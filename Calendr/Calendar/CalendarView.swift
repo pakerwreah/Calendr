@@ -43,7 +43,7 @@ class CalendarView: NSView {
 
     private func setUpBindings(with viewModel: CalendarViewModel) {
         for day in 0..<42 {
-            let dataObservable = viewModel.cellViewModelsObservable.map(\.[day])
+            let dataObservable = viewModel.asObservable().map(\.[day])
             let cellView = CalendarCellView(dataObservable: dataObservable)
             gridView.cell(atColumnIndex: day % 7, rowIndex: day / 7).contentView = cellView
         }

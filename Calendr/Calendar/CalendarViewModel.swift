@@ -8,7 +8,7 @@
 import RxSwift
 
 class CalendarViewModel {
-    let cellViewModelsObservable: Observable<[CalendarCellViewModel]>
+    private let cellViewModelsObservable: Observable<[CalendarCellViewModel]>
 
     init(yearObservable: Observable<Int>, monthObservable: Observable<Int>) {
 
@@ -47,5 +47,9 @@ class CalendarViewModel {
         return colors.compactMap {
             Bool.random() ? Event(color: $0) : nil
         }
+    }
+
+    func asObservable() -> Observable<[CalendarCellViewModel]> {
+        return cellViewModelsObservable
     }
 }
