@@ -10,7 +10,7 @@ import RxSwift
 
 class CalendarView: NSView {
 
-    private let cellSize: CGFloat = 30
+    private let cellSize: CGFloat = 25
     private let gridView = NSGridView(numberOfColumns: 7, rows: 6)
 
     private let disposeBag = DisposeBag()
@@ -42,12 +42,10 @@ class CalendarView: NSView {
     }
 
     private func setUpBindings(with viewModel: CalendarViewModel) {
-        for row in 0..<gridView.numberOfRows {
-            for col in 0..<gridView.numberOfColumns {
-                let dataObservable = viewModel.cellViewModelsObservable.map(\.[row][col])
-                let cellView = CalendarCellView(dataObservable: dataObservable)
-                gridView.cell(atColumnIndex: col, rowIndex: row).contentView = cellView
-            }
+        for day in 0..<42 {
+            let dataObservable = viewModel.cellViewModelsObservable.map(\.[day])
+            let cellView = CalendarCellView(dataObservable: dataObservable)
+            gridView.cell(atColumnIndex: day % 7, rowIndex: day / 7).contentView = cellView
         }
     }
 

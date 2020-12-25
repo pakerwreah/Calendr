@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3430ECFF259633D90045DA53 /* NSText+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3430ECFE259633D90045DA53 /* NSText+Rx.swift */; };
 		3430ED03259634E00045DA53 /* NSStackView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3430ED02259634E00045DA53 /* NSStackView+Rx.swift */; };
 		347D0F9825952F89002451EC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 347D0F9725952F89002451EC /* AppDelegate.swift */; };
 		347D0F9A25952F8A002451EC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 347D0F9925952F8A002451EC /* Assets.xcassets */; };
@@ -20,6 +19,8 @@
 		347D0FF825954975002451EC /* CalendarCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 347D0FF725954975002451EC /* CalendarCellViewModel.swift */; };
 		347D0FFE259566B5002451EC /* CalendarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 347D0FFD259566B5002451EC /* CalendarViewModel.swift */; };
 		34A4C3E925963FB200D0F949 /* NSStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A4C3E825963FB200D0F949 /* NSStackView.swift */; };
+		34F128D125968044007DF31C /* Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F128D025968044007DF31C /* Label.swift */; };
+		34F128DD259690C8007DF31C /* CALayer+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F128DC259690C8007DF31C /* CALayer+Rx.swift */; };
 		67F0C3D84A556DE7DAF46A74 /* libPods-App-CalendrTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DC8E186A8A4A9AE297AC779 /* libPods-App-CalendrTests.a */; };
 		F0F015866E92D977DA4CDC9F /* libPods-App-Calendr.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FE14E23C00B123A05A9808E8 /* libPods-App-Calendr.a */; };
 /* End PBXBuildFile section */
@@ -36,7 +37,6 @@
 
 /* Begin PBXFileReference section */
 		1F526354A9FE13111740C864 /* Pods-App-Calendr.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-App-Calendr.debug.xcconfig"; path = "Target Support Files/Pods-App-Calendr/Pods-App-Calendr.debug.xcconfig"; sourceTree = "<group>"; };
-		3430ECFE259633D90045DA53 /* NSText+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSText+Rx.swift"; sourceTree = "<group>"; };
 		3430ED02259634E00045DA53 /* NSStackView+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSStackView+Rx.swift"; sourceTree = "<group>"; };
 		347D0F9425952F89002451EC /* Calendr.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Calendr.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		347D0F9725952F89002451EC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -54,6 +54,8 @@
 		347D0FF725954975002451EC /* CalendarCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarCellViewModel.swift; sourceTree = "<group>"; };
 		347D0FFD259566B5002451EC /* CalendarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewModel.swift; sourceTree = "<group>"; };
 		34A4C3E825963FB200D0F949 /* NSStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSStackView.swift; sourceTree = "<group>"; };
+		34F128D025968044007DF31C /* Label.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Label.swift; sourceTree = "<group>"; };
+		34F128DC259690C8007DF31C /* CALayer+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CALayer+Rx.swift"; sourceTree = "<group>"; };
 		602259BB43827FA6636D29B3 /* Pods-App-CalendrTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-App-CalendrTests.release.xcconfig"; path = "Target Support Files/Pods-App-CalendrTests/Pods-App-CalendrTests.release.xcconfig"; sourceTree = "<group>"; };
 		7DC8E186A8A4A9AE297AC779 /* libPods-App-CalendrTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-App-CalendrTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		98D3804186B437006DBCEA90 /* Pods-App-CalendrTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-App-CalendrTests.debug.xcconfig"; path = "Target Support Files/Pods-App-CalendrTests/Pods-App-CalendrTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -149,6 +151,7 @@
 		347D0FE22595384E002451EC /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				34F128D025968044007DF31C /* Label.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -156,10 +159,10 @@
 		347D0FE525954481002451EC /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				347D0FE6259544B4002451EC /* NSView+Layout.swift */,
-				3430ECFE259633D90045DA53 /* NSText+Rx.swift */,
-				3430ED02259634E00045DA53 /* NSStackView+Rx.swift */,
 				34A4C3E825963FB200D0F949 /* NSStackView.swift */,
+				3430ED02259634E00045DA53 /* NSStackView+Rx.swift */,
+				347D0FE6259544B4002451EC /* NSView+Layout.swift */,
+				34F128DC259690C8007DF31C /* CALayer+Rx.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -334,10 +337,11 @@
 				347D0FDF259533C3002451EC /* CalendarView.swift in Sources */,
 				347D0F9825952F89002451EC /* AppDelegate.swift in Sources */,
 				347D0FF825954975002451EC /* CalendarCellViewModel.swift in Sources */,
+				34F128DD259690C8007DF31C /* CALayer+Rx.swift in Sources */,
 				347D0FED2595467A002451EC /* CalendarCellView.swift in Sources */,
+				34F128D125968044007DF31C /* Label.swift in Sources */,
 				347D0FE7259544B4002451EC /* NSView+Layout.swift in Sources */,
 				3430ED03259634E00045DA53 /* NSStackView+Rx.swift in Sources */,
-				3430ECFF259633D90045DA53 /* NSText+Rx.swift in Sources */,
 				347D0FF225954920002451EC /* Event.swift in Sources */,
 				34A4C3E925963FB200D0F949 /* NSStackView.swift in Sources */,
 				347D0FFE259566B5002451EC /* CalendarViewModel.swift in Sources */,
