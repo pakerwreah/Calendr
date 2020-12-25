@@ -10,15 +10,17 @@ import RxSwift
 import RxCocoa
 
 class CalendarCellView: NSView {
-    private let contentStackView = NSStackView()
-    private let eventsStackView = NSStackView()
-    private let label = NSTextView()
+    private static let eventDotSize: CGFloat = 3
+
+    private let contentStackView = NSStackView(.vertical)
+    private let eventsStackView = NSStackView(.horizontal)
+    private let label = NSText()
 
     private let diposeBag = DisposeBag()
 
     init(dataObservable: Observable<CalendarCellViewModel>) {
         super.init(frame: .zero)
-        translatesAutoresizingMaskIntoConstraints = false
+        forAutoLayout()
 
         configureLayout()
 
@@ -27,26 +29,18 @@ class CalendarCellView: NSView {
 
     private func configureLayout() {
         label.alignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
 
-        let labelContainer = NSView(frame: .zero)
-        labelContainer.addSubview(label)
+        eventsStackView.spacing = 2
+        eventsStackView.height(equalTo: Self.eventDotSize)
 
-        NSLayoutConstraint.activate([
-            label.heightAnchor.constraint(equalToConstant: label.font!.pointSize),
-            label.widthAnchor.constraint(equalTo: labelContainer.widthAnchor),
-            label.centerYAnchor.constraint(equalTo: labelContainer.centerYAnchor)
-        ])
-
-        eventsStackView.setContentHuggingPriority(.required, for: .vertical)
-
-        contentStackView.orientation = .vertical
-        contentStackView.addArrangedSubview(labelContainer)
+        contentStackView.addArrangedSubview(label)
         contentStackView.addArrangedSubview(eventsStackView)
 
         addSubview(contentStackView)
 
-        contentStackView.edges(to: self)
+        contentStackView.center(in: self)
+
+        label.size(equalTo: CGSize(width: 24, height: label.font!.pointSize))
     }
 
     private func setUpBindings(with dataObservable: Observable<CalendarCellViewModel>) {
@@ -57,24 +51,19 @@ class CalendarCellView: NSView {
 
         dataObservable
             .map(\.events)
-            .map {
-                $0.map(\.color).map(Self.makeEventDot)
-            }
-            .subscribe(onNext: { [eventsStackView] events in
-                eventsStackView.isHidden = events.isEmpty
-                eventsStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
-                events.forEach(eventsStackView.addArrangedSubview)
-            })
+            .debug()
+            .map { $0.map(\.color).map(Self.makeEventDot) }
+            .bind(to: eventsStackView.rx.arrangedSubviews)
             .disposed(by: diposeBag)
     }
 
     private static func makeEventDot(color: NSColor) -> NSView {
-        let size: CGFloat = 10
-        let view = NSView(frame: NSRect(origin: .zero, size: CGSize(width: size, height: size)))
+        let view = NSView()
+        view.size(equalTo: eventDotSize)
         view.wantsLayer = true
         view.layer.map { layer in
             layer.backgroundColor = color.cgColor
-            layer.cornerRadius = size / 2
+            layer.cornerRadius = eventDotSize / 2
         }
         return view
     }

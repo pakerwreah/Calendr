@@ -26,7 +26,7 @@ class CalendarView: NSView {
     private func configureLayout() {
         gridView.xPlacement = .fill
         gridView.yPlacement = .fill
-        gridView.rowSpacing = 1
+        gridView.rowSpacing = 0
         gridView.columnSpacing = 0
 
         for row in 0..<gridView.numberOfRows {
