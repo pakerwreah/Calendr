@@ -11,7 +11,7 @@ import RxSwift
 class CalendarView: NSView {
 
     private let cellSize: CGFloat = 25
-    private let gridView = NSGridView(numberOfColumns: 7, rows: 6)
+    private let gridView = NSGridView(numberOfColumns: 7, rows: 7)
 
     private let disposeBag = DisposeBag()
 
@@ -42,10 +42,16 @@ class CalendarView: NSView {
     }
 
     private func setUpBindings(with viewModel: CalendarViewModel) {
+        for day in 0..<7 {
+            let viewModel = HeaderCellViewModel(day: day)
+            let cellView = HeaderCellView(viewModel: viewModel)
+            gridView.cell(atColumnIndex: day, rowIndex: 0).contentView = cellView
+        }
+
         for day in 0..<42 {
-            let dataObservable = viewModel.asObservable().map(\.[day])
-            let cellView = CalendarCellView(dataObservable: dataObservable)
-            gridView.cell(atColumnIndex: day % 7, rowIndex: day / 7).contentView = cellView
+            let viewModel = viewModel.asObservable().map(\.[day])
+            let cellView = CalendarCellView(viewModel: viewModel)
+            gridView.cell(atColumnIndex: day % 7, rowIndex: 1 + day / 7).contentView = cellView
         }
     }
 

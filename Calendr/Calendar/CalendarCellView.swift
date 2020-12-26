@@ -18,7 +18,7 @@ class CalendarCellView: NSView {
 
     private let diposeBag = DisposeBag()
 
-    init(dataObservable: Observable<CalendarCellViewModel>) {
+    init(viewModel: Observable<CalendarCellViewModel>) {
         super.init(frame: .zero)
         wantsLayer = true
 
@@ -26,11 +26,12 @@ class CalendarCellView: NSView {
 
         configureLayout()
 
-        setUpBindings(with: dataObservable)
+        setUpBindings(with: viewModel)
     }
 
     private func configureLayout() {
         label.alignment = .center
+        label.size(equalTo: CGSize(width: 24, height: 13))
 
         eventsStackView.spacing = 2
         eventsStackView.height(equalTo: Self.eventDotSize)
@@ -42,27 +43,25 @@ class CalendarCellView: NSView {
         addSubview(contentStackView)
 
         contentStackView.center(in: self)
-
-        label.size(equalTo: CGSize(width: 24, height: label.font!.pointSize))
     }
 
-    private func setUpBindings(with dataObservable: Observable<CalendarCellViewModel>) {
-        dataObservable
-            .map(\.label)
+    private func setUpBindings(with viewModel: Observable<CalendarCellViewModel>) {
+        viewModel
+            .map(\.text)
             .bind(to: label.rx.string)
             .disposed(by: diposeBag)
 
-        dataObservable
+        viewModel
             .map(\.alpha)
             .bind(to: contentStackView.rx.alpha)
             .disposed(by: diposeBag)
 
-        dataObservable
+        viewModel
             .map(\.backgroundColor.cgColor)
             .bind(to: layer!.rx.backgroundColor)
             .disposed(by: diposeBag)
 
-        dataObservable
+        viewModel
             .map(\.events)
             .map { $0.map(\.color).map(Self.makeEventDot) }
             .bind(to: eventsStackView.rx.arrangedSubviews)

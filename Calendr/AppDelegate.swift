@@ -12,15 +12,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     @IBOutlet var window: NSWindow!
 
-    private let calendarView = CalendarView(viewModel: CalendarViewModel(yearObservable: .just(2020), monthObservable: .just(12)))
-
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-
-        guard let view = window.contentView else { return }
-
-        view.addSubview(calendarView)
-
-        calendarView.edges(to: view)
+        window.contentViewController = MainViewController()
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {

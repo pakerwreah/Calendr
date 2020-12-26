@@ -16,15 +16,6 @@ extension NSView {
     }
 
     @discardableResult
-    func leading(equalTo view: NSView) -> Self {
-        forAutoLayout()
-        NSLayoutConstraint.activate([
-            leadingAnchor.constraint(equalTo: view.leadingAnchor)
-        ])
-        return self
-    }
-
-    @discardableResult
     func leading(equalTo anchor: NSLayoutXAxisAnchor, constant: CGFloat = 0) -> Self {
         forAutoLayout()
         NSLayoutConstraint.activate([
@@ -34,28 +25,10 @@ extension NSView {
     }
 
     @discardableResult
-    func trailing(equalTo view: NSView) -> Self {
-        forAutoLayout()
-        NSLayoutConstraint.activate([
-            trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        ])
-        return self
-    }
-
-    @discardableResult
     func trailing(equalTo anchor: NSLayoutXAxisAnchor, constant: CGFloat = 0) -> Self {
         forAutoLayout()
         NSLayoutConstraint.activate([
-            trailingAnchor.constraint(equalTo: anchor, constant: constant)
-        ])
-        return self
-    }
-
-    @discardableResult
-    func top(equalTo view: NSView) -> Self {
-        forAutoLayout()
-        NSLayoutConstraint.activate([
-            topAnchor.constraint(equalTo: view.topAnchor)
+            trailingAnchor.constraint(equalTo: anchor, constant: -constant)
         ])
         return self
     }
@@ -70,29 +43,44 @@ extension NSView {
     }
 
     @discardableResult
-    func bottom(equalTo view: NSView) -> Self {
-        forAutoLayout()
-        NSLayoutConstraint.activate([
-            bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
-        return self
-    }
-
-    @discardableResult
     func bottom(equalTo anchor: NSLayoutYAxisAnchor, constant: CGFloat = 0) -> Self {
         forAutoLayout()
         NSLayoutConstraint.activate([
-            bottomAnchor.constraint(equalTo: anchor, constant: constant)
+            bottomAnchor.constraint(equalTo: anchor, constant: -constant)
         ])
         return self
     }
 
     @discardableResult
-    func edges(to view: NSView) -> Self {
-        top(equalTo: view)
-        bottom(equalTo: view)
-        leading(equalTo: view)
-        trailing(equalTo: view)
+    func leading(equalTo view: NSView, constant: CGFloat = 0) -> Self {
+        leading(equalTo: view.leadingAnchor, constant: constant)
+        return self
+    }
+
+    @discardableResult
+    func trailing(equalTo view: NSView, constant: CGFloat = 0) -> Self {
+        trailing(equalTo: view.trailingAnchor, constant: constant)
+        return self
+    }
+
+    @discardableResult
+    func top(equalTo view: NSView, constant: CGFloat = 0) -> Self {
+        top(equalTo: view.topAnchor, constant: constant)
+        return self
+    }
+
+    @discardableResult
+    func bottom(equalTo view: NSView, constant: CGFloat = 0) -> Self {
+        bottom(equalTo: view.bottomAnchor, constant: constant)
+        return self
+    }
+
+    @discardableResult
+    func edges(to view: NSView, constant: CGFloat = 0) -> Self {
+        top(equalTo: view, constant: constant)
+        bottom(equalTo: view, constant: constant)
+        leading(equalTo: view, constant: constant)
+        trailing(equalTo: view, constant: constant)
         return self
     }
 
@@ -115,10 +103,10 @@ extension NSView {
     }
 
     @discardableResult
-    func width(equalTo view: NSView) -> Self {
+    func width(equalTo view: NSView, constant: CGFloat = 0) -> Self {
         forAutoLayout()
         NSLayoutConstraint.activate([
-            widthAnchor.constraint(equalTo: view.widthAnchor)
+            widthAnchor.constraint(equalTo: view.widthAnchor, constant: constant)
         ])
         return self
     }
@@ -133,10 +121,10 @@ extension NSView {
     }
 
     @discardableResult
-    func height(equalTo view: NSView) -> Self {
+    func height(equalTo view: NSView, constant: CGFloat = 0) -> Self {
         forAutoLayout()
         NSLayoutConstraint.activate([
-            heightAnchor.constraint(equalTo: view.heightAnchor)
+            heightAnchor.constraint(equalTo: view.heightAnchor, constant: constant)
         ])
         return self
     }
@@ -151,9 +139,9 @@ extension NSView {
     }
 
     @discardableResult
-    func size(equalTo view: NSView) -> Self {
-        width(equalTo: view)
-        height(equalTo: view)
+    func size(equalTo view: NSView, constant: CGFloat = 0) -> Self {
+        width(equalTo: view, constant: constant)
+        height(equalTo: view, constant: constant)
         return self
     }
 

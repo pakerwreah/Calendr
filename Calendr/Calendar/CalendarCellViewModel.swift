@@ -8,13 +8,17 @@
 import Cocoa
 
 struct CalendarCellViewModel {
-    let label: String
+    let day: Int
     let inMonth: Bool
     let isWeekend: Bool
     let events: [Event]
 }
 
 extension CalendarCellViewModel {
+    var text: String {
+        "\(day)"
+    }
+
     var alpha: CGFloat {
         inMonth ? 1 : 0.3
     }

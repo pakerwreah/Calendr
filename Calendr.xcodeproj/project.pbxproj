@@ -21,6 +21,9 @@
 		34A4C3E925963FB200D0F949 /* NSStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A4C3E825963FB200D0F949 /* NSStackView.swift */; };
 		34F128D125968044007DF31C /* Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F128D025968044007DF31C /* Label.swift */; };
 		34F128DD259690C8007DF31C /* CALayer+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F128DC259690C8007DF31C /* CALayer+Rx.swift */; };
+		34F128E12597B9C9007DF31C /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F128E02597B9C9007DF31C /* MainViewController.swift */; };
+		34F128E52597C1BB007DF31C /* HeaderCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F128E42597C1BB007DF31C /* HeaderCellViewModel.swift */; };
+		34F128F22597C340007DF31C /* HeaderCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F128F12597C340007DF31C /* HeaderCellView.swift */; };
 		67F0C3D84A556DE7DAF46A74 /* libPods-App-CalendrTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DC8E186A8A4A9AE297AC779 /* libPods-App-CalendrTests.a */; };
 		F0F015866E92D977DA4CDC9F /* libPods-App-Calendr.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FE14E23C00B123A05A9808E8 /* libPods-App-Calendr.a */; };
 /* End PBXBuildFile section */
@@ -56,6 +59,9 @@
 		34A4C3E825963FB200D0F949 /* NSStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSStackView.swift; sourceTree = "<group>"; };
 		34F128D025968044007DF31C /* Label.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Label.swift; sourceTree = "<group>"; };
 		34F128DC259690C8007DF31C /* CALayer+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CALayer+Rx.swift"; sourceTree = "<group>"; };
+		34F128E02597B9C9007DF31C /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		34F128E42597C1BB007DF31C /* HeaderCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderCellViewModel.swift; sourceTree = "<group>"; };
+		34F128F12597C340007DF31C /* HeaderCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderCellView.swift; sourceTree = "<group>"; };
 		602259BB43827FA6636D29B3 /* Pods-App-CalendrTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-App-CalendrTests.release.xcconfig"; path = "Target Support Files/Pods-App-CalendrTests/Pods-App-CalendrTests.release.xcconfig"; sourceTree = "<group>"; };
 		7DC8E186A8A4A9AE297AC779 /* libPods-App-CalendrTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-App-CalendrTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		98D3804186B437006DBCEA90 /* Pods-App-CalendrTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-App-CalendrTests.debug.xcconfig"; path = "Target Support Files/Pods-App-CalendrTests/Pods-App-CalendrTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -124,6 +130,7 @@
 				347D0F9B25952F8A002451EC /* MainMenu.xib */,
 				347D0F9E25952F8A002451EC /* Info.plist */,
 				347D0F9F25952F8A002451EC /* Calendr.entitlements */,
+				34F128E02597B9C9007DF31C /* MainViewController.swift */,
 			);
 			path = Calendr;
 			sourceTree = "<group>";
@@ -144,6 +151,8 @@
 				347D0FF725954975002451EC /* CalendarCellViewModel.swift */,
 				347D0FDE259533C3002451EC /* CalendarView.swift */,
 				347D0FFD259566B5002451EC /* CalendarViewModel.swift */,
+				34F128F12597C340007DF31C /* HeaderCellView.swift */,
+				34F128E42597C1BB007DF31C /* HeaderCellViewModel.swift */,
 			);
 			path = Calendar;
 			sourceTree = "<group>";
@@ -337,13 +346,16 @@
 				347D0FDF259533C3002451EC /* CalendarView.swift in Sources */,
 				347D0F9825952F89002451EC /* AppDelegate.swift in Sources */,
 				347D0FF825954975002451EC /* CalendarCellViewModel.swift in Sources */,
+				34F128E12597B9C9007DF31C /* MainViewController.swift in Sources */,
 				34F128DD259690C8007DF31C /* CALayer+Rx.swift in Sources */,
 				347D0FED2595467A002451EC /* CalendarCellView.swift in Sources */,
 				34F128D125968044007DF31C /* Label.swift in Sources */,
+				34F128F22597C340007DF31C /* HeaderCellView.swift in Sources */,
 				347D0FE7259544B4002451EC /* NSView+Layout.swift in Sources */,
 				3430ED03259634E00045DA53 /* NSStackView+Rx.swift in Sources */,
 				347D0FF225954920002451EC /* Event.swift in Sources */,
 				34A4C3E925963FB200D0F949 /* NSStackView.swift in Sources */,
+				34F128E52597C1BB007DF31C /* HeaderCellViewModel.swift in Sources */,
 				347D0FFE259566B5002451EC /* CalendarViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

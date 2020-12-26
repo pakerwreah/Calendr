@@ -27,10 +27,10 @@ class CalendarViewModel {
 
                 for day in 0..<42 {
                     let date = calendar.date(byAdding: .day, value: day, to: start)!
-                    let label = calendar.component(.day, from: date)
+                    let day = calendar.component(.day, from: date)
                     let inMonth = calendar.isDate(date, equalTo: firstDayOfMonth, toGranularity: .month)
                     let isWeekend = calendar.isDateInWeekend(date)
-                    let viewModel = CalendarCellViewModel(label: "\(label)",
+                    let viewModel = CalendarCellViewModel(day: day,
                                                           inMonth: inMonth,
                                                           isWeekend: isWeekend,
                                                           events: Self.getEvents())
