@@ -49,9 +49,28 @@ class MainViewController: NSViewController {
     }
 
     func setUpBindings() {
+        let resetObservable = Observable.merge(
+            rx.sentMessage(#selector(NSViewController.viewWillAppear)).toVoid(),
+            monthSelectorView.resetBtnObservable
+        )
+
+        let keyObservable = rx.sentMessage(#selector(NSViewController.keyUp(with:)))
+            .compactMap { $0.first as? NSEvent }
+            .map(\.keyCode)
+            .share()
+
+        let keyLeftObservable = keyObservable.filter { $0 == 123 }.toVoid()
+        let keyRightObservable = keyObservable.filter { $0 == 124 }.toVoid()
+        let keyDownObservable = keyObservable.filter { $0 == 125 }.toVoid()
+        let keyUpObservable = keyObservable.filter { $0 == 126 }.toVoid()
+
         DateSelector(
             initial: dateSubject,
-            reset: monthSelectorView.resetBtnObservable,
+            reset: resetObservable,
+            prevDay: keyLeftObservable,
+            nextDay: keyRightObservable,
+            prevWeek: keyUpObservable,
+            nextWeek: keyDownObservable,
             prevMonth: monthSelectorView.prevBtnObservable,
             nextMonth: monthSelectorView.nextBtnObservable
         )
