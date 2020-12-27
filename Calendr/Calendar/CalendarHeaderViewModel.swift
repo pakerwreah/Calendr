@@ -1,5 +1,5 @@
 //
-//  MonthSelectorViewModel.swift
+//  CalendarHeaderViewModel.swift
 //  Calendr
 //
 //  Created by Paker on 26/12/20.
@@ -7,7 +7,7 @@
 
 import RxSwift
 
-class MonthSelectorViewModel {
+class CalendarHeaderViewModel {
 
     let titleObservable: Observable<String>
 

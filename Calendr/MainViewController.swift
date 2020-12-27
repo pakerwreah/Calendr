@@ -12,10 +12,10 @@ import RxCocoa
 class MainViewController: NSViewController {
 
     private let mainStackView = NSStackView(.vertical)
-    private let monthSelectorView: MonthSelectorView
+    private let calendarHeaderView: CalendarHeaderView
     private let calendarView: CalendarView
 
-    private let monthSelectorViewModel: MonthSelectorViewModel
+    private let calendarHeaderViewModel: CalendarHeaderViewModel
     private let calendarViewModel: CalendarViewModel
 
     private let dateSubject = BehaviorSubject<Date>(value: Date())
@@ -25,8 +25,8 @@ class MainViewController: NSViewController {
     init() {
         let dateObservable = dateSubject.asObservable()
 
-        monthSelectorViewModel = MonthSelectorViewModel(dateObservable: dateObservable)
-        monthSelectorView = MonthSelectorView(viewModel: monthSelectorViewModel)
+        calendarHeaderViewModel = CalendarHeaderViewModel(dateObservable: dateObservable)
+        calendarHeaderView = CalendarHeaderView(viewModel: calendarHeaderViewModel)
 
         calendarViewModel = CalendarViewModel(dateObservable: dateObservable)
         calendarView = CalendarView(viewModel: calendarViewModel)
@@ -44,14 +44,14 @@ class MainViewController: NSViewController {
         mainStackView.spacing = 4
         mainStackView.edges(to: view, constant: 8)
 
-        mainStackView.addArrangedSubview(monthSelectorView)
+        mainStackView.addArrangedSubview(calendarHeaderView)
         mainStackView.addArrangedSubview(calendarView)
     }
 
     func setUpBindings() {
         let resetObservable = Observable.merge(
             rx.sentMessage(#selector(NSViewController.viewWillAppear)).toVoid(),
-            monthSelectorView.resetBtnObservable
+            calendarHeaderView.resetBtnObservable
         )
 
         let keyObservable = rx.sentMessage(#selector(NSViewController.keyUp(with:)))
@@ -71,8 +71,8 @@ class MainViewController: NSViewController {
             nextDay: keyRightObservable,
             prevWeek: keyUpObservable,
             nextWeek: keyDownObservable,
-            prevMonth: monthSelectorView.prevBtnObservable,
-            nextMonth: monthSelectorView.nextBtnObservable
+            prevMonth: calendarHeaderView.prevBtnObservable,
+            nextMonth: calendarHeaderView.nextBtnObservable
         )
         .asObservable()
         .bind(to: dateSubject)

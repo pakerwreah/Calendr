@@ -1,5 +1,5 @@
 //
-//  MonthSelectorView.swift
+//  CalendarHeaderView.swift
 //  Calendr
 //
 //  Created by Paker on 26/12/20.
@@ -8,7 +8,7 @@
 import RxSwift
 import RxCocoa
 
-class MonthSelectorView: NSView {
+class CalendarHeaderView: NSView {
     private let stackView = NSStackView(.horizontal)
     private let label = Label()
     private let prevBtn = NSButton()
@@ -21,7 +21,7 @@ class MonthSelectorView: NSView {
 
     private let disposeBag = DisposeBag()
 
-    init(viewModel: MonthSelectorViewModel) {
+    init(viewModel: CalendarHeaderViewModel) {
         prevBtnObservable = prevBtn.rx.tap.asObservable()
         resetBtnObservable = resetBtn.rx.tap.asObservable()
         nextBtnObservable = nextBtn.rx.tap.asObservable()
@@ -58,7 +58,7 @@ class MonthSelectorView: NSView {
         stackView.edges(to: self)
     }
 
-    private func setUpBindings(with viewModel: MonthSelectorViewModel) {
+    private func setUpBindings(with viewModel: CalendarHeaderViewModel) {
         viewModel
             .titleObservable
             .bind(to: label.rx.string)
