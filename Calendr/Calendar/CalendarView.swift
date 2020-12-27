@@ -43,8 +43,8 @@ class CalendarView: NSView {
 
     private func setUpBindings(with viewModel: CalendarViewModel) {
         for day in 0..<7 {
-            let viewModel = HeaderCellViewModel(day: day)
-            let cellView = HeaderCellView(viewModel: viewModel)
+            let viewModel = WeekDayCellViewModel(day: day)
+            let cellView = WeekDayCellView(viewModel: viewModel)
             gridView.cell(atColumnIndex: day, rowIndex: 0).contentView = cellView
         }
 

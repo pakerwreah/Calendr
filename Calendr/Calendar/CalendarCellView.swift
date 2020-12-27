@@ -16,7 +16,7 @@ class CalendarCellView: NSView {
     private let eventsStackView = NSStackView(.horizontal)
     private let label = Label()
 
-    private let diposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     init(viewModel: Observable<CalendarCellViewModel>) {
         super.init(frame: .zero)
@@ -36,9 +36,15 @@ class CalendarCellView: NSView {
         eventsStackView.spacing = 2
         eventsStackView.height(equalTo: Self.eventDotSize)
 
+        let eventsContainer = NSView()
+        eventsContainer.addSubview(eventsStackView)
+        eventsStackView
+            .top(equalTo: eventsContainer)
+            .bottom(equalTo: eventsContainer)
+            .center(in: eventsContainer, orientation: .horizontal)
+
         contentStackView.spacing = 2
-        contentStackView.addArrangedSubview(label)
-        contentStackView.addArrangedSubview(eventsStackView)
+        contentStackView.addArrangedSubviews(label, eventsContainer)
 
         addSubview(contentStackView)
 
@@ -49,23 +55,23 @@ class CalendarCellView: NSView {
         viewModel
             .map(\.text)
             .bind(to: label.rx.string)
-            .disposed(by: diposeBag)
+            .disposed(by: disposeBag)
 
         viewModel
             .map(\.alpha)
             .bind(to: contentStackView.rx.alpha)
-            .disposed(by: diposeBag)
+            .disposed(by: disposeBag)
 
         viewModel
             .map(\.backgroundColor.cgColor)
             .bind(to: layer!.rx.backgroundColor)
-            .disposed(by: diposeBag)
+            .disposed(by: disposeBag)
 
         viewModel
             .map(\.events)
             .map { $0.map(\.color).map(Self.makeEventDot) }
             .bind(to: eventsStackView.rx.arrangedSubviews)
-            .disposed(by: diposeBag)
+            .disposed(by: disposeBag)
     }
 
     private static func makeEventDot(color: NSColor) -> NSView {

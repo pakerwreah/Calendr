@@ -12,4 +12,8 @@ extension NSStackView {
         self.init()
         self.orientation = orientation
     }
+
+    func addArrangedSubviews(_ views: NSView...) {
+        views.forEach(addArrangedSubview)
+    }
 }

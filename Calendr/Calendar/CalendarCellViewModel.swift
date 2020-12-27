@@ -11,6 +11,8 @@ struct CalendarCellViewModel {
     let day: Int
     let inMonth: Bool
     let isWeekend: Bool
+    let isCurrent: Bool
+    let isSelected: Bool
     let events: [Event]
 }
 

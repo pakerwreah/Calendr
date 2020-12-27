@@ -1,5 +1,5 @@
 //
-//  HeaderCellView.swift
+//  WeekDayCellView.swift
 //  Calendr
 //
 //  Created by Paker on 26/12/20.
@@ -7,11 +7,11 @@
 
 import Cocoa
 
-class HeaderCellView: NSView {
+class WeekDayCellView: NSView {
     
     private let label = Label()
 
-    init(viewModel: HeaderCellViewModel) {
+    init(viewModel: WeekDayCellViewModel) {
         super.init(frame: .zero)
 
         forAutoLayout()
@@ -31,7 +31,7 @@ class HeaderCellView: NSView {
             .size(equalTo: CGSize(width: 24, height: 13))
     }
 
-    private func setUpBindings(with viewModel: HeaderCellViewModel) {
+    private func setUpBindings(with viewModel: WeekDayCellViewModel) {
         label.string = viewModel.text
     }
 
