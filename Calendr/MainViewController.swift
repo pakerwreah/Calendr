@@ -49,25 +49,15 @@ class MainViewController: NSViewController {
     }
 
     func setUpBindings() {
-        monthSelectorViewModel
-            .prevBtnSubject
-            .withLatestFrom(dateSubject)
-            .map { Calendar.current.date(byAdding: .month, value: -1, to: $0)! }
-            .bind(to: dateSubject)
-            .disposed(by: disposeBag)
-
-        monthSelectorViewModel
-            .nextBtnSubject
-            .withLatestFrom(dateSubject)
-            .map { Calendar.current.date(byAdding: .month, value: 1, to: $0)! }
-            .bind(to: dateSubject)
-            .disposed(by: disposeBag)
-
-        monthSelectorViewModel
-            .todayBtnSubject
-            .map { Date() }
-            .bind(to: dateSubject)
-            .disposed(by: disposeBag)
+        DateSelector(
+            initial: dateSubject,
+            reset: monthSelectorView.resetBtnObservable,
+            prevMonth: monthSelectorView.prevBtnObservable,
+            nextMonth: monthSelectorView.nextBtnObservable
+        )
+        .asObservable()
+        .bind(to: dateSubject)
+        .disposed(by: disposeBag)
     }
 
     required init?(coder: NSCoder) {

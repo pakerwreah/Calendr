@@ -20,7 +20,6 @@ class CalendarCellView: NSView {
 
     init(viewModel: Observable<CalendarCellViewModel>) {
         super.init(frame: .zero)
-        wantsLayer = true
 
         forAutoLayout()
 
@@ -30,6 +29,10 @@ class CalendarCellView: NSView {
     }
 
     private func configureLayout() {
+        wantsLayer = true
+        layer!.borderWidth = 2
+        layer!.cornerRadius = 5
+
         label.alignment = .center
         label.size(equalTo: CGSize(width: 24, height: 13))
 
@@ -63,8 +66,8 @@ class CalendarCellView: NSView {
             .disposed(by: disposeBag)
 
         viewModel
-            .map(\.backgroundColor.cgColor)
-            .bind(to: layer!.rx.backgroundColor)
+            .map(\.borderColor.cgColor)
+            .bind(to: layer!.rx.borderColor)
             .disposed(by: disposeBag)
 
         viewModel

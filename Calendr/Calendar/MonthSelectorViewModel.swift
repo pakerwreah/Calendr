@@ -11,13 +11,9 @@ class MonthSelectorViewModel {
 
     let titleObservable: Observable<String>
 
-    let prevBtnSubject = PublishSubject<Void>()
-    let todayBtnSubject = PublishSubject<Void>()
-    let nextBtnSubject = PublishSubject<Void>()
-
     init(dateObservable: Observable<Date>) {
         let formatter = DateFormatter()
-        formatter.dateFormat = "MMM YYYY"
+        formatter.dateFormat = "MMM yyyy"
         titleObservable = dateObservable.map(formatter.string(from:))
     }
 

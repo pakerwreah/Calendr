@@ -16,4 +16,10 @@ extension Reactive where Base: CALayer {
         }
     }
 
+    public var borderColor: Binder<CGColor> {
+        return Binder(self.base) { layer, color in
+            layer.borderColor = color
+        }
+    }
+
 }

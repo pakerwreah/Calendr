@@ -12,12 +12,20 @@ class MonthSelectorView: NSView {
     private let stackView = NSStackView(.horizontal)
     private let label = Label()
     private let prevBtn = NSButton()
-    private let todayBtn = NSButton()
+    private let resetBtn = NSButton()
     private let nextBtn = NSButton()
+
+    let prevBtnObservable: Observable<Void>
+    let resetBtnObservable: Observable<Void>
+    let nextBtnObservable: Observable<Void>
 
     private let disposeBag = DisposeBag()
 
     init(viewModel: MonthSelectorViewModel) {
+        prevBtnObservable = prevBtn.rx.tap.asObservable()
+        resetBtnObservable = resetBtn.rx.tap.asObservable()
+        nextBtnObservable = nextBtn.rx.tap.asObservable()
+
         super.init(frame: .zero)
 
         configureLayout()
@@ -29,10 +37,10 @@ class MonthSelectorView: NSView {
         label.font = .systemFont(ofSize: 14, weight: .semibold)
 
         prevBtn.image = NSImage(named: NSImage.goBackTemplateName)
-        todayBtn.image = NSImage(named: NSImage.refreshTemplateName)
+        resetBtn.image = NSImage(named: NSImage.refreshTemplateName)
         nextBtn.image = NSImage(named: NSImage.goForwardTemplateName)
 
-        [prevBtn, todayBtn, nextBtn].forEach {
+        [prevBtn, resetBtn, nextBtn].forEach {
             $0.size(equalTo: 22)
             $0.bezelStyle = .regularSquare
             $0.isBordered = false
@@ -41,7 +49,7 @@ class MonthSelectorView: NSView {
         let btnStackView = NSStackView(.horizontal)
 
         btnStackView.spacing = 0
-        btnStackView.addArrangedSubviews(prevBtn, todayBtn, nextBtn)
+        btnStackView.addArrangedSubviews(prevBtn, resetBtn, nextBtn)
 
         stackView.addArrangedSubviews(label, btnStackView)
 
@@ -55,12 +63,6 @@ class MonthSelectorView: NSView {
             .titleObservable
             .bind(to: label.rx.string)
             .disposed(by: disposeBag)
-
-        disposeBag.insert(
-            prevBtn.rx.tap.bind(to: viewModel.prevBtnSubject),
-            todayBtn.rx.tap.bind(to: viewModel.todayBtnSubject),
-            nextBtn.rx.tap.bind(to: viewModel.nextBtnSubject)
-        )
     }
 
     required init?(coder: NSCoder) {

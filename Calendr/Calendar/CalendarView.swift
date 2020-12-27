@@ -20,6 +20,8 @@ class CalendarView: NSView {
 
         configureLayout()
 
+        addWeekendLayers()
+
         setUpBindings(with: viewModel)
     }
 
@@ -39,6 +41,18 @@ class CalendarView: NSView {
         addSubview(gridView)
 
         gridView.edges(to: self)
+    }
+
+    private func addWeekendLayers() {
+        gridView.wantsLayer = true
+
+        for col in [0, 6] {
+            let layer = CALayer()
+            layer.frame = CGRect(x: CGFloat(col) * cellSize, y: 0, width: cellSize, height: 6 * cellSize)
+            layer.backgroundColor = NSColor.gray.withAlphaComponent(0.2).cgColor
+            layer.cornerRadius = 5
+            gridView.layer?.addSublayer(layer)
+        }
     }
 
     private func setUpBindings(with viewModel: CalendarViewModel) {

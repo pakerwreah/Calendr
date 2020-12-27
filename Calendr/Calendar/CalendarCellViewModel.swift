@@ -10,8 +10,7 @@ import Cocoa
 struct CalendarCellViewModel {
     let day: Int
     let inMonth: Bool
-    let isWeekend: Bool
-    let isCurrent: Bool
+    let isToday: Bool
     let isSelected: Bool
     let events: [Event]
 }
@@ -25,7 +24,12 @@ extension CalendarCellViewModel {
         inMonth ? 1 : 0.3
     }
 
-    var backgroundColor: NSColor {
-        isWeekend ? NSColor.gray.withAlphaComponent(0.2) : .clear
+    var borderColor: NSColor {
+        if isSelected {
+            return .controlAccentColor
+        } else if isToday {
+            return .gray
+        }
+        return .clear
     }
 }
