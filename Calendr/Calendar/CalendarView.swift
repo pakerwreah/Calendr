@@ -57,13 +57,15 @@ class CalendarView: NSView {
 
     private func setUpBindings(with viewModel: CalendarViewModel) {
         for day in 0..<7 {
-            let viewModel = WeekDayCellViewModel(day: day)
-            let cellView = WeekDayCellView(viewModel: viewModel)
+            let weekDayViewModel = WeekDayCellViewModel(day: day)
+            let cellView = WeekDayCellView(viewModel: weekDayViewModel)
             gridView.cell(atColumnIndex: day, rowIndex: 0).contentView = cellView
         }
 
         for day in 0..<42 {
-            let viewModel = viewModel.asObservable().map(\.[day])
+            let viewModel = viewModel.asObservable()
+                .observeOn(MainScheduler.asyncInstance)
+                .map(\.[day])
             let cellView = CalendarCellView(viewModel: viewModel)
             gridView.cell(atColumnIndex: day % 7, rowIndex: 1 + day / 7).contentView = cellView
         }

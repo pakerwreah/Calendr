@@ -10,10 +10,39 @@ import RxSwift
 class CalendarViewModel {
     private let cellViewModelsObservable: Observable<[CalendarCellViewModel]>
 
-    init(dateObservable: Observable<Date>) {
+    init(dateObservable: Observable<Date>, calendarService: CalendarServiceProviding) {
 
-        cellViewModelsObservable = dateObservable.compactMap { selectedDate in
-            let calendar = Calendar.current
+        let calendar = Calendar.current
+
+        let dateRangeObservable = dateObservable
+            .map { selectedDate -> (start: Date, end: Date) in
+
+                let firstDayOfMonth = calendar.dateInterval(of: .month, for: selectedDate)!.start
+                let currentWeekDay = calendar.component(.weekday, from: firstDayOfMonth) - 1
+                let start = calendar.date(byAdding: .day, value: -currentWeekDay, to: firstDayOfMonth)!
+                let end = calendar.date(byAdding: .day, value: 42, to: start)!
+
+                return (start: start, end: end)
+
+            }
+            .distinctUntilChanged { a, b -> Bool in
+                a.start == b.start && a.end == b.end
+            }
+
+
+        let eventsObservable = Observable.combineLatest(
+            dateRangeObservable, calendarService.changeObservable
+        )
+        .map { dateRange, _ in
+            calendarService.events(from: dateRange.start, to: dateRange.end)
+        }
+        .startWith([])
+
+        cellViewModelsObservable = Observable.combineLatest(
+            dateObservable, eventsObservable
+        )
+        .map { selectedDate, events in
+
             let currentDate = Date()
             let firstDayOfMonth = calendar.dateInterval(of: .month, for: selectedDate)!.start
             let currentWeekDay = calendar.component(.weekday, from: firstDayOfMonth) - 1
@@ -27,24 +56,20 @@ class CalendarViewModel {
                 let inMonth = calendar.isDate(date, equalTo: firstDayOfMonth, toGranularity: .month)
                 let isToday = calendar.isDate(date, inSameDayAs: currentDate)
                 let isSelected = calendar.isDate(date, inSameDayAs: selectedDate)
+                let events = events.filter {
+                    calendar.isDate(date, in: ($0.start, $0.end), toGranularity: .day)
+                }
                 let viewModel = CalendarCellViewModel(day: day,
                                                       inMonth: inMonth,
                                                       isToday: isToday,
                                                       isSelected: isSelected,
-                                                      events: Self.getEvents())
+                                                      events: events)
                 cellViewModels.append(viewModel)
             }
 
             return cellViewModels
-        }.share(replay: 1)
-    }
-
-    // TODO: get events from system calendar
-    private static func getEvents() -> [Event] {
-        let colors: [NSColor] = [.systemYellow, .systemRed, .systemGreen]
-        return colors.compactMap {
-            Bool.random() ? Event(color: $0) : nil
         }
+        .share(replay: 1)
     }
 
     func asObservable() -> Observable<[CalendarCellViewModel]> {

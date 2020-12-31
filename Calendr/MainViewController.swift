@@ -18,6 +18,8 @@ class MainViewController: NSViewController {
     private let calendarHeaderViewModel: CalendarHeaderViewModel
     private let calendarViewModel: CalendarViewModel
 
+    private let calendarService = CalendarServiceProvider()
+
     private let dateSubject = BehaviorSubject<Date>(value: Date())
 
     private let disposeBag = DisposeBag()
@@ -28,12 +30,14 @@ class MainViewController: NSViewController {
         calendarHeaderViewModel = CalendarHeaderViewModel(dateObservable: dateObservable)
         calendarHeaderView = CalendarHeaderView(viewModel: calendarHeaderViewModel)
 
-        calendarViewModel = CalendarViewModel(dateObservable: dateObservable)
+        calendarViewModel = CalendarViewModel(dateObservable: dateObservable, calendarService: calendarService)
         calendarView = CalendarView(viewModel: calendarViewModel)
 
         super.init(nibName: nil, bundle: nil)
 
         setUpBindings()
+
+        calendarService.requestAccess()
     }
 
     override func loadView() {

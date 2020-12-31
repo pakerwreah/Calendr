@@ -26,5 +26,7 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Calendr needs to display events from your calendars.</string>
 </dict>
 </plist>

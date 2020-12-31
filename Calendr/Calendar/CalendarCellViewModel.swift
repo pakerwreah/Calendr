@@ -12,7 +12,7 @@ struct CalendarCellViewModel {
     let inMonth: Bool
     let isToday: Bool
     let isSelected: Bool
-    let events: [Event]
+    let events: [EventModel]
 }
 
 extension CalendarCellViewModel {
@@ -24,12 +24,18 @@ extension CalendarCellViewModel {
         inMonth ? 1 : 0.3
     }
 
-    var borderColor: NSColor {
+    var borderColor: CGColor {
         if isSelected {
-            return .controlAccentColor
+            return NSColor.controlAccentColor.cgColor
         } else if isToday {
-            return .gray
+            return NSColor.gray.cgColor
         }
-        return .clear
+        return NSColor.clear.cgColor
+    }
+
+    var dots: [CGColor] {
+        Set(events.map(\.calendar.color)).sorted {
+            $0.hashValue < $1.hashValue
+        }
     }
 }

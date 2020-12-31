@@ -62,27 +62,27 @@ class CalendarCellView: NSView {
 
         viewModel
             .map(\.alpha)
-            .bind(to: contentStackView.rx.alpha)
+            .bind(to: label.rx.alpha)
             .disposed(by: disposeBag)
 
         viewModel
-            .map(\.borderColor.cgColor)
+            .map(\.borderColor)
             .bind(to: layer!.rx.borderColor)
             .disposed(by: disposeBag)
 
         viewModel
-            .map(\.events)
-            .map { $0.map(\.color).map(Self.makeEventDot) }
+            .map(\.dots)
+            .map { $0.map(Self.makeEventDot) }
             .bind(to: eventsStackView.rx.arrangedSubviews)
             .disposed(by: disposeBag)
     }
 
-    private static func makeEventDot(color: NSColor) -> NSView {
+    private static func makeEventDot(color: CGColor) -> NSView {
         let view = NSView()
         view.size(equalTo: eventDotSize)
         view.wantsLayer = true
         view.layer.map { layer in
-            layer.backgroundColor = color.cgColor
+            layer.backgroundColor = color
             layer.cornerRadius = eventDotSize / 2
         }
         return view
