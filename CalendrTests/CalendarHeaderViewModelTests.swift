@@ -18,11 +18,13 @@ class CalendarHeaderViewModelTests: XCTestCase {
     func testTitle() {
         let observer = testScheduler.createObserver(String.self)
 
-        let dateObservable = Observable.of(
-            Calendar.current.date(from: DateComponents(year: 2020, month: 1))!,
-            Calendar.current.date(from: DateComponents(year: 2021, month: 6))!,
-            Calendar.current.date(from: DateComponents(year: 2022, month: 12))!
-        )
+        let dates: [DateComponents] = [
+            .init(year: 2020, month: 1),
+            .init(year: 2021, month: 6),
+            .init(year: 2022, month: 12)
+        ]
+
+        let dateObservable = Observable.from(dates.compactMap(Calendar.current.date(from:)))
 
         CalendarHeaderViewModel(dateObservable: dateObservable)
             .titleObservable
