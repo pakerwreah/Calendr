@@ -12,8 +12,8 @@ class CalendarHeaderViewModel {
     let titleObservable: Observable<String>
 
     init(dateObservable: Observable<Date>) {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMM yyyy"
+        let formatter = DateFormatter(format: "MMM yyyy")
+
         titleObservable = dateObservable.map(formatter.string(from:))
     }
 

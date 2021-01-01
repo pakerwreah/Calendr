@@ -27,6 +27,9 @@
 		347D0FF825954975002451EC /* CalendarCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 347D0FF725954975002451EC /* CalendarCellViewModel.swift */; };
 		347D0FFE259566B5002451EC /* CalendarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 347D0FFD259566B5002451EC /* CalendarViewModel.swift */; };
 		34924CD6259FB814009C3450 /* CalendarExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34924CD5259FB814009C3450 /* CalendarExtensionTests.swift */; };
+		34924CE4259FCB36009C3450 /* DateSelectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34924CE3259FCB36009C3450 /* DateSelectorTests.swift */; };
+		34924CE8259FCC95009C3450 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34924CE7259FCC95009C3450 /* Date.swift */; };
+		34924CEE259FD064009C3450 /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34924CED259FD064009C3450 /* DateFormatter.swift */; };
 		34A4C3E925963FB200D0F949 /* NSStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A4C3E825963FB200D0F949 /* NSStackView.swift */; };
 		34F128D125968044007DF31C /* Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F128D025968044007DF31C /* Label.swift */; };
 		34F128DD259690C8007DF31C /* CALayer+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F128DC259690C8007DF31C /* CALayer+Rx.swift */; };
@@ -74,6 +77,9 @@
 		347D0FF725954975002451EC /* CalendarCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarCellViewModel.swift; sourceTree = "<group>"; };
 		347D0FFD259566B5002451EC /* CalendarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewModel.swift; sourceTree = "<group>"; };
 		34924CD5259FB814009C3450 /* CalendarExtensionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarExtensionTests.swift; sourceTree = "<group>"; };
+		34924CE3259FCB36009C3450 /* DateSelectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateSelectorTests.swift; sourceTree = "<group>"; };
+		34924CE7259FCC95009C3450 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
+		34924CED259FD064009C3450 /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
 		34A4C3E825963FB200D0F949 /* NSStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSStackView.swift; sourceTree = "<group>"; };
 		34F128D025968044007DF31C /* Label.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Label.swift; sourceTree = "<group>"; };
 		34F128DC259690C8007DF31C /* CALayer+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CALayer+Rx.swift"; sourceTree = "<group>"; };
@@ -127,6 +133,7 @@
 			children = (
 				34305C3125994D5500AB381D /* TestableObserver.swift */,
 				34305C3725994DED00AB381D /* TestScheduler.swift */,
+				34924CE7259FCC95009C3450 /* Date.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -183,6 +190,7 @@
 				347D0FAA25952F8A002451EC /* Info.plist */,
 				34924CD5259FB814009C3450 /* CalendarExtensionTests.swift */,
 				34305BD625993E4A00AB381D /* CalendarHeaderViewModelTests.swift */,
+				34924CE3259FCB36009C3450 /* DateSelectorTests.swift */,
 				34305C3025994D4500AB381D /* Extensions */,
 			);
 			path = CalendrTests;
@@ -221,6 +229,7 @@
 				3430ED02259634E00045DA53 /* NSStackView+Rx.swift */,
 				347D0FE6259544B4002451EC /* NSView+Layout.swift */,
 				34305BCA25992A4E00AB381D /* Rx+Helpers.swift */,
+				34924CED259FD064009C3450 /* DateFormatter.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -449,6 +458,7 @@
 				34702168259E761100827AE7 /* Calendar.swift in Sources */,
 				347D0FF225954920002451EC /* EventModel.swift in Sources */,
 				34A4C3E925963FB200D0F949 /* NSStackView.swift in Sources */,
+				34924CEE259FD064009C3450 /* DateFormatter.swift in Sources */,
 				3470214A259DFF3000827AE7 /* CalendarServiceProvider.swift in Sources */,
 				3408D13E25982DB400CF1425 /* DateSelector.swift in Sources */,
 				34F128E52597C1BB007DF31C /* WeekDayCellViewModel.swift in Sources */,
@@ -462,7 +472,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				34305BD725993E4A00AB381D /* CalendarHeaderViewModelTests.swift in Sources */,
+				34924CE8259FCC95009C3450 /* Date.swift in Sources */,
 				34924CD6259FB814009C3450 /* CalendarExtensionTests.swift in Sources */,
+				34924CE4259FCB36009C3450 /* DateSelectorTests.swift in Sources */,
 				34305C3825994DED00AB381D /* TestScheduler.swift in Sources */,
 				34305C3225994D5500AB381D /* TestableObserver.swift in Sources */,
 			);
