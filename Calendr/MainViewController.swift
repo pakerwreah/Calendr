@@ -36,8 +36,6 @@ class MainViewController: NSViewController {
         calendarView = CalendarView(viewModel: calendarViewModel)
 
         super.init(nibName: nil, bundle: nil)
-
-        setUpBindings()
     }
 
     override func loadView() {
@@ -53,12 +51,9 @@ class MainViewController: NSViewController {
     }
 
     override func viewDidLoad() {
-        calendarService.requestAccess()
-        initialDateSubject.onNext(Date())
-    }
+        setUpBindings()
 
-    override func viewDidDisappear() {
-        initialDateSubject.onNext(Date())
+        calendarService.requestAccess()
     }
 
     private func setUpBindings() {
@@ -66,6 +61,16 @@ class MainViewController: NSViewController {
             .asObservable()
             .bind(to: selectedDateSubject)
             .disposed(by: disposeBag)
+
+        Observable.merge(
+            rx.sentMessage(#selector(NSViewController.viewDidLoad)),
+            rx.sentMessage(#selector(NSViewController.viewWillAppear)),
+            rx.sentMessage(#selector(NSViewController.viewDidDisappear))
+        )
+        .toVoid()
+        .map { Date() }
+        .bind(to: initialDateSubject)
+        .disposed(by: disposeBag)
     }
 
     private func makeDateSelector() -> DateSelector {

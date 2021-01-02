@@ -40,6 +40,9 @@ class DateSelector {
                 Calendar.current.date(byAdding: component, value: value, to: date)
             }
         )
+        .distinctUntilChanged { a, b in
+            Calendar.current.isDate(a, inSameDayAs: b)
+        }
         .bind(to: selectedSubject)
         .disposed(by: disposeBag)
     }

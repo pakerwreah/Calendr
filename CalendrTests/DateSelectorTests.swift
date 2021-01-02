@@ -17,6 +17,7 @@ class DateSelectorTests: XCTestCase {
 
     private let formatter = DateFormatter(format: "yyyy-MM-dd")
 
+    private let initial = PublishSubject<Date>()
     private let reset = PublishSubject<Void>()
     private let prevDay = PublishSubject<Void>()
     private let nextDay = PublishSubject<Void>()
@@ -29,7 +30,7 @@ class DateSelectorTests: XCTestCase {
 
     private lazy var selector =
         DateSelector(
-            initial: .of(.make(year: 2021, month: 1, day: 1)),
+            initial: initial,
             reset: reset,
             prevDay: prevDay,
             nextDay: nextDay,
@@ -45,12 +46,29 @@ class DateSelectorTests: XCTestCase {
             .map(formatter.string(from:))
             .bind(to: observer)
             .disposed(by: disposeBag)
+
+        initial.onNext(.make(year: 2021, month: 1, day: 1))
+    }
+
+    func testInitial() {
+        initial.onNext(.make(year: 2025, month: 1, day: 1))
+
+        XCTAssertEqual(observer.values.last, "2025-01-01")
     }
 
     func testReset() {
+        nextDay.onNext(())
         reset.onNext(())
 
-        XCTAssertEqual(observer.values.last, "2021-01-01")
+        XCTAssertEqual(observer.values, ["2021-01-01", "2021-01-02", "2021-01-01"])
+    }
+
+    func testDistinct() {
+        nextDay.onNext(())
+        initial.onNext(.make(year: 2021, month: 1, day: 2))
+        reset.onNext(())
+
+        XCTAssertEqual(observer.values, ["2021-01-01", "2021-01-02"])
     }
 
     func testPrevDay() {
