@@ -18,6 +18,7 @@ class DateSelectorTests: XCTestCase {
     private let formatter = DateFormatter(format: "yyyy-MM-dd")
 
     private let initial = PublishSubject<Date>()
+    private let selected = PublishSubject<Date>()
     private let reset = PublishSubject<Void>()
     private let prevDay = PublishSubject<Void>()
     private let nextDay = PublishSubject<Void>()
@@ -28,9 +29,10 @@ class DateSelectorTests: XCTestCase {
 
     private lazy var observer = testScheduler.createObserver(String.self)
 
-    private lazy var selector =
-        DateSelector(
+    override func setUp() {
+        let selector = DateSelector(
             initial: initial,
+            selected: selected,
             reset: reset,
             prevDay: prevDay,
             nextDay: nextDay,
@@ -40,7 +42,11 @@ class DateSelectorTests: XCTestCase {
             nextMonth: nextMonth
         )
 
-    override func setUp() {
+        selector
+            .asObservable()
+            .bind(to: selected)
+            .disposed(by: disposeBag)
+
         selector
             .asObservable()
             .map(formatter.string(from:))

@@ -17,20 +17,20 @@ class MainViewController: NSViewController {
     private let calendarView: CalendarView
 
     // ViewModels
-    private let calendarHeaderViewModel: CalendarHeaderViewModel
+    private let headerViewModel: CalendarHeaderViewModel
     private let calendarViewModel: CalendarViewModel
 
     // -
-    private lazy var dateSelector = makeDateSelector()
     private let initialDateSubject = PublishSubject<Date>()
     private let selectedDateSubject = PublishSubject<Date>()
+
     private let calendarService = CalendarServiceProvider()
 
     private let disposeBag = DisposeBag()
 
     init() {
-        calendarHeaderViewModel = CalendarHeaderViewModel(dateObservable: selectedDateSubject)
-        calendarHeaderView = CalendarHeaderView(viewModel: calendarHeaderViewModel)
+        headerViewModel = CalendarHeaderViewModel(dateObservable: selectedDateSubject)
+        calendarHeaderView = CalendarHeaderView(viewModel: headerViewModel)
 
         calendarViewModel = CalendarViewModel(dateObservable: selectedDateSubject, calendarService: calendarService)
         calendarView = CalendarView(viewModel: calendarViewModel)
@@ -57,7 +57,7 @@ class MainViewController: NSViewController {
     }
 
     private func setUpBindings() {
-        dateSelector
+        makeDateSelector()
             .asObservable()
             .bind(to: selectedDateSubject)
             .disposed(by: disposeBag)
@@ -87,13 +87,14 @@ class MainViewController: NSViewController {
 
         let dateSelector = DateSelector(
             initial: initialDateSubject,
-            reset: calendarHeaderView.resetBtnObservable,
+            selected: selectedDateSubject,
+            reset: headerViewModel.resetBtnObservable,
             prevDay: keyLeftObservable,
             nextDay: keyRightObservable,
             prevWeek: keyUpObservable,
             nextWeek: keyDownObservable,
-            prevMonth: calendarHeaderView.prevBtnObservable,
-            nextMonth: calendarHeaderView.nextBtnObservable
+            prevMonth: headerViewModel.prevBtnObservable,
+            nextMonth: headerViewModel.nextBtnObservable
         )
 
         return dateSelector

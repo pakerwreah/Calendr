@@ -8,12 +8,10 @@
 import RxSwift
 
 class DateSelector {
-    private let selectedSubject = PublishSubject<Date>()
-    private lazy var dateObservable = selectedSubject.asObservable()
-
-    private let disposeBag = DisposeBag()
+    private let dateObservable: Observable<Date>
 
     init(initial: Observable<Date>,
+         selected: Observable<Date>,
          reset: Observable<Void>,
          prevDay: Observable<Void>,
          nextDay: Observable<Void>,
@@ -22,7 +20,7 @@ class DateSelector {
          prevMonth: Observable<Void>,
          nextMonth: Observable<Void>) {
 
-        Observable.merge(
+        dateObservable = Observable.merge(
             initial,
             reset.withLatestFrom(initial),
             Observable<(Calendar.Component, Int)>.merge(
@@ -33,7 +31,7 @@ class DateSelector {
                 prevMonth.map { (.month, -1) },
                 nextMonth.map { (.month, 1) }
             )
-            .withLatestFrom(dateObservable) {
+            .withLatestFrom(selected) {
                 ($0.0, $0.1, $1)
             }
             .compactMap { component, value, date in
@@ -43,8 +41,7 @@ class DateSelector {
         .distinctUntilChanged { a, b in
             Calendar.current.isDate(a, inSameDayAs: b)
         }
-        .bind(to: selectedSubject)
-        .disposed(by: disposeBag)
+        .share(replay: 1)
     }
 
     func asObservable() -> Observable<Date> {

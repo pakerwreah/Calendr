@@ -15,18 +15,17 @@ class CalendarHeaderView: NSView {
     private let resetBtn = NSButton()
     private let nextBtn = NSButton()
 
-    let prevBtnObservable: Observable<Void>
-    let resetBtnObservable: Observable<Void>
-    let nextBtnObservable: Observable<Void>
-
     private let disposeBag = DisposeBag()
 
     init(viewModel: CalendarHeaderViewModel) {
-        prevBtnObservable = prevBtn.rx.tap.asObservable()
-        resetBtnObservable = resetBtn.rx.tap.asObservable()
-        nextBtnObservable = nextBtn.rx.tap.asObservable()
 
         super.init(frame: .zero)
+
+        disposeBag.insert(
+            prevBtn.rx.tap.bind(to: viewModel.prevBtnObserver),
+            resetBtn.rx.tap.bind(to: viewModel.resetBtnObserver),
+            nextBtn.rx.tap.bind(to: viewModel.nextBtnObserver)
+        )
 
         configureLayout()
 

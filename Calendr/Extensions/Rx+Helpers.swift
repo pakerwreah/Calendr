@@ -12,3 +12,9 @@ extension ObservableType {
         return map { _ in () }
     }
 }
+
+extension PublishSubject {
+    static func pipe() -> (input: AnyObserver<Element>, output: Observable<Element>) {
+        { ($0.asObserver(), $0.asObservable()) }(Self.init())
+    }
+}
