@@ -8,21 +8,23 @@
 import RxSwift
 
 class DateSelector {
-    private let dateObservable: Observable<Date>
+    private let selectedSubject = PublishSubject<Date>()
+    private lazy var dateObservable = selectedSubject.asObservable()
+
+    private let disposeBag = DisposeBag()
 
     init(initial: Observable<Date>,
-         reset: Observable<Void> = .empty(),
-         prevDay: Observable<Void> = .empty(),
-         nextDay: Observable<Void> = .empty(),
-         prevWeek: Observable<Void> = .empty(),
-         nextWeek: Observable<Void> = .empty(),
-         prevMonth: Observable<Void> = .empty(),
-         nextMonth: Observable<Void> = .empty()) {
+         reset: Observable<Void>,
+         prevDay: Observable<Void>,
+         nextDay: Observable<Void>,
+         prevWeek: Observable<Void>,
+         nextWeek: Observable<Void>,
+         prevMonth: Observable<Void>,
+         nextMonth: Observable<Void>) {
 
-        let calendar = Calendar.current
-
-        dateObservable = Observable.merge(
-            reset.map { Date() },
+        Observable.merge(
+            initial,
+            reset.withLatestFrom(initial),
             Observable<(Calendar.Component, Int)>.merge(
                 prevDay.map { (.day, -1) },
                 nextDay.map { (.day, 1) },
@@ -31,13 +33,15 @@ class DateSelector {
                 prevMonth.map { (.month, -1) },
                 nextMonth.map { (.month, 1) }
             )
-            .withLatestFrom(initial) {
+            .withLatestFrom(dateObservable) {
                 ($0.0, $0.1, $1)
             }
             .compactMap { component, value, date in
-                calendar.date(byAdding: component, value: value, to: date)
+                Calendar.current.date(byAdding: component, value: value, to: date)
             }
         )
+        .bind(to: selectedSubject)
+        .disposed(by: disposeBag)
     }
 
     func asObservable() -> Observable<Date> {

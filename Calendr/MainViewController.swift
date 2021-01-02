@@ -11,33 +11,33 @@ import RxCocoa
 
 class MainViewController: NSViewController {
 
+    // Views
     private let mainStackView = NSStackView(.vertical)
     private let calendarHeaderView: CalendarHeaderView
     private let calendarView: CalendarView
 
+    // ViewModels
     private let calendarHeaderViewModel: CalendarHeaderViewModel
     private let calendarViewModel: CalendarViewModel
 
+    // -
+    private lazy var dateSelector = makeDateSelector()
+    private let initialDateSubject = PublishSubject<Date>()
+    private let selectedDateSubject = PublishSubject<Date>()
     private let calendarService = CalendarServiceProvider()
-
-    private let dateSubject = BehaviorSubject<Date>(value: Date())
 
     private let disposeBag = DisposeBag()
 
     init() {
-        let dateObservable = dateSubject.asObservable()
-
-        calendarHeaderViewModel = CalendarHeaderViewModel(dateObservable: dateObservable)
+        calendarHeaderViewModel = CalendarHeaderViewModel(dateObservable: selectedDateSubject)
         calendarHeaderView = CalendarHeaderView(viewModel: calendarHeaderViewModel)
 
-        calendarViewModel = CalendarViewModel(dateObservable: dateObservable, calendarService: calendarService)
+        calendarViewModel = CalendarViewModel(dateObservable: selectedDateSubject, calendarService: calendarService)
         calendarView = CalendarView(viewModel: calendarViewModel)
 
         super.init(nibName: nil, bundle: nil)
 
         setUpBindings()
-
-        calendarService.requestAccess()
     }
 
     override func loadView() {
@@ -52,11 +52,23 @@ class MainViewController: NSViewController {
         mainStackView.addArrangedSubview(calendarView)
     }
 
-    func setUpBindings() {
-        let resetObservable = Observable.merge(
-            rx.sentMessage(#selector(NSViewController.viewWillAppear)).toVoid(),
-            calendarHeaderView.resetBtnObservable
-        )
+    override func viewDidLoad() {
+        calendarService.requestAccess()
+        initialDateSubject.onNext(Date())
+    }
+
+    override func viewDidDisappear() {
+        initialDateSubject.onNext(Date())
+    }
+
+    private func setUpBindings() {
+        dateSelector
+            .asObservable()
+            .bind(to: selectedDateSubject)
+            .disposed(by: disposeBag)
+    }
+
+    private func makeDateSelector() -> DateSelector {
 
         let keyObservable = rx.sentMessage(#selector(NSViewController.keyUp(with:)))
             .compactMap { $0.first as? NSEvent }
@@ -68,9 +80,9 @@ class MainViewController: NSViewController {
         let keyDownObservable = keyObservable.filter { $0 == 125 }.toVoid()
         let keyUpObservable = keyObservable.filter { $0 == 126 }.toVoid()
 
-        DateSelector(
-            initial: dateSubject,
-            reset: resetObservable,
+        let dateSelector = DateSelector(
+            initial: initialDateSubject,
+            reset: calendarHeaderView.resetBtnObservable,
             prevDay: keyLeftObservable,
             nextDay: keyRightObservable,
             prevWeek: keyUpObservable,
@@ -78,9 +90,8 @@ class MainViewController: NSViewController {
             prevMonth: calendarHeaderView.prevBtnObservable,
             nextMonth: calendarHeaderView.nextBtnObservable
         )
-        .asObservable()
-        .bind(to: dateSubject)
-        .disposed(by: disposeBag)
+
+        return dateSelector
     }
 
     required init?(coder: NSCoder) {
