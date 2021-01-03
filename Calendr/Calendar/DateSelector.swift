@@ -7,7 +7,6 @@
 
 import RxSwift
 
-// FIXME: ⚠️ Reentrancy anomaly was detected. ¯\_(ツ)_/¯
 class DateSelector {
     private let dateObservable: Observable<Date>
 

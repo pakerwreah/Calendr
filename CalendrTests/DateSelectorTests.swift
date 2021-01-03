@@ -30,20 +30,31 @@ class DateSelectorTests: XCTestCase {
     private lazy var observer = testScheduler.createObserver(String.self)
 
     override func setUp() {
+        // ⚠️ Reentrancy anomaly was detected. ¯\_(ツ)_/¯
+        // Normally we only need to .observeOn(MainScheduler.asyncInstance)
+        // but since we're testing, we need to sync the flow to get the output
+        // It still works without this "fix", but I don't feel comfortable with the warning
+
+        let dispatchGroup = DispatchGroup()
+        let wait = { (_: Any) in dispatchGroup.wait() }
+
         let selector = DateSelector(
-            initial: initial,
+            initial: initial.do(onNext: wait),
             selected: selected,
-            reset: reset,
-            prevDay: prevDay,
-            nextDay: nextDay,
-            prevWeek: prevWeek,
-            nextWeek: nextWeek,
-            prevMonth: prevMonth,
-            nextMonth: nextMonth
+            reset: reset.do(onNext: wait),
+            prevDay: prevDay.do(onNext: wait),
+            nextDay: nextDay.do(onNext: wait),
+            prevWeek: prevWeek.do(onNext: wait),
+            nextWeek: nextWeek.do(onNext: wait),
+            prevMonth: prevMonth.do(onNext: wait),
+            nextMonth: nextMonth.do(onNext: wait)
         )
 
         selector
             .asObservable()
+            .do(onNext: { _ in dispatchGroup.enter() })
+            .delay(.milliseconds(1), scheduler: SerialDispatchQueueScheduler(qos: .default))
+            .do(afterNext: { _ in dispatchGroup.leave() })
             .bind(to: selected)
             .disposed(by: disposeBag)
 
