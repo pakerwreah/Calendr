@@ -7,6 +7,7 @@
 
 import RxSwift
 
+// FIXME: ⚠️ Reentrancy anomaly was detected. ¯\_(ツ)_/¯
 class DateSelector {
     private let dateObservable: Observable<Date>
 
@@ -22,6 +23,7 @@ class DateSelector {
 
         dateObservable = Observable.merge(
             initial,
+            selected,
             reset.withLatestFrom(initial),
             Observable<(Calendar.Component, Int)>.merge(
                 prevDay.map { (.day, -1) },

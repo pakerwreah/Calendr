@@ -62,16 +62,23 @@ class DateSelectorTests: XCTestCase {
         XCTAssertEqual(observer.values.last, "2025-01-01")
     }
 
+    func testSelect() {
+        selected.onNext(.make(year: 2025, month: 1, day: 1))
+
+        XCTAssertEqual(observer.values.last, "2025-01-01")
+    }
+
     func testReset() {
-        nextDay.onNext(())
+        selected.onNext(.make(year: 2025, month: 1, day: 1))
         reset.onNext(())
 
-        XCTAssertEqual(observer.values, ["2021-01-01", "2021-01-02", "2021-01-01"])
+        XCTAssertEqual(observer.values, ["2021-01-01", "2025-01-01", "2021-01-01"])
     }
 
     func testDistinct() {
         nextDay.onNext(())
         initial.onNext(.make(year: 2021, month: 1, day: 2))
+        selected.onNext(.make(year: 2021, month: 1, day: 2))
         reset.onNext(())
 
         XCTAssertEqual(observer.values, ["2021-01-01", "2021-01-02"])
@@ -132,6 +139,7 @@ class DateSelectorTests: XCTestCase {
             XCTAssertNotEqual(current, previous)
         }
 
+        XCTAssertEqual(observer.values.count, 7)
         XCTAssertEqual(observer.values.last, "2021-01-01")
     }
 

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct CalendarModel {
+struct CalendarModel: Equatable {
     let identifier: String
     let title: String
     let color: CGColor

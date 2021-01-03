@@ -13,16 +13,19 @@ class CalendarView: NSView {
     private let cellSize: CGFloat = 25
     private let gridView = NSGridView(numberOfColumns: 7, rows: 7)
 
-    private let disposeBag = DisposeBag()
+    init(viewModel: CalendarViewModel,
+         hoverObserver: AnyObserver<(date: Date, isHovered: Bool)>,
+         clickObserver: AnyObserver<Date>) {
 
-    init(viewModel: CalendarViewModel) {
         super.init(frame: .zero)
 
         configureLayout()
 
         addWeekendLayers()
 
-        setUpBindings(with: viewModel)
+        setUpBindings(with: viewModel,
+                      hoverObserver: hoverObserver,
+                      clickObserver: clickObserver)
     }
 
     private func configureLayout() {
@@ -55,7 +58,9 @@ class CalendarView: NSView {
         }
     }
 
-    private func setUpBindings(with viewModel: CalendarViewModel) {
+    private func setUpBindings(with viewModel: CalendarViewModel,
+                               hoverObserver: AnyObserver<(date: Date, isHovered: Bool)>,
+                               clickObserver: AnyObserver<Date>) {
         for day in 0..<7 {
             let weekDayViewModel = WeekDayCellViewModel(day: day)
             let cellView = WeekDayCellView(viewModel: weekDayViewModel)
@@ -63,10 +68,17 @@ class CalendarView: NSView {
         }
 
         for day in 0..<42 {
-            let viewModel = viewModel.asObservable()
-                .observeOn(MainScheduler.asyncInstance)
+            let cellViewModel = viewModel
+                .asObservable()
                 .map(\.[day])
-            let cellView = CalendarCellView(viewModel: viewModel)
+                .distinctUntilChanged()
+                .observeOn(MainScheduler.asyncInstance)
+
+            let cellView = CalendarCellView(
+                viewModel: cellViewModel,
+                hoverObserver: hoverObserver,
+                clickObserver: clickObserver
+            )
             gridView.cell(atColumnIndex: day % 7, rowIndex: 1 + day / 7).contentView = cellView
         }
     }

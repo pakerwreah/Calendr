@@ -22,6 +22,14 @@ class Label: NSTextView {
         backgroundColor = .clear
     }
 
+    override func hitTest(_ point: NSPoint) -> NSView? {
+        nil // prevents click and helps prevent cursor change
+    }
+
+    override func mouseMoved(with event: NSEvent) {
+        // prevents changing cursor
+    }
+
     override var intrinsicContentSize: NSSize {
         NSSize(width: NSView.noIntrinsicMetric, height: (font?.pointSize ?? 0) + 4)
     }

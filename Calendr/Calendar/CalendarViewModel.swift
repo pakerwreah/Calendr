@@ -10,7 +10,9 @@ import RxSwift
 class CalendarViewModel {
     private let cellViewModelsObservable: Observable<[CalendarCellViewModel]>
 
-    init(dateObservable: Observable<Date>, calendarService: CalendarServiceProviding) {
+    init(dateObservable: Observable<Date>,
+         hoverObservable: Observable<(date: Date, isHovered: Bool)>,
+         calendarService: CalendarServiceProviding) {
 
         let calendar = Calendar.current
 
@@ -38,10 +40,14 @@ class CalendarViewModel {
         }
         .startWith([])
 
+        let hoverObservable = hoverObservable
+            .debounce(.milliseconds(1), scheduler: MainScheduler.instance)
+            .startWith((date: Date(), isHovered: false))
+
         cellViewModelsObservable = Observable.combineLatest(
-            dateObservable, eventsObservable
+            dateObservable, hoverObservable, eventsObservable
         )
-        .map { selectedDate, events in
+        .map { selectedDate, hoveredDate, events in
 
             let currentDate = Date()
             let firstDayOfMonth = calendar.dateInterval(of: .month, for: selectedDate)!.start
@@ -52,17 +58,18 @@ class CalendarViewModel {
 
             for day in 0..<42 {
                 let date = calendar.date(byAdding: .day, value: day, to: start)!
-                let day = calendar.component(.day, from: date)
                 let inMonth = calendar.isDate(date, equalTo: firstDayOfMonth, toGranularity: .month)
                 let isToday = calendar.isDate(date, inSameDayAs: currentDate)
                 let isSelected = calendar.isDate(date, inSameDayAs: selectedDate)
+                let isHovered = hoveredDate.isHovered && calendar.isDate(date, inSameDayAs: hoveredDate.date)
                 let events = events.filter {
                     calendar.isDate(date, in: ($0.start, $0.end), toGranularity: .day)
                 }
-                let viewModel = CalendarCellViewModel(day: day,
+                let viewModel = CalendarCellViewModel(date: date,
                                                       inMonth: inMonth,
                                                       isToday: isToday,
                                                       isSelected: isSelected,
+                                                      isHovered: isHovered,
                                                       events: events)
                 cellViewModels.append(viewModel)
             }

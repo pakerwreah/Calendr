@@ -21,12 +21,6 @@ class CalendarHeaderView: NSView {
 
         super.init(frame: .zero)
 
-        disposeBag.insert(
-            prevBtn.rx.tap.bind(to: viewModel.prevBtnObserver),
-            resetBtn.rx.tap.bind(to: viewModel.resetBtnObserver),
-            nextBtn.rx.tap.bind(to: viewModel.nextBtnObserver)
-        )
-
         configureLayout()
 
         setUpBindings(with: viewModel)
@@ -58,6 +52,13 @@ class CalendarHeaderView: NSView {
     }
 
     private func setUpBindings(with viewModel: CalendarHeaderViewModel) {
+
+        disposeBag.insert(
+            prevBtn.rx.tap.bind(to: viewModel.prevBtnObserver),
+            resetBtn.rx.tap.bind(to: viewModel.resetBtnObserver),
+            nextBtn.rx.tap.bind(to: viewModel.nextBtnObserver)
+        )
+
         viewModel
             .titleObservable
             .bind(to: label.rx.string)

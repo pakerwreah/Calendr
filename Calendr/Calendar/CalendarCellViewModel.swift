@@ -7,17 +7,18 @@
 
 import Cocoa
 
-struct CalendarCellViewModel {
-    let day: Int
+struct CalendarCellViewModel: Equatable {
+    let date: Date
     let inMonth: Bool
     let isToday: Bool
     let isSelected: Bool
+    let isHovered: Bool
     let events: [EventModel]
 }
 
 extension CalendarCellViewModel {
     var text: String {
-        "\(day)"
+        "\(Calendar.current.component(.day, from: date))"
     }
 
     var alpha: CGFloat {
@@ -25,12 +26,19 @@ extension CalendarCellViewModel {
     }
 
     var borderColor: CGColor {
-        if isSelected {
-            return NSColor.controlAccentColor.cgColor
-        } else if isToday {
-            return NSColor.gray.cgColor
+        let color: NSColor
+
+        if isToday {
+            color = .controlAccentColor
+        } else if isSelected {
+            color = .lightGray
+        } else if isHovered {
+            color = .placeholderTextColor
+        } else {
+            color = .clear
         }
-        return NSColor.clear.cgColor
+
+        return color.cgColor
     }
 
     var dots: [CGColor] {

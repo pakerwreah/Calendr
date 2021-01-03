@@ -21,19 +21,27 @@ class MainViewController: NSViewController {
     private let calendarViewModel: CalendarViewModel
 
     // -
-    private let initialDateSubject = PublishSubject<Date>()
-    private let selectedDateSubject = PublishSubject<Date>()
+    private let (clickObserver, clickObservable) = PublishSubject<Date>.pipe()
+    private let (initialDateObserver, initialDateObservable) = PublishSubject<Date>.pipe()
+    private let (selectedDateObserver, selectedDateObservable) = PublishSubject<Date>.pipe()
 
     private let calendarService = CalendarServiceProvider()
 
     private let disposeBag = DisposeBag()
 
     init() {
-        headerViewModel = CalendarHeaderViewModel(dateObservable: selectedDateSubject)
+        headerViewModel = CalendarHeaderViewModel(dateObservable: selectedDateObservable)
         calendarHeaderView = CalendarHeaderView(viewModel: headerViewModel)
 
-        calendarViewModel = CalendarViewModel(dateObservable: selectedDateSubject, calendarService: calendarService)
-        calendarView = CalendarView(viewModel: calendarViewModel)
+        let (hoverObserver, hoverObservable) = PublishSubject<(date: Date, isHovered: Bool)>.pipe()
+
+        calendarViewModel = CalendarViewModel(dateObservable: selectedDateObservable,
+                                              hoverObservable: hoverObservable,
+                                              calendarService: calendarService)
+
+        calendarView = CalendarView(viewModel: calendarViewModel,
+                                    hoverObserver: hoverObserver,
+                                    clickObserver: clickObserver)
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -59,7 +67,8 @@ class MainViewController: NSViewController {
     private func setUpBindings() {
         makeDateSelector()
             .asObservable()
-            .bind(to: selectedDateSubject)
+            .observeOn(MainScheduler.asyncInstance)
+            .bind(to: selectedDateObserver)
             .disposed(by: disposeBag)
 
         Observable.merge(
@@ -69,8 +78,12 @@ class MainViewController: NSViewController {
         )
         .toVoid()
         .map { Date() }
-        .bind(to: initialDateSubject)
+        .bind(to: initialDateObserver)
         .disposed(by: disposeBag)
+
+        clickObservable
+            .bind(to: selectedDateObserver)
+            .disposed(by: disposeBag)
     }
 
     private func makeDateSelector() -> DateSelector {
@@ -85,9 +98,10 @@ class MainViewController: NSViewController {
         let keyDownObservable = keyObservable.filter { $0 == 125 }.toVoid()
         let keyUpObservable = keyObservable.filter { $0 == 126 }.toVoid()
 
+
         let dateSelector = DateSelector(
-            initial: initialDateSubject,
-            selected: selectedDateSubject,
+            initial: initialDateObservable,
+            selected: selectedDateObservable,
             reset: headerViewModel.resetBtnObservable,
             prevDay: keyLeftObservable,
             nextDay: keyRightObservable,

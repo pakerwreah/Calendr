@@ -16,9 +16,12 @@ protocol CalendarServiceProviding {
 }
 
 class CalendarServiceProvider: CalendarServiceProviding {
+
     private let store = EKEventStore()
-    private let changeSubject = PublishSubject<Void>()
+
     private let disposeBag = DisposeBag()
+
+    private let changeObserver: AnyObserver<Void>
 
     let changeObservable: Observable<Void>
 
@@ -27,18 +30,18 @@ class CalendarServiceProvider: CalendarServiceProviding {
     }
 
     init() {
-        changeObservable = changeSubject.asObservable()
+        (changeObserver, changeObservable) = PublishSubject<Void>.pipe()
 
         NotificationCenter.default.rx
             .notification(.EKEventStoreChanged, object: store)
             .toVoid()
-            .bind(to: changeSubject)
+            .bind(to: changeObserver)
             .disposed(by: disposeBag)
     }
 
     func requestAccess() {
         if isAuthorized {
-            changeSubject.onNext(())
+            changeObserver.onNext(())
         } else {
             store.requestAccess(to: .event) { granted, error in
 

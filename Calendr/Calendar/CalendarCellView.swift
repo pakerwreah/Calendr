@@ -18,14 +18,19 @@ class CalendarCellView: NSView {
 
     private let disposeBag = DisposeBag()
 
-    init(viewModel: Observable<CalendarCellViewModel>) {
+    init(viewModel: Observable<CalendarCellViewModel>,
+         hoverObserver: AnyObserver<(date: Date, isHovered: Bool)>,
+         clickObserver: AnyObserver<Date>) {
+
         super.init(frame: .zero)
 
         forAutoLayout()
 
         configureLayout()
 
-        setUpBindings(with: viewModel)
+        setUpBindings(with: viewModel,
+                      hoverObserver: hoverObserver,
+                      clickObserver: clickObserver)
     }
 
     private func configureLayout() {
@@ -54,7 +59,9 @@ class CalendarCellView: NSView {
         contentStackView.center(in: self)
     }
 
-    private func setUpBindings(with viewModel: Observable<CalendarCellViewModel>) {
+    private func setUpBindings(with viewModel: Observable<CalendarCellViewModel>,
+                               hoverObserver: AnyObserver<(date: Date, isHovered: Bool)>,
+                               clickObserver: AnyObserver<Date>) {
         viewModel
             .map(\.text)
             .bind(to: label.rx.string)
@@ -75,6 +82,24 @@ class CalendarCellView: NSView {
             .map { $0.map(Self.makeEventDot) }
             .bind(to: eventsStackView.rx.arrangedSubviews)
             .disposed(by: disposeBag)
+
+        rx.sentMessage(#selector(NSView.mouseUp))
+            .withLatestFrom(viewModel.map(\.date))
+            .bind(to: clickObserver)
+            .disposed(by: disposeBag)
+
+        Observable.merge(
+            rx.sentMessage(#selector(NSView.mouseEntered)).toVoid().map { true },
+            rx.sentMessage(#selector(NSView.mouseExited)).toVoid().map { false }
+        )
+        .withLatestFrom(viewModel.map(\.date)) { ($1, $0) }
+        .bind(to: hoverObserver)
+        .disposed(by: disposeBag)
+    }
+
+    override func updateTrackingAreas() {
+        trackingAreas.forEach(removeTrackingArea(_:))
+        addTrackingRect(bounds, owner: self, userData: nil, assumeInside: false)
     }
 
     private static func makeEventDot(color: CGColor) -> NSView {
