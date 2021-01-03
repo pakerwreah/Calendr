@@ -131,7 +131,7 @@ class DateSelectorTests: XCTestCase {
         XCTAssertEqual(observer.values.last, "2021-02-01")
     }
 
-    func testAll() {
+    func testSequence() {
         [
             prevDay,
             nextDay,
@@ -141,17 +141,18 @@ class DateSelectorTests: XCTestCase {
             nextMonth
         ]
         .forEach {
-            let previous = observer.values.last
-
             $0.onNext(())
-
-            let current = observer.values.last
-
-            XCTAssertNotEqual(current, previous)
         }
 
-        XCTAssertEqual(observer.values.count, 7)
-        XCTAssertEqual(observer.values.last, "2021-01-01")
+        XCTAssertEqual(observer.values, [
+            "2021-01-01", // initial
+            "2020-12-31", // prevDay
+            "2021-01-01", // nextDay
+            "2020-12-25", // prevWeek
+            "2021-01-01", // nextWeek
+            "2020-12-01", // prevMonth
+            "2021-01-01"  // nextMonth
+        ])
     }
 
 }
