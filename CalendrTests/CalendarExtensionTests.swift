@@ -24,7 +24,7 @@ class CalendarExtensionTests: XCTestCase {
         ]
 
         for (start, end, expected) in ranges {
-            let result = Calendar.current.isDate(date, in: (start, end), toGranularity: .day)
+            let result = Calendar.current.isDate(date, in: (start, end))
             XCTAssertEqual(expected, result, "\(start) - \(end))")
         }
     }

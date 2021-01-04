@@ -63,7 +63,7 @@ class CalendarViewModel {
                 let isSelected = calendar.isDate(date, inSameDayAs: selectedDate)
                 let isHovered = hoveredDate.isHovered && calendar.isDate(date, inSameDayAs: hoveredDate.date)
                 let events = events.filter {
-                    calendar.isDate(date, in: ($0.start, $0.end), toGranularity: .day)
+                    calendar.isDate(date, in: ($0.start, $0.end))
                 }
                 let viewModel = CalendarCellViewModel(date: date,
                                                       inMonth: inMonth,
