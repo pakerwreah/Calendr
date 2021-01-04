@@ -33,14 +33,17 @@ class MainViewController: NSViewController {
         headerViewModel = CalendarHeaderViewModel(dateObservable: selectedDateObservable)
         calendarHeaderView = CalendarHeaderView(viewModel: headerViewModel)
 
-        let (hoverObserver, hoverObservable) = PublishSubject<(date: Date, isHovered: Bool)>.pipe()
+        let hoverSubject = PublishSubject<(date: Date, isHovered: Bool)>()
+
+        // prevent getting 2 events while moving between cells
+        let hoverObservable = hoverSubject.debounce(.milliseconds(1), scheduler: MainScheduler.instance)
 
         calendarViewModel = CalendarViewModel(dateObservable: selectedDateObservable,
                                               hoverObservable: hoverObservable,
                                               calendarService: calendarService)
 
         calendarView = CalendarView(viewModel: calendarViewModel,
-                                    hoverObserver: hoverObserver,
+                                    hoverObserver: hoverSubject.asObserver(),
                                     clickObserver: clickObserver)
 
         super.init(nibName: nil, bundle: nil)

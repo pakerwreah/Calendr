@@ -16,52 +16,51 @@ class CalendarViewModel {
 
         let calendar = Calendar.current
 
+        // Calculate date range for current month
         let dateRangeObservable = dateObservable
-            .map { selectedDate -> (start: Date, end: Date) in
+            .compactMap { selectedDate in
+                calendar.dateInterval(of: .month, for: selectedDate)?.start
+            }
+            .distinctUntilChanged()
+            .map { firstDayOfMonth -> (start: Date, end: Date) in
 
-                let firstDayOfMonth = calendar.dateInterval(of: .month, for: selectedDate)!.start
                 let currentWeekDay = calendar.component(.weekday, from: firstDayOfMonth) - 1
                 let start = calendar.date(byAdding: .day, value: -currentWeekDay, to: firstDayOfMonth)!
                 let end = calendar.date(byAdding: .day, value: 42, to: start)!
 
-                return (start: start, end: end)
-
+                return (start, end)
             }
-            .distinctUntilChanged { a, b -> Bool in
-                a.start == b.start && a.end == b.end
-            }
+            .share(replay: 1)
 
-
+        // Get events for current date range
         let eventsObservable = Observable.combineLatest(
             dateRangeObservable, calendarService.changeObservable
         )
-        .map { dateRange, _ in
-            calendarService.events(from: dateRange.start, to: dateRange.end)
+        .map(\.0)
+        .map { start, end in
+            calendarService.events(from: start, to: end)
         }
-        .startWith([])
-
-        let hoverObservable = hoverObservable
-            .debounce(.milliseconds(1), scheduler: MainScheduler.instance)
-            .startWith((date: Date(), isHovered: false))
 
         cellViewModelsObservable = Observable.combineLatest(
-            dateObservable, hoverObservable, eventsObservable
+            dateObservable,
+            dateRangeObservable.map(\.start),
+            hoverObservable.toOptional().startWith(nil),
+            eventsObservable.startWith([])
         )
-        .map { selectedDate, hoveredDate, events in
+        .map { (selectedDate, start, hoveredDate, events) in
 
-            let currentDate = Date()
-            let firstDayOfMonth = calendar.dateInterval(of: .month, for: selectedDate)!.start
-            let currentWeekDay = calendar.component(.weekday, from: firstDayOfMonth) - 1
-            let start = calendar.date(byAdding: .day, value: -currentWeekDay, to: firstDayOfMonth)!
+            let today = Date()
 
             var cellViewModels = [CalendarCellViewModel]()
 
             for day in 0..<42 {
                 let date = calendar.date(byAdding: .day, value: day, to: start)!
-                let inMonth = calendar.isDate(date, equalTo: firstDayOfMonth, toGranularity: .month)
-                let isToday = calendar.isDate(date, inSameDayAs: currentDate)
+                let inMonth = calendar.isDate(date, equalTo: selectedDate, toGranularity: .month)
+                let isToday = calendar.isDate(date, inSameDayAs: today)
                 let isSelected = calendar.isDate(date, inSameDayAs: selectedDate)
-                let isHovered = hoveredDate.isHovered && calendar.isDate(date, inSameDayAs: hoveredDate.date)
+                let isHovered = hoveredDate.map { hoveredDate, isHovered in
+                    isHovered && calendar.isDate(hoveredDate, inSameDayAs: date)
+                } ?? false
                 let events = events.filter {
                     calendar.isDate(date, in: ($0.start, $0.end))
                 }
