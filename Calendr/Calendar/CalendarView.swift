@@ -61,10 +61,9 @@ class CalendarView: NSView {
     private func setUpBindings(with viewModel: CalendarViewModel,
                                hoverObserver: AnyObserver<(date: Date, isHovered: Bool)>,
                                clickObserver: AnyObserver<Date>) {
-        for day in 0..<7 {
-            let weekDayViewModel = WeekDayCellViewModel(day: day)
-            let cellView = WeekDayCellView(viewModel: weekDayViewModel)
-            gridView.cell(atColumnIndex: day, rowIndex: 0).contentView = cellView
+        for weekDay in 0..<7 {
+            let cellView = WeekDayCellView(weekDay: weekDay)
+            gridView.cell(atColumnIndex: weekDay, rowIndex: 0).contentView = cellView
         }
 
         for day in 0..<42 {

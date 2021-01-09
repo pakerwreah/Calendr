@@ -12,66 +12,125 @@ import RxCocoa
 class MainViewController: NSViewController {
 
     // Views
-    private let mainStackView = NSStackView(.vertical)
-    private let calendarHeaderView: CalendarHeaderView
     private let calendarView: CalendarView
+    private let titleLabel = Label()
+    private let prevBtn = NSButton()
+    private let resetBtn = NSButton()
+    private let nextBtn = NSButton()
+    private let calendarBtn = NSButton()
+    private let settingsBtn = NSButton()
 
     // ViewModels
-    private let headerViewModel: CalendarHeaderViewModel
     private let calendarViewModel: CalendarViewModel
 
-    // -
-    private let (clickObserver, clickObservable) = PublishSubject<Date>.pipe()
-    private let (initialDateObserver, initialDateObservable) = PublishSubject<Date>.pipe()
-    private let (selectedDateObserver, selectedDateObservable) = PublishSubject<Date>.pipe()
+    // Reactive
+    private let disposeBag = DisposeBag()
+    private let dateClick = PublishSubject<Date>()
+    private let initialDate = PublishSubject<Date>()
+    private let selectedDate = PublishSubject<Date>()
 
+    // Properties
     private let calendarService = CalendarServiceProvider()
 
-    private let disposeBag = DisposeBag()
-
     init() {
-        headerViewModel = CalendarHeaderViewModel(dateObservable: selectedDateObservable)
-        calendarHeaderView = CalendarHeaderView(viewModel: headerViewModel)
 
         let hoverSubject = PublishSubject<(date: Date, isHovered: Bool)>()
 
         // prevent getting 2 events while moving between cells
         let hoverObservable = hoverSubject.debounce(.milliseconds(1), scheduler: MainScheduler.instance)
 
-        calendarViewModel = CalendarViewModel(dateObservable: selectedDateObservable,
-                                              hoverObservable: hoverObservable,
-                                              calendarService: calendarService)
+        calendarViewModel = CalendarViewModel(
+            dateObservable: selectedDate,
+            hoverObservable: hoverObservable,
+            calendarService: calendarService
+        )
 
-        calendarView = CalendarView(viewModel: calendarViewModel,
-                                    hoverObserver: hoverSubject.asObserver(),
-                                    clickObserver: clickObserver)
+        calendarView = CalendarView(
+            viewModel: calendarViewModel,
+            hoverObserver: hoverSubject.asObserver(),
+            clickObserver: dateClick.asObserver()
+        )
 
         super.init(nibName: nil, bundle: nil)
     }
 
     override func loadView() {
+
         view = NSView()
 
-        view.addSubview(mainStackView)
+        let mainView = makeMainView(
+            makeHeader(),
+            calendarView,
+            makeToolBar()
+        )
+
+        view.addSubview(mainView)
+
+        mainView.edges(to: view, constant: 8)
+    }
+
+    private func makeMainView(_ views: NSView...) -> NSView {
+
+        let mainStackView = NSStackView(.vertical)
 
         mainStackView.spacing = 4
-        mainStackView.edges(to: view, constant: 8)
 
-        mainStackView.addArrangedSubview(calendarHeaderView)
-        mainStackView.addArrangedSubview(calendarView)
+        mainStackView.addArrangedSubviews(views)
+
+        return mainStackView
+    }
+
+    private func makeHeader() -> NSView {
+
+        titleLabel.font = .systemFont(ofSize: 14, weight: .medium)
+
+        [prevBtn, resetBtn, nextBtn].forEach {
+            $0.size(equalTo: 22)
+            $0.bezelStyle = .regularSquare
+            $0.isBordered = false
+        }
+
+        prevBtn.image = NSImage(named: NSImage.goBackTemplateName)
+        resetBtn.image = NSImage(named: NSImage.refreshTemplateName)
+        nextBtn.image = NSImage(named: NSImage.goForwardTemplateName)
+
+        let headerStackView = NSStackView(.horizontal)
+        headerStackView.spacing = 0
+        headerStackView.addArrangedSubviews(titleLabel, prevBtn, resetBtn, nextBtn)
+
+        return headerStackView
+    }
+
+    private func makeToolBar() -> NSView {
+
+        [calendarBtn, settingsBtn].forEach {
+            $0.size(equalTo: 22)
+            $0.bezelStyle = .regularSquare
+            $0.isBordered = false
+        }
+
+        calendarBtn.image = NSImage(named: NSImage.iconViewTemplateName)?.withSymbolConfiguration(.init(scale: .large))
+        settingsBtn.image = NSImage(named: NSImage.actionTemplateName)?.withSymbolConfiguration(.init(scale: .large))
+
+        let toolStackView = NSStackView(.horizontal)
+        toolStackView.addArrangedSubviews(.spacer, calendarBtn, settingsBtn)
+
+        return toolStackView
     }
 
     override func viewDidLoad() {
+
         setUpBindings()
 
         calendarService.requestAccess()
     }
 
     private func setUpBindings() {
+
         makeDateSelector()
             .asObservable()
             .observeOn(MainScheduler.asyncInstance)
-            .bind(to: selectedDateObserver)
+            .bind(to: selectedDate)
             .disposed(by: disposeBag)
 
         Observable.merge(
@@ -81,12 +140,24 @@ class MainViewController: NSViewController {
         )
         .toVoid()
         .map { Date() }
-        .bind(to: initialDateObserver)
+        .bind(to: initialDate)
         .disposed(by: disposeBag)
 
-        clickObservable
-            .bind(to: selectedDateObserver)
+        dateClick
+            .bind(to: selectedDate)
             .disposed(by: disposeBag)
+
+        selectedDate
+            .map(DateFormatter(format: "MMM yyyy").string(from:))
+            .bind(to: titleLabel.rx.string)
+            .disposed(by: disposeBag)
+
+        calendarBtn.rx.tap.bind {
+            if let appUrl = NSWorkspace.shared.urlForApplication(toOpen: URL(string: "webcal://")!) {
+                NSWorkspace.shared.open(appUrl)
+            }
+        }
+        .disposed(by: disposeBag)
     }
 
     private func makeDateSelector() -> DateSelector {
@@ -96,22 +167,22 @@ class MainViewController: NSViewController {
             .map(\.keyCode)
             .share()
 
-        let keyLeftObservable = keyObservable.filter { $0 == 123 }.toVoid()
-        let keyRightObservable = keyObservable.filter { $0 == 124 }.toVoid()
-        let keyDownObservable = keyObservable.filter { $0 == 125 }.toVoid()
-        let keyUpObservable = keyObservable.filter { $0 == 126 }.toVoid()
+        let keyLeft = keyObservable.filter { $0 == 123 }.toVoid()
+        let keyRight = keyObservable.filter { $0 == 124 }.toVoid()
+        let keyDown = keyObservable.filter { $0 == 125 }.toVoid()
+        let keyUp = keyObservable.filter { $0 == 126 }.toVoid()
 
 
         let dateSelector = DateSelector(
-            initial: initialDateObservable,
-            selected: selectedDateObservable,
-            reset: headerViewModel.resetBtnObservable,
-            prevDay: keyLeftObservable,
-            nextDay: keyRightObservable,
-            prevWeek: keyUpObservable,
-            nextWeek: keyDownObservable,
-            prevMonth: headerViewModel.prevBtnObservable,
-            nextMonth: headerViewModel.nextBtnObservable
+            initial: initialDate,
+            selected: selectedDate,
+            reset: resetBtn.rx.tap.asObservable(),
+            prevDay: keyLeft,
+            nextDay: keyRight,
+            prevWeek: keyUp,
+            nextWeek: keyDown,
+            prevMonth: prevBtn.rx.tap.asObservable(),
+            nextMonth: nextBtn.rx.tap.asObservable()
         )
 
         return dateSelector

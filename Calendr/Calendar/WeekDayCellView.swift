@@ -8,17 +8,19 @@
 import Cocoa
 
 class WeekDayCellView: NSView {
+
+    private static let formatter = DateFormatter()
     
     private let label = Label()
 
-    init(viewModel: WeekDayCellViewModel) {
+    init(weekDay: Int) {
         super.init(frame: .zero)
 
         forAutoLayout()
 
         configureLayout()
 
-        setUpBindings(with: viewModel)
+        label.string = Self.formatter.veryShortWeekdaySymbols[weekDay]
     }
 
     private func configureLayout() {
@@ -26,13 +28,7 @@ class WeekDayCellView: NSView {
         label.alignment = .center
         label.textColor = .lightGray
         label.font = .boldSystemFont(ofSize: 11)
-        label
-            .center(in: self)
-            .size(equalTo: CGSize(width: 24, height: 13))
-    }
-
-    private func setUpBindings(with viewModel: WeekDayCellViewModel) {
-        label.string = viewModel.text
+        label.center(in: self).size(equalTo: CGSize(width: 24, height: 13))
     }
 
     required init?(coder: NSCoder) {
