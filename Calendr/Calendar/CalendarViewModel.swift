@@ -11,7 +11,7 @@ class CalendarViewModel {
     private let cellViewModelsObservable: Observable<[CalendarCellViewModel]>
 
     init(dateObservable: Observable<Date>,
-         hoverObservable: Observable<(date: Date, isHovered: Bool)>,
+         hoverObservable: Observable<Date?>,
          calendarService: CalendarServiceProviding) {
 
         let calendar = Calendar.current
@@ -41,10 +41,15 @@ class CalendarViewModel {
             calendarService.events(from: start, to: end)
         }
 
+        // Clear hover when month changes
+        let hoverObservable: Observable<Date?> = Observable.merge(
+            dateRangeObservable.toVoid().map { nil }, hoverObservable
+        )
+
         cellViewModelsObservable = Observable.combineLatest(
             dateObservable,
             dateRangeObservable.map(\.start),
-            hoverObservable.toOptional().startWith(nil),
+            hoverObservable,
             eventsObservable.startWith([])
         )
         .map { (selectedDate, start, hoveredDate, events) in
@@ -58,8 +63,8 @@ class CalendarViewModel {
                 let inMonth = calendar.isDate(date, equalTo: selectedDate, toGranularity: .month)
                 let isToday = calendar.isDate(date, inSameDayAs: today)
                 let isSelected = calendar.isDate(date, inSameDayAs: selectedDate)
-                let isHovered = hoveredDate.map { hoveredDate, isHovered in
-                    isHovered && calendar.isDate(hoveredDate, inSameDayAs: date)
+                let isHovered = hoveredDate.map { hoveredDate in
+                    calendar.isDate(hoveredDate, inSameDayAs: date)
                 } ?? false
                 let events = events.filter {
                     calendar.isDate(date, in: ($0.start, $0.end))

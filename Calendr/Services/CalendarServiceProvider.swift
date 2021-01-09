@@ -10,9 +10,9 @@ import EventKit
 
 protocol CalendarServiceProviding {
     var calendars: [CalendarModel] { get }
-    func events(from start: Date, to end: Date) -> [EventModel]
     var changeObservable: Observable<Void> { get }
-    var isAuthorized: Bool { get }
+
+    func events(from start: Date, to end: Date) -> [EventModel]
 }
 
 class CalendarServiceProvider: CalendarServiceProviding {
@@ -25,12 +25,8 @@ class CalendarServiceProvider: CalendarServiceProviding {
 
     let changeObservable: Observable<Void>
 
-    var isAuthorized: Bool {
-        EKEventStore.authorizationStatus(for: .event) == .authorized
-    }
-
     init() {
-        (changeObserver, changeObservable) = PublishSubject<Void>.pipe()
+        (changeObservable, changeObserver) = PublishSubject<Void>.pipe()
 
         NotificationCenter.default.rx
             .notification(.EKEventStoreChanged, object: store)
@@ -40,7 +36,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
     }
 
     func requestAccess() {
-        if isAuthorized {
+        if EKEventStore.authorizationStatus(for: .event) == .authorized {
             changeObserver.onNext(())
         } else {
             store.requestAccess(to: .event) { granted, error in

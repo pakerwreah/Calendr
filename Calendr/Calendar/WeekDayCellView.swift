@@ -20,7 +20,7 @@ class WeekDayCellView: NSView {
 
         configureLayout()
 
-        label.string = Self.formatter.veryShortWeekdaySymbols[weekDay]
+        label.stringValue = Self.formatter.veryShortWeekdaySymbols[weekDay]
     }
 
     private func configureLayout() {

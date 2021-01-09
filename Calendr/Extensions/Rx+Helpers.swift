@@ -16,11 +16,19 @@ extension ObservableType {
     public func toOptional() -> Observable<Element?> {
         map { value -> Element? in value }
     }
+
+    public func matching(_ value: Element) -> Observable<Element> where Element: Equatable {
+        filter { value ~= $0 }
+    }
 }
 
 extension PublishSubject {
 
-    static func pipe() -> (input: AnyObserver<Element>, output: Observable<Element>) {
-        { ($0.asObserver(), $0.asObservable()) }(Self.init())
+    static func pipe() -> (output: Observable<Element>, input: AnyObserver<Element>) {
+        { ($0.asObservable(), $0.asObserver()) }(Self.init())
     }
+}
+
+extension Bool {
+    var isFalse: Bool { !self }
 }

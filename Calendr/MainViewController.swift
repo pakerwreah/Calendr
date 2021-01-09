@@ -34,7 +34,7 @@ class MainViewController: NSViewController {
 
     init() {
 
-        let hoverSubject = PublishSubject<(date: Date, isHovered: Bool)>()
+        let hoverSubject = PublishSubject<Date?>()
 
         // prevent getting 2 events while moving between cells
         let hoverObservable = hoverSubject.debounce(.milliseconds(1), scheduler: MainScheduler.instance)
@@ -84,11 +84,7 @@ class MainViewController: NSViewController {
 
         titleLabel.font = .systemFont(ofSize: 14, weight: .medium)
 
-        [prevBtn, resetBtn, nextBtn].forEach {
-            $0.size(equalTo: 22)
-            $0.bezelStyle = .regularSquare
-            $0.isBordered = false
-        }
+        [prevBtn, resetBtn, nextBtn].forEach(styleButton)
 
         prevBtn.image = NSImage(named: NSImage.goBackTemplateName)
         resetBtn.image = NSImage(named: NSImage.refreshTemplateName)
@@ -96,18 +92,14 @@ class MainViewController: NSViewController {
 
         let headerStackView = NSStackView(.horizontal)
         headerStackView.spacing = 0
-        headerStackView.addArrangedSubviews(titleLabel, prevBtn, resetBtn, nextBtn)
+        headerStackView.addArrangedSubviews(titleLabel, .spacer, prevBtn, resetBtn, nextBtn)
 
         return headerStackView
     }
 
     private func makeToolBar() -> NSView {
 
-        [calendarBtn, settingsBtn].forEach {
-            $0.size(equalTo: 22)
-            $0.bezelStyle = .regularSquare
-            $0.isBordered = false
-        }
+        [calendarBtn, settingsBtn].forEach(styleButton)
 
         calendarBtn.image = NSImage(named: NSImage.iconViewTemplateName)?.withSymbolConfiguration(.init(scale: .large))
         settingsBtn.image = NSImage(named: NSImage.actionTemplateName)?.withSymbolConfiguration(.init(scale: .large))
@@ -149,7 +141,7 @@ class MainViewController: NSViewController {
 
         selectedDate
             .map(DateFormatter(format: "MMM yyyy").string(from:))
-            .bind(to: titleLabel.rx.string)
+            .bind(to: titleLabel.rx.text)
             .disposed(by: disposeBag)
 
         calendarBtn.rx.tap.bind {
@@ -160,17 +152,26 @@ class MainViewController: NSViewController {
         .disposed(by: disposeBag)
     }
 
+    private func styleButton(_ button: NSButton) {
+        button.size(equalTo: 22)
+        button.bezelStyle = .regularSquare
+        button.isBordered = false
+        button.refusesFirstResponder = true
+    }
+
     private func makeDateSelector() -> DateSelector {
 
-        let keyObservable = rx.sentMessage(#selector(NSViewController.keyUp(with:)))
-            .compactMap { $0.first as? NSEvent }
-            .map(\.keyCode)
-            .share()
+        let keySubject = PublishSubject<UInt16>()
 
-        let keyLeft = keyObservable.filter { $0 == 123 }.toVoid()
-        let keyRight = keyObservable.filter { $0 == 124 }.toVoid()
-        let keyDown = keyObservable.filter { $0 == 125 }.toVoid()
-        let keyUp = keyObservable.filter { $0 == 126 }.toVoid()
+        NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event -> NSEvent? in
+            keySubject.onNext(event.keyCode)
+            return nil
+        }
+
+        let keyLeft = keySubject.matching(123).toVoid()
+        let keyRight = keySubject.matching(124).toVoid()
+        let keyDown = keySubject.matching(125).toVoid()
+        let keyUp = keySubject.matching(126).toVoid()
 
 
         let dateSelector = DateSelector(

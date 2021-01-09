@@ -19,7 +19,7 @@ class CalendarCellView: NSView {
     private let disposeBag = DisposeBag()
 
     init(viewModel: Observable<CalendarCellViewModel>,
-         hoverObserver: AnyObserver<(date: Date, isHovered: Bool)>,
+         hoverObserver: AnyObserver<Date?>,
          clickObserver: AnyObserver<Date>) {
 
         super.init(frame: .zero)
@@ -28,9 +28,7 @@ class CalendarCellView: NSView {
 
         configureLayout()
 
-        setUpBindings(with: viewModel,
-                      hoverObserver: hoverObserver,
-                      clickObserver: clickObserver)
+        setUpBindings(with: viewModel, hoverObserver, clickObserver)
     }
 
     private func configureLayout() {
@@ -39,6 +37,7 @@ class CalendarCellView: NSView {
         layer!.cornerRadius = 5
 
         label.alignment = .center
+        label.font = .systemFont(ofSize: 12)
         label.size(equalTo: CGSize(width: 24, height: 13))
 
         eventsStackView.spacing = 2
@@ -60,11 +59,11 @@ class CalendarCellView: NSView {
     }
 
     private func setUpBindings(with viewModel: Observable<CalendarCellViewModel>,
-                               hoverObserver: AnyObserver<(date: Date, isHovered: Bool)>,
-                               clickObserver: AnyObserver<Date>) {
+                               _ hoverObserver: AnyObserver<Date?>,
+                               _ clickObserver: AnyObserver<Date>) {
         viewModel
             .map(\.text)
-            .bind(to: label.rx.string)
+            .bind(to: label.rx.text)
             .disposed(by: disposeBag)
 
         viewModel
@@ -89,10 +88,11 @@ class CalendarCellView: NSView {
             .disposed(by: disposeBag)
 
         Observable.merge(
-            rx.sentMessage(#selector(NSView.mouseEntered)).toVoid().map { true },
-            rx.sentMessage(#selector(NSView.mouseExited)).toVoid().map { false }
+            rx.sentMessage(#selector(NSView.mouseEntered))
+                .withLatestFrom(viewModel.map(\.date)).toOptional(),
+            rx.sentMessage(#selector(NSView.mouseExited))
+                .toVoid().map { nil }
         )
-        .withLatestFrom(viewModel.map(\.date)) { ($1, $0) }
         .bind(to: hoverObserver)
         .disposed(by: disposeBag)
     }

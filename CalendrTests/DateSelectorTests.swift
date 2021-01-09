@@ -7,12 +7,10 @@
 
 import XCTest
 import RxSwift
-import RxTest
 @testable import Calendr
 
 class DateSelectorTests: XCTestCase {
 
-    private let testScheduler = TestScheduler()
     private let disposeBag = DisposeBag()
 
     private let formatter = DateFormatter(format: "yyyy-MM-dd")
@@ -27,7 +25,7 @@ class DateSelectorTests: XCTestCase {
     private let prevMonth = PublishSubject<Void>()
     private let nextMonth = PublishSubject<Void>()
 
-    private lazy var observer = testScheduler.createObserver(String.self)
+    private var values = [String]()
 
     override func setUp() {
         // ⚠️ Reentrancy anomaly was detected. ¯\_(ツ)_/¯
@@ -61,7 +59,9 @@ class DateSelectorTests: XCTestCase {
         selector
             .asObservable()
             .map(formatter.string(from:))
-            .bind(to: observer)
+            .bind { [weak self] in
+                self?.values.append($0)
+            }
             .disposed(by: disposeBag)
 
         initial.onNext(.make(year: 2021, month: 1, day: 1))
@@ -70,20 +70,20 @@ class DateSelectorTests: XCTestCase {
     func testInitial() {
         initial.onNext(.make(year: 2025, month: 1, day: 1))
 
-        XCTAssertEqual(observer.values.last, "2025-01-01")
+        XCTAssertEqual(values.last, "2025-01-01")
     }
 
     func testSelect() {
         selected.onNext(.make(year: 2025, month: 1, day: 1))
 
-        XCTAssertEqual(observer.values.last, "2025-01-01")
+        XCTAssertEqual(values.last, "2025-01-01")
     }
 
     func testReset() {
         selected.onNext(.make(year: 2025, month: 1, day: 1))
         reset.onNext(())
 
-        XCTAssertEqual(observer.values, ["2021-01-01", "2025-01-01", "2021-01-01"])
+        XCTAssertEqual(values, ["2021-01-01", "2025-01-01", "2021-01-01"])
     }
 
     func testDistinct() {
@@ -92,43 +92,43 @@ class DateSelectorTests: XCTestCase {
         selected.onNext(.make(year: 2021, month: 1, day: 2))
         reset.onNext(())
 
-        XCTAssertEqual(observer.values, ["2021-01-01", "2021-01-02"])
+        XCTAssertEqual(values, ["2021-01-01", "2021-01-02"])
     }
 
     func testPrevDay() {
         prevDay.onNext(())
 
-        XCTAssertEqual(observer.values.last, "2020-12-31")
+        XCTAssertEqual(values.last, "2020-12-31")
     }
 
     func testNextDay() {
         nextDay.onNext(())
 
-        XCTAssertEqual(observer.values.last, "2021-01-02")
+        XCTAssertEqual(values.last, "2021-01-02")
     }
 
     func testPrevWeek() {
         prevWeek.onNext(())
 
-        XCTAssertEqual(observer.values.last, "2020-12-25")
+        XCTAssertEqual(values.last, "2020-12-25")
     }
 
     func testNextWeek() {
         nextWeek.onNext(())
 
-        XCTAssertEqual(observer.values.last, "2021-01-08")
+        XCTAssertEqual(values.last, "2021-01-08")
     }
 
     func testPrevMonth() {
         prevMonth.onNext(())
 
-        XCTAssertEqual(observer.values.last, "2020-12-01")
+        XCTAssertEqual(values.last, "2020-12-01")
     }
 
     func testNextMonth() {
         nextMonth.onNext(())
 
-        XCTAssertEqual(observer.values.last, "2021-02-01")
+        XCTAssertEqual(values.last, "2021-02-01")
     }
 
     func testSequence() {
@@ -144,7 +144,7 @@ class DateSelectorTests: XCTestCase {
             $0.onNext(())
         }
 
-        XCTAssertEqual(observer.values, [
+        XCTAssertEqual(values, [
             "2021-01-01", // initial
             "2020-12-31", // prevDay
             "2021-01-01", // nextDay

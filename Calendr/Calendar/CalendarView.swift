@@ -14,7 +14,7 @@ class CalendarView: NSView {
     private let gridView = NSGridView(numberOfColumns: 7, rows: 7)
 
     init(viewModel: CalendarViewModel,
-         hoverObserver: AnyObserver<(date: Date, isHovered: Bool)>,
+         hoverObserver: AnyObserver<Date?>,
          clickObserver: AnyObserver<Date>) {
 
         super.init(frame: .zero)
@@ -23,9 +23,7 @@ class CalendarView: NSView {
 
         addWeekendLayers()
 
-        setUpBindings(with: viewModel,
-                      hoverObserver: hoverObserver,
-                      clickObserver: clickObserver)
+        setUpBindings(with: viewModel, hoverObserver, clickObserver)
     }
 
     private func configureLayout() {
@@ -59,8 +57,8 @@ class CalendarView: NSView {
     }
 
     private func setUpBindings(with viewModel: CalendarViewModel,
-                               hoverObserver: AnyObserver<(date: Date, isHovered: Bool)>,
-                               clickObserver: AnyObserver<Date>) {
+                               _ hoverObserver: AnyObserver<Date?>,
+                               _ clickObserver: AnyObserver<Date>) {
         for weekDay in 0..<7 {
             let cellView = WeekDayCellView(weekDay: weekDay)
             gridView.cell(atColumnIndex: weekDay, rowIndex: 0).contentView = cellView
