@@ -1,15 +1,11 @@
 platform :osx, '11.1'
 use_frameworks!
 
-abstract_target 'App' do
+target 'Calendr' do
+    pod 'RxSwift', '~> 6.0'
+    pod 'RxCocoa', '~> 6.0'
 
-  target 'Calendr'
-
-  target 'CalendrTests' do
-    pod 'RxTest'
-  end
-
-  pod 'RxSwift'
-  pod 'RxCocoa'
-
+    target 'CalendrTests' do
+        pod 'RxTest', '~> 6.0'
+    end
 end

@@ -121,7 +121,7 @@ class MainViewController: NSViewController {
 
         makeDateSelector()
             .asObservable()
-            .observeOn(MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.asyncInstance)
             .bind(to: selectedDate)
             .disposed(by: disposeBag)
 
