@@ -66,12 +66,27 @@ class CalendarViewModelTests: XCTestCase {
     func testUnhover() {
 
         hoverSubject.onNext(.make(year: 2021, month: 1, day: 1))
-        XCTAssert(values.last?.filter(\.isHovered).isEmpty == false)
+        XCTAssertTrue(hasHoveredDate)
 
         hoverSubject.onNext(nil)
-        XCTAssert(values.last?.filter(\.isHovered).isEmpty == true)
+        XCTAssertFalse(hasHoveredDate)
     }
 
+    func testUnhoverAfterMonthChange() {
+
+        hoverSubject.onNext(.make(year: 2021, month: 1, day: 1))
+        XCTAssertTrue(hasHoveredDate)
+
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 2))
+        XCTAssertTrue(hasHoveredDate)
+
+        dateSubject.onNext(.make(year: 2021, month: 2, day: 2))
+        XCTAssertFalse(hasHoveredDate)
+    }
+
+    var hasHoveredDate: Bool {
+        values.last?.filter(\.isHovered).isEmpty == false
+    }
 }
 
 class MockCalendarServiceProvider: CalendarServiceProviding {
