@@ -11,17 +11,17 @@ import RxSwift
 
 class CalendarViewModelTests: XCTestCase {
 
-    private let disposeBag = DisposeBag()
-    private let dateSubject = PublishSubject<Date>()
-    private let hoverSubject = PublishSubject<Date?>()
+    let disposeBag = DisposeBag()
+    let dateSubject = PublishSubject<Date>()
+    let hoverSubject = PublishSubject<Date?>()
 
-    private let calendarServiceProvider = MockCalendarServiceProvider()
+    let calendarServiceProvider = MockCalendarServiceProvider()
 
-    private lazy var viewModel = CalendarViewModel(dateObservable: dateSubject,
-                                                   hoverObservable: hoverSubject,
-                                                   calendarService: calendarServiceProvider)
+    lazy var viewModel = CalendarViewModel(dateObservable: dateSubject,
+                                           hoverObservable: hoverSubject,
+                                           calendarService: calendarServiceProvider)
 
-    private var values = [[CalendarCellViewModel]]()
+    var values = [[CalendarCellViewModel]]()
 
     override func setUp() {
         viewModel

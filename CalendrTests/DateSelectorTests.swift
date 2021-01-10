@@ -11,21 +11,19 @@ import RxSwift
 
 class DateSelectorTests: XCTestCase {
 
-    private let disposeBag = DisposeBag()
+    let disposeBag = DisposeBag()
 
-    private let formatter = DateFormatter(format: "yyyy-MM-dd")
+    let initial = PublishSubject<Date>()
+    let selected = PublishSubject<Date>()
+    let reset = PublishSubject<Void>()
+    let prevDay = PublishSubject<Void>()
+    let nextDay = PublishSubject<Void>()
+    let prevWeek = PublishSubject<Void>()
+    let nextWeek = PublishSubject<Void>()
+    let prevMonth = PublishSubject<Void>()
+    let nextMonth = PublishSubject<Void>()
 
-    private let initial = PublishSubject<Date>()
-    private let selected = PublishSubject<Date>()
-    private let reset = PublishSubject<Void>()
-    private let prevDay = PublishSubject<Void>()
-    private let nextDay = PublishSubject<Void>()
-    private let prevWeek = PublishSubject<Void>()
-    private let nextWeek = PublishSubject<Void>()
-    private let prevMonth = PublishSubject<Void>()
-    private let nextMonth = PublishSubject<Void>()
-
-    private var values = [String]()
+    var values = [String]()
 
     override func setUp() {
         // ⚠️ Reentrancy anomaly was detected. ¯\_(ツ)_/¯
@@ -58,7 +56,7 @@ class DateSelectorTests: XCTestCase {
 
         selector
             .asObservable()
-            .map(formatter.string(from:))
+            .map(DateFormatter(format: "yyyy-MM-dd").string(from:))
             .bind { [weak self] in
                 self?.values.append($0)
             }
@@ -151,7 +149,7 @@ class DateSelectorTests: XCTestCase {
             "2020-12-25", // prevWeek
             "2021-01-01", // nextWeek
             "2020-12-01", // prevMonth
-            "2021-01-01"  // nextMonth
+            "2021-01-01", // nextMonth
         ])
     }
 
