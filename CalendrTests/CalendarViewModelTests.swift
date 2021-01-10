@@ -31,7 +31,7 @@ class CalendarViewModelTests: XCTestCase {
             }
             .disposed(by: disposeBag)
 
-        dateSubject.onNext(.make(year: 2021, month: 1))
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
     }
 
     func testDateSpan() {
@@ -48,7 +48,7 @@ class CalendarViewModelTests: XCTestCase {
     func testHoverDistinctly() {
 
         (1...5).map {
-            Date.make(year: 2021, day: $0)
+            Date.make(year: 2021, month: 1, day: $0)
         }
         .forEach { date in
             hoverSubject.onNext(date)
@@ -65,7 +65,7 @@ class CalendarViewModelTests: XCTestCase {
 
     func testUnhover() {
 
-        hoverSubject.onNext(.make(year: 2021, day: 1))
+        hoverSubject.onNext(.make(year: 2021, month: 1, day: 1))
         XCTAssert(values.last?.filter(\.isHovered).isEmpty == false)
 
         hoverSubject.onNext(nil)

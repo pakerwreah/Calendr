@@ -28,5 +28,10 @@ class CalendarExtensionTests: XCTestCase {
             XCTAssertEqual(expected, result, "\(start) - \(end))")
         }
     }
+}
 
+private extension Date {
+    static func make(day: Int, second: Int = 0) -> Date {
+        make(year: 2021, month: 1, day: day, second: second)
+    }
 }

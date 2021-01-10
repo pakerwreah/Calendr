@@ -10,9 +10,9 @@ import Foundation
 extension Date {
 
     static func make(
-        year: Int = 2020,
-        month: Int = 1,
-        day: Int = 1,
+        year: Int,
+        month: Int,
+        day: Int,
         hour: Int = 0,
         minute: Int = 0,
         second: Int = 0
