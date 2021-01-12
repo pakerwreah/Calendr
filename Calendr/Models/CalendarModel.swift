@@ -11,5 +11,4 @@ struct CalendarModel: Equatable {
     let identifier: String
     let title: String
     let color: CGColor
-    let isSelected: Bool
 }

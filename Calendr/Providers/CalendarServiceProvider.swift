@@ -55,19 +55,13 @@ class CalendarServiceProvider: CalendarServiceProviding {
     var calendars: [CalendarModel] {
 
         store.calendars(for: .event).map { cal in
-            // FIXME: Create settings screen to select calendars
-            CalendarModel(from: cal, isSelected: !cal.title.contains("WR"))
+            CalendarModel(from: cal)
         }
     }
 
     func events(from start: Date, to end: Date) -> [EventModel] {
 
-        let selected = calendars
-            .filter(\.isSelected)
-            .map(\.identifier)
-            .compactMap(store.calendar(withIdentifier:))
-
-        let predicate = store.predicateForEvents(withStart: start, end: end, calendars: selected)
+        let predicate = store.predicateForEvents(withStart: start, end: end, calendars: nil)
 
         return store.events(matching: predicate).map { event in
             EventModel(
@@ -84,12 +78,11 @@ class CalendarServiceProvider: CalendarServiceProviding {
 }
 
 private extension CalendarModel {
-    init(from calendar: EKCalendar, isSelected: Bool = true) {
+    init(from calendar: EKCalendar) {
         self.init(
             identifier: calendar.calendarIdentifier,
             title: calendar.title,
-            color: calendar.cgColor,
-            isSelected: isSelected
+            color: calendar.cgColor
         )
     }
 }

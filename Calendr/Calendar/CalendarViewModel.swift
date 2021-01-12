@@ -12,7 +12,8 @@ class CalendarViewModel {
 
     init(dateObservable: Observable<Date>,
          hoverObservable: Observable<Date?>,
-         calendarService: CalendarServiceProviding) {
+         calendarService: CalendarServiceProviding,
+         dateProvider: DateProviding) {
 
         let calendar = Calendar.current
 
@@ -34,7 +35,7 @@ class CalendarViewModel {
 
         // Get events for current date range
         let eventsObservable = Observable.combineLatest(
-            dateRangeObservable, calendarService.changeObservable
+            dateRangeObservable, calendarService.changeObservable.startWith(())
         )
         .map(\.0)
         .map { start, end in
@@ -50,11 +51,11 @@ class CalendarViewModel {
             dateObservable,
             dateRangeObservable.map(\.start),
             hoverObservable,
-            eventsObservable.startWith([])
+            eventsObservable
         )
         .map { (selectedDate, start, hoveredDate, events) in
 
-            let today = Date()
+            let today = dateProvider.today
 
             var cellViewModels = [CalendarCellViewModel]()
 
@@ -69,12 +70,14 @@ class CalendarViewModel {
                 let events = events.filter {
                     calendar.isDate(date, in: ($0.start, $0.end))
                 }
-                let viewModel = CalendarCellViewModel(date: date,
-                                                      inMonth: inMonth,
-                                                      isToday: isToday,
-                                                      isSelected: isSelected,
-                                                      isHovered: isHovered,
-                                                      events: events)
+                let viewModel = CalendarCellViewModel(
+                    date: date,
+                    inMonth: inMonth,
+                    isToday: isToday,
+                    isSelected: isSelected,
+                    isHovered: isHovered,
+                    events: events
+                )
                 cellViewModels.append(viewModel)
             }
 

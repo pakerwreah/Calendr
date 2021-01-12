@@ -15,28 +15,32 @@ class CalendarViewModelTests: XCTestCase {
     let dateSubject = PublishSubject<Date>()
     let hoverSubject = PublishSubject<Date?>()
 
-    let calendarServiceProvider = MockCalendarServiceProvider()
+    let calendarService = MockCalendarServiceProvider()
+    let dateProvider = MockDateProvider()
 
-    lazy var viewModel = CalendarViewModel(dateObservable: dateSubject,
-                                           hoverObservable: hoverSubject,
-                                           calendarService: calendarServiceProvider)
+    lazy var viewModel = CalendarViewModel(
+        dateObservable: dateSubject,
+        hoverObservable: hoverSubject,
+        calendarService: calendarService,
+        dateProvider: dateProvider
+    )
 
-    var values = [[CalendarCellViewModel]]()
+    var lastValue: [CalendarCellViewModel]?
 
     override func setUp() {
         viewModel
             .asObservable()
             .bind { [weak self] in
-                self?.values.append($0)
+                self?.lastValue = $0
             }
             .disposed(by: disposeBag)
 
-        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+        dateSubject.onNext(dateProvider.today)
     }
 
     func testDateSpan() {
 
-        guard let cellViewModels = values.last else {
+        guard let cellViewModels = lastValue else {
             return XCTFail()
         }
 
@@ -53,14 +57,13 @@ class CalendarViewModelTests: XCTestCase {
         .forEach { date in
             hoverSubject.onNext(date)
 
-            guard let hovered = values.last?.filter(\.isHovered) else {
+            guard let hovered = lastValue?.filter(\.isHovered) else {
                 return XCTFail()
             }
 
             XCTAssertEqual(hovered.count, 1)
             XCTAssertEqual(hovered.first.map(\.date), date)
         }
-
     }
 
     func testUnhover() {
@@ -85,18 +88,121 @@ class CalendarViewModelTests: XCTestCase {
     }
 
     var hasHoveredDate: Bool {
-        values.last?.filter(\.isHovered).isEmpty == false
+        lastValue?.filter(\.isHovered).isEmpty == false
     }
+
+    func testSelectDateDistinctly() {
+
+        (1...5).map {
+            Date.make(year: 2021, month: 1, day: $0)
+        }
+        .forEach { date in
+            dateSubject.onNext(date)
+
+            guard let selected = lastValue?.filter(\.isSelected) else {
+                return XCTFail()
+            }
+
+            XCTAssertEqual(selected.count, 1)
+            XCTAssertEqual(selected.first.map(\.date), date)
+        }
+    }
+
+    func testTodayVisibility() {
+
+        dateProvider.today = .make(year: 2020, month: 12, day: 31)
+
+        let expectedPositions: [(date: Date, position: Int?)] = [
+            (.make(year: 2020, month: 12, day: 1), 32),
+            (.make(year: 2021, month: 1, day: 1), 4),
+            (.make(year: 2021, month: 2, day: 1), nil)
+        ]
+
+        for (date, position) in expectedPositions {
+            dateSubject.onNext(date)
+
+            XCTAssertEqual(lastValue?.map(\.date).lastIndex(of: dateProvider.today), position, "\(date)")
+        }
+    }
+
+    func testEventsPerDate() {
+
+        let expectedEvents: [(date: Date, events: [String])] = [
+            (.make(year: 2021, month: 1, day: 1), ["Event 1"]),
+            (.make(year: 2021, month: 1, day: 2), ["Event 1", "Event 2", "Event 3"]),
+            (.make(year: 2021, month: 1, day: 3), ["Event 4"]),
+        ]
+
+        for (date, expected) in expectedEvents {
+            let events = lastValue?
+                .first(where: { $0.date == date })
+                .map(\.events)?
+                .map(\.title)
+
+            XCTAssertEqual(events, expected)
+        }
+    }
+
 }
 
 class MockCalendarServiceProvider: CalendarServiceProviding {
 
-    var calendars: [CalendarModel] = []
-    var events: [EventModel] = []
+    var calendars: [CalendarModel] = [
+        .init(identifier: "1", title: "Calendar 1", color: .white),
+        .init(identifier: "2", title: "Calendar 2", color: .black),
+        .init(identifier: "3", title: "Calendar 3", color: .clear)
+    ]
+
+    var events: [EventModel]
 
     let (changeObservable, changeObserver) = PublishSubject<Void>.pipe()
+
+    init() {
+        events = [
+            .init(
+                start: .make(year: 2021, month: 1, day: 1),
+                end: .make(year: 2021, month: 1, day: 3),
+                title: "Event 1",
+                location: nil,
+                notes: nil,
+                url: nil,
+                calendar: calendars[0]
+            ),
+            .init(
+                start: .make(year: 2021, month: 1, day: 2),
+                end: .make(year: 2021, month: 1, day: 2),
+                title: "Event 2",
+                location: nil,
+                notes: nil,
+                url: nil,
+                calendar: calendars[0]
+            ),
+            .init(
+                start: .make(year: 2021, month: 1, day: 2),
+                end: .make(year: 2021, month: 1, day: 2),
+                title: "Event 3",
+                location: nil,
+                notes: nil,
+                url: nil,
+                calendar: calendars[1]
+            ),
+            .init(
+                start: .make(year: 2021, month: 1, day: 3),
+                end: .make(year: 2021, month: 1, day: 3),
+                title: "Event 4",
+                location: nil,
+                notes: nil,
+                url: nil,
+                calendar: calendars[2]
+            )
+        ]
+    }
 
     func events(from start: Date, to end: Date) -> [EventModel] {
         return events
     }
+}
+
+class MockDateProvider: DateProviding {
+    var today: Date = .make(year: 2021, month: 1, day: 1)
 }

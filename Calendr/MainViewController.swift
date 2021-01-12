@@ -31,6 +31,7 @@ class MainViewController: NSViewController {
 
     // Properties
     private let calendarService = CalendarServiceProvider()
+    private let dateProvider = DateProvider()
 
     init() {
 
@@ -42,7 +43,8 @@ class MainViewController: NSViewController {
         calendarViewModel = CalendarViewModel(
             dateObservable: selectedDate,
             hoverObservable: hoverObservable,
-            calendarService: calendarService
+            calendarService: calendarService,
+            dateProvider: dateProvider
         )
 
         calendarView = CalendarView(

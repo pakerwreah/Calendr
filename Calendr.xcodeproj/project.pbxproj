@@ -33,6 +33,7 @@
 		34F128DD259690C8007DF31C /* CALayer+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F128DC259690C8007DF31C /* CALayer+Rx.swift */; };
 		34F128E12597B9C9007DF31C /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F128E02597B9C9007DF31C /* MainViewController.swift */; };
 		34F128F22597C340007DF31C /* WeekDayCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F128F12597C340007DF31C /* WeekDayCellView.swift */; };
+		34FD09D925AE269600AAAAE2 /* DateProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34FD09D825AE269600AAAAE2 /* DateProvider.swift */; };
 		658997A714EBED5A4F09A98D /* Pods_Calendr_CalendrTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B02BB336A7B6F0D1A72887E7 /* Pods_Calendr_CalendrTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -78,6 +79,7 @@
 		34F128DC259690C8007DF31C /* CALayer+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CALayer+Rx.swift"; sourceTree = "<group>"; };
 		34F128E02597B9C9007DF31C /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		34F128F12597C340007DF31C /* WeekDayCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekDayCellView.swift; sourceTree = "<group>"; };
+		34FD09D825AE269600AAAAE2 /* DateProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateProvider.swift; sourceTree = "<group>"; };
 		412A93608A43230F905F146E /* Pods-Calendr-CalendrTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Calendr-CalendrTests.debug.xcconfig"; path = "Target Support Files/Pods-Calendr-CalendrTests/Pods-Calendr-CalendrTests.debug.xcconfig"; sourceTree = "<group>"; };
 		487767F220373171B5FA00B3 /* Pods_Calendr.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Calendr.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		52E97BCA2B755E0ED9FAF18F /* Pods-Calendr.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Calendr.debug.xcconfig"; path = "Target Support Files/Pods-Calendr/Pods-Calendr.debug.xcconfig"; sourceTree = "<group>"; };
@@ -128,14 +130,6 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
-		34702148259DFEEE00827AE7 /* Services */ = {
-			isa = PBXGroup;
-			children = (
-				34702149259DFF3000827AE7 /* CalendarServiceProvider.swift */,
-			);
-			path = Services;
-			sourceTree = "<group>";
-		};
 		347D0F8B25952F89002451EC = {
 			isa = PBXGroup;
 			children = (
@@ -169,8 +163,7 @@
 				347D0FE22595384E002451EC /* Components */,
 				347D0FE525954481002451EC /* Extensions */,
 				347D0FF025954916002451EC /* Models */,
-				347E6D4125AA28FA009A6716 /* Protocols */,
-				34702148259DFEEE00827AE7 /* Services */,
+				347E6D4125AA28FA009A6716 /* Providers */,
 			);
 			path = Calendr;
 			sourceTree = "<group>";
@@ -231,11 +224,13 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		347E6D4125AA28FA009A6716 /* Protocols */ = {
+		347E6D4125AA28FA009A6716 /* Providers */ = {
 			isa = PBXGroup;
 			children = (
+				34702149259DFF3000827AE7 /* CalendarServiceProvider.swift */,
+				34FD09D825AE269600AAAAE2 /* DateProvider.swift */,
 			);
-			path = Protocols;
+			path = Providers;
 			sourceTree = "<group>";
 		};
 		C53A771308AC87F8514F0360 /* Pods */ = {
@@ -445,6 +440,7 @@
 				34F128E12597B9C9007DF31C /* MainViewController.swift in Sources */,
 				34F128DD259690C8007DF31C /* CALayer+Rx.swift in Sources */,
 				347D0FED2595467A002451EC /* CalendarCellView.swift in Sources */,
+				34FD09D925AE269600AAAAE2 /* DateProvider.swift in Sources */,
 				34F128D125968044007DF31C /* Label.swift in Sources */,
 				34F128F22597C340007DF31C /* WeekDayCellView.swift in Sources */,
 				34305BCB25992A4E00AB381D /* Rx+Helpers.swift in Sources */,
