@@ -10,6 +10,7 @@ import Foundation
 struct EventModel: Equatable {
     let start: Date
     let end: Date
+    let isAllDay: Bool
     let title: String
     let location: String?
     let notes: String?

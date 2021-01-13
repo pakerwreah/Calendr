@@ -130,7 +130,7 @@ class CalendarViewModelTests: XCTestCase {
         let expectedEvents: [(date: Date, events: [String])] = [
             (.make(year: 2021, month: 1, day: 1), ["Event 1"]),
             (.make(year: 2021, month: 1, day: 2), ["Event 1", "Event 2", "Event 3"]),
-            (.make(year: 2021, month: 1, day: 3), ["Event 4"]),
+            (.make(year: 2021, month: 1, day: 3), ["Event 1", "Event 4"]),
         ]
 
         for (date, expected) in expectedEvents {
@@ -161,7 +161,8 @@ class MockCalendarServiceProvider: CalendarServiceProviding {
         events = [
             .init(
                 start: .make(year: 2021, month: 1, day: 1),
-                end: .make(year: 2021, month: 1, day: 3),
+                end: .make(year: 2021, month: 1, day: 4),
+                isAllDay: true,
                 title: "Event 1",
                 location: nil,
                 notes: nil,
@@ -171,6 +172,7 @@ class MockCalendarServiceProvider: CalendarServiceProviding {
             .init(
                 start: .make(year: 2021, month: 1, day: 2),
                 end: .make(year: 2021, month: 1, day: 2),
+                isAllDay: true,
                 title: "Event 2",
                 location: nil,
                 notes: nil,
@@ -178,8 +180,9 @@ class MockCalendarServiceProvider: CalendarServiceProviding {
                 calendar: calendars[0]
             ),
             .init(
-                start: .make(year: 2021, month: 1, day: 2),
-                end: .make(year: 2021, month: 1, day: 2),
+                start: .make(year: 2021, month: 1, day: 2, hour: 8),
+                end: .make(year: 2021, month: 1, day: 2, hour: 9),
+                isAllDay: false,
                 title: "Event 3",
                 location: nil,
                 notes: nil,
@@ -187,8 +190,9 @@ class MockCalendarServiceProvider: CalendarServiceProviding {
                 calendar: calendars[1]
             ),
             .init(
-                start: .make(year: 2021, month: 1, day: 3),
-                end: .make(year: 2021, month: 1, day: 3),
+                start: .make(year: 2021, month: 1, day: 3, hour: 14),
+                end: .make(year: 2021, month: 1, day: 3, hour: 15),
+                isAllDay: false,
                 title: "Event 4",
                 location: nil,
                 notes: nil,

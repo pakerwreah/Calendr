@@ -67,6 +67,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
             EventModel(
                 start: event.startDate,
                 end: event.endDate,
+                isAllDay: event.isAllDay,
                 title: event.title,
                 location: event.location,
                 notes: event.notes,
