@@ -15,73 +15,117 @@ class CalendarViewModel {
          calendarService: CalendarServiceProviding,
          dateProvider: DateProviding) {
 
-        let calendar = Calendar.current
+        let dateObservable = dateObservable.distinctUntilChanged().share()
 
         // Calculate date range for current month
         let dateRangeObservable = dateObservable
             .compactMap { selectedDate in
-                calendar.dateInterval(of: .month, for: selectedDate)?.start
+                Calendar.current.dateInterval(of: .month, for: selectedDate)
             }
             .distinctUntilChanged()
-            .map { firstDayOfMonth -> (start: Date, end: Date) in
+            .share()
 
-                let currentWeekDay = calendar.component(.weekday, from: firstDayOfMonth) - 1
-                let start = calendar.date(byAdding: .day, value: -currentWeekDay, to: firstDayOfMonth)!
-                let end = calendar.date(byAdding: .day, value: 42, to: start)!
+        // Create cells for current month
+        let dateCellsObservable = dateRangeObservable.map { month -> [CalendarCellViewModel] in
 
-                return (start, end)
+            let today = dateProvider.today
+            let currentWeekDay = Calendar.current.component(.weekday, from: month.start) - 1
+            let start = Calendar.current.date(byAdding: .day, value: -currentWeekDay, to: month.start)!
+
+            return (0..<42).map { day -> CalendarCellViewModel in
+                let date = Calendar.current.date(byAdding: .day, value: day, to: start)!
+                let inMonth = month.contains(date)
+                let isToday = Calendar.current.isDate(date, inSameDayAs: today)
+
+                return CalendarCellViewModel(
+                    date: date,
+                    inMonth: inMonth,
+                    isToday: isToday,
+                    isSelected: false,
+                    isHovered: false,
+                    events: []
+                )
             }
-            .share(replay: 1)
-
-        // Get events for current date range
-        let eventsObservable = Observable.combineLatest(
-            dateRangeObservable, calendarService.changeObservable.startWith(())
-        )
-        .map(\.0)
-        .map { start, end in
-            calendarService.events(from: start, to: end)
         }
+        .share()
+
+        // Get events for current dates
+        let eventsObservable = Observable.combineLatest(
+            dateCellsObservable, calendarService.changeObservable.startWith(())
+        )
+        .map { cellViewModels, _ -> [CalendarCellViewModel] in
+
+            let events = calendarService.events(
+                from: cellViewModels.first!.date, to: cellViewModels.last!.date
+            )
+
+            return cellViewModels.map { viewModel in
+
+                let events = events.filter {
+                    Calendar.current.isDate(viewModel.date, in: ($0.start, $0.end))
+                }
+
+                return CalendarCellViewModel(
+                    date: viewModel.date,
+                    inMonth: viewModel.inMonth,
+                    isToday: viewModel.isToday,
+                    isSelected: false,
+                    isHovered: false,
+                    events: events
+                )
+
+            }
+        }
+        .share()
+
+        // Check which cell is selected
+        let isSelectedObservable = Observable.combineLatest(
+            eventsObservable, dateObservable
+        )
+        .map { cellViewModels, selectedDate -> [CalendarCellViewModel] in
+
+            cellViewModels.map { viewModel in
+
+                let isSelected = Calendar.current.isDate(viewModel.date, inSameDayAs: selectedDate)
+
+                return CalendarCellViewModel(
+                    date: viewModel.date,
+                    inMonth: viewModel.inMonth,
+                    isToday: viewModel.isToday,
+                    isSelected: isSelected,
+                    isHovered: false,
+                    events: viewModel.events
+                )
+            }
+        }
+        .share()
 
         // Clear hover when month changes
         let hoverObservable: Observable<Date?> = Observable.merge(
             dateRangeObservable.toVoid().map { nil }, hoverObservable
         )
 
+        // Check which cell is hovered
         cellViewModelsObservable = Observable.combineLatest(
-            dateObservable,
-            dateRangeObservable.map(\.start),
-            hoverObservable,
-            eventsObservable
+            isSelectedObservable, hoverObservable
         )
-        .map { (selectedDate, start, hoveredDate, events) in
+        .map { cellViewModels, hoveredDate -> [CalendarCellViewModel] in
 
-            let today = dateProvider.today
+            cellViewModels.map { viewModel in
 
-            var cellViewModels = [CalendarCellViewModel]()
-
-            for day in 0..<42 {
-                let date = calendar.date(byAdding: .day, value: day, to: start)!
-                let inMonth = calendar.isDate(date, equalTo: selectedDate, toGranularity: .month)
-                let isToday = calendar.isDate(date, inSameDayAs: today)
-                let isSelected = calendar.isDate(date, inSameDayAs: selectedDate)
-                let isHovered = hoveredDate.map { hoveredDate in
-                    calendar.isDate(hoveredDate, inSameDayAs: date)
+                let isHovered = hoveredDate.map { date in
+                    Calendar.current.isDate(date, inSameDayAs: viewModel.date)
                 } ?? false
-                let events = events.filter {
-                    calendar.isDate(date, in: ($0.start, $0.end))
-                }
-                let viewModel = CalendarCellViewModel(
-                    date: date,
-                    inMonth: inMonth,
-                    isToday: isToday,
-                    isSelected: isSelected,
-                    isHovered: isHovered,
-                    events: events
-                )
-                cellViewModels.append(viewModel)
-            }
 
-            return cellViewModels
+                return CalendarCellViewModel(
+                    date: viewModel.date,
+                    inMonth: viewModel.inMonth,
+                    isToday: viewModel.isToday,
+                    isSelected: viewModel.isSelected,
+                    isHovered: isHovered,
+                    events: viewModel.events
+                )
+            }
         }
         .share(replay: 1)
     }
