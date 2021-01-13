@@ -139,7 +139,25 @@ class CalendarViewModelTests: XCTestCase {
                 .map(\.events)?
                 .map(\.title)
 
-            XCTAssertEqual(events, expected)
+            XCTAssertEqual(events, expected, "\(date)")
+        }
+    }
+
+    func testEventDotsPerDate() {
+
+        let expectedEvents: [(date: Date, events: Set<CGColor>)] = [
+            (.make(year: 2021, month: 1, day: 1), [.white]),
+            (.make(year: 2021, month: 1, day: 2), [.white, .black]),
+            (.make(year: 2021, month: 1, day: 3), [.white, .clear]),
+        ]
+
+        for (date, expected) in expectedEvents {
+            let events = lastValue?
+                .first(where: { $0.date == date })
+                .map(\.dots)
+
+            XCTAssertEqual(events?.count, expected.count, "\(date)")
+            XCTAssertEqual(events.map(Set.init), expected, "\(date)")
         }
     }
 
