@@ -59,21 +59,10 @@ class CalendarViewModel {
                 from: cellViewModels.first!.date, to: cellViewModels.last!.date
             )
 
-            return cellViewModels.map { viewModel in
-
-                let events = events.filter {
-                    Calendar.current.isDate(viewModel.date, in: ($0.start, $0.end))
-                }
-
-                return CalendarCellViewModel(
-                    date: viewModel.date,
-                    inMonth: viewModel.inMonth,
-                    isToday: viewModel.isToday,
-                    isSelected: false,
-                    isHovered: false,
-                    events: events
-                )
-
+            return cellViewModels.map { vm in
+                vm.with(events: events.filter {
+                    Calendar.current.isDate(vm.date, in: ($0.start, $0.end))
+                })
             }
         }
         .share()
@@ -84,18 +73,8 @@ class CalendarViewModel {
         )
         .map { cellViewModels, selectedDate -> [CalendarCellViewModel] in
 
-            cellViewModels.map { viewModel in
-
-                let isSelected = Calendar.current.isDate(viewModel.date, inSameDayAs: selectedDate)
-
-                return CalendarCellViewModel(
-                    date: viewModel.date,
-                    inMonth: viewModel.inMonth,
-                    isToday: viewModel.isToday,
-                    isSelected: isSelected,
-                    isHovered: false,
-                    events: viewModel.events
-                )
+            cellViewModels.map {
+                $0.with(isSelected: Calendar.current.isDate($0.date, inSameDayAs: selectedDate))
             }
         }
         .share()
@@ -111,20 +90,14 @@ class CalendarViewModel {
         )
         .map { cellViewModels, hoveredDate -> [CalendarCellViewModel] in
 
-            cellViewModels.map { viewModel in
-
-                let isHovered = hoveredDate.map { date in
-                    Calendar.current.isDate(date, inSameDayAs: viewModel.date)
-                } ?? false
-
-                return CalendarCellViewModel(
-                    date: viewModel.date,
-                    inMonth: viewModel.inMonth,
-                    isToday: viewModel.isToday,
-                    isSelected: viewModel.isSelected,
-                    isHovered: isHovered,
-                    events: viewModel.events
-                )
+            if let hoveredDate = hoveredDate {
+                return cellViewModels.map {
+                    $0.with(isHovered: Calendar.current.isDate($0.date, inSameDayAs: hoveredDate))
+                }
+            } else {
+                return cellViewModels.map {
+                    $0.with(isHovered: false)
+                }
             }
         }
         .share(replay: 1)
@@ -132,5 +105,20 @@ class CalendarViewModel {
 
     func asObservable() -> Observable<[CalendarCellViewModel]> {
         return cellViewModelsObservable
+    }
+}
+
+private extension CalendarCellViewModel {
+
+    func with(isSelected: Bool? = nil, isHovered: Bool? = nil, events: [EventModel]? = nil) -> Self {
+
+        CalendarCellViewModel(
+            date: date,
+            inMonth: inMonth,
+            isToday: isToday,
+            isSelected: isSelected ?? self.isSelected,
+            isHovered: isHovered ?? self.isHovered,
+            events: events ?? self.events
+        )
     }
 }

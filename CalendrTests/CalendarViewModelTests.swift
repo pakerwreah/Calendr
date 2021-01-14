@@ -177,44 +177,32 @@ class MockCalendarServiceProvider: CalendarServiceProviding {
 
     init() {
         events = [
-            .init(
+            .make(
                 start: .make(year: 2021, month: 1, day: 1),
                 end: .make(year: 2021, month: 1, day: 4),
                 isAllDay: true,
                 title: "Event 1",
-                location: nil,
-                notes: nil,
-                url: nil,
                 calendar: calendars[0]
             ),
-            .init(
+            .make(
                 start: .make(year: 2021, month: 1, day: 2),
                 end: .make(year: 2021, month: 1, day: 2),
                 isAllDay: true,
                 title: "Event 2",
-                location: nil,
-                notes: nil,
-                url: nil,
                 calendar: calendars[0]
             ),
-            .init(
+            .make(
                 start: .make(year: 2021, month: 1, day: 2, hour: 8),
                 end: .make(year: 2021, month: 1, day: 2, hour: 9),
                 isAllDay: false,
                 title: "Event 3",
-                location: nil,
-                notes: nil,
-                url: nil,
                 calendar: calendars[1]
             ),
-            .init(
+            .make(
                 start: .make(year: 2021, month: 1, day: 3, hour: 14),
                 end: .make(year: 2021, month: 1, day: 3, hour: 15),
                 isAllDay: false,
                 title: "Event 4",
-                location: nil,
-                notes: nil,
-                url: nil,
                 calendar: calendars[2]
             )
         ]
