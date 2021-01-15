@@ -82,6 +82,7 @@ private extension CalendarModel {
     init(from calendar: EKCalendar) {
         self.init(
             identifier: calendar.calendarIdentifier,
+            account: calendar.source.title,
             title: calendar.title,
             color: calendar.cgColor
         )

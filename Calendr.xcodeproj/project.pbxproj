@@ -29,6 +29,9 @@
 		34924CE8259FCC95009C3450 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34924CE7259FCC95009C3450 /* Date.swift */; };
 		34924CEE259FD064009C3450 /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34924CED259FD064009C3450 /* DateFormatter.swift */; };
 		34A4C3E925963FB200D0F949 /* NSStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A4C3E825963FB200D0F949 /* NSStackView.swift */; };
+		34B5A09325B0CE6F00F7F7ED /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B5A09225B0CE6F00F7F7ED /* SettingsViewController.swift */; };
+		34B5A09725B0F8A500F7F7ED /* NSButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B5A09625B0F8A500F7F7ED /* NSButton.swift */; };
+		34B5A09D25B118EC00F7F7ED /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B5A09C25B118EC00F7F7ED /* SettingsViewModel.swift */; };
 		34F128D125968044007DF31C /* Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F128D025968044007DF31C /* Label.swift */; };
 		34F128DD259690C8007DF31C /* CALayer+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F128DC259690C8007DF31C /* CALayer+Rx.swift */; };
 		34F128E12597B9C9007DF31C /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F128E02597B9C9007DF31C /* MainViewController.swift */; };
@@ -76,6 +79,9 @@
 		34924CE7259FCC95009C3450 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		34924CED259FD064009C3450 /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
 		34A4C3E825963FB200D0F949 /* NSStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSStackView.swift; sourceTree = "<group>"; };
+		34B5A09225B0CE6F00F7F7ED /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		34B5A09625B0F8A500F7F7ED /* NSButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSButton.swift; sourceTree = "<group>"; };
+		34B5A09C25B118EC00F7F7ED /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		34F128D025968044007DF31C /* Label.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Label.swift; sourceTree = "<group>"; };
 		34F128DC259690C8007DF31C /* CALayer+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CALayer+Rx.swift"; sourceTree = "<group>"; };
 		34F128E02597B9C9007DF31C /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -164,6 +170,7 @@
 				347D0F9925952F8A002451EC /* Assets.xcassets */,
 				347D0FDD259532E7002451EC /* Calendar */,
 				347D0FE22595384E002451EC /* Components */,
+				34F88A8425B0CDA3005C9BA6 /* Settings */,
 				347D0FE525954481002451EC /* Extensions */,
 				347D0FF025954916002451EC /* Models */,
 				347E6D4125AA28FA009A6716 /* Providers */,
@@ -209,11 +216,12 @@
 			children = (
 				34F128DC259690C8007DF31C /* CALayer+Rx.swift */,
 				34702167259E761100827AE7 /* Calendar.swift */,
+				34924CED259FD064009C3450 /* DateFormatter.swift */,
+				34B5A09625B0F8A500F7F7ED /* NSButton.swift */,
 				34A4C3E825963FB200D0F949 /* NSStackView.swift */,
 				3430ED02259634E00045DA53 /* NSStackView+Rx.swift */,
 				347D0FE6259544B4002451EC /* NSView+Layout.swift */,
 				34305BCA25992A4E00AB381D /* Rx+Helpers.swift */,
-				34924CED259FD064009C3450 /* DateFormatter.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -234,6 +242,15 @@
 				34FD09D825AE269600AAAAE2 /* DateProvider.swift */,
 			);
 			path = Providers;
+			sourceTree = "<group>";
+		};
+		34F88A8425B0CDA3005C9BA6 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				34B5A09225B0CE6F00F7F7ED /* SettingsViewController.swift */,
+				34B5A09C25B118EC00F7F7ED /* SettingsViewModel.swift */,
+			);
+			path = Settings;
 			sourceTree = "<group>";
 		};
 		C53A771308AC87F8514F0360 /* Pods */ = {
@@ -438,7 +455,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				347D0FDF259533C3002451EC /* CalendarView.swift in Sources */,
+				34B5A09D25B118EC00F7F7ED /* SettingsViewModel.swift in Sources */,
 				347D0F9825952F89002451EC /* AppDelegate.swift in Sources */,
+				34B5A09325B0CE6F00F7F7ED /* SettingsViewController.swift in Sources */,
 				347D0FF825954975002451EC /* CalendarCellViewModel.swift in Sources */,
 				34F128E12597B9C9007DF31C /* MainViewController.swift in Sources */,
 				34F128DD259690C8007DF31C /* CALayer+Rx.swift in Sources */,
@@ -448,6 +467,7 @@
 				34F128F22597C340007DF31C /* WeekDayCellView.swift in Sources */,
 				34305BCB25992A4E00AB381D /* Rx+Helpers.swift in Sources */,
 				347D0FE7259544B4002451EC /* NSView+Layout.swift in Sources */,
+				34B5A09725B0F8A500F7F7ED /* NSButton.swift in Sources */,
 				3430ED03259634E00045DA53 /* NSStackView+Rx.swift in Sources */,
 				34702168259E761100827AE7 /* Calendar.swift in Sources */,
 				347D0FF225954920002451EC /* EventModel.swift in Sources */,

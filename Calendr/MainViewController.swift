@@ -71,6 +71,10 @@ class MainViewController: NSViewController {
         mainView.edges(to: view, constant: 8)
     }
 
+    override func viewDidAppear() {
+        view.window?.styleMask.remove(.resizable)
+    }
+
     private func makeMainView(_ views: NSView...) -> NSView {
 
         let mainStackView = NSStackView(.vertical)
@@ -150,6 +154,16 @@ class MainViewController: NSViewController {
             if let appUrl = NSWorkspace.shared.urlForApplication(toOpen: URL(string: "webcal://")!) {
                 NSWorkspace.shared.open(appUrl)
             }
+        }
+        .disposed(by: disposeBag)
+
+        settingsBtn.rx.tap.bind { [calendarService, settingsBtn] in
+            // FIXME: connect view model to calendar
+            let viewModel = SettingsViewModel(calendarService: calendarService, userDefaults: .standard)
+            let popover = NSPopover()
+            popover.behavior = .transient
+            popover.contentViewController = SettingsViewController(viewModel: viewModel)
+            popover.show(relativeTo: .zero, of: settingsBtn, preferredEdge: .minX)
         }
         .disposed(by: disposeBag)
     }

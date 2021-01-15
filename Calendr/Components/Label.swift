@@ -7,6 +7,8 @@
 
 import Cocoa
 
-func Label(text: String = "") -> NSTextField {
-    NSTextField(labelWithString: text)
+func Label(text: String = "", font: NSFont? = nil) -> NSTextField {
+    let label = NSTextField(labelWithString: text)
+    label.font = font
+    return label
 }

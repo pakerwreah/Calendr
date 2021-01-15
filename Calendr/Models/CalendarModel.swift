@@ -9,6 +9,7 @@ import Foundation
 
 struct CalendarModel: Equatable {
     let identifier: String
+    let account: String
     let title: String
     let color: CGColor
 }
