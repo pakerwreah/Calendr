@@ -188,8 +188,11 @@ class MainViewController: NSViewController {
         let keySubject = PublishSubject<UInt16>()
 
         NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event -> NSEvent? in
-            keySubject.onNext(event.keyCode)
-            return nil
+            if 123...126 ~= event.keyCode {
+                keySubject.onNext(event.keyCode)
+                return nil
+            }
+            return event
         }
 
         let keyLeft = keySubject.matching(123).toVoid()
