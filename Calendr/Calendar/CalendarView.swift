@@ -10,12 +10,21 @@ import RxSwift
 
 class CalendarView: NSView {
 
-    private let cellSize: CGFloat = 25
     private let gridView = NSGridView(numberOfColumns: 7, rows: 7)
 
-    init(viewModel: CalendarViewModel,
-         hoverObserver: AnyObserver<Date?>,
-         clickObserver: AnyObserver<Date>) {
+    private let viewModel: CalendarViewModel
+    private let hoverObserver: AnyObserver<Date?>
+    private let clickObserver: AnyObserver<Date>
+
+    init(
+        viewModel: CalendarViewModel,
+        hoverObserver: AnyObserver<Date?>,
+        clickObserver: AnyObserver<Date>
+    ) {
+
+        self.viewModel = viewModel
+        self.hoverObserver = hoverObserver
+        self.clickObserver = clickObserver
 
         super.init(frame: .zero)
 
@@ -23,7 +32,7 @@ class CalendarView: NSView {
 
         addWeekendLayers()
 
-        setUpBindings(with: viewModel, hoverObserver, clickObserver)
+        setUpBindings()
     }
 
     private func configureLayout() {
@@ -33,9 +42,9 @@ class CalendarView: NSView {
         gridView.columnSpacing = 0
 
         for row in 0..<gridView.numberOfRows {
-            gridView.row(at: row).height = cellSize
+            gridView.row(at: row).height = Constants.cellSize
             for col in 0..<gridView.numberOfColumns {
-                gridView.column(at: col).width = cellSize
+                gridView.column(at: col).width = Constants.cellSize
             }
         }
 
@@ -47,7 +56,9 @@ class CalendarView: NSView {
     private func addWeekendLayers() {
         gridView.wantsLayer = true
 
-        for col in [0, 6] {
+        let cellSize = Constants.cellSize
+
+        for col: CGFloat in [0, 6] {
             let layer = CALayer()
             layer.frame = CGRect(x: CGFloat(col) * cellSize, y: 0, width: cellSize, height: 6 * cellSize)
             layer.backgroundColor = NSColor.gray.withAlphaComponent(0.2).cgColor
@@ -56,9 +67,8 @@ class CalendarView: NSView {
         }
     }
 
-    private func setUpBindings(with viewModel: CalendarViewModel,
-                               _ hoverObserver: AnyObserver<Date?>,
-                               _ clickObserver: AnyObserver<Date>) {
+    private func setUpBindings() {
+
         for weekDay in 0..<7 {
             let cellView = WeekDayCellView(weekDay: weekDay)
             gridView.cell(atColumnIndex: weekDay, rowIndex: 0).contentView = cellView
@@ -84,4 +94,9 @@ class CalendarView: NSView {
         fatalError("init(coder:) has not been implemented")
     }
 
+}
+
+private enum Constants {
+
+    static let cellSize: CGFloat = 25
 }

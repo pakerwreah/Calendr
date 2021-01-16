@@ -16,15 +16,17 @@ class WeekDayCellView: NSView {
     init(weekDay: Int) {
         super.init(frame: .zero)
 
-        forAutoLayout()
-
         configureLayout()
 
         label.stringValue = Self.formatter.veryShortWeekdaySymbols[weekDay]
     }
 
     private func configureLayout() {
+
+        forAutoLayout()
+
         addSubview(label)
+
         label.alignment = .center
         label.textColor = .lightGray
         label.font = .boldSystemFont(ofSize: 11)
