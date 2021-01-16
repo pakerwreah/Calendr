@@ -10,10 +10,13 @@ import RxSwift
 class CalendarViewModel {
     private let cellViewModelsObservable: Observable<[CalendarCellViewModel]>
 
-    init(dateObservable: Observable<Date>,
-         hoverObservable: Observable<Date?>,
-         calendarService: CalendarServiceProviding,
-         dateProvider: DateProviding) {
+    init(
+        dateObservable: Observable<Date>,
+        hoverObservable: Observable<Date?>,
+        calendarService: CalendarServiceProviding,
+        enabledCalendars: Observable<[String]>,
+        dateProvider: DateProviding = DateProvider()
+    ) {
 
         let dateObservable = dateObservable.distinctUntilChanged().share()
 
@@ -51,12 +54,14 @@ class CalendarViewModel {
 
         // Get events for current dates
         let eventsObservable = Observable.combineLatest(
-            dateCellsObservable, calendarService.changeObservable.startWith(())
+            dateCellsObservable, enabledCalendars, calendarService.changeObservable.startWith(())
         )
-        .map { cellViewModels, _ -> [CalendarCellViewModel] in
+        .map { cellViewModels, calendars, _ -> [CalendarCellViewModel] in
 
             let events = calendarService.events(
-                from: cellViewModels.first!.date, to: cellViewModels.last!.date
+                from: cellViewModels.first!.date,
+                to: cellViewModels.last!.date,
+                calendars: calendars
             )
 
             return cellViewModels.map { vm in

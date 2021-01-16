@@ -22,6 +22,8 @@ class MainViewController: NSViewController {
 
     // ViewModels
     private let calendarViewModel: CalendarViewModel
+    private let settingsViewModel: SettingsViewModel
+    private let calendarPickerViewModel: CalendarPickerViewModel
 
     // Reactive
     private let disposeBag = DisposeBag()
@@ -31,9 +33,14 @@ class MainViewController: NSViewController {
 
     // Properties
     private let calendarService = CalendarServiceProvider()
-    private let dateProvider = DateProvider()
 
     init() {
+
+        settingsViewModel = SettingsViewModel()
+
+        calendarPickerViewModel = CalendarPickerViewModel(calendarService: calendarService)
+
+        let enabledCalendars = calendarPickerViewModel.enabledCalendars
 
         let hoverSubject = PublishSubject<Date?>()
 
@@ -44,7 +51,7 @@ class MainViewController: NSViewController {
             dateObservable: selectedDate,
             hoverObservable: hoverObservable,
             calendarService: calendarService,
-            dateProvider: dateProvider
+            enabledCalendars: enabledCalendars
         )
 
         calendarView = CalendarView(
@@ -157,13 +164,14 @@ class MainViewController: NSViewController {
         }
         .disposed(by: disposeBag)
 
-        settingsBtn.rx.tap.bind { [calendarService, settingsBtn] in
-            // FIXME: connect view model to calendar
-            let viewModel = SettingsViewModel(calendarService: calendarService, userDefaults: .standard)
+        settingsBtn.rx.tap.bind { [settingsViewModel, calendarPickerViewModel, settingsBtn] in
             let popover = NSPopover()
             popover.behavior = .transient
-            popover.contentViewController = SettingsViewController(viewModel: viewModel)
-            popover.show(relativeTo: .zero, of: settingsBtn, preferredEdge: .minX)
+            popover.contentViewController = SettingsViewController(
+                settingsViewModel: settingsViewModel,
+                calendarsViewModel: calendarPickerViewModel
+            )
+            popover.show(relativeTo: .zero, of: settingsBtn, preferredEdge: .maxY)
         }
         .disposed(by: disposeBag)
     }
