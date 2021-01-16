@@ -22,6 +22,7 @@ class CalendarViewModelTests: XCTestCase {
         dateObservable: dateSubject,
         hoverObservable: hoverSubject,
         calendarService: calendarService,
+        enabledCalendars: .just([]),
         dateProvider: dateProvider
     )
 
@@ -164,52 +165,57 @@ class CalendarViewModelTests: XCTestCase {
 }
 
 class MockCalendarServiceProvider: CalendarServiceProviding {
-
-    var calendars: [CalendarModel] = [
-        .init(identifier: "1", title: "Calendar 1", color: .white),
-        .init(identifier: "2", title: "Calendar 2", color: .black),
-        .init(identifier: "3", title: "Calendar 3", color: .clear)
-    ]
-
-    var events: [EventModel]
-
+    let authObservable: Observable<Void> = .empty()
     let (changeObservable, changeObserver) = PublishSubject<Void>.pipe()
 
+    var m_calendars: [CalendarModel]
+    var m_events: [EventModel]
+
     init() {
-        events = [
+        m_calendars = [
+            .init(identifier: "1", account: "A1", title: "Calendar 1", color: .white),
+            .init(identifier: "2", account: "A2", title: "Calendar 2", color: .black),
+            .init(identifier: "3", account: "A3", title: "Calendar 3", color: .clear)
+        ]
+
+        m_events = [
             .make(
                 start: .make(year: 2021, month: 1, day: 1),
                 end: .make(year: 2021, month: 1, day: 4),
                 isAllDay: true,
                 title: "Event 1",
-                calendar: calendars[0]
+                calendar: m_calendars[0]
             ),
             .make(
                 start: .make(year: 2021, month: 1, day: 2),
                 end: .make(year: 2021, month: 1, day: 2),
                 isAllDay: true,
                 title: "Event 2",
-                calendar: calendars[0]
+                calendar: m_calendars[0]
             ),
             .make(
                 start: .make(year: 2021, month: 1, day: 2, hour: 8),
                 end: .make(year: 2021, month: 1, day: 2, hour: 9),
                 isAllDay: false,
                 title: "Event 3",
-                calendar: calendars[1]
+                calendar: m_calendars[1]
             ),
             .make(
                 start: .make(year: 2021, month: 1, day: 3, hour: 14),
                 end: .make(year: 2021, month: 1, day: 3, hour: 15),
                 isAllDay: false,
                 title: "Event 4",
-                calendar: calendars[2]
+                calendar: m_calendars[2]
             )
         ]
     }
 
-    func events(from start: Date, to end: Date) -> [EventModel] {
-        return events
+    func calendars() -> [CalendarModel] {
+        return m_calendars
+    }
+
+    func events(from start: Date, to end: Date, calendars: [String]) -> [EventModel] {
+        return m_events
     }
 }
 
