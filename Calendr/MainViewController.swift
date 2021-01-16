@@ -78,10 +78,6 @@ class MainViewController: NSViewController {
         mainView.edges(to: view, constant: 8)
     }
 
-    override func viewDidAppear() {
-        view.window?.styleMask.remove(.resizable)
-    }
-
     private func makeMainView(_ views: NSView...) -> NSView {
 
         let mainStackView = NSStackView(.vertical)
@@ -128,6 +124,14 @@ class MainViewController: NSViewController {
         setUpBindings()
 
         calendarService.requestAccess()
+    }
+
+    override func viewDidAppear() {
+        view.window?.styleMask.remove(.resizable)
+    }
+
+    override func viewDidDisappear() {
+        NSApp.hide(self)
     }
 
     private func setUpBindings() {
