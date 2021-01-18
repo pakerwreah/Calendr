@@ -126,6 +126,38 @@ class CalendarViewModelTests: XCTestCase {
         }
     }
 
+    func testTodayChange() {
+
+        let dates: [Date] = [
+            .make(year: 2021, month: 1, day: 1),
+            .make(year: 2021, month: 1, day: 2),
+            .make(year: 2021, month: 2, day: 1)
+        ]
+
+        for date in dates {
+            dateProvider.today = date
+            dateSubject.onNext(date)
+
+            XCTAssertEqual(lastValue?.first(where: \.isToday).map(\.date), date, "\(date)")
+        }
+    }
+
+    func testTimezoneChange() {
+
+        dateProvider.m_calendar.timeZone = TimeZone(identifier: "America/Sao_Paulo")!
+
+        dateProvider.today = .make(year: 2021, month: 1, day: 1, hour: 23)
+        dateSubject.onNext(dateProvider.today)
+
+        XCTAssertEqual(lastValue?.firstIndex(where: \.isToday), 5)
+
+        dateProvider.m_calendar.timeZone = TimeZone(identifier: "UTC")!
+
+        dateSubject.onNext(dateProvider.today)
+
+        XCTAssertEqual(lastValue?.firstIndex(where: \.isToday), 6)
+    }
+
     func testEventsPerDate() {
 
         let expectedEvents: [(date: Date, events: [String])] = [
@@ -220,5 +252,7 @@ class MockCalendarServiceProvider: CalendarServiceProviding {
 }
 
 class MockDateProvider: DateProviding {
+    var m_calendar = Calendar.current
+    var calendar: Calendar { m_calendar }
     var today: Date = .make(year: 2021, month: 1, day: 1)
 }

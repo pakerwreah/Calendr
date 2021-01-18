@@ -139,10 +139,9 @@ class MainViewController: NSViewController {
             .disposed(by: disposeBag)
 
         Observable.merge(
-            rx.sentMessage(#selector(NSViewController.viewWillAppear)), // FIXME: detect day change and remove this
-            rx.sentMessage(#selector(NSViewController.viewDidDisappear))
+            NotificationCenter.default.rx.notification(.NSCalendarDayChanged, object: nil).toVoid(),
+            rx.sentMessage(#selector(NSViewController.viewDidDisappear)).toVoid()
         )
-        .toVoid()
         .startWith(())
         .map { Date() }
         .bind(to: initialDate)

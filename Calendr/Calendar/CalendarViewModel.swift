@@ -18,12 +18,10 @@ class CalendarViewModel {
         dateProvider: DateProviding = DateProvider()
     ) {
 
-        let dateObservable = dateObservable.distinctUntilChanged().share()
-
         // Calculate date range for current month
         let dateRangeObservable = dateObservable
             .compactMap { selectedDate in
-                Calendar.current.dateInterval(of: .month, for: selectedDate)
+                dateProvider.calendar.dateInterval(of: .month, for: selectedDate)
             }
             .distinctUntilChanged()
             .share()
@@ -31,19 +29,17 @@ class CalendarViewModel {
         // Create cells for current month
         let dateCellsObservable = dateRangeObservable.map { month -> [CalendarCellViewModel] in
 
-            let today = dateProvider.today
-            let currentWeekDay = Calendar.current.component(.weekday, from: month.start) - 1
-            let start = Calendar.current.date(byAdding: .day, value: -currentWeekDay, to: month.start)!
+            let currentWeekDay = dateProvider.calendar.component(.weekday, from: month.start) - 1
+            let start = dateProvider.calendar.date(byAdding: .day, value: -currentWeekDay, to: month.start)!
 
             return (0..<42).map { day -> CalendarCellViewModel in
-                let date = Calendar.current.date(byAdding: .day, value: day, to: start)!
+                let date = dateProvider.calendar.date(byAdding: .day, value: day, to: start)!
                 let inMonth = month.contains(date)
-                let isToday = Calendar.current.isDate(date, inSameDayAs: today)
 
                 return CalendarCellViewModel(
                     date: date,
                     inMonth: inMonth,
-                    isToday: isToday,
+                    isToday: false,
                     isSelected: false,
                     isHovered: false,
                     events: []
@@ -66,20 +62,45 @@ class CalendarViewModel {
 
             return cellViewModels.map { vm in
                 vm.with(events: events.filter {
-                    Calendar.current.isDate(vm.date, in: ($0.start, $0.end))
+                    dateProvider.calendar.isDate(vm.date, in: ($0.start, $0.end))
                 })
+            }
+        }
+        .share()
+
+        var timezone = dateProvider.calendar.timeZone
+
+        // Check if today has changed
+        let todayObservable = dateObservable
+            .toVoid()
+            .map { dateProvider.today }
+            .distinctUntilChanged { a, b in
+                timezone == dateProvider.calendar.timeZone && dateProvider.calendar.isDate(a, inSameDayAs: b)
+            }
+            .do(afterNext: { _ in
+                timezone = dateProvider.calendar.timeZone
+            })
+
+        // Check which cell is today
+        let isTodayObservable = Observable.combineLatest(
+            eventsObservable, todayObservable
+        )
+        .map { cellViewModels, today -> [CalendarCellViewModel] in
+
+            cellViewModels.map {
+                $0.with(isToday: dateProvider.calendar.isDate($0.date, inSameDayAs: today))
             }
         }
         .share()
 
         // Check which cell is selected
         let isSelectedObservable = Observable.combineLatest(
-            eventsObservable, dateObservable
+            isTodayObservable, dateObservable
         )
         .map { cellViewModels, selectedDate -> [CalendarCellViewModel] in
 
             cellViewModels.map {
-                $0.with(isSelected: Calendar.current.isDate($0.date, inSameDayAs: selectedDate))
+                $0.with(isSelected: dateProvider.calendar.isDate($0.date, inSameDayAs: selectedDate))
             }
         }
         .share()
@@ -97,7 +118,7 @@ class CalendarViewModel {
 
             if let hoveredDate = hoveredDate {
                 return cellViewModels.map {
-                    $0.with(isHovered: Calendar.current.isDate($0.date, inSameDayAs: hoveredDate))
+                    $0.with(isHovered: dateProvider.calendar.isDate($0.date, inSameDayAs: hoveredDate))
                 }
             } else {
                 return cellViewModels.map {
@@ -115,12 +136,17 @@ class CalendarViewModel {
 
 private extension CalendarCellViewModel {
 
-    func with(isSelected: Bool? = nil, isHovered: Bool? = nil, events: [EventModel]? = nil) -> Self {
+    func with(
+        isToday: Bool? = nil,
+        isSelected: Bool? = nil,
+        isHovered: Bool? = nil,
+        events: [EventModel]? = nil
+    ) -> Self {
 
         CalendarCellViewModel(
             date: date,
             inMonth: inMonth,
-            isToday: isToday,
+            isToday: isToday ?? self.isToday,
             isSelected: isSelected ?? self.isSelected,
             isHovered: isHovered ?? self.isHovered,
             events: events ?? self.events

@@ -10,15 +10,18 @@ import RxSwift
 class DateSelector {
     private let dateObservable: Observable<Date>
 
-    init(initial: Observable<Date>,
-         selected: Observable<Date>,
-         reset: Observable<Void>,
-         prevDay: Observable<Void>,
-         nextDay: Observable<Void>,
-         prevWeek: Observable<Void>,
-         nextWeek: Observable<Void>,
-         prevMonth: Observable<Void>,
-         nextMonth: Observable<Void>) {
+    init(
+        initial: Observable<Date>,
+        selected: Observable<Date>,
+        reset: Observable<Void>,
+        prevDay: Observable<Void>,
+        nextDay: Observable<Void>,
+        prevWeek: Observable<Void>,
+        nextWeek: Observable<Void>,
+        prevMonth: Observable<Void>,
+        nextMonth: Observable<Void>
+    ) {
+        var timezone = Calendar.current.timeZone
 
         dateObservable = Observable.merge(
             initial,
@@ -40,8 +43,11 @@ class DateSelector {
             }
         )
         .distinctUntilChanged { a, b in
-            Calendar.current.isDate(a, inSameDayAs: b)
+            timezone == Calendar.current.timeZone && Calendar.current.isDate(a, inSameDayAs: b)
         }
+        .do(afterNext: { _ in
+            timezone = Calendar.current.timeZone
+        })
         .share(replay: 1)
     }
 
