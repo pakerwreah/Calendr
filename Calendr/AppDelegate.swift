@@ -7,25 +7,14 @@
 
 import Cocoa
 
-@main
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-    @IBOutlet var window: NSWindow!
+    private var viewController: MainViewController?
 
-    func applicationDidFinishLaunching(_ aNotification: Notification) {
+    func applicationDidFinishLaunching(_ notification: Notification) {
+
         if NSClassFromString("XCTestCase") == nil {
-            window.contentViewController = MainViewController()
+            viewController = MainViewController()
         }
     }
-
-    func applicationWillTerminate(_ aNotification: Notification) {
-        // Insert code here to tear down your application
-    }
-
-    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
-        window.setIsVisible(true)
-        return true
-    }
-
 }
-

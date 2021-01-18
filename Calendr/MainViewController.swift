@@ -12,6 +12,7 @@ import RxCocoa
 class MainViewController: NSViewController {
 
     // Views
+    private var statusItem: NSStatusItem
     private let calendarView: CalendarView
     private let titleLabel = Label()
     private let prevBtn = NSButton()
@@ -35,6 +36,8 @@ class MainViewController: NSViewController {
     private let calendarService = CalendarServiceProvider()
 
     init() {
+
+        statusItem = NSStatusBar.system.statusItem(withLength: 90)
 
         settingsViewModel = SettingsViewModel()
 
@@ -61,6 +64,10 @@ class MainViewController: NSViewController {
         )
 
         super.init(nibName: nil, bundle: nil)
+
+        setUpBindings()
+
+        calendarService.requestAccess()
     }
 
     override func loadView() {
@@ -119,19 +126,8 @@ class MainViewController: NSViewController {
         return toolStackView
     }
 
-    override func viewDidLoad() {
-
-        setUpBindings()
-
-        calendarService.requestAccess()
-    }
-
     override func viewDidAppear() {
-        view.window?.styleMask.remove(.resizable)
-    }
-
-    override func viewDidDisappear() {
-        NSApp.hide(self)
+        view.window?.makeKey()
     }
 
     private func setUpBindings() {
@@ -143,11 +139,11 @@ class MainViewController: NSViewController {
             .disposed(by: disposeBag)
 
         Observable.merge(
-            rx.sentMessage(#selector(NSViewController.viewDidLoad)),
-            rx.sentMessage(#selector(NSViewController.viewWillAppear)),
+            rx.sentMessage(#selector(NSViewController.viewWillAppear)), // FIXME: detect day change and remove this
             rx.sentMessage(#selector(NSViewController.viewDidDisappear))
         )
         .toVoid()
+        .startWith(())
         .map { Date() }
         .bind(to: initialDate)
         .disposed(by: disposeBag)
@@ -159,6 +155,40 @@ class MainViewController: NSViewController {
         selectedDate
             .map(DateFormatter(format: "MMM yyyy").string(from:))
             .bind(to: titleLabel.rx.text)
+            .disposed(by: disposeBag)
+
+        guard
+            let statusBarButton = statusItem.button,
+            let statusItemView = statusBarButton.cell?.controlView
+        else { return }
+
+        // fix a bug with trackpad click
+        statusBarButton.sendAction(on: .leftMouseDown)
+
+        statusBarButton.rx.tap.flatMap { [weak self] _ -> Observable<Bool> in
+            let popover = NSPopover()
+            popover.behavior = .transient
+            popover.contentViewController = self
+            popover.animates = false
+            popover.show(relativeTo: .zero, of: statusItemView, preferredEdge: .maxY)
+            popover.animates = true
+            return popover.rx.observe(\.isShown)
+        }
+        .bind(to: statusBarButton.rx.isHighlighted)
+        .disposed(by: disposeBag)
+
+        let titleIcon = NSAttributedString(string: "\u{1f4c5}  ", attributes: [
+            .font: NSFont(name: "SegoeUISymbol", size: statusBarButton.font!.pointSize)!
+        ])
+
+        selectedDate
+            .map(DateFormatter(template: "yyyyMMdd").string(from:))
+            .map { date in
+                let title = NSMutableAttributedString(attributedString: titleIcon)
+                title.append(NSAttributedString(string: date))
+                return title
+            }
+            .bind(to: statusBarButton.rx.attributedTitle)
             .disposed(by: disposeBag)
 
         calendarBtn.rx.tap.bind {
@@ -222,5 +252,13 @@ class MainViewController: NSViewController {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+extension NSStatusBarButton {
+    open override func mouseDown(with event: NSEvent) {
+        super.mouseDown(with: event)
+        // keep highlighted
+        highlight(true)
     }
 }
