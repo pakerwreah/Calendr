@@ -34,6 +34,8 @@
 		34B5A09325B0CE6F00F7F7ED /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B5A09225B0CE6F00F7F7ED /* SettingsViewController.swift */; };
 		34B5A09725B0F8A500F7F7ED /* NSButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B5A09625B0F8A500F7F7ED /* NSButton.swift */; };
 		34B5A09D25B118EC00F7F7ED /* CalendarPickerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B5A09C25B118EC00F7F7ED /* CalendarPickerViewModel.swift */; };
+		34CC382D25B636A6006CBD99 /* Checkbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34CC382C25B636A6006CBD99 /* Checkbox.swift */; };
+		34E004A725B61D5200241419 /* StatusItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E004A625B61D5200241419 /* StatusItemViewModel.swift */; };
 		34F128D125968044007DF31C /* Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F128D025968044007DF31C /* Label.swift */; };
 		34F128DD259690C8007DF31C /* CALayer+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F128DC259690C8007DF31C /* CALayer+Rx.swift */; };
 		34F128E12597B9C9007DF31C /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F128E02597B9C9007DF31C /* MainViewController.swift */; };
@@ -88,6 +90,8 @@
 		34B5A09225B0CE6F00F7F7ED /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		34B5A09625B0F8A500F7F7ED /* NSButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSButton.swift; sourceTree = "<group>"; };
 		34B5A09C25B118EC00F7F7ED /* CalendarPickerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPickerViewModel.swift; sourceTree = "<group>"; };
+		34CC382C25B636A6006CBD99 /* Checkbox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checkbox.swift; sourceTree = "<group>"; };
+		34E004A625B61D5200241419 /* StatusItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemViewModel.swift; sourceTree = "<group>"; };
 		34F128D025968044007DF31C /* Label.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Label.swift; sourceTree = "<group>"; };
 		34F128DC259690C8007DF31C /* CALayer+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CALayer+Rx.swift"; sourceTree = "<group>"; };
 		34F128E02597B9C9007DF31C /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -178,8 +182,10 @@
 				34F96CD725B4E2F50020DEEA /* SegoeUISymbol.ttf */,
 				347D0F9925952F8A002451EC /* Assets.xcassets */,
 				347D0FDD259532E7002451EC /* Calendar */,
+				3481F66225B6233800FD26E6 /* CalendarPicker */,
 				347D0FE22595384E002451EC /* Components */,
 				347D0FE525954481002451EC /* Extensions */,
+				34CC383425B64432006CBD99 /* MenuBar */,
 				347D0FF025954916002451EC /* Models */,
 				347E6D4125AA28FA009A6716 /* Providers */,
 				34F88A8425B0CDA3005C9BA6 /* Settings */,
@@ -215,6 +221,7 @@
 		347D0FE22595384E002451EC /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				34CC382C25B636A6006CBD99 /* Checkbox.swift */,
 				34F128D025968044007DF31C /* Label.swift */,
 			);
 			path = Components;
@@ -253,14 +260,29 @@
 			path = Providers;
 			sourceTree = "<group>";
 		};
+		3481F66225B6233800FD26E6 /* CalendarPicker */ = {
+			isa = PBXGroup;
+			children = (
+				348B8D0725B2945600E518FE /* CalendarPickerView.swift */,
+				34B5A09C25B118EC00F7F7ED /* CalendarPickerViewModel.swift */,
+			);
+			path = CalendarPicker;
+			sourceTree = "<group>";
+		};
+		34CC383425B64432006CBD99 /* MenuBar */ = {
+			isa = PBXGroup;
+			children = (
+				34E004A625B61D5200241419 /* StatusItemViewModel.swift */,
+			);
+			path = MenuBar;
+			sourceTree = "<group>";
+		};
 		34F88A8425B0CDA3005C9BA6 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
 				348B8CFB25B290C200E518FE /* Prefs.swift */,
 				34B5A09225B0CE6F00F7F7ED /* SettingsViewController.swift */,
-				34B5A09C25B118EC00F7F7ED /* CalendarPickerViewModel.swift */,
 				348B8D0325B2925100E518FE /* SettingsViewModel.swift */,
-				348B8D0725B2945600E518FE /* CalendarPickerView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -484,7 +506,9 @@
 				34305BCB25992A4E00AB381D /* Rx+Helpers.swift in Sources */,
 				347D0FE7259544B4002451EC /* NSView+Layout.swift in Sources */,
 				34B5A09725B0F8A500F7F7ED /* NSButton.swift in Sources */,
+				34CC382D25B636A6006CBD99 /* Checkbox.swift in Sources */,
 				3430ED03259634E00045DA53 /* NSStackView+Rx.swift in Sources */,
+				34E004A725B61D5200241419 /* StatusItemViewModel.swift in Sources */,
 				34702168259E761100827AE7 /* Calendar.swift in Sources */,
 				347D0FF225954920002451EC /* EventModel.swift in Sources */,
 				34A4C3E925963FB200D0F949 /* NSStackView.swift in Sources */,

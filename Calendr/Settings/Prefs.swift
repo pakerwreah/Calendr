@@ -9,4 +9,6 @@ import Foundation
 
 enum Prefs {
     static let enabledCalendars = "enabled_calendars"
+    static let statusItemIconEnabled = "status_item_icon_enabled"
+    static let statusItemDateEnabled = "status_item_date_enabled"
 }

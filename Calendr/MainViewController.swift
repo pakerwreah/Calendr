@@ -11,8 +11,12 @@ import RxCocoa
 
 class MainViewController: NSViewController {
 
+    // ViewControllers
+    private let popover = NSPopover()
+    private let settingsViewController: SettingsViewController
+
     // Views
-    private var statusItem: NSStatusItem
+    private let statusItem: NSStatusItem
     private let calendarView: CalendarView
     private let titleLabel = Label()
     private let prevBtn = NSButton()
@@ -24,6 +28,7 @@ class MainViewController: NSViewController {
     // ViewModels
     private let calendarViewModel: CalendarViewModel
     private let settingsViewModel: SettingsViewModel
+    private let statusItemViewModel: StatusItemViewModel
     private let calendarPickerViewModel: CalendarPickerViewModel
 
     // Reactive
@@ -37,13 +42,21 @@ class MainViewController: NSViewController {
 
     init() {
 
-        statusItem = NSStatusBar.system.statusItem(withLength: 90)
+        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
 
         settingsViewModel = SettingsViewModel()
 
+        statusItemViewModel = StatusItemViewModel(
+            dateObservable: selectedDate,
+            settingsObservable: settingsViewModel.statusItemSettings
+        )
+
         calendarPickerViewModel = CalendarPickerViewModel(calendarService: calendarService)
 
-        let enabledCalendars = calendarPickerViewModel.enabledCalendars
+        settingsViewController = SettingsViewController(
+            settingsViewModel: settingsViewModel,
+            calendarsViewModel: calendarPickerViewModel
+        )
 
         let hoverSubject = PublishSubject<Date?>()
 
@@ -54,7 +67,7 @@ class MainViewController: NSViewController {
             dateObservable: selectedDate,
             hoverObservable: hoverObservable,
             calendarService: calendarService,
-            enabledCalendars: enabledCalendars
+            enabledCalendars: calendarPickerViewModel.enabledCalendars
         )
 
         calendarView = CalendarView(
@@ -66,6 +79,10 @@ class MainViewController: NSViewController {
         super.init(nibName: nil, bundle: nil)
 
         setUpBindings()
+
+        setUpPopoverBindings()
+
+        setUpStatusItemBindings()
 
         calendarService.requestAccess()
     }
@@ -156,6 +173,20 @@ class MainViewController: NSViewController {
             .bind(to: titleLabel.rx.text)
             .disposed(by: disposeBag)
 
+        calendarBtn.rx.tap.bind {
+            if let appUrl = NSWorkspace.shared.urlForApplication(toOpen: URL(string: "webcal://")!) {
+                NSWorkspace.shared.open(appUrl)
+            }
+        }
+        .disposed(by: disposeBag)
+
+        settingsBtn.rx.tap.bind { [weak self, settingsViewController] in
+            self?.presentAsModalWindow(settingsViewController)
+        }
+        .disposed(by: disposeBag)
+    }
+
+    private func setUpStatusItemBindings() {
         guard
             let statusBarButton = statusItem.button,
             let statusItemView = statusBarButton.cell?.controlView
@@ -164,49 +195,45 @@ class MainViewController: NSViewController {
         // fix a bug with trackpad click
         statusBarButton.sendAction(on: .leftMouseDown)
 
-        statusBarButton.rx.tap.flatMap { [weak self] _ -> Observable<Bool> in
-            let popover = NSPopover()
-            popover.behavior = .transient
-            popover.contentViewController = self
-            popover.animates = false
+        statusBarButton.rx.tap.bind { [popover] in
             popover.show(relativeTo: .zero, of: statusItemView, preferredEdge: .maxY)
-            popover.animates = true
-            return popover.rx.observe(\.isShown)
         }
-        .bind(to: statusBarButton.rx.isHighlighted)
         .disposed(by: disposeBag)
 
-        let titleIcon = NSAttributedString(string: "\u{1f4c5}  ", attributes: [
-            .font: NSFont(name: "SegoeUISymbol", size: statusBarButton.font!.pointSize)!
-        ])
-
-        selectedDate
-            .map(DateFormatter(template: "yyyyMMdd").string(from:))
-            .map { date in
-                let title = NSMutableAttributedString(attributedString: titleIcon)
-                title.append(NSAttributedString(string: date))
-                return title
-            }
-            .bind(to: statusBarButton.rx.attributedTitle)
+        popover.rx.observe(\.isShown)
+            .bind(to: statusBarButton.rx.isHighlighted)
             .disposed(by: disposeBag)
 
-        calendarBtn.rx.tap.bind {
-            if let appUrl = NSWorkspace.shared.urlForApplication(toOpen: URL(string: "webcal://")!) {
-                NSWorkspace.shared.open(appUrl)
-            }
-        }
-        .disposed(by: disposeBag)
+        statusItemViewModel.width
+            .bind(to: statusItem.rx.length)
+            .disposed(by: disposeBag)
 
-        settingsBtn.rx.tap.bind { [settingsViewModel, calendarPickerViewModel, settingsBtn] in
-            let popover = NSPopover()
-            popover.behavior = .transient
-            popover.contentViewController = SettingsViewController(
-                settingsViewModel: settingsViewModel,
-                calendarsViewModel: calendarPickerViewModel
-            )
-            popover.show(relativeTo: .zero, of: settingsBtn, preferredEdge: .maxY)
-        }
-        .disposed(by: disposeBag)
+        statusItemViewModel.text
+            .bind(to: statusBarButton.rx.attributedTitle)
+            .disposed(by: disposeBag)
+    }
+
+    private func setUpPopoverBindings() {
+
+        popover.contentViewController = self
+
+        popover.rx.observe(\.isShown)
+            .observe(on: MainScheduler.asyncInstance)
+            .bind(to: popover.rx.animates)
+            .disposed(by: disposeBag)
+
+        settingsViewController.rx.sentMessage(#selector(NSViewController.viewWillAppear))
+            .toVoid()
+            .map { NSPopover.Behavior.applicationDefined }
+            .bind(to: popover.rx.behavior)
+            .disposed(by: disposeBag)
+
+        settingsViewController.rx.sentMessage(#selector(NSViewController.viewDidDisappear))
+            .toVoid()
+            .startWith(())
+            .map { NSPopover.Behavior.transient }
+            .bind(to: popover.rx.behavior)
+            .disposed(by: disposeBag)
     }
 
     private func styleButton(_ button: NSButton) {

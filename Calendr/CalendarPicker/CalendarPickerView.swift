@@ -39,23 +39,26 @@ class CalendarPickerView: NSView {
 
     private func setUpBindings() {
 
-        viewModel.calendars.compactMap { [weak self] calendars -> [NSView]? in
-            guard let self = self else { return nil }
+        viewModel.calendars
+            .observe(on: MainScheduler.instance)
+            .compactMap { [weak self] calendars -> [NSView]? in
+                guard let self = self else { return nil }
 
-            return Dictionary(grouping: calendars, by: { $0.account })
-                .sorted(by: { $0.key < $1.key })
-                .flatMap { account, calendars in
-                    self.makeCalendarSection(title: account, calendars: calendars)
-                }
-        }
-        .bind(to: contentStackView.rx.arrangedSubviews)
-        .disposed(by: disposeBag)
+                return Dictionary(grouping: calendars, by: { $0.account })
+                    .sorted(by: { $0.key < $1.key })
+                    .flatMap { account, calendars in
+                        self.makeCalendarSection(title: account, calendars: calendars)
+                    }
+            }
+            .bind(to: contentStackView.rx.arrangedSubviews)
+            .disposed(by: disposeBag)
 
     }
 
     private func makeCalendarSection(title: String, calendars: [CalendarModel]) -> [NSView] {
 
-        let label = Label(text: title, font: .boldSystemFont(ofSize: 13))
+        let label = Label(text: title, font: .systemFont(ofSize: 11, weight: .semibold))
+        label.textColor = .placeholderTextColor
 
         let stackView = NSStackView(.vertical)
         stackView.alignment = .left
@@ -68,11 +71,8 @@ class CalendarPickerView: NSView {
 
     private func makeCalendarItem(_ calendar: CalendarModel) -> NSView {
 
-        let checkbox = NSButton()
-        checkbox.setButtonType(.switch)
-        checkbox.title = calendar.title
+        let checkbox = Checkbox(title: calendar.title)
         checkbox.setTitleColor(color: NSColor(cgColor: calendar.color)!)
-        checkbox.refusesFirstResponder = true
 
         viewModel.enabledCalendars
             .map { $0.contains(calendar.identifier) ? .on : .off }
