@@ -66,8 +66,8 @@ class MainViewController: NSViewController {
         calendarViewModel = CalendarViewModel(
             dateObservable: selectedDate,
             hoverObservable: hoverObservable,
-            calendarService: calendarService,
-            enabledCalendars: calendarPickerViewModel.enabledCalendars
+            enabledCalendars: calendarPickerViewModel.enabledCalendars,
+            calendarService: calendarService
         )
 
         calendarView = CalendarView(

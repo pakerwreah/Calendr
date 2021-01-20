@@ -14,15 +14,16 @@ class CalendarViewModelTests: XCTestCase {
     let disposeBag = DisposeBag()
     let dateSubject = PublishSubject<Date>()
     let hoverSubject = PublishSubject<Date?>()
+    let calendarsSubject = PublishSubject<[String]>()
 
-    let calendarService = MockCalendarServiceProvider()
-    let dateProvider = MockDateProvider()
+    private let calendarService = MockCalendarServiceProvider()
+    private let dateProvider = MockDateProvider()
 
     lazy var viewModel = CalendarViewModel(
         dateObservable: dateSubject,
         hoverObservable: hoverSubject,
+        enabledCalendars: calendarsSubject,
         calendarService: calendarService,
-        enabledCalendars: .just([]),
         dateProvider: dateProvider
     )
 
@@ -36,6 +37,7 @@ class CalendarViewModelTests: XCTestCase {
             }
             .disposed(by: disposeBag)
 
+        calendarsSubject.onNext([])
         dateSubject.onNext(dateProvider.today)
     }
 
@@ -194,11 +196,54 @@ class CalendarViewModelTests: XCTestCase {
         }
     }
 
+    func testServiceProviderEventsDateRange() {
+
+        var ranges: [[Date]] = []
+
+        calendarService.spyEventsObservable.bind {
+            ranges.append([$0.start, $0.end])
+        }
+        .disposed(by: disposeBag)
+
+        calendarsSubject.onNext(["1"])
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 2))
+        dateSubject.onNext(.make(year: 2021, month: 2, day: 1))
+
+        XCTAssertEqual(ranges, [
+            [.make(year: 2020, month: 12, day: 27), .make(year: 2021, month: 2, day: 6)], // calendar
+            [.make(year: 2021, month: 1, day: 31), .make(year: 2021, month: 3, day: 13)] // month change
+        ])
+    }
+
+    func testServiceProviderEventsCalendars() {
+
+        var calendars: [[String]] = []
+
+        calendarService.spyEventsObservable.map(\.calendars).bind {
+            calendars.append($0)
+        }
+        .disposed(by: disposeBag)
+
+        calendarsSubject.onNext(["1", "2", "3"])
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+        dateSubject.onNext(.make(year: 2021, month: 2, day: 1))
+        calendarsSubject.onNext(["1", "3"])
+
+        XCTAssertEqual(calendars, [
+            ["1", "2", "3"], // calendar
+            ["1", "2", "3"], // month change
+            ["1", "3"] // calendar
+        ])
+    }
 }
 
-class MockCalendarServiceProvider: CalendarServiceProviding {
-    let authObservable: Observable<Void> = .empty()
+private typealias EventsArgs = (start: Date, end: Date, calendars: [String])
+
+private class MockCalendarServiceProvider: CalendarServiceProviding {
+
     let (changeObservable, changeObserver) = PublishSubject<Void>.pipe()
+    let (spyEventsObservable, spyEventsObserver) = PublishSubject<EventsArgs>.pipe()
 
     var m_calendars: [CalendarModel]
     var m_events: [EventModel]
@@ -247,11 +292,12 @@ class MockCalendarServiceProvider: CalendarServiceProviding {
     }
 
     func events(from start: Date, to end: Date, calendars: [String]) -> [EventModel] {
+        spyEventsObserver.onNext((start: start, end: end, calendars: calendars))
         return m_events
     }
 }
 
-class MockDateProvider: DateProviding {
+private class MockDateProvider: DateProviding {
     var m_calendar = Calendar.current
     var calendar: Calendar { m_calendar }
     var today: Date = .make(year: 2021, month: 1, day: 1)

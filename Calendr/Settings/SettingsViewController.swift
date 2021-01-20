@@ -13,15 +13,15 @@ class SettingsViewController: NSViewController {
     private let disposeBag = DisposeBag()
 
     private let settingsViewModel: SettingsViewModel
+    private let calendarsViewModel: CalendarPickerViewModel
 
-    private let calendarsView: CalendarPickerView
     private let showIconCheckbox = Checkbox(title: "Show icon")
     private let showDateCheckbox = Checkbox(title: "Show date")
 
     init(settingsViewModel: SettingsViewModel, calendarsViewModel: CalendarPickerViewModel) {
 
         self.settingsViewModel = settingsViewModel
-        self.calendarsView = CalendarPickerView(viewModel: calendarsViewModel)
+        self.calendarsViewModel = calendarsViewModel
 
         super.init(nibName: nil, bundle: nil)
 
@@ -34,7 +34,7 @@ class SettingsViewController: NSViewController {
         view = NSView()
 
         let stackView = NSStackView(.vertical)
-        stackView.spacing = 32
+        stackView.spacing = 24
         view.addSubview(stackView)
         stackView.edges(to: view, constant: 24)
 
@@ -44,6 +44,8 @@ class SettingsViewController: NSViewController {
                 content: NSStackView(views: [showIconCheckbox, showDateCheckbox])
             )
         )
+
+        let calendarsView = CalendarPickerView(viewModel: calendarsViewModel)
 
         stackView.addArrangedSubview(
             makeSection(
@@ -58,6 +60,7 @@ class SettingsViewController: NSViewController {
     private func makeSection(title: String, content: NSView) -> NSView {
         let stackView = NSStackView(.vertical)
         stackView.alignment = .left
+        stackView.spacing = 5
 
         let label = Label(text: title, font: .systemFont(ofSize: 13, weight: .semibold))
 
@@ -68,7 +71,7 @@ class SettingsViewController: NSViewController {
 
         stackView.addArrangedSubviews(label, divider, content)
 
-        stackView.setCustomSpacing(16, after: divider)
+        stackView.setCustomSpacing(12, after: divider)
 
         return stackView
     }

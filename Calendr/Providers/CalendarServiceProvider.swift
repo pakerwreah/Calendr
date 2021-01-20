@@ -9,7 +9,6 @@ import RxSwift
 import EventKit
 
 protocol CalendarServiceProviding {
-    var authObservable: Observable<Void> { get }
     var changeObservable: Observable<Void> { get }
 
     func calendars() -> [CalendarModel]
@@ -22,18 +21,12 @@ class CalendarServiceProvider: CalendarServiceProviding {
 
     private let disposeBag = DisposeBag()
 
-    private let authObserver: AnyObserver<Bool>
     private let changeObserver: AnyObserver<Void>
 
-    let authObservable: Observable<Void>
     let changeObservable: Observable<Void>
 
     init() {
         (changeObservable, changeObserver) = PublishSubject<Void>.pipe()
-
-        let authSubject = BehaviorSubject<Bool>(value: false)
-        authObservable = authSubject.matching(true).toVoid()
-        authObserver = authSubject.asObserver()
 
         NotificationCenter.default.rx
             .notification(.EKEventStoreChanged, object: store)
@@ -44,16 +37,14 @@ class CalendarServiceProvider: CalendarServiceProviding {
 
     func requestAccess() {
         if EKEventStore.authorizationStatus(for: .event) == .authorized {
-            authObserver.onNext(true)
             changeObserver.onNext(())
         } else {
-            store.requestAccess(to: .event) { [authObserver] granted, error in
+            store.requestAccess(to: .event) { granted, error in
 
                 if let error = error {
                     print(error.localizedDescription)
                 } else if granted {
                     print("Access granted!")
-                    authObserver.onNext(true)
                 } else {
                     print("Access not granted!")
                 }

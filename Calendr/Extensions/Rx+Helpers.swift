@@ -9,15 +9,15 @@ import RxSwift
 
 extension ObservableType {
 
-    public func toVoid() -> Observable<Void> {
+    func toVoid() -> Observable<Void> {
         return map { _ in () }
     }
 
-    public func toOptional() -> Observable<Element?> {
+    func toOptional() -> Observable<Element?> {
         map { value -> Element? in value }
     }
 
-    public func matching(_ value: Element) -> Observable<Element> where Element: Equatable {
+    func matching(_ value: Element) -> Observable<Element> where Element: Equatable {
         filter { value ~= $0 }
     }
 }
@@ -26,6 +26,13 @@ extension PublishSubject {
 
     static func pipe() -> (output: Observable<Element>, input: AnyObserver<Element>) {
         { ($0.asObservable(), $0.asObserver()) }(Self.init())
+    }
+}
+
+extension BehaviorSubject {
+
+    static func pipe(value: Element) -> (output: Observable<Element>, input: AnyObserver<Element>) {
+        { ($0.asObservable(), $0.asObserver()) }(Self.init(value: value))
     }
 }
 

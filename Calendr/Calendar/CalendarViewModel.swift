@@ -13,8 +13,8 @@ class CalendarViewModel {
     init(
         dateObservable: Observable<Date>,
         hoverObservable: Observable<Date?>,
-        calendarService: CalendarServiceProviding,
         enabledCalendars: Observable<[String]>,
+        calendarService: CalendarServiceProviding,
         dateProvider: DateProviding = DateProvider()
     ) {
 
@@ -50,7 +50,9 @@ class CalendarViewModel {
 
         // Get events for current dates
         let eventsObservable = Observable.combineLatest(
-            dateCellsObservable, enabledCalendars, calendarService.changeObservable.startWith(())
+            dateCellsObservable,
+            enabledCalendars.startWith([]),
+            calendarService.changeObservable.startWith(())
         )
         .map { cellViewModels, calendars, _ -> [CalendarCellViewModel] in
 
