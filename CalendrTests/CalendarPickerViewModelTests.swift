@@ -26,6 +26,10 @@ class CalendarPickerViewModelTests: XCTestCase {
         userDefaults.stringArray(forKey: Prefs.enabledCalendars)
     }
 
+    override func tearDown() {
+        userDefaults.removePersistentDomain(forName: className)
+    }
+
     func testCalendars() {
 
         var calendars: [String]?
@@ -89,10 +93,6 @@ class CalendarPickerViewModelTests: XCTestCase {
 
         XCTAssertEqual(enabledCalendars, enabled)
         XCTAssertEqual(enabled, ["1", "3", "2"])
-    }
-
-    override func tearDown() {
-        userDefaults.removePersistentDomain(forName: className)
     }
 }
 

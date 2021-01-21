@@ -8,6 +8,8 @@
 import RxCocoa
 import RxSwift
 
+typealias StatusItemSettings = (showIcon: Bool, showDate: Bool)
+
 class SettingsViewModel {
 
     // Observers
@@ -15,12 +17,16 @@ class SettingsViewModel {
     let toggleStatusItemDate: AnyObserver<Bool>
 
     // Observables
-    let statusItemSettings: Observable<(showIcon: Bool, showDate: Bool)>
+    let statusItemSettings: Observable<StatusItemSettings>
 
     init(userDefaults: UserDefaults = .standard) {
 
-        let statusItemIconBehavior = BehaviorSubject(value: userDefaults.bool(forKey: Prefs.statusItemIconEnabled))
-        let statusItemDateBehavior = BehaviorSubject(value: userDefaults.bool(forKey: Prefs.statusItemDateEnabled))
+        let statusItemIconBehavior = BehaviorSubject(
+            value: userDefaults.bool(forKey: Prefs.statusItemIconEnabled)
+        )
+        let statusItemDateBehavior = BehaviorSubject(
+            value: userDefaults.bool(forKey: Prefs.statusItemDateEnabled)
+        )
 
         toggleStatusItemIcon = statusItemIconBehavior.asObserver()
         toggleStatusItemDate = statusItemDateBehavior.asObserver()
