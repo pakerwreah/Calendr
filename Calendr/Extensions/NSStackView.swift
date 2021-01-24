@@ -25,10 +25,10 @@ extension NSStackView {
 extension NSView {
     static var spacer: NSView {
         let spacer = NSView()
-        spacer.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        spacer.setContentHuggingPriority(.defaultLow, for: .vertical)
-        spacer.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        spacer.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
+        spacer.setContentHuggingPriority(.fittingSizeCompression, for: .horizontal)
+        spacer.setContentHuggingPriority(.fittingSizeCompression, for: .vertical)
+        spacer.setContentCompressionResistancePriority(.fittingSizeCompression, for: .horizontal)
+        spacer.setContentCompressionResistancePriority(.fittingSizeCompression, for: .vertical)
         return spacer
     }
 }

@@ -53,8 +53,6 @@ class SettingsViewController: NSViewController {
                 content: calendarsView
             )
         )
-
-        calendarsView.width(equalTo: stackView)
     }
 
     private func makeSection(title: String, content: NSView) -> NSView {

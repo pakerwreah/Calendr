@@ -9,6 +9,7 @@ import Cocoa
 
 func Label(text: String = "", font: NSFont? = nil) -> NSTextField {
     let label = NSTextField(labelWithString: text)
+    label.setContentHuggingPriority(.fittingSizeCompression, for: .horizontal)
     label.font = font
     return label
 }

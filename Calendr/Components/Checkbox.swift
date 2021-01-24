@@ -9,6 +9,7 @@ import Cocoa
 
 func Checkbox(title: String = "") -> NSButton {
     let checkbox = NSButton(checkboxWithTitle: title, target: nil, action: nil)
+    checkbox.setContentHuggingPriority(.fittingSizeCompression, for: .horizontal)
     checkbox.refusesFirstResponder = true
     return checkbox
 }
