@@ -9,10 +9,10 @@ import Foundation
 
 protocol DateProviding {
     var calendar: Calendar { get }
-    var today: Date { get }
+    var now: Date { get }
 }
 
 class DateProvider: DateProviding {
     let calendar: Calendar = .current
-    var today: Date { Date() }
+    var now: Date { Date() }
 }

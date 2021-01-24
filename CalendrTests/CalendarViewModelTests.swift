@@ -38,7 +38,7 @@ class CalendarViewModelTests: XCTestCase {
             .disposed(by: disposeBag)
 
         calendarsSubject.onNext([])
-        dateSubject.onNext(dateProvider.today)
+        dateSubject.onNext(dateProvider.now)
     }
 
     func testDateSpan() {
@@ -113,7 +113,7 @@ class CalendarViewModelTests: XCTestCase {
 
     func testTodayVisibility() {
 
-        dateProvider.today = .make(year: 2020, month: 12, day: 31)
+        dateProvider.now = .make(year: 2020, month: 12, day: 31)
 
         let expectedPositions: [(date: Date, position: Int?)] = [
             (.make(year: 2020, month: 12, day: 1), 32),
@@ -124,7 +124,7 @@ class CalendarViewModelTests: XCTestCase {
         for (date, position) in expectedPositions {
             dateSubject.onNext(date)
 
-            XCTAssertEqual(lastValue?.map(\.date).lastIndex(of: dateProvider.today), position, "\(date)")
+            XCTAssertEqual(lastValue?.map(\.date).lastIndex(of: dateProvider.now), position, "\(date)")
         }
     }
 
@@ -137,7 +137,7 @@ class CalendarViewModelTests: XCTestCase {
         ]
 
         for date in dates {
-            dateProvider.today = date
+            dateProvider.now = date
             dateSubject.onNext(date)
 
             XCTAssertEqual(lastValue?.first(where: \.isToday).map(\.date), date, "\(date)")
@@ -148,14 +148,14 @@ class CalendarViewModelTests: XCTestCase {
 
         dateProvider.m_calendar.timeZone = TimeZone(identifier: "America/Sao_Paulo")!
 
-        dateProvider.today = .make(year: 2021, month: 1, day: 1, hour: 23)
-        dateSubject.onNext(dateProvider.today)
+        dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 23)
+        dateSubject.onNext(dateProvider.now)
 
         XCTAssertEqual(lastValue?.firstIndex(where: \.isToday), 5)
 
         dateProvider.m_calendar.timeZone = TimeZone(identifier: "UTC")!
 
-        dateSubject.onNext(dateProvider.today)
+        dateSubject.onNext(dateProvider.now)
 
         XCTAssertEqual(lastValue?.firstIndex(where: \.isToday), 6)
     }
@@ -300,5 +300,5 @@ private class MockCalendarServiceProvider: CalendarServiceProviding {
 private class MockDateProvider: DateProviding {
     var m_calendar = Calendar.current
     var calendar: Calendar { m_calendar }
-    var today: Date = .make(year: 2021, month: 1, day: 1)
+    var now: Date = .make(year: 2021, month: 1, day: 1)
 }

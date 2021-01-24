@@ -75,7 +75,7 @@ class CalendarViewModel {
         // Check if today has changed
         let todayObservable = dateObservable
             .toVoid()
-            .map { dateProvider.today }
+            .map { dateProvider.now }
             .distinctUntilChanged { a, b in
                 timezone == dateProvider.calendar.timeZone && dateProvider.calendar.isDate(a, inSameDayAs: b)
             }
