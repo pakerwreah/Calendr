@@ -18,6 +18,7 @@ class MainViewController: NSViewController {
     // Views
     private let statusItem: NSStatusItem
     private let calendarView: CalendarView
+    private let eventListView: EventListView
     private let titleLabel = Label()
     private let prevBtn = NSButton()
     private let resetBtn = NSButton()
@@ -76,6 +77,12 @@ class MainViewController: NSViewController {
             clickObserver: dateClick.asObserver()
         )
 
+        eventListView = EventListView(
+            eventsObservable: calendarViewModel.asObservable().compactMap {
+                $0.filter(\.isSelected).first.map(\.events)
+            }
+        )
+
         super.init(nibName: nil, bundle: nil)
 
         setUpBindings()
@@ -94,12 +101,30 @@ class MainViewController: NSViewController {
         let mainView = makeMainView(
             makeHeader(),
             calendarView,
-            makeToolBar()
+            makeToolBar(),
+            eventListView
         )
 
         view.addSubview(mainView)
 
-        mainView.edges(to: view, constant: 8)
+        let margin: CGFloat = 8
+
+        mainView
+            .width(equalTo: calendarView)
+            .top(equalTo: view, constant: margin)
+            .leading(equalTo: view, constant: margin)
+            .trailing(equalTo: view, constant: margin)
+
+        mainView.rx.observe(\.frame)
+            .distinctUntilChanged()
+            .observe(on: MainScheduler.asyncInstance)
+            .map { [view] frame in
+                var size = view.frame.size
+                size.height = frame.height + 2 * margin
+                return size
+            }
+            .bind(to: popover.rx.contentSize)
+            .disposed(by: disposeBag)
     }
 
     private func makeMainView(_ views: NSView...) -> NSView {
