@@ -220,10 +220,14 @@ class MainViewController: NSViewController {
         // fix a bug with trackpad click
         statusBarButton.sendAction(on: .leftMouseDown)
 
-        statusBarButton.rx.tap.bind { [popover] in
-            popover.show(relativeTo: .zero, of: statusItemView, preferredEdge: .maxY)
-        }
-        .disposed(by: disposeBag)
+        statusBarButton.rx.tap
+            .filter { [popover] in
+                !popover.isShown
+            }
+            .bind { [popover] in
+                popover.show(relativeTo: .zero, of: statusItemView, preferredEdge: .maxY)
+            }
+            .disposed(by: disposeBag)
 
         popover.rx.observe(\.isShown)
             .bind(to: statusBarButton.rx.isHighlighted)
