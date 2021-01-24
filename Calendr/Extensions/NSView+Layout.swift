@@ -16,145 +16,182 @@ extension NSView {
     }
 
     @discardableResult
-    func leading(equalTo anchor: NSLayoutXAxisAnchor, constant: CGFloat = 0) -> Self {
+    func leading(equalTo anchor: NSLayoutXAxisAnchor,
+                 constant: CGFloat = 0,
+                 priority: NSLayoutConstraint.Priority = .required) -> Self {
         forAutoLayout()
         NSLayoutConstraint.activate([
-            leadingAnchor.constraint(equalTo: anchor, constant: constant)
+            leadingAnchor.constraint(equalTo: anchor, constant: constant).with(priority: priority)
         ])
         return self
     }
 
     @discardableResult
-    func trailing(equalTo anchor: NSLayoutXAxisAnchor, constant: CGFloat = 0) -> Self {
+    func trailing(equalTo anchor: NSLayoutXAxisAnchor,
+                  constant: CGFloat = 0,
+                  priority: NSLayoutConstraint.Priority = .required) -> Self {
         forAutoLayout()
         NSLayoutConstraint.activate([
-            trailingAnchor.constraint(equalTo: anchor, constant: -constant)
+            trailingAnchor.constraint(equalTo: anchor, constant: -constant).with(priority: priority)
         ])
         return self
     }
 
     @discardableResult
-    func top(equalTo anchor: NSLayoutYAxisAnchor, constant: CGFloat = 0) -> Self {
+    func top(equalTo anchor: NSLayoutYAxisAnchor,
+             constant: CGFloat = 0,
+             priority: NSLayoutConstraint.Priority = .required) -> Self {
         forAutoLayout()
         NSLayoutConstraint.activate([
-            topAnchor.constraint(equalTo: anchor, constant: constant)
+            topAnchor.constraint(equalTo: anchor, constant: constant).with(priority: priority)
         ])
         return self
     }
 
     @discardableResult
-    func bottom(equalTo anchor: NSLayoutYAxisAnchor, constant: CGFloat = 0) -> Self {
+    func bottom(equalTo anchor: NSLayoutYAxisAnchor,
+                constant: CGFloat = 0,
+                priority: NSLayoutConstraint.Priority = .required) -> Self {
         forAutoLayout()
         NSLayoutConstraint.activate([
-            bottomAnchor.constraint(equalTo: anchor, constant: -constant)
+            bottomAnchor.constraint(equalTo: anchor, constant: -constant).with(priority: priority)
         ])
         return self
     }
 
     @discardableResult
-    func leading(equalTo view: NSView, constant: CGFloat = 0) -> Self {
-        leading(equalTo: view.leadingAnchor, constant: constant)
+    func leading(equalTo view: NSView,
+                 constant: CGFloat = 0,
+                 priority: NSLayoutConstraint.Priority = .required) -> Self {
+        leading(equalTo: view.leadingAnchor, constant: constant, priority: priority)
         return self
     }
 
     @discardableResult
-    func trailing(equalTo view: NSView, constant: CGFloat = 0) -> Self {
-        trailing(equalTo: view.trailingAnchor, constant: constant)
+    func trailing(equalTo view: NSView,
+                  constant: CGFloat = 0,
+                  priority: NSLayoutConstraint.Priority = .required) -> Self {
+        trailing(equalTo: view.trailingAnchor, constant: constant, priority: priority)
         return self
     }
 
     @discardableResult
-    func top(equalTo view: NSView, constant: CGFloat = 0) -> Self {
-        top(equalTo: view.topAnchor, constant: constant)
+    func top(equalTo view: NSView,
+             constant: CGFloat = 0,
+             priority: NSLayoutConstraint.Priority = .required) -> Self {
+        top(equalTo: view.topAnchor, constant: constant, priority: priority)
         return self
     }
 
     @discardableResult
-    func bottom(equalTo view: NSView, constant: CGFloat = 0) -> Self {
-        bottom(equalTo: view.bottomAnchor, constant: constant)
+    func bottom(equalTo view: NSView,
+                constant: CGFloat = 0,
+                priority: NSLayoutConstraint.Priority = .required) -> Self {
+        bottom(equalTo: view.bottomAnchor, constant: constant, priority: priority)
         return self
     }
 
     @discardableResult
-    func edges(to view: NSView, constant: CGFloat = 0) -> Self {
-        top(equalTo: view, constant: constant)
-        bottom(equalTo: view, constant: constant)
-        leading(equalTo: view, constant: constant)
-        trailing(equalTo: view, constant: constant)
+    func edges(to view: NSView,
+               constant: CGFloat = 0,
+               priority: NSLayoutConstraint.Priority = .required) -> Self {
+        top(equalTo: view, constant: constant, priority: priority)
+        bottom(equalTo: view, constant: constant, priority: priority)
+        leading(equalTo: view, constant: constant, priority: priority)
+        trailing(equalTo: view, constant: constant, priority: priority)
         return self
     }
 
     @discardableResult
-    func center(in view: NSView, orientation: NSLayoutConstraint.Orientation) -> Self {
+    func center(in view: NSView,
+                orientation: NSLayoutConstraint.Orientation,
+                priority: NSLayoutConstraint.Priority = .required) -> Self {
         forAutoLayout()
         NSLayoutConstraint.activate([
-            orientation == .horizontal
-                ? centerXAnchor.constraint(equalTo: view.centerXAnchor)
-            : centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            (
+                orientation == .horizontal
+                    ? centerXAnchor.constraint(equalTo: view.centerXAnchor)
+                    : centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            )
+            .with(priority: priority)
         ])
         return self
     }
 
     @discardableResult
-    func center(in view: NSView) -> Self {
-        center(in: view, orientation: .horizontal)
-        center(in: view, orientation: .vertical)
+    func center(in view: NSView, priority: NSLayoutConstraint.Priority = .required) -> Self {
+        center(in: view, orientation: .horizontal, priority: priority)
+        center(in: view, orientation: .vertical, priority: priority)
         return self
     }
 
     @discardableResult
-    func width(equalTo view: NSView, constant: CGFloat = 0) -> Self {
+    func width(equalTo view: NSView,
+               constant: CGFloat = 0,
+               priority: NSLayoutConstraint.Priority = .required) -> Self {
         forAutoLayout()
         NSLayoutConstraint.activate([
-            widthAnchor.constraint(equalTo: view.widthAnchor, constant: constant)
+            widthAnchor.constraint(equalTo: view.widthAnchor, constant: constant).with(priority: priority)
         ])
         return self
     }
 
     @discardableResult
-    func width(equalTo constant: CGFloat) -> Self {
+    func width(equalTo constant: CGFloat, priority: NSLayoutConstraint.Priority = .required) -> Self {
         forAutoLayout()
         NSLayoutConstraint.activate([
-            widthAnchor.constraint(equalToConstant: constant)
+            widthAnchor.constraint(equalToConstant: constant).with(priority: priority)
         ])
         return self
     }
 
     @discardableResult
-    func height(equalTo view: NSView, constant: CGFloat = 0) -> Self {
+    func height(equalTo view: NSView,
+                constant: CGFloat = 0,
+                priority: NSLayoutConstraint.Priority = .required) -> Self {
         forAutoLayout()
         NSLayoutConstraint.activate([
-            heightAnchor.constraint(equalTo: view.heightAnchor, constant: constant)
+            heightAnchor.constraint(equalTo: view.heightAnchor, constant: constant).with(priority: priority)
         ])
         return self
     }
 
     @discardableResult
-    func height(equalTo constant: CGFloat) -> Self {
+    func height(equalTo constant: CGFloat, priority: NSLayoutConstraint.Priority = .required) -> Self {
         forAutoLayout()
         NSLayoutConstraint.activate([
-            heightAnchor.constraint(equalToConstant: constant)
+            heightAnchor.constraint(equalToConstant: constant).with(priority: priority)
         ])
         return self
     }
 
     @discardableResult
-    func size(equalTo view: NSView, constant: CGFloat = 0) -> Self {
-        width(equalTo: view, constant: constant)
-        height(equalTo: view, constant: constant)
+    func size(equalTo view: NSView,
+              constant: CGFloat = 0,
+              priority: NSLayoutConstraint.Priority = .required) -> Self {
+        width(equalTo: view, constant: constant, priority: priority)
+        height(equalTo: view, constant: constant, priority: priority)
         return self
     }
 
     @discardableResult
-    func size(equalTo size: CGSize) -> Self {
-        width(equalTo: size.width)
-        height(equalTo: size.height)
+    func size(equalTo size: CGSize, priority: NSLayoutConstraint.Priority = .required) -> Self {
+        width(equalTo: size.width, priority: priority)
+        height(equalTo: size.height, priority: priority)
         return self
     }
 
     @discardableResult
-    func size(equalTo constant: CGFloat) -> Self {
-        size(equalTo: CGSize(width: constant, height: constant))
+    func size(equalTo constant: CGFloat, priority: NSLayoutConstraint.Priority = .required) -> Self {
+        size(equalTo: CGSize(width: constant, height: constant), priority: priority)
+        return self
+    }
+}
+
+extension NSLayoutConstraint {
+
+    func with(priority: NSLayoutConstraint.Priority) -> Self {
+        self.priority = priority
         return self
     }
 }
