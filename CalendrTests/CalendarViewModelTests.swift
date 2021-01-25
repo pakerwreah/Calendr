@@ -52,6 +52,19 @@ class CalendarViewModelTests: XCTestCase {
         XCTAssertEqual(cellViewModels.last.map(\.date), .make(year: 2021, month: 2, day: 6))
     }
 
+    func testMonthSpan() {
+
+        guard let cellViewModels = lastValue else {
+            return XCTFail()
+        }
+
+        let inMonth = cellViewModels.filter(\.inMonth)
+
+        XCTAssertEqual(inMonth.count, 31)
+        XCTAssertEqual(inMonth.first.map(\.date), .make(year: 2021, month: 1, day: 1))
+        XCTAssertEqual(inMonth.last.map(\.date), .make(year: 2021, month: 1, day: 31))
+    }
+
     func testHoverDistinctly() {
 
         (1...5).map {

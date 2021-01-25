@@ -34,7 +34,7 @@ class CalendarViewModel {
 
             return (0..<42).map { day -> CalendarCellViewModel in
                 let date = dateProvider.calendar.date(byAdding: .day, value: day, to: start)!
-                let inMonth = month.contains(date)
+                let inMonth = dateProvider.calendar.isDate(date, equalTo: month.start, toGranularity: .month)
 
                 return CalendarCellViewModel(
                     date: date,
