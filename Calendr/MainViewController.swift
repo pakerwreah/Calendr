@@ -151,7 +151,8 @@ class MainViewController: NSViewController {
 
         let headerStackView = NSStackView(.horizontal)
         headerStackView.spacing = 0
-        headerStackView.addArrangedSubviews(titleLabel, .spacer, prevBtn, resetBtn, nextBtn)
+        let padding = NSView().width(equalTo: 5)
+        headerStackView.addArrangedSubviews(padding, titleLabel, .spacer, prevBtn, resetBtn, nextBtn)
 
         return headerStackView
     }
