@@ -25,11 +25,19 @@ class EventViewModel {
         title = event.title
         color = event.calendar.color
 
-        let formatter = DateFormatter(template: "Hm")
+        let isSingleDay = dateProvider.calendar.isDate(event.start, inSameDayAs: event.end)
 
-        duration = event.start != event.end
-            ? "\(formatter.string(from: event.start)) - \(formatter.string(from: event.end))"
-            : ""
+        let formatter = DateFormatter(template: isSingleDay ? "Hm" : "ddMMyyyyHm")
+        let start = formatter.string(from: event.start)
+        let end = formatter.string(from: event.end)
+
+        if event.isAllDay {
+            duration = ""
+        } else if isSingleDay {
+            duration = "\(start) - \(end)"
+        } else {
+            duration = "Start: \(start)\nEnd:   \(end)"
+        }
 
         let total = dateProvider.calendar
             .dateComponents([.second], from: event.start, to: event.end)

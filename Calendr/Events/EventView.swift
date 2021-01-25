@@ -15,6 +15,7 @@ class EventView: NSView {
     private let viewModel: EventViewModel
 
     private let title = Label()
+    private let duration = Label()
 
     init(viewModel: EventViewModel) {
 
@@ -32,13 +33,21 @@ class EventView: NSView {
     private func setData() {
 
         title.stringValue = viewModel.title
+        duration.stringValue = viewModel.duration
+        duration.isHidden = viewModel.duration.isEmpty
     }
 
     private func configureLayout() {
 
         forAutoLayout()
 
-        title.lineBreakMode = .byTruncatingTail
+        title.lineBreakMode = .byWordWrapping
+        title.textColor = .headerTextColor
+        title.font = .systemFont(ofSize: 12)
+
+        duration.lineBreakMode = .byWordWrapping
+        duration.textColor = .secondaryLabelColor
+        duration.font = .systemFont(ofSize: 11)
 
         let colorBar = NSView()
         colorBar.wantsLayer = true
@@ -47,7 +56,8 @@ class EventView: NSView {
         colorBar.width(equalTo: 4)
 
         let eventStackView = NSStackView(.vertical)
-        eventStackView.addArrangedSubview(title)
+        eventStackView.spacing = 2
+        eventStackView.addArrangedSubviews(title, duration)
 
         let contentStackView = NSStackView(.horizontal)
         addSubview(contentStackView)
