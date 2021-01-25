@@ -8,6 +8,7 @@
 import Cocoa
 import RxSwift
 import RxCocoa
+import RxGesture
 
 class MainViewController: NSViewController {
 
@@ -44,6 +45,8 @@ class MainViewController: NSViewController {
     init() {
 
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+        statusItem.behavior = .terminationOnRemoval
+        statusItem.isVisible = true
 
         settingsViewModel = SettingsViewModel()
 
@@ -229,10 +232,13 @@ class MainViewController: NSViewController {
             let statusItemView = statusBarButton.cell?.controlView
         else { return }
 
-        // fix a bug with trackpad click
-        statusBarButton.sendAction(on: .leftMouseDown)
+        let menu = NSMenu()
+        menu.addItem(NSMenuItem(title: "Quit", action: #selector(NSApp.terminate), keyEquivalent: "q"))
+        statusItem.menu = menu
 
-        statusBarButton.rx.tap
+        statusBarButton.rx.leftClickGesture()
+            .when(.recognized)
+            .toVoid()
             .filter { [popover] in
                 !popover.isShown
             }
@@ -319,13 +325,5 @@ class MainViewController: NSViewController {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-}
-
-extension NSStatusBarButton {
-    open override func mouseDown(with event: NSEvent) {
-        super.mouseDown(with: event)
-        // keep highlighted
-        highlight(true)
     }
 }
