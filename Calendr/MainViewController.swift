@@ -125,6 +125,16 @@ class MainViewController: NSViewController {
             }
             .bind(to: popover.rx.contentSize)
             .disposed(by: disposeBag)
+
+        let popoverView = view.rx.observe(\.superview)
+            .compactMap { $0 as? NSVisualEffectView }
+            .take(1)
+
+        Observable.combineLatest(
+            popoverView, settingsViewModel.materialObservable
+        )
+        .bind { $0.material = $1 }
+        .disposed(by: disposeBag)
     }
 
     private func makeMainView(_ views: NSView...) -> NSView {

@@ -17,6 +17,14 @@ class SettingsViewController: NSViewController {
 
     private let showIconCheckbox = Checkbox(title: "Show icon")
     private let showDateCheckbox = Checkbox(title: "Show date")
+    private let transparencySlider: NSSlider = {
+        let slider = NSSlider(value: 0, minValue: 0, maxValue: 5, target: nil, action: nil)
+        slider.allowsTickMarkValuesOnly = true
+        slider.numberOfTickMarks = 6
+        slider.controlSize = .small
+        slider.refusesFirstResponder = true
+        return slider
+    }()
 
     init(settingsViewModel: SettingsViewModel, calendarsViewModel: CalendarPickerViewModel) {
 
@@ -40,6 +48,13 @@ class SettingsViewController: NSViewController {
 
         stackView.addArrangedSubview(
             makeSection(
+                title: "Transparency",
+                content: transparencySlider
+            )
+        )
+
+        stackView.addArrangedSubview(
+            makeSection(
                 title: "Menu Bar",
                 content: NSStackView(views: [showIconCheckbox, showDateCheckbox])
             )
@@ -58,7 +73,7 @@ class SettingsViewController: NSViewController {
     private func makeSection(title: String, content: NSView) -> NSView {
         let stackView = NSStackView(.vertical)
         stackView.alignment = .left
-        stackView.spacing = 5
+        stackView.spacing = 6
 
         let label = Label(text: title, font: .systemFont(ofSize: 13, weight: .semibold))
 
@@ -94,6 +109,16 @@ class SettingsViewController: NSViewController {
             observable: settingsViewModel.statusItemSettings.map(\.showDate),
             observer: settingsViewModel.toggleStatusItemDate
         )
+
+        settingsViewModel.transparencyObservable
+            .bind(to: transparencySlider.rx.integerValue)
+            .disposed(by: disposeBag)
+
+        transparencySlider.rx.value
+            .skip(1)
+            .map(Int.init)
+            .bind(to: settingsViewModel.transparencyObserver)
+            .disposed(by: disposeBag)
     }
 
     private func bind(checkbox: NSButton, observable: Observable<Bool>, observer: AnyObserver<Bool>) {
@@ -103,6 +128,7 @@ class SettingsViewController: NSViewController {
             .disposed(by: disposeBag)
 
         checkbox.rx.state
+            .skip(1)
             .map { $0 == .on }
             .bind(to: observer)
             .disposed(by: disposeBag)
