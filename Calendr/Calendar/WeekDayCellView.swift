@@ -28,7 +28,7 @@ class WeekDayCellView: NSView {
         addSubview(label)
 
         label.alignment = .center
-        label.textColor = .lightGray
+        label.textColor = .secondaryLabelColor
         label.font = .boldSystemFont(ofSize: 11)
         label.center(in: self).size(equalTo: CGSize(width: 24, height: 13))
     }

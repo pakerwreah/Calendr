@@ -49,6 +49,7 @@ class CalendarCellView: NSView {
         label.alignment = .center
         label.font = .systemFont(ofSize: 12)
         label.size(equalTo: CGSize(width: 24, height: 13))
+        label.textColor = .headerTextColor
 
         eventsStackView.spacing = 2
         eventsStackView.height(equalTo: Constants.eventDotSize)

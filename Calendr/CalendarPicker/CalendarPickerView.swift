@@ -58,7 +58,7 @@ class CalendarPickerView: NSView {
     private func makeCalendarSection(title: String, calendars: [CalendarModel]) -> [NSView] {
 
         let label = Label(text: title, font: .systemFont(ofSize: 11, weight: .semibold))
-        label.textColor = .placeholderTextColor
+        label.textColor = .secondaryLabelColor
 
         let stackView = NSStackView(.vertical)
         stackView.alignment = .left

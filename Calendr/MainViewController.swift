@@ -141,6 +141,7 @@ class MainViewController: NSViewController {
     private func makeHeader() -> NSView {
 
         titleLabel.font = .systemFont(ofSize: 14, weight: .medium)
+        titleLabel.textColor = .headerTextColor
 
         [prevBtn, resetBtn, nextBtn].forEach(styleButton)
 
