@@ -6,6 +6,7 @@
 //
 
 import RxSwift
+import RxRelay
 
 class CalendarPickerViewModel {
 
@@ -22,7 +23,7 @@ class CalendarPickerViewModel {
             .map(calendarService.calendars)
             .share(replay: 1)
 
-        let toggleCalendarSubject = PublishSubject<String>()
+        let toggleCalendarSubject = PublishRelay<String>()
 
         self.toggleCalendar = toggleCalendarSubject.asObserver()
 

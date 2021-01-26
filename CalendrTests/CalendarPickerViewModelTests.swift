@@ -94,6 +94,22 @@ class CalendarPickerViewModelTests: XCTestCase {
         XCTAssertEqual(enabledCalendars, enabled)
         XCTAssertEqual(enabled, ["1", "3", "2"])
     }
+
+    func testToggleCalendar_ignoresOnCompleted() {
+
+        var enabled: [String]?
+
+        viewModel.enabledCalendars
+            .bind { enabled = $0 }
+            .disposed(by: disposeBag)
+
+        calendarService.changeObserver.onNext(())
+
+        viewModel.toggleCalendar.onCompleted()
+
+        viewModel.toggleCalendar.onNext("2")
+        XCTAssertEqual(enabled, ["1", "3"])
+    }
 }
 
 private class MockCalendarServiceProvider: CalendarServiceProviding {
