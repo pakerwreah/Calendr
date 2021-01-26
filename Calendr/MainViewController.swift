@@ -24,6 +24,7 @@ class MainViewController: NSViewController {
     private let prevBtn = NSButton()
     private let resetBtn = NSButton()
     private let nextBtn = NSButton()
+    private let pinBtn = NSButton()
     private let calendarBtn = NSButton()
     private let settingsBtn = NSButton()
 
@@ -174,13 +175,15 @@ class MainViewController: NSViewController {
 
     private func makeToolBar() -> NSView {
 
-        [calendarBtn, settingsBtn].forEach(styleButton)
+        [pinBtn, calendarBtn, settingsBtn].forEach(styleButton)
+
+        pinBtn.setButtonType(.onOff)
 
         calendarBtn.image = NSImage(named: NSImage.iconViewTemplateName)?.withSymbolConfiguration(.init(scale: .large))
         settingsBtn.image = NSImage(named: NSImage.actionTemplateName)?.withSymbolConfiguration(.init(scale: .large))
 
         let toolStackView = NSStackView(.horizontal)
-        toolStackView.addArrangedSubviews(.spacer, calendarBtn, settingsBtn)
+        toolStackView.addArrangedSubviews(pinBtn, .spacer, calendarBtn, settingsBtn)
 
         return toolStackView
     }
@@ -226,6 +229,25 @@ class MainViewController: NSViewController {
             self?.presentAsModalWindow(settingsViewController)
         }
         .disposed(by: disposeBag)
+
+        let pinIconOn = Self.pinBtnIcon(.on)
+        let pinIconOff = Self.pinBtnIcon(.off)
+
+        pinBtn.rx.state.map { $0 == .on ? pinIconOn : pinIconOff }
+            .bind(to: pinBtn.rx.attributedTitle)
+            .disposed(by: disposeBag)
+    }
+
+    private static func pinBtnIcon(_ state: NSControl.StateValue) -> NSAttributedString {
+        let imageName = state == .on ? NSImage.lockLockedTemplateName : NSImage.lockUnlockedTemplateName
+
+        let attachment = NSTextAttachment()
+        attachment.image = NSImage(named: imageName)
+
+        let attributed = NSMutableAttributedString(attachment: attachment)
+        attributed.addAttribute(.baselineOffset, value: -1, range: NSRange(location: 0, length: attributed.length))
+
+        return attributed
     }
 
     private func setUpStatusItemBindings() {
@@ -273,14 +295,21 @@ class MainViewController: NSViewController {
 
         settingsViewController.rx.sentMessage(#selector(NSViewController.viewWillAppear))
             .toVoid()
-            .map { NSPopover.Behavior.applicationDefined }
+            .map { .applicationDefined }
             .bind(to: popover.rx.behavior)
             .disposed(by: disposeBag)
 
         settingsViewController.rx.sentMessage(#selector(NSViewController.viewDidDisappear))
+            .withLatestFrom(pinBtn.rx.state)
+            .matching(.off)
             .toVoid()
             .startWith(())
-            .map { NSPopover.Behavior.transient }
+            .map { .transient }
+            .bind(to: popover.rx.behavior)
+            .disposed(by: disposeBag)
+
+        pinBtn.rx.state
+            .map { $0 == .on ? .applicationDefined : .transient }
             .bind(to: popover.rx.behavior)
             .disposed(by: disposeBag)
     }
