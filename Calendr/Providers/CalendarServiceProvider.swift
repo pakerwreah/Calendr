@@ -66,19 +66,26 @@ class CalendarServiceProvider: CalendarServiceProviding {
             calendars: calendars.compactMap(store.calendar(withIdentifier:))
         )
 
-        return store.events(matching: predicate).map { event in
-            EventModel(
-                start: event.startDate,
-                end: event.endDate,
-                isAllDay: event.isAllDay,
-                title: event.title,
-                location: event.location,
-                notes: event.notes,
-                url: event.url,
-                isPending: event.attendees?.first(where: \.isCurrentUser).map(\.participantStatus) == .pending,
-                calendar: CalendarModel(from: event.calendar)
-            )
-        }
+        return store.events(matching: predicate)
+            .map {
+                ($0, $0.attendees?.first(where: \.isCurrentUser).map(\.participantStatus))
+            }
+            .filter {
+                $1 != .declined
+            }
+            .map { event, status in
+                EventModel(
+                    start: event.startDate,
+                    end: event.endDate,
+                    isAllDay: event.isAllDay,
+                    title: event.title,
+                    location: event.location,
+                    notes: event.notes,
+                    url: event.url,
+                    isPending: status == .pending,
+                    calendar: CalendarModel(from: event.calendar)
+                )
+            }
     }
 }
 
