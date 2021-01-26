@@ -9,13 +9,15 @@ import Cocoa
 
 extension NSButton {
 
-    func setTitleColor(color: NSColor) {
+    func setTitleColor(color: NSColor?) {
         let newAttributedTitle = NSMutableAttributedString(attributedString: attributedTitle)
         let range = NSRange(location: 0, length: attributedTitle.length)
 
-        newAttributedTitle.addAttributes([
-            .foregroundColor: color,
-        ], range: range)
+        newAttributedTitle.removeAttribute(.foregroundColor, range: range)
+
+        if let color = color {
+            newAttributedTitle.addAttribute(.foregroundColor, value: color, range: range)
+        }
 
         attributedTitle = newAttributedTitle
     }
