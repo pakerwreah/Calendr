@@ -95,6 +95,44 @@ class CalendarPickerViewModelTests: XCTestCase {
         XCTAssertEqual(enabled, ["1", "3", "2"])
     }
 
+    func testNewCalendar_shouldBeDisabled() {
+
+        var enabled: [String]?
+
+        viewModel.enabledCalendars
+            .bind { enabled = $0 }
+            .disposed(by: disposeBag)
+
+        calendarService.changeObserver.onNext(())
+
+        XCTAssertEqual(enabled, ["1", "2", "3"])
+
+        calendarService.m_calendars.append(.init(identifier: "4", account: "", title: "", color: .clear))
+
+        calendarService.changeObserver.onNext(())
+
+        XCTAssertEqual(enabled, ["1", "2", "3"])
+    }
+
+    func testRemoveCalendar_shouldRemoveEnabled() {
+
+        var enabled: [String]?
+
+        viewModel.enabledCalendars
+            .bind { enabled = $0 }
+            .disposed(by: disposeBag)
+
+        calendarService.changeObserver.onNext(())
+
+        XCTAssertEqual(enabled, ["1", "2", "3"])
+
+        calendarService.m_calendars.removeFirst()
+
+        calendarService.changeObserver.onNext(())
+
+        XCTAssertEqual(enabled, ["2", "3"])
+    }
+
     func testToggleCalendar_ignoresOnCompleted() {
 
         var enabled: [String]?
@@ -116,12 +154,14 @@ private class MockCalendarServiceProvider: CalendarServiceProviding {
 
     let (changeObservable, changeObserver) = PublishSubject<Void>.pipe()
 
+    var m_calendars: [CalendarModel] = [
+        .init(identifier: "1", account: "A1", title: "Calendar 1", color: .white),
+        .init(identifier: "2", account: "A2", title: "Calendar 2", color: .black),
+        .init(identifier: "3", account: "A3", title: "Calendar 3", color: .clear)
+    ]
+
     func calendars() -> [CalendarModel] {
-        [
-            .init(identifier: "1", account: "A1", title: "Calendar 1", color: .white),
-            .init(identifier: "2", account: "A2", title: "Calendar 2", color: .black),
-            .init(identifier: "3", account: "A3", title: "Calendar 3", color: .clear)
-        ]
+        return m_calendars
     }
 
     func events(from start: Date, to end: Date, calendars: [String]) -> [EventModel] {
