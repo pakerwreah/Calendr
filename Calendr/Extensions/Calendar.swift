@@ -17,14 +17,30 @@ extension Calendar {
         }
 
         // date >= start
-        let gte = compare(date, to: start, toGranularity: .day) != .orderedAscending
+        let gte = isDate(date, greaterThanOrEqualTo: start, granularity: .day)
 
         // fix range ending at 00:00 of the next day
         let fixedEnd = start == end ? end : self.date(byAdding: .second, value: -1, to: end)!
 
         // date <= end
-        let lte = compare(date, to: fixedEnd, toGranularity: .day) != .orderedDescending
+        let lte = isDate(date, lessThanOrEqualTo: fixedEnd, granularity: .day)
 
         return gte && lte
+    }
+
+    func isDate(_ date: Date, lessThan other: Date, granularity: Component = .day) -> Bool {
+        compare(date, to: other, toGranularity: granularity) == .orderedAscending
+    }
+
+    func isDate(_ date: Date, lessThanOrEqualTo other: Date, granularity: Component = .day) -> Bool {
+        compare(date, to: other, toGranularity: granularity) != .orderedDescending
+    }
+
+    func isDate(_ date: Date, greaterThan other: Date, granularity: Component = .day) -> Bool {
+        compare(date, to: other, toGranularity: granularity) == .orderedDescending
+    }
+
+    func isDate(_ date: Date, greaterThanOrEqualTo other: Date, granularity: Component = .day) -> Bool {
+        compare(date, to: other, toGranularity: granularity) != .orderedAscending
     }
 }

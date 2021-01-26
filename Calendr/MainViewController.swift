@@ -81,9 +81,11 @@ class MainViewController: NSViewController {
         )
 
         eventListView = EventListView(
-            eventsObservable: calendarViewModel.asObservable().compactMap {
-                $0.filter(\.isSelected).first.map(\.events)
-            }
+            eventsObservable: calendarViewModel.asObservable()
+                .compactMap {
+                    $0.filter(\.isSelected).first.map(\.events)
+                }
+                .distinctUntilChanged()
         )
 
         super.init(nibName: nil, bundle: nil)
