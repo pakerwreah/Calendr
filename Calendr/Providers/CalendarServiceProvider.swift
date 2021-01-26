@@ -75,6 +75,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
                 location: event.location,
                 notes: event.notes,
                 url: event.url,
+                isPending: event.attendees?.first(where: \.isCurrentUser).map(\.participantStatus) == .pending,
                 calendar: CalendarModel(from: event.calendar)
             )
         }

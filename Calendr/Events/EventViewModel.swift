@@ -13,6 +13,7 @@ class EventViewModel {
     let title: String
     let duration: String
     let color: CGColor
+    let isPending: Bool
 
     let isFaded: Observable<Bool>
     let progress: Observable<CGFloat?>
@@ -25,6 +26,7 @@ class EventViewModel {
 
         title = event.title
         color = event.calendar.color
+        isPending = event.isPending
 
         // fix range ending at 00:00 of the next day
         let fixedEnd = dateProvider.calendar.date(byAdding: .second, value: -1, to: event.end)!

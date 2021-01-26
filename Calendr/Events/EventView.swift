@@ -28,11 +28,11 @@ class EventView: NSView {
 
         super.init(frame: .zero)
 
-        setData()
-
         configureLayout()
 
         setUpBindings()
+
+        setData()
     }
 
     private func setData() {
@@ -40,6 +40,10 @@ class EventView: NSView {
         title.stringValue = viewModel.title
         duration.stringValue = viewModel.duration
         duration.isHidden = viewModel.duration.isEmpty
+
+        if viewModel.isPending {
+            layer?.backgroundFilters = Self.pendingBackgroundFilters
+        }
     }
 
     private func configureLayout() {
@@ -115,6 +119,21 @@ class EventView: NSView {
             .bind(to: layer!.rx.backgroundColor)
             .disposed(by: disposeBag)
     }
+
+    private static let pendingBackgroundFilters: [CIFilter] = {
+        let stripes = CIFilter(name: "CIStripesGenerator", parameters: [
+            "inputColor0": CIColor(color: NSColor.gray.withAlphaComponent(0.25))!,
+            "inputColor1": CIColor.clear,
+            "inputWidth": 2.5,
+            "inputSharpness" : 0
+        ])!
+
+        let rotated = CIFilter(name: "CIAffineTransform", parameters: [
+            "inputTransform": CGAffineTransform(rotationAngle: -.pi / 4)
+        ])!
+
+        return [stripes, rotated]
+    }()
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

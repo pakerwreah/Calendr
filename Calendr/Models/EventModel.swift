@@ -15,5 +15,6 @@ struct EventModel: Equatable {
     let location: String?
     let notes: String?
     let url: URL?
+    let isPending: Bool
     let calendar: CalendarModel
 }
