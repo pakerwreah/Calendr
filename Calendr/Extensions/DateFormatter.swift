@@ -13,8 +13,9 @@ extension DateFormatter {
         dateFormat = format
     }
 
-    convenience init(template: String) {
+    convenience init(template: String, locale: Locale) {
         self.init()
+        self.locale = locale
         setLocalizedDateFormatFromTemplate(template)
     }
 }

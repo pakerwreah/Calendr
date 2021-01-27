@@ -104,18 +104,12 @@ class EventView: NSView {
         .bind(to: progressTop.rx.constant)
         .disposed(by: disposeBag)
 
-        viewModel.progress
-            .map { $0 == nil }
-            .distinctUntilChanged()
+        viewModel.isLineVisible
+            .map(\.isFalse)
             .bind(to: progress.rx.isHidden)
             .disposed(by: disposeBag)
 
-        let color = viewModel.color.copy(alpha: 0.1)
-
-        viewModel.progress
-            .map { $0 != nil }
-            .distinctUntilChanged()
-            .map { $0 ? color : .clear }
+        viewModel.backgroundColor
             .bind(to: layer!.rx.backgroundColor)
             .disposed(by: disposeBag)
     }

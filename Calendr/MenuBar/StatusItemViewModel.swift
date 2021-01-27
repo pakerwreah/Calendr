@@ -13,14 +13,18 @@ class StatusItemViewModel {
     let width: Observable<CGFloat>
     let text: Observable<NSAttributedString>
 
-    init(dateObservable: Observable<Date>, settingsObservable: Observable<(showIcon: Bool, showDate: Bool)>) {
+    init(
+        dateObservable: Observable<Date>,
+        settingsObservable: Observable<(showIcon: Bool, showDate: Bool)>,
+        locale: Locale
+    ) {
 
         let titleIcon = NSAttributedString(string: "\u{1f4c5}", attributes: [
             .font: NSFont(name: "SegoeUISymbol", size: Constants.iconPointSize)!,
             .baselineOffset: Constants.iconBaselineOffset
         ])
 
-        let dateFormatter = DateFormatter(template: "yyyyMMdd")
+        let dateFormatter = DateFormatter(template: "yyyyMMdd", locale: locale)
 
         text = Observable.combineLatest(
             dateObservable, settingsObservable

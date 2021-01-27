@@ -15,6 +15,8 @@ class EventViewModel {
     let color: CGColor
     let isPending: Bool
 
+    let isLineVisible: Observable<Bool>
+    let backgroundColor: Observable<CGColor>
     let isFaded: Observable<Bool>
     let progress: Observable<CGFloat?>
 
@@ -32,7 +34,10 @@ class EventViewModel {
         let fixedEnd = dateProvider.calendar.date(byAdding: .second, value: -1, to: event.end)!
         let isSingleDay = dateProvider.calendar.isDate(event.start, inSameDayAs: fixedEnd)
 
-        let formatter = DateFormatter(template: isSingleDay ? "Hm" : "ddMMyyyyHm")
+        let formatter = DateFormatter(
+            template: isSingleDay ? "Hm" : "ddMMyyyyHm",
+            locale: dateProvider.calendar.locale!
+        )
         let start = formatter.string(from: event.start)
         let end = formatter.string(from: event.end)
 
@@ -66,11 +71,17 @@ class EventViewModel {
         .distinctUntilChanged()
         .share(replay: 1)
 
-        isFaded = clock.map {
-            return dateProvider.calendar.isDate(event.start, inSameDayAs: dateProvider.now)
+        isFaded = event.isAllDay ? .just(false) : clock.map {
+            return dateProvider.calendar.isDate(event.end, inSameDayAs: dateProvider.now)
                 && dateProvider.calendar.isDate(event.end, lessThan: dateProvider.now, granularity: .second)
         }
         .distinctUntilChanged()
         .share(replay: 1)
+
+        isLineVisible = progress.map { $0 != nil }.distinctUntilChanged()
+
+        let progressBackgroundColor = color.copy(alpha: 0.1)!
+
+        backgroundColor = isLineVisible.map { $0 ? progressBackgroundColor : .clear }
     }
 }

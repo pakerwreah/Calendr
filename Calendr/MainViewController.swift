@@ -53,7 +53,8 @@ class MainViewController: NSViewController {
 
         statusItemViewModel = StatusItemViewModel(
             dateObservable: selectedDate,
-            settingsObservable: settingsViewModel.statusItemSettings
+            settingsObservable: settingsViewModel.statusItemSettings,
+            locale: Calendar.current.locale!
         )
 
         calendarPickerViewModel = CalendarPickerViewModel(calendarService: calendarService)
