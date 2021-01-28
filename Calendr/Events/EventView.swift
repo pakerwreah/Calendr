@@ -79,10 +79,10 @@ class EventView: NSView {
         addSubview(progress, positioned: .below, relativeTo: nil)
 
         progress.wantsLayer = true
-        progress.layer?.backgroundColor = NSColor.red.cgColor
+        progress.layer?.backgroundColor = NSColor.red.cgColor.copy(alpha: 0.5)
 
         progress
-            .height(equalTo: 0.5)
+            .height(equalTo: 1)
             .width(equalTo: self)
 
         progressTop.isActive = true
