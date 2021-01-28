@@ -5,88 +5,68 @@
 //  Created by Paker on 14/01/21.
 //
 
-import RxCocoa
 import RxSwift
+import RxCocoa
 
-class SettingsViewController: NSViewController {
+class SettingsViewController: NSTabViewController {
 
     private let disposeBag = DisposeBag()
 
-    private let settingsViewModel: SettingsViewModel
-    private let calendarsViewModel: CalendarPickerViewModel
-
-    private let showIconCheckbox = Checkbox(title: "Show icon")
-    private let showDateCheckbox = Checkbox(title: "Show date")
-    private let transparencySlider: NSSlider = {
-        let slider = NSSlider(value: 0, minValue: 0, maxValue: 5, target: nil, action: nil)
-        slider.allowsTickMarkValuesOnly = true
-        slider.numberOfTickMarks = 6
-        slider.controlSize = .small
-        slider.refusesFirstResponder = true
-        return slider
-    }()
-
     init(settingsViewModel: SettingsViewModel, calendarsViewModel: CalendarPickerViewModel) {
-
-        self.settingsViewModel = settingsViewModel
-        self.calendarsViewModel = calendarsViewModel
 
         super.init(nibName: nil, bundle: nil)
 
-        title = "Settings"
+        title = ""
+
+        tabStyle = .toolbar
+
+        let generalSettingsViewController = GeneralSettingsViewController(viewModel: settingsViewModel)
+        let calendarPickerViewController = CalendarPickerViewController(viewModel: calendarsViewModel)
+
+        let general = NSTabViewItem(viewController: generalSettingsViewController)
+        let calendar = NSTabViewItem(viewController: calendarPickerViewController)
+
+        general.label = "General"
+        general.image = NSImage(named: NSImage.homeTemplateName)
+
+        calendar.label = "Calendars"
+        calendar.image = NSImage(named: NSImage.iconViewTemplateName)
+
+        tabViewItems = [general, calendar]
 
         setUpBindings()
     }
 
-    override func loadView() {
-        view = NSView()
+    private func setUpBindings() {
 
-        let stackView = NSStackView(.vertical)
-        stackView.spacing = 24
-        view.addSubview(stackView)
-        stackView.edges(to: view, constant: 24)
+        for (i, vc) in tabViewItems.compactMap(\.viewController).enumerated() {
 
-        stackView.addArrangedSubview(
-            makeSection(
-                title: "Transparency",
-                content: transparencySlider
-            )
-        )
-
-        stackView.addArrangedSubview(
-            makeSection(
-                title: "Menu Bar",
-                content: NSStackView(views: [showIconCheckbox, showDateCheckbox])
-            )
-        )
-
-        let calendarsView = CalendarPickerView(viewModel: calendarsViewModel)
-
-        stackView.addArrangedSubview(
-            makeSection(
-                title: "Calendars",
-                content: calendarsView
-            )
-        )
+            vc.rx.sentMessage(#selector(viewDidLayout))
+                .withLatestFrom(rx.observe(\.selectedTabViewItemIndex))
+                .matching(i)
+                .toVoid()
+                .map { vc.view.fittingSize }
+                .distinctUntilChanged()
+                .skip(i > 0 ? 1 : 0)
+                .map(sizeWithPadding)
+                .bind(to: rx.preferredContentSize)
+                .disposed(by: disposeBag)
+        }
     }
 
-    private func makeSection(title: String, content: NSView) -> NSView {
-        let stackView = NSStackView(.vertical)
-        stackView.alignment = .left
-        stackView.spacing = 6
+    override func loadView() {
 
-        let label = Label(text: title, font: .systemFont(ofSize: 13, weight: .semibold))
+        super.loadView()
 
-        let divider: NSView = .spacer
-        divider.height(equalTo: 1)
-        divider.wantsLayer = true
-        divider.layer?.backgroundColor = NSColor.separatorColor.cgColor
+        let contentView = view
 
-        stackView.addArrangedSubviews(label, divider, content)
+        view.removeFromSuperview()
 
-        stackView.setCustomSpacing(12, after: divider)
+        view = NSView()
 
-        return stackView
+        view.addSubview(contentView)
+
+        contentView.edges(to: view, constant: Constants.contentPadding)
     }
 
     override func viewDidAppear() {
@@ -96,45 +76,41 @@ class SettingsViewController: NSViewController {
         NSApp.activate(ignoringOtherApps: true)
     }
 
-    private func setUpBindings() {
+    override func tabView(_ tabView: NSTabView, didSelect tabViewItem: NSTabViewItem?) {
 
-        bind(
-            checkbox: showIconCheckbox,
-            observable: settingsViewModel.statusItemSettings.map(\.showIcon),
-            observer: settingsViewModel.toggleStatusItemIcon
-        )
+        super.tabView(tabView, didSelect: tabViewItem)
+        
+        guard let itemView = tabViewItem?.view, let window = view.window else { return }
 
-        bind(
-            checkbox: showDateCheckbox,
-            observable: settingsViewModel.statusItemSettings.map(\.showDate),
-            observer: settingsViewModel.toggleStatusItemDate
-        )
+        itemView.isHidden = true
 
-        settingsViewModel.transparencyObservable
-            .bind(to: transparencySlider.rx.integerValue)
-            .disposed(by: disposeBag)
+        DispatchQueue.main.async {
 
-        transparencySlider.rx.value
-            .skip(1)
-            .map(Int.init)
-            .bind(to: settingsViewModel.transparencyObserver)
-            .disposed(by: disposeBag)
-    }
+            self.preferredContentSize = sizeWithPadding(itemView.fittingSize)
 
-    private func bind(checkbox: NSButton, observable: Observable<Bool>, observer: AnyObserver<Bool>) {
-        observable
-            .map { $0 ? .on : .off }
-            .bind(to: checkbox.rx.state)
-            .disposed(by: disposeBag)
-
-        checkbox.rx.state
-            .skip(1)
-            .map { $0 == .on }
-            .bind(to: observer)
-            .disposed(by: disposeBag)
+            NSAnimationContext.runAnimationGroup({ context in
+                context.duration = 0.1
+                context.allowsImplicitAnimation = true
+                window.layoutIfNeeded()
+            }) {
+                itemView.animator().isHidden = false
+            }
+        }
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+}
+
+private func sizeWithPadding(_ size: NSSize) -> NSSize {
+    NSSize(
+        width: size.width + 2 * Constants.contentPadding,
+        height: size.height + 2 * Constants.contentPadding
+    )
+}
+
+private enum Constants {
+
+    static let contentPadding: CGFloat = 24
 }

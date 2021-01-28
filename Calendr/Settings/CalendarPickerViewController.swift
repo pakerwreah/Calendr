@@ -1,14 +1,14 @@
 //
-//  CalendarPickerView.swift
+//  CalendarPickerViewController.swift
 //  Calendr
 //
-//  Created by Paker on 16/01/21.
+//  Created by Paker on 28/01/21.
 //
 
 import RxSwift
 import RxCocoa
 
-class CalendarPickerView: NSView {
+class CalendarPickerViewController: NSViewController {
 
     private let disposeBag = DisposeBag()
 
@@ -17,23 +17,20 @@ class CalendarPickerView: NSView {
     private let contentStackView = NSStackView(.vertical)
 
     init(viewModel: CalendarPickerViewModel) {
-
         self.viewModel = viewModel
 
-        super.init(frame: .zero)
-
-        configureLayout()
+        super.init(nibName: nil, bundle: nil)
 
         setUpBindings()
     }
 
-    private func configureLayout() {
+    override func loadView() {
 
-        forAutoLayout()
+        view = NSView()
 
-        addSubview(contentStackView)
+        view.addSubview(contentStackView)
 
-        contentStackView.edges(to: self)
+        contentStackView.edges(to: view)
         contentStackView.alignment = .left
     }
 
@@ -52,9 +49,8 @@ class CalendarPickerView: NSView {
             }
             .bind(to: contentStackView.rx.arrangedSubviews)
             .disposed(by: disposeBag)
-
     }
-
+    
     private func makeCalendarSection(title: String, calendars: [CalendarModel]) -> [NSView] {
 
         let label = Label(text: title, font: .systemFont(ofSize: 11, weight: .semibold))

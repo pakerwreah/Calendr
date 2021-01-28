@@ -12,6 +12,8 @@
 		3421AD3D25BA1D0800A4F468 /* SettingsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3421AD3C25BA1D0800A4F468 /* SettingsViewModelTests.swift */; };
 		34305BCB25992A4E00AB381D /* Rx+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34305BCA25992A4E00AB381D /* Rx+Helpers.swift */; };
 		3430ED03259634E00045DA53 /* NSStackView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3430ED02259634E00045DA53 /* NSStackView+Rx.swift */; };
+		3449402E25C348B20020E664 /* GeneralSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3449402D25C348B20020E664 /* GeneralSettingsViewController.swift */; };
+		3449403225C348C70020E664 /* CalendarPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3449403125C348C70020E664 /* CalendarPickerViewController.swift */; };
 		3470214A259DFF3000827AE7 /* CalendarServiceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34702149259DFF3000827AE7 /* CalendarServiceProvider.swift */; };
 		34702150259E163000827AE7 /* CalendarModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3470214F259E163000827AE7 /* CalendarModel.swift */; };
 		34702168259E761100827AE7 /* Calendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34702167259E761100827AE7 /* Calendar.swift */; };
@@ -26,7 +28,6 @@
 		347E6D3E25AA2811009A6716 /* CalendarViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 347E6D3D25AA2811009A6716 /* CalendarViewModelTests.swift */; };
 		348B8CFC25B290C200E518FE /* Prefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348B8CFB25B290C200E518FE /* Prefs.swift */; };
 		348B8D0425B2925100E518FE /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348B8D0325B2925100E518FE /* SettingsViewModel.swift */; };
-		348B8D0825B2945600E518FE /* CalendarPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348B8D0725B2945600E518FE /* CalendarPickerView.swift */; };
 		34924CD6259FB814009C3450 /* CalendarExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34924CD5259FB814009C3450 /* CalendarExtensionTests.swift */; };
 		34924CE4259FCB36009C3450 /* DateSelectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34924CE3259FCB36009C3450 /* DateSelectorTests.swift */; };
 		34924CE8259FCC95009C3450 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34924CE7259FCC95009C3450 /* Date.swift */; };
@@ -70,6 +71,8 @@
 		3421AD3C25BA1D0800A4F468 /* SettingsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModelTests.swift; sourceTree = "<group>"; };
 		34305BCA25992A4E00AB381D /* Rx+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Rx+Helpers.swift"; sourceTree = "<group>"; };
 		3430ED02259634E00045DA53 /* NSStackView+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSStackView+Rx.swift"; sourceTree = "<group>"; };
+		3449402D25C348B20020E664 /* GeneralSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsViewController.swift; sourceTree = "<group>"; };
+		3449403125C348C70020E664 /* CalendarPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPickerViewController.swift; sourceTree = "<group>"; };
 		34702149259DFF3000827AE7 /* CalendarServiceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarServiceProvider.swift; sourceTree = "<group>"; };
 		3470214F259E163000827AE7 /* CalendarModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarModel.swift; sourceTree = "<group>"; };
 		34702167259E761100827AE7 /* Calendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Calendar.swift; sourceTree = "<group>"; };
@@ -89,7 +92,6 @@
 		347E6D3D25AA2811009A6716 /* CalendarViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewModelTests.swift; sourceTree = "<group>"; };
 		348B8CFB25B290C200E518FE /* Prefs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Prefs.swift; sourceTree = "<group>"; };
 		348B8D0325B2925100E518FE /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
-		348B8D0725B2945600E518FE /* CalendarPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPickerView.swift; sourceTree = "<group>"; };
 		34924CD5259FB814009C3450 /* CalendarExtensionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarExtensionTests.swift; sourceTree = "<group>"; };
 		34924CE3259FCB36009C3450 /* DateSelectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateSelectorTests.swift; sourceTree = "<group>"; };
 		34924CE7259FCC95009C3450 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
@@ -196,7 +198,6 @@
 				34F96CD725B4E2F50020DEEA /* SegoeUISymbol.ttf */,
 				347D0F9925952F8A002451EC /* Assets.xcassets */,
 				347D0FDD259532E7002451EC /* Calendar */,
-				3481F66225B6233800FD26E6 /* CalendarPicker */,
 				347D0FE22595384E002451EC /* Components */,
 				349355A425BCA89400957945 /* Events */,
 				347D0FE525954481002451EC /* Extensions */,
@@ -279,15 +280,6 @@
 			path = Providers;
 			sourceTree = "<group>";
 		};
-		3481F66225B6233800FD26E6 /* CalendarPicker */ = {
-			isa = PBXGroup;
-			children = (
-				348B8D0725B2945600E518FE /* CalendarPickerView.swift */,
-				34B5A09C25B118EC00F7F7ED /* CalendarPickerViewModel.swift */,
-			);
-			path = CalendarPicker;
-			sourceTree = "<group>";
-		};
 		349355A425BCA89400957945 /* Events */ = {
 			isa = PBXGroup;
 			children = (
@@ -309,6 +301,9 @@
 		34F88A8425B0CDA3005C9BA6 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				3449403125C348C70020E664 /* CalendarPickerViewController.swift */,
+				34B5A09C25B118EC00F7F7ED /* CalendarPickerViewModel.swift */,
+				3449402D25C348B20020E664 /* GeneralSettingsViewController.swift */,
 				348B8CFB25B290C200E518FE /* Prefs.swift */,
 				34B5A09225B0CE6F00F7F7ED /* SettingsViewController.swift */,
 				348B8D0325B2925100E518FE /* SettingsViewModel.swift */,
@@ -520,8 +515,8 @@
 				347D0FDF259533C3002451EC /* CalendarView.swift in Sources */,
 				34B5A09D25B118EC00F7F7ED /* CalendarPickerViewModel.swift in Sources */,
 				347D0F9825952F89002451EC /* AppDelegate.swift in Sources */,
+				3449403225C348C70020E664 /* CalendarPickerViewController.swift in Sources */,
 				34B5A09325B0CE6F00F7F7ED /* SettingsViewController.swift in Sources */,
-				348B8D0825B2945600E518FE /* CalendarPickerView.swift in Sources */,
 				347D0FF825954975002451EC /* CalendarCellViewModel.swift in Sources */,
 				349355AA25BCA8DF00957945 /* EventView.swift in Sources */,
 				34F128E12597B9C9007DF31C /* MainViewController.swift in Sources */,
@@ -529,6 +524,7 @@
 				34F128DD259690C8007DF31C /* CALayer+Rx.swift in Sources */,
 				347D0FED2595467A002451EC /* CalendarCellView.swift in Sources */,
 				34FD09D925AE269600AAAAE2 /* DateProvider.swift in Sources */,
+				3449402E25C348B20020E664 /* GeneralSettingsViewController.swift in Sources */,
 				349355A625BCA8D400957945 /* EventListView.swift in Sources */,
 				34F96CEE25B523ED0020DEEA /* main.swift in Sources */,
 				348B8D0425B2925100E518FE /* SettingsViewModel.swift in Sources */,
