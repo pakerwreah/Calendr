@@ -22,7 +22,7 @@ class EventViewModel {
 
     init(
         event: EventModel,
-        dateProvider: DateProviding = DateProvider(),
+        dateProvider: DateProviding,
         scheduler: SchedulerType = MainScheduler.instance
     ) {
 

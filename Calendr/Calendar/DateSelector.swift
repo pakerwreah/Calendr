@@ -11,6 +11,7 @@ class DateSelector {
     private let dateObservable: Observable<Date>
 
     init(
+        calendar: Calendar,
         initial: Observable<Date>,
         selected: Observable<Date>,
         reset: Observable<Void>,
@@ -21,7 +22,7 @@ class DateSelector {
         prevMonth: Observable<Void>,
         nextMonth: Observable<Void>
     ) {
-        var timezone = Calendar.current.timeZone
+        var timezone = calendar.timeZone
 
         dateObservable = Observable.merge(
             initial,
@@ -39,14 +40,14 @@ class DateSelector {
                 ($0.0, $0.1, $1)
             }
             .compactMap { component, value, date in
-                Calendar.current.date(byAdding: component, value: value, to: date)
+                calendar.date(byAdding: component, value: value, to: date)
             }
         )
         .distinctUntilChanged { a, b in
-            timezone == Calendar.current.timeZone && Calendar.current.isDate(a, inSameDayAs: b)
+            timezone == calendar.timeZone && calendar.isDate(a, inSameDayAs: b)
         }
         .do(afterNext: { _ in
-            timezone = Calendar.current.timeZone
+            timezone = calendar.timeZone
         })
         .share(replay: 1)
     }

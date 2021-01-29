@@ -30,6 +30,9 @@ class CalendarViewModelTests: XCTestCase {
     var lastValue: [CalendarCellViewModel]?
 
     override func setUp() {
+
+        dateProvider.m_calendar.firstWeekday = 1
+
         viewModel
             .asObservable()
             .bind { [weak self] in
@@ -38,10 +41,11 @@ class CalendarViewModelTests: XCTestCase {
             .disposed(by: disposeBag)
 
         calendarsSubject.onNext([])
-        dateSubject.onNext(dateProvider.now)
     }
 
     func testDateSpan() {
+
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
 
         guard let cellViewModels = lastValue else {
             return XCTFail()
@@ -54,6 +58,8 @@ class CalendarViewModelTests: XCTestCase {
 
     func testMonthSpan() {
 
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+
         guard let cellViewModels = lastValue else {
             return XCTFail()
         }
@@ -65,7 +71,24 @@ class CalendarViewModelTests: XCTestCase {
         XCTAssertEqual(inMonth.last.map(\.date), .make(year: 2021, month: 1, day: 31))
     }
 
+    func testWeekDays() {
+
+        dateProvider.m_calendar.firstWeekday = 2
+
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+
+        guard let cellViewModels = lastValue else {
+            return XCTFail()
+        }
+
+        XCTAssertEqual(cellViewModels.count, 42)
+        XCTAssertEqual(cellViewModels.first.map(\.date), .make(year: 2020, month: 12, day: 28))
+        XCTAssertEqual(cellViewModels.last.map(\.date), .make(year: 2021, month: 2, day: 7))
+    }
+
     func testHoverDistinctly() {
+
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
 
         (1...5).map {
             Date.make(year: 2021, month: 1, day: $0)
@@ -84,6 +107,8 @@ class CalendarViewModelTests: XCTestCase {
 
     func testUnhover() {
 
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+
         hoverSubject.onNext(.make(year: 2021, month: 1, day: 1))
         XCTAssertTrue(hasHoveredDate)
 
@@ -92,6 +117,8 @@ class CalendarViewModelTests: XCTestCase {
     }
 
     func testUnhoverAfterMonthChange() {
+
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
 
         hoverSubject.onNext(.make(year: 2021, month: 1, day: 1))
         XCTAssertTrue(hasHoveredDate)
@@ -175,6 +202,8 @@ class CalendarViewModelTests: XCTestCase {
 
     func testEventsPerDate() {
 
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+
         let expectedEvents: [(date: Date, events: [String])] = [
             (.make(year: 2021, month: 1, day: 1), ["Event 1"]),
             (.make(year: 2021, month: 1, day: 2), ["Event 1", "Event 2", "Event 3"]),
@@ -192,6 +221,8 @@ class CalendarViewModelTests: XCTestCase {
     }
 
     func testEventDotsPerDate() {
+
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
 
         let expectedEvents: [(date: Date, events: Set<CGColor>)] = [
             (.make(year: 2021, month: 1, day: 1), [.white]),
@@ -300,18 +331,18 @@ private class MockCalendarServiceProvider: CalendarServiceProviding {
         ]
     }
 
-    func calendars() -> [CalendarModel] {
-        return m_calendars
+    func calendars() -> Observable<[CalendarModel]> {
+        return .just(m_calendars)
     }
 
-    func events(from start: Date, to end: Date, calendars: [String]) -> [EventModel] {
+    func events(from start: Date, to end: Date, calendars: [String]) -> Observable<[EventModel]> {
         spyEventsObserver.onNext((start: start, end: end, calendars: calendars))
-        return m_events
+        return .just(m_events)
     }
 }
 
 private class MockDateProvider: DateProviding {
-    var m_calendar = Calendar.current
+    var m_calendar = Calendar(identifier: .iso8601)
     var calendar: Calendar { m_calendar }
     var now: Date = .make(year: 2021, month: 1, day: 1)
 }

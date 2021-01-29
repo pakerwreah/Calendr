@@ -42,6 +42,7 @@ class MainViewController: NSViewController {
 
     // Properties
     private let calendarService = CalendarServiceProvider()
+    private let dateProvider = DateProvider(calendar: .current)
 
     init() {
 
@@ -54,7 +55,7 @@ class MainViewController: NSViewController {
         statusItemViewModel = StatusItemViewModel(
             dateObservable: selectedDate,
             settingsObservable: settingsViewModel.statusItemSettings,
-            locale: Calendar.current.locale!
+            locale: .current
         )
 
         calendarPickerViewModel = CalendarPickerViewModel(calendarService: calendarService)
@@ -73,7 +74,8 @@ class MainViewController: NSViewController {
             dateObservable: selectedDate,
             hoverObservable: hoverObservable,
             enabledCalendars: calendarPickerViewModel.enabledCalendars,
-            calendarService: calendarService
+            calendarService: calendarService,
+            dateProvider: dateProvider
         )
 
         calendarView = CalendarView(
@@ -82,12 +84,15 @@ class MainViewController: NSViewController {
             clickObserver: dateClick.asObserver()
         )
 
+        let eventsObservable = calendarViewModel.asObservable()
+            .compactMap {
+                $0.filter(\.isSelected).first.map(\.events)
+            }
+            .distinctUntilChanged()
+
         eventListView = EventListView(
-            eventsObservable: calendarViewModel.asObservable()
-                .compactMap {
-                    $0.filter(\.isSelected).first.map(\.events)
-                }
-                .distinctUntilChanged()
+            eventsObservable: eventsObservable,
+            dateProvider: dateProvider
         )
 
         super.init(nibName: nil, bundle: nil)
@@ -215,7 +220,7 @@ class MainViewController: NSViewController {
             .disposed(by: disposeBag)
 
         selectedDate
-            .map(DateFormatter(format: "MMM yyyy").string(from:))
+            .map(DateFormatter(format: "MMM yyyy", locale: .current).string(from:))
             .bind(to: titleLabel.rx.text)
             .disposed(by: disposeBag)
 
@@ -341,6 +346,7 @@ class MainViewController: NSViewController {
 
 
         let dateSelector = DateSelector(
+            calendar: .current,
             initial: initialDate,
             selected: selectedDate,
             reset: resetBtn.rx.tap.asObservable(),

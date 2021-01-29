@@ -14,26 +14,28 @@ class EventListView: NSView {
 
     private let stackView = NSStackView(.vertical)
 
-    init(eventsObservable: Observable<[EventModel]>) {
+    init(eventsObservable: Observable<[EventModel]>, dateProvider: DateProviding) {
 
         func sortTuple(_ event: EventModel) -> (Int, Date, Date) {
             (event.isAllDay ? 0 : 1, event.start, event.end)
         }
 
-        eventsObservable.map { events in
-            events
-                .sorted {
-                    sortTuple($0) < sortTuple($1)
-                }
-                .map {
-                    EventView(viewModel: EventViewModel(event: $0))
-                }
-        }
-        .map {
-            $0.isEmpty ? [] : ([.spacer] + $0 + [.spacer])
-        }
-        .bind(to: stackView.rx.arrangedSubviews)
-        .disposed(by: disposeBag)
+        eventsObservable
+            .observe(on: MainScheduler.instance)
+            .map { events in
+                events
+                    .sorted {
+                        sortTuple($0) < sortTuple($1)
+                    }
+                    .map {
+                        EventView(viewModel: EventViewModel(event: $0, dateProvider: dateProvider))
+                    }
+            }
+            .map {
+                $0.isEmpty ? [] : ([.spacer] + $0 + [.spacer])
+            }
+            .bind(to: stackView.rx.arrangedSubviews)
+            .disposed(by: disposeBag)
 
         super.init(frame: .zero)
 

@@ -8,15 +8,29 @@
 import RxSwift
 
 class CalendarViewModel {
+
     private let cellViewModelsObservable: Observable<[CalendarCellViewModel]>
+
+    let weekDays: [WeekDay]
 
     init(
         dateObservable: Observable<Date>,
         hoverObservable: Observable<Date?>,
         enabledCalendars: Observable<[String]>,
         calendarService: CalendarServiceProviding,
-        dateProvider: DateProviding = DateProvider()
+        dateProvider: DateProviding
     ) {
+
+        let dateFormatter = DateFormatter(locale: dateProvider.calendar.locale)
+
+        weekDays = (dateProvider.calendar.firstWeekday ..< dateProvider.calendar.firstWeekday + 7)
+            .map { ($0 - 1) % 7 }
+            .map {
+                WeekDay(
+                    title: dateFormatter.veryShortWeekdaySymbols[$0],
+                    isWeekend: [0, 6].contains($0)
+                )
+            }
 
         // Calculate date range for current month
         let dateRangeObservable = dateObservable
@@ -29,8 +43,13 @@ class CalendarViewModel {
         // Create cells for current month
         let dateCellsObservable = dateRangeObservable.map { month -> [CalendarCellViewModel] in
 
-            let currentWeekDay = dateProvider.calendar.component(.weekday, from: month.start) - 1
-            let start = dateProvider.calendar.date(byAdding: .day, value: -currentWeekDay, to: month.start)!
+            let currentWeekDay = dateProvider.calendar.component(.weekday, from: month.start)
+            let firstWeekday = dateProvider.calendar.firstWeekday
+            let start = dateProvider.calendar.date(
+                byAdding: .day,
+                value: firstWeekday - currentWeekDay,
+                to: month.start
+            )!
 
             return (0..<42).map { day -> CalendarCellViewModel in
                 let date = dateProvider.calendar.date(byAdding: .day, value: day, to: start)!
@@ -54,19 +73,14 @@ class CalendarViewModel {
             enabledCalendars.startWith([]),
             calendarService.changeObservable.startWith(())
         )
-        .map { cellViewModels, calendars, _ -> [CalendarCellViewModel] in
+        .flatMapLatest { cellViewModels, calendars, _ -> Observable<[EventModel]> in
 
-            let events = calendarService.events(
+            calendarService.events(
                 from: cellViewModels.first!.date,
                 to: cellViewModels.last!.date,
                 calendars: calendars
             )
-
-            return cellViewModels.map { vm in
-                vm.with(events: events.filter {
-                    dateProvider.calendar.isDate(vm.date, in: ($0.start, $0.end))
-                })
-            }
+            .startWith([])
         }
         .share()
 
@@ -82,15 +96,21 @@ class CalendarViewModel {
             .do(afterNext: { _ in
                 timezone = dateProvider.calendar.timeZone
             })
+            .share()
 
         // Check which cell is today
         let isTodayObservable = Observable.combineLatest(
-            eventsObservable, todayObservable
+            dateCellsObservable, eventsObservable, todayObservable
         )
-        .map { cellViewModels, today -> [CalendarCellViewModel] in
+        .map { cellViewModels, events, today -> [CalendarCellViewModel] in
 
-            cellViewModels.map {
-                $0.with(isToday: dateProvider.calendar.isDate($0.date, inSameDayAs: today))
+            cellViewModels.map { vm in
+                vm.with(
+                    isToday: dateProvider.calendar.isDate(vm.date, inSameDayAs: today),
+                    events: events.filter { event in
+                        dateProvider.calendar.isDate(vm.date, in: (event.start, event.end))
+                    }
+                )
             }
         }
         .share()

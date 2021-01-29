@@ -9,16 +9,14 @@ import Cocoa
 
 class WeekDayCellView: NSView {
 
-    private static let formatter = DateFormatter()
-    
     private let label = Label()
 
-    init(weekDay: Int) {
+    init(weekDay: String) {
         super.init(frame: .zero)
 
         configureLayout()
 
-        label.stringValue = Self.formatter.veryShortWeekdaySymbols[weekDay]
+        label.stringValue = weekDay
     }
 
     private func configureLayout() {

@@ -34,7 +34,10 @@ class DateSelectorTests: XCTestCase {
         let dispatchGroup = DispatchGroup()
         let wait = { (_: Any) in dispatchGroup.wait() }
 
+        let calendar = Calendar(identifier: .iso8601)
+
         let selector = DateSelector(
+            calendar: calendar,
             initial: initial.do(onNext: wait),
             selected: selected,
             reset: reset.do(onNext: wait),
@@ -56,7 +59,7 @@ class DateSelectorTests: XCTestCase {
 
         selector
             .asObservable()
-            .map(DateFormatter(format: "yyyy-MM-dd").string(from:))
+            .map(DateFormatter(format: "yyyy-MM-dd", locale: calendar.locale).string(from:))
             .bind { [weak self] in
                 self?.values.append($0)
             }

@@ -23,8 +23,10 @@ class CalendarExtensionTests: XCTestCase {
             (.make(day: 4), .make(day: 6), true)
         ]
 
+        let calendar = Calendar(identifier: .iso8601)
+
         for (start, end, expected) in ranges {
-            let result = Calendar.current.isDate(date, in: (start, end))
+            let result = calendar.isDate(date, in: (start, end))
             XCTAssertEqual(expected, result, "\(start) - \(end))")
         }
     }

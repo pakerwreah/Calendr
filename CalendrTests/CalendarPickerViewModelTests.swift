@@ -160,11 +160,11 @@ private class MockCalendarServiceProvider: CalendarServiceProviding {
         .init(identifier: "3", account: "A3", title: "Calendar 3", color: .clear)
     ]
 
-    func calendars() -> [CalendarModel] {
-        return m_calendars
+    func calendars() -> Observable<[CalendarModel]> {
+        return .just(m_calendars)
     }
 
-    func events(from start: Date, to end: Date, calendars: [String]) -> [EventModel] {
-        return []
+    func events(from start: Date, to end: Date, calendars: [String]) -> Observable<[EventModel]> {
+        return .empty()
     }
 }

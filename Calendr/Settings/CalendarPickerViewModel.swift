@@ -20,7 +20,7 @@ class CalendarPickerViewModel {
     init(calendarService: CalendarServiceProviding, userDefaults: UserDefaults = .standard) {
 
         self.calendars = calendarService.changeObservable
-            .map(calendarService.calendars)
+            .flatMapLatest(calendarService.calendars)
             .share(replay: 1)
 
         let toggleCalendarSubject = PublishRelay<String>()

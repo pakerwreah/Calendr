@@ -11,8 +11,8 @@ import EventKit
 protocol CalendarServiceProviding {
     var changeObservable: Observable<Void> { get }
 
-    func calendars() -> [CalendarModel]
-    func events(from start: Date, to end: Date, calendars: [String]) -> [EventModel]
+    func calendars() -> Observable<[CalendarModel]>
+    func events(from start: Date, to end: Date, calendars: [String]) -> Observable<[EventModel]>
 }
 
 class CalendarServiceProvider: CalendarServiceProviding {
@@ -52,40 +52,55 @@ class CalendarServiceProvider: CalendarServiceProviding {
         }
     }
 
-    func calendars() -> [CalendarModel] {
+    func calendars() -> Observable<[CalendarModel]> {
 
-        store.calendars(for: .event).map { calendar in
-            CalendarModel(from: calendar)
+        Observable.create { [store] observer in
+            let calendars = store
+                .calendars(for: .event)
+                .map(CalendarModel.init(from:))
+
+            observer.onNext(calendars)
+
+            return Disposables.create()
         }
+        .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
     }
 
-    func events(from start: Date, to end: Date, calendars: [String]) -> [EventModel] {
+    func events(from start: Date, to end: Date, calendars: [String]) -> Observable<[EventModel]> {
 
-        let predicate = store.predicateForEvents(
-            withStart: start, end: end,
-            calendars: calendars.compactMap(store.calendar(withIdentifier:))
-        )
+        Observable.create { [store] observer in
 
-        return store.events(matching: predicate)
-            .map {
-                ($0, $0.attendees?.first(where: \.isCurrentUser).map(\.participantStatus))
-            }
-            .filter {
-                $1 != .declined
-            }
-            .map { event, status in
-                EventModel(
-                    start: event.startDate,
-                    end: event.endDate,
-                    isAllDay: event.isAllDay,
-                    title: event.title,
-                    location: event.location,
-                    notes: event.notes,
-                    url: event.url,
-                    isPending: status == .pending,
-                    calendar: CalendarModel(from: event.calendar)
-                )
-            }
+            let predicate = store.predicateForEvents(
+                withStart: start, end: end,
+                calendars: calendars.compactMap(store.calendar(withIdentifier:))
+            )
+
+            let events = store.events(matching: predicate)
+                .map {
+                    ($0, $0.attendees?.first(where: \.isCurrentUser).map(\.participantStatus))
+                }
+                .filter {
+                    $1 != .declined
+                }
+                .map { event, status in
+                    EventModel(
+                        start: event.startDate,
+                        end: event.endDate,
+                        isAllDay: event.isAllDay,
+                        title: event.title,
+                        location: event.location,
+                        notes: event.notes,
+                        url: event.url,
+                        isPending: status == .pending,
+                        calendar: CalendarModel(from: event.calendar)
+                    )
+                }
+
+            observer.onNext(events)
+
+            return Disposables.create()
+        }
+        .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
     }
 }
 

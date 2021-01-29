@@ -12,7 +12,7 @@ protocol DateProviding {
     var now: Date { get }
 }
 
-class DateProvider: DateProviding {
-    let calendar: Calendar = .current
+struct DateProvider: DateProviding {
+    let calendar: Calendar
     var now: Date { Date() }
 }

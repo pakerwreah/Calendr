@@ -8,14 +8,18 @@
 import Foundation
 
 extension DateFormatter {
-    convenience init(format: String) {
+    convenience init(locale: Locale?) {
         self.init()
+        self.locale = locale
+    }
+
+    convenience init(format: String, locale: Locale?) {
+        self.init(locale: locale)
         dateFormat = format
     }
 
-    convenience init(template: String, locale: Locale) {
-        self.init()
-        self.locale = locale
+    convenience init(template: String, locale: Locale?) {
+        self.init(locale: locale)
         setLocalizedDateFormatFromTemplate(template)
     }
 }

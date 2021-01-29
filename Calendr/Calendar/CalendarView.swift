@@ -54,24 +54,33 @@ class CalendarView: NSView {
     }
 
     private func addWeekendLayers() {
+
         gridView.wantsLayer = true
 
-        let cellSize = Constants.cellSize
+        let weekends = viewModel.weekDays
+            .enumerated()
+            .filter(\.element.isWeekend)
+            .map(\.offset)
 
-        for col: CGFloat in [0, 6] {
+        for range in IndexSet(weekends).rangeView {
             let layer = CALayer()
-            layer.frame = CGRect(x: CGFloat(col) * cellSize, y: 0, width: cellSize, height: 6 * cellSize)
-            layer.backgroundColor = NSColor.gray.withAlphaComponent(0.2).cgColor
-            layer.cornerRadius = 5
+            layer.frame = CGRect(
+                x: CGFloat(range.startIndex) * Constants.cellSize,
+                y: 0,
+                width: CGFloat(range.count) * Constants.cellSize,
+                height: 6 * Constants.cellSize
+            )
+            layer.backgroundColor = Constants.weekendBackgroundColor
+            layer.cornerRadius = Constants.cornerRadius
             gridView.layer?.addSublayer(layer)
         }
     }
 
     private func setUpBindings() {
 
-        for weekDay in 0..<7 {
+        for (i, weekDay) in viewModel.weekDays.map(\.title).enumerated() {
             let cellView = WeekDayCellView(weekDay: weekDay)
-            gridView.cell(atColumnIndex: weekDay, rowIndex: 0).contentView = cellView
+            gridView.cell(atColumnIndex: i, rowIndex: 0).contentView = cellView
         }
 
         for day in 0..<42 {
@@ -79,7 +88,7 @@ class CalendarView: NSView {
                 .asObservable()
                 .map(\.[day])
                 .distinctUntilChanged()
-                .observe(on: MainScheduler.asyncInstance)
+                .observe(on: MainScheduler.instance)
 
             let cellView = CalendarCellView(
                 viewModel: cellViewModel,
@@ -99,4 +108,6 @@ class CalendarView: NSView {
 private enum Constants {
 
     static let cellSize: CGFloat = 25
+    static let cornerRadius: CGFloat = 5
+    static let weekendBackgroundColor = NSColor.gray.cgColor.copy(alpha: 0.2)
 }

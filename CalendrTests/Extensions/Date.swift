@@ -15,10 +15,11 @@ extension Date {
         day: Int,
         hour: Int = 0,
         minute: Int = 0,
-        second: Int = 0
+        second: Int = 0,
+        calendar: Calendar = Calendar(identifier: .iso8601)
     ) -> Date {
 
-        Calendar.current.date(
+        calendar.date(
             from: .init(
                 year: year,
                 month: month,
