@@ -19,13 +19,17 @@ class CalendarViewModelTests: XCTestCase {
     private let calendarService = MockCalendarServiceProvider()
     private let dateProvider = MockDateProvider()
 
-    lazy var viewModel = CalendarViewModel(
-        dateObservable: dateSubject,
-        hoverObservable: hoverSubject,
-        enabledCalendars: calendarsSubject,
-        calendarService: calendarService,
-        dateProvider: dateProvider
-    )
+    func makeViewModel() -> CalendarViewModel {
+        CalendarViewModel(
+            dateObservable: dateSubject,
+            hoverObservable: hoverSubject,
+            enabledCalendars: calendarsSubject,
+            calendarService: calendarService,
+            dateProvider: dateProvider
+        )
+    }
+
+    lazy var viewModel = makeViewModel()
 
     var lastValue: [CalendarCellViewModel]?
 
@@ -43,19 +47,6 @@ class CalendarViewModelTests: XCTestCase {
         calendarsSubject.onNext([])
     }
 
-    func testDateSpan() {
-
-        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
-
-        guard let cellViewModels = lastValue else {
-            return XCTFail()
-        }
-
-        XCTAssertEqual(cellViewModels.count, 42)
-        XCTAssertEqual(cellViewModels.first.map(\.date), .make(year: 2020, month: 12, day: 27))
-        XCTAssertEqual(cellViewModels.last.map(\.date), .make(year: 2021, month: 2, day: 6))
-    }
-
     func testMonthSpan() {
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
@@ -71,7 +62,22 @@ class CalendarViewModelTests: XCTestCase {
         XCTAssertEqual(inMonth.last.map(\.date), .make(year: 2021, month: 1, day: 31))
     }
 
-    func testWeekDays() {
+    func testDateSpan_firstWeekDaySunday() {
+
+        dateProvider.m_calendar.firstWeekday = 1
+
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+
+        guard let cellViewModels = lastValue else {
+            return XCTFail()
+        }
+
+        XCTAssertEqual(cellViewModels.count, 42)
+        XCTAssertEqual(cellViewModels.first.map(\.date), .make(year: 2020, month: 12, day: 27))
+        XCTAssertEqual(cellViewModels.last.map(\.date), .make(year: 2021, month: 2, day: 6))
+    }
+
+    func testDateSpan_firstWeekDayMonday() {
 
         dateProvider.m_calendar.firstWeekday = 2
 
@@ -84,6 +90,30 @@ class CalendarViewModelTests: XCTestCase {
         XCTAssertEqual(cellViewModels.count, 42)
         XCTAssertEqual(cellViewModels.first.map(\.date), .make(year: 2020, month: 12, day: 28))
         XCTAssertEqual(cellViewModels.last.map(\.date), .make(year: 2021, month: 2, day: 7))
+    }
+
+    func testWeekDays_firstWeekDaySunday() {
+
+        dateProvider.m_calendar.firstWeekday = 1
+        dateProvider.m_calendar.locale = Locale(identifier: "en_US")
+
+        let weekDays = makeViewModel().weekDays
+        let expected = ["S", "M", "T", "W", "T", "F", "S"]
+
+        XCTAssertEqual(weekDays.map(\.title), expected)
+        XCTAssertEqual(weekDays.enumerated().filter(\.element.isWeekend).map(\.offset), [0, 6])
+    }
+
+    func testWeekDays_firstWeekDayMonday() {
+
+        dateProvider.m_calendar.firstWeekday = 2
+        dateProvider.m_calendar.locale = Locale(identifier: "en_US")
+
+        let weekDays = makeViewModel().weekDays
+        let expected = ["M", "T", "W", "T", "F", "S", "S"]
+
+        XCTAssertEqual(weekDays.map(\.title), expected)
+        XCTAssertEqual(weekDays.enumerated().filter(\.element.isWeekend).map(\.offset), [5, 6])
     }
 
     func testHoverDistinctly() {
