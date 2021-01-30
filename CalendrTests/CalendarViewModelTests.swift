@@ -370,9 +370,3 @@ private class MockCalendarServiceProvider: CalendarServiceProviding {
         return .just(m_events)
     }
 }
-
-private class MockDateProvider: DateProviding {
-    var m_calendar = Calendar(identifier: .iso8601)
-    var calendar: Calendar { m_calendar }
-    var now: Date = .make(year: 2021, month: 1, day: 1)
-}

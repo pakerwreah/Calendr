@@ -9,6 +9,8 @@ import XCTest
 import RxSwift
 @testable import Calendr
 
+var UserDefaultsID = 0
+
 class SettingsViewModelTests: XCTestCase {
 
     let disposeBag = DisposeBag()
@@ -27,7 +29,18 @@ class SettingsViewModelTests: XCTestCase {
         set { userDefaults.setValue(newValue, forKey: Prefs.statusItemDateEnabled) }
     }
 
-    override func tearDown() {
+    var userDefaultsTransparency: Int? {
+        get { userDefaults.object(forKey: Prefs.transparencyLevel) as! Int? }
+        set { userDefaults.setValue(newValue, forKey: Prefs.transparencyLevel) }
+    }
+
+    var userDefaultsShowPastEvents: Bool? {
+        get { userDefaults.object(forKey: Prefs.showPastEvents) as! Bool? }
+        set { userDefaults.setValue(newValue, forKey: Prefs.showPastEvents) }
+    }
+
+    override func setUp() {
+        userDefaults.setVolatileDomain([:], forName: UserDefaults.registrationDomain)
         userDefaults.removePersistentDomain(forName: className)
     }
 
@@ -35,18 +48,102 @@ class SettingsViewModelTests: XCTestCase {
 
         XCTAssertNil(userDefaultsIconEnabled)
         XCTAssertNil(userDefaultsDateEnabled)
+        XCTAssertNil(userDefaultsShowPastEvents)
+        XCTAssertNil(userDefaultsTransparency)
 
-        var settings: StatusItemSettings?
+        var statusItemSettings: StatusItemSettings?
+        var showPastEvents: Bool?
+        var popoverTransparency: Int?
+        var popoverMaterial: NSVisualEffectView.Material?
 
         viewModel.statusItemSettings
-            .bind { settings = $0 }
+            .bind { statusItemSettings = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(settings?.showIcon, true)
-        XCTAssertEqual(settings?.showDate, false)
+        viewModel.showPastEvents
+            .bind { showPastEvents = $0 }
+            .disposed(by: disposeBag)
+
+        viewModel.popoverTransparency
+            .bind { popoverTransparency = $0 }
+            .disposed(by: disposeBag)
+
+        viewModel.popoverMaterial
+            .bind { popoverMaterial = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(statusItemSettings?.showIcon, true)
+        XCTAssertEqual(statusItemSettings?.showDate, true)
+        XCTAssertEqual(showPastEvents, true)
+        XCTAssertEqual(popoverTransparency, 2)
+        XCTAssertEqual(popoverMaterial, .headerView)
 
         XCTAssertEqual(userDefaultsIconEnabled, true)
-        XCTAssertEqual(userDefaultsDateEnabled, false)
+        XCTAssertEqual(userDefaultsDateEnabled, true)
+        XCTAssertEqual(userDefaultsShowPastEvents, true)
+        XCTAssertEqual(userDefaultsTransparency, 2)
+    }
+
+    func testToggleShowPastEvents() {
+
+        userDefaultsShowPastEvents = false
+
+        var showPastEvents: Bool?
+
+        viewModel.showPastEvents
+            .bind { showPastEvents = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(showPastEvents, false)
+        XCTAssertEqual(userDefaultsShowPastEvents, false)
+
+        viewModel.toggleShowPastEvents.onNext(true)
+
+        XCTAssertEqual(showPastEvents, true)
+        XCTAssertEqual(userDefaultsShowPastEvents, true)
+
+        viewModel.toggleShowPastEvents.onNext(false)
+
+        XCTAssertEqual(showPastEvents, false)
+        XCTAssertEqual(userDefaultsShowPastEvents, false)
+    }
+
+    func testChangeTransparency() {
+
+        userDefaultsTransparency = 5
+
+        var popoverTransparency: Int?
+        var popoverMaterial: NSVisualEffectView.Material?
+
+        viewModel.popoverTransparency
+            .bind { popoverTransparency = $0 }
+            .disposed(by: disposeBag)
+
+        viewModel.popoverMaterial
+            .bind { popoverMaterial = $0 }
+            .disposed(by: disposeBag)
+
+        let expected: [NSVisualEffectView.Material] = [
+            .contentBackground,
+            .sheet,
+            .headerView,
+            .menu,
+            .popover,
+            .hudWindow
+        ]
+
+        XCTAssertEqual(popoverTransparency, 5)
+        XCTAssertEqual(userDefaultsTransparency, 5)
+        XCTAssertEqual(popoverMaterial, expected[5])
+
+        for level in 0..<expected.count {
+
+            viewModel.transparencyObserver.onNext(level)
+
+            XCTAssertEqual(popoverTransparency, level)
+            XCTAssertEqual(userDefaultsTransparency, level)
+            XCTAssertEqual(popoverMaterial, expected[level])
+        }
     }
 
     /// [] icon [✓] date  =  [✓] icon [✓] date

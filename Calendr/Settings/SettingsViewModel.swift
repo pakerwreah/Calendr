@@ -15,14 +15,23 @@ class SettingsViewModel {
     // Observers
     let toggleStatusItemIcon: AnyObserver<Bool>
     let toggleStatusItemDate: AnyObserver<Bool>
+    let toggleShowPastEvents: AnyObserver<Bool>
     let transparencyObserver: AnyObserver<Int>
 
     // Observables
     let statusItemSettings: Observable<StatusItemSettings>
-    let transparencyObservable: Observable<Int>
-    let materialObservable: Observable<NSVisualEffectView.Material>
+    let showPastEvents: Observable<Bool>
+    let popoverTransparency: Observable<Int>
+    let popoverMaterial: Observable<NSVisualEffectView.Material>
 
     init(userDefaults: UserDefaults = .standard) {
+
+        userDefaults.register(defaults: [
+            Prefs.statusItemIconEnabled: true,
+            Prefs.statusItemDateEnabled: true,
+            Prefs.showPastEvents: true,
+            Prefs.transparencyLevel: 2
+        ])
 
         let statusItemIconBehavior = BehaviorSubject(
             value: userDefaults.bool(forKey: Prefs.statusItemIconEnabled)
@@ -30,12 +39,16 @@ class SettingsViewModel {
         let statusItemDateBehavior = BehaviorSubject(
             value: userDefaults.bool(forKey: Prefs.statusItemDateEnabled)
         )
+        let showPastEventsBehavior = BehaviorSubject(
+            value: userDefaults.bool(forKey: Prefs.showPastEvents)
+        )
         let transparencyBehavior = BehaviorSubject(
             value: userDefaults.integer(forKey: Prefs.transparencyLevel)
         )
 
         toggleStatusItemIcon = statusItemIconBehavior.asObserver()
         toggleStatusItemDate = statusItemDateBehavior.asObserver()
+        toggleShowPastEvents = showPastEventsBehavior.asObserver()
         transparencyObserver = transparencyBehavior.asObserver()
 
         statusItemSettings = Observable.combineLatest(
@@ -52,13 +65,19 @@ class SettingsViewModel {
         })
         .share(replay: 1)
 
-        transparencyObservable = transparencyBehavior
+        showPastEvents = showPastEventsBehavior
+            .do(onNext: {
+                userDefaults.setValue($0, forKey: Prefs.showPastEvents)
+            })
+            .share(replay: 1)
+
+        popoverTransparency = transparencyBehavior
             .do(onNext: {
                 userDefaults.setValue($0, forKey: Prefs.transparencyLevel)
             })
             .share(replay: 1)
 
-        materialObservable = transparencyBehavior
+        popoverMaterial = transparencyBehavior
             .map { value -> NSVisualEffectView.Material in
                 [.contentBackground,
                  .sheet,

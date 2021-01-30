@@ -31,4 +31,12 @@ extension NSView {
         spacer.setContentCompressionResistancePriority(.fittingSizeCompression, for: .vertical)
         return spacer
     }
+
+    static func spacer(width: CGFloat) -> NSView {
+        NSView.spacer.width(equalTo: width)
+    }
+
+    static func spacer(height: CGFloat) -> NSView {
+        NSView.spacer.height(equalTo: height)
+    }
 }

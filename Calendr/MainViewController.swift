@@ -92,7 +92,8 @@ class MainViewController: NSViewController {
 
         eventListView = EventListView(
             eventsObservable: eventsObservable,
-            dateProvider: dateProvider
+            dateProvider: dateProvider,
+            settings: settingsViewModel
         )
 
         super.init(nibName: nil, bundle: nil)
@@ -143,7 +144,7 @@ class MainViewController: NSViewController {
             .take(1)
 
         Observable.combineLatest(
-            popoverView, settingsViewModel.materialObservable
+            popoverView, settingsViewModel.popoverMaterial
         )
         .bind { $0.material = $1 }
         .disposed(by: disposeBag)

@@ -26,7 +26,8 @@ class CalendarPickerViewModelTests: XCTestCase {
         userDefaults.stringArray(forKey: Prefs.enabledCalendars)
     }
 
-    override func tearDown() {
+    override func setUp() {
+        userDefaults.setVolatileDomain([:], forName: UserDefaults.registrationDomain)
         userDefaults.removePersistentDomain(forName: className)
     }
 

@@ -15,13 +15,15 @@ class EventListView: NSView {
     private let eventsObservable: Observable<[EventModel]>
 
     private let dateProvider: DateProviding
+    private let settings: SettingsViewModel
 
     private let stackView = NSStackView(.vertical)
 
-    init(eventsObservable: Observable<[EventModel]>, dateProvider: DateProviding) {
+    init(eventsObservable: Observable<[EventModel]>, dateProvider: DateProviding, settings: SettingsViewModel) {
 
         self.eventsObservable = eventsObservable
         self.dateProvider = dateProvider
+        self.settings = settings
 
         super.init(frame: .zero)
 
@@ -47,13 +49,13 @@ class EventListView: NSView {
 
         eventsObservable
             .observe(on: MainScheduler.instance)
-            .map { [dateProvider] events in
+            .map { [dateProvider, settings] events in
                 events
                     .sorted {
                         sortTuple($0) < sortTuple($1)
                     }
                     .map {
-                        EventView(viewModel: EventViewModel(event: $0, dateProvider: dateProvider))
+                        EventView(viewModel: EventViewModel(event: $0, dateProvider: dateProvider, settings: settings))
                     }
             }
             .map {
