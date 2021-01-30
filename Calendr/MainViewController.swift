@@ -86,7 +86,7 @@ class MainViewController: NSViewController {
 
         let eventsObservable = calendarViewModel.asObservable()
             .compactMap {
-                $0.filter(\.isSelected).first.map(\.events)
+                $0.first(where: \.isSelected).flatMap(\.events)
             }
             .distinctUntilChanged()
 

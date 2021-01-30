@@ -88,7 +88,7 @@ class CalendarCellView: NSView {
 
         viewModel
             .map(\.dots)
-            .map { $0.map(Self.makeEventDot) }
+            .compactMap { $0?.map(Self.makeEventDot) }
             .bind(to: eventsStackView.rx.arrangedSubviews)
             .disposed(by: disposeBag)
 

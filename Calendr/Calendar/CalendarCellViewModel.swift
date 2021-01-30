@@ -13,7 +13,7 @@ struct CalendarCellViewModel: Equatable {
     let isToday: Bool
     let isSelected: Bool
     let isHovered: Bool
-    let events: [EventModel]
+    let events: [EventModel]?
 }
 
 extension CalendarCellViewModel {
@@ -41,8 +41,10 @@ extension CalendarCellViewModel {
         return color.cgColor
     }
 
-    var dots: [CGColor] {
-        Set(events.map(\.calendar.color)).sorted {
+    var dots: [CGColor]? {
+        guard let events = events else { return nil }
+
+        return Set(events.map(\.calendar.color)).sorted {
             $0.hashValue < $1.hashValue
         }
     }

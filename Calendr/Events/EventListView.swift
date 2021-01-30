@@ -12,9 +12,34 @@ class EventListView: NSView {
 
     private let disposeBag = DisposeBag()
 
+    private let eventsObservable: Observable<[EventModel]>
+
+    private let dateProvider: DateProviding
+
     private let stackView = NSStackView(.vertical)
 
     init(eventsObservable: Observable<[EventModel]>, dateProvider: DateProviding) {
+
+        self.eventsObservable = eventsObservable
+        self.dateProvider = dateProvider
+
+        super.init(frame: .zero)
+
+        configureLayout()
+
+        setUpBindings()
+    }
+
+    private func configureLayout() {
+
+        forAutoLayout()
+
+        addSubview(stackView)
+
+        stackView.edges(to: self)
+    }
+
+    private func setUpBindings() {
 
         func sortTuple(_ event: EventModel) -> (Int, Date, Date) {
             (event.isAllDay ? 0 : 1, event.start, event.end)
@@ -22,7 +47,7 @@ class EventListView: NSView {
 
         eventsObservable
             .observe(on: MainScheduler.instance)
-            .map { events in
+            .map { [dateProvider] events in
                 events
                     .sorted {
                         sortTuple($0) < sortTuple($1)
@@ -36,19 +61,6 @@ class EventListView: NSView {
             }
             .bind(to: stackView.rx.arrangedSubviews)
             .disposed(by: disposeBag)
-
-        super.init(frame: .zero)
-
-        configureLayout()
-    }
-
-    private func configureLayout() {
-
-        forAutoLayout()
-
-        addSubview(stackView)
-
-        stackView.edges(to: self)
     }
 
     required init?(coder: NSCoder) {

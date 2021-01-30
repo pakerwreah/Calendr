@@ -61,7 +61,7 @@ class CalendarViewModel {
                     isToday: false,
                     isSelected: false,
                     isHovered: false,
-                    events: []
+                    events: nil
                 )
             }
         }
@@ -73,14 +73,15 @@ class CalendarViewModel {
             enabledCalendars.startWith([]),
             calendarService.changeObservable.startWith(())
         )
-        .flatMapLatest { cellViewModels, calendars, _ -> Observable<[EventModel]> in
+        .flatMapLatest { cellViewModels, calendars, _ -> Observable<[EventModel]?> in
 
             calendarService.events(
                 from: cellViewModels.first!.date,
                 to: cellViewModels.last!.date,
                 calendars: calendars
             )
-            .startWith([])
+            .toOptional()
+            .startWith(nil)
         }
         .share()
 
@@ -107,7 +108,7 @@ class CalendarViewModel {
             cellViewModels.map { vm in
                 vm.with(
                     isToday: dateProvider.calendar.isDate(vm.date, inSameDayAs: today),
-                    events: events.filter { event in
+                    events: events?.filter { event in
                         dateProvider.calendar.isDate(vm.date, in: (event.start, event.end))
                     }
                 )
