@@ -7,9 +7,21 @@
 
 import Cocoa
 
-func Label(text: String = "", font: NSFont? = nil) -> NSTextField {
-    let label = NSTextField(labelWithString: text)
-    label.setContentHuggingPriority(.fittingSizeCompression, for: .horizontal)
-    label.font = font
-    return label
+class Label: NSTextField {
+
+    var forceVibrancy: Bool?
+
+    override var allowsVibrancy: Bool {
+        forceVibrancy ?? super.allowsVibrancy
+    }
+
+    convenience init() {
+        self.init(text: "")
+    }
+
+    convenience init(text: String = "", font: NSFont? = nil) {
+        self.init(labelWithString: text)
+        setContentHuggingPriority(.fittingSizeCompression, for: .horizontal)
+        self.font = font
+    }
 }

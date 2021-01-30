@@ -7,6 +7,7 @@
 
 import RxCocoa
 import RxSwift
+import CoreImage.CIFilterBuiltins
 
 class EventView: NSView {
 
@@ -42,7 +43,7 @@ class EventView: NSView {
         duration.isHidden = viewModel.duration.isEmpty
 
         if viewModel.isPending {
-            layer?.backgroundFilters = Self.pendingBackgroundFilters
+            layer?.backgroundColor = Self.pendingBackground
         }
     }
 
@@ -53,6 +54,7 @@ class EventView: NSView {
         wantsLayer = true
         layer?.cornerRadius = 2
 
+        title.forceVibrancy = false
         title.lineBreakMode = .byWordWrapping
         title.textColor = .headerTextColor
         title.font = .systemFont(ofSize: 12)
@@ -114,19 +116,24 @@ class EventView: NSView {
             .disposed(by: disposeBag)
     }
 
-    private static let pendingBackgroundFilters: [CIFilter] = {
-        let stripes = CIFilter(name: "CIStripesGenerator", parameters: [
-            "inputColor0": CIColor(color: NSColor.gray.withAlphaComponent(0.25))!,
-            "inputColor1": CIColor.clear,
-            "inputWidth": 2.5,
-            "inputSharpness" : 0
-        ])!
+    private static let pendingBackground: CGColor = {
 
-        let rotated = CIFilter(name: "CIAffineTransform", parameters: [
-            "inputTransform": CGAffineTransform(rotationAngle: -.pi / 4)
-        ])!
+        let stripes = CIFilter.stripesGenerator()
+        stripes.color0 = CIColor(color: NSColor.gray.withAlphaComponent(0.25))!
+        stripes.color1 = .clear
+        stripes.width = 2.5
+        stripes.sharpness = 0
 
-        return [stripes, rotated]
+        let rotated = CIFilter.affineClamp()
+        rotated.inputImage = stripes.outputImage!
+        rotated.transform = CGAffineTransform(rotationAngle: -.pi / 4)
+
+        let ciImage = rotated.outputImage!.cropped(to: CGRect(x: 0, y: 0, width: 300, height: 300))
+        let rep = NSCIImageRep(ciImage: ciImage)
+        let nsImage = NSImage(size: rep.size)
+        nsImage.addRepresentation(rep)
+
+        return NSColor(patternImage: nsImage).cgColor
     }()
 
     required init?(coder: NSCoder) {
