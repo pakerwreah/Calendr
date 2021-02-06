@@ -213,15 +213,13 @@ class EventViewModelHideTests: XCTestCase {
     func mock(
         start: Date,
         end: Date,
-        isAllDay: Bool = false,
-        scheduler: SchedulerType = MainScheduler.instance
+        isAllDay: Bool = false
     ) -> EventViewModel {
 
         EventViewModel(
             event: .make(start: start, end: end, isAllDay: isAllDay),
             dateProvider: dateProvider,
-            settings: settings,
-            scheduler: scheduler
+            settings: settings
         )
     }
 }

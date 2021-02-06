@@ -41,6 +41,7 @@
 		349355A625BCA8D400957945 /* EventListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349355A525BCA8D400957945 /* EventListView.swift */; };
 		349355AA25BCA8DF00957945 /* EventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349355A925BCA8DF00957945 /* EventView.swift */; };
 		349355B225BCB07B00957945 /* EventViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349355B125BCB07B00957945 /* EventViewModel.swift */; };
+		349E4CEF25CF48ED00A6FC18 /* TestScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349E4CEE25CF48ED00A6FC18 /* TestScheduler.swift */; };
 		34A4C3E925963FB200D0F949 /* NSStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A4C3E825963FB200D0F949 /* NSStackView.swift */; };
 		34B23E9C25C0C94000DADCD6 /* NSButton+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B23E9B25C0C94000DADCD6 /* NSButton+Rx.swift */; };
 		34B5A09325B0CE6F00F7F7ED /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B5A09225B0CE6F00F7F7ED /* SettingsViewController.swift */; };
@@ -111,6 +112,7 @@
 		349355A525BCA8D400957945 /* EventListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventListView.swift; sourceTree = "<group>"; };
 		349355A925BCA8DF00957945 /* EventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventView.swift; sourceTree = "<group>"; };
 		349355B125BCB07B00957945 /* EventViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventViewModel.swift; sourceTree = "<group>"; };
+		349E4CEE25CF48ED00A6FC18 /* TestScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestScheduler.swift; sourceTree = "<group>"; };
 		34A4C3E825963FB200D0F949 /* NSStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSStackView.swift; sourceTree = "<group>"; };
 		34B23E9B25C0C94000DADCD6 /* NSButton+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSButton+Rx.swift"; sourceTree = "<group>"; };
 		34B5A09225B0CE6F00F7F7ED /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
@@ -175,6 +177,7 @@
 			children = (
 				34924CE7259FCC95009C3450 /* Date.swift */,
 				34F88A8025B0C6A3005C9BA6 /* EventModel.swift */,
+				349E4CEE25CF48ED00A6FC18 /* TestScheduler.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -587,6 +590,7 @@
 				34924CD6259FB814009C3450 /* CalendarExtensionTests.swift in Sources */,
 				348E703125C6168C00B3B160 /* EventViewModelHideTests.swift in Sources */,
 				3421AD3D25BA1D0800A4F468 /* SettingsViewModelTests.swift in Sources */,
+				349E4CEF25CF48ED00A6FC18 /* TestScheduler.swift in Sources */,
 				34924CE4259FCB36009C3450 /* DateSelectorTests.swift in Sources */,
 				34C2CF9125C2070400FC2CFF /* EventViewModelTests.swift in Sources */,
 				34F88A8125B0C6A3005C9BA6 /* EventModel.swift in Sources */,
