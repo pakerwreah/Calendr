@@ -17,9 +17,8 @@ class CalendarCellView: NSView {
     private let hoverObserver: AnyObserver<Date?>
     private let clickObserver: AnyObserver<Date>
 
-    private let contentStackView = NSStackView(.vertical)
-    private let eventsStackView = NSStackView(.horizontal)
     private let label = Label()
+    private let eventsStackView = NSStackView()
 
     init(
         viewModel: Observable<CalendarCellViewModel>,
@@ -51,18 +50,18 @@ class CalendarCellView: NSView {
         label.size(equalTo: CGSize(width: 24, height: 13))
         label.textColor = .headerTextColor
 
-        eventsStackView.spacing = 2
-        eventsStackView.height(equalTo: Constants.eventDotSize)
+        let eventsContainer = NSView(wrapping: eventsStackView)
 
-        let eventsContainer = NSView()
-        eventsContainer.addSubview(eventsStackView)
         eventsStackView
+            .with(spacing: 2)
             .top(equalTo: eventsContainer)
             .bottom(equalTo: eventsContainer)
             .center(in: eventsContainer, orientation: .horizontal)
+            .height(equalTo: Constants.eventDotSize)
 
-        contentStackView.spacing = 2
-        contentStackView.addArrangedSubviews(label, eventsContainer)
+        let contentStackView = NSStackView(views: [label, eventsContainer])
+            .with(orientation: .vertical)
+            .with(spacing: 2)
 
         addSubview(contentStackView)
 

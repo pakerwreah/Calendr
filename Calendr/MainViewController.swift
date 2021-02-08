@@ -37,7 +37,7 @@ class MainViewController: NSViewController {
     // Reactive
     private let disposeBag = DisposeBag()
     private let dateClick = PublishSubject<Date>()
-    private let initialDate = PublishSubject<Date>()
+    private let initialDate = BehaviorSubject<Date>(value: Date())
     private let selectedDate = PublishSubject<Date>()
 
     // Properties
@@ -50,11 +50,11 @@ class MainViewController: NSViewController {
         statusItem.behavior = .terminationOnRemoval
         statusItem.isVisible = true
 
-        settingsViewModel = SettingsViewModel()
+        settingsViewModel = SettingsViewModel(dateProvider: dateProvider)
 
         statusItemViewModel = StatusItemViewModel(
-            dateObservable: selectedDate,
-            settingsObservable: settingsViewModel.statusItemSettings,
+            dateObservable: initialDate,
+            settings: settingsViewModel.statusItemSettings,
             locale: .current
         )
 
@@ -111,12 +111,14 @@ class MainViewController: NSViewController {
 
         view = NSView()
 
-        let mainView = makeMainView(
+        let mainView = NSStackView(views: [
             makeHeader(),
             calendarView,
             makeToolBar(),
             eventListView
-        )
+        ])
+        .with(orientation: .vertical)
+        .with(spacing: 4)
 
         view.addSubview(mainView)
 
@@ -150,17 +152,6 @@ class MainViewController: NSViewController {
         .disposed(by: disposeBag)
     }
 
-    private func makeMainView(_ views: NSView...) -> NSView {
-
-        let mainStackView = NSStackView(.vertical)
-
-        mainStackView.spacing = 4
-
-        mainStackView.addArrangedSubviews(views)
-
-        return mainStackView
-    }
-
     private func makeHeader() -> NSView {
 
         titleLabel.font = .systemFont(ofSize: 14, weight: .medium)
@@ -172,12 +163,10 @@ class MainViewController: NSViewController {
         resetBtn.image = NSImage(named: NSImage.refreshTemplateName)
         nextBtn.image = NSImage(named: NSImage.goForwardTemplateName)
 
-        let headerStackView = NSStackView(.horizontal)
-        headerStackView.spacing = 0
-        let padding = NSView().width(equalTo: 5)
-        headerStackView.addArrangedSubviews(padding, titleLabel, .spacer, prevBtn, resetBtn, nextBtn)
-
-        return headerStackView
+        return NSStackView(views: [
+            .spacer(width: 5), titleLabel, .spacer, prevBtn, resetBtn, nextBtn
+        ])
+        .with(spacing: 0)
     }
 
     private func makeToolBar() -> NSView {
@@ -189,10 +178,7 @@ class MainViewController: NSViewController {
         calendarBtn.image = NSImage(named: NSImage.iconViewTemplateName)?.withSymbolConfiguration(.init(scale: .large))
         settingsBtn.image = NSImage(named: NSImage.actionTemplateName)?.withSymbolConfiguration(.init(scale: .large))
 
-        let toolStackView = NSStackView(.horizontal)
-        toolStackView.addArrangedSubviews(pinBtn, .spacer, calendarBtn, settingsBtn)
-
-        return toolStackView
+        return NSStackView(views: [pinBtn, .spacer, calendarBtn, settingsBtn])
     }
 
     override func viewDidAppear() {
@@ -211,7 +197,6 @@ class MainViewController: NSViewController {
             NotificationCenter.default.rx.notification(.NSCalendarDayChanged, object: nil).toVoid(),
             rx.sentMessage(#selector(NSViewController.viewDidDisappear)).toVoid()
         )
-        .startWith(())
         .map { Date() }
         .bind(to: initialDate)
         .disposed(by: disposeBag)
@@ -280,10 +265,6 @@ class MainViewController: NSViewController {
 
         popover.rx.observe(\.isShown)
             .bind(to: statusBarButton.rx.isHighlighted)
-            .disposed(by: disposeBag)
-
-        statusItemViewModel.width
-            .bind(to: statusItem.rx.length)
             .disposed(by: disposeBag)
 
         statusItemViewModel.text

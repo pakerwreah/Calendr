@@ -8,21 +8,30 @@
 import Cocoa
 
 extension NSStackView {
+
     convenience init(_ orientation: NSUserInterfaceLayoutOrientation) {
         self.init()
         self.orientation = orientation
     }
 
-    func addArrangedSubviews(_ views: NSView...) {
-        addArrangedSubviews(views)
+    func with(orientation: NSUserInterfaceLayoutOrientation) -> Self {
+        self.orientation = orientation
+        return self
     }
 
-    func addArrangedSubviews(_ views: [NSView]) {
-        views.forEach(addArrangedSubview)
+    func with(alignment: NSLayoutConstraint.Attribute) -> Self {
+        self.alignment = alignment
+        return self
+    }
+
+    func with(spacing: CGFloat) -> Self {
+        self.spacing = spacing
+        return self
     }
 }
 
 extension NSView {
+
     static var spacer: NSView {
         let spacer = NSView()
         spacer.setContentHuggingPriority(.fittingSizeCompression, for: .horizontal)

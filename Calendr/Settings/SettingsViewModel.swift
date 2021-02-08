@@ -8,13 +8,18 @@
 import RxCocoa
 import RxSwift
 
-typealias StatusItemSettings = (showIcon: Bool, showDate: Bool)
+struct StatusItemSettings {
+    let showIcon: Bool
+    let showDate: Bool
+    let dateStyle: DateFormatter.Style
+}
 
 class SettingsViewModel {
 
     // Observers
     let toggleStatusItemIcon: AnyObserver<Bool>
     let toggleStatusItemDate: AnyObserver<Bool>
+    let statusItemDateStyleObserver: AnyObserver<DateFormatter.Style>
     let toggleShowPastEvents: AnyObserver<Bool>
     let transparencyObserver: AnyObserver<Int>
 
@@ -24,11 +29,28 @@ class SettingsViewModel {
     let popoverTransparency: Observable<Int>
     let popoverMaterial: Observable<NSVisualEffectView.Material>
 
-    init(userDefaults: UserDefaults = .standard) {
+    let dateProvider: DateProviding
+
+    var dateFormatOptions: [String] {
+        let dateFormatter = DateFormatter(locale: dateProvider.calendar.locale)
+        var options: [String] = []
+
+        for i: UInt in 1...4 {
+            dateFormatter.dateStyle = DateFormatter.Style(rawValue: i) ?? .none
+            options.append(dateFormatter.string(from: dateProvider.now))
+        }
+
+        return options
+    }
+
+    init(dateProvider: DateProviding, userDefaults: UserDefaults = .standard) {
+
+        self.dateProvider = dateProvider
 
         userDefaults.register(defaults: [
             Prefs.statusItemIconEnabled: true,
             Prefs.statusItemDateEnabled: true,
+            Prefs.statusItemDateStyle: 1,
             Prefs.showPastEvents: true,
             Prefs.transparencyLevel: 2
         ])
@@ -39,6 +61,9 @@ class SettingsViewModel {
         let statusItemDateBehavior = BehaviorSubject(
             value: userDefaults.bool(forKey: Prefs.statusItemDateEnabled)
         )
+        let statusItemDateStyleBehavior = BehaviorSubject(
+            value: DateFormatter.Style(rawValue: UInt(userDefaults.integer(forKey: Prefs.statusItemDateStyle))) ?? .none
+        )
         let showPastEventsBehavior = BehaviorSubject(
             value: userDefaults.bool(forKey: Prefs.showPastEvents)
         )
@@ -48,10 +73,11 @@ class SettingsViewModel {
 
         toggleStatusItemIcon = statusItemIconBehavior.asObserver()
         toggleStatusItemDate = statusItemDateBehavior.asObserver()
+        statusItemDateStyleObserver = statusItemDateStyleBehavior.asObserver()
         toggleShowPastEvents = showPastEventsBehavior.asObserver()
         transparencyObserver = transparencyBehavior.asObserver()
 
-        statusItemSettings = Observable.combineLatest(
+        let statusItemIconAndDate = Observable.combineLatest(
             statusItemIconBehavior, statusItemDateBehavior
         )
         .map { iconEnabled, dateEnabled in
@@ -63,6 +89,25 @@ class SettingsViewModel {
                 Prefs.statusItemDateEnabled: dateEnabled
             ])
         })
+        .share(replay: 1)
+
+        let statusItemDateStyle = statusItemDateStyleBehavior
+            .do(onNext: {
+                userDefaults.setValue($0.rawValue, forKey: Prefs.statusItemDateStyle)
+            })
+            .share(replay: 1)
+
+        statusItemSettings = Observable.combineLatest(
+            statusItemIconAndDate,
+            statusItemDateStyle
+        )
+        .map { iconAndDate, dateStyle in
+            StatusItemSettings(
+                showIcon: iconAndDate.0,
+                showDate: iconAndDate.1,
+                dateStyle: dateStyle
+            )
+        }
         .share(replay: 1)
 
         showPastEvents = showPastEventsBehavior

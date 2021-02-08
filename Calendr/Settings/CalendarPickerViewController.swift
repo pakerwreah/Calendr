@@ -56,13 +56,13 @@ class CalendarPickerViewController: NSViewController {
         let label = Label(text: title, font: .systemFont(ofSize: 11, weight: .semibold))
         label.textColor = .secondaryLabelColor
 
-        let stackView = NSStackView(.vertical)
-        stackView.alignment = .left
-        stackView.addArrangedSubviews(calendars.compactMap(makeCalendarItem))
+        let stackView = NSStackView(
+            views: calendars.compactMap(makeCalendarItem)
+        )
+        .with(orientation: .vertical)
+        .with(alignment: .left)
 
-        let margin = NSView().width(equalTo: 0)
-
-        return [label, NSStackView(views: [margin, stackView])]
+        return [label, NSStackView(views: [.spacer(width: 0), stackView])]
     }
 
     private func makeCalendarItem(_ calendar: CalendarModel) -> NSView {

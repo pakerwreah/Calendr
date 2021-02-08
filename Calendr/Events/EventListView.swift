@@ -17,7 +17,7 @@ class EventListView: NSView {
     private let dateProvider: DateProviding
     private let settings: SettingsViewModel
 
-    private let stackView = NSStackView(.vertical)
+    private let contentStackView = NSStackView(.vertical)
 
     init(eventsObservable: Observable<[EventModel]>, dateProvider: DateProviding, settings: SettingsViewModel) {
 
@@ -36,9 +36,9 @@ class EventListView: NSView {
 
         forAutoLayout()
 
-        addSubview(stackView)
+        addSubview(contentStackView)
 
-        stackView.edges(to: self)
+        contentStackView.edges(to: self)
     }
 
     private func setUpBindings() {
@@ -61,7 +61,7 @@ class EventListView: NSView {
             .map {
                 $0.isEmpty ? [] : ([.spacer] + $0 + [.spacer])
             }
-            .bind(to: stackView.rx.arrangedSubviews)
+            .bind(to: contentStackView.rx.arrangedSubviews)
             .disposed(by: disposeBag)
     }
 

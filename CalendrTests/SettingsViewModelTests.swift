@@ -9,15 +9,15 @@ import XCTest
 import RxSwift
 @testable import Calendr
 
-var UserDefaultsID = 0
-
 class SettingsViewModelTests: XCTestCase {
 
     let disposeBag = DisposeBag()
 
+    let dateProvider = MockDateProvider()
+
     let userDefaults = UserDefaults(suiteName: className())!
 
-    lazy var viewModel = SettingsViewModel(userDefaults: userDefaults)
+    lazy var viewModel = SettingsViewModel(dateProvider: dateProvider, userDefaults: userDefaults)
 
     var userDefaultsIconEnabled: Bool? {
         get { userDefaults.object(forKey: Prefs.statusItemIconEnabled) as! Bool? }
@@ -27,6 +27,11 @@ class SettingsViewModelTests: XCTestCase {
     var userDefaultsDateEnabled: Bool? {
         get { userDefaults.object(forKey: Prefs.statusItemDateEnabled) as! Bool? }
         set { userDefaults.setValue(newValue, forKey: Prefs.statusItemDateEnabled) }
+    }
+
+    var userDefaultsDateStyle: Int? {
+        get { userDefaults.object(forKey: Prefs.statusItemDateStyle) as! Int? }
+        set { userDefaults.setValue(newValue, forKey: Prefs.statusItemDateStyle) }
     }
 
     var userDefaultsTransparency: Int? {
@@ -48,6 +53,7 @@ class SettingsViewModelTests: XCTestCase {
 
         XCTAssertNil(userDefaultsIconEnabled)
         XCTAssertNil(userDefaultsDateEnabled)
+        XCTAssertNil(userDefaultsDateStyle)
         XCTAssertNil(userDefaultsShowPastEvents)
         XCTAssertNil(userDefaultsTransparency)
 
@@ -74,14 +80,45 @@ class SettingsViewModelTests: XCTestCase {
 
         XCTAssertEqual(statusItemSettings?.showIcon, true)
         XCTAssertEqual(statusItemSettings?.showDate, true)
+        XCTAssertEqual(statusItemSettings?.dateStyle, .short)
         XCTAssertEqual(showPastEvents, true)
         XCTAssertEqual(popoverTransparency, 2)
         XCTAssertEqual(popoverMaterial, .headerView)
 
         XCTAssertEqual(userDefaultsIconEnabled, true)
         XCTAssertEqual(userDefaultsDateEnabled, true)
+        XCTAssertEqual(userDefaultsDateStyle, 1)
         XCTAssertEqual(userDefaultsShowPastEvents, true)
         XCTAssertEqual(userDefaultsTransparency, 2)
+    }
+
+    func testDateStyleOptions() {
+
+        dateProvider.m_calendar.locale = Locale(identifier: "en_US")
+
+        XCTAssertEqual(viewModel.dateFormatOptions, [
+            "1/1/21",
+            "Jan 1, 2021",
+            "January 1, 2021",
+            "Friday, January 1, 2021"
+        ])
+    }
+
+    func testDateStyleSelected() {
+
+        userDefaultsDateStyle = 2
+
+        var settings: StatusItemSettings?
+
+        viewModel.statusItemSettings
+            .bind { settings = $0 }
+            .disposed(by: disposeBag)
+
+        viewModel.statusItemDateStyleObserver.onNext(.medium)
+
+        XCTAssertEqual(settings?.dateStyle, .medium)
+
+        XCTAssertEqual(userDefaultsDateStyle, 2)
     }
 
     func testToggleShowPastEvents() {

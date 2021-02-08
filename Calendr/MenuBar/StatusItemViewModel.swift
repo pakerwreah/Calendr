@@ -10,12 +10,11 @@ import RxSwift
 
 class StatusItemViewModel {
 
-    let width: Observable<CGFloat>
     let text: Observable<NSAttributedString>
 
     init(
         dateObservable: Observable<Date>,
-        settingsObservable: Observable<(showIcon: Bool, showDate: Bool)>,
+        settings: Observable<StatusItemSettings>,
         locale: Locale
     ) {
 
@@ -24,12 +23,14 @@ class StatusItemViewModel {
             .baselineOffset: Constants.iconBaselineOffset
         ])
 
-        let dateFormatter = DateFormatter(template: "yyyyMMdd", locale: locale)
+        let dateFormatter = DateFormatter(locale: locale)
 
         text = Observable.combineLatest(
-            dateObservable, settingsObservable
+            dateObservable, settings
         )
         .map { date, settings in
+
+            dateFormatter.dateStyle = settings.dateStyle
 
             let title = NSMutableAttributedString()
 
@@ -46,32 +47,11 @@ class StatusItemViewModel {
 
             return title
         }
-
-        width = settingsObservable.map { showIcon, showDate in
-
-            var width: CGFloat = 0
-
-            if showIcon {
-                width += Constants.iconWidth
-            }
-
-            if showDate {
-                if showIcon {
-                    width += Constants.spacerWidth
-                }
-                width += Constants.dateWidth
-            }
-
-            return width
-        }
     }
 }
 
 private enum Constants {
 
-    static let iconWidth: CGFloat = 15
-    static let dateWidth: CGFloat = 70
-    static let spacerWidth: CGFloat = 5
     static let iconPointSize: CGFloat = 14
     static let iconBaselineOffset: CGFloat = -1
 }

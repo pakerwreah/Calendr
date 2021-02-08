@@ -14,11 +14,11 @@ class EventViewModelTests: XCTestCase {
 
     let disposeBag = DisposeBag()
 
+    let dateProvider = MockDateProvider()
+
     let userDefaults = UserDefaults(suiteName: className())!
 
-    lazy var settings = SettingsViewModel(userDefaults: userDefaults)
-
-    private let dateProvider = MockDateProvider()
+    lazy var settings = SettingsViewModel(dateProvider: dateProvider, userDefaults: userDefaults)
 
     override func setUp() {
         userDefaults.setVolatileDomain([:], forName: UserDefaults.registrationDomain)

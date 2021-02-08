@@ -69,14 +69,13 @@ class EventView: NSView {
         colorBar.layer?.cornerRadius = 2
         colorBar.width(equalTo: 4)
 
-        let eventStackView = NSStackView(.vertical)
-        eventStackView.spacing = 2
-        eventStackView.addArrangedSubviews(title, duration)
+        let eventStackView = NSStackView(views: [title, duration])
+            .with(orientation: .vertical)
+            .with(spacing: 2)
 
-        let contentStackView = NSStackView(.horizontal)
+        let contentStackView = NSStackView(views: [colorBar, eventStackView])
         addSubview(contentStackView)
         contentStackView.edges(to: self)
-        contentStackView.addArrangedSubviews(colorBar, eventStackView)
 
         addSubview(progress, positioned: .below, relativeTo: nil)
 

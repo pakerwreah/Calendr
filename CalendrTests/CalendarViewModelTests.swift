@@ -17,7 +17,8 @@ class CalendarViewModelTests: XCTestCase {
     let calendarsSubject = PublishSubject<[String]>()
 
     private let calendarService = MockCalendarServiceProvider()
-    private let dateProvider = MockDateProvider()
+
+    let dateProvider = MockDateProvider()
 
     func makeViewModel() -> CalendarViewModel {
         CalendarViewModel(
