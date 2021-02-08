@@ -10,11 +10,13 @@ import RxSwift
 
 class CalendarView: NSView {
 
-    private let gridView = NSGridView(numberOfColumns: 7, rows: 7)
+    private let disposeBag = DisposeBag()
 
     private let viewModel: CalendarViewModel
     private let hoverObserver: AnyObserver<Date?>
     private let clickObserver: AnyObserver<Date>
+
+    private let gridView = NSGridView(numberOfColumns: 7, rows: 7)
 
     init(
         viewModel: CalendarViewModel,
@@ -29,8 +31,6 @@ class CalendarView: NSView {
         super.init(frame: .zero)
 
         configureLayout()
-
-        addWeekendLayers()
 
         setUpBindings()
     }
@@ -53,35 +53,42 @@ class CalendarView: NSView {
         gridView.edges(to: self)
     }
 
-    private func addWeekendLayers() {
+    private func setUpBindings() {
 
         gridView.wantsLayer = true
 
-        let weekends = viewModel.weekDays
-            .enumerated()
-            .filter(\.element.isWeekend)
-            .map(\.offset)
+        viewModel.weekDays.map { weekDays in
 
-        for range in IndexSet(weekends).rangeView {
-            let layer = CALayer()
-            layer.frame = CGRect(
-                x: CGFloat(range.startIndex) * Constants.cellSize,
-                y: 0,
-                width: CGFloat(range.count) * Constants.cellSize,
-                height: 6 * Constants.cellSize
-            )
-            layer.backgroundColor = Constants.weekendBackgroundColor
-            layer.cornerRadius = Constants.cornerRadius
-            gridView.layer?.addSublayer(layer)
+            let weekends = weekDays
+                .enumerated()
+                .filter(\.element.isWeekend)
+                .map(\.offset)
+
+            return IndexSet(weekends).rangeView.map { range in
+                let layer = CALayer()
+                layer.frame = CGRect(
+                    x: CGFloat(range.startIndex) * Constants.cellSize,
+                    y: 0,
+                    width: CGFloat(range.count) * Constants.cellSize,
+                    height: 6 * Constants.cellSize
+                )
+                layer.backgroundColor = Constants.weekendBackgroundColor
+                layer.cornerRadius = Constants.cornerRadius
+                return layer
+            }
         }
-    }
+        .bind(to: gridView.layer!.rx.sublayers)
+        .disposed(by: disposeBag)
 
-    private func setUpBindings() {
+        viewModel.weekDays.bind { [gridView] weekDays in
 
-        for (i, weekDay) in viewModel.weekDays.map(\.title).enumerated() {
-            let cellView = WeekDayCellView(weekDay: weekDay)
-            gridView.cell(atColumnIndex: i, rowIndex: 0).contentView = cellView
+            for (i, weekDay) in weekDays.map(\.title).enumerated() {
+
+                let cellView = WeekDayCellView(weekDay: weekDay)
+                gridView.cell(atColumnIndex: i, rowIndex: 0).contentView = cellView
+            }
         }
+        .disposed(by: disposeBag)
 
         for day in 0..<42 {
             let cellViewModel = viewModel

@@ -15,7 +15,8 @@ class StatusItemViewModel {
     init(
         dateObservable: Observable<Date>,
         settings: Observable<StatusItemSettings>,
-        locale: Locale
+        locale: Locale,
+        notificationCenter: NotificationCenter
     ) {
 
         let titleIcon = NSAttributedString(string: "\u{1f4c5}", attributes: [
@@ -25,10 +26,15 @@ class StatusItemViewModel {
 
         let dateFormatter = DateFormatter(locale: locale)
 
+        let currentLocaleDidChange = notificationCenter.rx
+            .notification(NSLocale.currentLocaleDidChangeNotification)
+            .toVoid()
+            .startWith(())
+
         text = Observable.combineLatest(
-            dateObservable, settings
+            dateObservable, settings, currentLocaleDidChange
         )
-        .map { date, settings in
+        .map { date, settings, _ in
 
             dateFormatter.dateStyle = settings.dateStyle
 

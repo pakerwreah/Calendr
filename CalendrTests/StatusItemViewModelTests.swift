@@ -12,15 +12,19 @@ import RxSwift
 class StatusItemViewModelTests: XCTestCase {
 
     let disposeBag = DisposeBag()
+
     let dateSubject = PublishSubject<Date>()
     let settings = PublishSubject<StatusItemSettings>()
 
     let dateProvider = MockDateProvider()
 
+    let notificationCenter = NotificationCenter()
+
     lazy var viewModel = StatusItemViewModel(
         dateObservable: dateSubject,
         settings: settings,
-        locale: Locale(identifier: "en_US")
+        locale: Locale(identifier: "en_US"),
+        notificationCenter: notificationCenter
     )
 
     var lastValue: String?
@@ -34,6 +38,29 @@ class StatusItemViewModelTests: XCTestCase {
             .disposed(by: disposeBag)
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+    }
+
+    func testText_withDateChange_shouldUpdateText() {
+
+        settings.onNext(.init(showIcon: false, showDate: true, dateStyle: .short))
+        XCTAssertEqual(lastValue, "1/1/21")
+
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 2))
+        XCTAssertEqual(lastValue, "1/2/21")
+
+        dateSubject.onNext(.make(year: 2021, month: 2, day: 2))
+        XCTAssertEqual(lastValue, "2/2/21")
+    }
+
+    func testDateStyle_withLocaleChangeNotification_shouldUpdateText() {
+
+        settings.onNext(.init(showIcon: false, showDate: true, dateStyle: .short))
+        XCTAssertEqual(lastValue, "1/1/21")
+
+        lastValue = nil
+
+        notificationCenter.post(name: NSLocale.currentLocaleDidChangeNotification, object: nil)
+        XCTAssertEqual(lastValue, "1/1/21")
     }
 
     func testIconVisibility() {

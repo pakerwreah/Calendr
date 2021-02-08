@@ -12,6 +12,7 @@ import RxSwift
 class CalendarViewModelTests: XCTestCase {
 
     let disposeBag = DisposeBag()
+    
     let dateSubject = PublishSubject<Date>()
     let hoverSubject = PublishSubject<Date?>()
     let calendarsSubject = PublishSubject<[String]>()
@@ -20,17 +21,16 @@ class CalendarViewModelTests: XCTestCase {
 
     let dateProvider = MockDateProvider()
 
-    func makeViewModel() -> CalendarViewModel {
-        CalendarViewModel(
-            dateObservable: dateSubject,
-            hoverObservable: hoverSubject,
-            enabledCalendars: calendarsSubject,
-            calendarService: calendarService,
-            dateProvider: dateProvider
-        )
-    }
+    let notificationCenter = NotificationCenter()
 
-    lazy var viewModel = makeViewModel()
+    lazy var viewModel = CalendarViewModel(
+        dateObservable: dateSubject,
+        hoverObservable: hoverSubject,
+        enabledCalendars: calendarsSubject,
+        calendarService: calendarService,
+        dateProvider: dateProvider,
+        notificationCenter: notificationCenter
+    )
 
     var lastValue: [CalendarCellViewModel]?
 
@@ -82,6 +82,8 @@ class CalendarViewModelTests: XCTestCase {
 
         dateProvider.m_calendar.firstWeekday = 2
 
+        notificationCenter.post(name: NSLocale.currentLocaleDidChangeNotification, object: nil)
+
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
 
         guard let cellViewModels = lastValue else {
@@ -95,26 +97,34 @@ class CalendarViewModelTests: XCTestCase {
 
     func testWeekDays_firstWeekDaySunday() {
 
-        dateProvider.m_calendar.firstWeekday = 1
-        dateProvider.m_calendar.locale = Locale(identifier: "en_US")
+        var weekDays: [WeekDay]?
 
-        let weekDays = makeViewModel().weekDays
+        viewModel.weekDays
+            .bind { weekDays = $0 }
+            .disposed(by: disposeBag)
+
         let expected = ["S", "M", "T", "W", "T", "F", "S"]
 
-        XCTAssertEqual(weekDays.map(\.title), expected)
-        XCTAssertEqual(weekDays.enumerated().filter(\.element.isWeekend).map(\.offset), [0, 6])
+        XCTAssertEqual(weekDays?.map(\.title), expected)
+        XCTAssertEqual(weekDays?.enumerated().filter(\.element.isWeekend).map(\.offset), [0, 6])
     }
 
     func testWeekDays_firstWeekDayMonday() {
 
         dateProvider.m_calendar.firstWeekday = 2
-        dateProvider.m_calendar.locale = Locale(identifier: "en_US")
 
-        let weekDays = makeViewModel().weekDays
+        notificationCenter.post(name: NSLocale.currentLocaleDidChangeNotification, object: nil)
+
+        var weekDays: [WeekDay]?
+
+        viewModel.weekDays
+            .bind { weekDays = $0 }
+            .disposed(by: disposeBag)
+
         let expected = ["M", "T", "W", "T", "F", "S", "S"]
 
-        XCTAssertEqual(weekDays.map(\.title), expected)
-        XCTAssertEqual(weekDays.enumerated().filter(\.element.isWeekend).map(\.offset), [5, 6])
+        XCTAssertEqual(weekDays?.map(\.title), expected)
+        XCTAssertEqual(weekDays?.enumerated().filter(\.element.isWeekend).map(\.offset), [5, 6])
     }
 
     func testHoverDistinctly() {

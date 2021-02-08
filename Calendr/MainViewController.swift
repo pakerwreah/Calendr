@@ -59,7 +59,8 @@ class MainViewController: NSViewController {
         statusItemViewModel = StatusItemViewModel(
             dateObservable: initialDate,
             settings: settingsViewModel.statusItemSettings,
-            locale: .autoupdatingCurrent
+            locale: .autoupdatingCurrent,
+            notificationCenter: .default
         )
 
         calendarPickerViewModel = CalendarPickerViewModel(
@@ -82,7 +83,8 @@ class MainViewController: NSViewController {
             hoverObservable: hoverObservable,
             enabledCalendars: calendarPickerViewModel.enabledCalendars,
             calendarService: calendarService,
-            dateProvider: dateProvider
+            dateProvider: dateProvider,
+            notificationCenter: .default
         )
 
         calendarView = CalendarView(
@@ -201,7 +203,6 @@ class MainViewController: NSViewController {
             .disposed(by: disposeBag)
 
         Observable.merge(
-            NotificationCenter.default.rx.notification(NSLocale.currentLocaleDidChangeNotification).toVoid(),
             NotificationCenter.default.rx.notification(.NSCalendarDayChanged).toVoid(),
             rx.sentMessage(#selector(NSViewController.viewDidDisappear)).toVoid()
         )

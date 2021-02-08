@@ -11,26 +11,38 @@ class CalendarViewModel {
 
     private let cellViewModelsObservable: Observable<[CalendarCellViewModel]>
 
-    let weekDays: [WeekDay]
+    let weekDays: Observable<[WeekDay]>
 
     init(
         dateObservable: Observable<Date>,
         hoverObservable: Observable<Date?>,
         enabledCalendars: Observable<[String]>,
         calendarService: CalendarServiceProviding,
-        dateProvider: DateProviding
+        dateProvider: DateProviding,
+        notificationCenter: NotificationCenter
     ) {
+
+        let firstWeekdayObservable = notificationCenter.rx
+            .notification(NSLocale.currentLocaleDidChangeNotification)
+            .toVoid()
+            .startWith(())
+            .map { dateProvider.calendar.firstWeekday }
+            .distinctUntilChanged()
+            .share(replay: 1)
 
         let dateFormatter = DateFormatter(locale: dateProvider.calendar.locale)
 
-        weekDays = (dateProvider.calendar.firstWeekday ..< dateProvider.calendar.firstWeekday + 7)
-            .map { ($0 - 1) % 7 }
-            .map {
-                WeekDay(
-                    title: dateFormatter.veryShortWeekdaySymbols[$0],
-                    isWeekend: [0, 6].contains($0)
-                )
+        weekDays = firstWeekdayObservable
+            .map { ($0 ..< $0 + 7)
+                .map { ($0 - 1) % 7 }
+                .map {
+                    WeekDay(
+                        title: dateFormatter.veryShortWeekdaySymbols[$0],
+                        isWeekend: [0, 6].contains($0)
+                    )
+                }
             }
+            .share(replay: 1)
 
         // Calculate date range for current month
         let dateRangeObservable = dateObservable
@@ -41,10 +53,12 @@ class CalendarViewModel {
             .share()
 
         // Create cells for current month
-        let dateCellsObservable = dateRangeObservable.map { month -> [CalendarCellViewModel] in
+        let dateCellsObservable = Observable.combineLatest(
+            dateRangeObservable, firstWeekdayObservable
+        )
+        .map { month, firstWeekday -> [CalendarCellViewModel] in
 
             let currentWeekDay = dateProvider.calendar.component(.weekday, from: month.start)
-            let firstWeekday = dateProvider.calendar.firstWeekday
             let start = dateProvider.calendar.date(
                 byAdding: .day,
                 value: firstWeekday - currentWeekDay,
