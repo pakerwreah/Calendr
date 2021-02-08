@@ -18,7 +18,13 @@ class EventViewModelProgressTests: XCTestCase {
 
     let userDefaults = UserDefaults(suiteName: className())!
 
-    lazy var settings = SettingsViewModel(dateProvider: dateProvider, userDefaults: userDefaults)
+    let notificationCenter = NotificationCenter()
+
+    lazy var settings = SettingsViewModel(
+        dateProvider: dateProvider,
+        userDefaults: userDefaults,
+        notificationCenter: notificationCenter
+    )
 
     override func setUp() {
         userDefaults.setVolatileDomain([:], forName: UserDefaults.registrationDomain)

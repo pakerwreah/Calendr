@@ -17,7 +17,7 @@ class CalendarPickerViewModel {
     let calendars: Observable<[CalendarModel]>
     let enabledCalendars: Observable<[String]>
 
-    init(calendarService: CalendarServiceProviding, userDefaults: UserDefaults = .standard) {
+    init(calendarService: CalendarServiceProviding, userDefaults: UserDefaults) {
 
         self.calendars = calendarService.changeObservable
             .flatMapLatest(calendarService.calendars)

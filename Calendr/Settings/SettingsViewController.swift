@@ -41,16 +41,19 @@ class SettingsViewController: NSTabViewController {
 
         for (i, vc) in tabViewItems.compactMap(\.viewController).enumerated() {
 
-            vc.rx.sentMessage(#selector(viewDidLayout))
-                .withLatestFrom(rx.observe(\.selectedTabViewItemIndex))
-                .matching(i)
-                .toVoid()
-                .map { vc.view.fittingSize }
-                .distinctUntilChanged()
-                .skip(i > 0 ? 1 : 0)
-                .map(sizeWithPadding)
-                .bind(to: rx.preferredContentSize)
-                .disposed(by: disposeBag)
+            Observable.merge(
+                NotificationCenter.default.rx.notification(NSLocale.currentLocaleDidChangeNotification).toVoid(),
+                vc.rx.sentMessage(#selector(viewDidLayout)).toVoid()
+            )
+            .withLatestFrom(rx.observe(\.selectedTabViewItemIndex))
+            .matching(i)
+            .toVoid()
+            .map { vc.view.fittingSize }
+            .distinctUntilChanged()
+            .skip(i > 0 ? 1 : 0)
+            .map(sizeWithPadding)
+            .bind(to: rx.preferredContentSize)
+            .disposed(by: disposeBag)
         }
     }
 

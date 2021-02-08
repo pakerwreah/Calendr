@@ -149,11 +149,11 @@ class GeneralSettingsViewController: NSViewController {
             .bind(to: viewModel.statusItemDateStyleObserver)
             .disposed(by: disposeBag)
 
-        rx.sentMessage(#selector(viewDidAppear))
-            .withLatestFrom(viewModel.statusItemSettings.map(\.dateStyle))
-            .bind { [viewModel, dateFormatDropdown] dateStyle in
+        viewModel.dateFormatOptions
+            .withLatestFrom(viewModel.statusItemSettings.map(\.dateStyle)) { ($0, $1) }
+            .bind { [dateFormatDropdown] options, dateStyle in
                 dateFormatDropdown.removeAllItems()
-                dateFormatDropdown.addItems(withTitles: viewModel.dateFormatOptions)
+                dateFormatDropdown.addItems(withTitles: options)
                 dateFormatStyle.onNext(dateStyle)
             }
             .disposed(by: disposeBag)

@@ -42,7 +42,7 @@ class MainViewController: NSViewController {
 
     // Properties
     private let calendarService = CalendarServiceProvider()
-    private let dateProvider = DateProvider(calendar: .current)
+    private let dateProvider = DateProvider(calendar: .autoupdatingCurrent)
 
     init() {
 
@@ -50,15 +50,22 @@ class MainViewController: NSViewController {
         statusItem.behavior = .terminationOnRemoval
         statusItem.isVisible = true
 
-        settingsViewModel = SettingsViewModel(dateProvider: dateProvider)
+        settingsViewModel = SettingsViewModel(
+            dateProvider: dateProvider,
+            userDefaults: .standard,
+            notificationCenter: .default
+        )
 
         statusItemViewModel = StatusItemViewModel(
             dateObservable: initialDate,
             settings: settingsViewModel.statusItemSettings,
-            locale: .current
+            locale: .autoupdatingCurrent
         )
 
-        calendarPickerViewModel = CalendarPickerViewModel(calendarService: calendarService)
+        calendarPickerViewModel = CalendarPickerViewModel(
+            calendarService: calendarService,
+            userDefaults: .standard
+        )
 
         settingsViewController = SettingsViewController(
             settingsViewModel: settingsViewModel,
@@ -194,7 +201,8 @@ class MainViewController: NSViewController {
             .disposed(by: disposeBag)
 
         Observable.merge(
-            NotificationCenter.default.rx.notification(.NSCalendarDayChanged, object: nil).toVoid(),
+            NotificationCenter.default.rx.notification(NSLocale.currentLocaleDidChangeNotification).toVoid(),
+            NotificationCenter.default.rx.notification(.NSCalendarDayChanged).toVoid(),
             rx.sentMessage(#selector(NSViewController.viewDidDisappear)).toVoid()
         )
         .map { Date() }
@@ -206,7 +214,7 @@ class MainViewController: NSViewController {
             .disposed(by: disposeBag)
 
         selectedDate
-            .map(DateFormatter(format: "MMM yyyy", locale: .current).string(from:))
+            .map(DateFormatter(format: "MMM yyyy", locale: .autoupdatingCurrent).string(from:))
             .bind(to: titleLabel.rx.text)
             .disposed(by: disposeBag)
 
@@ -328,7 +336,7 @@ class MainViewController: NSViewController {
 
 
         let dateSelector = DateSelector(
-            calendar: .current,
+            calendar: .autoupdatingCurrent,
             initial: initialDate,
             selected: selectedDate,
             reset: resetBtn.rx.tap.asObservable(),

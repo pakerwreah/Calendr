@@ -18,7 +18,7 @@ struct CalendarCellViewModel: Equatable {
 
 extension CalendarCellViewModel {
     var text: String {
-        "\(Calendar.current.component(.day, from: date))"
+        "\(Calendar.autoupdatingCurrent.component(.day, from: date))"
     }
 
     var alpha: CGFloat {

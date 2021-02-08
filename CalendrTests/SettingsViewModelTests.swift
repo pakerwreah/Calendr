@@ -17,7 +17,13 @@ class SettingsViewModelTests: XCTestCase {
 
     let userDefaults = UserDefaults(suiteName: className())!
 
-    lazy var viewModel = SettingsViewModel(dateProvider: dateProvider, userDefaults: userDefaults)
+    let notificationCenter = NotificationCenter()
+
+    lazy var viewModel = SettingsViewModel(
+        dateProvider: dateProvider,
+        userDefaults: userDefaults,
+        notificationCenter: notificationCenter
+    )
 
     var userDefaultsIconEnabled: Bool? {
         get { userDefaults.object(forKey: Prefs.statusItemIconEnabled) as! Bool? }
@@ -96,12 +102,37 @@ class SettingsViewModelTests: XCTestCase {
 
         dateProvider.m_calendar.locale = Locale(identifier: "en_US")
 
-        XCTAssertEqual(viewModel.dateFormatOptions, [
+        var options: [String]?
+
+        viewModel.dateFormatOptions
+            .bind { options = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(options, [
             "1/1/21",
             "Jan 1, 2021",
             "January 1, 2021",
             "Friday, January 1, 2021"
         ])
+    }
+
+    func testDateStyleOptions_withLocaleChange() {
+
+        dateProvider.m_calendar.locale = Locale(identifier: "en_US")
+
+        var options: [String]?
+
+        viewModel.dateFormatOptions
+            .bind { options = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(options?.first, "1/1/21")
+
+        dateProvider.m_calendar.locale = Locale(identifier: "en_GB")
+
+        notificationCenter.post(name: NSLocale.currentLocaleDidChangeNotification, object: nil)
+
+        XCTAssertEqual(options?.first, "01/01/2021")
     }
 
     func testDateStyleSelected() {

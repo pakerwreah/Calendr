@@ -29,23 +29,13 @@ class SettingsViewModel {
     let popoverTransparency: Observable<Int>
     let popoverMaterial: Observable<NSVisualEffectView.Material>
 
-    let dateProvider: DateProviding
+    let dateFormatOptions: Observable<[String]>
 
-    var dateFormatOptions: [String] {
-        let dateFormatter = DateFormatter(locale: dateProvider.calendar.locale)
-        var options: [String] = []
-
-        for i: UInt in 1...4 {
-            dateFormatter.dateStyle = DateFormatter.Style(rawValue: i) ?? .none
-            options.append(dateFormatter.string(from: dateProvider.now))
-        }
-
-        return options
-    }
-
-    init(dateProvider: DateProviding, userDefaults: UserDefaults = .standard) {
-
-        self.dateProvider = dateProvider
+    init(
+        dateProvider: DateProviding,
+        userDefaults: UserDefaults,
+        notificationCenter: NotificationCenter
+    ) {
 
         userDefaults.register(defaults: [
             Prefs.statusItemIconEnabled: true,
@@ -131,6 +121,22 @@ class SettingsViewModel {
                  .popover,
                  .hudWindow
                 ][value]
+            }
+            .share(replay: 1)
+
+        dateFormatOptions = notificationCenter.rx.notification(NSLocale.currentLocaleDidChangeNotification)
+            .toVoid()
+            .startWith(())
+            .map {
+                let dateFormatter = DateFormatter(locale: dateProvider.calendar.locale)
+                var options: [String] = []
+
+                for i: UInt in 1...4 {
+                    dateFormatter.dateStyle = DateFormatter.Style(rawValue: i) ?? .none
+                    options.append(dateFormatter.string(from: dateProvider.now))
+                }
+
+                return options
             }
             .share(replay: 1)
     }
