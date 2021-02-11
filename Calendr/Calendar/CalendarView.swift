@@ -13,18 +13,21 @@ class CalendarView: NSView {
     private let disposeBag = DisposeBag()
 
     private let viewModel: CalendarViewModel
+    private let settings: SettingsViewModel
     private let hoverObserver: AnyObserver<Date?>
     private let clickObserver: AnyObserver<Date>
 
-    private let gridView = NSGridView(numberOfColumns: 7, rows: 7)
+    private let gridView = NSGridView(numberOfColumns: 8, rows: 7)
 
     init(
         viewModel: CalendarViewModel,
+        settings: SettingsViewModel,
         hoverObserver: AnyObserver<Date?>,
         clickObserver: AnyObserver<Date>
     ) {
 
         self.viewModel = viewModel
+        self.settings = settings
         self.hoverObserver = hoverObserver
         self.clickObserver = clickObserver
 
@@ -57,7 +60,17 @@ class CalendarView: NSView {
 
         gridView.wantsLayer = true
 
-        viewModel.weekDays.map { weekDays in
+        let weekNumbersWidth = settings.showWeekNumbers.map { $0 ? Constants.cellSize : 0 }
+
+        weekNumbersWidth
+            .observe(on: MainScheduler.instance)
+            .bind(to: gridView.column(at: 0).rx.width)
+            .disposed(by: disposeBag)
+
+        Observable.combineLatest(
+            weekNumbersWidth, viewModel.weekDays
+        )
+        .map { offset, weekDays -> [CALayer] in
 
             let weekends = weekDays
                 .enumerated()
@@ -67,7 +80,7 @@ class CalendarView: NSView {
             return IndexSet(weekends).rangeView.map { range in
                 let layer = CALayer()
                 layer.frame = CGRect(
-                    x: CGFloat(range.startIndex) * Constants.cellSize,
+                    x: offset + CGFloat(range.startIndex) * Constants.cellSize,
                     y: 0,
                     width: CGFloat(range.count) * Constants.cellSize,
                     height: 6 * Constants.cellSize
@@ -77,18 +90,23 @@ class CalendarView: NSView {
                 return layer
             }
         }
-        .bind(to: gridView.layer!.rx.sublayers)
-        .disposed(by: disposeBag)
-
-        viewModel.weekDays.bind { [gridView] weekDays in
-
-            for (i, weekDay) in weekDays.map(\.title).enumerated() {
-
-                let cellView = WeekDayCellView(weekDay: weekDay)
-                gridView.cell(atColumnIndex: i, rowIndex: 0).contentView = cellView
-            }
+        .scan(([], [])) { ($0.1, $1) }
+        .observe(on: MainScheduler.instance)
+        .bind { [gridView] oldLayers, newLayers in
+            oldLayers.forEach { $0.removeFromSuperlayer() }
+            newLayers.forEach(gridView.layer!.addSublayer)
         }
         .disposed(by: disposeBag)
+
+        for i in 0..<7 {
+            let cellView = WeekDayCellView(viewModel: viewModel.weekDays.map(\.[i].title))
+            gridView.cell(atColumnIndex: 1 + i, rowIndex: 0).contentView = cellView
+        }
+
+        for i in 0..<6 {
+            let cellView = WeekNumberCellView(viewModel: viewModel.weekNumbers.map(\.[i]))
+            gridView.cell(atColumnIndex: 0, rowIndex: 1 + i).contentView = cellView
+        }
 
         for day in 0..<42 {
             let cellViewModel = viewModel
@@ -102,7 +120,7 @@ class CalendarView: NSView {
                 hoverObserver: hoverObserver,
                 clickObserver: clickObserver
             )
-            gridView.cell(atColumnIndex: day % 7, rowIndex: 1 + day / 7).contentView = cellView
+            gridView.cell(atColumnIndex: 1 + day % 7, rowIndex: 1 + day / 7).contentView = cellView
         }
     }
 

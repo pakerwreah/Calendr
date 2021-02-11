@@ -34,7 +34,7 @@ class DateSelectorTests: XCTestCase {
         let dispatchGroup = DispatchGroup()
         let wait = { (_: Any) in dispatchGroup.wait() }
 
-        let calendar = Calendar(identifier: .iso8601)
+        let calendar = Calendar(identifier: .gregorian)
 
         let selector = DateSelector(
             calendar: calendar,

@@ -40,14 +40,19 @@ class SettingsViewModelTests: XCTestCase {
         set { userDefaults.setValue(newValue, forKey: Prefs.statusItemDateStyle) }
     }
 
-    var userDefaultsTransparency: Int? {
-        get { userDefaults.object(forKey: Prefs.transparencyLevel) as! Int? }
-        set { userDefaults.setValue(newValue, forKey: Prefs.transparencyLevel) }
+    var userDefaultsShowWeekNumbers: Bool? {
+        get { userDefaults.object(forKey: Prefs.showWeekNumbers) as! Bool? }
+        set { userDefaults.setValue(newValue, forKey: Prefs.showWeekNumbers) }
     }
 
     var userDefaultsShowPastEvents: Bool? {
         get { userDefaults.object(forKey: Prefs.showPastEvents) as! Bool? }
         set { userDefaults.setValue(newValue, forKey: Prefs.showPastEvents) }
+    }
+
+    var userDefaultsTransparency: Int? {
+        get { userDefaults.object(forKey: Prefs.transparencyLevel) as! Int? }
+        set { userDefaults.setValue(newValue, forKey: Prefs.transparencyLevel) }
     }
 
     override func setUp() {
@@ -60,16 +65,22 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertNil(userDefaultsIconEnabled)
         XCTAssertNil(userDefaultsDateEnabled)
         XCTAssertNil(userDefaultsDateStyle)
+        XCTAssertNil(userDefaultsShowWeekNumbers)
         XCTAssertNil(userDefaultsShowPastEvents)
         XCTAssertNil(userDefaultsTransparency)
 
         var statusItemSettings: StatusItemSettings?
+        var showWeekNumbers: Bool?
         var showPastEvents: Bool?
         var popoverTransparency: Int?
         var popoverMaterial: NSVisualEffectView.Material?
 
         viewModel.statusItemSettings
             .bind { statusItemSettings = $0 }
+            .disposed(by: disposeBag)
+
+        viewModel.showWeekNumbers
+            .bind { showWeekNumbers = $0 }
             .disposed(by: disposeBag)
 
         viewModel.showPastEvents
@@ -87,6 +98,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(statusItemSettings?.showIcon, true)
         XCTAssertEqual(statusItemSettings?.showDate, true)
         XCTAssertEqual(statusItemSettings?.dateStyle, .short)
+        XCTAssertEqual(showWeekNumbers, false)
         XCTAssertEqual(showPastEvents, true)
         XCTAssertEqual(popoverTransparency, 2)
         XCTAssertEqual(popoverMaterial, .headerView)
@@ -94,6 +106,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(userDefaultsIconEnabled, true)
         XCTAssertEqual(userDefaultsDateEnabled, true)
         XCTAssertEqual(userDefaultsDateStyle, 1)
+        XCTAssertEqual(userDefaultsShowWeekNumbers, false)
         XCTAssertEqual(userDefaultsShowPastEvents, true)
         XCTAssertEqual(userDefaultsTransparency, 2)
     }
@@ -152,6 +165,31 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(userDefaultsDateStyle, 2)
     }
 
+    func testToggleShowWeekNumbers() {
+
+        userDefaultsShowWeekNumbers = true
+
+        var showWeekNumbers: Bool?
+
+        viewModel.showWeekNumbers
+            .bind { showWeekNumbers = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(showWeekNumbers, true)
+        XCTAssertEqual(userDefaultsShowWeekNumbers, true)
+
+        viewModel.toggleWeekNumbers.onNext(false)
+
+        XCTAssertEqual(showWeekNumbers, false)
+        XCTAssertEqual(userDefaultsShowWeekNumbers, false)
+
+        viewModel.toggleWeekNumbers.onNext(true)
+
+        XCTAssertEqual(showWeekNumbers, true)
+        XCTAssertEqual(userDefaultsShowWeekNumbers, true)
+    }
+
+
     func testToggleShowPastEvents() {
 
         userDefaultsShowPastEvents = false
@@ -165,12 +203,12 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(showPastEvents, false)
         XCTAssertEqual(userDefaultsShowPastEvents, false)
 
-        viewModel.toggleShowPastEvents.onNext(true)
+        viewModel.togglePastEvents.onNext(true)
 
         XCTAssertEqual(showPastEvents, true)
         XCTAssertEqual(userDefaultsShowPastEvents, true)
 
-        viewModel.toggleShowPastEvents.onNext(false)
+        viewModel.togglePastEvents.onNext(false)
 
         XCTAssertEqual(showPastEvents, false)
         XCTAssertEqual(userDefaultsShowPastEvents, false)

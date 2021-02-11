@@ -105,13 +105,14 @@ extension NSView {
     @discardableResult
     func center(in view: NSView,
                 orientation: NSLayoutConstraint.Orientation,
+                constant: CGFloat = 0,
                 priority: NSLayoutConstraint.Priority = .required) -> Self {
         forAutoLayout()
         NSLayoutConstraint.activate([
             (
                 orientation == .horizontal
-                    ? centerXAnchor.constraint(equalTo: view.centerXAnchor)
-                    : centerYAnchor.constraint(equalTo: view.centerYAnchor)
+                    ? centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: constant)
+                    : centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: constant)
             )
             .with(priority: priority)
         ])
@@ -119,9 +120,11 @@ extension NSView {
     }
 
     @discardableResult
-    func center(in view: NSView, priority: NSLayoutConstraint.Priority = .required) -> Self {
-        center(in: view, orientation: .horizontal, priority: priority)
-        center(in: view, orientation: .vertical, priority: priority)
+    func center(in view: NSView,
+                constant: CGPoint = .zero,
+                priority: NSLayoutConstraint.Priority = .required) -> Self {
+        center(in: view, orientation: .horizontal, constant: constant.x, priority: priority)
+        center(in: view, orientation: .vertical, constant: constant.y, priority: priority)
         return self
     }
 

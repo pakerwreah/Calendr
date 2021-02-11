@@ -20,11 +20,13 @@ class SettingsViewModel {
     let toggleStatusItemIcon: AnyObserver<Bool>
     let toggleStatusItemDate: AnyObserver<Bool>
     let statusItemDateStyleObserver: AnyObserver<DateFormatter.Style>
-    let toggleShowPastEvents: AnyObserver<Bool>
+    let toggleWeekNumbers: AnyObserver<Bool>
+    let togglePastEvents: AnyObserver<Bool>
     let transparencyObserver: AnyObserver<Int>
 
     // Observables
     let statusItemSettings: Observable<StatusItemSettings>
+    let showWeekNumbers: Observable<Bool>
     let showPastEvents: Observable<Bool>
     let popoverTransparency: Observable<Int>
     let popoverMaterial: Observable<NSVisualEffectView.Material>
@@ -41,6 +43,7 @@ class SettingsViewModel {
             Prefs.statusItemIconEnabled: true,
             Prefs.statusItemDateEnabled: true,
             Prefs.statusItemDateStyle: 1,
+            Prefs.showWeekNumbers: false,
             Prefs.showPastEvents: true,
             Prefs.transparencyLevel: 2
         ])
@@ -54,6 +57,9 @@ class SettingsViewModel {
         let statusItemDateStyleBehavior = BehaviorSubject(
             value: DateFormatter.Style(rawValue: UInt(userDefaults.integer(forKey: Prefs.statusItemDateStyle))) ?? .none
         )
+        let showWeekNumbersBehavior = BehaviorSubject(
+            value: userDefaults.bool(forKey: Prefs.showWeekNumbers)
+        )
         let showPastEventsBehavior = BehaviorSubject(
             value: userDefaults.bool(forKey: Prefs.showPastEvents)
         )
@@ -64,7 +70,8 @@ class SettingsViewModel {
         toggleStatusItemIcon = statusItemIconBehavior.asObserver()
         toggleStatusItemDate = statusItemDateBehavior.asObserver()
         statusItemDateStyleObserver = statusItemDateStyleBehavior.asObserver()
-        toggleShowPastEvents = showPastEventsBehavior.asObserver()
+        toggleWeekNumbers = showWeekNumbersBehavior.asObserver()
+        togglePastEvents = showPastEventsBehavior.asObserver()
         transparencyObserver = transparencyBehavior.asObserver()
 
         let statusItemIconAndDate = Observable.combineLatest(
@@ -99,6 +106,12 @@ class SettingsViewModel {
             )
         }
         .share(replay: 1)
+
+        showWeekNumbers = showWeekNumbersBehavior
+            .do(onNext: {
+                userDefaults.setValue($0, forKey: Prefs.showWeekNumbers)
+            })
+            .share(replay: 1)
 
         showPastEvents = showPastEventsBehavior
             .do(onNext: {

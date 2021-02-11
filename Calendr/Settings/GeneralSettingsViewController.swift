@@ -16,6 +16,7 @@ class GeneralSettingsViewController: NSViewController {
 
     private let showMenuBarIconCheckbox = Checkbox(title: "Show icon")
     private let showMenuBarDateCheckbox = Checkbox(title: "Show date")
+    private let showWeekNumbersCheckbox = Checkbox(title: "Show week numbers")
     private let fadePastEventsRadio = Radio(title: "Fade")
     private let hidePastEventsRadio = Radio(title: "Hide")
     private let dateFormatDropdown = Dropdown()
@@ -33,6 +34,7 @@ class GeneralSettingsViewController: NSViewController {
 
         let stackView = NSStackView(views: [
             makeSection(title: "Menu Bar", content: menuBarContent),
+            makeSection(title: "Calendar", content: showWeekNumbersCheckbox),
             makeSection(title: "Events", content: eventsContent),
             makeSection(title: "Transparency", content: transparencySlider)
         ])
@@ -114,15 +116,21 @@ class GeneralSettingsViewController: NSViewController {
         )
 
         bind(
+            control: showWeekNumbersCheckbox,
+            observable: viewModel.showWeekNumbers,
+            observer: viewModel.toggleWeekNumbers
+        )
+
+        bind(
             control: fadePastEventsRadio,
             observable: viewModel.showPastEvents,
-            observer: viewModel.toggleShowPastEvents
+            observer: viewModel.togglePastEvents
         )
 
         bind(
             control: hidePastEventsRadio,
             observable: viewModel.showPastEvents.map(\.isFalse),
-            observer: viewModel.toggleShowPastEvents.mapObserver(\.isFalse)
+            observer: viewModel.togglePastEvents.mapObserver(\.isFalse)
         )
 
         viewModel.popoverTransparency

@@ -36,8 +36,6 @@ class CalendarViewModelTests: XCTestCase {
 
     override func setUp() {
 
-        dateProvider.m_calendar.firstWeekday = 1
-
         viewModel
             .asObservable()
             .bind { [weak self] in
@@ -64,8 +62,6 @@ class CalendarViewModelTests: XCTestCase {
     }
 
     func testDateSpan_firstWeekDaySunday() {
-
-        dateProvider.m_calendar.firstWeekday = 1
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
 
@@ -125,6 +121,57 @@ class CalendarViewModelTests: XCTestCase {
 
         XCTAssertEqual(weekDays?.map(\.title), expected)
         XCTAssertEqual(weekDays?.enumerated().filter(\.element.isWeekend).map(\.offset), [5, 6])
+    }
+
+    func testWeekNumbers_gregorianCalendar() {
+
+        var weekNumbers: [Int]?
+
+        viewModel.weekNumbers
+            .bind { weekNumbers = $0 }
+            .disposed(by: disposeBag)
+
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+        XCTAssertEqual(weekNumbers, Array(1...6))
+
+        dateSubject.onNext(.make(year: 2021, month: 2, day: 1))
+        XCTAssertEqual(weekNumbers, Array(6...11))
+    }
+
+    // Monday is the default first day of week for ISO8601
+    func testWeekNumbers_iso8601Calendar_firstWeekDayMonday() {
+
+        dateProvider.m_calendar = Calendar(identifier: .iso8601)
+
+        var weekNumbers: [Int]?
+
+        viewModel.weekNumbers
+            .bind { weekNumbers = $0 }
+            .disposed(by: disposeBag)
+
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+        XCTAssertEqual(weekNumbers, Array([52, 53, 1, 2, 3, 4]))
+
+        dateSubject.onNext(.make(year: 2021, month: 2, day: 1))
+        XCTAssertEqual(weekNumbers, Array(4...9))
+    }
+
+    func testWeekNumbers_iso8601Calendar_firstWeekDaySunday() {
+
+        dateProvider.m_calendar = Calendar(identifier: .iso8601)
+        dateProvider.m_calendar.firstWeekday = 1
+
+        var weekNumbers: [Int]?
+
+        viewModel.weekNumbers
+            .bind { weekNumbers = $0 }
+            .disposed(by: disposeBag)
+
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+        XCTAssertEqual(weekNumbers, Array([53, 1, 2, 3, 4, 5]))
+
+        dateSubject.onNext(.make(year: 2021, month: 2, day: 1))
+        XCTAssertEqual(weekNumbers, Array(5...10))
     }
 
     func testHoverDistinctly() {

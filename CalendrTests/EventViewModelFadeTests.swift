@@ -88,7 +88,7 @@ class EventViewModelFadeTests: XCTestCase {
 
     func testFade_isMultiDay_endsToday_isPast_showPastEventsDisabled_shouldNotFade() {
 
-        settings.toggleShowPastEvents.onNext(false)
+        settings.togglePastEvents.onNext(false)
 
         dateProvider.now = .make(year: 2021, month: 1, day: 2, hour: 15)
 
@@ -180,7 +180,7 @@ class EventViewModelFadeTests: XCTestCase {
 
     func testFade_isToday_isPast_showPastEventsDisabled_shouldNotFade() {
 
-        settings.toggleShowPastEvents.onNext(false)
+        settings.togglePastEvents.onNext(false)
 
         dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 15)
 

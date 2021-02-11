@@ -89,6 +89,7 @@ class MainViewController: NSViewController {
 
         calendarView = CalendarView(
             viewModel: calendarViewModel,
+            settings: settingsViewModel,
             hoverObserver: hoverSubject.asObserver(),
             clickObserver: dateClick.asObserver()
         )

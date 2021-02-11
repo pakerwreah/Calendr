@@ -12,6 +12,7 @@ class CalendarViewModel {
     private let cellViewModelsObservable: Observable<[CalendarCellViewModel]>
 
     let weekDays: Observable<[WeekDay]>
+    let weekNumbers: Observable<[Int]>
 
     init(
         dateObservable: Observable<Date>,
@@ -80,6 +81,13 @@ class CalendarViewModel {
             }
         }
         .share()
+
+        weekNumbers = dateCellsObservable.map { dateCells in
+            (0..<6).map {
+                dateProvider.calendar.component(.weekOfYear, from: dateCells[7 * $0].date)
+            }
+        }
+        .share(replay: 1)
 
         // Get events for current dates
         let eventsObservable = Observable.combineLatest(

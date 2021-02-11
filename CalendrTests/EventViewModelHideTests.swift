@@ -88,7 +88,7 @@ class EventViewModelHideTests: XCTestCase {
 
     func testHide_isMultiDay_endsToday_isPast_showPastEventsDisabled_shouldHide() {
 
-        settings.toggleShowPastEvents.onNext(false)
+        settings.togglePastEvents.onNext(false)
 
         dateProvider.now = .make(year: 2021, month: 1, day: 2, hour: 15)
 
@@ -198,7 +198,7 @@ class EventViewModelHideTests: XCTestCase {
 
     func testHide_isToday_isPast_showPastEventsDisabled_shouldHide() {
 
-        settings.toggleShowPastEvents.onNext(false)
+        settings.togglePastEvents.onNext(false)
 
         dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 15)
 
