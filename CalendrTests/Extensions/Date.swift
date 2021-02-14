@@ -16,10 +16,13 @@ extension Date {
         hour: Int = 0,
         minute: Int = 0,
         second: Int = 0,
-        calendar: Calendar = Calendar(identifier: .gregorian)
+        timezone: TimeZone? = nil
     ) -> Date {
 
-        calendar.date(
+        var calendar = Calendar.reference
+        timezone.map { calendar.timeZone = $0 }
+
+        return calendar.date(
             from: .init(
                 year: year,
                 month: month,

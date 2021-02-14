@@ -9,11 +9,11 @@ import Cocoa
 
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-    private var viewController: MainViewController?
+    private var viewController: NSViewController?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
 
-        if NSClassFromString("XCTestCase") == nil {
+        if #available(OSX 11.0, *), NSClassFromString("XCTestCase") == nil {
             viewController = MainViewController()
         }
     }

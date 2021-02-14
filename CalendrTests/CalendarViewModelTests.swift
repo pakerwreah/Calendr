@@ -274,9 +274,11 @@ class CalendarViewModelTests: XCTestCase {
 
     func testTimezoneChange() {
 
-        dateProvider.m_calendar.timeZone = TimeZone(identifier: "America/Sao_Paulo")!
+        let timezone = TimeZone(abbreviation: "UTC-1")!
 
-        dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 23)
+        dateProvider.m_calendar.timeZone = timezone
+        dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 23, timezone: timezone)
+
         dateSubject.onNext(dateProvider.now)
 
         XCTAssertEqual(lastValue?.firstIndex(where: \.isToday), 5)
