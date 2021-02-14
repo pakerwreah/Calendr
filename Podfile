@@ -1,4 +1,4 @@
-platform :osx, '11.1'
+platform :osx, '10.15'
 use_frameworks!
 
 target 'Calendr' do

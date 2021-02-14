@@ -10,6 +10,7 @@ import RxSwift
 import RxCocoa
 import RxGesture
 
+@available(OSX 11.0, *)
 class MainViewController: NSViewController {
 
     // ViewControllers
