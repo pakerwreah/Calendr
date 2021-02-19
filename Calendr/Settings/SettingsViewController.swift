@@ -20,11 +20,9 @@ class SettingsViewController: NSTabViewController {
 
         tabStyle = .toolbar
 
-        let generalSettingsViewController = GeneralSettingsViewController(viewModel: settingsViewModel)
-        let calendarPickerViewController = CalendarPickerViewController(viewModel: calendarsViewModel)
-
-        let general = NSTabViewItem(viewController: generalSettingsViewController)
-        let calendar = NSTabViewItem(viewController: calendarPickerViewController)
+        let general = NSTabViewItem(viewController: GeneralSettingsViewController(viewModel: settingsViewModel))
+        let calendar = NSTabViewItem(viewController: CalendarPickerViewController(viewModel: calendarsViewModel))
+        let about = NSTabViewItem(viewController: AboutViewController())
 
         general.label = "General"
         general.image = NSImage(named: NSImage.homeTemplateName)
@@ -32,7 +30,10 @@ class SettingsViewController: NSTabViewController {
         calendar.label = "Calendars"
         calendar.image = NSImage(named: NSImage.iconViewTemplateName)
 
-        tabViewItems = [general, calendar]
+        about.label = "About"
+        about.image = NSImage(named: NSImage.bookmarksTemplateName)
+
+        tabViewItems = [general, calendar, about]
 
         setUpBindings()
     }
@@ -69,7 +70,7 @@ class SettingsViewController: NSTabViewController {
 
         view.addSubview(contentView)
 
-        contentView.edges(to: view, constant: Constants.contentPadding)
+        contentView.edges(to: view, constant: Constants.padding)
     }
 
     override func viewDidAppear() {
@@ -108,12 +109,13 @@ class SettingsViewController: NSTabViewController {
 
 private func sizeWithPadding(_ size: NSSize) -> NSSize {
     NSSize(
-        width: size.width + 2 * Constants.contentPadding,
-        height: size.height + 2 * Constants.contentPadding
+        width: max(size.width, Constants.minWidth) + 2 * Constants.padding,
+        height: size.height + 2 * Constants.padding
     )
 }
 
 private enum Constants {
 
-    static let contentPadding: CGFloat = 24
+    static let padding: CGFloat = 24
+    static let minWidth: CGFloat = 180
 }

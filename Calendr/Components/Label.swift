@@ -19,9 +19,20 @@ class Label: NSTextField {
         self.init(text: "")
     }
 
-    convenience init(text: String = "", font: NSFont? = nil) {
+    convenience init(text: String = "", font: NSFont? = nil, color: NSColor? = nil, align: NSTextAlignment = .left) {
         self.init(labelWithString: text)
-        setContentHuggingPriority(.fittingSizeCompression, for: .horizontal)
         self.font = font
+        self.textColor = color
+        self.alignment = align
+        setUpLayout()
+    }
+
+    convenience init(text: NSAttributedString) {
+        self.init(labelWithAttributedString: text)
+        setUpLayout()
+    }
+
+    private func setUpLayout() {
+        setContentHuggingPriority(.fittingSizeCompression, for: .horizontal)
     }
 }

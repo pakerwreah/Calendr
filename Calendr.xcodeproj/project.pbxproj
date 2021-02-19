@@ -53,6 +53,9 @@
 		34B5A09725B0F8A500F7F7ED /* NSButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B5A09625B0F8A500F7F7ED /* NSButton.swift */; };
 		34B5A09D25B118EC00F7F7ED /* CalendarPickerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B5A09C25B118EC00F7F7ED /* CalendarPickerViewModel.swift */; };
 		34C2CF9125C2070400FC2CFF /* EventViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C2CF9025C2070400FC2CFF /* EventViewModelTests.swift */; };
+		34C4599C25DEFFDA00561C29 /* BuildConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C4599B25DEFFDA00561C29 /* BuildConfig.m */; };
+		34C459A425DF030000561C29 /* BuildConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C459A325DF030000561C29 /* BuildConfig.swift */; };
+		34C459BC25DF114300561C29 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C459BB25DF114300561C29 /* AboutViewController.swift */; };
 		34CC382D25B636A6006CBD99 /* Checkbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34CC382C25B636A6006CBD99 /* Checkbox.swift */; };
 		34E004A725B61D5200241419 /* StatusItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E004A625B61D5200241419 /* StatusItemViewModel.swift */; };
 		34E1902325B76CFE00E9491B /* CalendarPickerViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E1902225B76CFE00E9491B /* CalendarPickerViewModelTests.swift */; };
@@ -129,6 +132,10 @@
 		34B5A09625B0F8A500F7F7ED /* NSButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSButton.swift; sourceTree = "<group>"; };
 		34B5A09C25B118EC00F7F7ED /* CalendarPickerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPickerViewModel.swift; sourceTree = "<group>"; };
 		34C2CF9025C2070400FC2CFF /* EventViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventViewModelTests.swift; sourceTree = "<group>"; };
+		34C4599A25DEFFDA00561C29 /* Calendr-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Calendr-Bridging-Header.h"; sourceTree = "<group>"; };
+		34C4599B25DEFFDA00561C29 /* BuildConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BuildConfig.m; sourceTree = "<group>"; };
+		34C459A325DF030000561C29 /* BuildConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildConfig.swift; sourceTree = "<group>"; };
+		34C459BB25DF114300561C29 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		34CC382C25B636A6006CBD99 /* Checkbox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checkbox.swift; sourceTree = "<group>"; };
 		34E004A625B61D5200241419 /* StatusItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemViewModel.swift; sourceTree = "<group>"; };
 		34E1902225B76CFE00E9491B /* CalendarPickerViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPickerViewModelTests.swift; sourceTree = "<group>"; };
@@ -217,8 +224,11 @@
 			isa = PBXGroup;
 			children = (
 				347D0F9F25952F8A002451EC /* Calendr.entitlements */,
+				34C4599A25DEFFDA00561C29 /* Calendr-Bridging-Header.h */,
+				34C4599B25DEFFDA00561C29 /* BuildConfig.m */,
 				347D0F9E25952F8A002451EC /* Info.plist */,
 				347D0F9725952F89002451EC /* AppDelegate.swift */,
+				34C459A325DF030000561C29 /* BuildConfig.swift */,
 				34F96CED25B523ED0020DEEA /* main.swift */,
 				34F128E02597B9C9007DF31C /* MainViewController.swift */,
 				34F96CD725B4E2F50020DEEA /* SegoeUISymbol.ttf */,
@@ -345,6 +355,7 @@
 		34F88A8425B0CDA3005C9BA6 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				34C459BB25DF114300561C29 /* AboutViewController.swift */,
 				3449403125C348C70020E664 /* CalendarPickerViewController.swift */,
 				34B5A09C25B118EC00F7F7ED /* CalendarPickerViewModel.swift */,
 				3449402D25C348B20020E664 /* GeneralSettingsViewController.swift */,
@@ -425,6 +436,7 @@
 				TargetAttributes = {
 					347D0F9325952F89002451EC = {
 						CreatedOnToolsVersion = 12.3;
+						LastSwiftMigration = 1240;
 					};
 					347D0FA325952F8A002451EC = {
 						CreatedOnToolsVersion = 12.3;
@@ -572,6 +584,7 @@
 				34F128DD259690C8007DF31C /* CALayer+Rx.swift in Sources */,
 				347D0FED2595467A002451EC /* CalendarCellView.swift in Sources */,
 				34FD09D925AE269600AAAAE2 /* DateProvider.swift in Sources */,
+				34C459A425DF030000561C29 /* BuildConfig.swift in Sources */,
 				3449402E25C348B20020E664 /* GeneralSettingsViewController.swift in Sources */,
 				349355A625BCA8D400957945 /* EventListView.swift in Sources */,
 				341B2B4825D0C9A600336342 /* NSView.swift in Sources */,
@@ -579,6 +592,7 @@
 				348B8D0425B2925100E518FE /* SettingsViewModel.swift in Sources */,
 				34F128D125968044007DF31C /* Label.swift in Sources */,
 				34F128F22597C340007DF31C /* WeekDayCellView.swift in Sources */,
+				34C459BC25DF114300561C29 /* AboutViewController.swift in Sources */,
 				34305BCB25992A4E00AB381D /* Rx+Helpers.swift in Sources */,
 				347D0FE7259544B4002451EC /* NSView+Layout.swift in Sources */,
 				34B5A09725B0F8A500F7F7ED /* NSButton.swift in Sources */,
@@ -586,6 +600,7 @@
 				3430ED03259634E00045DA53 /* NSStackView+Rx.swift in Sources */,
 				34E004A725B61D5200241419 /* StatusItemViewModel.swift in Sources */,
 				34702168259E761100827AE7 /* Calendar.swift in Sources */,
+				34C4599C25DEFFDA00561C29 /* BuildConfig.m in Sources */,
 				347D0FF225954920002451EC /* EventModel.swift in Sources */,
 				34A4C3E925963FB200D0F949 /* NSStackView.swift in Sources */,
 				34924CEE259FD064009C3450 /* DateFormatter.swift in Sources */,
@@ -752,6 +767,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Calendr/Calendr.entitlements;
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
@@ -764,6 +780,8 @@
 				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Calendr-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -774,6 +792,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Calendr/Calendr.entitlements;
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
@@ -786,6 +805,7 @@
 				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Calendr-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
