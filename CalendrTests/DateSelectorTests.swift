@@ -55,9 +55,12 @@ class DateSelectorTests: XCTestCase {
             .bind(to: selected)
             .disposed(by: disposeBag)
 
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = .withFullDate
+
         selector
             .asObservable()
-            .map(DateFormatter(format: "yyyy-MM-dd", locale: Locale(identifier: "en_US")).string(from:))
+            .map(formatter.string(from:))
             .bind { [weak self] in
                 self?.values.append($0)
             }

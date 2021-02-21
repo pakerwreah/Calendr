@@ -35,20 +35,43 @@ class EventViewModel {
         // fix range ending at 00:00 of the next day
         let fixedEnd = dateProvider.calendar.date(byAdding: .second, value: -1, to: event.end)!
         let isSingleDay = dateProvider.calendar.isDate(event.start, inSameDayAs: fixedEnd)
-
-        let formatter = DateFormatter(
-            template: isSingleDay ? "Hm" : "ddMMyyyyHm",
-            locale: dateProvider.calendar.locale!
-        )
-        let start = formatter.string(from: event.start)
-        let end = formatter.string(from: event.end)
+        let isSameMonth = dateProvider.calendar.isDate(event.start, equalTo: fixedEnd, toGranularity: .month)
+        let startsMidnight = dateProvider.calendar.date(event.start, matchesComponents: .init(hour: 0, minute: 0))
+        let endsMidnight = dateProvider.calendar.date(event.end, matchesComponents: .init(hour: 0, minute: 0))
+        let showTime = !(startsMidnight && endsMidnight)
 
         if event.isAllDay {
+
             duration = ""
+
         } else if isSingleDay {
-            duration = "\(start) - \(end)"
+
+            let formatter = DateIntervalFormatter()
+            formatter.dateTemplate = "jm"
+            formatter.locale = dateProvider.calendar.locale!
+
+            let end = endsMidnight ? dateProvider.calendar.startOfDay(for: event.start) : event.end
+
+            duration = formatter.string(from: event.start, to: end)
+
+        } else if !showTime {
+
+            let formatter = DateIntervalFormatter()
+            formatter.dateTemplate = isSameMonth ? "ddMMMM" : "ddMMM"
+            formatter.locale = dateProvider.calendar.locale!
+
+            duration = formatter.string(from: event.start, to: fixedEnd)
+
         } else {
-            duration = "Start: \(start)\nEnd:   \(end)"
+
+            let formatter = DateFormatter(
+                template: "ddMMyyyyHm",
+                locale: dateProvider.calendar.locale!
+            )
+            let start = formatter.string(from: event.start)
+            let end = formatter.string(from: showTime ? event.end : fixedEnd)
+
+            duration = "\(start)\n\(end)"
         }
 
         let total = dateProvider.calendar

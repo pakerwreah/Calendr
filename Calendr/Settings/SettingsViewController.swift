@@ -24,13 +24,13 @@ class SettingsViewController: NSTabViewController {
         let calendar = NSTabViewItem(viewController: CalendarPickerViewController(viewModel: calendarsViewModel))
         let about = NSTabViewItem(viewController: AboutViewController())
 
-        general.label = "General"
+        general.label = Strings.Settings.Tab.general
         general.image = NSImage(named: NSImage.homeTemplateName)
 
-        calendar.label = "Calendars"
+        calendar.label = Strings.Settings.Tab.calendars
         calendar.image = NSImage(named: NSImage.iconViewTemplateName)
 
-        about.label = "About"
+        about.label = Strings.Settings.Tab.about
         about.image = NSImage(named: NSImage.bookmarksTemplateName)
 
         tabViewItems = [general, calendar, about]

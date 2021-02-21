@@ -1,0 +1,27 @@
+/* 
+  Localizable.strings
+  Calendr
+
+  Created by Paker on 20/02/2021.
+  
+*/
+
+"settings.tab.general" = "General";
+"settings.tab.calendars" = "Calendars";
+"settings.tab.about" = "About";
+
+"settings.menu_bar" = "Menu Bar";
+"settings.menu_bar.show_icon" = "Show icon";
+"settings.menu_bar.show_date" = "Show date";
+"settings.menu_bar.date_format" = "Date format";
+"settings.menu_bar.date_format.info" = "Configurable in System Preferences";
+
+"settings.calendar" = "Calendar";
+"settings.calendar.show_week_numbers" = "Show week numbers";
+
+"settings.events" = "Events";
+"settings.events.finished" = "Finished";
+"settings.events.finished.fade" = "Fade";
+"settings.events.finished.hide" = "Hide";
+
+"settings.transparency" = "Transparency";

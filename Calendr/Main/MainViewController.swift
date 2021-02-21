@@ -324,11 +324,18 @@ class MainViewController: NSViewController {
 
         let keySubject = PublishSubject<UInt16>()
 
-        NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event -> NSEvent? in
+        NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event -> NSEvent? in
+
+            if event.keyCode == 53, let vc = self?.presentedViewControllers?.last {
+                self?.dismiss(vc)
+                return nil
+            }
+
             if 123...126 ~= event.keyCode {
                 keySubject.onNext(event.keyCode)
                 return nil
             }
+
             return event
         }
 

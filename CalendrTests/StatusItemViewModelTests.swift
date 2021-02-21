@@ -66,19 +66,19 @@ class StatusItemViewModelTests: XCTestCase {
     func testIconVisibility() {
 
         settings.onNext(.init(showIcon: true, showDate: true, dateStyle: .short))
-        XCTAssertEqual(lastValue?.first, "\u{1f4c5}")
+        XCTAssertEqual(lastValue?.first, "📅")
 
         settings.onNext(.init(showIcon: false, showDate: true, dateStyle: .short))
-        XCTAssertNotEqual(lastValue?.first, "\u{1f4c5}")
+        XCTAssertNotEqual(lastValue?.first, "📅")
     }
 
     func testDateVisibility() {
 
         settings.onNext(.init(showIcon: true, showDate: true, dateStyle: .short))
-        XCTAssertEqual(lastValue, "\u{1f4c5}  1/1/21")
+        XCTAssertEqual(lastValue, "📅  1/1/21")
 
         settings.onNext(.init(showIcon: true, showDate: false, dateStyle: .short))
-        XCTAssertEqual(lastValue, "\u{1f4c5}")
+        XCTAssertEqual(lastValue, "📅")
     }
 
     func testDateStyle() {

@@ -1,0 +1,27 @@
+/* 
+  Localizable.strings
+  Calendr
+
+  Created by Paker on 20/02/2021.
+  
+*/
+
+"settings.tab.general" = "Geral";
+"settings.tab.calendars" = "Calendários";
+"settings.tab.about" = "Sobre";
+
+"settings.menu_bar" = "Barra de Menus";
+"settings.menu_bar.show_icon" = "Mostrar ícone";
+"settings.menu_bar.show_date" = "Mostrar data";
+"settings.menu_bar.date_format" = "Formato de data";
+"settings.menu_bar.date_format.info" = "Configurável nas Preferências do Sistema";
+
+"settings.calendar" = "Calendário";
+"settings.calendar.show_week_numbers" = "Mostrar números das semanas";
+
+"settings.events" = "Eventos";
+"settings.events.finished" = "Terminados";
+"settings.events.finished.fade" = "Esmaecer";
+"settings.events.finished.hide" = "Ocultar";
+
+"settings.transparency" = "Transparência";

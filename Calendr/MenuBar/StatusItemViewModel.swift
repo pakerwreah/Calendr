@@ -19,7 +19,7 @@ class StatusItemViewModel {
         notificationCenter: NotificationCenter
     ) {
 
-        let titleIcon = NSAttributedString(string: "\u{1f4c5}", attributes: [
+        let titleIcon = NSAttributedString(string: "📅", attributes: [
             .font: NSFont(name: "SegoeUISymbol", size: Constants.iconPointSize)!,
             .baselineOffset: Constants.iconBaselineOffset
         ])

@@ -9,9 +9,5 @@ import Foundation
 
 extension Calendar {
 
-    init(identifier: Calendar.Identifier, timeZone: TimeZone) {
-        self.init(identifier: identifier)
-    }
-
-    static let reference = Calendar(identifier: .gregorian, timeZone: TimeZone(identifier: "UTC")!)
+    static let reference = Calendar(identifier: .gregorian)
 }

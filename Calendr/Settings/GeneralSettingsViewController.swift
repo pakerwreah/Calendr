@@ -14,11 +14,11 @@ class GeneralSettingsViewController: NSViewController {
 
     private let viewModel: SettingsViewModel
 
-    private let showMenuBarIconCheckbox = Checkbox(title: "Show icon")
-    private let showMenuBarDateCheckbox = Checkbox(title: "Show date")
-    private let showWeekNumbersCheckbox = Checkbox(title: "Show week numbers")
-    private let fadePastEventsRadio = Radio(title: "Fade")
-    private let hidePastEventsRadio = Radio(title: "Hide")
+    private let showMenuBarIconCheckbox = Checkbox(title: Strings.Settings.MenuBar.showIcon)
+    private let showMenuBarDateCheckbox = Checkbox(title: Strings.Settings.MenuBar.showDate)
+    private let showWeekNumbersCheckbox = Checkbox(title: Strings.Settings.Calendar.showWeekNumbers)
+    private let fadePastEventsRadio = Radio(title: Strings.Settings.Events.Finished.fade)
+    private let hidePastEventsRadio = Radio(title: Strings.Settings.Events.Finished.hide)
     private let dateFormatDropdown = Dropdown()
 
     init(viewModel: SettingsViewModel) {
@@ -33,10 +33,10 @@ class GeneralSettingsViewController: NSViewController {
         view = NSView()
 
         let stackView = NSStackView(views: [
-            makeSection(title: "Menu Bar", content: menuBarContent),
-            makeSection(title: "Calendar", content: showWeekNumbersCheckbox),
-            makeSection(title: "Events", content: eventsContent),
-            makeSection(title: "Transparency", content: transparencySlider)
+            makeSection(title: Strings.Settings.menuBar, content: menuBarContent),
+            makeSection(title: Strings.Settings.calendar, content: showWeekNumbersCheckbox),
+            makeSection(title: Strings.Settings.events, content: eventsContent),
+            makeSection(title: Strings.Settings.transparency, content: transparencySlider)
         ])
         .with(spacing: Constants.contentSpacing)
         .with(orientation: .vertical)
@@ -53,9 +53,12 @@ class GeneralSettingsViewController: NSViewController {
         ])
 
         let dateFormat = NSStackView(views: [
-            Label(text: "Date Format:"),
+            Label(text: "\(Strings.Settings.MenuBar.dateFormat):"),
             dateFormatDropdown,
-            Label(text: "Formats from system preferences", font: .systemFont(ofSize: 10, weight: .light))
+            Label(
+                text: " \(Strings.Settings.MenuBar.DateFormat.info)",
+                font: .systemFont(ofSize: 10, weight: .light)
+            )
         ])
         .with(orientation: .vertical)
 
@@ -66,7 +69,7 @@ class GeneralSettingsViewController: NSViewController {
 
     private lazy var eventsContent: NSView = {
         NSStackView(views: [
-            Label(text: "Finished:"), fadePastEventsRadio, hidePastEventsRadio
+            Label(text: "\(Strings.Settings.Events.finished):"), fadePastEventsRadio, hidePastEventsRadio
         ])
     }()
 
