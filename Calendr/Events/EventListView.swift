@@ -15,14 +15,21 @@ class EventListView: NSView {
     private let eventsObservable: Observable<[EventModel]>
 
     private let dateProvider: DateProviding
+    private let workspaceProvider: WorkspaceProviding
     private let settings: SettingsViewModel
 
     private let contentStackView = NSStackView(.vertical)
 
-    init(eventsObservable: Observable<[EventModel]>, dateProvider: DateProviding, settings: SettingsViewModel) {
+    init(
+        eventsObservable: Observable<[EventModel]>,
+        dateProvider: DateProviding,
+        workspaceProvider: WorkspaceProviding,
+        settings: SettingsViewModel
+    ) {
 
         self.eventsObservable = eventsObservable
         self.dateProvider = dateProvider
+        self.workspaceProvider = workspaceProvider
         self.settings = settings
 
         super.init(frame: .zero)
@@ -49,13 +56,20 @@ class EventListView: NSView {
 
         eventsObservable
             .observe(on: MainScheduler.instance)
-            .map { [dateProvider, settings] events in
+            .map { [dateProvider, workspaceProvider, settings] events in
                 events
                     .sorted {
                         sortTuple($0) < sortTuple($1)
                     }
                     .map {
-                        EventView(viewModel: EventViewModel(event: $0, dateProvider: dateProvider, settings: settings))
+                        EventView(
+                            viewModel: EventViewModel(
+                                event: $0,
+                                dateProvider: dateProvider,
+                                workspaceProvider: workspaceProvider,
+                                settings: settings
+                            )
+                        )
                     }
             }
             .map {

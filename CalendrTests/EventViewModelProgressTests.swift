@@ -16,6 +16,8 @@ class EventViewModelProgressTests: XCTestCase {
 
     let dateProvider = MockDateProvider()
 
+    let workspaceProvider = MockWorkspaceProvider()
+
     let userDefaults = UserDefaults(suiteName: className())!
 
     let notificationCenter = NotificationCenter()
@@ -122,7 +124,7 @@ class EventViewModelProgressTests: XCTestCase {
         XCTAssertEqual(progress, 0.4)
     }
 
-    func testProgress_isNotInProgress_shouldHideLine() {
+    func testProgress_isNotInProgress() {
 
         dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 9)
 
@@ -131,16 +133,16 @@ class EventViewModelProgressTests: XCTestCase {
             end: .make(year: 2021, month: 1, day: 1, hour: 15)
         )
 
-        var isLineVisible: Bool?
+        var isInProgress: Bool?
 
-        viewModel.isLineVisible
-            .bind { isLineVisible = $0 }
+        viewModel.isInProgress
+            .bind { isInProgress = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(isLineVisible, false)
+        XCTAssertEqual(isInProgress, false)
     }
 
-    func testProgress_isInProgress_shouldShowLine() {
+    func testProgress_isInProgress() {
 
         dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 12)
 
@@ -149,13 +151,13 @@ class EventViewModelProgressTests: XCTestCase {
             end: .make(year: 2021, month: 1, day: 1, hour: 15)
         )
 
-        var isLineVisible: Bool?
+        var isInProgress: Bool?
 
-        viewModel.isLineVisible
-            .bind { isLineVisible = $0 }
+        viewModel.isInProgress
+            .bind { isInProgress = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(isLineVisible, true)
+        XCTAssertEqual(isInProgress, true)
     }
 
     func testProgress_isNotInProgress_shouldShowClearBackground() {
@@ -253,6 +255,7 @@ class EventViewModelProgressTests: XCTestCase {
         EventViewModel(
             event: .make(start: start, end: end, isAllDay: isAllDay),
             dateProvider: dateProvider,
+            workspaceProvider: workspaceProvider,
             settings: settings,
             scheduler: scheduler
         )

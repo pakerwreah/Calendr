@@ -10,15 +10,15 @@ import Foundation
 
 extension EventModel {
     static func make(
-        start: Date,
-        end: Date,
+        start: Date = Date(),
+        end: Date = Date(),
         isAllDay: Bool = false,
         title: String = "",
         location: String? = nil,
         notes: String? = nil,
         url: URL? = nil,
         isPending: Bool = false,
-        calendar: CalendarModel = .init(identifier: "", account: "", title: "", color: .clear)
+        calendar: CalendarModel = .make()
     ) -> EventModel {
 
         .init(

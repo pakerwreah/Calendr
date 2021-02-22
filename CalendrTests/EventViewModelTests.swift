@@ -16,6 +16,8 @@ class EventViewModelTests: XCTestCase {
 
     let dateProvider = MockDateProvider()
 
+    let workspaceProvider = MockWorkspaceProvider()
+
     let userDefaults = UserDefaults(suiteName: className())!
 
     let notificationCenter = NotificationCenter()
@@ -33,13 +35,40 @@ class EventViewModelTests: XCTestCase {
 
     func testBasicInfo() {
 
-        let calendar = CalendarModel(identifier: "", account: "", title: "", color: .black)
-        let event: EventModel = .make(start: Date(), end: Date(), title: "Title", isPending: true, calendar: calendar)
-        let viewModel = EventViewModel(event: event, dateProvider: dateProvider, settings: settings)
+        let viewModel = mock(
+            event: .make(title: "Title", isPending: true, calendar: .make(color: .black))
+        )
 
         XCTAssertEqual(viewModel.title, "Title")
         XCTAssertEqual(viewModel.color, .black)
         XCTAssertEqual(viewModel.isPending, true)
+    }
+
+    func testSubtitle_withLocation_withoutURL_shouldShowLocation() {
+
+        let viewModel = mock(
+            event: .make(location: "Some address", url: nil)
+        )
+
+        XCTAssertEqual(viewModel.subtitle, "Some address")
+    }
+
+    func testSubtitle_withURL_withoutLocation_shouldShowURL() {
+
+        let viewModel = mock(
+            event: .make(location: nil, url: URL(string: ".")!)
+        )
+
+        XCTAssertEqual(viewModel.subtitle, ".")
+    }
+
+    func testSubtitle_withURL_withLocation_shouldShowLocation() {
+
+        let viewModel = mock(
+            event: .make(location: "Some address", url: URL(string: ".")!)
+        )
+
+        XCTAssertEqual(viewModel.subtitle, "Some address")
     }
 
     func testDuration_isAllDay() {
@@ -117,6 +146,16 @@ class EventViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.duration, "Jan 1 - Feb 2")
     }
 
+    func mock(event: EventModel) -> EventViewModel {
+
+        EventViewModel(
+            event: event,
+            dateProvider: dateProvider,
+            workspaceProvider: workspaceProvider,
+            settings: settings
+        )
+    }
+
     func mock(
         start: Date,
         end: Date,
@@ -126,6 +165,7 @@ class EventViewModelTests: XCTestCase {
         EventViewModel(
             event: .make(start: start, end: end, isAllDay: isAllDay),
             dateProvider: dateProvider,
+            workspaceProvider: workspaceProvider,
             settings: settings
         )
     }

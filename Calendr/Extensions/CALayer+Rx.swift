@@ -11,13 +11,13 @@ import RxCocoa
 extension Reactive where Base: CALayer {
 
     public var backgroundColor: Binder<CGColor> {
-        return Binder(self.base) { layer, color in
+        Binder(self.base) { layer, color in
             layer.backgroundColor = color
         }
     }
 
     public var borderColor: Binder<CGColor> {
-        return Binder(self.base) { layer, color in
+        Binder(self.base) { layer, color in
             layer.borderColor = color
         }
     }

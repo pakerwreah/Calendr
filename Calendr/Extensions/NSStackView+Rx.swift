@@ -11,10 +11,17 @@ import RxCocoa
 extension Reactive where Base: NSStackView {
 
     public var arrangedSubviews: Binder<[NSView]> {
-        return Binder(self.base) { stackView, views in
+        Binder(self.base) { stackView, views in
             stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
             views.forEach(stackView.addArrangedSubview)
         }
     }
 
+    public var isContentHidden: Observable<Bool> {
+        Observable.combineLatest(
+            base.arrangedSubviews.map {
+                $0.rx.observe(\.isHidden)
+            }
+        ).map { $0.allSatisfy { $0 } }
+    }
 }

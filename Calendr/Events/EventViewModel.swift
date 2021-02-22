@@ -11,11 +11,13 @@ import RxSwift
 class EventViewModel {
 
     let title: String
+    let subtitle: String
     let duration: String
     let color: CGColor
     let isPending: Bool
 
-    let isLineVisible: Observable<Bool>
+    let videoURL: URL?
+    let isInProgress: Observable<Bool>
     let backgroundColor: Observable<CGColor>
     let isFaded: Observable<Bool>
     let isHidden: Observable<Bool>
@@ -24,13 +26,42 @@ class EventViewModel {
     init(
         event: EventModel,
         dateProvider: DateProviding,
+        workspaceProvider: WorkspaceProviding,
         settings: SettingsViewModel,
         scheduler: SchedulerType = MainScheduler.instance
     ) {
 
         title = event.title
+        subtitle = (event.location ?? event.url?.absoluteString ?? "").trimmed
         color = event.calendar.color
         isPending = event.isPending
+
+        let link = [event.location, event.url?.absoluteString]
+            .compactMap { $0?.trimmed }
+            .first(where: { $0.hasPrefix(Constants.Schema.https) })
+
+        if let link = link {
+
+            if link.contains(Constants.Link.zoom) && workspaceProvider.supportsSchema(Constants.Schema.zoom) {
+                videoURL = URL(
+                    string: link
+                        .replacingOccurrences(of: Constants.Schema.https, with: Constants.Schema.zoom)
+                        .replacingOccurrences(of: "?", with: "&")
+                        .replacingOccurrences(of: "/j/", with: "/join?confno=")
+                )
+            }
+            else if link.contains(Constants.Link.teams) && workspaceProvider.supportsSchema(Constants.Schema.teams) {
+                videoURL = URL(
+                    string: link.replacingOccurrences(of: Constants.Schema.https, with: Constants.Schema.teams)
+                )
+            }
+            else {
+                videoURL = URL(string: link)
+            }
+        }
+        else {
+            videoURL = nil
+        }
 
         // fix range ending at 00:00 of the next day
         let fixedEnd = dateProvider.calendar.date(byAdding: .second, value: -1, to: event.end)!
@@ -113,10 +144,24 @@ class EventViewModel {
             .distinctUntilChanged()
             .share(replay: 1)
 
-        isLineVisible = progress.map { $0 != nil }.distinctUntilChanged()
+        isInProgress = progress.map { $0 != nil }.distinctUntilChanged()
 
         let progressBackgroundColor = color.copy(alpha: 0.1)!
 
-        backgroundColor = isLineVisible.map { $0 ? progressBackgroundColor : .clear }
+        backgroundColor = isInProgress.map { $0 ? progressBackgroundColor : .clear }
+    }
+}
+
+private enum Constants {
+
+    enum Link {
+        static let zoom = "zoom.us/j/"
+        static let teams = "teams.microsoft.com/l/meetup-join/"
+    }
+
+    enum Schema {
+        static let https = "https://"
+        static let zoom = "zoommtg://"
+        static let teams = "msteams://"
     }
 }

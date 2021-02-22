@@ -11,7 +11,7 @@ import RxCocoa
 extension Reactive where Base: NSButton {
 
     public var titleColor: Binder<NSColor?> {
-        return Binder(self.base) { button, color in
+        Binder(self.base) { button, color in
             button.setTitleColor(color: color)
         }
     }

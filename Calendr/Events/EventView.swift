@@ -16,8 +16,10 @@ class EventView: NSView {
     private let viewModel: EventViewModel
 
     private let title = Label()
+    private let subtitle = Label()
     private let duration = Label()
     private let progress = NSView()
+    private let videoBtn = NSButton()
 
     private lazy var progressTop: NSLayoutConstraint = {
         progress.topAnchor.constraint(equalTo: topAnchor)
@@ -39,8 +41,15 @@ class EventView: NSView {
     private func setData() {
 
         title.stringValue = viewModel.title
+
+        subtitle.stringValue = viewModel.subtitle.replacingOccurrences(of: "https://", with: "")
+        subtitle.isHidden = subtitle.stringValue.isEmpty
+        subtitle.toolTip = viewModel.subtitle
+
         duration.stringValue = viewModel.duration
-        duration.isHidden = viewModel.duration.isEmpty
+        duration.isHidden = duration.stringValue.isEmpty
+
+        videoBtn.isHidden = viewModel.videoURL == nil
 
         if viewModel.isPending {
             layer?.backgroundColor = Self.pendingBackground
@@ -63,13 +72,31 @@ class EventView: NSView {
         duration.textColor = .secondaryLabelColor
         duration.font = .systemFont(ofSize: 11)
 
+        subtitle.lineBreakMode = .byTruncatingTail
+        subtitle.textColor = .secondaryLabelColor
+        subtitle.font = .systemFont(ofSize: 11)
+
         let colorBar = NSView()
         colorBar.wantsLayer = true
         colorBar.layer?.backgroundColor = viewModel.color
         colorBar.layer?.cornerRadius = 2
         colorBar.width(equalTo: 4)
 
-        let eventStackView = NSStackView(views: [title, duration])
+        videoBtn.setContentCompressionResistancePriority(.required, for: .horizontal)
+        videoBtn.refusesFirstResponder = true
+        videoBtn.bezelStyle = .roundRect
+        videoBtn.isBordered = false
+        videoBtn.font = NSFont(name: "SegoeUISymbol", size: 13)
+        videoBtn.title = "📹"
+        videoBtn.width(equalTo: 22)
+
+        let subtitleStackView = NSStackView(views: [subtitle, videoBtn]).with(spacing: 0)
+
+        subtitleStackView.rx.isContentHidden
+            .bind(to: subtitleStackView.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        let eventStackView = NSStackView(views: [title, subtitleStackView, duration])
             .with(orientation: .vertical)
             .with(spacing: 2)
 
@@ -91,6 +118,19 @@ class EventView: NSView {
 
     private func setUpBindings() {
 
+        if let url = viewModel.videoURL {
+
+            viewModel.isInProgress.map { $0 ? .controlAccentColor : .secondaryLabelColor }
+                .bind(to: videoBtn.rx.contentTintColor)
+                .disposed(by: disposeBag)
+
+            viewModel.isInProgress
+                .bind(to: videoBtn.rx.isEnabled)
+                .disposed(by: disposeBag)
+
+            videoBtn.rx.tap.bind { NSWorkspace.shared.open(url) }.disposed(by: disposeBag)
+        }
+
         viewModel.isFaded
             .map { $0 ? 0.5 : 1 }
             .bind(to: rx.alpha)
@@ -109,7 +149,7 @@ class EventView: NSView {
         .bind(to: progressTop.rx.constant)
         .disposed(by: disposeBag)
 
-        viewModel.isLineVisible
+        viewModel.isInProgress
             .map(\.isFalse)
             .bind(to: progress.rx.isHidden)
             .disposed(by: disposeBag)

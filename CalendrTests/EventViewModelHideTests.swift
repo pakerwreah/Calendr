@@ -16,6 +16,8 @@ class EventViewModelHideTests: XCTestCase {
 
     let dateProvider = MockDateProvider()
 
+    let workspaceProvider = MockWorkspaceProvider()
+
     let userDefaults = UserDefaults(suiteName: className())!
 
     let notificationCenter = NotificationCenter()
@@ -225,6 +227,7 @@ class EventViewModelHideTests: XCTestCase {
         EventViewModel(
             event: .make(start: start, end: end, isAllDay: isAllDay),
             dateProvider: dateProvider,
+            workspaceProvider: workspaceProvider,
             settings: settings
         )
     }
