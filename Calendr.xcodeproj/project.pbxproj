@@ -113,6 +113,7 @@
 		34651F6D25E3171D00518C5A /* EventViewModelLinkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventViewModelLinkTests.swift; sourceTree = "<group>"; };
 		34651F7325E3207200518C5A /* WorkspaceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkspaceProvider.swift; sourceTree = "<group>"; };
 		34651F7925E325EA00518C5A /* MockWorkspaceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockWorkspaceProvider.swift; sourceTree = "<group>"; };
+		34651F8925E4099700518C5A /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34702149259DFF3000827AE7 /* CalendarServiceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarServiceProvider.swift; sourceTree = "<group>"; };
 		3470214F259E163000827AE7 /* CalendarModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarModel.swift; sourceTree = "<group>"; };
 		34702167259E761100827AE7 /* Calendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Calendar.swift; sourceTree = "<group>"; };
@@ -509,6 +510,7 @@
 				pt,
 				fr,
 				Base,
+				es,
 			);
 			mainGroup = 347D0F8B25952F89002451EC;
 			productRefGroup = 347D0F9525952F89002451EC /* Products */;
@@ -737,6 +739,7 @@
 				34651F2D25E1C99900518C5A /* en */,
 				34651F2E25E1C99900518C5A /* pt */,
 				34651F4E25E1EAFB00518C5A /* fr */,
+				34651F8925E4099700518C5A /* es */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
