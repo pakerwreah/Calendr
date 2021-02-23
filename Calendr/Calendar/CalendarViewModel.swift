@@ -11,6 +11,7 @@ class CalendarViewModel {
 
     private let cellViewModelsObservable: Observable<[CalendarCellViewModel]>
 
+    let title: Observable<String>
     let weekDays: Observable<[WeekDay]>
     let weekNumbers: Observable<[Int]>
 
@@ -23,27 +24,45 @@ class CalendarViewModel {
         notificationCenter: NotificationCenter
     ) {
 
-        let firstWeekdayObservable = notificationCenter.rx
+        let calendarObservable = notificationCenter.rx
             .notification(NSLocale.currentLocaleDidChangeNotification)
             .toVoid()
             .startWith(())
-            .map { dateProvider.calendar.firstWeekday }
+            .map { dateProvider.calendar }
+            .share(replay: 1)
+
+        let dateFormatterObservable = calendarObservable
+            .map(\.locale)
+            .distinctUntilChanged()
+            .map { DateFormatter(format: "MMM yyyy", locale: $0) }
+            .share(replay: 1)
+
+        let firstWeekdayObservable = calendarObservable
+            .map(\.firstWeekday)
             .distinctUntilChanged()
             .share(replay: 1)
 
-        let dateFormatter = DateFormatter(locale: dateProvider.calendar.locale)
+        title = Observable.combineLatest(
+            dateFormatterObservable, dateObservable
+        )
+        .map { $0.string(from: $1).capitalizedFirst }
+        .distinctUntilChanged()
+        .share(replay: 1)
 
-        weekDays = firstWeekdayObservable
-            .map { ($0 ..< $0 + 7)
+        weekDays = Observable.combineLatest(
+            dateFormatterObservable, firstWeekdayObservable
+        )
+        .map { dateFormatter, firstWeekday in
+            (firstWeekday ..< firstWeekday + 7)
                 .map { ($0 - 1) % 7 }
-                .map {
+                .map { weekDay in
                     WeekDay(
-                        title: dateFormatter.veryShortWeekdaySymbols[$0],
-                        isWeekend: [0, 6].contains($0)
+                        title: dateFormatter.veryShortWeekdaySymbols[weekDay],
+                        isWeekend: [0, 6].contains(weekDay)
                     )
                 }
-            }
-            .share(replay: 1)
+        }
+        .share(replay: 1)
 
         // Calculate date range for current month
         let dateRangeObservable = dateObservable

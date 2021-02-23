@@ -46,6 +46,25 @@ class CalendarViewModelTests: XCTestCase {
         calendarsSubject.onNext([])
     }
 
+    func testTitle() {
+
+        var titles: [String] = []
+
+        viewModel.title.bind {
+            titles.append($0)
+        }
+        .disposed(by: disposeBag)
+
+        dateProvider.m_calendar.locale = Locale(identifier: "fr")
+        notificationCenter.post(name: NSLocale.currentLocaleDidChangeNotification, object: nil)
+
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 2))
+        dateSubject.onNext(.make(year: 2021, month: 2, day: 1))
+
+        XCTAssertEqual(titles, ["Janv. 2021", "Févr. 2021"])
+    }
+
     func testMonthSpan() {
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))

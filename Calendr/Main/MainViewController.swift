@@ -218,8 +218,7 @@ class MainViewController: NSViewController {
             .bind(to: selectedDate)
             .disposed(by: disposeBag)
 
-        selectedDate
-            .map(DateFormatter(format: "MMM yyyy", locale: .autoupdatingCurrent).string(from:))
+        calendarViewModel.title
             .bind(to: titleLabel.rx.text)
             .disposed(by: disposeBag)
 
