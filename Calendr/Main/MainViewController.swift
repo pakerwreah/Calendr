@@ -61,7 +61,7 @@ class MainViewController: NSViewController {
         statusItemViewModel = StatusItemViewModel(
             dateObservable: initialDate,
             settings: settingsViewModel.statusItemSettings,
-            locale: .autoupdatingCurrent,
+            dateProvider: dateProvider,
             notificationCenter: .default
         )
 

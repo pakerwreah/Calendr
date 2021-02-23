@@ -15,7 +15,7 @@ class StatusItemViewModel {
     init(
         dateObservable: Observable<Date>,
         settings: Observable<StatusItemSettings>,
-        locale: Locale,
+        dateProvider: DateProviding,
         notificationCenter: NotificationCenter
     ) {
 
@@ -24,17 +24,16 @@ class StatusItemViewModel {
             .baselineOffset: Constants.iconBaselineOffset
         ])
 
-        let dateFormatter = DateFormatter(locale: locale)
-
-        let currentLocaleDidChange = notificationCenter.rx
+        let dateFormatterObservable = notificationCenter.rx
             .notification(NSLocale.currentLocaleDidChangeNotification)
             .toVoid()
             .startWith(())
+            .map { DateFormatter(locale: dateProvider.calendar.locale) }
 
         text = Observable.combineLatest(
-            dateObservable, settings, currentLocaleDidChange
+            dateObservable, settings, dateFormatterObservable
         )
-        .map { date, settings, _ in
+        .map { date, settings, dateFormatter in
 
             dateFormatter.dateStyle = settings.dateStyle
 

@@ -23,7 +23,7 @@ class StatusItemViewModelTests: XCTestCase {
     lazy var viewModel = StatusItemViewModel(
         dateObservable: dateSubject,
         settings: settings,
-        locale: Locale(identifier: "en_US"),
+        dateProvider: dateProvider,
         notificationCenter: notificationCenter
     )
 
@@ -43,23 +43,23 @@ class StatusItemViewModelTests: XCTestCase {
     func testText_withDateChange_shouldUpdateText() {
 
         settings.onNext(.init(showIcon: false, showDate: true, dateStyle: .short))
-        XCTAssertEqual(lastValue, "1/1/21")
+        XCTAssertEqual(lastValue, "2021-01-01")
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 2))
-        XCTAssertEqual(lastValue, "1/2/21")
+        XCTAssertEqual(lastValue, "2021-01-02")
 
         dateSubject.onNext(.make(year: 2021, month: 2, day: 2))
-        XCTAssertEqual(lastValue, "2/2/21")
+        XCTAssertEqual(lastValue, "2021-02-02")
     }
 
-    func testDateStyle_withLocaleChangeNotification_shouldUpdateText() {
+    func testText_withLocaleChange_shouldUpdateText() {
 
         settings.onNext(.init(showIcon: false, showDate: true, dateStyle: .short))
-        XCTAssertEqual(lastValue, "1/1/21")
+        XCTAssertEqual(lastValue, "2021-01-01")
 
-        lastValue = nil
-
+        dateProvider.m_calendar.locale = Locale(identifier: "en")
         notificationCenter.post(name: NSLocale.currentLocaleDidChangeNotification, object: nil)
+
         XCTAssertEqual(lastValue, "1/1/21")
     }
 
@@ -75,13 +75,16 @@ class StatusItemViewModelTests: XCTestCase {
     func testDateVisibility() {
 
         settings.onNext(.init(showIcon: true, showDate: true, dateStyle: .short))
-        XCTAssertEqual(lastValue, "📅  1/1/21")
+        XCTAssertEqual(lastValue, "📅  2021-01-01")
 
         settings.onNext(.init(showIcon: true, showDate: false, dateStyle: .short))
         XCTAssertEqual(lastValue, "📅")
     }
 
     func testDateStyle() {
+
+        dateProvider.m_calendar.locale = Locale(identifier: "en_US")
+        notificationCenter.post(name: NSLocale.currentLocaleDidChangeNotification, object: nil)
 
         settings.onNext(.init(showIcon: false, showDate: true, dateStyle: .short))
         XCTAssertEqual(lastValue, "1/1/21")
