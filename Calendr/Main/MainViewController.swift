@@ -160,11 +160,10 @@ class MainViewController: NSViewController {
 
         let margin: CGFloat = 8
 
-        mainView
-            .width(equalTo: calendarView)
-            .top(equalTo: view, constant: margin)
-            .leading(equalTo: view, constant: margin)
-            .trailing(equalTo: view, constant: margin)
+        mainView.width(equalTo: calendarView)
+        mainView.top(equalTo: view, constant: margin)
+        mainView.leading(equalTo: view, constant: margin)
+        mainView.trailing(equalTo: view, constant: margin)
 
         mainView.rx.observe(\.frame)
             .distinctUntilChanged()

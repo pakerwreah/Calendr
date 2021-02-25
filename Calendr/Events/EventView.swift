@@ -21,9 +21,7 @@ class EventView: NSView {
     private let progress = NSView()
     private let videoBtn = NSButton()
 
-    private lazy var progressTop: NSLayoutConstraint = {
-        progress.topAnchor.constraint(equalTo: topAnchor)
-    }()
+    private lazy var progressTop = progress.top(equalTo: self)
 
     init(viewModel: EventViewModel) {
 
@@ -109,11 +107,8 @@ class EventView: NSView {
         progress.wantsLayer = true
         progress.layer?.backgroundColor = NSColor.red.cgColor.copy(alpha: 0.5)
 
-        progress
-            .height(equalTo: 1)
-            .width(equalTo: self)
-
-        progressTop.isActive = true
+        progress.height(equalTo: 1)
+        progress.width(equalTo: self)
     }
 
     private func setUpBindings() {

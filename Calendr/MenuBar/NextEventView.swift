@@ -58,7 +58,7 @@ class NextEventView: NSView {
         colorBar.height(equalTo: nextEventView, constant: -4)
 
         nextEventView.height(equalTo: Constants.height)
-        nextEventView.widthAnchor.constraint(lessThanOrEqualToConstant: Constants.maxWidth).isActive = true
+        nextEventView.widthAnchor.constraint(lessThanOrEqualToConstant: Constants.maxWidth).activate()
         nextEventView.setCustomSpacing(0, after: nextEventTitle)
         nextEventView.wantsLayer = true
         nextEventView.layer?.cornerRadius = 4
