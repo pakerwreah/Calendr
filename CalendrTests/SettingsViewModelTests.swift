@@ -40,6 +40,11 @@ class SettingsViewModelTests: XCTestCase {
         set { userDefaults.setValue(newValue, forKey: Prefs.statusItemDateStyle) }
     }
 
+    var userDefaultsShowEventStatusItem: Bool? {
+        get { userDefaults.object(forKey: Prefs.showEventStatusItem) as! Bool? }
+        set { userDefaults.setValue(newValue, forKey: Prefs.showEventStatusItem) }
+    }
+
     var userDefaultsShowWeekNumbers: Bool? {
         get { userDefaults.object(forKey: Prefs.showWeekNumbers) as! Bool? }
         set { userDefaults.setValue(newValue, forKey: Prefs.showWeekNumbers) }
@@ -65,11 +70,13 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertNil(userDefaultsIconEnabled)
         XCTAssertNil(userDefaultsDateEnabled)
         XCTAssertNil(userDefaultsDateStyle)
+        XCTAssertNil(userDefaultsShowEventStatusItem)
         XCTAssertNil(userDefaultsShowWeekNumbers)
         XCTAssertNil(userDefaultsShowPastEvents)
         XCTAssertNil(userDefaultsTransparency)
 
         var statusItemSettings: StatusItemSettings?
+        var showEventStatusItem: Bool?
         var showWeekNumbers: Bool?
         var showPastEvents: Bool?
         var popoverTransparency: Int?
@@ -77,6 +84,10 @@ class SettingsViewModelTests: XCTestCase {
 
         viewModel.statusItemSettings
             .bind { statusItemSettings = $0 }
+            .disposed(by: disposeBag)
+
+        viewModel.showEventStatusItem
+            .bind { showEventStatusItem = $0 }
             .disposed(by: disposeBag)
 
         viewModel.showWeekNumbers
@@ -98,6 +109,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(statusItemSettings?.showIcon, true)
         XCTAssertEqual(statusItemSettings?.showDate, true)
         XCTAssertEqual(statusItemSettings?.dateStyle, .short)
+        XCTAssertEqual(showEventStatusItem, false)
         XCTAssertEqual(showWeekNumbers, false)
         XCTAssertEqual(showPastEvents, true)
         XCTAssertEqual(popoverTransparency, 2)
@@ -106,6 +118,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(userDefaultsIconEnabled, true)
         XCTAssertEqual(userDefaultsDateEnabled, true)
         XCTAssertEqual(userDefaultsDateStyle, 1)
+        XCTAssertEqual(userDefaultsShowEventStatusItem, false)
         XCTAssertEqual(userDefaultsShowWeekNumbers, false)
         XCTAssertEqual(userDefaultsShowPastEvents, true)
         XCTAssertEqual(userDefaultsTransparency, 2)
@@ -163,6 +176,30 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(settings?.dateStyle, .medium)
 
         XCTAssertEqual(userDefaultsDateStyle, 2)
+    }
+
+    func testToggleShowEventStatusItem() {
+
+        userDefaultsShowEventStatusItem = true
+
+        var showEventStatusItem: Bool?
+
+        viewModel.showEventStatusItem
+            .bind { showEventStatusItem = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(showEventStatusItem, true)
+        XCTAssertEqual(userDefaultsShowEventStatusItem, true)
+
+        viewModel.toggleEventStatusItem.onNext(false)
+
+        XCTAssertEqual(showEventStatusItem, false)
+        XCTAssertEqual(userDefaultsShowEventStatusItem, false)
+
+        viewModel.toggleEventStatusItem.onNext(true)
+
+        XCTAssertEqual(showEventStatusItem, true)
+        XCTAssertEqual(userDefaultsShowEventStatusItem, true)
     }
 
     func testToggleShowWeekNumbers() {

@@ -41,6 +41,8 @@ internal enum Strings {
       internal static var showDate: String { return Strings.tr("Localizable", "settings.menu_bar.show_date") }
       /// Show icon
       internal static var showIcon: String { return Strings.tr("Localizable", "settings.menu_bar.show_icon") }
+      /// Show next event
+      internal static var showNextEvent: String { return Strings.tr("Localizable", "settings.menu_bar.show_next_event") }
       internal enum DateFormat {
         /// Configurable in System Preferences
         internal static var info: String { return Strings.tr("Localizable", "settings.menu_bar.date_format.info") }

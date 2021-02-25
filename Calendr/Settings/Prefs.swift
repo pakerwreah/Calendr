@@ -12,6 +12,7 @@ enum Prefs {
     static let statusItemIconEnabled = "status_item_icon_enabled"
     static let statusItemDateEnabled = "status_item_date_enabled"
     static let statusItemDateStyle = "status_item_date_style"
+    static let showEventStatusItem = "show_event_status_item"
     static let showWeekNumbers = "show_week_numbers"
     static let showPastEvents = "show_past_events"
     static let transparencyLevel = "transparency_level"

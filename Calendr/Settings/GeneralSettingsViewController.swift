@@ -16,6 +16,7 @@ class GeneralSettingsViewController: NSViewController {
 
     private let showMenuBarIconCheckbox = Checkbox(title: Strings.Settings.MenuBar.showIcon)
     private let showMenuBarDateCheckbox = Checkbox(title: Strings.Settings.MenuBar.showDate)
+    private let showNextEventCheckbox = Checkbox(title: Strings.Settings.MenuBar.showNextEvent)
     private let showWeekNumbersCheckbox = Checkbox(title: Strings.Settings.Calendar.showWeekNumbers)
     private let fadePastEventsRadio = Radio(title: Strings.Settings.Events.Finished.fade)
     private let hidePastEventsRadio = Radio(title: Strings.Settings.Events.Finished.hide)
@@ -49,8 +50,12 @@ class GeneralSettingsViewController: NSViewController {
     private lazy var menuBarContent: NSView = {
 
         let checkboxes = NSStackView(views: [
-            showMenuBarIconCheckbox, showMenuBarDateCheckbox
+            NSStackView(views: [
+                showMenuBarIconCheckbox, showMenuBarDateCheckbox
+            ]),
+            showNextEventCheckbox
         ])
+        .with(orientation: .vertical)
 
         let dateFormat = NSStackView(views: [
             Label(text: "\(Strings.Settings.MenuBar.dateFormat):"),
@@ -116,6 +121,12 @@ class GeneralSettingsViewController: NSViewController {
             control: showMenuBarDateCheckbox,
             observable: viewModel.statusItemSettings.map(\.showDate),
             observer: viewModel.toggleStatusItemDate
+        )
+
+        bind(
+            control: showNextEventCheckbox,
+            observable: viewModel.showEventStatusItem,
+            observer: viewModel.toggleEventStatusItem
         )
 
         bind(

@@ -50,4 +50,10 @@ extension PublishRelay {
 
 extension Bool {
     var isFalse: Bool { !self }
+    var isTrue: Bool { self }
+}
+
+extension Optional {
+    var isNil: Bool { self == nil }
+    var isNotNil: Bool { self != nil }
 }

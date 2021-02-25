@@ -20,12 +20,14 @@ class SettingsViewModel {
     let toggleStatusItemIcon: AnyObserver<Bool>
     let toggleStatusItemDate: AnyObserver<Bool>
     let statusItemDateStyleObserver: AnyObserver<DateFormatter.Style>
+    let toggleEventStatusItem: AnyObserver<Bool>
     let toggleWeekNumbers: AnyObserver<Bool>
     let togglePastEvents: AnyObserver<Bool>
     let transparencyObserver: AnyObserver<Int>
 
     // Observables
     let statusItemSettings: Observable<StatusItemSettings>
+    let showEventStatusItem: Observable<Bool>
     let showWeekNumbers: Observable<Bool>
     let showPastEvents: Observable<Bool>
     let popoverTransparency: Observable<Int>
@@ -43,6 +45,7 @@ class SettingsViewModel {
             Prefs.statusItemIconEnabled: true,
             Prefs.statusItemDateEnabled: true,
             Prefs.statusItemDateStyle: 1,
+            Prefs.showEventStatusItem: false,
             Prefs.showWeekNumbers: false,
             Prefs.showPastEvents: true,
             Prefs.transparencyLevel: 2
@@ -57,6 +60,9 @@ class SettingsViewModel {
         let statusItemDateStyleBehavior = BehaviorSubject(
             value: DateFormatter.Style(rawValue: UInt(userDefaults.integer(forKey: Prefs.statusItemDateStyle))) ?? .none
         )
+        let showEventStatusItemBehavior = BehaviorSubject(
+            value: userDefaults.bool(forKey: Prefs.showEventStatusItem)
+        )
         let showWeekNumbersBehavior = BehaviorSubject(
             value: userDefaults.bool(forKey: Prefs.showWeekNumbers)
         )
@@ -70,6 +76,7 @@ class SettingsViewModel {
         toggleStatusItemIcon = statusItemIconBehavior.asObserver()
         toggleStatusItemDate = statusItemDateBehavior.asObserver()
         statusItemDateStyleObserver = statusItemDateStyleBehavior.asObserver()
+        toggleEventStatusItem = showEventStatusItemBehavior.asObserver()
         toggleWeekNumbers = showWeekNumbersBehavior.asObserver()
         togglePastEvents = showPastEventsBehavior.asObserver()
         transparencyObserver = transparencyBehavior.asObserver()
@@ -106,6 +113,12 @@ class SettingsViewModel {
             )
         }
         .share(replay: 1)
+
+        showEventStatusItem = showEventStatusItemBehavior
+            .do(onNext: {
+                userDefaults.setValue($0, forKey: Prefs.showEventStatusItem)
+            })
+            .share(replay: 1)
 
         showWeekNumbers = showWeekNumbersBehavior
             .do(onNext: {

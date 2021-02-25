@@ -19,6 +19,8 @@ class MainViewController: NSViewController {
 
     // Views
     private let statusItem: NSStatusItem
+    private let eventStatusItem: NSStatusItem
+    private let nextEventView: NextEventView
     private let calendarView: CalendarView
     private let eventListView: EventListView
     private let titleLabel = Label()
@@ -33,6 +35,7 @@ class MainViewController: NSViewController {
     private let calendarViewModel: CalendarViewModel
     private let settingsViewModel: SettingsViewModel
     private let statusItemViewModel: StatusItemViewModel
+    private let nextEventViewModel: NextEventViewModel
     private let calendarPickerViewModel: CalendarPickerViewModel
 
     // Reactive
@@ -51,6 +54,9 @@ class MainViewController: NSViewController {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         statusItem.behavior = .terminationOnRemoval
         statusItem.isVisible = true
+
+        eventStatusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+        eventStatusItem.autosaveName = "event_status_item"
 
         settingsViewModel = SettingsViewModel(
             dateProvider: dateProvider,
@@ -109,13 +115,30 @@ class MainViewController: NSViewController {
             settings: settingsViewModel
         )
 
+        let todayEventsObservable = calendarViewModel.asObservable()
+            .compactMap {
+                $0.first(where: \.isToday).flatMap(\.events)
+            }
+            .debounce(.seconds(1), scheduler: MainScheduler.instance)
+            .distinctUntilChanged()
+
+        nextEventViewModel = NextEventViewModel(
+            isEnabled: settingsViewModel.showEventStatusItem,
+            eventsObservable: todayEventsObservable,
+            dateProvider: dateProvider
+        )
+
+        nextEventView = NextEventView(viewModel: nextEventViewModel)
+
         super.init(nibName: nil, bundle: nil)
 
         setUpBindings()
 
-        setUpPopoverBindings()
+        setUpPopover()
 
-        setUpStatusItemBindings()
+        setUpStatusItem()
+
+        setUpEventStatusItem()
 
         calendarService.requestAccess()
     }
@@ -163,6 +186,32 @@ class MainViewController: NSViewController {
         )
         .bind { $0.material = $1 }
         .disposed(by: disposeBag)
+
+        setUpEventStatusItem()
+    }
+
+    private func setUpEventStatusItem() {
+        guard
+            let statusBarButton = eventStatusItem.button,
+            let container = statusBarButton.superview?.superview
+        else { return }
+
+        container.addSubview(nextEventView)
+
+        nextEventView.leading(equalTo: statusBarButton, constant: -5)
+        nextEventView.top(equalTo: statusBarButton)
+        nextEventView.bottom(equalTo: statusBarButton)
+
+        nextEventView.widthObservable
+            .observe(on: MainScheduler.asyncInstance)
+            .bind(to: eventStatusItem.rx.length)
+            .disposed(by: disposeBag)
+
+        settingsViewModel.showEventStatusItem
+            .distinctUntilChanged()
+            .observe(on: MainScheduler.asyncInstance)
+            .bind(to: eventStatusItem.rx.isVisible)
+            .disposed(by: disposeBag)
     }
 
     private func makeHeader() -> NSView {
@@ -254,10 +303,9 @@ class MainViewController: NSViewController {
         return attributed
     }
 
-    private func setUpStatusItemBindings() {
+    private func setUpStatusItem() {
         guard
-            let statusBarButton = statusItem.button,
-            let statusItemView = statusBarButton.cell?.controlView
+            let statusBarButton = statusItem.button
         else { return }
 
         let menu = NSMenu()
@@ -271,7 +319,7 @@ class MainViewController: NSViewController {
                 !popover.isShown
             }
             .bind { [popover] in
-                popover.show(relativeTo: .zero, of: statusItemView, preferredEdge: .maxY)
+                popover.show(relativeTo: .zero, of: statusBarButton, preferredEdge: .maxY)
             }
             .disposed(by: disposeBag)
 
@@ -284,7 +332,7 @@ class MainViewController: NSViewController {
             .disposed(by: disposeBag)
     }
 
-    private func setUpPopoverBindings() {
+    private func setUpPopover() {
 
         popover.contentViewController = self
 
