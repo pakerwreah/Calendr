@@ -37,6 +37,7 @@ class MainViewController: NSViewController {
     private let statusItemViewModel: StatusItemViewModel
     private let nextEventViewModel: NextEventViewModel
     private let calendarPickerViewModel: CalendarPickerViewModel
+    private let eventListViewModel: EventListViewModel
 
     // Reactive
     private let disposeBag = DisposeBag()
@@ -108,12 +109,14 @@ class MainViewController: NSViewController {
             }
             .distinctUntilChanged()
 
-        eventListView = EventListView(
+        eventListViewModel = EventListViewModel(
             eventsObservable: eventsObservable,
             dateProvider: dateProvider,
             workspaceProvider: workspaceProvider,
             settings: settingsViewModel
         )
+
+        eventListView = EventListView(viewModel: eventListViewModel)
 
         let todayEventsObservable = calendarViewModel.asObservable()
             .compactMap {

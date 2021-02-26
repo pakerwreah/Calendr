@@ -12,25 +12,13 @@ class EventListView: NSView {
 
     private let disposeBag = DisposeBag()
 
-    private let eventsObservable: Observable<[EventModel]>
-
-    private let dateProvider: DateProviding
-    private let workspaceProvider: WorkspaceProviding
-    private let settings: EventSettings
+    private let viewModel: EventListViewModel
 
     private let contentStackView = NSStackView(.vertical)
 
-    init(
-        eventsObservable: Observable<[EventModel]>,
-        dateProvider: DateProviding,
-        workspaceProvider: WorkspaceProviding,
-        settings: EventSettings
-    ) {
+    init(viewModel: EventListViewModel) {
 
-        self.eventsObservable = eventsObservable
-        self.dateProvider = dateProvider
-        self.workspaceProvider = workspaceProvider
-        self.settings = settings
+        self.viewModel = viewModel
 
         super.init(frame: .zero)
 
@@ -54,23 +42,10 @@ class EventListView: NSView {
             (event.isAllDay ? 0 : 1, event.start, event.end)
         }
 
-        eventsObservable
+        viewModel.asObservable()
             .observe(on: MainScheduler.instance)
-            .map { [dateProvider, workspaceProvider, settings] events in
-                events
-                    .sorted {
-                        sortTuple($0) < sortTuple($1)
-                    }
-                    .map {
-                        EventView(
-                            viewModel: EventViewModel(
-                                event: $0,
-                                dateProvider: dateProvider,
-                                workspaceProvider: workspaceProvider,
-                                settings: settings
-                            )
-                        )
-                    }
+            .map {
+                $0.map(EventView.init)
             }
             .map {
                 $0.isEmpty ? [] : ([.spacer] + $0 + [.spacer])

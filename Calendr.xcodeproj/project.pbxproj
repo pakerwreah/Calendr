@@ -73,6 +73,8 @@
 		34C72F8825E88C0300FD20FA /* MockEventSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C72F8725E88C0300FD20FA /* MockEventSettings.swift */; };
 		34C72F8C25E88DA100FD20FA /* MockCalendarSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C72F8B25E88DA100FD20FA /* MockCalendarSettings.swift */; };
 		34C72F9625E8A05700FD20FA /* MockNextEventSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C72F9525E8A05700FD20FA /* MockNextEventSettings.swift */; };
+		34C72F9C25E9847300FD20FA /* EventListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C72F9B25E9847300FD20FA /* EventListViewModel.swift */; };
+		34C72FA225E987F000FD20FA /* EventListViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C72FA125E987F000FD20FA /* EventListViewModelTests.swift */; };
 		34CC382D25B636A6006CBD99 /* Checkbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34CC382C25B636A6006CBD99 /* Checkbox.swift */; };
 		34E004A725B61D5200241419 /* StatusItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E004A625B61D5200241419 /* StatusItemViewModel.swift */; };
 		34E1902325B76CFE00E9491B /* CalendarPickerViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E1902225B76CFE00E9491B /* CalendarPickerViewModelTests.swift */; };
@@ -172,6 +174,8 @@
 		34C72F8725E88C0300FD20FA /* MockEventSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockEventSettings.swift; sourceTree = "<group>"; };
 		34C72F8B25E88DA100FD20FA /* MockCalendarSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCalendarSettings.swift; sourceTree = "<group>"; };
 		34C72F9525E8A05700FD20FA /* MockNextEventSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNextEventSettings.swift; sourceTree = "<group>"; };
+		34C72F9B25E9847300FD20FA /* EventListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventListViewModel.swift; sourceTree = "<group>"; };
+		34C72FA125E987F000FD20FA /* EventListViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventListViewModelTests.swift; sourceTree = "<group>"; };
 		34CC382C25B636A6006CBD99 /* Checkbox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checkbox.swift; sourceTree = "<group>"; };
 		34E004A625B61D5200241419 /* StatusItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemViewModel.swift; sourceTree = "<group>"; };
 		34E1902225B76CFE00E9491B /* CalendarPickerViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPickerViewModelTests.swift; sourceTree = "<group>"; };
@@ -318,6 +322,7 @@
 				34E1902225B76CFE00E9491B /* CalendarPickerViewModelTests.swift */,
 				347E6D3D25AA2811009A6716 /* CalendarViewModelTests.swift */,
 				34924CE3259FCB36009C3450 /* DateSelectorTests.swift */,
+				34C72FA125E987F000FD20FA /* EventListViewModelTests.swift */,
 				348E702C25C6161900B3B160 /* EventViewModelFadeTests.swift */,
 				348E703025C6168C00B3B160 /* EventViewModelHideTests.swift */,
 				34651F6D25E3171D00518C5A /* EventViewModelLinkTests.swift */,
@@ -413,6 +418,7 @@
 			isa = PBXGroup;
 			children = (
 				349355A525BCA8D400957945 /* EventListView.swift */,
+				34C72F9B25E9847300FD20FA /* EventListViewModel.swift */,
 				349355A925BCA8DF00957945 /* EventView.swift */,
 				349355B125BCB07B00957945 /* EventViewModel.swift */,
 			);
@@ -695,6 +701,7 @@
 				348B8D0425B2925100E518FE /* SettingsViewModel.swift in Sources */,
 				34F128D125968044007DF31C /* Label.swift in Sources */,
 				34F128F22597C340007DF31C /* WeekDayCellView.swift in Sources */,
+				34C72F9C25E9847300FD20FA /* EventListViewModel.swift in Sources */,
 				3487A43825E706F800FCC7D7 /* NextEventViewModel.swift in Sources */,
 				34C459BC25DF114300561C29 /* AboutViewController.swift in Sources */,
 				34305BCB25992A4E00AB381D /* Rx+Helpers.swift in Sources */,
@@ -745,6 +752,7 @@
 				348E703725C6173400B3B160 /* EventViewModelProgressTests.swift in Sources */,
 				347E6D3E25AA2811009A6716 /* CalendarViewModelTests.swift in Sources */,
 				348E702D25C6161900B3B160 /* EventViewModelFadeTests.swift in Sources */,
+				34C72FA225E987F000FD20FA /* EventListViewModelTests.swift in Sources */,
 				34C72F9625E8A05700FD20FA /* MockNextEventSettings.swift in Sources */,
 				341B2B4225D0B19500336342 /* StatusItemViewModelTests.swift in Sources */,
 			);
