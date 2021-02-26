@@ -22,7 +22,7 @@
 
 "settings.events" = "Eventos";
 "settings.events.finished" = "Terminados";
-"settings.events.finished.fade" = "Esmaecer";
+"settings.events.finished.fade" = "Sombrear";
 "settings.events.finished.hide" = "Ocultar";
 
 "settings.transparency" = "Transparência";
