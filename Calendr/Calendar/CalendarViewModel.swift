@@ -34,7 +34,9 @@ class CalendarViewModel {
         let dateFormatterObservable = calendarObservable
             .map(\.locale)
             .distinctUntilChanged()
-            .map { DateFormatter(format: "MMM yyyy", locale: $0, context: .beginningOfSentence) }
+            .map {
+                DateFormatter(format: "MMM yyyy", locale: $0).with(context: .beginningOfSentence)
+            }
             .share(replay: 1)
 
         let firstWeekdayObservable = calendarObservable

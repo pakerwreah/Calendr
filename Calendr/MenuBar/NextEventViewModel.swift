@@ -17,7 +17,7 @@ class NextEventViewModel {
     let hasEvent: Observable<Bool>
 
     init(
-        isEnabled: Observable<Bool>,
+        settings: NextEventSettings,
         eventsObservable: Observable<[EventModel]>,
         dateProvider: DateProviding,
         scheduler: SchedulerType = MainScheduler.instance
@@ -25,7 +25,7 @@ class NextEventViewModel {
 
         typealias NextEventTuple = (event: EventModel, isInProgress: Bool)
 
-        let nextEventObservable = Observable.combineLatest(isEnabled, eventsObservable)
+        let nextEventObservable = Observable.combineLatest(settings.showEventStatusItem, eventsObservable)
             .map { isEnabled, events in
                 isEnabled ? events.filter { !$0.isAllDay && !$0.isPending } : []
             }

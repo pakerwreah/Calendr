@@ -14,13 +14,13 @@ class NextEventViewModelTests: XCTestCase {
 
     let disposeBag = DisposeBag()
 
-    let isEnabledSubject = BehaviorSubject<Bool>(value: true)
     let eventsSubject = PublishSubject<[EventModel]>()
 
+    let settings = MockNextEventSettings()
     let dateProvider = MockDateProvider()
 
     lazy var viewModel = NextEventViewModel(
-        isEnabled: isEnabledSubject,
+        settings: settings,
         eventsObservable: eventsSubject,
         dateProvider: dateProvider
     )
@@ -77,7 +77,7 @@ class NextEventViewModelTests: XCTestCase {
 
         XCTAssertEqual(hasEvent, true)
 
-        isEnabledSubject.onNext(false)
+        settings.toggleStatusItem.onNext(false)
 
         XCTAssertEqual(hasEvent, false)
     }

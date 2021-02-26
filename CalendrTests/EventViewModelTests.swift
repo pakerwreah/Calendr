@@ -15,23 +15,8 @@ class EventViewModelTests: XCTestCase {
     let disposeBag = DisposeBag()
 
     let dateProvider = MockDateProvider()
-
     let workspaceProvider = MockWorkspaceProvider()
-
-    let userDefaults = UserDefaults(suiteName: className())!
-
-    let notificationCenter = NotificationCenter()
-
-    lazy var settings = SettingsViewModel(
-        dateProvider: dateProvider,
-        userDefaults: userDefaults,
-        notificationCenter: notificationCenter
-    )
-
-    override func setUp() {
-        userDefaults.setVolatileDomain([:], forName: UserDefaults.registrationDomain)
-        userDefaults.removePersistentDomain(forName: className)
-    }
+    let settings = MockEventSettings()
 
     func testBasicInfo() {
 

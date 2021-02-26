@@ -66,7 +66,7 @@ class MainViewController: NSViewController {
 
         statusItemViewModel = StatusItemViewModel(
             dateObservable: initialDate,
-            settings: settingsViewModel.statusItemSettings,
+            settings: settingsViewModel,
             dateProvider: dateProvider,
             notificationCenter: .default
         )
@@ -123,7 +123,7 @@ class MainViewController: NSViewController {
             .distinctUntilChanged()
 
         nextEventViewModel = NextEventViewModel(
-            isEnabled: settingsViewModel.showEventStatusItem,
+            settings: settingsViewModel,
             eventsObservable: todayEventsObservable,
             dateProvider: dateProvider
         )

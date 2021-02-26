@@ -113,13 +113,13 @@ class GeneralSettingsViewController: NSViewController {
 
         bind(
             control: showMenuBarIconCheckbox,
-            observable: viewModel.statusItemSettings.map(\.showIcon),
+            observable: viewModel.showStatusItemIcon,
             observer: viewModel.toggleStatusItemIcon
         )
 
         bind(
             control: showMenuBarDateCheckbox,
-            observable: viewModel.statusItemSettings.map(\.showDate),
+            observable: viewModel.showStatusItemDate,
             observer: viewModel.toggleStatusItemDate
         )
 
@@ -171,14 +171,15 @@ class GeneralSettingsViewController: NSViewController {
             .bind(to: viewModel.statusItemDateStyleObserver)
             .disposed(by: disposeBag)
 
-        viewModel.dateFormatOptions
-            .withLatestFrom(viewModel.statusItemSettings.map(\.dateStyle)) { ($0, $1) }
-            .bind { [dateFormatDropdown] options, dateStyle in
-                dateFormatDropdown.removeAllItems()
-                dateFormatDropdown.addItems(withTitles: options)
-                dateFormatStyle.onNext(dateStyle)
-            }
-            .disposed(by: disposeBag)
+        Observable.combineLatest(
+            viewModel.dateFormatOptions, viewModel.statusItemDateStyle
+        )
+        .bind { [dateFormatDropdown] options, dateStyle in
+            dateFormatDropdown.removeAllItems()
+            dateFormatDropdown.addItems(withTitles: options)
+            dateFormatStyle.onNext(dateStyle)
+        }
+        .disposed(by: disposeBag)
     }
 
     private func bind(control: NSButton, observable: Observable<Bool>, observer: AnyObserver<Bool>) {

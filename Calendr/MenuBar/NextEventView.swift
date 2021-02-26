@@ -29,7 +29,7 @@ class NextEventView: NSView {
             viewModel.hasEvent,
             nextEventView.rx.observe(\.frame).map(\.width)
         )
-        .map { $0 ? min($1, Constants.maxWidth) - 14: 0 }
+        .map { $0 ? max($1 - 14, 0) : 0 }
         .distinctUntilChanged()
 
         super.init(frame: .zero)
@@ -58,8 +58,6 @@ class NextEventView: NSView {
         colorBar.height(equalTo: nextEventView, constant: -4)
 
         nextEventView.height(equalTo: Constants.height)
-        nextEventView.widthAnchor.constraint(lessThanOrEqualToConstant: Constants.maxWidth).activate()
-        nextEventView.setCustomSpacing(0, after: nextEventTitle)
         nextEventView.wantsLayer = true
         nextEventView.layer?.cornerRadius = 4
 
@@ -81,7 +79,7 @@ class NextEventView: NSView {
             .disposed(by: disposeBag)
 
         viewModel.title
-            .map { "\($0) " }
+            .map { $0.count > Constants.length ? "\($0.prefix(Constants.length).trimmed)..." : $0 }
             .bind(to: nextEventTitle.rx.stringValue)
             .disposed(by: disposeBag)
 
@@ -103,5 +101,5 @@ class NextEventView: NSView {
 private enum Constants {
 
     static let height: CGFloat = 20
-    static let maxWidth: CGFloat = 180
+    static let length: Int = 20
 }

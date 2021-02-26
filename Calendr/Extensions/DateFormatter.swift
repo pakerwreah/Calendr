@@ -9,19 +9,28 @@ import Foundation
 
 extension DateFormatter {
 
-    convenience init(locale: Locale?, context: Context = .unknown) {
+    convenience init(locale: Locale?) {
         self.init()
         self.locale = locale
-        self.formattingContext = context
     }
 
-    convenience init(format: String, locale: Locale?, context: Context = .unknown) {
-        self.init(locale: locale, context: context)
+    convenience init(format: String, locale: Locale?) {
+        self.init(locale: locale)
         dateFormat = format
     }
 
-    convenience init(template: String, locale: Locale?, context: Context = .unknown) {
-        self.init(locale: locale, context: context)
+    convenience init(template: String, locale: Locale?) {
+        self.init(locale: locale)
         setLocalizedDateFormatFromTemplate(template)
+    }
+
+    func with(context: Context) -> Self {
+        formattingContext = context
+        return self
+    }
+
+    func with(style: Style) -> Self {
+        dateStyle = style
+        return self
     }
 }

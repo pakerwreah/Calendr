@@ -13,7 +13,7 @@ class CalendarView: NSView {
     private let disposeBag = DisposeBag()
 
     private let viewModel: CalendarViewModel
-    private let settings: SettingsViewModel
+    private let settings: CalendarSettings
     private let hoverObserver: AnyObserver<Date?>
     private let clickObserver: AnyObserver<Date>
 
@@ -21,7 +21,7 @@ class CalendarView: NSView {
 
     init(
         viewModel: CalendarViewModel,
-        settings: SettingsViewModel,
+        settings: CalendarSettings,
         hoverObserver: AnyObserver<Date?>,
         clickObserver: AnyObserver<Date>
     ) {

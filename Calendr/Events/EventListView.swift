@@ -16,7 +16,7 @@ class EventListView: NSView {
 
     private let dateProvider: DateProviding
     private let workspaceProvider: WorkspaceProviding
-    private let settings: SettingsViewModel
+    private let settings: EventSettings
 
     private let contentStackView = NSStackView(.vertical)
 
@@ -24,7 +24,7 @@ class EventListView: NSView {
         eventsObservable: Observable<[EventModel]>,
         dateProvider: DateProviding,
         workspaceProvider: WorkspaceProviding,
-        settings: SettingsViewModel
+        settings: EventSettings
     ) {
 
         self.eventsObservable = eventsObservable
