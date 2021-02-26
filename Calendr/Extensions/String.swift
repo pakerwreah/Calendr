@@ -7,13 +7,9 @@
 
 import Foundation
 
-extension String {
+extension StringProtocol {
 
     var trimmed: String {
         trimmingCharacters(in: .whitespacesAndNewlines)
-    }
-
-    var capitalizedFirst: String {
-        prefix(1).capitalized + dropFirst()
     }
 }

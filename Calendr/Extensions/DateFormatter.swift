@@ -8,6 +8,7 @@
 import Foundation
 
 extension DateFormatter {
+
     convenience init(locale: Locale?) {
         self.init()
         self.locale = locale
@@ -21,5 +22,15 @@ extension DateFormatter {
     convenience init(template: String, locale: Locale?) {
         self.init(locale: locale)
         setLocalizedDateFormatFromTemplate(template)
+    }
+
+    func with(context: Context) -> Self {
+        formattingContext = context
+        return self
+    }
+
+    func with(style: Style) -> Self {
+        dateStyle = style
+        return self
     }
 }

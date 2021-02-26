@@ -27,7 +27,7 @@ class EventViewModel {
         event: EventModel,
         dateProvider: DateProviding,
         workspaceProvider: WorkspaceProviding,
-        settings: SettingsViewModel,
+        settings: EventSettings,
         scheduler: SchedulerType = MainScheduler.instance
     ) {
 

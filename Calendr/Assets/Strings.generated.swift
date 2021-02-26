@@ -11,6 +11,15 @@ import Foundation
 // swiftlint:disable nesting type_body_length type_name vertical_whitespace_opening_braces
 internal enum Strings {
 
+  internal enum Formatter {
+    internal enum Date {
+      internal enum Relative {
+        /// in
+        internal static var `in`: String { return Strings.tr("Localizable", "formatter.date.relative.in") }
+      }
+    }
+  }
+
   internal enum Settings {
     /// Calendar
     internal static var calendar: String { return Strings.tr("Localizable", "settings.calendar") }
@@ -41,6 +50,8 @@ internal enum Strings {
       internal static var showDate: String { return Strings.tr("Localizable", "settings.menu_bar.show_date") }
       /// Show icon
       internal static var showIcon: String { return Strings.tr("Localizable", "settings.menu_bar.show_icon") }
+      /// Show next event
+      internal static var showNextEvent: String { return Strings.tr("Localizable", "settings.menu_bar.show_next_event") }
       internal enum DateFormat {
         /// Configurable in System Preferences
         internal static var info: String { return Strings.tr("Localizable", "settings.menu_bar.date_format.info") }

@@ -52,12 +52,11 @@ class CalendarCellView: NSView {
 
         let eventsContainer = NSView(wrapping: eventsStackView)
 
-        eventsStackView
-            .with(spacing: 2)
-            .top(equalTo: eventsContainer)
-            .bottom(equalTo: eventsContainer)
-            .center(in: eventsContainer, orientation: .horizontal)
-            .height(equalTo: Constants.eventDotSize)
+        eventsStackView.spacing = 2
+        eventsStackView.top(equalTo: eventsContainer)
+        eventsStackView.bottom(equalTo: eventsContainer)
+        eventsStackView.center(in: eventsContainer, orientation: .horizontal)
+        eventsStackView.height(equalTo: Constants.eventDotSize)
 
         let contentStackView = NSStackView(views: [label, eventsContainer])
             .with(orientation: .vertical)

@@ -8,24 +8,40 @@
 import RxCocoa
 import RxSwift
 
-struct StatusItemSettings {
-    let showIcon: Bool
-    let showDate: Bool
-    let dateStyle: DateFormatter.Style
+protocol StatusItemSettings {
+    var showStatusItemIcon: Observable<Bool> { get }
+    var showStatusItemDate: Observable<Bool> { get }
+    var statusItemDateStyle: Observable<DateFormatter.Style> { get }
 }
 
-class SettingsViewModel {
+protocol CalendarSettings {
+    var showWeekNumbers: Observable<Bool> { get }
+}
+
+protocol EventSettings {
+    var showPastEvents: Observable<Bool> { get }
+}
+
+protocol NextEventSettings {
+    var showEventStatusItem: Observable<Bool> { get }
+}
+
+class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings, EventSettings  {
 
     // Observers
     let toggleStatusItemIcon: AnyObserver<Bool>
     let toggleStatusItemDate: AnyObserver<Bool>
     let statusItemDateStyleObserver: AnyObserver<DateFormatter.Style>
+    let toggleEventStatusItem: AnyObserver<Bool>
     let toggleWeekNumbers: AnyObserver<Bool>
     let togglePastEvents: AnyObserver<Bool>
     let transparencyObserver: AnyObserver<Int>
 
     // Observables
-    let statusItemSettings: Observable<StatusItemSettings>
+    var showStatusItemIcon: Observable<Bool>
+    var showStatusItemDate: Observable<Bool>
+    var statusItemDateStyle: Observable<DateFormatter.Style>
+    let showEventStatusItem: Observable<Bool>
     let showWeekNumbers: Observable<Bool>
     let showPastEvents: Observable<Bool>
     let popoverTransparency: Observable<Int>
@@ -43,6 +59,7 @@ class SettingsViewModel {
             Prefs.statusItemIconEnabled: true,
             Prefs.statusItemDateEnabled: true,
             Prefs.statusItemDateStyle: 1,
+            Prefs.showEventStatusItem: false,
             Prefs.showWeekNumbers: false,
             Prefs.showPastEvents: true,
             Prefs.transparencyLevel: 2
@@ -57,6 +74,9 @@ class SettingsViewModel {
         let statusItemDateStyleBehavior = BehaviorSubject(
             value: DateFormatter.Style(rawValue: UInt(userDefaults.integer(forKey: Prefs.statusItemDateStyle))) ?? .none
         )
+        let showEventStatusItemBehavior = BehaviorSubject(
+            value: userDefaults.bool(forKey: Prefs.showEventStatusItem)
+        )
         let showWeekNumbersBehavior = BehaviorSubject(
             value: userDefaults.bool(forKey: Prefs.showWeekNumbers)
         )
@@ -70,6 +90,7 @@ class SettingsViewModel {
         toggleStatusItemIcon = statusItemIconBehavior.asObserver()
         toggleStatusItemDate = statusItemDateBehavior.asObserver()
         statusItemDateStyleObserver = statusItemDateStyleBehavior.asObserver()
+        toggleEventStatusItem = showEventStatusItemBehavior.asObserver()
         toggleWeekNumbers = showWeekNumbersBehavior.asObserver()
         togglePastEvents = showPastEventsBehavior.asObserver()
         transparencyObserver = transparencyBehavior.asObserver()
@@ -80,32 +101,30 @@ class SettingsViewModel {
         .map { iconEnabled, dateEnabled in
             (iconEnabled || !dateEnabled, dateEnabled)
         }
-        .do(onNext: { iconEnabled, dateEnabled in
-            userDefaults.setValuesForKeys([
-                Prefs.statusItemIconEnabled: iconEnabled,
-                Prefs.statusItemDateEnabled: dateEnabled
-            ])
-        })
-        .share(replay: 1)
 
-        let statusItemDateStyle = statusItemDateStyleBehavior
+        showStatusItemIcon = statusItemIconAndDate.map(\.0)
+            .do(onNext: {
+                userDefaults.setValue($0, forKey: Prefs.statusItemIconEnabled)
+            })
+            .share(replay: 1)
+
+        showStatusItemDate = statusItemIconAndDate.map(\.1)
+            .do(onNext: {
+                userDefaults.setValue($0, forKey: Prefs.statusItemDateEnabled)
+            })
+            .share(replay: 1)
+
+        statusItemDateStyle = statusItemDateStyleBehavior
             .do(onNext: {
                 userDefaults.setValue($0.rawValue, forKey: Prefs.statusItemDateStyle)
             })
             .share(replay: 1)
 
-        statusItemSettings = Observable.combineLatest(
-            statusItemIconAndDate,
-            statusItemDateStyle
-        )
-        .map { iconAndDate, dateStyle in
-            StatusItemSettings(
-                showIcon: iconAndDate.0,
-                showDate: iconAndDate.1,
-                dateStyle: dateStyle
-            )
-        }
-        .share(replay: 1)
+        showEventStatusItem = showEventStatusItemBehavior
+            .do(onNext: {
+                userDefaults.setValue($0, forKey: Prefs.showEventStatusItem)
+            })
+            .share(replay: 1)
 
         showWeekNumbers = showWeekNumbersBehavior
             .do(onNext: {

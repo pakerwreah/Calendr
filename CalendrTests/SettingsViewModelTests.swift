@@ -40,6 +40,11 @@ class SettingsViewModelTests: XCTestCase {
         set { userDefaults.setValue(newValue, forKey: Prefs.statusItemDateStyle) }
     }
 
+    var userDefaultsShowEventStatusItem: Bool? {
+        get { userDefaults.object(forKey: Prefs.showEventStatusItem) as! Bool? }
+        set { userDefaults.setValue(newValue, forKey: Prefs.showEventStatusItem) }
+    }
+
     var userDefaultsShowWeekNumbers: Bool? {
         get { userDefaults.object(forKey: Prefs.showWeekNumbers) as! Bool? }
         set { userDefaults.setValue(newValue, forKey: Prefs.showWeekNumbers) }
@@ -65,18 +70,34 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertNil(userDefaultsIconEnabled)
         XCTAssertNil(userDefaultsDateEnabled)
         XCTAssertNil(userDefaultsDateStyle)
+        XCTAssertNil(userDefaultsShowEventStatusItem)
         XCTAssertNil(userDefaultsShowWeekNumbers)
         XCTAssertNil(userDefaultsShowPastEvents)
         XCTAssertNil(userDefaultsTransparency)
 
-        var statusItemSettings: StatusItemSettings?
+        var showStatusItemIcon: Bool?
+        var showStatusItemDate: Bool?
+        var statusItemDateStyle: DateFormatter.Style?
+        var showEventStatusItem: Bool?
         var showWeekNumbers: Bool?
         var showPastEvents: Bool?
         var popoverTransparency: Int?
         var popoverMaterial: NSVisualEffectView.Material?
 
-        viewModel.statusItemSettings
-            .bind { statusItemSettings = $0 }
+        viewModel.showStatusItemIcon
+            .bind { showStatusItemIcon = $0 }
+            .disposed(by: disposeBag)
+
+        viewModel.showStatusItemDate
+            .bind { showStatusItemDate = $0 }
+            .disposed(by: disposeBag)
+
+        viewModel.statusItemDateStyle
+            .bind { statusItemDateStyle = $0 }
+            .disposed(by: disposeBag)
+
+        viewModel.showEventStatusItem
+            .bind { showEventStatusItem = $0 }
             .disposed(by: disposeBag)
 
         viewModel.showWeekNumbers
@@ -95,9 +116,10 @@ class SettingsViewModelTests: XCTestCase {
             .bind { popoverMaterial = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(statusItemSettings?.showIcon, true)
-        XCTAssertEqual(statusItemSettings?.showDate, true)
-        XCTAssertEqual(statusItemSettings?.dateStyle, .short)
+        XCTAssertEqual(showStatusItemIcon, true)
+        XCTAssertEqual(showStatusItemDate, true)
+        XCTAssertEqual(statusItemDateStyle, .short)
+        XCTAssertEqual(showEventStatusItem, false)
         XCTAssertEqual(showWeekNumbers, false)
         XCTAssertEqual(showPastEvents, true)
         XCTAssertEqual(popoverTransparency, 2)
@@ -106,6 +128,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(userDefaultsIconEnabled, true)
         XCTAssertEqual(userDefaultsDateEnabled, true)
         XCTAssertEqual(userDefaultsDateStyle, 1)
+        XCTAssertEqual(userDefaultsShowEventStatusItem, false)
         XCTAssertEqual(userDefaultsShowWeekNumbers, false)
         XCTAssertEqual(userDefaultsShowPastEvents, true)
         XCTAssertEqual(userDefaultsTransparency, 2)
@@ -152,17 +175,41 @@ class SettingsViewModelTests: XCTestCase {
 
         userDefaultsDateStyle = 2
 
-        var settings: StatusItemSettings?
+        var statusItemDateStyle: DateFormatter.Style?
 
-        viewModel.statusItemSettings
-            .bind { settings = $0 }
+        viewModel.statusItemDateStyle
+            .bind { statusItemDateStyle = $0 }
             .disposed(by: disposeBag)
 
         viewModel.statusItemDateStyleObserver.onNext(.medium)
 
-        XCTAssertEqual(settings?.dateStyle, .medium)
+        XCTAssertEqual(statusItemDateStyle, .medium)
 
         XCTAssertEqual(userDefaultsDateStyle, 2)
+    }
+
+    func testToggleShowEventStatusItem() {
+
+        userDefaultsShowEventStatusItem = true
+
+        var showEventStatusItem: Bool?
+
+        viewModel.showEventStatusItem
+            .bind { showEventStatusItem = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(showEventStatusItem, true)
+        XCTAssertEqual(userDefaultsShowEventStatusItem, true)
+
+        viewModel.toggleEventStatusItem.onNext(false)
+
+        XCTAssertEqual(showEventStatusItem, false)
+        XCTAssertEqual(userDefaultsShowEventStatusItem, false)
+
+        viewModel.toggleEventStatusItem.onNext(true)
+
+        XCTAssertEqual(showEventStatusItem, true)
+        XCTAssertEqual(userDefaultsShowEventStatusItem, true)
     }
 
     func testToggleShowWeekNumbers() {
@@ -258,16 +305,21 @@ class SettingsViewModelTests: XCTestCase {
         userDefaultsIconEnabled = false
         userDefaultsDateEnabled = true
 
-        var settings: StatusItemSettings?
+        var showStatusItemIcon: Bool?
+        var showStatusItemDate: Bool?
 
-        viewModel.statusItemSettings
-            .bind { settings = $0 }
+        viewModel.showStatusItemIcon
+            .bind { showStatusItemIcon = $0 }
+            .disposed(by: disposeBag)
+
+        viewModel.showStatusItemDate
+            .bind { showStatusItemDate = $0 }
             .disposed(by: disposeBag)
 
         viewModel.toggleStatusItemIcon.onNext(true)
 
-        XCTAssertEqual(settings?.showIcon, true)
-        XCTAssertEqual(settings?.showDate, true)
+        XCTAssertEqual(showStatusItemIcon, true)
+        XCTAssertEqual(showStatusItemDate, true)
 
         XCTAssertEqual(userDefaultsIconEnabled, true)
         XCTAssertEqual(userDefaultsDateEnabled, true)
@@ -279,16 +331,21 @@ class SettingsViewModelTests: XCTestCase {
         userDefaultsIconEnabled = true
         userDefaultsDateEnabled = true
 
-        var settings: StatusItemSettings?
+        var showStatusItemIcon: Bool?
+        var showStatusItemDate: Bool?
 
-        viewModel.statusItemSettings
-            .bind { settings = $0 }
+        viewModel.showStatusItemIcon
+            .bind { showStatusItemIcon = $0 }
+            .disposed(by: disposeBag)
+
+        viewModel.showStatusItemDate
+            .bind { showStatusItemDate = $0 }
             .disposed(by: disposeBag)
 
         viewModel.toggleStatusItemIcon.onNext(false)
 
-        XCTAssertEqual(settings?.showIcon, false)
-        XCTAssertEqual(settings?.showDate, true)
+        XCTAssertEqual(showStatusItemIcon, false)
+        XCTAssertEqual(showStatusItemDate, true)
 
         XCTAssertEqual(userDefaultsIconEnabled, false)
         XCTAssertEqual(userDefaultsDateEnabled, true)
@@ -300,16 +357,21 @@ class SettingsViewModelTests: XCTestCase {
         userDefaultsIconEnabled = true
         userDefaultsDateEnabled = false
 
-        var settings: StatusItemSettings?
+        var showStatusItemIcon: Bool?
+        var showStatusItemDate: Bool?
 
-        viewModel.statusItemSettings
-            .bind { settings = $0 }
+        viewModel.showStatusItemIcon
+            .bind { showStatusItemIcon = $0 }
+            .disposed(by: disposeBag)
+
+        viewModel.showStatusItemDate
+            .bind { showStatusItemDate = $0 }
             .disposed(by: disposeBag)
 
         viewModel.toggleStatusItemIcon.onNext(false)
 
-        XCTAssertEqual(settings?.showIcon, true)
-        XCTAssertEqual(settings?.showDate, false)
+        XCTAssertEqual(showStatusItemIcon, true)
+        XCTAssertEqual(showStatusItemDate, false)
 
         XCTAssertEqual(userDefaultsIconEnabled, true)
         XCTAssertEqual(userDefaultsDateEnabled, false)
@@ -321,16 +383,21 @@ class SettingsViewModelTests: XCTestCase {
         userDefaultsIconEnabled = true
         userDefaultsDateEnabled = false
 
-        var settings: StatusItemSettings?
+        var showStatusItemIcon: Bool?
+        var showStatusItemDate: Bool?
 
-        viewModel.statusItemSettings
-            .bind { settings = $0 }
+        viewModel.showStatusItemIcon
+            .bind { showStatusItemIcon = $0 }
+            .disposed(by: disposeBag)
+
+        viewModel.showStatusItemDate
+            .bind { showStatusItemDate = $0 }
             .disposed(by: disposeBag)
 
         viewModel.toggleStatusItemDate.onNext(true)
 
-        XCTAssertEqual(settings?.showIcon, true)
-        XCTAssertEqual(settings?.showDate, true)
+        XCTAssertEqual(showStatusItemIcon, true)
+        XCTAssertEqual(showStatusItemDate, true)
 
         XCTAssertEqual(userDefaultsIconEnabled, true)
         XCTAssertEqual(userDefaultsDateEnabled, true)
@@ -342,16 +409,21 @@ class SettingsViewModelTests: XCTestCase {
         userDefaultsIconEnabled = true
         userDefaultsDateEnabled = true
 
-        var settings: StatusItemSettings?
+        var showStatusItemIcon: Bool?
+        var showStatusItemDate: Bool?
 
-        viewModel.statusItemSettings
-            .bind { settings = $0 }
+        viewModel.showStatusItemIcon
+            .bind { showStatusItemIcon = $0 }
+            .disposed(by: disposeBag)
+
+        viewModel.showStatusItemDate
+            .bind { showStatusItemDate = $0 }
             .disposed(by: disposeBag)
 
         viewModel.toggleStatusItemDate.onNext(false)
 
-        XCTAssertEqual(settings?.showIcon, true)
-        XCTAssertEqual(settings?.showDate, false)
+        XCTAssertEqual(showStatusItemIcon, true)
+        XCTAssertEqual(showStatusItemDate, false)
 
         XCTAssertEqual(userDefaultsIconEnabled, true)
         XCTAssertEqual(userDefaultsDateEnabled, false)
@@ -363,16 +435,21 @@ class SettingsViewModelTests: XCTestCase {
         userDefaultsIconEnabled = false
         userDefaultsDateEnabled = true
 
-        var settings: StatusItemSettings?
+        var showStatusItemIcon: Bool?
+        var showStatusItemDate: Bool?
 
-        viewModel.statusItemSettings
-            .bind { settings = $0 }
+        viewModel.showStatusItemIcon
+            .bind { showStatusItemIcon = $0 }
+            .disposed(by: disposeBag)
+
+        viewModel.showStatusItemDate
+            .bind { showStatusItemDate = $0 }
             .disposed(by: disposeBag)
 
         viewModel.toggleStatusItemDate.onNext(false)
 
-        XCTAssertEqual(settings?.showIcon, true)
-        XCTAssertEqual(settings?.showDate, false)
+        XCTAssertEqual(showStatusItemIcon, true)
+        XCTAssertEqual(showStatusItemDate, false)
 
         XCTAssertEqual(userDefaultsIconEnabled, true)
         XCTAssertEqual(userDefaultsDateEnabled, false)

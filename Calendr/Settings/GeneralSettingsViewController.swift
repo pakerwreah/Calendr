@@ -16,6 +16,7 @@ class GeneralSettingsViewController: NSViewController {
 
     private let showMenuBarIconCheckbox = Checkbox(title: Strings.Settings.MenuBar.showIcon)
     private let showMenuBarDateCheckbox = Checkbox(title: Strings.Settings.MenuBar.showDate)
+    private let showNextEventCheckbox = Checkbox(title: Strings.Settings.MenuBar.showNextEvent)
     private let showWeekNumbersCheckbox = Checkbox(title: Strings.Settings.Calendar.showWeekNumbers)
     private let fadePastEventsRadio = Radio(title: Strings.Settings.Events.Finished.fade)
     private let hidePastEventsRadio = Radio(title: Strings.Settings.Events.Finished.hide)
@@ -49,8 +50,12 @@ class GeneralSettingsViewController: NSViewController {
     private lazy var menuBarContent: NSView = {
 
         let checkboxes = NSStackView(views: [
-            showMenuBarIconCheckbox, showMenuBarDateCheckbox
+            NSStackView(views: [
+                showMenuBarIconCheckbox, showMenuBarDateCheckbox
+            ]),
+            showNextEventCheckbox
         ])
+        .with(orientation: .vertical)
 
         let dateFormat = NSStackView(views: [
             Label(text: "\(Strings.Settings.MenuBar.dateFormat):"),
@@ -108,14 +113,20 @@ class GeneralSettingsViewController: NSViewController {
 
         bind(
             control: showMenuBarIconCheckbox,
-            observable: viewModel.statusItemSettings.map(\.showIcon),
+            observable: viewModel.showStatusItemIcon,
             observer: viewModel.toggleStatusItemIcon
         )
 
         bind(
             control: showMenuBarDateCheckbox,
-            observable: viewModel.statusItemSettings.map(\.showDate),
+            observable: viewModel.showStatusItemDate,
             observer: viewModel.toggleStatusItemDate
+        )
+
+        bind(
+            control: showNextEventCheckbox,
+            observable: viewModel.showEventStatusItem,
+            observer: viewModel.toggleEventStatusItem
         )
 
         bind(
@@ -160,14 +171,15 @@ class GeneralSettingsViewController: NSViewController {
             .bind(to: viewModel.statusItemDateStyleObserver)
             .disposed(by: disposeBag)
 
-        viewModel.dateFormatOptions
-            .withLatestFrom(viewModel.statusItemSettings.map(\.dateStyle)) { ($0, $1) }
-            .bind { [dateFormatDropdown] options, dateStyle in
-                dateFormatDropdown.removeAllItems()
-                dateFormatDropdown.addItems(withTitles: options)
-                dateFormatStyle.onNext(dateStyle)
-            }
-            .disposed(by: disposeBag)
+        Observable.combineLatest(
+            viewModel.dateFormatOptions, viewModel.statusItemDateStyle
+        )
+        .bind { [dateFormatDropdown] options, dateStyle in
+            dateFormatDropdown.removeAllItems()
+            dateFormatDropdown.addItems(withTitles: options)
+            dateFormatStyle.onNext(dateStyle)
+        }
+        .disposed(by: disposeBag)
     }
 
     private func bind(control: NSButton, observable: Observable<Bool>, observer: AnyObserver<Bool>) {

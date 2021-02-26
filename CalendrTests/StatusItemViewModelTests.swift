@@ -14,9 +14,9 @@ class StatusItemViewModelTests: XCTestCase {
     let disposeBag = DisposeBag()
 
     let dateSubject = PublishSubject<Date>()
-    let settings = PublishSubject<StatusItemSettings>()
 
     let dateProvider = MockDateProvider()
+    let settings = MockStatusItemSettings()
 
     let notificationCenter = NotificationCenter()
 
@@ -38,11 +38,18 @@ class StatusItemViewModelTests: XCTestCase {
             .disposed(by: disposeBag)
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+        settings.dateStyleObserver.onNext(.short)
+    }
+
+    func setUp(showIcon: Bool, showDate: Bool) {
+        settings.toggleIcon.onNext(showIcon)
+        settings.toggleDate.onNext(showDate)
     }
 
     func testText_withDateChange_shouldUpdateText() {
 
-        settings.onNext(.init(showIcon: false, showDate: true, dateStyle: .short))
+        setUp(showIcon: false, showDate: true)
+
         XCTAssertEqual(lastValue, "2021-01-01")
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 2))
@@ -54,7 +61,8 @@ class StatusItemViewModelTests: XCTestCase {
 
     func testText_withLocaleChange_shouldUpdateText() {
 
-        settings.onNext(.init(showIcon: false, showDate: true, dateStyle: .short))
+        setUp(showIcon: false, showDate: true)
+
         XCTAssertEqual(lastValue, "2021-01-01")
 
         dateProvider.m_calendar.locale = Locale(identifier: "en")
@@ -65,37 +73,39 @@ class StatusItemViewModelTests: XCTestCase {
 
     func testIconVisibility() {
 
-        settings.onNext(.init(showIcon: true, showDate: true, dateStyle: .short))
+        setUp(showIcon: true, showDate: true)
         XCTAssertEqual(lastValue?.first, "📅")
 
-        settings.onNext(.init(showIcon: false, showDate: true, dateStyle: .short))
+        setUp(showIcon: false, showDate: true)
         XCTAssertNotEqual(lastValue?.first, "📅")
     }
 
     func testDateVisibility() {
 
-        settings.onNext(.init(showIcon: true, showDate: true, dateStyle: .short))
+        setUp(showIcon: true, showDate: true)
         XCTAssertEqual(lastValue, "📅  2021-01-01")
 
-        settings.onNext(.init(showIcon: true, showDate: false, dateStyle: .short))
+        setUp(showIcon: true, showDate: false)
         XCTAssertEqual(lastValue, "📅")
     }
 
     func testDateStyle() {
 
+        setUp(showIcon: false, showDate: true)
+
         dateProvider.m_calendar.locale = Locale(identifier: "en_US")
         notificationCenter.post(name: NSLocale.currentLocaleDidChangeNotification, object: nil)
 
-        settings.onNext(.init(showIcon: false, showDate: true, dateStyle: .short))
+        settings.dateStyleObserver.onNext(.short)
         XCTAssertEqual(lastValue, "1/1/21")
 
-        settings.onNext(.init(showIcon: false, showDate: true, dateStyle: .medium))
+        settings.dateStyleObserver.onNext(.medium)
         XCTAssertEqual(lastValue, "Jan 1, 2021")
 
-        settings.onNext(.init(showIcon: false, showDate: true, dateStyle: .long))
+        settings.dateStyleObserver.onNext(.long)
         XCTAssertEqual(lastValue, "January 1, 2021")
 
-        settings.onNext(.init(showIcon: false, showDate: true, dateStyle: .full))
+        settings.dateStyleObserver.onNext(.full)
         XCTAssertEqual(lastValue, "Friday, January 1, 2021")
     }
 }

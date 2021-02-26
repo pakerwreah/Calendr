@@ -42,10 +42,10 @@ extension NSView {
     }
 
     static func spacer(width: CGFloat) -> NSView {
-        NSView.spacer.width(equalTo: width)
+        NSView.spacer.with(width: width)
     }
 
     static func spacer(height: CGFloat) -> NSView {
-        NSView.spacer.height(equalTo: height)
+        NSView.spacer.with(height: height)
     }
 }

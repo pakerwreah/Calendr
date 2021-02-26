@@ -412,29 +412,29 @@ private class MockCalendarServiceProvider: CalendarServiceProviding {
             .make(
                 start: .make(year: 2021, month: 1, day: 1),
                 end: .make(year: 2021, month: 1, day: 4),
-                isAllDay: true,
                 title: "Event 1",
+                isAllDay: true,
                 calendar: m_calendars[0]
             ),
             .make(
                 start: .make(year: 2021, month: 1, day: 2),
                 end: .make(year: 2021, month: 1, day: 2),
-                isAllDay: true,
                 title: "Event 2",
+                isAllDay: true,
                 calendar: m_calendars[0]
             ),
             .make(
                 start: .make(year: 2021, month: 1, day: 2, hour: 8),
                 end: .make(year: 2021, month: 1, day: 2, hour: 9),
-                isAllDay: false,
                 title: "Event 3",
+                isAllDay: false,
                 calendar: m_calendars[1]
             ),
             .make(
                 start: .make(year: 2021, month: 1, day: 3, hour: 14),
                 end: .make(year: 2021, month: 1, day: 3, hour: 15),
-                isAllDay: false,
                 title: "Event 4",
+                isAllDay: false,
                 calendar: m_calendars[2]
             )
         ]
