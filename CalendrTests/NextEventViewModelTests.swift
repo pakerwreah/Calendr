@@ -201,7 +201,7 @@ class NextEventViewModelTests: XCTestCase {
             .make(start: now + 60, end: now + 70)
         ])
 
-        XCTAssertEqual(time, "in 2m")
+        XCTAssertEqual(time, "in 1m")
     }
 
     func testNextEvent_isNotInProgress_startsInMoreThan1Minute() {
@@ -291,7 +291,7 @@ class NextEventViewModelTests: XCTestCase {
             .make(start: now, end: now + 60)
         ])
 
-        XCTAssertEqual(time, "2m")
+        XCTAssertEqual(time, "1m")
     }
 
     func testNextEvent_isInProgress_endsInMoreThan1Minute() {

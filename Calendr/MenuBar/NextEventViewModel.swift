@@ -78,15 +78,13 @@ class NextEventViewModel {
 
                 var date = (isInProgress ? event.end : event.start)
 
-                let diff = dateProvider.calendar.dateComponents([.hour, .second], from: dateProvider.now, to: date)
+                let diff = dateProvider.calendar.dateComponents([.minute, .second], from: dateProvider.now, to: date)
 
-                if diff.hour == 0 {
-                    if let seconds = diff.second, seconds <= 30 {
-                        dateFormatter.allowedUnits = [.second]
-                    }
-                    else {
-                        dateProvider.calendar.date(byAdding: .minute, value: 1, to: date).map { date = $0 }
-                    }
+                if diff.minute == 0, diff.second! <= 30 {
+                    dateFormatter.allowedUnits = [.second]
+                }
+                else if diff.second! > 0 {
+                    dateProvider.calendar.date(byAdding: .minute, value: 1, to: date).map { date = $0 }
                 }
 
                 var time = dateFormatter.string(from: dateProvider.now, to: date) ?? ""

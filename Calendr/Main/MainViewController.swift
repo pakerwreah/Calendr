@@ -185,8 +185,6 @@ class MainViewController: NSViewController {
         )
         .bind { $0.material = $1 }
         .disposed(by: disposeBag)
-
-        setUpEventStatusItem()
     }
 
     private func setUpEventStatusItem() {
