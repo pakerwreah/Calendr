@@ -26,3 +26,5 @@
 "settings.events.finished.hide" = "Masquer";
 
 "settings.transparency" = "Transparence";
+
+"formatter.date.relative.in" = "dans";

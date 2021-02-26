@@ -81,6 +81,7 @@ class NextEventView: NSView {
             .disposed(by: disposeBag)
 
         viewModel.title
+            .map { "\($0) " }
             .bind(to: nextEventTitle.rx.stringValue)
             .disposed(by: disposeBag)
 

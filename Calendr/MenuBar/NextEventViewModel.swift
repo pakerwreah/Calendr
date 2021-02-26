@@ -43,7 +43,7 @@ class NextEventViewModel {
                             })
                             .map { event -> NextEventTuple in
                                 let isInProgress = dateProvider.calendar.isDate(
-                                    dateProvider.now, greaterThan: event.start, granularity: .second
+                                    dateProvider.now, greaterThanOrEqualTo: event.start, granularity: .second
                                 )
                                 return (event, isInProgress)
                             }
@@ -62,31 +62,40 @@ class NextEventViewModel {
         
         title = nextEventObservable
             .compactMap { $0 }
-            .map { "\($0.event.title) " }
+            .map(\.event.title)
             .distinctUntilChanged()
 
-        let startDateFormatter = RelativeDateTimeFormatter()
-        startDateFormatter.calendar = dateProvider.calendar
-        startDateFormatter.unitsStyle = .abbreviated
-
-        let endDateFormatter = DateComponentsFormatter()
-        endDateFormatter.calendar = dateProvider.calendar
-        endDateFormatter.unitsStyle = .abbreviated
-        endDateFormatter.maximumUnitCount = 2
+        let dateFormatter = DateComponentsFormatter()
+        dateFormatter.calendar = dateProvider.calendar
+        dateFormatter.unitsStyle = .abbreviated
+        dateFormatter.maximumUnitCount = 2
 
         time = nextEventObservable
             .compactMap { $0 }
             .map { [dateProvider] event, isInProgress in
+
+                dateFormatter.allowedUnits = [.hour, .minute]
+
+                var date = (isInProgress ? event.end : event.start)
+
+                let diff = dateProvider.calendar.dateComponents([.hour, .second], from: dateProvider.now, to: date)
+
+                if diff.hour == 0 {
+                    if let seconds = diff.second, seconds <= 30 {
+                        dateFormatter.allowedUnits = [.second]
+                    }
+                    else {
+                        dateProvider.calendar.date(byAdding: .minute, value: 1, to: date).map { date = $0 }
+                    }
+                }
+
+                var time = dateFormatter.string(from: dateProvider.now, to: date) ?? ""
+
                 if !isInProgress {
-                    return startDateFormatter.localizedString(for: event.start, relativeTo: dateProvider.now)
+                    time = "\(Strings.Formatter.Date.Relative.in) \(time)"
                 }
-                else {
-                    endDateFormatter.allowedUnits =
-                        dateProvider.now.distance(to: event.end) < 60
-                        ? [.second]
-                        : [.hour, .minute]
-                    return endDateFormatter.string(from: dateProvider.now, to: event.end) ?? ""
-                }
+
+                return time
             }
             .distinctUntilChanged()
 

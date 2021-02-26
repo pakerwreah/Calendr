@@ -26,3 +26,5 @@
 "settings.events.finished.hide" = "Hide";
 
 "settings.transparency" = "Transparency";
+
+"formatter.date.relative.in" = "in";

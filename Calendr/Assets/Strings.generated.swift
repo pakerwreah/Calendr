@@ -11,6 +11,15 @@ import Foundation
 // swiftlint:disable nesting type_body_length type_name vertical_whitespace_opening_braces
 internal enum Strings {
 
+  internal enum Formatter {
+    internal enum Date {
+      internal enum Relative {
+        /// in
+        internal static var `in`: String { return Strings.tr("Localizable", "formatter.date.relative.in") }
+      }
+    }
+  }
+
   internal enum Settings {
     /// Calendar
     internal static var calendar: String { return Strings.tr("Localizable", "settings.calendar") }

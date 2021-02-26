@@ -12,11 +12,11 @@ extension EventModel {
     static func make(
         start: Date = Date(),
         end: Date = Date(),
-        isAllDay: Bool = false,
         title: String = "",
         location: String? = nil,
         notes: String? = nil,
         url: URL? = nil,
+        isAllDay: Bool = false,
         isPending: Bool = false,
         calendar: CalendarModel = .make()
     ) -> EventModel {
@@ -24,11 +24,11 @@ extension EventModel {
         .init(
             start: start,
             end: end,
-            isAllDay: isAllDay,
             title: title,
             location: location,
             notes: notes,
             url: url,
+            isAllDay: isAllDay,
             isPending: isPending,
             calendar: calendar
         )
