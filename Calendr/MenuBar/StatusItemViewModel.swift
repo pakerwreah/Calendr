@@ -33,22 +33,17 @@ class StatusItemViewModel {
             settings.statusItemDateStyle,
             localeChangeObservable
         )
-        .map { dateStyle, _ -> DateFormatter in
-            let dateFormatter = DateFormatter(locale: dateProvider.calendar.locale)
-            dateFormatter.dateStyle = dateStyle
-            return dateFormatter
+        .map { dateStyle, _ in
+            DateFormatter(locale: dateProvider.calendar.locale).with(style: dateStyle)
         }
 
         text = Observable.combineLatest(
             dateObservable,
             settings.showStatusItemIcon,
             settings.showStatusItemDate,
-            settings.statusItemDateStyle,
             dateFormatterObservable
         )
-        .map { date, showIcon, showDate, dateStyle, dateFormatter in
-
-            dateFormatter.dateStyle = dateStyle
+        .map { date, showIcon, showDate, dateFormatter in
 
             let title = NSMutableAttributedString()
 
