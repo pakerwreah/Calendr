@@ -12,7 +12,6 @@ class EventViewModelLinkTests: XCTestCase {
 
     let dateProvider = MockDateProvider()
     let workspaceProvider = MockWorkspaceProvider()
-    let settings = MockEventSettings()
 
     func testLink_withRegularLocation_withoutURL_shouldNotShowVideoButton() {
 
@@ -112,8 +111,7 @@ class EventViewModelLinkTests: XCTestCase {
         EventViewModel(
             event: event,
             dateProvider: dateProvider,
-            workspaceProvider: workspaceProvider,
-            settings: settings
+            workspaceProvider: workspaceProvider
         )
     }
 }

@@ -98,7 +98,7 @@ class GeneralSettingsViewController: NSViewController {
         let stackView = NSStackView(views: [
             label,
             divider,
-            NSStackView(views: [.spacer(width: 0), content, .spacer(width: 0)])
+            NSStackView(views: [.dummy, content, .dummy])
         ])
         .with(orientation: .vertical)
         .with(alignment: .left)

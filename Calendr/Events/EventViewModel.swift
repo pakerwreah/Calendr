@@ -20,14 +20,12 @@ class EventViewModel {
     let isInProgress: Observable<Bool>
     let backgroundColor: Observable<CGColor>
     let isFaded: Observable<Bool>
-    let isHidden: Observable<Bool>
     let progress: Observable<CGFloat?>
 
     init(
         event: EventModel,
         dateProvider: DateProviding,
         workspaceProvider: WorkspaceProviding,
-        settings: EventSettings,
         scheduler: SchedulerType = MainScheduler.instance
     ) {
 
@@ -127,22 +125,12 @@ class EventViewModel {
         .distinctUntilChanged()
         .share(replay: 1)
 
-        let isPast = event.isAllDay ? .just(false) : clock.map {
+        isFaded = event.isAllDay ? .just(false) : clock.map {
             return dateProvider.calendar.isDate(event.end, inSameDayAs: dateProvider.now)
                 && dateProvider.calendar.isDate(event.end, lessThan: dateProvider.now, granularity: .second)
         }
         .distinctUntilChanged()
         .share(replay: 1)
-
-        isFaded = Observable.combineLatest(isPast, settings.showPastEvents)
-            .map { $0 && $1 }
-            .distinctUntilChanged()
-            .share(replay: 1)
-
-        isHidden = Observable.combineLatest(isPast, settings.showPastEvents)
-            .map { $0 && !$1 }
-            .distinctUntilChanged()
-            .share(replay: 1)
 
         isInProgress = progress.map { $0 != nil }.distinctUntilChanged()
 

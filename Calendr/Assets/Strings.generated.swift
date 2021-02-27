@@ -13,6 +13,10 @@ internal enum Strings {
 
   internal enum Formatter {
     internal enum Date {
+      /// All day
+      internal static var allDay: String { return Strings.tr("Localizable", "formatter.date.all_day") }
+      /// Today
+      internal static var today: String { return Strings.tr("Localizable", "formatter.date.today") }
       internal enum Relative {
         /// in
         internal static var `in`: String { return Strings.tr("Localizable", "formatter.date.relative.in") }

@@ -131,10 +131,6 @@ class EventView: NSView {
             .bind(to: rx.alpha)
             .disposed(by: disposeBag)
 
-        viewModel.isHidden
-            .bind(to: rx.isHidden)
-            .disposed(by: disposeBag)
-
         Observable.combineLatest(
             viewModel.progress, rx.observe(\.frame)
         )

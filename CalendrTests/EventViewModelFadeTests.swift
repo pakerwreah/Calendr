@@ -16,7 +16,6 @@ class EventViewModelFadeTests: XCTestCase {
 
     let dateProvider = MockDateProvider()
     let workspaceProvider = MockWorkspaceProvider()
-    let settings = MockEventSettings()
 
     func testFade_isAllDay_shouldNotFade() {
 
@@ -73,27 +72,7 @@ class EventViewModelFadeTests: XCTestCase {
         XCTAssertEqual(isFaded, false)
     }
 
-    func testFade_isMultiDay_endsToday_isPast_showPastEventsDisabled_shouldNotFade() {
-
-        settings.togglePastEvents.onNext(false)
-
-        dateProvider.now = .make(year: 2021, month: 1, day: 2, hour: 15)
-
-        let viewModel = mock(
-            start: .make(year: 2021, month: 1, day: 1, hour: 10),
-            end: .make(year: 2021, month: 1, day: 2, hour: 12)
-        )
-
-        var isFaded: Bool?
-
-        viewModel.isFaded
-            .bind { isFaded = $0 }
-            .disposed(by: disposeBag)
-
-        XCTAssertEqual(isFaded, false)
-    }
-
-    func testFade_isMultiDay_endsToday_isPast_showPastEventsEnabled_shouldFade() {
+    func testFade_isMultiDay_endsToday_isPast_shouldFade() {
 
         dateProvider.now = .make(year: 2021, month: 1, day: 2, hour: 15)
 
@@ -165,27 +144,7 @@ class EventViewModelFadeTests: XCTestCase {
         XCTAssertEqual(isFaded, false)
     }
 
-    func testFade_isToday_isPast_showPastEventsDisabled_shouldNotFade() {
-
-        settings.togglePastEvents.onNext(false)
-
-        dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 15)
-
-        let viewModel = mock(
-            start: .make(year: 2021, month: 1, day: 1, hour: 10),
-            end: .make(year: 2021, month: 1, day: 1, hour: 12)
-        )
-
-        var isFaded: Bool?
-
-        viewModel.isFaded
-            .bind { isFaded = $0 }
-            .disposed(by: disposeBag)
-
-        XCTAssertEqual(isFaded, false)
-    }
-
-    func testFade_isToday_isPast_showPastEventsEnabled_shouldFade() {
+    func testFade_isToday_isPast_shouldFade() {
 
         dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 15)
 
@@ -212,8 +171,7 @@ class EventViewModelFadeTests: XCTestCase {
         EventViewModel(
             event: .make(start: start, end: end, isAllDay: isAllDay),
             dateProvider: dateProvider,
-            workspaceProvider: workspaceProvider,
-            settings: settings
+            workspaceProvider: workspaceProvider
         )
     }
 }

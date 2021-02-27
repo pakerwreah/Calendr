@@ -18,41 +18,166 @@ class EventListViewModelTests: XCTestCase {
     let dateProvider = MockDateProvider()
     let workspaceProvider = MockWorkspaceProvider()
     let settings = MockEventSettings()
+    let scheduler = TestScheduler()
 
     lazy var viewModel = EventListViewModel(
         eventsObservable: eventsSubject,
         dateProvider: dateProvider,
         workspaceProvider: workspaceProvider,
-        settings: settings
+        settings: settings,
+        scheduler: scheduler
     )
 
-    var eventViewModels: [EventViewModel]?
+    enum EventListItemTest: Equatable {
+        case section(String)
+        case interval(String)
+        case event(String)
+    }
+
+    var eventListItems: [EventListItemTest]?
+
+    var testEvents: [EventModel] {
+        [
+            .make(start: dateProvider.now + 70, end: dateProvider.now + 200, title: "Event 1", isAllDay: false),
+            .make(start: dateProvider.now + 70, end: dateProvider.now + 100, title: "Event 2", isAllDay: false),
+            .make(start: dateProvider.now, end: dateProvider.now + 10, title: "All day 1", isAllDay: true),
+            .make(start: dateProvider.now, end: dateProvider.now + 10, title: "Event 3", isAllDay: false),
+            .make(start: dateProvider.now, end: dateProvider.now + 10, title: "All day 2", isAllDay: true)
+        ]
+    }
 
     override func setUp() {
 
         viewModel.asObservable()
             .bind { [weak self] in
-                self?.eventViewModels = $0
+                self?.eventListItems = $0.map { item in
+                    switch item {
+                    case .event(let viewModel):
+                        return .event(viewModel.title)
+
+                    case .section(let text):
+                        return .section(text)
+
+                    case .interval(let text):
+                        return .interval(text)
+                    }
+                }
             }
             .disposed(by: disposeBag)
     }
 
-    func testEventListSorting() {
+    func testEventList_noEvents_shouldNotShowAnySection() {
 
-        let now = Date()
+        eventsSubject.onNext([])
 
-        let events: [EventModel] = [
-            .make(start: now + 10, end: now + 100, title: "Event 1", isAllDay: false),
-            .make(start: now + 10, end: now + 50, title: "Event 2", isAllDay: false),
-            .make(start: now, end: now + 10, title: "All day 1", isAllDay: true),
-            .make(start: now, end: now + 10, title: "Event 3", isAllDay: false),
-            .make(start: now, end: now + 10, title: "All day 2", isAllDay: true)
-        ]
+        XCTAssertEqual(eventListItems, [])
+    }
 
-        eventsSubject.onNext(events)
+    func testEventList_onlyAllDay_shouldNotShowTodaySection() {
 
-        XCTAssertEqual(eventViewModels?.map(\.title), [
-            "All day 1", "All day 2", "Event 3", "Event 2", "Event 1"
+        eventsSubject.onNext(testEvents.filter(\.isAllDay))
+
+        XCTAssertEqual(eventListItems, [
+            .section("All day"),
+            .event("All day 1"),
+            .event("All day 2"),
+        ])
+    }
+
+    func testEventList_noAllDay_shouldNotShowAllDaySection() {
+
+        eventsSubject.onNext(testEvents.filter(\.isAllDay.isFalse))
+
+        XCTAssertEqual(eventListItems, [
+            .section("Today"),
+            .event("Event 3"),
+            .interval("1m"),
+            .event("Event 2"),
+            .event("Event 1")
+        ])
+    }
+
+    func testEventList_isToday_shouldShowTodaySection() {
+
+        eventsSubject.onNext(testEvents)
+
+        XCTAssertEqual(eventListItems, [
+            .section("All day"),
+            .event("All day 1"),
+            .event("All day 2"),
+            .section("Today"),
+            .event("Event 3"),
+            .interval("1m"),
+            .event("Event 2"),
+            .event("Event 1")
+        ])
+    }
+
+    func testEventList_isNotToday_shouldShowDateSection() {
+
+        eventsSubject.onNext(testEvents)
+
+        dateProvider.add(1, .day)
+        scheduler.advance(by: .seconds(1))
+
+        XCTAssertEqual(eventListItems, [
+            .section("All day"),
+            .event("All day 1"),
+            .event("All day 2"),
+            .section("2021-01-01"),
+            .event("Event 3"),
+            .interval("1m"),
+            .event("Event 2"),
+            .event("Event 1")
+        ])
+    }
+
+    func testEventList_withPastEvents_withHidePastEventsEnabled_isNotToday_shouldNotHideEvents() {
+
+        eventsSubject.onNext(testEvents)
+
+        dateProvider.add(1, .day)
+
+        settings.togglePastEvents.onNext(false)
+
+        XCTAssertEqual(eventListItems, [
+            .section("All day"),
+            .event("All day 1"),
+            .event("All day 2"),
+            .section("2021-01-01"),
+            .event("Event 3"),
+            .interval("1m"),
+            .event("Event 2"),
+            .event("Event 1")
+        ])
+    }
+
+    func testEventList_withPastEvents_withHidePastEventsEnabled_isToday_shouldHidePastEvents() {
+
+        eventsSubject.onNext(testEvents)
+
+        dateProvider.add(1, .minute)
+
+        settings.togglePastEvents.onNext(false)
+
+        XCTAssertEqual(eventListItems, [
+            .section("All day"),
+            .event("All day 1"),
+            .event("All day 2"),
+            .section("Today"),
+            .event("Event 2"),
+            .event("Event 1")
+        ])
+
+        dateProvider.add(1, .minute)
+        scheduler.advance(by: .seconds(1))
+
+        XCTAssertEqual(eventListItems, [
+            .section("All day"),
+            .event("All day 1"),
+            .event("All day 2"),
+            .section("Today"),
+            .event("Event 1")
         ])
     }
 }

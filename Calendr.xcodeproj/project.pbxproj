@@ -46,7 +46,6 @@
 		348B8D0425B2925100E518FE /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348B8D0325B2925100E518FE /* SettingsViewModel.swift */; };
 		348E701F25C43C5200B3B160 /* WeekDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348E701E25C43C5200B3B160 /* WeekDay.swift */; };
 		348E702D25C6161900B3B160 /* EventViewModelFadeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348E702C25C6161900B3B160 /* EventViewModelFadeTests.swift */; };
-		348E703125C6168C00B3B160 /* EventViewModelHideTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348E703025C6168C00B3B160 /* EventViewModelHideTests.swift */; };
 		348E703725C6173400B3B160 /* EventViewModelProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348E703625C6173400B3B160 /* EventViewModelProgressTests.swift */; };
 		348E703C25C617F100B3B160 /* MockDateProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348E703B25C617F100B3B160 /* MockDateProvider.swift */; };
 		348E704B25C61B8D00B3B160 /* Radio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348E704A25C61B8D00B3B160 /* Radio.swift */; };
@@ -146,7 +145,6 @@
 		348B8D0325B2925100E518FE /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		348E701E25C43C5200B3B160 /* WeekDay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekDay.swift; sourceTree = "<group>"; };
 		348E702C25C6161900B3B160 /* EventViewModelFadeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventViewModelFadeTests.swift; sourceTree = "<group>"; };
-		348E703025C6168C00B3B160 /* EventViewModelHideTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventViewModelHideTests.swift; sourceTree = "<group>"; };
 		348E703625C6173400B3B160 /* EventViewModelProgressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventViewModelProgressTests.swift; sourceTree = "<group>"; };
 		348E703B25C617F100B3B160 /* MockDateProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDateProvider.swift; sourceTree = "<group>"; };
 		348E704A25C61B8D00B3B160 /* Radio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Radio.swift; sourceTree = "<group>"; };
@@ -324,7 +322,6 @@
 				34924CE3259FCB36009C3450 /* DateSelectorTests.swift */,
 				34C72FA125E987F000FD20FA /* EventListViewModelTests.swift */,
 				348E702C25C6161900B3B160 /* EventViewModelFadeTests.swift */,
-				348E703025C6168C00B3B160 /* EventViewModelHideTests.swift */,
 				34651F6D25E3171D00518C5A /* EventViewModelLinkTests.swift */,
 				348E703625C6173400B3B160 /* EventViewModelProgressTests.swift */,
 				34C2CF9025C2070400FC2CFF /* EventViewModelTests.swift */,
@@ -738,7 +735,6 @@
 				34924CD6259FB814009C3450 /* CalendarExtensionTests.swift in Sources */,
 				34A9513125D9C14500D1B2CA /* Calendar.swift in Sources */,
 				34651F6E25E3171D00518C5A /* EventViewModelLinkTests.swift in Sources */,
-				348E703125C6168C00B3B160 /* EventViewModelHideTests.swift in Sources */,
 				3421AD3D25BA1D0800A4F468 /* SettingsViewModelTests.swift in Sources */,
 				34651F7A25E325EA00518C5A /* MockWorkspaceProvider.swift in Sources */,
 				349E4CEF25CF48ED00A6FC18 /* TestScheduler.swift in Sources */,

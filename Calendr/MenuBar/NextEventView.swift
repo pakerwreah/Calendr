@@ -51,7 +51,7 @@ class NextEventView: NSView {
 
         nextEventView.spacing = 4
         [
-            .spacer(width: 0), colorBar, nextEventTitle, nextEventTime, .spacer(width: 0)
+            .dummy, colorBar, nextEventTitle, nextEventTime, .dummy
         ]
         .forEach(nextEventView.addArrangedSubview)
 

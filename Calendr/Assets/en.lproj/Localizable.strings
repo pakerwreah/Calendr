@@ -27,4 +27,6 @@
 
 "settings.transparency" = "Transparency";
 
+"formatter.date.all_day" = "All day";
+"formatter.date.today" = "Today";
 "formatter.date.relative.in" = "in";
