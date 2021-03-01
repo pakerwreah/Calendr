@@ -10,7 +10,7 @@ import RxSwift
 
 enum EventListItem {
     case section(String)
-    case interval(String)
+    case interval(String, Observable<Bool>)
     case event(EventViewModel)
 }
 
@@ -40,7 +40,8 @@ class EventListViewModel {
             EventViewModel(
                 event: event,
                 dateProvider: dateProvider,
-                workspaceProvider: workspaceProvider
+                workspaceProvider: workspaceProvider,
+                scheduler: scheduler
             )
         }
 
@@ -84,7 +85,8 @@ class EventListViewModel {
                     }
                     .prevMap { prev, curr -> [EventListItem] in
 
-                        let eventItem: EventListItem = .event(makeEventViewModel(curr))
+                        let viewModel = makeEventViewModel(curr)
+                        let eventItem: EventListItem = .event(viewModel)
 
                         guard let prev = prev else {
                             // if first event, show today section
@@ -103,7 +105,13 @@ class EventListViewModel {
                         let diff = dateComponentsFormatter.string(
                             from: prev.end, to: curr.start
                         ) {
-                            return [.interval(diff), eventItem]
+                            let fade = Observable.merge(
+                                viewModel.isFaded,
+                                viewModel.isInProgress
+                            )
+                            .take(until: \.isTrue, behavior: .inclusive)
+
+                            return [.interval(diff, fade), eventItem]
                         }
 
                         return [eventItem]

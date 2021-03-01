@@ -49,8 +49,8 @@ class EventListView: NSView {
                     case .section(let text):
                         return makeSection(text)
 
-                    case .interval(let text):
-                        return makeInterval(text)
+                    case .interval(let text, let fade):
+                        return EventIntervalView(text, fade)
                     }
                 }
             }
@@ -84,14 +84,4 @@ private func makeSection(_ text: String) -> NSStackView {
     let label = Label(text: text, font: .systemFont(ofSize: 10), color: .secondaryLabelColor)
 
     return NSStackView(views: [.dummy, line1, label, line2, .dummy]).with(alignment: .centerY)
-}
-
-private func makeInterval(_ text: String) -> NSStackView {
-
-    let vdash = Label(text: "⋮", font: .systemFont(ofSize: 10), color: .labelColor)
-    vdash.setContentHuggingPriority(.required, for: .horizontal)
-
-    let label = Label(text: text, font: .systemFont(ofSize: 10), color: .labelColor, align: .right)
-
-    return NSStackView(views: [vdash, label]).with(alignment: .centerY)
 }

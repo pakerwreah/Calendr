@@ -61,7 +61,7 @@ class EventListViewModelTests: XCTestCase {
                     case .section(let text):
                         return .section(text)
 
-                    case .interval(let text):
+                    case .interval(let text, _):
                         return .interval(text)
                     }
                 }
@@ -132,7 +132,7 @@ class EventListViewModelTests: XCTestCase {
         ])
     }
 
-    func testEventList_withPastEvents_withHidePastEventsEnabled_isNotToday_shouldNotHideEvents() {
+    func testEventList_withHidePastEventsEnabled_isNotToday_shouldNotHideEvents() {
 
         eventsSubject.onNext(testEvents(adding: 1, .day))
 
@@ -150,7 +150,7 @@ class EventListViewModelTests: XCTestCase {
         ])
     }
 
-    func testEventList_withPastEvents_withHidePastEventsEnabled_isToday_shouldHidePastEvents() {
+    func testEventList_withHidePastEventsEnabled_isToday_shouldHidePastEvents() {
 
         eventsSubject.onNext(testEvents())
 
@@ -178,5 +178,61 @@ class EventListViewModelTests: XCTestCase {
             .section("Today"),
             .event("Event 1")
         ])
+    }
+
+    func testEventList_withFadePastEventsEnabled_shouldFadePastSections() {
+
+        let events = testEvents()
+        let lastDate = events.filter(\.isAllDay.isFalse).max(by: { $0.end < $1.end })!.end
+        let start = dateProvider.calendar.date(byAdding: .minute, value: 90, to: lastDate)!
+
+        eventsSubject.onNext(events + [
+            .make(start: start, end: start + 1, title: "Event 4")
+        ])
+
+        XCTAssertEqual(eventListItems, [
+            .section("All day"),
+            .event("All day 1"),
+            .event("All day 2"),
+            .section("Today"),
+            .event("Event 3"),
+            .interval("1m"),
+            .event("Event 2"),
+            .event("Event 1"),
+            .interval("1h 30m"),
+            .event("Event 4")
+        ])
+
+        var sectionsFaded: [Bool]?
+
+        viewModel.asObservable()
+            .flatMap {
+                Observable.combineLatest(
+                    $0.compactMap { item -> Observable<Bool>? in
+                        switch item {
+                        case .interval(_, let fade):
+                            return fade
+                        default:
+                            return nil
+                        }
+                    }
+                )
+            }
+            .bind {
+                sectionsFaded = $0
+            }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(sectionsFaded, [false, false])
+
+        dateProvider.add(1, .hour)
+        scheduler.advance(by: .seconds(1))
+
+        XCTAssertEqual(sectionsFaded, [true, false])
+
+        dateProvider.add(1, .hour)
+        scheduler.advance(by: .seconds(1))
+
+        XCTAssertEqual(sectionsFaded, [true, true])
     }
 }
