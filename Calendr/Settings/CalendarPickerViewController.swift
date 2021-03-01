@@ -62,7 +62,7 @@ class CalendarPickerViewController: NSViewController {
         .with(orientation: .vertical)
         .with(alignment: .left)
 
-        return [label, NSStackView(views: [.spacer(width: 0), stackView])]
+        return [label, NSStackView(views: [.dummy, stackView])]
     }
 
     private func makeCalendarItem(_ calendar: CalendarModel) -> NSView {

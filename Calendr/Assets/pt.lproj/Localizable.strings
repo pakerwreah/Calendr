@@ -27,4 +27,6 @@
 
 "settings.transparency" = "Transparência";
 
+"formatter.date.all_day" = "Dia inteiro";
+"formatter.date.today" = "Hoje";
 "formatter.date.relative.in" = "em";

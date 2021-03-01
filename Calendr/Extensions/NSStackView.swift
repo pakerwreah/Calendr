@@ -32,6 +32,10 @@ extension NSStackView {
 
 extension NSView {
 
+    static var dummy: NSView {
+        NSView.spacer.with(width: 0).with(height: 0)
+    }
+
     static var spacer: NSView {
         let spacer = NSView()
         spacer.setContentHuggingPriority(.fittingSizeCompression, for: .horizontal)
