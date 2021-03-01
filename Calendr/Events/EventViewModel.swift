@@ -63,6 +63,7 @@ class EventViewModel {
 
         // fix range ending at 00:00 of the next day
         let fixedEnd = dateProvider.calendar.date(byAdding: .second, value: -1, to: event.end)!
+        let endsToday = dateProvider.calendar.isDate(fixedEnd, inSameDayAs: dateProvider.now)
         let isSingleDay = dateProvider.calendar.isDate(event.start, inSameDayAs: fixedEnd)
         let isSameMonth = dateProvider.calendar.isDate(event.start, equalTo: fixedEnd, toGranularity: .month)
         let startsMidnight = dateProvider.calendar.date(event.start, matchesComponents: .init(hour: 0, minute: 0))
@@ -112,27 +113,34 @@ class EventViewModel {
             .startWith(())
             .share(replay: 1)
 
-        progress = total <= 0 || !isSingleDay || event.isAllDay ? .just(nil) : clock.map {
-            guard
-                dateProvider.calendar.isDate(event.end, greaterThanOrEqualTo: dateProvider.now, granularity: .second),
-                let ellapsed = dateProvider.calendar.dateComponents(
-                    [.second], from: event.start, to: dateProvider.now
-                ).second, ellapsed >= 0
-            else { return nil }
-
-            return CGFloat(ellapsed) / CGFloat(total)
+        let isPast = clock.map {
+            dateProvider.calendar.isDate(event.end, lessThan: dateProvider.now, granularity: .second)
         }
         .distinctUntilChanged()
+        .take(until: \.isTrue, behavior: .inclusive)
         .share(replay: 1)
 
-        isFaded = event.isAllDay ? .just(false) : clock.map {
-            return dateProvider.calendar.isDate(event.end, inSameDayAs: dateProvider.now)
-                && dateProvider.calendar.isDate(event.end, lessThan: dateProvider.now, granularity: .second)
-        }
-        .distinctUntilChanged()
-        .share(replay: 1)
+        progress = total <= 0 || !isSingleDay || !endsToday || event.isAllDay
+            ? .just(nil)
+            : clock.map { () -> CGFloat? in
+                guard
+                    dateProvider.calendar.isDate(event.end, greaterThanOrEqualTo: dateProvider.now, granularity: .second),
+                    let ellapsed = dateProvider.calendar.dateComponents(
+                        [.second], from: event.start, to: dateProvider.now
+                    ).second, ellapsed >= 0
+                else { return nil }
 
-        isInProgress = progress.map { $0 != nil }.distinctUntilChanged()
+                return CGFloat(ellapsed) / CGFloat(total)
+            }
+            .distinctUntilChanged()
+            .withLatestFrom(isPast) { ($0, $1) }
+            .take(until: \.1, behavior: .inclusive)
+            .map(\.0)
+            .share(replay: 1)
+
+        isFaded = event.isAllDay || !endsToday ? .just(false) : isPast
+
+        isInProgress = progress.map(\.isNotNil).distinctUntilChanged()
 
         let progressBackgroundColor = color.copy(alpha: 0.1)!
 

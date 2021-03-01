@@ -36,13 +36,16 @@ class EventListViewModelTests: XCTestCase {
 
     var eventListItems: [EventListItemTest]?
 
-    var testEvents: [EventModel] {
-        [
-            .make(start: dateProvider.now + 70, end: dateProvider.now + 200, title: "Event 1", isAllDay: false),
-            .make(start: dateProvider.now + 70, end: dateProvider.now + 100, title: "Event 2", isAllDay: false),
-            .make(start: dateProvider.now, end: dateProvider.now + 10, title: "All day 1", isAllDay: true),
-            .make(start: dateProvider.now, end: dateProvider.now + 10, title: "Event 3", isAllDay: false),
-            .make(start: dateProvider.now, end: dateProvider.now + 10, title: "All day 2", isAllDay: true)
+    func testEvents(adding value: Int = 0, _ component: Calendar.Component = .day) -> [EventModel] {
+
+        let now = dateProvider.calendar.date(byAdding: component, value: value, to: dateProvider.now)!
+
+        return [
+            .make(start: now + 70, end: now + 200, title: "Event 1", isAllDay: false),
+            .make(start: now + 70, end: now + 100, title: "Event 2", isAllDay: false),
+            .make(start: now, end: now + 10, title: "All day 1", isAllDay: true),
+            .make(start: now, end: now + 10, title: "Event 3", isAllDay: false),
+            .make(start: now, end: now + 10, title: "All day 2", isAllDay: true)
         ]
     }
 
@@ -75,7 +78,7 @@ class EventListViewModelTests: XCTestCase {
 
     func testEventList_onlyAllDay_shouldNotShowTodaySection() {
 
-        eventsSubject.onNext(testEvents.filter(\.isAllDay))
+        eventsSubject.onNext(testEvents().filter(\.isAllDay))
 
         XCTAssertEqual(eventListItems, [
             .section("All day"),
@@ -86,7 +89,7 @@ class EventListViewModelTests: XCTestCase {
 
     func testEventList_noAllDay_shouldNotShowAllDaySection() {
 
-        eventsSubject.onNext(testEvents.filter(\.isAllDay.isFalse))
+        eventsSubject.onNext(testEvents().filter(\.isAllDay.isFalse))
 
         XCTAssertEqual(eventListItems, [
             .section("Today"),
@@ -99,7 +102,7 @@ class EventListViewModelTests: XCTestCase {
 
     func testEventList_isToday_shouldShowTodaySection() {
 
-        eventsSubject.onNext(testEvents)
+        eventsSubject.onNext(testEvents())
 
         XCTAssertEqual(eventListItems, [
             .section("All day"),
@@ -115,16 +118,13 @@ class EventListViewModelTests: XCTestCase {
 
     func testEventList_isNotToday_shouldShowDateSection() {
 
-        eventsSubject.onNext(testEvents)
-
-        dateProvider.add(1, .day)
-        scheduler.advance(by: .seconds(1))
+        eventsSubject.onNext(testEvents(adding: 1, .day))
 
         XCTAssertEqual(eventListItems, [
             .section("All day"),
             .event("All day 1"),
             .event("All day 2"),
-            .section("2021-01-01"),
+            .section("2021-01-02"),
             .event("Event 3"),
             .interval("1m"),
             .event("Event 2"),
@@ -134,9 +134,7 @@ class EventListViewModelTests: XCTestCase {
 
     func testEventList_withPastEvents_withHidePastEventsEnabled_isNotToday_shouldNotHideEvents() {
 
-        eventsSubject.onNext(testEvents)
-
-        dateProvider.add(1, .day)
+        eventsSubject.onNext(testEvents(adding: 1, .day))
 
         settings.togglePastEvents.onNext(false)
 
@@ -144,7 +142,7 @@ class EventListViewModelTests: XCTestCase {
             .section("All day"),
             .event("All day 1"),
             .event("All day 2"),
-            .section("2021-01-01"),
+            .section("2021-01-02"),
             .event("Event 3"),
             .interval("1m"),
             .event("Event 2"),
@@ -154,11 +152,12 @@ class EventListViewModelTests: XCTestCase {
 
     func testEventList_withPastEvents_withHidePastEventsEnabled_isToday_shouldHidePastEvents() {
 
-        eventsSubject.onNext(testEvents)
-
-        dateProvider.add(1, .minute)
+        eventsSubject.onNext(testEvents())
 
         settings.togglePastEvents.onNext(false)
+
+        dateProvider.add(1, .minute)
+        scheduler.advance(by: .seconds(1))
 
         XCTAssertEqual(eventListItems, [
             .section("All day"),

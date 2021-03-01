@@ -49,6 +49,7 @@ class NextEventViewModel {
                             }
                     }
             }
+            .share()
 
         barColor = nextEventObservable
             .compactMap { $0 }

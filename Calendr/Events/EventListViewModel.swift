@@ -64,6 +64,7 @@ class EventListViewModel {
                 )
             }
         }
+        .distinctUntilChanged()
 
         viewModels = visibleEvents
             .map { events in
