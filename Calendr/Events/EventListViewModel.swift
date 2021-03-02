@@ -45,14 +45,27 @@ class EventListViewModel {
             )
         }
 
-        let clock = Observable<Int>.interval(.seconds(1), scheduler: scheduler)
+        let refreshEvents = eventsObservable.flatMapLatest { events in
+            Observable.merge(
+                events
+                    .filter(\.isAllDay.isFalse)
+                    .compactMap {
+                        dateProvider.calendar.dateComponents([.second], from: dateProvider.now, to: $0.end).second
+                    }
+                    .filter { $0 >= 0 }
+                    .map {
+                        Observable<Int>.timer(.seconds($0 + 1), scheduler: scheduler)
+                    }
+            )
             .toVoid()
             .startWith(())
+            .map { events }
+        }
 
         let visibleEvents = Observable.combineLatest(
-            eventsObservable, settings.showPastEvents, clock
+            refreshEvents, settings.showPastEvents
         )
-        .map { events, showPast, _ in
+        .map { events, showPast in
             showPast ? events : events.filter {
                 $0.isAllDay
                 ||
@@ -61,7 +74,7 @@ class EventListViewModel {
                 )
                 ||
                 dateProvider.calendar.isDate(
-                    dateProvider.now, lessThanOrEqualTo: $0.end, granularity: .second
+                    dateProvider.now, lessThan: $0.end, granularity: .second
                 )
             }
         }

@@ -108,34 +108,57 @@ class EventViewModel {
             .dateComponents([.second], from: event.start, to: event.end)
             .second ?? 0
 
-        let clock = Observable<Int>.interval(.seconds(1), scheduler: scheduler)
-            .toVoid()
-            .startWith(())
-            .share(replay: 1)
+        let secondsToStart = dateProvider.calendar.dateComponents(
+            [.second], from: dateProvider.now, to: event.start
+        ).second!
+        
+        let secondsToEnd = dateProvider.calendar.dateComponents(
+            [.second], from: dateProvider.now, to: event.end
+        ).second! + 1
 
-        let isPast = clock.map {
-            dateProvider.calendar.isDate(event.end, lessThan: dateProvider.now, granularity: .second)
+        let isPast: Observable<Bool>
+        let clock: Observable<Void>
+
+        if secondsToEnd > 0 {
+
+            isPast = Observable<Int>.timer(.seconds(secondsToEnd), scheduler: scheduler)
+                .toVoid()
+                .map { true }
+                .startWith(false)
+                .share(replay: 1)
+
+            clock = Observable<Int>.timer(.seconds(secondsToStart), scheduler: scheduler)
+                .toVoid()
+                .concat(
+                    Observable<Int>.interval(.seconds(1), scheduler: scheduler)
+                        .toVoid()
+                        .startWith(())
+                )
+                .startWith(())
+                .take(until: isPast.filter(\.isTrue))
+
+        } else {
+            isPast = .just(true)
+            clock = .empty()
         }
-        .distinctUntilChanged()
-        .take(until: \.isTrue, behavior: .inclusive)
-        .share(replay: 1)
 
-        progress = total <= 0 || !isSingleDay || !endsToday || event.isAllDay
+        progress = total <= 0 || event.isAllDay || !isSingleDay || !endsToday
             ? .just(nil)
             : clock.map { () -> CGFloat? in
                 guard
-                    dateProvider.calendar.isDate(event.end, greaterThanOrEqualTo: dateProvider.now, granularity: .second),
+                    dateProvider.calendar.isDate(
+                        event.end, greaterThanOrEqualTo: dateProvider.now, granularity: .second
+                    ),
                     let ellapsed = dateProvider.calendar.dateComponents(
                         [.second], from: event.start, to: dateProvider.now
                     ).second, ellapsed >= 0
+
                 else { return nil }
 
                 return CGFloat(ellapsed) / CGFloat(total)
             }
             .distinctUntilChanged()
-            .withLatestFrom(isPast) { ($0, $1) }
-            .take(until: \.1, behavior: .inclusive)
-            .map(\.0)
+            .concat(Observable.just(nil))
             .share(replay: 1)
 
         isFaded = event.isAllDay || !endsToday ? .just(false) : isPast

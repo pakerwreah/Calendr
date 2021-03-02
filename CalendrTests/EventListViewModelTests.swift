@@ -157,7 +157,7 @@ class EventListViewModelTests: XCTestCase {
         settings.togglePastEvents.onNext(false)
 
         dateProvider.add(1, .minute)
-        scheduler.advance(by: .seconds(1))
+        scheduler.advance(by: .seconds(60))
 
         XCTAssertEqual(eventListItems, [
             .section("All day"),
@@ -169,7 +169,7 @@ class EventListViewModelTests: XCTestCase {
         ])
 
         dateProvider.add(1, .minute)
-        scheduler.advance(by: .seconds(1))
+        scheduler.advance(by: .seconds(60))
 
         XCTAssertEqual(eventListItems, [
             .section("All day"),
@@ -226,12 +226,12 @@ class EventListViewModelTests: XCTestCase {
         XCTAssertEqual(sectionsFaded, [false, false])
 
         dateProvider.add(1, .hour)
-        scheduler.advance(by: .seconds(1))
+        scheduler.advance(by: .seconds(60 * 60))
 
         XCTAssertEqual(sectionsFaded, [true, false])
 
         dateProvider.add(1, .hour)
-        scheduler.advance(by: .seconds(1))
+        scheduler.advance(by: .seconds(60 * 60))
 
         XCTAssertEqual(sectionsFaded, [true, true])
     }
