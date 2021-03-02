@@ -29,7 +29,7 @@ class NextEventView: NSView {
             viewModel.hasEvent,
             nextEventView.rx.observe(\.frame).map(\.width)
         )
-        .map { $0 ? max($1 - 14, 0) : 0 }
+        .map { $0 ? max($1 - 10, 0) : 0 }
         .distinctUntilChanged()
 
         super.init(frame: .zero)
