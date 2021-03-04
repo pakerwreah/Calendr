@@ -26,7 +26,7 @@ class EventViewModel {
         event: EventModel,
         dateProvider: DateProviding,
         workspaceProvider: WorkspaceProviding,
-        scheduler: SchedulerType = MainScheduler.instance
+        scheduler: SchedulerType = WallTimeScheduler()
     ) {
 
         title = event.title

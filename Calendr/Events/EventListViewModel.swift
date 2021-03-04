@@ -23,7 +23,7 @@ class EventListViewModel {
         dateProvider: DateProviding,
         workspaceProvider: WorkspaceProviding,
         settings: EventSettings,
-        scheduler: SchedulerType = MainScheduler.instance
+        scheduler: SchedulerType = WallTimeScheduler()
     ) {
 
         let dateComponentsFormatter = DateComponentsFormatter()
