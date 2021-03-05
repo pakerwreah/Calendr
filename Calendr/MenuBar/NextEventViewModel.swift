@@ -20,7 +20,7 @@ class NextEventViewModel {
         settings: NextEventSettings,
         eventsObservable: Observable<[EventModel]>,
         dateProvider: DateProviding,
-        scheduler: SchedulerType = WallTimeScheduler()
+        scheduler: SchedulerType = MainScheduler.instance
     ) {
 
         typealias NextEventTuple = (event: EventModel, isInProgress: Bool)

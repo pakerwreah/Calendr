@@ -1,5 +1,5 @@
 //
-//  TestScheduler.swift
+//  HistoricalScheduler.swift
 //  CalendrTests
 //
 //  Created by Paker on 06/02/21.
@@ -7,13 +7,14 @@
 
 import RxSwift
 
-// I hate the default TestScheduler 😠
-typealias TestScheduler = HistoricalScheduler
+extension HistoricalScheduler {
 
-extension TestScheduler {
-
-    func advance(by interval: RxTimeInterval) {
+    func advance(_ interval: RxTimeInterval) {
         advanceTo(clock + interval.timeInterval)
+    }
+
+    func advance(_ value: Int, _ component: Calendar.Component, using calendar: Calendar = .reference) {
+        advanceTo(calendar.date(byAdding: component, value: value, to: clock)!)
     }
 }
 

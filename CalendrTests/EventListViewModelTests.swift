@@ -18,7 +18,7 @@ class EventListViewModelTests: XCTestCase {
     let dateProvider = MockDateProvider()
     let workspaceProvider = MockWorkspaceProvider()
     let settings = MockEventSettings()
-    let scheduler = TestScheduler()
+    lazy var scheduler = HistoricalScheduler(initialClock: dateProvider.now)
 
     lazy var viewModel = EventListViewModel(
         eventsObservable: eventsSubject,
@@ -157,7 +157,7 @@ class EventListViewModelTests: XCTestCase {
         settings.togglePastEvents.onNext(false)
 
         dateProvider.add(1, .minute)
-        scheduler.advance(by: .seconds(60))
+        scheduler.advance(1, .minute)
 
         XCTAssertEqual(eventListItems, [
             .section("All day"),
@@ -169,7 +169,7 @@ class EventListViewModelTests: XCTestCase {
         ])
 
         dateProvider.add(1, .minute)
-        scheduler.advance(by: .seconds(60))
+        scheduler.advance(1, .minute)
 
         XCTAssertEqual(eventListItems, [
             .section("All day"),
@@ -226,12 +226,12 @@ class EventListViewModelTests: XCTestCase {
         XCTAssertEqual(sectionsFaded, [false, false])
 
         dateProvider.add(1, .hour)
-        scheduler.advance(by: .seconds(60 * 60))
+        scheduler.advance(1, .hour)
 
         XCTAssertEqual(sectionsFaded, [true, false])
 
         dateProvider.add(1, .hour)
-        scheduler.advance(by: .seconds(60 * 60))
+        scheduler.advance(1, .hour)
 
         XCTAssertEqual(sectionsFaded, [true, true])
     }

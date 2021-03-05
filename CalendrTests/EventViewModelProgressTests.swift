@@ -182,10 +182,10 @@ class EventViewModelProgressTests: XCTestCase {
 
     func testProgressClock() {
 
-        let scheduler = TestScheduler()
-
         // 1 second before the event starts
         dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 9, minute: 59, second: 59)
+
+        let scheduler = HistoricalScheduler(initialClock: dateProvider.now)
 
         let viewModel = mock(
             start: .make(year: 2021, month: 1, day: 1, hour: 10),
@@ -206,26 +206,26 @@ class EventViewModelProgressTests: XCTestCase {
         dateProvider.now += 1
 
         // check that the progress is not computed before 1 second
-        scheduler.advance(by: .milliseconds(500))
+        scheduler.advance(.milliseconds(500))
         XCTAssertNil(progress)
 
         // now the progress should be computed
-        scheduler.advance(by: .milliseconds(500))
+        scheduler.advance(.milliseconds(500))
         XCTAssertEqual(progress, 0)
 
         // 20% progress
         dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 11)
-        scheduler.advance(by: .seconds(1))
+        scheduler.advance(.seconds(1))
         XCTAssertEqual(progress, 0.2)
 
         // 100% progress
         dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 15)
-        scheduler.advance(by: .seconds(1))
+        scheduler.advance(.seconds(1))
         XCTAssertEqual(progress, 1)
 
         // event finished
         dateProvider.now += 1
-        scheduler.advance(by: .seconds(1))
+        scheduler.advance(.seconds(1))
         XCTAssertNil(progress)
     }
 

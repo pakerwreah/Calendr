@@ -111,10 +111,10 @@ class EventViewModel {
         let secondsToStart = dateProvider.calendar.dateComponents(
             [.second], from: dateProvider.now, to: event.start
         ).second!
-        
+
         let secondsToEnd = dateProvider.calendar.dateComponents(
             [.second], from: dateProvider.now, to: event.end
-        ).second! + 1
+        ).second!
 
         let isPast: Observable<Bool>
         let clock: Observable<Void>

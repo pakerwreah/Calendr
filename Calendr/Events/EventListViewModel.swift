@@ -54,7 +54,7 @@ class EventListViewModel {
                     }
                     .filter { $0 >= 0 }
                     .map {
-                        Observable<Int>.timer(.seconds($0 + 1), scheduler: scheduler)
+                        Observable<Int>.timer(.seconds($0), scheduler: scheduler)
                     }
             )
             .toVoid()
