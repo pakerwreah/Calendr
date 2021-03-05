@@ -71,21 +71,25 @@ class CalendarCellView: NSView {
 
         viewModel
             .map(\.text)
+            .distinctUntilChanged()
             .bind(to: label.rx.text)
             .disposed(by: disposeBag)
 
         viewModel
             .map(\.alpha)
+            .distinctUntilChanged()
             .bind(to: label.rx.alpha)
             .disposed(by: disposeBag)
 
         viewModel
             .map(\.borderColor)
+            .distinctUntilChanged()
             .bind(to: layer!.rx.borderColor)
             .disposed(by: disposeBag)
 
         viewModel
             .map(\.dots)
+            .distinctUntilChanged()
             .compactMap { $0?.map(Self.makeEventDot) }
             .bind(to: eventsStackView.rx.arrangedSubviews)
             .disposed(by: disposeBag)

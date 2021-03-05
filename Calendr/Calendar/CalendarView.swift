@@ -113,6 +113,7 @@ class CalendarView: NSView {
                 .asObservable()
                 .map(\.[day])
                 .distinctUntilChanged()
+                .share()
                 .observe(on: MainScheduler.instance)
 
             let cellView = CalendarCellView(

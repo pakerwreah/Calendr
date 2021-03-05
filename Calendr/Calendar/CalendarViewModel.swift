@@ -169,6 +169,7 @@ class CalendarViewModel {
                 $0.with(isSelected: dateProvider.calendar.isDate($0.date, inSameDayAs: selectedDate))
             }
         }
+        .distinctUntilChanged()
         .share()
 
         // Clear hover when month changes
@@ -192,6 +193,7 @@ class CalendarViewModel {
                 }
             }
         }
+        .distinctUntilChanged()
         .share(replay: 1)
     }
 
