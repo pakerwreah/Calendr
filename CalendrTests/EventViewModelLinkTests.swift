@@ -13,16 +13,16 @@ class EventViewModelLinkTests: XCTestCase {
     let dateProvider = MockDateProvider()
     let workspaceProvider = MockWorkspaceProvider()
 
-    func testLink_withRegularLocation_withoutURL_shouldNotShowVideoButton() {
+    func testLink_withRegularLocation_withoutURL_shouldNotShowLinkButton() {
 
         let viewModel = mock(
             event: .make(location: "some location")
         )
 
-        XCTAssertNil(viewModel.videoURL)
+        XCTAssertNil(viewModel.linkURL)
     }
 
-    func testLink_withRegularLocation_withInvalidURL_shouldNotShowVideoButton() {
+    func testLink_withRegularLocation_withInvalidURL_shouldNotShowLinkButton() {
 
         let viewModel = mock(
             event: .make(
@@ -31,10 +31,10 @@ class EventViewModelLinkTests: XCTestCase {
             )
         )
 
-        XCTAssertNil(viewModel.videoURL)
+        XCTAssertNil(viewModel.linkURL)
     }
 
-    func testLink_withRegularLocation_withValidURL_shouldShowVideoButton() {
+    func testLink_withRegularLocation_withValidURL_shouldShowLinkButton() {
 
         let viewModel = mock(
             event: .make(
@@ -43,34 +43,37 @@ class EventViewModelLinkTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(viewModel.videoURL?.absoluteString, "https://someurl.com")
+        XCTAssertFalse(viewModel.isMeeting)
+        XCTAssertEqual(viewModel.linkURL?.absoluteString, "https://someurl.com")
     }
 
-    func testLink_withUrlLocation_shouldShowVideoButton() {
+    func testLink_withUrlLocation_shouldShowLinkButton() {
 
         let viewModel = mock(
             event: .make(location: "https://someurl.com")
         )
 
-        XCTAssertEqual(viewModel.videoURL?.absoluteString, "https://someurl.com")
+        XCTAssertFalse(viewModel.isMeeting)
+        XCTAssertEqual(viewModel.linkURL?.absoluteString, "https://someurl.com")
     }
 
-    func testLink_withInvalidURL_shouldNotShowVideoButton() {
+    func testLink_withInvalidURL_shouldNotShowLinkButton() {
 
         let viewModel = mock(
             event: .make(url: URL(string: "invalidurl")!)
         )
 
-        XCTAssertNil(viewModel.videoURL)
+        XCTAssertNil(viewModel.linkURL)
     }
 
-    func testLink_withValidURL_shouldShowVideoButton() {
+    func testLink_withValidURL_shouldShowLinkButton() {
 
         let viewModel = mock(
             event: .make(url: URL(string: "https://someurl.com")!)
         )
 
-        XCTAssertEqual(viewModel.videoURL?.absoluteString, "https://someurl.com")
+        XCTAssertFalse(viewModel.isMeeting)
+        XCTAssertEqual(viewModel.linkURL?.absoluteString, "https://someurl.com")
     }
 
     func testLink_withVideoURL_withAppNotInstalled() {
@@ -79,7 +82,8 @@ class EventViewModelLinkTests: XCTestCase {
 
         let viewModel = mock(event: .make(location: httpLink))
 
-        XCTAssertEqual(viewModel.videoURL?.absoluteString, httpLink)
+        XCTAssertTrue(viewModel.isMeeting)
+        XCTAssertEqual(viewModel.linkURL?.absoluteString, httpLink)
     }
 
     func testLink_withZoomURL_withZoomInstalled() {
@@ -91,7 +95,8 @@ class EventViewModelLinkTests: XCTestCase {
 
         let viewModel = mock(event: .make(location: httpLink))
 
-        XCTAssertEqual(viewModel.videoURL?.absoluteString, appLink)
+        XCTAssertTrue(viewModel.isMeeting)
+        XCTAssertEqual(viewModel.linkURL?.absoluteString, appLink)
     }
 
     func testLink_withTeamsURL_withTeamsInstalled() {
@@ -103,7 +108,8 @@ class EventViewModelLinkTests: XCTestCase {
 
         let viewModel = mock(event: .make(location: httpLink))
 
-        XCTAssertEqual(viewModel.videoURL?.absoluteString, appLink)
+        XCTAssertTrue(viewModel.isMeeting)
+        XCTAssertEqual(viewModel.linkURL?.absoluteString, appLink)
     }
 
     func mock(event: EventModel) -> EventViewModel {

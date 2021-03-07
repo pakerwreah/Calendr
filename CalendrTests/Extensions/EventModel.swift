@@ -18,6 +18,7 @@ extension EventModel {
         url: URL? = nil,
         isAllDay: Bool = false,
         isPending: Bool = false,
+        isBirthday: Bool = false,
         calendar: CalendarModel = .make()
     ) -> EventModel {
 
@@ -30,6 +31,7 @@ extension EventModel {
             url: url,
             isAllDay: isAllDay,
             isPending: isPending,
+            isBirthday: isBirthday,
             calendar: calendar
         )
     }

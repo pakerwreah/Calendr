@@ -20,8 +20,8 @@ class StatusItemViewModel {
     ) {
 
         let titleIcon = NSAttributedString(string: "📅", attributes: [
-            .font: NSFont(name: "SegoeUISymbol", size: Constants.iconPointSize)!,
-            .baselineOffset: Constants.iconBaselineOffset
+            .font: Fonts.SegoeUISymbol.regular.font(size: 14),
+            .baselineOffset: -1
         ])
 
         let localeChangeObservable = notificationCenter.rx
@@ -61,10 +61,4 @@ class StatusItemViewModel {
             return title
         }
     }
-}
-
-private enum Constants {
-
-    static let iconPointSize: CGFloat = 14
-    static let iconBaselineOffset: CGFloat = -1
 }

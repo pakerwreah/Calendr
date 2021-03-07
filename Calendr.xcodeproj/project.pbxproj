@@ -59,6 +59,8 @@
 		349355B225BCB07B00957945 /* EventViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349355B125BCB07B00957945 /* EventViewModel.swift */; };
 		349E4CEF25CF48ED00A6FC18 /* HistoricalScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349E4CEE25CF48ED00A6FC18 /* HistoricalScheduler.swift */; };
 		34A4C3E925963FB200D0F949 /* NSStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A4C3E825963FB200D0F949 /* NSStackView.swift */; };
+		34A6434D25F42375000A0F08 /* EventViewPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A6434C25F42375000A0F08 /* EventViewPreview.swift */; };
+		34A6435325F45495000A0F08 /* Fonts.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A6435225F45495000A0F08 /* Fonts.generated.swift */; };
 		34A9513125D9C14500D1B2CA /* Calendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A9513025D9C14500D1B2CA /* Calendar.swift */; };
 		34B1C7C525EDA01F00E5CA80 /* EventIntervalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B1C7C425EDA01F00E5CA80 /* EventIntervalView.swift */; };
 		34B23E9C25C0C94000DADCD6 /* NSButton+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B23E9B25C0C94000DADCD6 /* NSButton+Rx.swift */; };
@@ -161,6 +163,8 @@
 		349355B125BCB07B00957945 /* EventViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventViewModel.swift; sourceTree = "<group>"; };
 		349E4CEE25CF48ED00A6FC18 /* HistoricalScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoricalScheduler.swift; sourceTree = "<group>"; };
 		34A4C3E825963FB200D0F949 /* NSStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSStackView.swift; sourceTree = "<group>"; };
+		34A6434C25F42375000A0F08 /* EventViewPreview.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventViewPreview.swift; sourceTree = "<group>"; };
+		34A6435225F45495000A0F08 /* Fonts.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Fonts.generated.swift; sourceTree = "<group>"; };
 		34A9513025D9C14500D1B2CA /* Calendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Calendar.swift; sourceTree = "<group>"; };
 		34B1C7C425EDA01F00E5CA80 /* EventIntervalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventIntervalView.swift; sourceTree = "<group>"; };
 		34B23E9B25C0C94000DADCD6 /* NSButton+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSButton+Rx.swift"; sourceTree = "<group>"; };
@@ -259,11 +263,12 @@
 		34273C2F25E1AE2800B35091 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
-				347D0F9925952F8A002451EC /* Images.xcassets */,
-				34651F2C25E1C99900518C5A /* Localizable.strings */,
-				34F96CD725B4E2F50020DEEA /* SegoeUISymbol.ttf */,
+				34A6435225F45495000A0F08 /* Fonts.generated.swift */,
 				34651F1425E1BB8400518C5A /* Strings.generated.swift */,
 				34651F4A25E1D78F00518C5A /* Strings.swift */,
+				34F96CD725B4E2F50020DEEA /* SegoeUISymbol.ttf */,
+				347D0F9925952F8A002451EC /* Images.xcassets */,
+				34651F2C25E1C99900518C5A /* Localizable.strings */,
 			);
 			path = Assets;
 			sourceTree = "<group>";
@@ -312,6 +317,7 @@
 				34273BDD25E19B7500B35091 /* Main */,
 				34CC383425B64432006CBD99 /* MenuBar */,
 				347D0FF025954916002451EC /* Models */,
+				34A6434B25F42375000A0F08 /* Previews */,
 				347E6D4125AA28FA009A6716 /* Providers */,
 				34D5601D25F197F1007F5C81 /* Schedulers */,
 				34F88A8425B0CDA3005C9BA6 /* Settings */,
@@ -429,6 +435,14 @@
 				349355B125BCB07B00957945 /* EventViewModel.swift */,
 			);
 			path = Events;
+			sourceTree = "<group>";
+		};
+		34A6434B25F42375000A0F08 /* Previews */ = {
+			isa = PBXGroup;
+			children = (
+				34A6434C25F42375000A0F08 /* EventViewPreview.swift */,
+			);
+			path = Previews;
 			sourceTree = "<group>";
 		};
 		34CC383425B64432006CBD99 /* MenuBar */ = {
@@ -693,6 +707,7 @@
 				34651F5A25E2F08500518C5A /* String.swift in Sources */,
 				34651F7425E3207200518C5A /* WorkspaceProvider.swift in Sources */,
 				34286E4625D5CD9C0097EC5D /* WeekNumberCellView.swift in Sources */,
+				34A6435325F45495000A0F08 /* Fonts.generated.swift in Sources */,
 				341B2B3E25D06A6F00336342 /* Dropdown.swift in Sources */,
 				347D0F9825952F89002451EC /* AppDelegate.swift in Sources */,
 				3449403225C348C70020E664 /* CalendarPickerViewController.swift in Sources */,
@@ -718,6 +733,7 @@
 				34F128F22597C340007DF31C /* WeekDayCellView.swift in Sources */,
 				34C72F9C25E9847300FD20FA /* EventListViewModel.swift in Sources */,
 				3487A43825E706F800FCC7D7 /* NextEventViewModel.swift in Sources */,
+				34A6434D25F42375000A0F08 /* EventViewPreview.swift in Sources */,
 				34C459BC25DF114300561C29 /* AboutViewController.swift in Sources */,
 				34305BCB25992A4E00AB381D /* Rx+Helpers.swift in Sources */,
 				347D0FE7259544B4002451EC /* NSView+Layout.swift in Sources */,

@@ -6,3 +6,11 @@ strings:
       params:
         enumName: Strings
         lookupFunction: lookupFunction
+
+fonts:
+  inputs: ${PROJECT_DIR}/${TARGET_NAME}/Assets
+  outputs:
+    - templateName: swift5
+      output: ${PROJECT_DIR}/${TARGET_NAME}/Assets/Fonts.generated.swift
+      params:
+        enumName: Fonts
