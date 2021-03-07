@@ -27,7 +27,7 @@ class EventViewModel {
     init(
         event: EventModel,
         dateProvider: DateProviding,
-        workspaceProvider: WorkspaceProviding,
+        workspace: WorkspaceServiceProviding,
         scheduler: SchedulerType = WallTimeScheduler()
     ) {
 
@@ -37,10 +37,10 @@ class EventViewModel {
         isBirthday = event.isBirthday
 
         let links = !event.isAllDay
-            ? detectLinks([event.location, event.url?.absoluteString, event.notes].compactMap())
+            ? workspace.detectLinks([event.location, event.url?.absoluteString, event.notes])
             : []
 
-        if let meetingURL = links.compactMap({ detectMeeting($0, workspaceProvider) }).first {
+        if let meetingURL = links.compactMap(workspace.detectMeeting).first {
             isMeeting = true
             linkURL = meetingURL
         }
@@ -162,60 +162,5 @@ class EventViewModel {
         let progressBackgroundColor = color.copy(alpha: 0.1)!
 
         backgroundColor = isInProgress.map { $0 ? progressBackgroundColor : .clear }
-    }
-}
-
-private func detectLinks(_ texts: [String]) -> [URL] {
-
-    let detector = try! NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
-
-    return texts.flatMap {
-        detector
-            .matches(in: $0, options: [], range: NSRange(location: 0, length: $0.count))
-            .compactMap(\.url)
-    }
-}
-
-private func detectMeeting(_ url: URL?, _ workspaceProvider: WorkspaceProviding) -> URL? {
-
-    guard let url = url else { return nil }
-
-    let link = url.absoluteString
-
-    if link.contains(Constants.Link.zoom) {
-
-        guard workspaceProvider.supportsSchema(Constants.Schema.zoom) else { return url }
-
-        return URL(
-            string: Constants.Schema.zoom + link
-                .replacingOccurrences(of: Constants.Schema.https, with: "")
-                .replacingOccurrences(of: "?", with: "&")
-                .replacingOccurrences(of: "/j/", with: "/join?confno=")
-        )
-    }
-    else if link.contains(Constants.Link.teams) {
-
-        guard workspaceProvider.supportsSchema(Constants.Schema.teams) else { return url }
-
-        return URL(
-            string: Constants.Schema.teams + link
-                .replacingOccurrences(of: Constants.Schema.https, with: "")
-        )
-    }
-
-    return nil
-}
-
-private enum Constants {
-
-    enum Link {
-        static let zoom = "zoom.us/j/"
-        static let teams = "teams.microsoft.com/l/meetup-join/"
-    }
-
-    enum Schema {
-        static let https = "https://"
-        static let zoom = "zoommtg://"
-        static let teams = "msteams://"
     }
 }

@@ -47,7 +47,7 @@ class MainViewController: NSViewController {
 
     // Properties
     private let calendarService = CalendarServiceProvider()
-    private let workspaceProvider = WorkspaceProvider()
+    private let workspace = WorkspaceServiceProvider()
     private let dateProvider = DateProvider(calendar: .autoupdatingCurrent)
 
     init() {
@@ -112,7 +112,7 @@ class MainViewController: NSViewController {
         eventListViewModel = EventListViewModel(
             eventsObservable: eventsObservable,
             dateProvider: dateProvider,
-            workspaceProvider: workspaceProvider,
+            workspace: workspace,
             settings: settingsViewModel
         )
 

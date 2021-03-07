@@ -21,8 +21,8 @@ private struct EventViewPreview: NSViewRepresentable {
                     end: now + 15,
                     title: "Test Event",
                     location: "Brasil",
-                    notes: "Join at zoom.us/j/0000000000",
-                    url: URL(string: "https://google.com"),
+                    notes: "Join at http://meet.google.com",
+                    url: nil,
                     isAllDay: false,
                     isPending: false,
                     isBirthday: true,
@@ -34,7 +34,7 @@ private struct EventViewPreview: NSViewRepresentable {
                     )
                 ),
                 dateProvider: DateProvider(calendar: .current),
-                workspaceProvider: WorkspaceProvider()
+                workspace: WorkspaceServiceProvider()
             )
         )
     }

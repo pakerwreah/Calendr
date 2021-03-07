@@ -11,7 +11,7 @@ import XCTest
 class EventViewModelLinkTests: XCTestCase {
 
     let dateProvider = MockDateProvider()
-    let workspaceProvider = MockWorkspaceProvider()
+    let workspace = MockWorkspaceServiceProvider()
 
     func testLink_withRegularLocation_withoutURL_shouldNotShowLinkButton() {
 
@@ -76,7 +76,7 @@ class EventViewModelLinkTests: XCTestCase {
         XCTAssertEqual(viewModel.linkURL?.absoluteString, "https://someurl.com")
     }
 
-    func testLink_withVideoURL_withAppNotInstalled() {
+    func testLink_withZoomURL_withZoomNotInstalled() {
 
         let httpLink = "https://something.zoom.us/j/0000000000?pwd=xxxxxxxxxx"
 
@@ -88,7 +88,7 @@ class EventViewModelLinkTests: XCTestCase {
 
     func testLink_withZoomURL_withZoomInstalled() {
 
-        workspaceProvider.m_supportsSchema = true
+        workspace.m_supportsScheme = true
 
         let httpLink = "https://something.zoom.us/j/0000000000?pwd=xxxxxxxxxx"
         let appLink = "zoommtg://something.zoom.us/join?confno=0000000000&pwd=xxxxxxxxxx"
@@ -99,9 +99,19 @@ class EventViewModelLinkTests: XCTestCase {
         XCTAssertEqual(viewModel.linkURL?.absoluteString, appLink)
     }
 
+    func testLink_withTeamsURL_withTeamsNotInstalled() {
+
+        let httpLink = "https://teams.microsoft.com/l/meetup-join/xxxxxxxxxx"
+
+        let viewModel = mock(event: .make(location: httpLink))
+
+        XCTAssertTrue(viewModel.isMeeting)
+        XCTAssertEqual(viewModel.linkURL?.absoluteString, httpLink)
+    }
+
     func testLink_withTeamsURL_withTeamsInstalled() {
 
-        workspaceProvider.m_supportsSchema = true
+        workspace.m_supportsScheme = true
 
         let httpLink = "https://teams.microsoft.com/l/meetup-join/xxxxxxxxxx"
         let appLink = "msteams://teams.microsoft.com/l/meetup-join/xxxxxxxxxx"
@@ -112,12 +122,32 @@ class EventViewModelLinkTests: XCTestCase {
         XCTAssertEqual(viewModel.linkURL?.absoluteString, appLink)
     }
 
+    func testLink_withGoogleMeetURL() {
+
+        let httpLink = "https://meet.google.com"
+
+        let viewModel = mock(event: .make(location: httpLink))
+
+        XCTAssertTrue(viewModel.isMeeting)
+        XCTAssertEqual(viewModel.linkURL?.absoluteString, httpLink)
+    }
+
+    func testLink_withGoogleHangoutsURL() {
+
+        let httpLink = "https://hangouts.google.com"
+
+        let viewModel = mock(event: .make(location: httpLink))
+
+        XCTAssertTrue(viewModel.isMeeting)
+        XCTAssertEqual(viewModel.linkURL?.absoluteString, httpLink)
+    }
+
     func mock(event: EventModel) -> EventViewModel {
 
         EventViewModel(
             event: event,
             dateProvider: dateProvider,
-            workspaceProvider: workspaceProvider
+            workspace: workspace
         )
     }
 }
