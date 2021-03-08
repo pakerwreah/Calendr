@@ -16,4 +16,8 @@ extension Sequence {
             return try transform((prev, curr))
         }
     }
+
+    func compactMap<T>() -> [T] where Element == T? {
+        compactMap { $0 }
+    }
 }

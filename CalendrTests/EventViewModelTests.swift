@@ -15,7 +15,7 @@ class EventViewModelTests: XCTestCase {
     let disposeBag = DisposeBag()
 
     let dateProvider = MockDateProvider()
-    let workspaceProvider = MockWorkspaceProvider()
+    let workspace = MockWorkspaceServiceProvider()
 
     func testBasicInfo() {
 
@@ -31,7 +31,7 @@ class EventViewModelTests: XCTestCase {
     func testSubtitle_withLocation_withoutURL_shouldShowLocation() {
 
         let viewModel = mock(
-            event: .make(location: "Some address", url: nil)
+            event: .make(location: "Some address")
         )
 
         XCTAssertEqual(viewModel.subtitle, "Some address")
@@ -40,19 +40,46 @@ class EventViewModelTests: XCTestCase {
     func testSubtitle_withURL_withoutLocation_shouldShowURL() {
 
         let viewModel = mock(
-            event: .make(location: nil, url: URL(string: ".")!)
+            event: .make(url: URL(string: "https://someurl.com")!)
         )
 
-        XCTAssertEqual(viewModel.subtitle, ".")
+        XCTAssertEqual(viewModel.subtitle, "https://someurl.com")
     }
 
     func testSubtitle_withURL_withLocation_shouldShowLocation() {
 
         let viewModel = mock(
-            event: .make(location: "Some address", url: URL(string: ".")!)
+            event: .make(location: "Some address", url: URL(string: "https://someurl.com")!)
         )
 
         XCTAssertEqual(viewModel.subtitle, "Some address")
+    }
+
+    func testSubtitle_withoutLocation_withoutURL_withNotes_shouldShowURL() {
+
+        let viewModel = mock(
+            event: .make(notes: "Some notes https://someurl.com")
+        )
+
+        XCTAssertEqual(viewModel.subtitle, "https://someurl.com")
+    }
+
+    func testSubtitle_withLocation_isAllDay_shouldShowLocation() {
+
+        let viewModel = mock(
+            event: .make(location: "Some address", isAllDay: true)
+        )
+
+        XCTAssertEqual(viewModel.subtitle, "Some address")
+    }
+
+    func testSubtitle_withURL_isAllDay_shouldNotShowURL() {
+
+        let viewModel = mock(
+            event: .make(url: URL(string: "https://someurl.com")!, isAllDay: true)
+        )
+
+        XCTAssertEqual(viewModel.subtitle, "")
     }
 
     func testDuration_isAllDay() {
@@ -135,7 +162,7 @@ class EventViewModelTests: XCTestCase {
         EventViewModel(
             event: event,
             dateProvider: dateProvider,
-            workspaceProvider: workspaceProvider
+            workspace: workspace
         )
     }
 
@@ -148,7 +175,7 @@ class EventViewModelTests: XCTestCase {
         EventViewModel(
             event: .make(start: start, end: end, isAllDay: isAllDay),
             dateProvider: dateProvider,
-            workspaceProvider: workspaceProvider
+            workspace: workspace
         )
     }
 }

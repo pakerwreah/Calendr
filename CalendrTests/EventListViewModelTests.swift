@@ -16,14 +16,14 @@ class EventListViewModelTests: XCTestCase {
     let eventsSubject = PublishSubject<[EventModel]>()
 
     let dateProvider = MockDateProvider()
-    let workspaceProvider = MockWorkspaceProvider()
+    let workspace = MockWorkspaceServiceProvider()
     let settings = MockEventSettings()
     lazy var scheduler = HistoricalScheduler(initialClock: dateProvider.now)
 
     lazy var viewModel = EventListViewModel(
         eventsObservable: eventsSubject,
         dateProvider: dateProvider,
-        workspaceProvider: workspaceProvider,
+        workspace: workspace,
         settings: settings,
         scheduler: scheduler
     )

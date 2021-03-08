@@ -15,8 +15,10 @@ class EventViewModel {
     let duration: String
     let color: CGColor
     let isPending: Bool
+    let isBirthday: Bool
+    let isMeeting: Bool
+    let linkURL: URL?
 
-    let videoURL: URL?
     let isInProgress: Observable<Bool>
     let backgroundColor: Observable<CGColor>
     let isFaded: Observable<Bool>
@@ -25,40 +27,32 @@ class EventViewModel {
     init(
         event: EventModel,
         dateProvider: DateProviding,
-        workspaceProvider: WorkspaceProviding,
+        workspace: WorkspaceServiceProviding,
         scheduler: SchedulerType = WallTimeScheduler()
     ) {
 
         title = event.title
-        subtitle = (event.location ?? event.url?.absoluteString ?? "").trimmed
         color = event.calendar.color
         isPending = event.isPending
+        isBirthday = event.isBirthday
 
-        let link = [event.location, event.url?.absoluteString]
-            .compactMap { $0?.trimmed }
-            .first(where: { $0.hasPrefix(Constants.Schema.https) })
+        let links = !event.isAllDay
+            ? workspace.detectLinks([event.location, event.url?.absoluteString, event.notes])
+            : []
 
-        if let link = link {
-
-            if link.contains(Constants.Link.zoom) && workspaceProvider.supportsSchema(Constants.Schema.zoom) {
-                videoURL = URL(
-                    string: link
-                        .replacingOccurrences(of: Constants.Schema.https, with: Constants.Schema.zoom)
-                        .replacingOccurrences(of: "?", with: "&")
-                        .replacingOccurrences(of: "/j/", with: "/join?confno=")
-                )
-            }
-            else if link.contains(Constants.Link.teams) && workspaceProvider.supportsSchema(Constants.Schema.teams) {
-                videoURL = URL(
-                    string: link.replacingOccurrences(of: Constants.Schema.https, with: Constants.Schema.teams)
-                )
-            }
-            else {
-                videoURL = URL(string: link)
-            }
+        if let meetingURL = links.compactMap(workspace.detectMeeting).first {
+            isMeeting = true
+            linkURL = meetingURL
         }
         else {
-            videoURL = nil
+            isMeeting = false
+            linkURL = links.first
+        }
+
+        if let location = event.location {
+            subtitle = location
+        } else {
+            subtitle = linkURL?.absoluteString ?? ""
         }
 
         // fix range ending at 00:00 of the next day
@@ -168,19 +162,5 @@ class EventViewModel {
         let progressBackgroundColor = color.copy(alpha: 0.1)!
 
         backgroundColor = isInProgress.map { $0 ? progressBackgroundColor : .clear }
-    }
-}
-
-private enum Constants {
-
-    enum Link {
-        static let zoom = "zoom.us/j/"
-        static let teams = "teams.microsoft.com/l/meetup-join/"
-    }
-
-    enum Schema {
-        static let https = "https://"
-        static let zoom = "zoommtg://"
-        static let teams = "msteams://"
     }
 }

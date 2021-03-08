@@ -16,5 +16,6 @@ struct EventModel: Equatable {
     let url: URL?
     let isAllDay: Bool
     let isPending: Bool
+    let isBirthday: Bool
     let calendar: CalendarModel
 }

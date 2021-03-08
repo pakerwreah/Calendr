@@ -92,6 +92,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
                         url: event.url,
                         isAllDay: event.isAllDay,
                         isPending: status == .pending,
+                        isBirthday: event.birthdayContactIdentifier.isNotNil,
                         calendar: CalendarModel(from: event.calendar)
                     )
                 }
