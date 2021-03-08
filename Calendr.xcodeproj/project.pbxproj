@@ -17,6 +17,8 @@
 		34273C0825E1A56200B35091 /* SegoeUISymbol.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 34F96CD725B4E2F50020DEEA /* SegoeUISymbol.ttf */; };
 		34286E4625D5CD9C0097EC5D /* WeekNumberCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34286E4525D5CD9C0097EC5D /* WeekNumberCellView.swift */; };
 		34305BCB25992A4E00AB381D /* Rx+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34305BCA25992A4E00AB381D /* Rx+Helpers.swift */; };
+		3430675E25F6BC15000D4003 /* HistoricalSchedulerTimeConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3430675D25F6BC15000D4003 /* HistoricalSchedulerTimeConverter.swift */; };
+		3430676325F6C130000D4003 /* TrackedHistoricalScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3430676225F6C130000D4003 /* TrackedHistoricalScheduler.swift */; };
 		3430ED03259634E00045DA53 /* NSStackView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3430ED02259634E00045DA53 /* NSStackView+Rx.swift */; };
 		3449402E25C348B20020E664 /* GeneralSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3449402D25C348B20020E664 /* GeneralSettingsViewController.swift */; };
 		3449403225C348C70020E664 /* CalendarPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3449403125C348C70020E664 /* CalendarPickerViewController.swift */; };
@@ -57,7 +59,7 @@
 		349355A625BCA8D400957945 /* EventListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349355A525BCA8D400957945 /* EventListView.swift */; };
 		349355AA25BCA8DF00957945 /* EventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349355A925BCA8DF00957945 /* EventView.swift */; };
 		349355B225BCB07B00957945 /* EventViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349355B125BCB07B00957945 /* EventViewModel.swift */; };
-		349E4CEF25CF48ED00A6FC18 /* HistoricalScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349E4CEE25CF48ED00A6FC18 /* HistoricalScheduler.swift */; };
+		349E4CEF25CF48ED00A6FC18 /* VirtualTimeScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349E4CEE25CF48ED00A6FC18 /* VirtualTimeScheduler.swift */; };
 		34A4C3E925963FB200D0F949 /* NSStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A4C3E825963FB200D0F949 /* NSStackView.swift */; };
 		34A6434D25F42375000A0F08 /* EventViewPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A6434C25F42375000A0F08 /* EventViewPreview.swift */; };
 		34A6435325F45495000A0F08 /* Fonts.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A6435225F45495000A0F08 /* Fonts.generated.swift */; };
@@ -112,6 +114,8 @@
 		3421AD3C25BA1D0800A4F468 /* SettingsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModelTests.swift; sourceTree = "<group>"; };
 		34286E4525D5CD9C0097EC5D /* WeekNumberCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekNumberCellView.swift; sourceTree = "<group>"; };
 		34305BCA25992A4E00AB381D /* Rx+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Rx+Helpers.swift"; sourceTree = "<group>"; };
+		3430675D25F6BC15000D4003 /* HistoricalSchedulerTimeConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoricalSchedulerTimeConverter.swift; sourceTree = "<group>"; };
+		3430676225F6C130000D4003 /* TrackedHistoricalScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackedHistoricalScheduler.swift; sourceTree = "<group>"; };
 		3430ED02259634E00045DA53 /* NSStackView+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSStackView+Rx.swift"; sourceTree = "<group>"; };
 		3449402D25C348B20020E664 /* GeneralSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsViewController.swift; sourceTree = "<group>"; };
 		3449403125C348C70020E664 /* CalendarPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPickerViewController.swift; sourceTree = "<group>"; };
@@ -161,7 +165,7 @@
 		349355A525BCA8D400957945 /* EventListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventListView.swift; sourceTree = "<group>"; };
 		349355A925BCA8DF00957945 /* EventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventView.swift; sourceTree = "<group>"; };
 		349355B125BCB07B00957945 /* EventViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventViewModel.swift; sourceTree = "<group>"; };
-		349E4CEE25CF48ED00A6FC18 /* HistoricalScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoricalScheduler.swift; sourceTree = "<group>"; };
+		349E4CEE25CF48ED00A6FC18 /* VirtualTimeScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualTimeScheduler.swift; sourceTree = "<group>"; };
 		34A4C3E825963FB200D0F949 /* NSStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSStackView.swift; sourceTree = "<group>"; };
 		34A6434C25F42375000A0F08 /* EventViewPreview.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventViewPreview.swift; sourceTree = "<group>"; };
 		34A6435225F45495000A0F08 /* Fonts.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Fonts.generated.swift; sourceTree = "<group>"; };
@@ -280,9 +284,18 @@
 				34651F6525E314A900518C5A /* CalendarModel.swift */,
 				34924CE7259FCC95009C3450 /* Date.swift */,
 				34F88A8025B0C6A3005C9BA6 /* EventModel.swift */,
-				349E4CEE25CF48ED00A6FC18 /* HistoricalScheduler.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		3430676125F6C117000D4003 /* Schedulers */ = {
+			isa = PBXGroup;
+			children = (
+				3430675D25F6BC15000D4003 /* HistoricalSchedulerTimeConverter.swift */,
+				3430676225F6C130000D4003 /* TrackedHistoricalScheduler.swift */,
+				349E4CEE25CF48ED00A6FC18 /* VirtualTimeScheduler.swift */,
+			);
+			path = Schedulers;
 			sourceTree = "<group>";
 		};
 		347D0F8B25952F89002451EC = {
@@ -343,6 +356,7 @@
 				341B2B4125D0B19500336342 /* StatusItemViewModelTests.swift */,
 				34305C3025994D4500AB381D /* Extensions */,
 				348E703A25C617DD00B3B160 /* Mocks */,
+				3430676125F6C117000D4003 /* Schedulers */,
 			);
 			path = CalendrTests;
 			sourceTree = "<group>";
@@ -768,15 +782,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				348E703C25C617F100B3B160 /* MockDateProvider.swift in Sources */,
+				3430675E25F6BC15000D4003 /* HistoricalSchedulerTimeConverter.swift in Sources */,
 				34C72F8425E88B6600FD20FA /* MockStatusItemSettings.swift in Sources */,
 				34E1902325B76CFE00E9491B /* CalendarPickerViewModelTests.swift in Sources */,
 				34924CE8259FCC95009C3450 /* Date.swift in Sources */,
 				34924CD6259FB814009C3450 /* CalendarExtensionTests.swift in Sources */,
 				34A9513125D9C14500D1B2CA /* Calendar.swift in Sources */,
+				3430676325F6C130000D4003 /* TrackedHistoricalScheduler.swift in Sources */,
 				34651F6E25E3171D00518C5A /* EventViewModelLinkTests.swift in Sources */,
 				3421AD3D25BA1D0800A4F468 /* SettingsViewModelTests.swift in Sources */,
 				34651F7A25E325EA00518C5A /* MockWorkspaceServiceProvider.swift in Sources */,
-				349E4CEF25CF48ED00A6FC18 /* HistoricalScheduler.swift in Sources */,
+				349E4CEF25CF48ED00A6FC18 /* VirtualTimeScheduler.swift in Sources */,
 				34924CE4259FCB36009C3450 /* DateSelectorTests.swift in Sources */,
 				34C72F8C25E88DA100FD20FA /* MockCalendarSettings.swift in Sources */,
 				34651F6625E314A900518C5A /* CalendarModel.swift in Sources */,

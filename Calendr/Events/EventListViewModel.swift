@@ -45,12 +45,29 @@ class EventListViewModel {
             )
         }
 
-        let refreshEvents = eventsObservable.flatMapLatest { events in
-            Observable.merge(
+        func isToday(_ event: EventModel) -> Bool {
+            dateProvider.calendar.isDate(
+                event.start, inSameDayAs: dateProvider.now
+            )
+        }
+
+        func isPast(_ event: EventModel) -> Bool {
+            dateProvider.calendar.isDate(
+                event.end, lessThan: dateProvider.now, granularity: .second
+            )
+        }
+
+        let visibleEvents = Observable.combineLatest(
+            eventsObservable, settings.showPastEvents
+        )
+        .flatMapLatest { events, showPast in
+            showPast ? .just(events) : Observable.merge(
                 events
-                    .filter(\.isAllDay.isFalse)
-                    .compactMap {
-                        dateProvider.calendar.dateComponents([.second], from: dateProvider.now, to: $0.end).second
+                    .filter {
+                        !$0.isAllDay && isToday($0)
+                    }
+                    .map {
+                        Int(dateProvider.now.distance(to: $0.end).rounded(.up))
                     }
                     .filter { $0 >= 0 }
                     .map {
@@ -59,23 +76,10 @@ class EventListViewModel {
             )
             .toVoid()
             .startWith(())
-            .map { events }
-        }
-
-        let visibleEvents = Observable.combineLatest(
-            refreshEvents, settings.showPastEvents
-        )
-        .map { events, showPast in
-            showPast ? events : events.filter {
-                $0.isAllDay
-                ||
-                !dateProvider.calendar.isDate(
-                    dateProvider.now, inSameDayAs: $0.start
-                )
-                ||
-                dateProvider.calendar.isDate(
-                    dateProvider.now, lessThan: $0.end, granularity: .second
-                )
+            .map {
+                events.filter {
+                    $0.isAllDay || !isToday($0) || !isPast($0)
+                }
             }
         }
         .distinctUntilChanged()

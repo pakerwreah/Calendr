@@ -98,17 +98,9 @@ class EventViewModel {
             duration = "\(start)\n\(end)"
         }
 
-        let total = dateProvider.calendar
-            .dateComponents([.second], from: event.start, to: event.end)
-            .second ?? 0
-
-        let secondsToStart = dateProvider.calendar.dateComponents(
-            [.second], from: dateProvider.now, to: event.start
-        ).second!
-
-        let secondsToEnd = dateProvider.calendar.dateComponents(
-            [.second], from: dateProvider.now, to: event.end
-        ).second!
+        let total = event.start.distance(to: event.end)
+        let secondsToStart = Int(dateProvider.now.distance(to: event.start))
+        let secondsToEnd = Int(dateProvider.now.distance(to: event.end).rounded(.up))
 
         let isPast: Observable<Bool>
         let clock: Observable<Void>
@@ -138,18 +130,18 @@ class EventViewModel {
 
         progress = total <= 0 || event.isAllDay || !isSingleDay || !endsToday
             ? .just(nil)
-            : clock.map { () -> CGFloat? in
-                guard
-                    dateProvider.calendar.isDate(
-                        event.end, greaterThanOrEqualTo: dateProvider.now, granularity: .second
-                    ),
-                    let ellapsed = dateProvider.calendar.dateComponents(
-                        [.second], from: event.start, to: dateProvider.now
-                    ).second, ellapsed >= 0
+            : clock.map {
 
+                let ellapsed = event.start.distance(to: dateProvider.now)
+
+                guard
+                    ellapsed >= 0,
+                    dateProvider.calendar.isDate(
+                        dateProvider.now, lessThan: event.end, granularity: .second
+                    )
                 else { return nil }
 
-                return CGFloat(ellapsed) / CGFloat(total)
+                return CGFloat(ellapsed / total)
             }
             .distinctUntilChanged()
             .concat(Observable.just(nil))

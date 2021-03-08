@@ -18,7 +18,7 @@ class EventListViewModelTests: XCTestCase {
     let dateProvider = MockDateProvider()
     let workspace = MockWorkspaceServiceProvider()
     let settings = MockEventSettings()
-    lazy var scheduler = HistoricalScheduler(initialClock: dateProvider.now)
+    lazy var scheduler = TrackedHistoricalScheduler(initialClock: dateProvider.now)
 
     lazy var viewModel = EventListViewModel(
         eventsObservable: eventsSubject,
@@ -234,5 +234,37 @@ class EventListViewModelTests: XCTestCase {
         scheduler.advance(1, .hour)
 
         XCTAssertEqual(sectionsFaded, [true, true])
+    }
+
+    func testEventList_withFadePastEventsEnabled_shouldNotScheduleRefreshes() {
+
+        eventsSubject.onNext(testEvents())
+
+        XCTAssertEqual(scheduler.log, [])
+    }
+
+    func testEventList_withHidePastEventsEnabled_withExactSecond_shouldScheduleRefreshesCorrectly() {
+
+        let events = testEvents()
+
+        eventsSubject.onNext(events)
+
+        settings.togglePastEvents.onNext(false)
+
+        XCTAssertEqual(scheduler.log, events.filter(\.isAllDay.isFalse).map(\.end))
+    }
+
+    func testEventList_withHidePastEventsEnabled_withPartialSecond_shouldScheduleRefreshesCorrectly() {
+
+        let events = testEvents()
+
+        dateProvider.now.addTimeInterval(0.1)
+        scheduler.advanceTo(dateProvider.now)
+
+        eventsSubject.onNext(events)
+
+        settings.togglePastEvents.onNext(false)
+
+        XCTAssertTrue(zip(scheduler.log, events.filter(\.isAllDay.isFalse).map(\.end)).allSatisfy(>=))
     }
 }
