@@ -129,7 +129,7 @@ class EventListViewModel {
 
                         return [eventItem]
                     }
-                    .flatMap { $0 }
+                    .flatten()
 
                 guard allDayViewModels.isEmpty else {
                     return [.section(Strings.Formatter.Date.allDay)] + allDayViewModels + viewModels

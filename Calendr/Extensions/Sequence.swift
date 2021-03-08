@@ -17,7 +17,11 @@ extension Sequence {
         }
     }
 
-    func compactMap<T>() -> [T] where Element == T? {
+    func compact<T>() -> [T] where Element == T? {
         compactMap { $0 }
+    }
+
+    func flatten() -> [Element.Element] where Element: Sequence {
+        flatMap { $0 }
     }
 }
