@@ -270,7 +270,7 @@ class EventListViewModelTests: XCTestCase {
         settings.togglePastEvents.onNext(false)
 
         XCTAssertFalse(scheduler.log.isEmpty)
-        XCTAssertEqual(scheduler.log, events.filter(\.isAllDay.isFalse).map(\.end))
+        XCTAssertTrue(zip(scheduler.log, events.filter(\.isAllDay.isFalse).map(\.end)).allSatisfy(>))
     }
 
     func testEventList_withHidePastEventsEnabled_withPartialSecond_shouldScheduleRefreshesCorrectly() {
@@ -285,6 +285,6 @@ class EventListViewModelTests: XCTestCase {
         settings.togglePastEvents.onNext(false)
 
         XCTAssertFalse(scheduler.log.isEmpty)
-        XCTAssertTrue(zip(scheduler.log, events.filter(\.isAllDay.isFalse).map(\.end)).allSatisfy(>=))
+        XCTAssertTrue(zip(scheduler.log, events.filter(\.isAllDay.isFalse).map(\.end)).allSatisfy(>))
     }
 }

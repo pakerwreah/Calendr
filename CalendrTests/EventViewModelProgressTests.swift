@@ -218,8 +218,13 @@ class EventViewModelProgressTests: XCTestCase {
         scheduler.advance(.seconds(1))
         XCTAssertEqual(progress, 0.2)
 
-        // event finished
+        // 100% progress
         dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 15)
+        scheduler.advance(.seconds(1))
+        XCTAssertEqual(progress, 1)
+
+        // event finished
+        dateProvider.add(1, .second)
         scheduler.advance(.seconds(1))
         XCTAssertNil(progress)
     }

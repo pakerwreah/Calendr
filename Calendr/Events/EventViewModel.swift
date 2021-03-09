@@ -100,7 +100,7 @@ class EventViewModel {
 
         let total = event.start.distance(to: event.end)
         let secondsToStart = Int(dateProvider.now.distance(to: event.start))
-        let secondsToEnd = Int(dateProvider.now.distance(to: event.end).rounded(.up))
+        let secondsToEnd = Int(dateProvider.now.distance(to: event.end).rounded(.up)) + 1
 
         let isPast: Observable<Bool>
         let clock: Observable<Void>
@@ -137,7 +137,7 @@ class EventViewModel {
                 guard
                     ellapsed >= 0,
                     dateProvider.calendar.isDate(
-                        dateProvider.now, lessThan: event.end, granularity: .second
+                        dateProvider.now, lessThanOrEqualTo: event.end, granularity: .second
                     )
                 else { return nil }
 

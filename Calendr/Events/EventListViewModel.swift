@@ -74,7 +74,7 @@ class EventListViewModel {
                         !$0.isAllDay && endsToday($0)
                     }
                     .map {
-                        Int(dateProvider.now.distance(to: $0.end).rounded(.up))
+                        Int(dateProvider.now.distance(to: $0.end).rounded(.up)) + 1
                     }
                     .filter { $0 >= 0 }
                     .map {
