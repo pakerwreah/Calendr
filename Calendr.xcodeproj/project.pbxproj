@@ -607,11 +607,14 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
+				"${SRCROOT}/${TARGET_NAME}/Assets/en.lproj/Localizable.strings",
 			);
 			name = SwiftGen;
 			outputFileListPaths = (
 			);
 			outputPaths = (
+				"${SRCROOT}/${TARGET_NAME}/Assets/Strings.generated.swift",
+				"${SRCROOT}/${TARGET_NAME}/Assets/Fonts.generated.swift",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
