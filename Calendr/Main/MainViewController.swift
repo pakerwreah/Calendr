@@ -110,6 +110,7 @@ class MainViewController: NSViewController {
             .distinctUntilChanged()
 
         eventListViewModel = EventListViewModel(
+            dateObservable: selectedDate,
             eventsObservable: eventsObservable,
             dateProvider: dateProvider,
             workspace: workspace,

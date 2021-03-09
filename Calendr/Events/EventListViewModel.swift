@@ -19,6 +19,7 @@ class EventListViewModel {
     private let viewModels: Observable<[EventListItem]>
 
     init(
+        dateObservable: Observable<Date>,
         eventsObservable: Observable<[EventModel]>,
         dateProvider: DateProviding,
         workspace: WorkspaceServiceProviding,
@@ -45,10 +46,10 @@ class EventListViewModel {
             )
         }
 
-        func isToday(_ event: EventModel) -> Bool {
-            dateProvider.calendar.isDate(
-                event.start, inSameDayAs: dateProvider.now
-            )
+        func endsToday(_ event: EventModel) -> Bool {
+            // fix range ending at 00:00 of the next day
+            let fixedEnd = dateProvider.calendar.date(byAdding: .second, value: -1, to: event.end)!
+            return dateProvider.calendar.isDate(fixedEnd, inSameDayAs: dateProvider.now)
         }
 
         func isPast(_ event: EventModel) -> Bool {
@@ -57,14 +58,20 @@ class EventListViewModel {
             )
         }
 
-        let visibleEvents = Observable.combineLatest(
-            eventsObservable, settings.showPastEvents
+        viewModels = Observable.combineLatest(
+            eventsObservable, dateObservable, settings.showPastEvents
         )
-        .flatMapLatest { events, showPast in
-            showPast ? .just(events) : Observable.merge(
+        .flatMapLatest { events, date, showPast -> Observable<([EventModel], Date, Bool)> in
+
+            let isToday = dateProvider.calendar.isDate(date, inSameDayAs: dateProvider.now)
+
+            guard isToday && !showPast else { return .just((events, date, isToday)) }
+
+            // schedule refresh for every event end to hide past events
+            return Observable.merge(
                 events
                     .filter {
-                        !$0.isAllDay && isToday($0)
+                        !$0.isAllDay && endsToday($0)
                     }
                     .map {
                         Int(dateProvider.now.distance(to: $0.end).rounded(.up))
@@ -78,70 +85,69 @@ class EventListViewModel {
             .startWith(())
             .map {
                 events.filter {
-                    $0.isAllDay || !isToday($0) || !isPast($0)
+                    $0.isAllDay || !isPast($0)
                 }
             }
+            .map { ($0, date, isToday) }
         }
-        .distinctUntilChanged()
+        // build event list
+        .map { events, date, isToday in
 
-        viewModels = visibleEvents
-            .map { events in
-                let allDayViewModels: [EventListItem] = events
-                    .filter(\.isAllDay)
-                    .sorted {
-                        $0.calendar.color.hashValue < $1.calendar.color.hashValue
-                    }
-                    .map {
-                        .event(makeEventViewModel($0))
-                    }
-
-                let viewModels = events
-                    .filter(\.isAllDay.isFalse)
-                    .sorted {
-                        ($0.start, $0.end) < ($1.start, $1.end)
-                    }
-                    .prevMap { prev, curr -> [EventListItem] in
-
-                        let viewModel = makeEventViewModel(curr)
-                        let eventItem: EventListItem = .event(viewModel)
-
-                        guard let prev = prev else {
-                            // if first event, show today section
-
-                            let today = dateProvider.calendar.isDate(curr.start, inSameDayAs: dateProvider.now)
-                                ? Strings.Formatter.Date.today
-                                : dateFormatter.string(from: curr.start)
-
-                            return [.section(today), eventItem]
-                        }
-
-                        // if not first, show interval between events
-                        if dateProvider.calendar.isDate(
-                            prev.end, lessThan: curr.start, granularity: .minute
-                        ),
-                        let diff = dateComponentsFormatter.string(
-                            from: prev.end, to: curr.start
-                        ) {
-                            let fade = Observable.merge(
-                                viewModel.isFaded,
-                                viewModel.isInProgress
-                            )
-                            .take(until: \.isTrue, behavior: .inclusive)
-
-                            return [.interval(diff, fade), eventItem]
-                        }
-
-                        return [eventItem]
-                    }
-                    .flatten()
-
-                guard allDayViewModels.isEmpty else {
-                    return [.section(Strings.Formatter.Date.allDay)] + allDayViewModels + viewModels
+            let allDayViewModels: [EventListItem] = events
+                .filter(\.isAllDay)
+                .sorted {
+                    $0.calendar.color.hashValue < $1.calendar.color.hashValue
+                }
+                .map {
+                    .event(makeEventViewModel($0))
                 }
 
-                return viewModels
+            let viewModels = events
+                .filter(\.isAllDay.isFalse)
+                .sorted {
+                    ($0.start, $0.end) < ($1.start, $1.end)
+                }
+                .prevMap { prev, curr -> [EventListItem] in
+
+                    let viewModel = makeEventViewModel(curr)
+                    let eventItem: EventListItem = .event(viewModel)
+
+                    guard let prev = prev else {
+                        // if first event, show today section
+                        let title = isToday
+                            ? Strings.Formatter.Date.today
+                            : dateFormatter.string(from: date)
+
+                        return [.section(title), eventItem]
+                    }
+
+                    // if not first, show interval between events
+                    if dateProvider.calendar.isDate(
+                        prev.end, lessThan: curr.start, granularity: .minute
+                    ),
+                    let diff = dateComponentsFormatter.string(
+                        from: prev.end, to: curr.start
+                    ) {
+                        let fade = Observable.merge(
+                            viewModel.isFaded,
+                            viewModel.isInProgress
+                        )
+                        .take(until: \.isTrue, behavior: .inclusive)
+
+                        return [.interval(diff, fade), eventItem]
+                    }
+
+                    return [eventItem]
+                }
+                .flatten()
+
+            guard allDayViewModels.isEmpty else {
+                return [.section(Strings.Formatter.Date.allDay)] + allDayViewModels + viewModels
             }
-            .share(replay: 1)
+
+            return viewModels
+        }
+        .share(replay: 1)
     }
 
     func asObservable() -> Observable<[EventListItem]> {

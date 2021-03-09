@@ -13,6 +13,7 @@ class EventListViewModelTests: XCTestCase {
 
     let disposeBag = DisposeBag()
 
+    let dateSubject = PublishSubject<Date>()
     let eventsSubject = PublishSubject<[EventModel]>()
 
     let dateProvider = MockDateProvider()
@@ -21,6 +22,7 @@ class EventListViewModelTests: XCTestCase {
     lazy var scheduler = TrackedHistoricalScheduler(initialClock: dateProvider.now)
 
     lazy var viewModel = EventListViewModel(
+        dateObservable: dateSubject,
         eventsObservable: eventsSubject,
         dateProvider: dateProvider,
         workspace: workspace,
@@ -38,14 +40,16 @@ class EventListViewModelTests: XCTestCase {
 
     func testEvents(adding value: Int = 0, _ component: Calendar.Component = .day) -> [EventModel] {
 
-        let now = dateProvider.calendar.date(byAdding: component, value: value, to: dateProvider.now)!
+        let date = dateProvider.calendar.date(byAdding: component, value: value, to: dateProvider.now)!
+        let yesterday = dateProvider.calendar.date(byAdding: .day, value: -1, to: date)!
 
         return [
-            .make(start: now + 70, end: now + 200, title: "Event 1", isAllDay: false),
-            .make(start: now + 70, end: now + 100, title: "Event 2", isAllDay: false),
-            .make(start: now, end: now + 10, title: "All day 1", isAllDay: true),
-            .make(start: now, end: now + 10, title: "Event 3", isAllDay: false),
-            .make(start: now, end: now + 10, title: "All day 2", isAllDay: true)
+            .make(start: date + 70, end: date + 200, title: "Event 1", isAllDay: false),
+            .make(start: date + 70, end: date + 100, title: "Event 2", isAllDay: false),
+            .make(start: date, end: date + 10, title: "All day 1", isAllDay: true),
+            .make(start: date, end: date + 10, title: "Event 3", isAllDay: false),
+            .make(start: date, end: date + 10, title: "All day 2", isAllDay: true),
+            .make(start: yesterday, end: date + 10, title: "Multi day", isAllDay: false)
         ]
     }
 
@@ -67,6 +71,8 @@ class EventListViewModelTests: XCTestCase {
                 }
             }
             .disposed(by: disposeBag)
+
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
     }
 
     func testEventList_noEvents_shouldNotShowAnySection() {
@@ -93,6 +99,7 @@ class EventListViewModelTests: XCTestCase {
 
         XCTAssertEqual(eventListItems, [
             .section("Today"),
+            .event("Multi day"),
             .event("Event 3"),
             .interval("1m"),
             .event("Event 2"),
@@ -109,6 +116,7 @@ class EventListViewModelTests: XCTestCase {
             .event("All day 1"),
             .event("All day 2"),
             .section("Today"),
+            .event("Multi day"),
             .event("Event 3"),
             .interval("1m"),
             .event("Event 2"),
@@ -118,13 +126,15 @@ class EventListViewModelTests: XCTestCase {
 
     func testEventList_isNotToday_shouldShowDateSection() {
 
-        eventsSubject.onNext(testEvents(adding: 1, .day))
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 2))
+        eventsSubject.onNext(testEvents())
 
         XCTAssertEqual(eventListItems, [
             .section("All day"),
             .event("All day 1"),
             .event("All day 2"),
             .section("2021-01-02"),
+            .event("Multi day"),
             .event("Event 3"),
             .interval("1m"),
             .event("Event 2"),
@@ -134,15 +144,16 @@ class EventListViewModelTests: XCTestCase {
 
     func testEventList_withHidePastEventsEnabled_isNotToday_shouldNotHideEvents() {
 
-        eventsSubject.onNext(testEvents(adding: 1, .day))
-
+        dateSubject.onNext(.make(year: 2020, month: 12, day: 31))
+        eventsSubject.onNext(testEvents())
         settings.togglePastEvents.onNext(false)
 
         XCTAssertEqual(eventListItems, [
             .section("All day"),
             .event("All day 1"),
             .event("All day 2"),
-            .section("2021-01-02"),
+            .section("2020-12-31"),
+            .event("Multi day"),
             .event("Event 3"),
             .interval("1m"),
             .event("Event 2"),
@@ -153,7 +164,6 @@ class EventListViewModelTests: XCTestCase {
     func testEventList_withHidePastEventsEnabled_isToday_shouldHidePastEvents() {
 
         eventsSubject.onNext(testEvents())
-
         settings.togglePastEvents.onNext(false)
 
         dateProvider.add(1, .minute)
@@ -195,6 +205,7 @@ class EventListViewModelTests: XCTestCase {
             .event("All day 1"),
             .event("All day 2"),
             .section("Today"),
+            .event("Multi day"),
             .event("Event 3"),
             .interval("1m"),
             .event("Event 2"),
@@ -240,17 +251,25 @@ class EventListViewModelTests: XCTestCase {
 
         eventsSubject.onNext(testEvents())
 
-        XCTAssertEqual(scheduler.log, [])
+        XCTAssertTrue(scheduler.log.isEmpty)
+    }
+
+    func testEventList_withHidePastEventsEnabled_isNotToday_shouldNotScheduleRefreshes() {
+
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 2))
+        eventsSubject.onNext(testEvents())
+        settings.togglePastEvents.onNext(false)
+
+        XCTAssertTrue(scheduler.log.isEmpty)
     }
 
     func testEventList_withHidePastEventsEnabled_withExactSecond_shouldScheduleRefreshesCorrectly() {
 
         let events = testEvents()
-
         eventsSubject.onNext(events)
-
         settings.togglePastEvents.onNext(false)
 
+        XCTAssertFalse(scheduler.log.isEmpty)
         XCTAssertEqual(scheduler.log, events.filter(\.isAllDay.isFalse).map(\.end))
     }
 
@@ -265,6 +284,7 @@ class EventListViewModelTests: XCTestCase {
 
         settings.togglePastEvents.onNext(false)
 
+        XCTAssertFalse(scheduler.log.isEmpty)
         XCTAssertTrue(zip(scheduler.log, events.filter(\.isAllDay.isFalse).map(\.end)).allSatisfy(>=))
     }
 }
