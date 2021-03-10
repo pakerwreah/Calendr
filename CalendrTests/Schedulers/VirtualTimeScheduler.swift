@@ -1,5 +1,5 @@
 //
-//  HistoricalScheduler.swift
+//  VirtualTimeScheduler.swift
 //  CalendrTests
 //
 //  Created by Paker on 06/02/21.
@@ -7,7 +7,7 @@
 
 import RxSwift
 
-extension HistoricalScheduler {
+extension VirtualTimeScheduler where VirtualTime == RxTime {
 
     func advance(_ interval: RxTimeInterval) {
         advanceTo(clock + interval.timeInterval)
@@ -19,7 +19,7 @@ extension HistoricalScheduler {
 }
 
 extension RxTimeInterval {
-    // Shamelessly copied from ReactiveSwift 😅
+    
     var timeInterval: TimeInterval {
         switch self {
         case let .seconds(s):

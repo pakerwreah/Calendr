@@ -27,7 +27,7 @@ class EventViewModelProgressTests: XCTestCase {
             isAllDay: true
         )
 
-        var progress: CGFloat?
+        var progress: CGFloat? = -1
 
         viewModel.progress
             .bind { progress = $0 }
@@ -45,7 +45,7 @@ class EventViewModelProgressTests: XCTestCase {
             end: .make(year: 2021, month: 1, day: 2, hour: 15)
         )
 
-        var progress: CGFloat?
+        var progress: CGFloat? = -1
 
         viewModel.progress
             .bind { progress = $0 }
@@ -63,7 +63,7 @@ class EventViewModelProgressTests: XCTestCase {
             end: .make(year: 2021, month: 1, day: 1, hour: 15)
         )
 
-        var progress: CGFloat?
+        var progress: CGFloat? = -1
 
         viewModel.progress
             .bind { progress = $0 }
@@ -81,7 +81,7 @@ class EventViewModelProgressTests: XCTestCase {
             end: .make(year: 2021, month: 1, day: 1, hour: 15)
         )
 
-        var progress: CGFloat?
+        var progress: CGFloat? = -1
 
         viewModel.progress
             .bind { progress = $0 }
@@ -99,7 +99,7 @@ class EventViewModelProgressTests: XCTestCase {
             end: .make(year: 2021, month: 1, day: 1, hour: 15)
         )
 
-        var progress: CGFloat?
+        var progress: CGFloat? = -1
 
         viewModel.progress
             .bind { progress = $0 }
@@ -193,7 +193,7 @@ class EventViewModelProgressTests: XCTestCase {
             scheduler: scheduler
         )
 
-        var progress: CGFloat?
+        var progress: CGFloat? = -1
 
         viewModel.progress
             .bind { progress = $0 }
@@ -224,7 +224,7 @@ class EventViewModelProgressTests: XCTestCase {
         XCTAssertEqual(progress, 1)
 
         // event finished
-        dateProvider.now += 1
+        dateProvider.add(1, .second)
         scheduler.advance(.seconds(1))
         XCTAssertNil(progress)
     }

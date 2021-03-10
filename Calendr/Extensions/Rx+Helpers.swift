@@ -21,6 +21,10 @@ extension ObservableType {
     func matching(_ value: Element) -> Observable<Element> where Element: Equatable {
         filter { value ~= $0 }
     }
+
+    func skipNil<T>() -> Observable<T> where Element == T? {
+        compactMap { $0 }
+    }
 }
 
 extension PublishSubject {

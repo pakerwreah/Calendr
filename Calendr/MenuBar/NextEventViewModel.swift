@@ -52,17 +52,17 @@ class NextEventViewModel {
             .share()
 
         barColor = nextEventObservable
-            .compactMap { $0 }
+            .skipNil()
             .map(\.event.calendar.color)
             .distinctUntilChanged()
 
         backgroundColor = nextEventObservable
-            .compactMap { $0 }
+            .skipNil()
             .map { $0.isInProgress ? $0.event.calendar.color.copy(alpha: 0.2)!: .clear }
             .distinctUntilChanged()
         
         title = nextEventObservable
-            .compactMap { $0 }
+            .skipNil()
             .map(\.event.title)
             .distinctUntilChanged()
 
@@ -72,7 +72,7 @@ class NextEventViewModel {
         dateFormatter.maximumUnitCount = 2
 
         time = nextEventObservable
-            .compactMap { $0 }
+            .skipNil()
             .map { [dateProvider] event, isInProgress in
 
                 dateFormatter.allowedUnits = [.hour, .minute]

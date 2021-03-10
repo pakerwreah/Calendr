@@ -30,7 +30,7 @@ extension WorkspaceServiceProviding {
 
         let detector = try! NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
 
-        return texts.compactMap().flatMap { text in
+        return texts.compact().flatMap { text in
             detector
                 .matches(in: text, options: [], range: NSRange(location: 0, length: text.count))
                 .filter { text[Range($0.range, in: text)!].contains("://") }
