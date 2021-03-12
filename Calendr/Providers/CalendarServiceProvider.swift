@@ -13,6 +13,7 @@ protocol CalendarServiceProviding {
 
     func calendars() -> Observable<[CalendarModel]>
     func events(from start: Date, to end: Date, calendars: [String]) -> Observable<[EventModel]>
+    func event(_ identifier: String) -> EventDetailsModel?
 }
 
 class CalendarServiceProvider: CalendarServiceProviding {
@@ -76,26 +77,8 @@ class CalendarServiceProvider: CalendarServiceProviding {
             )
 
             let events = store.events(matching: predicate)
-                .map {
-                    ($0, $0.attendees?.first(where: \.isCurrentUser).map(\.participantStatus))
-                }
-                .filter {
-                    $1 != .declined
-                }
-                .map { event, status in
-                    EventModel(
-                        start: event.startDate,
-                        end: event.endDate,
-                        title: event.title,
-                        location: event.location,
-                        notes: event.notes,
-                        url: event.url,
-                        isAllDay: event.isAllDay,
-                        isPending: status == .pending,
-                        isBirthday: event.birthdayContactIdentifier.isNotNil,
-                        calendar: CalendarModel(from: event.calendar)
-                    )
-                }
+                .filter { $0.status != .declined }
+                .map(EventModel.init(from:))
 
             observer.onNext(events)
 
@@ -103,9 +86,32 @@ class CalendarServiceProvider: CalendarServiceProviding {
         }
         .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
     }
+
+    func event(_ identifier: String) -> EventDetailsModel? {
+        let group = DispatchGroup()
+        group.enter()
+
+        var details: EventDetailsModel?
+        // I have no idea why I have to request authorization again
+        store.requestAccess(to: .event) { [store] _, _ in
+            details = store.event(withIdentifier: identifier)
+            group.leave()
+        }
+        group.wait()
+
+        return details
+    }
+}
+
+extension EKEvent {
+
+    var status: EKParticipantStatus {
+        attendees?.first(where: \.isCurrentUser).map(\.participantStatus) ?? .unknown
+    }
 }
 
 private extension CalendarModel {
+
     init(from calendar: EKCalendar) {
         self.init(
             identifier: calendar.calendarIdentifier,
@@ -115,3 +121,24 @@ private extension CalendarModel {
         )
     }
 }
+
+private extension EventModel {
+
+    init(from event: EKEvent) {
+        self.init(
+            id: event.eventIdentifier,
+            start: event.startDate,
+            end: event.endDate,
+            title: event.title,
+            location: event.location,
+            notes: event.notes,
+            url: event.url,
+            isAllDay: event.isAllDay,
+            isPending: event.status == .pending,
+            isBirthday: event.birthdayContactIdentifier.isNotNil,
+            calendar: .init(from: event.calendar)
+        )
+    }
+}
+
+typealias EventDetailsModel = EKEvent

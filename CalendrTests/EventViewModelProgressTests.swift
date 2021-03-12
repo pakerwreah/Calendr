@@ -15,6 +15,7 @@ class EventViewModelProgressTests: XCTestCase {
     let disposeBag = DisposeBag()
 
     let dateProvider = MockDateProvider()
+    let calendarService = MockCalendarServiceProvider()
     let workspace = MockWorkspaceServiceProvider()
 
     func testProgress_isAllDay_shouldNotCalculateProgress() {
@@ -239,6 +240,7 @@ class EventViewModelProgressTests: XCTestCase {
         EventViewModel(
             event: .make(start: start, end: end, isAllDay: isAllDay),
             dateProvider: dateProvider,
+            calendarService: calendarService,
             workspace: workspace,
             scheduler: scheduler
         )

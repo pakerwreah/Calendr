@@ -50,7 +50,8 @@ class CalendarCellView: NSView {
         label.size(equalTo: CGSize(width: 24, height: 13))
         label.textColor = .headerTextColor
 
-        let eventsContainer = NSView(wrapping: eventsStackView)
+        let eventsContainer = NSView()
+        eventsContainer.addSubview(eventsStackView)
 
         eventsStackView.spacing = 2
         eventsStackView.top(equalTo: eventsContainer)

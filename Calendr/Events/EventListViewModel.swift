@@ -22,6 +22,7 @@ class EventListViewModel {
         dateObservable: Observable<Date>,
         eventsObservable: Observable<[EventModel]>,
         dateProvider: DateProviding,
+        calendarService: CalendarServiceProviding,
         workspace: WorkspaceServiceProviding,
         settings: EventSettings,
         scheduler: SchedulerType = WallTimeScheduler()
@@ -41,6 +42,7 @@ class EventListViewModel {
             EventViewModel(
                 event: event,
                 dateProvider: dateProvider,
+                calendarService: calendarService,
                 workspace: workspace,
                 scheduler: scheduler
             )

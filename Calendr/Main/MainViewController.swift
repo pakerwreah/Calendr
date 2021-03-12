@@ -113,6 +113,7 @@ class MainViewController: NSViewController {
             dateObservable: selectedDate,
             eventsObservable: eventsObservable,
             dateProvider: dateProvider,
+            calendarService: calendarService,
             workspace: workspace,
             settings: settingsViewModel
         )

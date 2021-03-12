@@ -9,11 +9,6 @@ import Cocoa
 
 extension NSView {
 
-    convenience init(wrapping: NSView) {
-        self.init()
-        addSubview(wrapping)
-    }
-
     static var dummy: NSView {
         NSView.spacer.with(width: 0).with(height: 0)
     }

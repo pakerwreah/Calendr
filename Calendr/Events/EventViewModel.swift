@@ -10,6 +10,7 @@ import RxSwift
 
 class EventViewModel {
 
+    let identifier: String
     let title: String
     let subtitle: String
     let duration: String
@@ -24,13 +25,21 @@ class EventViewModel {
     let isFaded: Observable<Bool>
     let progress: Observable<CGFloat?>
 
+    private let dateProvider: DateProviding
+    private let calendarService: CalendarServiceProviding
+
     init(
         event: EventModel,
         dateProvider: DateProviding,
+        calendarService: CalendarServiceProviding,
         workspace: WorkspaceServiceProviding,
         scheduler: SchedulerType = WallTimeScheduler()
     ) {
 
+        self.dateProvider = dateProvider
+        self.calendarService = calendarService
+
+        identifier = event.id
         title = event.title
         color = event.calendar.color
         isPending = event.isPending
@@ -121,7 +130,7 @@ class EventViewModel {
                         .startWith(())
                 )
                 .startWith(())
-                .take(until: isPast.filter(\.isTrue))
+                .take(until: isPast.matching(true))
 
         } else {
             isPast = .just(true)
@@ -154,5 +163,13 @@ class EventViewModel {
         let progressBackgroundColor = color.copy(alpha: 0.1)!
 
         backgroundColor = isInProgress.map { $0 ? progressBackgroundColor : .clear }
+    }
+
+    func makeDetails() -> EventDetailsViewModel? {
+        EventDetailsViewModel(
+            identifier: identifier,
+            dateProvider: dateProvider,
+            calendarService: calendarService
+        )
     }
 }

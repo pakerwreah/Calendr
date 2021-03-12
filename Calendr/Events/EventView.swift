@@ -7,6 +7,7 @@
 
 import RxCocoa
 import RxSwift
+import RxGesture
 import CoreImage.CIFilterBuiltins
 
 class EventView: NSView {
@@ -45,11 +46,11 @@ class EventView: NSView {
         title.stringValue = viewModel.title
 
         subtitle.stringValue = viewModel.subtitle.replacingOccurrences(of: "https://", with: "")
-        subtitle.isHidden = subtitle.stringValue.isEmpty
+        subtitle.isHidden = subtitle.isEmpty
         subtitle.toolTip = viewModel.subtitle
 
         duration.stringValue = viewModel.duration
-        duration.isHidden = duration.stringValue.isEmpty
+        duration.isHidden = duration.isEmpty
 
         videoBtn.isHidden = viewModel.linkURL == nil
 
@@ -121,6 +122,26 @@ class EventView: NSView {
 
         progress.height(equalTo: 1)
         progress.width(equalTo: self)
+
+        rx.leftClickGesture()
+            .when(.recognized)
+            .compactMap { [viewModel] _ in
+                viewModel.makeDetails()
+            }
+            .withUnretained(self)
+            .flatMapLatest { view, viewModel -> Observable<Void> in
+                let vc = EventDetailsViewController(viewModel: viewModel)
+                let popover = NSPopover()
+                popover.behavior = .transient
+                popover.contentViewController = vc
+                popover.delegate = vc
+                popover.show(relativeTo: .zero, of: view, preferredEdge: .minX)
+                return popover.rx.deallocated
+            }
+            .bind(with: self) { view, _ in
+                view.window?.makeKey()
+            }
+            .disposed(by: disposeBag)
     }
 
     private func setUpBindings() {

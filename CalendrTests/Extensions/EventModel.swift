@@ -10,6 +10,7 @@ import Foundation
 
 extension EventModel {
     static func make(
+        id: String = "",
         start: Date = Date(),
         end: Date = Date(),
         title: String = "",
@@ -23,6 +24,7 @@ extension EventModel {
     ) -> EventModel {
 
         .init(
+            id: id,
             start: start,
             end: end,
             title: title,

@@ -17,6 +17,7 @@ private struct EventViewPreview: NSViewRepresentable {
         EventView(
             viewModel: EventViewModel(
                 event: EventModel(
+                    id: "",
                     start: now + 5,
                     end: now + 15,
                     title: "Test Event",
@@ -34,6 +35,7 @@ private struct EventViewPreview: NSViewRepresentable {
                     )
                 ),
                 dateProvider: DateProvider(calendar: .current),
+                calendarService: CalendarServiceProvider(),
                 workspace: WorkspaceServiceProvider()
             )
         )
