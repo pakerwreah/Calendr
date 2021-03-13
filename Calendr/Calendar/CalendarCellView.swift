@@ -95,16 +95,15 @@ class CalendarCellView: NSView {
             .bind(to: eventsStackView.rx.arrangedSubviews)
             .disposed(by: disposeBag)
 
-        rx.sentMessage(#selector(NSView.mouseUp))
+        rx.leftClickGesture()
+            .when(.recognized)
             .withLatestFrom(viewModel.map(\.date))
             .bind(to: clickObserver)
             .disposed(by: disposeBag)
 
         Observable.merge(
-            rx.sentMessage(#selector(NSView.mouseEntered))
-                .withLatestFrom(viewModel.map(\.date)).toOptional(),
-            rx.sentMessage(#selector(NSView.mouseExited))
-                .toVoid().map { nil }
+            rx.mouseEntered.withLatestFrom(viewModel.map(\.date)).toOptional(),
+            rx.mouseExited.map { nil }
         )
         .bind(to: hoverObserver)
         .disposed(by: disposeBag)

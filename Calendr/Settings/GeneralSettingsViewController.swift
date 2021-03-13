@@ -143,8 +143,8 @@ class GeneralSettingsViewController: NSViewController {
 
         bind(
             control: hidePastEventsRadio,
-            observable: viewModel.showPastEvents.map(\.isFalse),
-            observer: viewModel.togglePastEvents.mapObserver(\.isFalse)
+            observable: viewModel.showPastEvents.map(!),
+            observer: viewModel.togglePastEvents.mapObserver(!)
         )
 
         viewModel.popoverTransparency

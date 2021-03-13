@@ -59,7 +59,7 @@ struct EventView_Previews: PreviewProvider {
 
     static func make(_ color: ColorScheme) -> some View {
         ZStack {
-            Color(.windowBackgroundColor)
+            Color(.controlBackgroundColor)
             EventViewPreview()
         }
         .frame(width: 180, height: 50)

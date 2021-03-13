@@ -88,7 +88,7 @@ class NextEventView: NSView {
             .disposed(by: disposeBag)
 
         viewModel.hasEvent
-            .map(\.isFalse)
+            .map(!)
             .bind(to: rx.isHidden)
             .disposed(by: disposeBag)
     }
