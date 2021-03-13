@@ -17,6 +17,7 @@ class EventViewModelFadeTests: XCTestCase {
     let dateProvider = MockDateProvider()
     let calendarService = MockCalendarServiceProvider()
     let workspace = MockWorkspaceServiceProvider()
+    let settings = MockEventSettings()
 
     func testFade_isAllDay_shouldNotFade() {
 
@@ -173,7 +174,8 @@ class EventViewModelFadeTests: XCTestCase {
             event: .make(start: start, end: end, isAllDay: isAllDay),
             dateProvider: dateProvider,
             calendarService: calendarService,
-            workspace: workspace
+            workspace: workspace,
+            settings: settings
         )
     }
 }

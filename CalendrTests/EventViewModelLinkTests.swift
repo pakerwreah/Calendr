@@ -13,6 +13,7 @@ class EventViewModelLinkTests: XCTestCase {
     let dateProvider = MockDateProvider()
     let calendarService = MockCalendarServiceProvider()
     let workspace = MockWorkspaceServiceProvider()
+    let settings = MockEventSettings()
 
     func testLink_withRegularLocation_withoutURL_shouldNotShowLinkButton() {
 
@@ -149,7 +150,8 @@ class EventViewModelLinkTests: XCTestCase {
             event: event,
             dateProvider: dateProvider,
             calendarService: calendarService,
-            workspace: workspace
+            workspace: workspace,
+            settings: settings
         )
     }
 }

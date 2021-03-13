@@ -24,7 +24,7 @@ class EventListViewModel {
         dateProvider: DateProviding,
         calendarService: CalendarServiceProviding,
         workspace: WorkspaceServiceProviding,
-        settings: EventSettings,
+        settings: EventListSettings,
         scheduler: SchedulerType = WallTimeScheduler()
     ) {
 
@@ -44,6 +44,7 @@ class EventListViewModel {
                 dateProvider: dateProvider,
                 calendarService: calendarService,
                 workspace: workspace,
+                settings: settings,
                 scheduler: scheduler
             )
         }

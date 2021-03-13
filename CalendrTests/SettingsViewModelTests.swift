@@ -77,12 +77,12 @@ class SettingsViewModelTests: XCTestCase {
 
         var showStatusItemIcon: Bool?
         var showStatusItemDate: Bool?
-        var statusItemDateStyle: DateFormatter.Style?
+        var statusItemDateStyle: DateStyle?
         var showEventStatusItem: Bool?
         var showWeekNumbers: Bool?
         var showPastEvents: Bool?
         var popoverTransparency: Int?
-        var popoverMaterial: NSVisualEffectView.Material?
+        var popoverMaterial: PopoverMaterial?
 
         viewModel.showStatusItemIcon
             .bind { showStatusItemIcon = $0 }
@@ -175,7 +175,7 @@ class SettingsViewModelTests: XCTestCase {
 
         userDefaultsDateStyle = 2
 
-        var statusItemDateStyle: DateFormatter.Style?
+        var statusItemDateStyle: DateStyle?
 
         viewModel.statusItemDateStyle
             .bind { statusItemDateStyle = $0 }
@@ -266,7 +266,7 @@ class SettingsViewModelTests: XCTestCase {
         userDefaultsTransparency = 5
 
         var popoverTransparency: Int?
-        var popoverMaterial: NSVisualEffectView.Material?
+        var popoverMaterial: PopoverMaterial?
 
         viewModel.popoverTransparency
             .bind { popoverTransparency = $0 }
@@ -276,7 +276,7 @@ class SettingsViewModelTests: XCTestCase {
             .bind { popoverMaterial = $0 }
             .disposed(by: disposeBag)
 
-        let expected: [NSVisualEffectView.Material] = [
+        let expected: [PopoverMaterial] = [
             .contentBackground,
             .sheet,
             .headerView,

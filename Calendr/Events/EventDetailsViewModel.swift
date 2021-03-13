@@ -15,7 +15,14 @@ class EventDetailsViewModel {
     let location: String
     let notes: String
 
-    init?(identifier: String, dateProvider: DateProviding, calendarService: CalendarServiceProviding) {
+    let popoverMaterial: Observable<PopoverMaterial>
+
+    init?(
+        identifier: String,
+        dateProvider: DateProviding,
+        calendarService: CalendarServiceProviding,
+        settings: EventSettings
+    ) {
 
         guard let event = calendarService.event(identifier) else { return nil }
 
@@ -35,5 +42,7 @@ class EventDetailsViewModel {
             formatter.timeStyle = .short
             duration = formatter.string(from: event.startDate, to: event.endDate)
         }
+
+        popoverMaterial = settings.popoverMaterial
     }
 }

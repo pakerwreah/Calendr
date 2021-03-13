@@ -9,9 +9,17 @@
 
 import SwiftUI
 
-private struct EventViewPreview: NSViewRepresentable {
+private final class EventViewPreview: NSViewRepresentable {
 
     let now = Date()
+    let dateProvider = DateProvider(calendar: .current)
+    let calendarService = CalendarServiceProvider()
+    let workspace = WorkspaceServiceProvider()
+    lazy var settings = SettingsViewModel(
+        dateProvider: dateProvider,
+        userDefaults: .init(),
+        notificationCenter: .init()
+    )
 
     func makeNSView(context: Context) -> EventView {
         EventView(
@@ -34,9 +42,10 @@ private struct EventViewPreview: NSViewRepresentable {
                         color: NSColor.systemYellow.cgColor
                     )
                 ),
-                dateProvider: DateProvider(calendar: .current),
-                calendarService: CalendarServiceProvider(),
-                workspace: WorkspaceServiceProvider()
+                dateProvider: dateProvider,
+                calendarService: calendarService,
+                workspace: workspace,
+                settings: settings
             )
         )
     }

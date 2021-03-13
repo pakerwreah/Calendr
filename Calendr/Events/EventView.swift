@@ -47,7 +47,6 @@ class EventView: NSView {
 
         subtitle.stringValue = viewModel.subtitle.replacingOccurrences(of: "https://", with: "")
         subtitle.isHidden = subtitle.isEmpty
-        subtitle.toolTip = viewModel.subtitle
 
         duration.stringValue = viewModel.duration
         duration.isHidden = duration.isEmpty
@@ -125,9 +124,8 @@ class EventView: NSView {
 
         rx.leftClickGesture()
             .when(.recognized)
-            .compactMap { [viewModel] _ in
-                viewModel.makeDetails()
-            }
+            .toVoid()
+            .compactMap(viewModel.makeDetails)
             .withUnretained(self)
             .flatMapLatest { view, viewModel -> Observable<Void> in
                 let vc = EventDetailsViewController(viewModel: viewModel)

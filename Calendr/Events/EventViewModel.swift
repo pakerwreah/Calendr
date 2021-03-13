@@ -27,15 +27,18 @@ class EventViewModel {
 
     private let dateProvider: DateProviding
     private let calendarService: CalendarServiceProviding
+    private let settings: EventSettings
 
     init(
         event: EventModel,
         dateProvider: DateProviding,
         calendarService: CalendarServiceProviding,
         workspace: WorkspaceServiceProviding,
+        settings: EventSettings,
         scheduler: SchedulerType = WallTimeScheduler()
     ) {
 
+        self.settings = settings
         self.dateProvider = dateProvider
         self.calendarService = calendarService
 
@@ -169,7 +172,8 @@ class EventViewModel {
         EventDetailsViewModel(
             identifier: identifier,
             dateProvider: dateProvider,
-            calendarService: calendarService
+            calendarService: calendarService,
+            settings: settings
         )
     }
 }

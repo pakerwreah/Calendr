@@ -8,10 +8,13 @@
 import RxCocoa
 import RxSwift
 
+typealias DateStyle = DateFormatter.Style
+typealias PopoverMaterial = NSVisualEffectView.Material
+
 protocol StatusItemSettings {
     var showStatusItemIcon: Observable<Bool> { get }
     var showStatusItemDate: Observable<Bool> { get }
-    var statusItemDateStyle: Observable<DateFormatter.Style> { get }
+    var statusItemDateStyle: Observable<DateStyle> { get }
 }
 
 protocol CalendarSettings {
@@ -19,6 +22,10 @@ protocol CalendarSettings {
 }
 
 protocol EventSettings {
+    var popoverMaterial: Observable<PopoverMaterial> { get }
+}
+
+protocol EventListSettings: EventSettings {
     var showPastEvents: Observable<Bool> { get }
 }
 
@@ -26,12 +33,12 @@ protocol NextEventSettings {
     var showEventStatusItem: Observable<Bool> { get }
 }
 
-class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings, EventSettings  {
+class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings, EventListSettings  {
 
     // Observers
     let toggleStatusItemIcon: AnyObserver<Bool>
     let toggleStatusItemDate: AnyObserver<Bool>
-    let statusItemDateStyleObserver: AnyObserver<DateFormatter.Style>
+    let statusItemDateStyleObserver: AnyObserver<DateStyle>
     let toggleEventStatusItem: AnyObserver<Bool>
     let toggleWeekNumbers: AnyObserver<Bool>
     let togglePastEvents: AnyObserver<Bool>
@@ -40,12 +47,12 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
     // Observables
     var showStatusItemIcon: Observable<Bool>
     var showStatusItemDate: Observable<Bool>
-    var statusItemDateStyle: Observable<DateFormatter.Style>
+    var statusItemDateStyle: Observable<DateStyle>
     let showEventStatusItem: Observable<Bool>
     let showWeekNumbers: Observable<Bool>
     let showPastEvents: Observable<Bool>
     let popoverTransparency: Observable<Int>
-    let popoverMaterial: Observable<NSVisualEffectView.Material>
+    let popoverMaterial: Observable<PopoverMaterial>
 
     let dateFormatOptions: Observable<[String]>
 
@@ -72,7 +79,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
             value: userDefaults.bool(forKey: Prefs.statusItemDateEnabled)
         )
         let statusItemDateStyleBehavior = BehaviorSubject(
-            value: DateFormatter.Style(rawValue: UInt(userDefaults.integer(forKey: Prefs.statusItemDateStyle))) ?? .none
+            value: DateStyle(rawValue: UInt(userDefaults.integer(forKey: Prefs.statusItemDateStyle))) ?? .none
         )
         let showEventStatusItemBehavior = BehaviorSubject(
             value: userDefaults.bool(forKey: Prefs.showEventStatusItem)
@@ -145,7 +152,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
             .share(replay: 1)
 
         popoverMaterial = transparencyBehavior
-            .map { value -> NSVisualEffectView.Material in
+            .map { value -> PopoverMaterial in
                 [.contentBackground,
                  .sheet,
                  .headerView,
@@ -164,7 +171,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
                 var options: [String] = []
 
                 for i: UInt in 1...4 {
-                    dateFormatter.dateStyle = DateFormatter.Style(rawValue: i) ?? .none
+                    dateFormatter.dateStyle = DateStyle(rawValue: i) ?? .none
                     options.append(dateFormatter.string(from: dateProvider.now))
                 }
 

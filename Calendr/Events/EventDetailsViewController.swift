@@ -6,8 +6,11 @@
 //
 
 import Cocoa
+import RxSwift
 
 class EventDetailsViewController: NSViewController, NSPopoverDelegate {
+
+    private let disposeBag = DisposeBag()
 
     private let _title = Label()
     private let url = Label()
@@ -26,6 +29,8 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         self.viewModel = viewModel
 
         super.init(nibName: nil, bundle: nil)
+
+        setUpBindings()
     }
 
     override func loadView() {
@@ -83,7 +88,22 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         }
     }
 
+    private func setUpBindings() {
+
+        let popoverView = view.rx.observe(\.superview)
+            .compactMap { $0 as? NSVisualEffectView }
+            .take(1)
+
+        Observable.combineLatest(
+            popoverView, viewModel.popoverMaterial
+        )
+        .bind { $0.material = $1 }
+        .disposed(by: disposeBag)
+    }
+
     func popoverWillClose(_ notification: Notification) {
+        // 🔨 Fix a bug when selecting some text and closing the popover
+        // causes the resignFirstResponder to go crazy and doesn't select anymore
         view.window?.makeFirstResponder(nil)
     }
 

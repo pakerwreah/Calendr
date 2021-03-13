@@ -19,7 +19,7 @@ class EventListViewModelTests: XCTestCase {
     let dateProvider = MockDateProvider()
     let calendarService = MockCalendarServiceProvider()
     let workspace = MockWorkspaceServiceProvider()
-    let settings = MockEventSettings()
+    let settings = MockEventListSettings()
     lazy var scheduler = TrackedHistoricalScheduler(initialClock: dateProvider.now)
 
     lazy var viewModel = EventListViewModel(
