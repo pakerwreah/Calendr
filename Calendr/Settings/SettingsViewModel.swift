@@ -5,7 +5,7 @@
 //  Created by Paker on 16/01/21.
 //
 
-import RxCocoa
+import Cocoa
 import RxSwift
 
 typealias DateStyle = DateFormatter.Style

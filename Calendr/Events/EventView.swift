@@ -5,7 +5,7 @@
 //  Created by Paker on 23/01/21.
 //
 
-import RxCocoa
+import Cocoa
 import RxSwift
 import RxGesture
 import CoreImage.CIFilterBuiltins
@@ -67,7 +67,7 @@ class EventView: NSView {
         layer?.cornerRadius = 2
 
         hoverLayer.isHidden = true
-        hoverLayer.backgroundColor = NSColor.quaternaryLabelColor.cgColor
+        hoverLayer.backgroundColor = NSColor.gray.cgColor.copy(alpha: 0.2)
         layer?.addSublayer(hoverLayer)
 
         icon.forceVibrancy = false
@@ -91,7 +91,7 @@ class EventView: NSView {
 
         let colorBar = NSView()
         colorBar.wantsLayer = true
-        colorBar.layer?.backgroundColor = viewModel.color
+        colorBar.layer?.backgroundColor = viewModel.color.cgColor
         colorBar.layer?.cornerRadius = 2
         colorBar.width(equalTo: 4)
 
@@ -122,8 +122,7 @@ class EventView: NSView {
         addSubview(progress, positioned: .below, relativeTo: nil)
 
         progress.wantsLayer = true
-        progress.layer?.backgroundColor = NSColor.red.cgColor.copy(alpha: 0.5)
-
+        progress.layer?.backgroundColor = NSColor.red.cgColor.copy(alpha: 0.7)
         progress.height(equalTo: 1)
         progress.width(equalTo: self)
 
@@ -148,11 +147,6 @@ class EventView: NSView {
             view.window?.makeKey()
         }
         .disposed(by: disposeBag)
-    }
-
-    override func updateLayer() {
-        super.updateLayer()
-        hoverLayer.frame = bounds
     }
 
     private func setUpBindings() {
@@ -197,8 +191,14 @@ class EventView: NSView {
             .disposed(by: disposeBag)
 
         viewModel.backgroundColor
+            .map(\.cgColor)
             .bind(to: layer!.rx.backgroundColor)
             .disposed(by: disposeBag)
+    }
+
+    override func updateLayer() {
+        super.updateLayer()
+        hoverLayer.frame = bounds
     }
 
     override func updateTrackingAreas() {

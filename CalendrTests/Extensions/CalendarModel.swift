@@ -5,7 +5,7 @@
 //  Created by Paker on 21/02/2021.
 //
 
-import Foundation
+import Cocoa
 @testable import Calendr
 
 extension CalendarModel {
@@ -13,7 +13,7 @@ extension CalendarModel {
         identifier: String = "",
         account: String = "",
         title: String = "",
-        color: CGColor = .clear
+        color: NSColor = .clear
     ) -> CalendarModel {
 
         .init(

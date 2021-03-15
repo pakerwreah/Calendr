@@ -5,7 +5,7 @@
 //  Created by Paker on 28/01/21.
 //
 
-import RxCocoa
+import Cocoa
 import RxSwift
 
 class GeneralSettingsViewController: NSViewController {
@@ -93,7 +93,11 @@ class GeneralSettingsViewController: NSViewController {
 
         let divider: NSView = .spacer(height: 1)
         divider.wantsLayer = true
-        divider.layer?.backgroundColor = NSColor.separatorColor.cgColor
+
+        divider.rx.updateLayer
+            .map { NSColor.tertiaryLabelColor.cgColor }
+            .bind(to: divider.layer!.rx.backgroundColor)
+            .disposed(by: disposeBag)
 
         let stackView = NSStackView(views: [
             label,

@@ -5,7 +5,7 @@
 //  Created by Paker on 24/02/2021.
 //
 
-import RxCocoa
+import Cocoa
 import RxSwift
 
 class NextEventView: NSView {
@@ -71,10 +71,12 @@ class NextEventView: NSView {
     private func setUpBindings() {
 
         viewModel.barColor
+            .map(\.cgColor)
             .bind(to: colorBar.layer!.rx.backgroundColor)
             .disposed(by: disposeBag)
 
         viewModel.backgroundColor
+            .map(\.cgColor)
             .bind(to: nextEventView.layer!.rx.backgroundColor)
             .disposed(by: disposeBag)
 

@@ -39,7 +39,7 @@ private final class EventViewPreview: NSViewRepresentable {
                         identifier: "",
                         account: "",
                         title: "",
-                        color: NSColor.systemYellow.cgColor
+                        color: .systemYellow
                     )
                 ),
                 dateProvider: dateProvider,

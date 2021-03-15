@@ -23,4 +23,8 @@ extension Reactive where Base: NSView {
             mouseExited.map { false }
         )
     }
+
+    var updateLayer: Observable<Void> {
+        methodInvoked(#selector(Base.updateLayer)).toVoid()
+    }
 }

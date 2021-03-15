@@ -84,7 +84,7 @@ class NextEventViewModelTests: XCTestCase {
 
     func testNextEvent_barColor() {
 
-        var color: CGColor?
+        var color: NSColor?
 
         viewModel.barColor
             .bind { color = $0 }
@@ -99,7 +99,7 @@ class NextEventViewModelTests: XCTestCase {
 
     func testNextEvent_isNotInProgress_backgroundColor() {
 
-        var color: CGColor?
+        var color: NSColor?
 
         viewModel.backgroundColor
             .bind { color = $0 }
@@ -114,7 +114,7 @@ class NextEventViewModelTests: XCTestCase {
 
     func testNextEvent_isInProgress_backgroundColor() {
 
-        var color: CGColor?
+        var color: NSColor?
 
         viewModel.backgroundColor
             .bind { color = $0 }
@@ -124,7 +124,7 @@ class NextEventViewModelTests: XCTestCase {
             .make(start: now - 1, end: now + 1, calendar: .make(color: .white))
         ])
 
-        XCTAssertEqual(color, CGColor.white.copy(alpha: 0.2))
+        XCTAssertEqual(color, NSColor.white.withAlphaComponent(0.2))
     }
 
     func testNextEvent_isAllDay_shouldNotAppear() {

@@ -5,15 +5,15 @@
 //  Created by Paker on 24/02/2021.
 //
 
-import RxCocoa
+import Cocoa
 import RxSwift
 
 class NextEventViewModel {
 
     let title: Observable<String>
     let time: Observable<String>
-    let barColor: Observable<CGColor>
-    let backgroundColor: Observable<CGColor>
+    let barColor: Observable<NSColor>
+    let backgroundColor: Observable<NSColor>
     let hasEvent: Observable<Bool>
 
     init(
@@ -58,7 +58,7 @@ class NextEventViewModel {
 
         backgroundColor = nextEventObservable
             .skipNil()
-            .map { $0.isInProgress ? $0.event.calendar.color.copy(alpha: 0.2)!: .clear }
+            .map { $0.isInProgress ? $0.event.calendar.color.withAlphaComponent(0.2): .clear }
             .distinctUntilChanged()
         
         title = nextEventObservable

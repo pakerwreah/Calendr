@@ -5,7 +5,7 @@
 //  Created by Paker on 18/01/21.
 //
 
-import RxCocoa
+import Cocoa
 import RxSwift
 
 class StatusItemViewModel {
@@ -27,15 +27,12 @@ class StatusItemViewModel {
         let localeChangeObservable = notificationCenter.rx
             .notification(NSLocale.currentLocaleDidChangeNotification)
             .toVoid()
-            .startWith(())
 
-        let dateFormatterObservable = Observable.combineLatest(
-            settings.statusItemDateStyle,
-            localeChangeObservable
-        )
-        .map { dateStyle, _ in
-            DateFormatter(locale: dateProvider.calendar.locale).with(style: dateStyle)
-        }
+        let dateFormatterObservable = settings.statusItemDateStyle
+            .repeat(when: localeChangeObservable)
+            .map { dateStyle in
+                DateFormatter(locale: dateProvider.calendar.locale).with(style: dateStyle)
+            }
 
         text = Observable.combineLatest(
             dateObservable,

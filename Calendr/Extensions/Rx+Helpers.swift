@@ -25,6 +25,10 @@ extension ObservableType {
     func skipNil<T>() -> Observable<T> where Element == T? {
         compactMap { $0 }
     }
+
+    func `repeat`<T: ObservableType>(when other: T) -> Observable<Element> where T.Element == Void {
+        Observable.combineLatest(self, other.startWith(())).map(\.0)
+    }
 }
 
 extension PublishSubject {

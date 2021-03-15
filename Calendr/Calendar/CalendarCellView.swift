@@ -7,7 +7,6 @@
 
 import Cocoa
 import RxSwift
-import RxCocoa
 
 class CalendarCellView: NSView {
 
@@ -19,6 +18,7 @@ class CalendarCellView: NSView {
 
     private let label = Label()
     private let eventsStackView = NSStackView()
+    private let borderLayer = CALayer()
 
     init(
         viewModel: Observable<CalendarCellViewModel>,
@@ -42,8 +42,9 @@ class CalendarCellView: NSView {
         forAutoLayout()
 
         wantsLayer = true
-        layer!.borderWidth = 2
-        layer!.cornerRadius = 5
+        borderLayer.borderWidth = 2
+        borderLayer.cornerRadius = 5
+        layer!.addSublayer(borderLayer)
 
         label.alignment = .center
         label.font = .systemFont(ofSize: 12)
@@ -83,15 +84,16 @@ class CalendarCellView: NSView {
             .disposed(by: disposeBag)
 
         viewModel
-            .map(\.borderColor)
+            .repeat(when: rx.updateLayer)
+            .map(\.borderColor.cgColor)
             .distinctUntilChanged()
-            .bind(to: layer!.rx.borderColor)
+            .bind(to: borderLayer.rx.borderColor)
             .disposed(by: disposeBag)
 
         viewModel
             .map(\.dots)
             .distinctUntilChanged()
-            .compactMap { $0?.map(Self.makeEventDot) }
+            .compactMap { $0?.map(makeEventDot) }
             .bind(to: eventsStackView.rx.arrangedSubviews)
             .disposed(by: disposeBag)
 
@@ -109,25 +111,30 @@ class CalendarCellView: NSView {
         .disposed(by: disposeBag)
     }
 
+    override func updateLayer() {
+        super.updateLayer()
+        borderLayer.frame = bounds
+    }
+
     override func updateTrackingAreas() {
         trackingAreas.forEach(removeTrackingArea(_:))
         addTrackingRect(bounds, owner: self, userData: nil, assumeInside: false)
     }
 
-    private static func makeEventDot(color: CGColor) -> NSView {
-        let view = NSView()
-        view.size(equalTo: Constants.eventDotSize)
-        view.wantsLayer = true
-        view.layer.map { layer in
-            layer.backgroundColor = color
-            layer.cornerRadius = Constants.eventDotSize / 2
-        }
-        return view
-    }
-
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+}
+
+private func makeEventDot(color: NSColor) -> NSView {
+    let view = NSView()
+    view.size(equalTo: Constants.eventDotSize)
+    view.wantsLayer = true
+    view.layer.map { layer in
+        layer.backgroundColor = color.cgColor
+        layer.cornerRadius = Constants.eventDotSize / 2
+    }
+    return view
 }
 
 private enum Constants {

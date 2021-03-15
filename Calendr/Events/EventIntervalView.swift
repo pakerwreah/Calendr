@@ -5,7 +5,7 @@
 //  Created by Paker on 01/03/2021.
 //
 
-import RxCocoa
+import Cocoa
 import RxSwift
 
 class EventIntervalView: NSView {

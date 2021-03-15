@@ -5,7 +5,7 @@
 //  Created by Paker on 23/01/21.
 //
 
-import RxCocoa
+import Cocoa
 import RxSwift
 
 class EventViewModel {
@@ -14,14 +14,14 @@ class EventViewModel {
     let title: String
     let subtitle: String
     let duration: String
-    let color: CGColor
+    let color: NSColor
     let isPending: Bool
     let isBirthday: Bool
     let isMeeting: Bool
     let linkURL: URL?
 
     let isInProgress: Observable<Bool>
-    let backgroundColor: Observable<CGColor>
+    let backgroundColor: Observable<NSColor>
     let isFaded: Observable<Bool>
     let progress: Observable<CGFloat?>
 
@@ -163,7 +163,7 @@ class EventViewModel {
 
         isInProgress = progress.map(\.isNotNil).distinctUntilChanged()
 
-        let progressBackgroundColor = color.copy(alpha: 0.1)!
+        let progressBackgroundColor = color.withAlphaComponent(0.15)
 
         backgroundColor = isInProgress.map { $0 ? progressBackgroundColor : .clear }
     }

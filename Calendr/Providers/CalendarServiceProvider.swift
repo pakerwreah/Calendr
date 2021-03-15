@@ -117,7 +117,7 @@ private extension CalendarModel {
             identifier: calendar.calendarIdentifier,
             account: calendar.source.title,
             title: calendar.title,
-            color: calendar.cgColor
+            color: calendar.color
         )
     }
 }

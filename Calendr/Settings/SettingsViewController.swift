@@ -5,8 +5,8 @@
 //  Created by Paker on 14/01/21.
 //
 
+import Cocoa
 import RxSwift
-import RxCocoa
 
 class SettingsViewController: NSTabViewController {
 

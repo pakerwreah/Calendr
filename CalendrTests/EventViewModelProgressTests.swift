@@ -155,7 +155,7 @@ class EventViewModelProgressTests: XCTestCase {
             end: .make(year: 2021, month: 1, day: 1, hour: 15)
         )
 
-        var backgroundColor: CGColor?
+        var backgroundColor: NSColor?
 
         viewModel.backgroundColor
             .bind { backgroundColor = $0 }
@@ -173,13 +173,13 @@ class EventViewModelProgressTests: XCTestCase {
             end: .make(year: 2021, month: 1, day: 1, hour: 15)
         )
 
-        var backgroundColor: CGColor?
+        var backgroundColor: NSColor?
 
         viewModel.backgroundColor
             .bind { backgroundColor = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(backgroundColor, viewModel.color.copy(alpha: 0.1))
+        XCTAssertEqual(backgroundColor, viewModel.color.withAlphaComponent(0.15))
     }
 
     func testProgressClock() {

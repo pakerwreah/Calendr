@@ -370,7 +370,7 @@ class CalendarViewModelTests: XCTestCase {
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
 
-        let expectedEvents: [(date: Date, events: Set<CGColor>)] = [
+        let expectedEvents: [(date: Date, events: Set<NSColor>)] = [
             (.make(year: 2021, month: 1, day: 1), [.white]),
             (.make(year: 2021, month: 1, day: 2), [.white, .black]),
             (.make(year: 2021, month: 1, day: 3), [.white, .clear]),

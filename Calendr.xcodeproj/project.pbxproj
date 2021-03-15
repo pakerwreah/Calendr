@@ -91,7 +91,6 @@
 		34E004A725B61D5200241419 /* StatusItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E004A625B61D5200241419 /* StatusItemViewModel.swift */; };
 		34E1902325B76CFE00E9491B /* CalendarPickerViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E1902225B76CFE00E9491B /* CalendarPickerViewModelTests.swift */; };
 		34F128D125968044007DF31C /* Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F128D025968044007DF31C /* Label.swift */; };
-		34F128DD259690C8007DF31C /* CALayer+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F128DC259690C8007DF31C /* CALayer+Rx.swift */; };
 		34F128E12597B9C9007DF31C /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F128E02597B9C9007DF31C /* MainViewController.swift */; };
 		34F128F22597C340007DF31C /* WeekDayCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F128F12597C340007DF31C /* WeekDayCellView.swift */; };
 		34F88A8125B0C6A3005C9BA6 /* EventModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F88A8025B0C6A3005C9BA6 /* EventModel.swift */; };
@@ -204,7 +203,6 @@
 		34E004A625B61D5200241419 /* StatusItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemViewModel.swift; sourceTree = "<group>"; };
 		34E1902225B76CFE00E9491B /* CalendarPickerViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPickerViewModelTests.swift; sourceTree = "<group>"; };
 		34F128D025968044007DF31C /* Label.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Label.swift; sourceTree = "<group>"; };
-		34F128DC259690C8007DF31C /* CALayer+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CALayer+Rx.swift"; sourceTree = "<group>"; };
 		34F128E02597B9C9007DF31C /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		34F128F12597C340007DF31C /* WeekDayCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekDayCellView.swift; sourceTree = "<group>"; };
 		34F88A8025B0C6A3005C9BA6 /* EventModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventModel.swift; sourceTree = "<group>"; };
@@ -415,7 +413,6 @@
 		347D0FE525954481002451EC /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				34F128DC259690C8007DF31C /* CALayer+Rx.swift */,
 				34702167259E761100827AE7 /* Calendar.swift */,
 				34924CED259FD064009C3450 /* DateFormatter.swift */,
 				34651F5325E22A3900518C5A /* DateIntervalFormatter.swift */,
@@ -755,7 +752,6 @@
 				34F128E12597B9C9007DF31C /* MainViewController.swift in Sources */,
 				3477F3E425FD5285008EA888 /* NSView+Rx.swift in Sources */,
 				348B8CFC25B290C200E518FE /* Prefs.swift in Sources */,
-				34F128DD259690C8007DF31C /* CALayer+Rx.swift in Sources */,
 				34D55FE325F06669007F5C81 /* Sequence.swift in Sources */,
 				347D0FED2595467A002451EC /* CalendarCellView.swift in Sources */,
 				34FD09D925AE269600AAAAE2 /* DateProvider.swift in Sources */,

@@ -107,18 +107,22 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         view.window?.makeFirstResponder(nil)
     }
 
+    private func makeLine() -> NSView {
+
+        let line = NSView.spacer(height: 1)
+        line.wantsLayer = true
+
+        line.rx.updateLayer
+            .map { NSColor.tertiaryLabelColor.cgColor }
+            .bind(to: line.layer!.rx.backgroundColor)
+            .disposed(by: disposeBag)
+
+        return line
+    }
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-}
-
-private func makeLine() -> NSView {
-
-    let line = NSView.spacer(height: 1)
-    line.wantsLayer = true
-    line.layer?.backgroundColor = NSColor.quaternaryLabelColor.cgColor
-
-    return line
 }
 
 

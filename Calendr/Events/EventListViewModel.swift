@@ -5,7 +5,7 @@
 //  Created by Paker on 26/02/2021.
 //
 
-import RxCocoa
+import Cocoa
 import RxSwift
 
 enum EventListItem {
