@@ -12,11 +12,11 @@ class MockStatusItemSettings: StatusItemSettings {
 
     var toggleIcon: AnyObserver<Bool>
     var toggleDate: AnyObserver<Bool>
-    var dateStyleObserver: AnyObserver<DateFormatter.Style>
+    var dateStyleObserver: AnyObserver<DateStyle>
 
     var showStatusItemIcon: Observable<Bool>
     var showStatusItemDate: Observable<Bool>
-    var statusItemDateStyle: Observable<DateFormatter.Style>
+    var statusItemDateStyle: Observable<DateStyle>
 
     init() {
         (showStatusItemIcon, toggleIcon) = BehaviorSubject.pipe(value: true)

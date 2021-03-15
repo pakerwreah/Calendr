@@ -7,7 +7,6 @@
 
 import Cocoa
 import RxSwift
-import RxCocoa
 import RxGesture
 
 @available(OSX 11.0, *)
@@ -113,6 +112,7 @@ class MainViewController: NSViewController {
             dateObservable: selectedDate,
             eventsObservable: eventsObservable,
             dateProvider: dateProvider,
+            calendarService: calendarService,
             workspace: workspace,
             settings: settingsViewModel
         )
@@ -258,7 +258,7 @@ class MainViewController: NSViewController {
 
         Observable.merge(
             NotificationCenter.default.rx.notification(.NSCalendarDayChanged).toVoid(),
-            rx.sentMessage(#selector(NSViewController.viewDidDisappear)).toVoid()
+            rx.viewDidDisappear
         )
         .map { Date() }
         .bind(to: initialDate)
@@ -342,13 +342,12 @@ class MainViewController: NSViewController {
             .bind(to: popover.rx.animates)
             .disposed(by: disposeBag)
 
-        settingsViewController.rx.sentMessage(#selector(NSViewController.viewWillAppear))
-            .toVoid()
+        settingsViewController.rx.viewWillAppear
             .map { .applicationDefined }
             .bind(to: popover.rx.behavior)
             .disposed(by: disposeBag)
 
-        settingsViewController.rx.sentMessage(#selector(NSViewController.viewDidDisappear))
+        settingsViewController.rx.viewDidDisappear
             .withLatestFrom(pinBtn.rx.state)
             .matching(.off)
             .toVoid()

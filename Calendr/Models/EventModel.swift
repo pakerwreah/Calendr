@@ -8,6 +8,7 @@
 import Foundation
 
 struct EventModel: Equatable {
+    let id: String
     let start: Date
     let end: Date
     let title: String

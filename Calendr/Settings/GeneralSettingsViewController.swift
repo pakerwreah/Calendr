@@ -5,7 +5,7 @@
 //  Created by Paker on 28/01/21.
 //
 
-import RxCocoa
+import Cocoa
 import RxSwift
 
 class GeneralSettingsViewController: NSViewController {
@@ -93,7 +93,11 @@ class GeneralSettingsViewController: NSViewController {
 
         let divider: NSView = .spacer(height: 1)
         divider.wantsLayer = true
-        divider.layer?.backgroundColor = NSColor.separatorColor.cgColor
+
+        divider.rx.updateLayer
+            .map { NSColor.tertiaryLabelColor.cgColor }
+            .bind(to: divider.layer!.rx.backgroundColor)
+            .disposed(by: disposeBag)
 
         let stackView = NSStackView(views: [
             label,
@@ -143,8 +147,8 @@ class GeneralSettingsViewController: NSViewController {
 
         bind(
             control: hidePastEventsRadio,
-            observable: viewModel.showPastEvents.map(\.isFalse),
-            observer: viewModel.togglePastEvents.mapObserver(\.isFalse)
+            observable: viewModel.showPastEvents.map(!),
+            observer: viewModel.togglePastEvents.mapObserver(!)
         )
 
         viewModel.popoverTransparency
@@ -158,10 +162,10 @@ class GeneralSettingsViewController: NSViewController {
             .disposed(by: disposeBag)
 
         let dateFormatStyle = dateFormatDropdown.rx.controlProperty(
-            getter: { (dropdown: NSPopUpButton) -> DateFormatter.Style in
-                DateFormatter.Style(rawValue: UInt(dropdown.indexOfSelectedItem + 1)) ?? .none
+            getter: { (dropdown: NSPopUpButton) -> DateStyle in
+                DateStyle(rawValue: UInt(dropdown.indexOfSelectedItem + 1)) ?? .none
             },
-            setter: { (dropdown: NSPopUpButton, style: DateFormatter.Style) in
+            setter: { (dropdown: NSPopUpButton, style: DateStyle) in
                 dropdown.selectItem(at: Int(style.rawValue) - 1)
             }
         )

@@ -5,8 +5,8 @@
 //  Created by Paker on 25/12/20.
 //
 
+import Cocoa
 import RxSwift
-import RxCocoa
 
 extension Reactive where Base: NSStackView {
 

@@ -39,6 +39,8 @@ class CalendarView: NSView {
     }
 
     private func configureLayout() {
+
+        gridView.wantsLayer = true
         gridView.xPlacement = .fill
         gridView.yPlacement = .fill
         gridView.rowSpacing = 0
@@ -57,8 +59,6 @@ class CalendarView: NSView {
     }
 
     private func setUpBindings() {
-
-        gridView.wantsLayer = true
 
         let weekNumbersWidth = settings.showWeekNumbers.map { $0 ? Constants.cellSize : 0 }
 

@@ -5,8 +5,8 @@
 //  Created by Paker on 28/01/21.
 //
 
+import Cocoa
 import RxSwift
-import RxCocoa
 
 class CalendarPickerViewController: NSViewController {
 
@@ -68,7 +68,7 @@ class CalendarPickerViewController: NSViewController {
     private func makeCalendarItem(_ calendar: CalendarModel) -> NSView {
 
         let checkbox = Checkbox(title: calendar.title)
-        checkbox.setTitleColor(color: NSColor(cgColor: calendar.color)!)
+        checkbox.setTitleColor(color: calendar.color)
 
         viewModel.enabledCalendars
             .map { $0.contains(calendar.identifier) ? .on : .off }

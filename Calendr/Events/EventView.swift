@@ -5,8 +5,9 @@
 //  Created by Paker on 23/01/21.
 //
 
-import RxCocoa
+import Cocoa
 import RxSwift
+import RxGesture
 import CoreImage.CIFilterBuiltins
 
 class EventView: NSView {
@@ -21,6 +22,7 @@ class EventView: NSView {
     private let duration = Label()
     private let progress = NSView()
     private let videoBtn = NSButton()
+    private let hoverLayer = CALayer()
 
     private lazy var progressTop = progress.top(equalTo: self)
 
@@ -45,11 +47,10 @@ class EventView: NSView {
         title.stringValue = viewModel.title
 
         subtitle.stringValue = viewModel.subtitle.replacingOccurrences(of: "https://", with: "")
-        subtitle.isHidden = subtitle.stringValue.isEmpty
-        subtitle.toolTip = viewModel.subtitle
+        subtitle.isHidden = subtitle.isEmpty
 
         duration.stringValue = viewModel.duration
-        duration.isHidden = duration.stringValue.isEmpty
+        duration.isHidden = duration.isEmpty
 
         videoBtn.isHidden = viewModel.linkURL == nil
 
@@ -64,6 +65,10 @@ class EventView: NSView {
 
         wantsLayer = true
         layer?.cornerRadius = 2
+
+        hoverLayer.isHidden = true
+        hoverLayer.backgroundColor = NSColor.gray.cgColor.copy(alpha: 0.2)
+        layer?.addSublayer(hoverLayer)
 
         icon.forceVibrancy = false
         icon.textColor = .systemRed
@@ -86,7 +91,7 @@ class EventView: NSView {
 
         let colorBar = NSView()
         colorBar.wantsLayer = true
-        colorBar.layer?.backgroundColor = viewModel.color
+        colorBar.layer?.backgroundColor = viewModel.color.cgColor
         colorBar.layer?.cornerRadius = 2
         colorBar.width(equalTo: 4)
 
@@ -117,13 +122,39 @@ class EventView: NSView {
         addSubview(progress, positioned: .below, relativeTo: nil)
 
         progress.wantsLayer = true
-        progress.layer?.backgroundColor = NSColor.red.cgColor.copy(alpha: 0.5)
-
+        progress.layer?.backgroundColor = NSColor.red.cgColor.copy(alpha: 0.7)
         progress.height(equalTo: 1)
         progress.width(equalTo: self)
+
+        rx.leftClickGesture { gesture, _ in
+            // NSClickGestureRecognizer overrides other events by default when buttonMask is 0x1 🤦🏻‍♂️
+            gesture.delaysPrimaryMouseButtonEvents = false
+        }
+        .when(.recognized)
+        .toVoid()
+        .compactMap(viewModel.makeDetails)
+        .withUnretained(self)
+        .flatMapLatest { view, viewModel -> Observable<Void> in
+            let vc = EventDetailsViewController(viewModel: viewModel)
+            let popover = NSPopover()
+            popover.behavior = .transient
+            popover.contentViewController = vc
+            popover.delegate = vc
+            popover.show(relativeTo: .zero, of: view, preferredEdge: .minX)
+            return popover.rx.deallocated
+        }
+        .bind(with: self) { view, _ in
+            view.window?.makeKey()
+        }
+        .disposed(by: disposeBag)
     }
 
     private func setUpBindings() {
+
+        rx.isHovered
+            .map(!)
+            .bind(to: hoverLayer.rx.isHidden)
+            .disposed(by: disposeBag)
 
         if let url = viewModel.linkURL {
 
@@ -135,7 +166,9 @@ class EventView: NSView {
                 .bind(to: videoBtn.rx.isEnabled)
                 .disposed(by: disposeBag)
 
-            videoBtn.rx.tap.bind { NSWorkspace.shared.open(url) }.disposed(by: disposeBag)
+            videoBtn.rx.tap
+                .bind { NSWorkspace.shared.open(url) }
+                .disposed(by: disposeBag)
         }
 
         viewModel.isFaded
@@ -153,13 +186,24 @@ class EventView: NSView {
         .disposed(by: disposeBag)
 
         viewModel.isInProgress
-            .map(\.isFalse)
+            .map(!)
             .bind(to: progress.rx.isHidden)
             .disposed(by: disposeBag)
 
         viewModel.backgroundColor
+            .map(\.cgColor)
             .bind(to: layer!.rx.backgroundColor)
             .disposed(by: disposeBag)
+    }
+
+    override func updateLayer() {
+        super.updateLayer()
+        hoverLayer.frame = bounds
+    }
+
+    override func updateTrackingAreas() {
+        trackingAreas.forEach(removeTrackingArea(_:))
+        addTrackingRect(bounds, owner: self, userData: nil, assumeInside: false)
     }
 
     private static let pendingBackground: CGColor = {

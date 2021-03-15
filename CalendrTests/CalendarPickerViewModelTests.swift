@@ -29,6 +29,12 @@ class CalendarPickerViewModelTests: XCTestCase {
     override func setUp() {
         userDefaults.setVolatileDomain([:], forName: UserDefaults.registrationDomain)
         userDefaults.removePersistentDomain(forName: className)
+
+        calendarService.m_calendars = [
+            .init(identifier: "1", account: "A1", title: "Calendar 1", color: .white),
+            .init(identifier: "2", account: "A2", title: "Calendar 2", color: .black),
+            .init(identifier: "3", account: "A3", title: "Calendar 3", color: .clear)
+        ]
     }
 
     func testCalendars() {
@@ -148,24 +154,5 @@ class CalendarPickerViewModelTests: XCTestCase {
 
         viewModel.toggleCalendar.onNext("2")
         XCTAssertEqual(enabled, ["1", "3"])
-    }
-}
-
-private class MockCalendarServiceProvider: CalendarServiceProviding {
-
-    let (changeObservable, changeObserver) = PublishSubject<Void>.pipe()
-
-    var m_calendars: [CalendarModel] = [
-        .init(identifier: "1", account: "A1", title: "Calendar 1", color: .white),
-        .init(identifier: "2", account: "A2", title: "Calendar 2", color: .black),
-        .init(identifier: "3", account: "A3", title: "Calendar 3", color: .clear)
-    ]
-
-    func calendars() -> Observable<[CalendarModel]> {
-        return .just(m_calendars)
-    }
-
-    func events(from start: Date, to end: Date, calendars: [String]) -> Observable<[EventModel]> {
-        return .empty()
     }
 }

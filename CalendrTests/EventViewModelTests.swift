@@ -15,7 +15,9 @@ class EventViewModelTests: XCTestCase {
     let disposeBag = DisposeBag()
 
     let dateProvider = MockDateProvider()
+    let calendarService = MockCalendarServiceProvider()
     let workspace = MockWorkspaceServiceProvider()
+    let settings = MockEventSettings()
 
     func testBasicInfo() {
 
@@ -162,7 +164,9 @@ class EventViewModelTests: XCTestCase {
         EventViewModel(
             event: event,
             dateProvider: dateProvider,
-            workspace: workspace
+            calendarService: calendarService,
+            workspace: workspace,
+            settings: settings
         )
     }
 
@@ -175,7 +179,9 @@ class EventViewModelTests: XCTestCase {
         EventViewModel(
             event: .make(start: start, end: end, isAllDay: isAllDay),
             dateProvider: dateProvider,
-            workspace: workspace
+            calendarService: calendarService,
+            workspace: workspace,
+            settings: settings
         )
     }
 }

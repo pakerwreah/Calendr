@@ -15,6 +15,10 @@ class Label: NSTextField {
         forceVibrancy ?? super.allowsVibrancy
     }
 
+    var isEmpty: Bool {
+        stringValue.isEmpty && attributedStringValue.length == 0
+    }
+
     convenience init() {
         self.init(text: "")
     }

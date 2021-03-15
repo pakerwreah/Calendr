@@ -10,10 +10,5 @@ import RxSwift
 
 class MockEventSettings: EventSettings {
 
-    var togglePastEvents: AnyObserver<Bool>
-    var showPastEvents: Observable<Bool>
-
-    init() {
-        (showPastEvents, togglePastEvents) = BehaviorSubject.pipe(value: true)
-    }
+    let popoverMaterial: Observable<PopoverMaterial> = .just(.popover)
 }

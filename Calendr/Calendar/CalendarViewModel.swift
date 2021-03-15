@@ -113,10 +113,10 @@ class CalendarViewModel {
         // Get events for current dates
         let eventsObservable = Observable.combineLatest(
             dateCellsObservable,
-            enabledCalendars.startWith([]),
-            calendarService.changeObservable.startWith(())
+            enabledCalendars.startWith([])
         )
-        .flatMapLatest { cellViewModels, calendars, _ -> Observable<[EventModel]?> in
+        .repeat(when: calendarService.changeObservable)
+        .flatMapLatest { cellViewModels, calendars -> Observable<[EventModel]?> in
 
             calendarService.events(
                 from: cellViewModels.first!.date,

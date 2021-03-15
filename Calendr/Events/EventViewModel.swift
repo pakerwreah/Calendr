@@ -5,32 +5,44 @@
 //  Created by Paker on 23/01/21.
 //
 
-import RxCocoa
+import Cocoa
 import RxSwift
 
 class EventViewModel {
 
+    let identifier: String
     let title: String
     let subtitle: String
     let duration: String
-    let color: CGColor
+    let color: NSColor
     let isPending: Bool
     let isBirthday: Bool
     let isMeeting: Bool
     let linkURL: URL?
 
     let isInProgress: Observable<Bool>
-    let backgroundColor: Observable<CGColor>
+    let backgroundColor: Observable<NSColor>
     let isFaded: Observable<Bool>
     let progress: Observable<CGFloat?>
+
+    private let dateProvider: DateProviding
+    private let calendarService: CalendarServiceProviding
+    private let settings: EventSettings
 
     init(
         event: EventModel,
         dateProvider: DateProviding,
+        calendarService: CalendarServiceProviding,
         workspace: WorkspaceServiceProviding,
+        settings: EventSettings,
         scheduler: SchedulerType = WallTimeScheduler()
     ) {
 
+        self.settings = settings
+        self.dateProvider = dateProvider
+        self.calendarService = calendarService
+
+        identifier = event.id
         title = event.title
         color = event.calendar.color
         isPending = event.isPending
@@ -121,7 +133,7 @@ class EventViewModel {
                         .startWith(())
                 )
                 .startWith(())
-                .take(until: isPast.filter(\.isTrue))
+                .take(until: isPast.matching(true))
 
         } else {
             isPast = .just(true)
@@ -151,8 +163,17 @@ class EventViewModel {
 
         isInProgress = progress.map(\.isNotNil).distinctUntilChanged()
 
-        let progressBackgroundColor = color.copy(alpha: 0.1)!
+        let progressBackgroundColor = color.withAlphaComponent(0.15)
 
         backgroundColor = isInProgress.map { $0 ? progressBackgroundColor : .clear }
+    }
+
+    func makeDetails() -> EventDetailsViewModel? {
+        EventDetailsViewModel(
+            identifier: identifier,
+            dateProvider: dateProvider,
+            calendarService: calendarService,
+            settings: settings
+        )
     }
 }

@@ -5,8 +5,8 @@
 //  Created by Paker on 26/01/21.
 //
 
+import Cocoa
 import RxSwift
-import RxCocoa
 
 extension Reactive where Base: NSButton {
 

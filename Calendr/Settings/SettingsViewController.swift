@@ -5,8 +5,8 @@
 //  Created by Paker on 14/01/21.
 //
 
+import Cocoa
 import RxSwift
-import RxCocoa
 
 class SettingsViewController: NSTabViewController {
 
@@ -44,7 +44,7 @@ class SettingsViewController: NSTabViewController {
 
             Observable.merge(
                 NotificationCenter.default.rx.notification(NSLocale.currentLocaleDidChangeNotification).toVoid(),
-                vc.rx.sentMessage(#selector(viewDidLayout)).toVoid()
+                vc.rx.viewDidLayout
             )
             .withLatestFrom(rx.observe(\.selectedTabViewItemIndex))
             .matching(i)

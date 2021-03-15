@@ -15,7 +15,9 @@ class EventViewModelProgressTests: XCTestCase {
     let disposeBag = DisposeBag()
 
     let dateProvider = MockDateProvider()
+    let calendarService = MockCalendarServiceProvider()
     let workspace = MockWorkspaceServiceProvider()
+    let settings = MockEventSettings()
 
     func testProgress_isAllDay_shouldNotCalculateProgress() {
 
@@ -153,7 +155,7 @@ class EventViewModelProgressTests: XCTestCase {
             end: .make(year: 2021, month: 1, day: 1, hour: 15)
         )
 
-        var backgroundColor: CGColor?
+        var backgroundColor: NSColor?
 
         viewModel.backgroundColor
             .bind { backgroundColor = $0 }
@@ -171,13 +173,13 @@ class EventViewModelProgressTests: XCTestCase {
             end: .make(year: 2021, month: 1, day: 1, hour: 15)
         )
 
-        var backgroundColor: CGColor?
+        var backgroundColor: NSColor?
 
         viewModel.backgroundColor
             .bind { backgroundColor = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(backgroundColor, viewModel.color.copy(alpha: 0.1))
+        XCTAssertEqual(backgroundColor, viewModel.color.withAlphaComponent(0.15))
     }
 
     func testProgressClock() {
@@ -239,7 +241,9 @@ class EventViewModelProgressTests: XCTestCase {
         EventViewModel(
             event: .make(start: start, end: end, isAllDay: isAllDay),
             dateProvider: dateProvider,
+            calendarService: calendarService,
             workspace: workspace,
+            settings: settings,
             scheduler: scheduler
         )
     }

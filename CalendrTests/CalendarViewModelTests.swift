@@ -36,6 +36,43 @@ class CalendarViewModelTests: XCTestCase {
 
     override func setUp() {
 
+        calendarService.m_calendars = [
+            .init(identifier: "1", account: "A1", title: "Calendar 1", color: .white),
+            .init(identifier: "2", account: "A2", title: "Calendar 2", color: .black),
+            .init(identifier: "3", account: "A3", title: "Calendar 3", color: .clear)
+        ]
+
+        calendarService.m_events = [
+            .make(
+                start: .make(year: 2021, month: 1, day: 1),
+                end: .make(year: 2021, month: 1, day: 4),
+                title: "Event 1",
+                isAllDay: true,
+                calendar: calendarService.m_calendars[0]
+            ),
+            .make(
+                start: .make(year: 2021, month: 1, day: 2),
+                end: .make(year: 2021, month: 1, day: 2),
+                title: "Event 2",
+                isAllDay: true,
+                calendar: calendarService.m_calendars[0]
+            ),
+            .make(
+                start: .make(year: 2021, month: 1, day: 2, hour: 8),
+                end: .make(year: 2021, month: 1, day: 2, hour: 9),
+                title: "Event 3",
+                isAllDay: false,
+                calendar: calendarService.m_calendars[1]
+            ),
+            .make(
+                start: .make(year: 2021, month: 1, day: 3, hour: 14),
+                end: .make(year: 2021, month: 1, day: 3, hour: 15),
+                title: "Event 4",
+                isAllDay: false,
+                calendar: calendarService.m_calendars[2]
+            )
+        ]
+
         viewModel
             .asObservable()
             .bind { [weak self] in
@@ -333,7 +370,7 @@ class CalendarViewModelTests: XCTestCase {
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
 
-        let expectedEvents: [(date: Date, events: Set<CGColor>)] = [
+        let expectedEvents: [(date: Date, events: Set<NSColor>)] = [
             (.make(year: 2021, month: 1, day: 1), [.white]),
             (.make(year: 2021, month: 1, day: 2), [.white, .black]),
             (.make(year: 2021, month: 1, day: 3), [.white, .clear]),
@@ -388,64 +425,5 @@ class CalendarViewModelTests: XCTestCase {
             ["1", "2", "3"], // month change
             ["1", "3"] // calendar
         ])
-    }
-}
-
-private typealias EventsArgs = (start: Date, end: Date, calendars: [String])
-
-private class MockCalendarServiceProvider: CalendarServiceProviding {
-
-    let (changeObservable, changeObserver) = PublishSubject<Void>.pipe()
-    let (spyEventsObservable, spyEventsObserver) = PublishSubject<EventsArgs>.pipe()
-
-    var m_calendars: [CalendarModel]
-    var m_events: [EventModel]
-
-    init() {
-        m_calendars = [
-            .init(identifier: "1", account: "A1", title: "Calendar 1", color: .white),
-            .init(identifier: "2", account: "A2", title: "Calendar 2", color: .black),
-            .init(identifier: "3", account: "A3", title: "Calendar 3", color: .clear)
-        ]
-
-        m_events = [
-            .make(
-                start: .make(year: 2021, month: 1, day: 1),
-                end: .make(year: 2021, month: 1, day: 4),
-                title: "Event 1",
-                isAllDay: true,
-                calendar: m_calendars[0]
-            ),
-            .make(
-                start: .make(year: 2021, month: 1, day: 2),
-                end: .make(year: 2021, month: 1, day: 2),
-                title: "Event 2",
-                isAllDay: true,
-                calendar: m_calendars[0]
-            ),
-            .make(
-                start: .make(year: 2021, month: 1, day: 2, hour: 8),
-                end: .make(year: 2021, month: 1, day: 2, hour: 9),
-                title: "Event 3",
-                isAllDay: false,
-                calendar: m_calendars[1]
-            ),
-            .make(
-                start: .make(year: 2021, month: 1, day: 3, hour: 14),
-                end: .make(year: 2021, month: 1, day: 3, hour: 15),
-                title: "Event 4",
-                isAllDay: false,
-                calendar: m_calendars[2]
-            )
-        ]
-    }
-
-    func calendars() -> Observable<[CalendarModel]> {
-        return .just(m_calendars)
-    }
-
-    func events(from start: Date, to end: Date, calendars: [String]) -> Observable<[EventModel]> {
-        spyEventsObserver.onNext((start: start, end: end, calendars: calendars))
-        return .just(m_events)
     }
 }
