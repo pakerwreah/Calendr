@@ -41,25 +41,23 @@ class NextEventView: NSView {
 
     private func configureLayout() {
 
-        colorBar.wantsLayer = true
-        colorBar.layer?.cornerRadius = 1.5
-        colorBar.width(equalTo: 3)
-
-        nextEventTitle.lineBreakMode = .byTruncatingTail
-
-        nextEventTime.setContentCompressionResistancePriority(.required, for: .horizontal)
-
         nextEventView.spacing = 4
-        [
-            .dummy, colorBar, nextEventTitle, nextEventTime, .dummy
-        ]
-        .forEach(nextEventView.addArrangedSubview)
-
-        colorBar.height(equalTo: nextEventView, constant: -4)
-
         nextEventView.height(equalTo: Constants.height)
         nextEventView.wantsLayer = true
         nextEventView.layer?.cornerRadius = 4
+
+        [.dummy, colorBar, nextEventTitle, nextEventTime, .dummy].forEach(nextEventView.addArrangedSubview)
+
+        colorBar.wantsLayer = true
+        colorBar.layer?.cornerRadius = 1.5
+        colorBar.width(equalTo: 3)
+        colorBar.height(equalTo: nextEventView, constant: -4)
+
+        nextEventTitle.textColor = .headerTextColor
+        nextEventTitle.lineBreakMode = .byTruncatingTail
+
+        nextEventTime.textColor = .headerTextColor
+        nextEventTime.setContentCompressionResistancePriority(.required, for: .horizontal)
 
         forAutoLayout()
 

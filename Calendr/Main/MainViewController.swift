@@ -293,6 +293,7 @@ class MainViewController: NSViewController {
     }
 
     private static func pinBtnIcon(_ state: NSControl.StateValue) -> NSAttributedString {
+
         let imageName = state == .on ? NSImage.lockLockedTemplateName : NSImage.lockUnlockedTemplateName
 
         let attachment = NSTextAttachment()
@@ -305,9 +306,8 @@ class MainViewController: NSViewController {
     }
 
     private func setUpStatusItem() {
-        guard
-            let statusBarButton = statusItem.button
-        else { return }
+
+        guard let statusBarButton = statusItem.button else { return }
 
         let menu = NSMenu()
         menu.addItem(NSMenuItem(title: "Quit", action: #selector(NSApp.terminate), keyEquivalent: "q"))
