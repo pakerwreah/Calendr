@@ -213,6 +213,33 @@ class MainViewController: NSViewController {
             .observe(on: MainScheduler.asyncInstance)
             .bind(to: eventStatusItem.rx.isVisible)
             .disposed(by: disposeBag)
+
+        func makeDetails(identifier: String) -> EventDetailsViewModel? {
+            EventDetailsViewModel(
+                identifier: identifier,
+                dateProvider: dateProvider,
+                calendarService: calendarService,
+                settings: settingsViewModel
+            )
+        }
+
+        statusBarButton.rx.tap
+            .withLatestFrom(nextEventViewModel.eventId)
+            .skipNil()
+            .compactMap(makeDetails)
+            .flatMapFirst { viewModel -> Observable<Void> in
+                let vc = EventDetailsViewController(viewModel: viewModel)
+                let popover = NSPopover()
+                popover.behavior = .transient
+                popover.contentViewController = vc
+                popover.delegate = vc
+                popover.show(relativeTo: .zero, of: statusBarButton, preferredEdge: .maxY)
+                return popover.rx.deallocated
+            }
+            .subscribe()
+            .disposed(by: disposeBag)
+
+        statusBarButton.sendAction(on: .leftMouseDown)
     }
 
     private func makeHeader() -> NSView {
