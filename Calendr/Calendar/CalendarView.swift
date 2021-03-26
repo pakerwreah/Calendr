@@ -60,7 +60,7 @@ class CalendarView: NSView {
 
     private func setUpBindings() {
 
-        let weekNumbersWidth = settings.showWeekNumbers.map { $0 ? Constants.cellSize : 0 }
+        let weekNumbersWidth = settings.showWeekNumbers.map { $0 ? Constants.weekNumberCellSize : 0 }
 
         weekNumbersWidth
             .observe(on: MainScheduler.instance)
@@ -134,6 +134,7 @@ class CalendarView: NSView {
 private enum Constants {
 
     static let cellSize: CGFloat = 25
+    static let weekNumberCellSize: CGFloat = 21
     static let cornerRadius: CGFloat = 5
     static let weekendBackgroundColor = NSColor.gray.cgColor.copy(alpha: 0.2)
 }
