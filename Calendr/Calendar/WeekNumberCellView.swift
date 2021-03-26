@@ -33,11 +33,9 @@ class WeekNumberCellView: NSView {
 
         addSubview(label)
 
-        label.alignment = .center
         label.textColor = .secondaryLabelColor
-        label.font = .systemFont(ofSize: 12, weight: .medium)
-        label.size(equalTo: CGSize(width: 24, height: 13))
-        label.center(in: self, constant: CGPoint(x: 0, y: -3))
+        label.font = .systemFont(ofSize: 10)
+        label.center(in: self, constant: CGPoint(x: -2, y: 0))
     }
 
     required init?(coder: NSCoder) {
