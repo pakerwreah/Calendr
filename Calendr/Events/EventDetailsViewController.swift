@@ -101,6 +101,15 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         .disposed(by: disposeBag)
     }
 
+    override func viewDidAppear() {
+
+        super.viewDidAppear()
+
+        view.window?.makeKey()
+        view.window?.makeFirstResponder(self)
+
+    }
+
     func popoverWillClose(_ notification: Notification) {
         // 🔨 Fix a bug when selecting some text and closing the popover
         // causes the resignFirstResponder to go crazy and doesn't select anymore

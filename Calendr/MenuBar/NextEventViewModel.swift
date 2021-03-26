@@ -15,6 +15,7 @@ class NextEventViewModel {
     let barColor: Observable<NSColor>
     let backgroundColor: Observable<NSColor>
     let hasEvent: Observable<Bool>
+    let eventId: Observable<String?>
 
     init(
         settings: NextEventSettings,
@@ -49,7 +50,9 @@ class NextEventViewModel {
                             }
                     }
             }
-            .share()
+            .share(replay: 1)
+
+        eventId = nextEventObservable.map { $0?.event.id }
 
         barColor = nextEventObservable
             .skipNil()
