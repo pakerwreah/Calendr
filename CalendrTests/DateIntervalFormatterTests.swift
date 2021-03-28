@@ -10,26 +10,32 @@ import XCTest
 
 class DateIntervalFormatterTests: XCTestCase {
 
-    let formatter = Calendr.DateIntervalFormatter()
+    let oldFormatter = Foundation.DateIntervalFormatter()
+    let newFormatter = Calendr.DateIntervalFormatter()
     let date: Date = .make(year: 2021, month: 1, day: 5)
 
     override func setUp() {
-        formatter.calendar = .reference
+        oldFormatter.calendar = .reference
+        newFormatter.calendar = .reference
     }
 
     /// ├week of month: 2┤
     func testDateWeekFormat() {
 
-        formatter.dateTemplate = "MW"
+        oldFormatter.dateTemplate = "MW"
+        newFormatter.dateTemplate = "MW"
 
-        XCTAssertEqual(formatter.string(from: date, to: date), "1 2")
+        XCTAssertEqual(oldFormatter.string(from: date, to: date), "1 ├week of month: 2┤")
+        XCTAssertEqual(newFormatter.string(from: date, to: date), "1 2")
     }
 
     /// (quarter: 1)
     func testDateQuarterFormat() {
 
-        formatter.dateTemplate = "MQ"
+        oldFormatter.dateTemplate = "MQ"
+        newFormatter.dateTemplate = "MQ"
 
-        XCTAssertEqual(formatter.string(from: date, to: date), "1 1")
+        XCTAssertEqual(oldFormatter.string(from: date, to: date), "1 (quarter: 1)")
+        XCTAssertEqual(newFormatter.string(from: date, to: date), "1 1")
     }
 }
