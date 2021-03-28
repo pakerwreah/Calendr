@@ -19,23 +19,21 @@ class DateIntervalFormatterTests: XCTestCase {
         newFormatter.calendar = .reference
     }
 
-    /// ├week of month: 2┤
     func testDateWeekFormat() {
 
-        oldFormatter.dateTemplate = "MW"
-        newFormatter.dateTemplate = "MW"
+        oldFormatter.dateTemplate = "YMW"
+        newFormatter.dateTemplate = "YMW"
 
-        XCTAssertEqual(oldFormatter.string(from: date, to: date), "1 ├week of month: 2┤")
-        XCTAssertEqual(newFormatter.string(from: date, to: date), "1 2")
+        XCTAssertEqual(oldFormatter.string(from: date, to: date), "01/2021 ├week of month: 2┤")
+        XCTAssertEqual(newFormatter.string(from: date, to: date), "01/2021 2")
     }
 
-    /// (quarter: 1)
     func testDateQuarterFormat() {
 
-        oldFormatter.dateTemplate = "MQ"
-        newFormatter.dateTemplate = "MQ"
+        oldFormatter.dateTemplate = "YMQ"
+        newFormatter.dateTemplate = "YMQ"
 
-        XCTAssertEqual(oldFormatter.string(from: date, to: date), "1 (quarter: 1)")
-        XCTAssertEqual(newFormatter.string(from: date, to: date), "1 1")
+        XCTAssertEqual(oldFormatter.string(from: date, to: date), "01/2021 (quarter: 1)")
+        XCTAssertEqual(newFormatter.string(from: date, to: date), "01/2021 1")
     }
 }
