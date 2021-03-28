@@ -9,6 +9,12 @@ import Foundation
 
 class DateIntervalFormatter: Foundation.DateIntervalFormatter {
 
+    override var calendar: Calendar! {
+        didSet {
+            locale = calendar.locale
+        }
+    }
+
     override func string(from fromDate: Date, to toDate: Date) -> String {
 
         var output = super.string(from: fromDate, to: toDate)
