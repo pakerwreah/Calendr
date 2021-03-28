@@ -65,7 +65,7 @@ class StatusItemViewModelTests: XCTestCase {
 
         XCTAssertEqual(lastValue, "2021-01-01")
 
-        dateProvider.m_calendar.locale = Locale(identifier: "en")
+        dateProvider.m_calendar.locale = Locale(identifier: "en_US")
         notificationCenter.post(name: NSLocale.currentLocaleDidChangeNotification, object: nil)
 
         XCTAssertEqual(lastValue, "1/1/21")
