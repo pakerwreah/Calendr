@@ -7,7 +7,6 @@
 
 import XCTest
 import RxSwift
-import RxTest
 @testable import Calendr
 
 class NextEventViewModelTests: XCTestCase {
@@ -261,7 +260,7 @@ class NextEventViewModelTests: XCTestCase {
             .make(start: now, end: now + 30)
         ])
 
-        XCTAssertEqual(time, "30s")
+        XCTAssertEqual(time, "30s left")
     }
 
     func testNextEvent_isInProgress_endsInLessThan1Minute() {
@@ -276,7 +275,7 @@ class NextEventViewModelTests: XCTestCase {
             .make(start: now, end: now + 59)
         ])
 
-        XCTAssertEqual(time, "1m")
+        XCTAssertEqual(time, "1m left")
     }
 
     func testNextEvent_isInProgress_endsIn1Minute() {
@@ -291,7 +290,7 @@ class NextEventViewModelTests: XCTestCase {
             .make(start: now, end: now + 60)
         ])
 
-        XCTAssertEqual(time, "1m")
+        XCTAssertEqual(time, "1m left")
     }
 
     func testNextEvent_isInProgress_endsInMoreThan1Minute() {
@@ -306,7 +305,7 @@ class NextEventViewModelTests: XCTestCase {
             .make(start: now, end: now + 65)
         ])
 
-        XCTAssertEqual(time, "2m")
+        XCTAssertEqual(time, "2m left")
     }
 
     func testNextEvent_isInProgress_endsIn1Hour() {
@@ -321,7 +320,7 @@ class NextEventViewModelTests: XCTestCase {
             .make(start: now, end: now + 3600)
         ])
 
-        XCTAssertEqual(time, "1h")
+        XCTAssertEqual(time, "1h left")
     }
 
     func testNextEvent_isInProgress_endsInMoreThan1Hour() {
@@ -336,7 +335,41 @@ class NextEventViewModelTests: XCTestCase {
             .make(start: now, end: now + 6000)
         ])
 
-        XCTAssertEqual(time, "1h 40m")
+        XCTAssertEqual(time, "1h 40m left")
+    }
+
+    func testNextEvent_isReminder() {
+
+        var time: String?
+
+        viewModel.time
+            .bind { time = $0 }
+            .disposed(by: disposeBag)
+
+        eventsSubject.onNext([
+            .make(start: now + 6000, type: .reminder)
+        ])
+
+        XCTAssertEqual(time, "in 1h 40m")
+    }
+
+    func testNextEvent_isPast_isReminder() {
+
+        var time: String?
+
+        let start = now
+
+        dateProvider.now.addTimeInterval(6000)
+
+        viewModel.time
+            .bind { time = $0 }
+            .disposed(by: disposeBag)
+
+        eventsSubject.onNext([
+            .make(start: start, type: .reminder)
+        ])
+
+        XCTAssertEqual(time, "1h 40m ago")
     }
 }
 

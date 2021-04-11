@@ -10,13 +10,12 @@ import RxSwift
 
 class EventViewModel {
 
-    let identifier: String
     let title: String
     let subtitle: String
     let duration: String
     let color: NSColor
     let isPending: Bool
-    let isBirthday: Bool
+    let type: EventType
     let isMeeting: Bool
     let linkURL: URL?
 
@@ -25,6 +24,7 @@ class EventViewModel {
     let isFaded: Observable<Bool>
     let progress: Observable<CGFloat?>
 
+    private let event: EventModel
     private let dateProvider: DateProviding
     private let calendarService: CalendarServiceProviding
     private let settings: EventSettings
@@ -38,17 +38,17 @@ class EventViewModel {
         scheduler: SchedulerType = WallTimeScheduler()
     ) {
 
+        self.event = event
         self.settings = settings
         self.dateProvider = dateProvider
         self.calendarService = calendarService
 
-        identifier = event.id
         title = event.title
         color = event.calendar.color
         isPending = event.isPending
-        isBirthday = event.isBirthday
+        type = event.type
 
-        let links = !event.isAllDay
+        let links = !event.type.isBirthday
             ? workspace.detectLinks([event.location, event.url?.absoluteString, event.notes])
             : []
 
@@ -61,42 +61,47 @@ class EventViewModel {
             linkURL = links.first
         }
 
-        if let location = event.location {
-            subtitle = location
-        } else {
-            subtitle = linkURL?.absoluteString ?? ""
-        }
+        let url = linkURL?.absoluteString
 
-        // fix range ending at 00:00 of the next day
-        let fixedEnd = dateProvider.calendar.date(byAdding: .second, value: -1, to: event.end)!
-        let endsToday = dateProvider.calendar.isDate(fixedEnd, inSameDayAs: dateProvider.now)
-        let isSingleDay = dateProvider.calendar.isDate(event.start, inSameDayAs: fixedEnd)
-        let isSameMonth = dateProvider.calendar.isDate(event.start, equalTo: fixedEnd, toGranularity: .month)
-        let startsMidnight = dateProvider.calendar.date(event.start, matchesComponents: .init(hour: 0, minute: 0))
-        let endsMidnight = dateProvider.calendar.date(event.end, matchesComponents: .init(hour: 0, minute: 0))
-        let showTime = !(startsMidnight && endsMidnight)
+        subtitle = (event.location ?? url ?? event.notes)?
+            .replacingOccurrences(of: "https://", with: "")
+            .prefix(while: \.isNewline.isFalse)
+            .trimmed ?? ""
+
+        let meta = event.meta(using: dateProvider)
+        let showTime = !(meta.startsMidnight && meta.endsMidnight)
 
         if event.isAllDay {
 
             duration = ""
 
-        } else if isSingleDay {
+        } else if meta.isSingleDay {
 
             let formatter = DateIntervalFormatter()
             formatter.dateTemplate = "jm"
             formatter.locale = dateProvider.calendar.locale!
 
-            let end = endsMidnight ? dateProvider.calendar.startOfDay(for: event.start) : event.end
+            let end: Date
+
+            if event.type.isReminder {
+                end = event.start
+            }
+            else if meta.endsMidnight {
+                end = dateProvider.calendar.startOfDay(for: event.start)
+            }
+            else {
+                end = event.end
+            }
 
             duration = formatter.string(from: event.start, to: end)
 
         } else if !showTime {
 
             let formatter = DateIntervalFormatter()
-            formatter.dateTemplate = isSameMonth ? "ddMMMM" : "ddMMM"
+            formatter.dateTemplate = meta.isSameMonth ? "ddMMMM" : "ddMMM"
             formatter.locale = dateProvider.calendar.locale!
 
-            duration = formatter.string(from: event.start, to: fixedEnd)
+            duration = formatter.string(from: event.start, to: meta.fixedEnd)
 
         } else {
 
@@ -105,7 +110,7 @@ class EventViewModel {
                 locale: dateProvider.calendar.locale!
             )
             let start = formatter.string(from: event.start)
-            let end = formatter.string(from: showTime ? event.end : fixedEnd)
+            let end = formatter.string(from: showTime ? event.end : meta.fixedEnd)
 
             duration = "\(start)\n\(end)"
         }
@@ -140,7 +145,7 @@ class EventViewModel {
             clock = .empty()
         }
 
-        progress = total <= 0 || event.isAllDay || !isSingleDay || !endsToday
+        progress = total <= 0 || event.isAllDay || !meta.isSingleDay || !meta.endsToday
             ? .just(nil)
             : clock.map {
 
@@ -159,7 +164,7 @@ class EventViewModel {
             .concat(Observable.just(nil))
             .share(replay: 1)
 
-        isFaded = event.isAllDay || !endsToday ? .just(false) : isPast
+        isFaded = event.isAllDay || !meta.endsToday ? .just(false) : isPast
 
         isInProgress = progress.map(\.isNotNil).distinctUntilChanged()
 
@@ -168,9 +173,9 @@ class EventViewModel {
         backgroundColor = isInProgress.map { $0 ? progressBackgroundColor : .clear }
     }
 
-    func makeDetails() -> EventDetailsViewModel? {
+    func makeDetails() -> EventDetailsViewModel {
         EventDetailsViewModel(
-            identifier: identifier,
+            event: event,
             dateProvider: dateProvider,
             calendarService: calendarService,
             settings: settings

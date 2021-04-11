@@ -41,12 +41,22 @@ class EventView: NSView {
 
     private func setData() {
 
-        icon.stringValue = "🎁"
-        icon.isHidden = !viewModel.isBirthday
+        switch viewModel.type {
+
+        case .birthday:
+            icon.stringValue = "🎁"
+            icon.textColor = .systemRed
+
+        case .reminder:
+            icon.stringValue = "🔔"
+
+        case .event:
+            icon.isHidden = true
+        }
 
         title.stringValue = viewModel.title
 
-        subtitle.stringValue = viewModel.subtitle.replacingOccurrences(of: "https://", with: "")
+        subtitle.stringValue = viewModel.subtitle
         subtitle.isHidden = subtitle.isEmpty
 
         duration.stringValue = viewModel.duration
@@ -71,7 +81,6 @@ class EventView: NSView {
         layer?.addSublayer(hoverLayer)
 
         icon.forceVibrancy = false
-        icon.textColor = .systemRed
         icon.font = Fonts.SegoeUISymbol.regular.font(size: 10)
         icon.setContentHuggingPriority(.required, for: .horizontal)
         icon.setContentCompressionResistancePriority(.required, for: .horizontal)
@@ -114,6 +123,7 @@ class EventView: NSView {
         let eventStackView = NSStackView(views: [titleStackView, subtitleStackView, duration])
             .with(orientation: .vertical)
             .with(spacing: 2)
+            .with(insets: .init(vertical: 1))
 
         let contentStackView = NSStackView(views: [colorBar, eventStackView])
         addSubview(contentStackView)
@@ -121,32 +131,11 @@ class EventView: NSView {
 
         addSubview(progress, positioned: .below, relativeTo: nil)
 
+        progress.isHidden = true
         progress.wantsLayer = true
         progress.layer?.backgroundColor = NSColor.red.cgColor.copy(alpha: 0.7)
         progress.height(equalTo: 1)
         progress.width(equalTo: self)
-
-        rx.leftClickGesture { gesture, _ in
-            // NSClickGestureRecognizer overrides other events by default when buttonMask is 0x1 🤦🏻‍♂️
-            gesture.delaysPrimaryMouseButtonEvents = false
-        }
-        .when(.recognized)
-        .toVoid()
-        .compactMap(viewModel.makeDetails)
-        .withUnretained(self)
-        .flatMapLatest { view, viewModel -> Observable<Void> in
-            let vc = EventDetailsViewController(viewModel: viewModel)
-            let popover = NSPopover()
-            popover.behavior = .transient
-            popover.contentViewController = vc
-            popover.delegate = vc
-            popover.show(relativeTo: .zero, of: view, preferredEdge: .minX)
-            return popover.rx.deallocated
-        }
-        .bind(with: self) { view, _ in
-            view.window?.makeKey()
-        }
-        .disposed(by: disposeBag)
     }
 
     private func setUpBindings() {
@@ -171,29 +160,54 @@ class EventView: NSView {
                 .disposed(by: disposeBag)
         }
 
-        viewModel.isFaded
-            .map { $0 ? 0.5 : 1 }
-            .bind(to: rx.alpha)
+        if viewModel.type.isEvent {
+
+            viewModel.isFaded
+                .map { $0 ? 0.5 : 1 }
+                .bind(to: rx.alpha)
+                .disposed(by: disposeBag)
+
+            Observable.combineLatest(
+                viewModel.progress, rx.observe(\.frame)
+            )
+            .compactMap { progress, frame in
+                progress.map { max(1, $0 * frame.height - 0.5) }
+            }
+            .bind(to: progressTop.rx.constant)
             .disposed(by: disposeBag)
 
-        Observable.combineLatest(
-            viewModel.progress, rx.observe(\.frame)
-        )
-        .compactMap { progress, frame in
-            progress.map { max(1, $0 * frame.height - 0.5) }
+            viewModel.isInProgress
+                .map(!)
+                .bind(to: progress.rx.isHidden)
+                .disposed(by: disposeBag)
         }
-        .bind(to: progressTop.rx.constant)
-        .disposed(by: disposeBag)
-
-        viewModel.isInProgress
-            .map(!)
-            .bind(to: progress.rx.isHidden)
-            .disposed(by: disposeBag)
 
         viewModel.backgroundColor
             .map(\.cgColor)
             .bind(to: layer!.rx.backgroundColor)
             .disposed(by: disposeBag)
+
+        rx.leftClickGesture { gesture, _ in
+            // NSClickGestureRecognizer overrides other events by default when buttonMask is 0x1 🤦🏻‍♂️
+            gesture.delaysPrimaryMouseButtonEvents = false
+        }
+        .when(.recognized)
+        .toVoid()
+        .map(viewModel.makeDetails)
+        .withUnretained(self)
+        .flatMapLatest { view, viewModel -> Observable<Void> in
+            let vc = EventDetailsViewController(viewModel: viewModel)
+            let popover = NSPopover()
+            popover.behavior = .transient
+            popover.contentViewController = vc
+            popover.delegate = vc
+            popover.show(relativeTo: .zero, of: view, preferredEdge: .minX)
+            return popover.rx.deallocated
+        }
+        .bind(with: self) { view, _ in
+            view.window?.makeKey()
+        }
+        .disposed(by: disposeBag)
     }
 
     override func updateLayer() {

@@ -28,4 +28,9 @@ extension NSStackView {
         self.spacing = spacing
         return self
     }
+
+    func with(insets: NSEdgeInsets) -> Self {
+        self.edgeInsets = insets
+        return self
+    }
 }

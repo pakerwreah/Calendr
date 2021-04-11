@@ -9,6 +9,7 @@ import Cocoa
 @testable import Calendr
 
 extension CalendarModel {
+    
     static func make(
         identifier: String = "",
         account: String = "",

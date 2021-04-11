@@ -15,7 +15,7 @@ class NextEventViewModel {
     let barColor: Observable<NSColor>
     let backgroundColor: Observable<NSColor>
     let hasEvent: Observable<Bool>
-    let eventId: Observable<String?>
+    let event: Observable<EventModel?>
 
     init(
         settings: NextEventSettings,
@@ -52,7 +52,7 @@ class NextEventViewModel {
             }
             .share(replay: 1)
 
-        eventId = nextEventObservable.map { $0?.event.id }
+        event = nextEventObservable.map { $0?.event }
 
         barColor = nextEventObservable
             .skipNil()
@@ -80,7 +80,7 @@ class NextEventViewModel {
 
                 dateFormatter.allowedUnits = [.hour, .minute]
 
-                var date = (isInProgress ? event.end : event.start)
+                var date = isInProgress && !event.type.isReminder ? event.end : event.start
 
                 let diff = dateProvider.calendar.dateComponents([.minute, .second], from: dateProvider.now, to: date)
 
@@ -91,10 +91,22 @@ class NextEventViewModel {
                     dateProvider.calendar.date(byAdding: .minute, value: 1, to: date).map { date = $0 }
                 }
 
-                var time = dateFormatter.string(from: dateProvider.now, to: date) ?? ""
+                let time: String
 
                 if !isInProgress {
-                    time = "\(Strings.Formatter.Date.Relative.in) \(time)"
+                    time = Strings.Formatter.Date.Relative.in(
+                        dateFormatter.string(from: dateProvider.now, to: date) ?? ""
+                    )
+                }
+                else if event.type.isReminder {
+                    time = Strings.Formatter.Date.Relative.ago(
+                        dateFormatter.string(from: date, to: dateProvider.now) ?? ""
+                    )
+                }
+                else {
+                    time = Strings.Formatter.Date.Relative.left(
+                        dateFormatter.string(from: dateProvider.now, to: date) ?? ""
+                    )
                 }
 
                 return time

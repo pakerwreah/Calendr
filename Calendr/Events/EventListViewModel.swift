@@ -49,18 +49,6 @@ class EventListViewModel {
             )
         }
 
-        func endsToday(_ event: EventModel) -> Bool {
-            // fix range ending at 00:00 of the next day
-            let fixedEnd = dateProvider.calendar.date(byAdding: .second, value: -1, to: event.end)!
-            return dateProvider.calendar.isDate(fixedEnd, inSameDayAs: dateProvider.now)
-        }
-
-        func isPast(_ event: EventModel) -> Bool {
-            dateProvider.calendar.isDate(
-                event.end, lessThan: dateProvider.now, granularity: .second
-            )
-        }
-
         viewModels = Observable.combineLatest(
             eventsObservable, dateObservable, settings.showPastEvents
         )
@@ -74,7 +62,7 @@ class EventListViewModel {
             return Observable.merge(
                 events
                     .filter {
-                        !$0.isAllDay && endsToday($0)
+                        !$0.isAllDay && $0.meta(using: dateProvider).endsToday
                     }
                     .map {
                         Int(dateProvider.now.distance(to: $0.end).rounded(.up)) + 1
@@ -88,7 +76,7 @@ class EventListViewModel {
             .startWith(())
             .map {
                 events.filter {
-                    $0.isAllDay || !isPast($0)
+                    $0.isAllDay || !$0.meta(using: dateProvider).isPast
                 }
             }
             .map { ($0, date, isToday) }

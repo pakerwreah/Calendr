@@ -29,4 +29,6 @@
 
 "formatter.date.all_day" = "Dia inteiro";
 "formatter.date.today" = "Hoje";
-"formatter.date.relative.in" = "em";
+"formatter.date.relative.in" = "em %@";
+"formatter.date.relative.ago" = "%@ atrás";
+"formatter.date.relative.left" = "%@ rest.";

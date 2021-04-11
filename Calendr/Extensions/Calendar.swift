@@ -8,6 +8,7 @@
 import Foundation
 
 extension Calendar {
+
     func isDate(_ date: Date, in range: (start: Date, end: Date)) -> Bool {
 
         let (start, end) = range
@@ -42,5 +43,9 @@ extension Calendar {
 
     func isDate(_ date: Date, greaterThanOrEqualTo other: Date, granularity: Component = .day) -> Bool {
         compare(date, to: other, toGranularity: granularity) != .orderedAscending
+    }
+
+    func endOfDay(for date: Date) -> Date {
+        startOfDay(for: self.date(byAdding: .day, value: 1, to: date)!)
     }
 }

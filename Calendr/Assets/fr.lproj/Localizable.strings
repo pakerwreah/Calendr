@@ -29,4 +29,6 @@
 
 "formatter.date.all_day" = "Toute la journée";
 "formatter.date.today" = "Aujourd'hui";
-"formatter.date.relative.in" = "dans";
+"formatter.date.relative.in" = "dans %@";
+"formatter.date.relative.ago" = "il y a %@";
+"formatter.date.relative.left" = "%@ rest.";

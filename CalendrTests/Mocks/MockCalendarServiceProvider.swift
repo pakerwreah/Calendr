@@ -26,8 +26,4 @@ class MockCalendarServiceProvider: CalendarServiceProviding {
         spyEventsObserver.onNext((start: start, end: end, calendars: calendars))
         return .just(m_events)
     }
-
-    func event(_ identifier: String) -> EventDetailsModel? {
-        return nil
-    }
 }

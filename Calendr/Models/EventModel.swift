@@ -17,6 +17,25 @@ struct EventModel: Equatable {
     let url: URL?
     let isAllDay: Bool
     let isPending: Bool
-    let isBirthday: Bool
+    let type: EventType
     let calendar: CalendarModel
+}
+
+enum EventType {
+    case event
+    case birthday
+    case reminder
+}
+
+extension EventType {
+    var isEvent: Bool { self ~= .event }
+    var isBirthday: Bool { self ~= .birthday }
+    var isReminder: Bool { self ~= .reminder }
+}
+
+extension EventModel {
+
+    func meta(using dateProvider: DateProviding) -> EventMeta {
+        EventMeta(event: self, dateProvider: dateProvider)
+    }
 }

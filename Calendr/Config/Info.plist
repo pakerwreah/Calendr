@@ -29,8 +29,10 @@
 	<key>LSUIElement</key>
 	<true/>
 	<key>NSCalendarsUsageDescription</key>
-	<string>Calendr needs to display events from your calendars.</string>
+	<string>Calendr needs access to display events from your calendars.</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>NSRemindersUsageDescription</key>
+	<string>Calendr needs access to display your reminders.</string>
 </dict>
 </plist>

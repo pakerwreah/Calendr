@@ -34,7 +34,7 @@ private final class EventViewPreview: NSViewRepresentable {
                     url: nil,
                     isAllDay: false,
                     isPending: false,
-                    isBirthday: true,
+                    type: .event,
                     calendar: CalendarModel(
                         identifier: "",
                         account: "",
