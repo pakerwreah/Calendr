@@ -29,4 +29,6 @@
 
 "formatter.date.all_day" = "Todo el día";
 "formatter.date.today" = "Hoy";
-"formatter.date.relative.in" = "en";
+"formatter.date.relative.in" = "en %@";
+"formatter.date.relative.ago" = "hace %@";
+"formatter.date.relative.left" = "%@ rest.";

@@ -8,6 +8,13 @@
 import Foundation
 
 class DateIntervalFormatter: Foundation.DateIntervalFormatter {
+
+    override var calendar: Calendar! {
+        didSet {
+            locale = calendar.locale
+        }
+    }
+
     // 🔨 Fix this fucking nonsense so we can normally type them in unit tests
     override func string(from fromDate: Date, to toDate: Date) -> String {
         super.string(from: fromDate, to: toDate)

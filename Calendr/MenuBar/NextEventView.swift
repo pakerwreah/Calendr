@@ -57,6 +57,7 @@ class NextEventView: NSView {
         nextEventTitle.lineBreakMode = .byTruncatingTail
 
         nextEventTime.textColor = .headerTextColor
+        nextEventTime.font = .systemFont(ofSize: 11)
         nextEventTime.setContentCompressionResistancePriority(.required, for: .horizontal)
 
         forAutoLayout()

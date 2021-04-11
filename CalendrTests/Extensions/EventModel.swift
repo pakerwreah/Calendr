@@ -9,6 +9,7 @@ import Foundation
 @testable import Calendr
 
 extension EventModel {
+
     static func make(
         id: String = "",
         start: Date = Date(),
@@ -19,21 +20,21 @@ extension EventModel {
         url: URL? = nil,
         isAllDay: Bool = false,
         isPending: Bool = false,
-        isBirthday: Bool = false,
+        type: EventType = .event,
         calendar: CalendarModel = .make()
     ) -> EventModel {
 
         .init(
             id: id,
             start: start,
-            end: end,
+            end: type.isReminder ? Calendar.reference.endOfDay(for: start) : end,
             title: title,
             location: location,
             notes: notes,
             url: url,
-            isAllDay: isAllDay,
+            isAllDay: isAllDay || type.isBirthday,
             isPending: isPending,
-            isBirthday: isBirthday,
+            type: type,
             calendar: calendar
         )
     }

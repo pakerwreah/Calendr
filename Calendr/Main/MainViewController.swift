@@ -214,9 +214,9 @@ class MainViewController: NSViewController {
             .bind(to: eventStatusItem.rx.isVisible)
             .disposed(by: disposeBag)
 
-        func makeDetails(identifier: String) -> EventDetailsViewModel? {
+        func makeDetails(event: EventModel) -> EventDetailsViewModel {
             EventDetailsViewModel(
-                identifier: identifier,
+                event: event,
                 dateProvider: dateProvider,
                 calendarService: calendarService,
                 settings: settingsViewModel
@@ -224,9 +224,9 @@ class MainViewController: NSViewController {
         }
 
         statusBarButton.rx.tap
-            .withLatestFrom(nextEventViewModel.eventId)
+            .withLatestFrom(nextEventViewModel.event)
             .skipNil()
-            .compactMap(makeDetails)
+            .map(makeDetails)
             .flatMapFirst { viewModel -> Observable<Void> in
                 let vc = EventDetailsViewController(viewModel: viewModel)
                 let popover = NSPopover()

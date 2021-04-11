@@ -18,8 +18,18 @@ internal enum Strings {
       /// Today
       internal static var today: String { return Strings.tr("Localizable", "formatter.date.today") }
       internal enum Relative {
-        /// in
-        internal static var `in`: String { return Strings.tr("Localizable", "formatter.date.relative.in") }
+        /// %@ ago
+        internal static func ago(_ p1: Any) -> String {
+          return Strings.tr("Localizable", "formatter.date.relative.ago", String(describing: p1))
+        }
+        /// in %@
+        internal static func `in`(_ p1: Any) -> String {
+          return Strings.tr("Localizable", "formatter.date.relative.in", String(describing: p1))
+        }
+        /// %@ left
+        internal static func `left`(_ p1: Any) -> String {
+          return Strings.tr("Localizable", "formatter.date.relative.left", String(describing: p1))
+        }
       }
     }
   }

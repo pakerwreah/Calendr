@@ -7,7 +7,6 @@
 
 import XCTest
 import RxSwift
-import RxTest
 @testable import Calendr
 
 class EventViewModelProgressTests: XCTestCase {

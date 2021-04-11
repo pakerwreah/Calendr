@@ -36,7 +36,7 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
     override func loadView() {
         view = NSView()
 
-        view.widthAnchor.constraint(lessThanOrEqualToConstant: 300).activate()
+        view.widthAnchor.constraint(lessThanOrEqualToConstant: 310).activate()
 
         let contentStackView = NSStackView(
             views: fields

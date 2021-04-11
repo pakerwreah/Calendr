@@ -17,17 +17,15 @@ class EventDetailsViewModel {
 
     let popoverMaterial: Observable<PopoverMaterial>
 
-    init?(
-        identifier: String,
+    init(
+        event: EventModel,
         dateProvider: DateProviding,
         calendarService: CalendarServiceProviding,
         settings: EventSettings
     ) {
 
-        guard let event = calendarService.event(identifier) else { return nil }
-
         title = event.title
-        url = event.url?.absoluteString ?? ""
+        url = (event.type.isBirthday ? nil : event.url?.absoluteString) ?? ""
         location = event.location ?? ""
         notes = event.notes ?? ""
 
@@ -37,10 +35,25 @@ class EventDetailsViewModel {
 
         if event.isAllDay {
             formatter.timeStyle = .none
-            duration = formatter.string(from: event.startDate, to: event.startDate)
+            duration = formatter.string(from: event.start, to: event.start)
         } else {
             formatter.timeStyle = .short
-            duration = formatter.string(from: event.startDate, to: event.endDate)
+
+            let meta = EventMeta(event: event, dateProvider: dateProvider)
+
+            let end: Date
+
+            if event.type.isReminder {
+                end = event.start
+            }
+            else if meta.isSingleDay && meta.endsMidnight {
+                end = dateProvider.calendar.startOfDay(for: event.start)
+            }
+            else {
+                end = event.end
+            }
+
+            duration = formatter.string(from: event.start, to: end)
         }
 
         popoverMaterial = settings.popoverMaterial

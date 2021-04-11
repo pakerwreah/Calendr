@@ -9,11 +9,11 @@ import RxSwift
 import EventKit
 
 protocol CalendarServiceProviding {
+
     var changeObservable: Observable<Void> { get }
 
     func calendars() -> Observable<[CalendarModel]>
     func events(from start: Date, to end: Date, calendars: [String]) -> Observable<[EventModel]>
-    func event(_ identifier: String) -> EventDetailsModel?
 }
 
 class CalendarServiceProvider: CalendarServiceProviding {
@@ -37,18 +37,31 @@ class CalendarServiceProvider: CalendarServiceProviding {
     }
 
     func requestAccess() {
-        if EKEventStore.authorizationStatus(for: .event) == .authorized {
-            changeObserver.onNext(())
+        requestAccess(for: .event) {
+            self.requestAccess(for: .reminder)
+        }
+    }
+
+    private func requestAccess(for type: EKEntityType, completion: (() -> Void)? = nil) {
+
+        if EKEventStore.authorizationStatus(for: type) == .authorized {
+            if let completion = completion {
+                completion()
+            } else {
+                changeObserver.onNext(())
+            }
         } else {
-            store.requestAccess(to: .event) { granted, error in
+            store.requestAccess(to: type) { granted, error in
 
                 if let error = error {
                     print(error.localizedDescription)
                 } else if granted {
-                    print("Access granted!")
+                    print("Access granted for \(type)!")
                 } else {
-                    print("Access not granted!")
+                    print("Access denied for \(type)!")
                 }
+
+                completion?()
             }
         }
     }
@@ -56,11 +69,10 @@ class CalendarServiceProvider: CalendarServiceProviding {
     func calendars() -> Observable<[CalendarModel]> {
 
         Observable.create { [store] observer in
-            let calendars = store
-                .calendars(for: .event)
-                .map(CalendarModel.init(from:))
 
-            observer.onNext(calendars)
+            observer.onNext(
+                (store.calendars(for: .event) + store.calendars(for: .reminder)).map(CalendarModel.init(from:))
+            )
 
             return Disposables.create()
         }
@@ -69,12 +81,20 @@ class CalendarServiceProvider: CalendarServiceProviding {
 
     func events(from start: Date, to end: Date, calendars: [String]) -> Observable<[EventModel]> {
 
+        let calendars = calendars.compactMap(store.calendar(withIdentifier:))
+
+        return Observable.zip(
+            fetchEvents(from: start, to: end, calendars: calendars),
+            fetchReminders(from: start, to: end, calendars: calendars)
+        )
+        .map(+)
+    }
+
+    private func fetchEvents(from start: Date, to end: Date, calendars: [EKCalendar]) -> Observable<[EventModel]> {
+
         Observable.create { [store] observer in
 
-            let predicate = store.predicateForEvents(
-                withStart: start, end: end,
-                calendars: calendars.compactMap(store.calendar(withIdentifier:))
-            )
+            let predicate = store.predicateForEvents(withStart: start, end: end, calendars: calendars)
 
             let events = store.events(matching: predicate)
                 .filter { $0.status != .declined }
@@ -87,19 +107,21 @@ class CalendarServiceProvider: CalendarServiceProviding {
         .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
     }
 
-    func event(_ identifier: String) -> EventDetailsModel? {
-        let group = DispatchGroup()
-        group.enter()
+    func fetchReminders(from start: Date, to end: Date, calendars: [EKCalendar]) -> Observable<[EventModel]> {
 
-        var details: EventDetailsModel?
-        // I have no idea why I have to request authorization again
-        store.requestAccess(to: .event) { [store] _, _ in
-            details = store.event(withIdentifier: identifier)
-            group.leave()
+        Observable.create { [store] observer in
+
+            let predicate = store.predicateForIncompleteReminders(
+                withDueDateStarting: start, ending: end, calendars: calendars
+            )
+
+            store.fetchReminders(matching: predicate) {
+                observer.onNext($0?.map(EventModel.init(from:)) ?? [])
+            }
+
+            return Disposables.create()
         }
-        group.wait()
-
-        return details
+        .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
     }
 }
 
@@ -135,10 +157,49 @@ private extension EventModel {
             url: event.url,
             isAllDay: event.isAllDay,
             isPending: event.status == .pending,
-            isBirthday: event.birthdayContactIdentifier.isNotNil,
+            type: event.birthdayContactIdentifier.isNotNil ? .birthday : .event,
             calendar: .init(from: event.calendar)
+        )
+    }
+
+    init(from reminder: EKReminder) {
+        self.init(
+            id: reminder.calendarItemIdentifier,
+            start: reminder.dueDateComponents!.date,
+            end: reminder.dueDateComponents!.endOfDay,
+            title: reminder.title,
+            location: reminder.location, // doesn't work
+            notes: reminder.notes,
+            url: reminder.url, // doesn't work
+            isAllDay: reminder.dueDateComponents!.hour == nil,
+            isPending: false,
+            type: .reminder,
+            calendar: .init(from: reminder.calendar)
         )
     }
 }
 
-typealias EventDetailsModel = EKEvent
+extension EKEntityType: CustomStringConvertible {
+
+    public var description: String {
+        switch self {
+        case .event:
+            return "events"
+        case .reminder:
+            return "reminders"
+        @unknown default:
+            return "unknown"
+        }
+    }
+}
+
+private extension DateComponents {
+
+    var date: Date {
+        Calendar.current.date(from: self)!
+    }
+
+    var endOfDay: Date {
+        Calendar.current.endOfDay(for: date)
+    }
+}
