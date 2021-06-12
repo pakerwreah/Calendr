@@ -14,7 +14,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
 
-        if #available(OSX 11.0, *), NSClassFromString("XCTestCase") == nil {
+        if NSClassFromString("XCTestCase") == nil {
             viewController = MainViewController()
         }
 

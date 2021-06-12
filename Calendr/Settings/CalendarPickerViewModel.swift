@@ -5,6 +5,7 @@
 //  Created by Paker on 14/01/21.
 //
 
+import Foundation
 import RxSwift
 import RxRelay
 

@@ -54,7 +54,6 @@ private final class EventViewPreview: NSViewRepresentable {
     }
 }
 
-@available(OSX 11.0, *)
 struct EventView_Previews: PreviewProvider {
 
     static func make(_ color: ColorScheme) -> some View {

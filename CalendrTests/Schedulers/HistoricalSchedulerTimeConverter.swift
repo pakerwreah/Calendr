@@ -7,6 +7,7 @@
 // 💡 This is just a copy from RxSwift because it doesn't have a public constructor ¯\_(ツ)_/¯
 //
 
+import Foundation
 import RxSwift
 
 /// Converts historical virtual time into real time.
