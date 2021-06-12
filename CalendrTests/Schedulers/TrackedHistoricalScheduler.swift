@@ -5,6 +5,7 @@
 //  Created by Paker on 08/03/2021.
 //
 
+import Foundation
 import RxSwift
 
 class TrackedHistoricalScheduler : VirtualTimeScheduler<HistoricalSchedulerTimeConverter> {

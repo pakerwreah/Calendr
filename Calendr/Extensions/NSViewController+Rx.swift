@@ -5,6 +5,7 @@
 //  Created by Paker on 13/03/2021.
 //
 
+import AppKit
 import RxSwift
 
 extension Reactive where Base: NSViewController {
