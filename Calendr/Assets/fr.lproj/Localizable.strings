@@ -32,3 +32,7 @@
 "formatter.date.relative.in" = "dans %@";
 "formatter.date.relative.ago" = "il y a %@";
 "formatter.date.relative.left" = "%@ rest.";
+
+"reminder.options.button" = "Options";
+"reminder.options.complete" = "Terminé";
+"reminder.options.remind" = "Rappel %@";

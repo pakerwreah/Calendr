@@ -22,6 +22,9 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         [_title, url, location, duration, notes]
     }
 
+    private lazy var optionsButton = NSButton()
+    private lazy var reminderOptions = ReminderOptions()
+
     private let viewModel: EventDetailsViewModel
 
     init(viewModel: EventDetailsViewModel) {
@@ -66,6 +69,18 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         location.font = .small
         url.font = .small
         duration.font = .default
+
+        if viewModel.type.isReminder {
+            optionsButton.title = Strings.Reminder.Options.button
+            optionsButton.bezelStyle = .texturedRounded
+            optionsButton.image = Icons.EventDetails.options.with(scale: .small)
+            optionsButton.imagePosition = .imageTrailing
+
+            let optionsStackView = NSStackView(views: [.spacer, optionsButton])
+            optionsStackView.setHuggingPriority(.defaultHigh, for: .vertical)
+            optionsStackView.edgeInsets.top = 4
+            contentStackView.addArrangedSubview(optionsStackView)
+        }
     }
 
     override func viewDidLoad() {
@@ -99,6 +114,34 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         )
         .bind { $0.material = $1 }
         .disposed(by: disposeBag)
+
+        if viewModel.type.isReminder {
+
+            optionsButton.rx.tap.bind { [optionsButton, reminderOptions] in
+                reminderOptions.popUp(
+                    positioning: nil,
+                    at: NSPoint(x: 0, y: optionsButton.bounds.height),
+                    in: optionsButton
+                )
+            }
+            .disposed(by: disposeBag)
+
+            reminderOptions.asObservable()
+                .bind(to: viewModel.reminderActionObserver)
+                .disposed(by: disposeBag)
+
+            viewModel.reminderActionCallback
+                .observe(on: MainScheduler.instance)
+                .subscribe(
+                    onNext: { [weak self] in
+                        self?.view.window?.close()
+                    },
+                    onError: { error in
+                        NSAlert(error: error).runModal()
+                    }
+                )
+                .disposed(by: disposeBag)
+        }
     }
 
     override func viewDidAppear() {

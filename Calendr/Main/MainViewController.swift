@@ -248,9 +248,9 @@ class MainViewController: NSViewController {
 
         [prevBtn, resetBtn, nextBtn].forEach(styleButton)
 
-        prevBtn.image = NSImage(named: NSImage.goBackTemplateName)
-        resetBtn.image = NSImage(named: NSImage.refreshTemplateName)
-        nextBtn.image = NSImage(named: NSImage.goForwardTemplateName)
+        prevBtn.image = Icons.Calendar.prev
+        resetBtn.image = Icons.Calendar.reset
+        nextBtn.image = Icons.Calendar.next
 
         return NSStackView(views: [
             .spacer(width: 5), titleLabel, .spacer, prevBtn, resetBtn, nextBtn
@@ -264,8 +264,8 @@ class MainViewController: NSViewController {
 
         pinBtn.setButtonType(.onOff)
 
-        calendarBtn.image = NSImage(named: NSImage.iconViewTemplateName)?.withSymbolConfiguration(.init(scale: .large))
-        settingsBtn.image = NSImage(named: NSImage.actionTemplateName)?.withSymbolConfiguration(.init(scale: .large))
+        calendarBtn.image = Icons.Calendar.calendar.with(scale: .large)
+        settingsBtn.image = Icons.Calendar.settings.with(scale: .large)
 
         return NSStackView(views: [pinBtn, .spacer, calendarBtn, settingsBtn])
     }
@@ -336,7 +336,7 @@ class MainViewController: NSViewController {
         guard let statusBarButton = statusItem.button else { return }
 
         let menu = NSMenu()
-        menu.addItem(NSMenuItem(title: "Quit", action: #selector(NSApp.terminate), keyEquivalent: "q"))
+        menu.addItem(withTitle: "Quit", action: #selector(NSApp.terminate), keyEquivalent: "q")
         statusItem.menu = menu
 
         statusBarButton.rx.leftClickGesture()

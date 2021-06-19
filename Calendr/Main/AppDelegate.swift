@@ -14,9 +14,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
 
-        if NSClassFromString("XCTestCase") == nil {
-            viewController = MainViewController()
-        }
+        guard NSClassFromString("XCTestCase") == nil else { return }
+
+        viewController = MainViewController()
 
         // 🔨 Fix issue with NSColor.cgColor returning the wrong color when switching between dark & light themes
         appearanceObserver = NSApp.observe(\.effectiveAppearance, options: [.new]) { app, change in
