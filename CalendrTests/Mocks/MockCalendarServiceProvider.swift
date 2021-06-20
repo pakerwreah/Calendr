@@ -15,16 +15,26 @@ class MockCalendarServiceProvider: CalendarServiceProviding {
 
     let (changeObservable, changeObserver) = PublishSubject<Void>.pipe()
     let (spyEventsObservable, spyEventsObserver) = PublishSubject<EventsArgs>.pipe()
+    let (spyCompleteObservable, spyCompleteObserver) = PublishSubject<Void>.pipe()
+    let (spyRescheduleObservable, spyRescheduleObserver) = PublishSubject<Date>.pipe()
 
     var m_calendars: [CalendarModel] = []
     var m_events: [EventModel] = []
 
-    func calendars() -> Observable<[CalendarModel]> {
-        return .just(m_calendars)
-    }
+    func calendars() -> Observable<[CalendarModel]> { .just(m_calendars) }
 
     func events(from start: Date, to end: Date, calendars: [String]) -> Observable<[EventModel]> {
         spyEventsObserver.onNext((start: start, end: end, calendars: calendars))
         return .just(m_events)
+    }
+
+    func completeReminder(id: String) -> Observable<Void> {
+        spyCompleteObserver.onNext(())
+        return .just(())
+    }
+
+    func rescheduleReminder(id: String, to date: Date) -> Observable<Void> {
+        spyRescheduleObserver.onNext(date)
+        return .just(())
     }
 }

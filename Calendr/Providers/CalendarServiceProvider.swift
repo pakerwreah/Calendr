@@ -14,6 +14,8 @@ protocol CalendarServiceProviding {
 
     func calendars() -> Observable<[CalendarModel]>
     func events(from start: Date, to end: Date, calendars: [String]) -> Observable<[EventModel]>
+    func completeReminder(id: String) -> Observable<Void>
+    func rescheduleReminder(id: String, to: Date) -> Observable<Void>
 }
 
 class CalendarServiceProvider: CalendarServiceProviding {
@@ -74,6 +76,8 @@ class CalendarServiceProvider: CalendarServiceProviding {
                 (store.calendars(for: .event) + store.calendars(for: .reminder)).map(CalendarModel.init(from:))
             )
 
+            observer.onCompleted()
+
             return Disposables.create()
         }
         .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
@@ -101,6 +105,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
                 .map(EventModel.init(from:))
 
             observer.onNext(events)
+            observer.onCompleted()
 
             return Disposables.create()
         }
@@ -117,9 +122,62 @@ class CalendarServiceProvider: CalendarServiceProviding {
 
             store.fetchReminders(matching: predicate) {
                 observer.onNext($0?.map(EventModel.init(from:)) ?? [])
+                observer.onCompleted()
             }
 
             return Disposables.create()
+        }
+        .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+    }
+
+    func completeReminder(id: String) -> Observable<Void> {
+
+        Observable.create { [store] observer in
+
+            let disposable = Disposables.create()
+
+            defer { observer.onCompleted() }
+
+            guard let reminder = store.calendarItem(withIdentifier: id) as? EKReminder else {
+                assertionFailure("🔥 Not a reminder")
+                return disposable
+            }
+
+            do {
+                reminder.isCompleted = true
+                try store.save(reminder, commit: true)
+                observer.onNext(())
+            } catch {
+                observer.onError(error)
+            }
+
+            return disposable
+        }
+        .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+    }
+
+    func rescheduleReminder(id: String, to date: Date) -> Observable<Void> {
+
+        Observable.create { [store] observer in
+
+            let disposable = Disposables.create()
+
+            defer { observer.onCompleted() }
+
+            guard let reminder = store.calendarItem(withIdentifier: id) as? EKReminder else {
+                assertionFailure("🔥 Not a reminder")
+                return disposable
+            }
+
+            do {
+                reminder.dueDateComponents = date.dateComponents
+                try store.save(reminder, commit: true)
+                observer.onNext(())
+            } catch {
+                observer.onError(error)
+            }
+
+            return disposable
         }
         .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
     }
@@ -196,10 +254,17 @@ extension EKEntityType: CustomStringConvertible {
 private extension DateComponents {
 
     var date: Date {
-        Calendar.current.date(from: self)!
+        Calendar.autoupdatingCurrent.date(from: self)!
     }
 
     var endOfDay: Date {
-        Calendar.current.endOfDay(for: date)
+        Calendar.autoupdatingCurrent.endOfDay(for: date)
+    }
+}
+
+private extension Date {
+
+    var dateComponents: DateComponents {
+        Calendar.autoupdatingCurrent.dateComponents(in: .autoupdatingCurrent, from: self)
     }
 }

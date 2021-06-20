@@ -34,6 +34,19 @@ internal enum Strings {
     }
   }
 
+  internal enum Reminder {
+    internal enum Options {
+      /// Options
+      internal static var button: String { return Strings.tr("Localizable", "reminder.options.button") }
+      /// Complete
+      internal static var complete: String { return Strings.tr("Localizable", "reminder.options.complete") }
+      /// Remind %@
+      internal static func remind(_ p1: Any) -> String {
+        return Strings.tr("Localizable", "reminder.options.remind", String(describing: p1))
+      }
+    }
+  }
+
   internal enum Settings {
     /// Calendar
     internal static var calendar: String { return Strings.tr("Localizable", "settings.calendar") }

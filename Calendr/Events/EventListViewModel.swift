@@ -141,7 +141,5 @@ class EventListViewModel {
         .share(replay: 1)
     }
 
-    func asObservable() -> Observable<[EventListItem]> {
-        return viewModels
-    }
+    func asObservable() -> Observable<[EventListItem]> { viewModels }
 }
