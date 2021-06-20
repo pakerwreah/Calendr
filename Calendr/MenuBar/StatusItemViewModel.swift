@@ -19,11 +19,6 @@ class StatusItemViewModel {
         notificationCenter: NotificationCenter
     ) {
 
-        let titleIcon = NSAttributedString(string: "📅", attributes: [
-            .font: Fonts.SegoeUISymbol.regular.font(size: 14),
-            .baselineOffset: -1
-        ])
-
         let localeChangeObservable = notificationCenter.rx
             .notification(NSLocale.currentLocaleDidChangeNotification)
             .toVoid()
@@ -45,7 +40,9 @@ class StatusItemViewModel {
             let title = NSMutableAttributedString()
 
             if showIcon {
-                title.append(titleIcon)
+                let attachment = NSTextAttachment()
+                attachment.image = Icons.MenuBar.icon.with(scale: .large)
+                title.append(NSAttributedString(attachment: attachment))
             }
 
             if showDate {

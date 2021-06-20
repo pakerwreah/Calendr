@@ -27,13 +27,14 @@ class StatusItemViewModelTests: XCTestCase {
         notificationCenter: notificationCenter
     )
 
-    var lastValue: String?
+    var lastAttributed: NSAttributedString?
+    var lastValue: String? { lastAttributed?.string }
 
     override func setUp() {
 
         viewModel.text
             .bind { [weak self] in
-                self?.lastValue = $0.string
+                self?.lastAttributed = $0
             }
             .disposed(by: disposeBag)
 
@@ -74,19 +75,19 @@ class StatusItemViewModelTests: XCTestCase {
     func testIconVisibility() {
 
         setUp(showIcon: true, showDate: true)
-        XCTAssertEqual(lastValue?.first, "📅")
+        XCTAssertEqual(lastAttributed?.containsAttachments, true)
 
         setUp(showIcon: false, showDate: true)
-        XCTAssertNotEqual(lastValue?.first, "📅")
+        XCTAssertEqual(lastAttributed?.containsAttachments, false)
     }
 
     func testDateVisibility() {
 
-        setUp(showIcon: true, showDate: true)
-        XCTAssertEqual(lastValue, "📅  2021-01-01")
+        setUp(showIcon: false, showDate: true)
+        XCTAssertEqual(lastValue, "2021-01-01")
 
-        setUp(showIcon: true, showDate: false)
-        XCTAssertEqual(lastValue, "📅")
+        setUp(showIcon: false, showDate: false)
+        XCTAssertEqual(lastValue, "")
     }
 
     func testDateStyle() {

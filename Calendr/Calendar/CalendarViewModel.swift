@@ -198,9 +198,7 @@ class CalendarViewModel {
         .share(replay: 1)
     }
 
-    func asObservable() -> Observable<[CalendarCellViewModel]> {
-        return cellViewModelsObservable
-    }
+    func asObservable() -> Observable<[CalendarCellViewModel]> { cellViewModelsObservable }
 }
 
 private extension CalendarCellViewModel {

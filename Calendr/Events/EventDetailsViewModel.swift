@@ -10,6 +10,7 @@ import RxSwift
 
 class EventDetailsViewModel {
 
+    let type: EventType
     let title: String
     let duration: String
     let url: String
@@ -18,6 +19,11 @@ class EventDetailsViewModel {
 
     let popoverMaterial: Observable<PopoverMaterial>
 
+    private let reminderActionObservable: Observable<ReminderOptions.Action>
+    let reminderActionObserver: AnyObserver<ReminderOptions.Action>
+
+    let reminderActionCallback: Observable<Void>
+
     init(
         event: EventModel,
         dateProvider: DateProviding,
@@ -25,8 +31,9 @@ class EventDetailsViewModel {
         settings: EventSettings
     ) {
 
+        type = event.type
         title = event.title
-        url = (event.type.isBirthday ? nil : event.url?.absoluteString) ?? ""
+        url = (type.isBirthday ? nil : event.url?.absoluteString) ?? ""
         location = event.location ?? ""
         notes = event.notes ?? ""
 
@@ -44,7 +51,7 @@ class EventDetailsViewModel {
 
             let end: Date
 
-            if event.type.isReminder {
+            if type.isReminder {
                 end = event.start
             }
             else if meta.isSingleDay && meta.endsMidnight {
@@ -58,5 +65,18 @@ class EventDetailsViewModel {
         }
 
         popoverMaterial = settings.popoverMaterial
+
+        (reminderActionObservable, reminderActionObserver) = PublishSubject.pipe()
+
+        reminderActionCallback = !type.isReminder ? .empty() : reminderActionObservable
+            .flatMapFirst { action -> Observable<Void> in
+                switch action {
+                case .complete:
+                    return calendarService.completeReminder(id: event.id)
+                case .remind(let dateComponents):
+                    let date = dateProvider.calendar.date(byAdding: dateComponents, to: dateProvider.now)!
+                    return calendarService.rescheduleReminder(id: event.id, to: date)
+                }
+            }
     }
 }

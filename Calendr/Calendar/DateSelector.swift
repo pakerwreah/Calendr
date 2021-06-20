@@ -9,6 +9,7 @@ import Foundation
 import RxSwift
 
 class DateSelector {
+    
     private let dateObservable: Observable<Date>
 
     init(
@@ -53,7 +54,5 @@ class DateSelector {
         .share(replay: 1)
     }
 
-    func asObservable() -> Observable<Date> {
-        return dateObservable
-    }
+    func asObservable() -> Observable<Date> { dateObservable }
 }
