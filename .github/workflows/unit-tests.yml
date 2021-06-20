@@ -2,9 +2,9 @@ name: Unit Tests
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master-disabled ]
   pull_request:
-    branches: [ master ]
+    branches: [ master-disabled ]
 
 jobs:
   build:
