@@ -171,6 +171,8 @@ class CalendarServiceProvider: CalendarServiceProviding {
 
             do {
                 reminder.dueDateComponents = date.dateComponents
+                reminder.alarms?.forEach(reminder.removeAlarm)
+                reminder.addAlarm(EKAlarm(absoluteDate: date))
                 try store.save(reminder, commit: true)
                 observer.onNext(())
             } catch {
