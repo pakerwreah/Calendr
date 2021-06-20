@@ -10,6 +10,8 @@ import Foundation
 // swiftlint:disable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:disable nesting type_body_length type_name vertical_whitespace_opening_braces
 internal enum Strings {
+  /// Quit
+  internal static var quit: String { return Strings.tr("Localizable", "quit") }
 
   internal enum Formatter {
     internal enum Date {

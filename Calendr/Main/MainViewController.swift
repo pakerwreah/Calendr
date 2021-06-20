@@ -336,7 +336,7 @@ class MainViewController: NSViewController {
         guard let statusBarButton = statusItem.button else { return }
 
         let menu = NSMenu()
-        menu.addItem(withTitle: "Quit", action: #selector(NSApp.terminate), keyEquivalent: "q")
+        menu.addItem(withTitle: Strings.quit, action: #selector(NSApp.terminate), keyEquivalent: "q")
         statusItem.menu = menu
 
         statusBarButton.rx.leftClickGesture()

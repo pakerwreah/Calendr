@@ -6,6 +6,8 @@
   
 */
 
+"quit" = "Quit";
+
 "settings.tab.general" = "General";
 "settings.tab.calendars" = "Calendars";
 "settings.tab.about" = "About";
