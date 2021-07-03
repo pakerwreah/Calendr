@@ -91,12 +91,12 @@ class MainViewController: NSViewController {
             enabledCalendars: calendarPickerViewModel.enabledCalendars,
             calendarService: calendarService,
             dateProvider: dateProvider,
+            settings: settingsViewModel,
             notificationCenter: .default
         )
 
         calendarView = CalendarView(
             viewModel: calendarViewModel,
-            settings: settingsViewModel,
             hoverObserver: hoverSubject.asObserver(),
             clickObserver: dateClick.asObserver()
         )

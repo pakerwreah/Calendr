@@ -14,7 +14,7 @@ class CalendarViewModel {
 
     let title: Observable<String>
     let weekDays: Observable<[WeekDay]>
-    let weekNumbers: Observable<[Int]>
+    let weekNumbers: Observable<[Int]?>
 
     init(
         dateObservable: Observable<Date>,
@@ -22,6 +22,7 @@ class CalendarViewModel {
         enabledCalendars: Observable<[String]>,
         calendarService: CalendarServiceProviding,
         dateProvider: DateProviding,
+        settings: CalendarSettings,
         notificationCenter: NotificationCenter
     ) {
 
@@ -73,7 +74,7 @@ class CalendarViewModel {
                 dateProvider.calendar.dateInterval(of: .month, for: selectedDate)
             }
             .distinctUntilChanged()
-            .share()
+            .share(replay: 1)
 
         // Create cells for current month
         let dateCellsObservable = Observable.combineLatest(
@@ -102,10 +103,13 @@ class CalendarViewModel {
                 )
             }
         }
-        .share()
+        .share(replay: 1)
 
-        weekNumbers = dateCellsObservable.map { dateCells in
-            (0..<6).map {
+        weekNumbers = Observable.combineLatest(
+            settings.showWeekNumbers, dateCellsObservable
+        )
+        .map { showWeekNumbers, dateCells in
+            !showWeekNumbers ? nil : (0..<6).map {
                 dateProvider.calendar.component(.weekOfYear, from: dateCells[7 * $0].date)
             }
         }
@@ -127,7 +131,7 @@ class CalendarViewModel {
             .toOptional()
             .startWith(nil)
         }
-        .share()
+        .share(replay: 1)
 
         var timezone = dateProvider.calendar.timeZone
 
@@ -141,7 +145,7 @@ class CalendarViewModel {
             .do(afterNext: { _ in
                 timezone = dateProvider.calendar.timeZone
             })
-            .share()
+            .share(replay: 1)
 
         // Check which cell is today
         let isTodayObservable = Observable.combineLatest(
@@ -158,7 +162,7 @@ class CalendarViewModel {
                 )
             }
         }
-        .share()
+        .share(replay: 1)
 
         // Check which cell is selected
         let isSelectedObservable = Observable.combineLatest(
@@ -171,7 +175,7 @@ class CalendarViewModel {
             }
         }
         .distinctUntilChanged()
-        .share()
+        .share(replay: 1)
 
         // Clear hover when month changes
         let hoverObservable: Observable<Date?> = Observable.merge(

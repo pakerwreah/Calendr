@@ -13,7 +13,6 @@ class CalendarView: NSView {
     private let disposeBag = DisposeBag()
 
     private let viewModel: CalendarViewModel
-    private let settings: CalendarSettings
     private let hoverObserver: AnyObserver<Date?>
     private let clickObserver: AnyObserver<Date>
 
@@ -21,13 +20,11 @@ class CalendarView: NSView {
 
     init(
         viewModel: CalendarViewModel,
-        settings: CalendarSettings,
         hoverObserver: AnyObserver<Date?>,
         clickObserver: AnyObserver<Date>
     ) {
 
         self.viewModel = viewModel
-        self.settings = settings
         self.hoverObserver = hoverObserver
         self.clickObserver = clickObserver
 
@@ -60,7 +57,7 @@ class CalendarView: NSView {
 
     private func setUpBindings() {
 
-        let weekNumbersWidth = settings.showWeekNumbers.map { $0 ? Constants.weekNumberCellSize : 0 }
+        let weekNumbersWidth = viewModel.weekNumbers.map { $0 != nil ? Constants.weekNumberCellSize : 0 }
 
         weekNumbersWidth
             .observe(on: MainScheduler.instance)
@@ -104,7 +101,7 @@ class CalendarView: NSView {
         }
 
         for i in 0..<6 {
-            let cellView = WeekNumberCellView(viewModel: viewModel.weekNumbers.map(\.[i]))
+            let cellView = WeekNumberCellView(viewModel: viewModel.weekNumbers.skipNil().map(\.[i]))
             gridView.cell(atColumnIndex: 0, rowIndex: 1 + i).contentView = cellView
         }
 
