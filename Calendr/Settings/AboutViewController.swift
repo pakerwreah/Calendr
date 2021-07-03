@@ -28,7 +28,7 @@ class AboutViewController: NSViewController {
             .spacer(height: 4),
             Label(text: #"¯\_(ツ)_/¯"#, font: .systemFont(ofSize: 16), align: .center),
             .spacer(height: 4),
-            Label(text: "© 2020 - \(BuildConfig.date.components(separatedBy: " ")[2]) Carlos Enumo", align: .center),
+            Label(text: "© 2020 - \(BuildConfig.date.suffix(4)) Carlos Enumo", align: .center),
             link,
             .spacer(height: 4),
             NSButton(title: Strings.quit, target: NSApp, action: #selector(NSApp.terminate))
