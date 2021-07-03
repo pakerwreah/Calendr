@@ -18,6 +18,7 @@ class CalendarViewModelTests: XCTestCase {
     let calendarsSubject = PublishSubject<[String]>()
 
     private let calendarService = MockCalendarServiceProvider()
+    private let settings = MockCalendarSettings()
 
     let dateProvider = MockDateProvider()
 
@@ -29,6 +30,7 @@ class CalendarViewModelTests: XCTestCase {
         enabledCalendars: calendarsSubject,
         calendarService: calendarService,
         dateProvider: dateProvider,
+        settings: settings,
         notificationCenter: notificationCenter
     )
 
@@ -81,6 +83,8 @@ class CalendarViewModelTests: XCTestCase {
             .disposed(by: disposeBag)
 
         calendarsSubject.onNext([])
+
+        settings.toggleWeekNumbers.onNext(true)
     }
 
     func testTitle() {
@@ -177,6 +181,25 @@ class CalendarViewModelTests: XCTestCase {
 
         XCTAssertEqual(weekDays?.map(\.title), expected)
         XCTAssertEqual(weekDays?.enumerated().filter(\.element.isWeekend).map(\.offset), [5, 6])
+    }
+
+    func testWeekNumbers_shouldReturnWeekNumbersIfEnabled() {
+
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+
+        settings.toggleWeekNumbers.onNext(false)
+
+        var weekNumbers: [Int]?
+
+        viewModel.weekNumbers
+            .bind { weekNumbers = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertNil(weekNumbers)
+
+        settings.toggleWeekNumbers.onNext(true)
+
+        XCTAssertNotNil(weekNumbers)
     }
 
     func testWeekNumbers_gregorianCalendar() {
