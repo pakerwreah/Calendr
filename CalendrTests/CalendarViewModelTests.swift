@@ -106,13 +106,11 @@ class CalendarViewModelTests: XCTestCase {
         XCTAssertEqual(titles, ["Janv. 2021", "Févr. 2021"])
     }
 
-    func testMonthSpan() {
+    func testMonthSpan() throws {
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
 
-        guard let cellViewModels = lastValue else {
-            return XCTFail()
-        }
+        let cellViewModels = try XCTUnwrap(lastValue)
 
         let inMonth = cellViewModels.filter(\.inMonth)
 
@@ -121,20 +119,18 @@ class CalendarViewModelTests: XCTestCase {
         XCTAssertEqual(inMonth.last.map(\.date), .make(year: 2021, month: 1, day: 31))
     }
 
-    func testDateSpan_firstWeekDaySunday() {
+    func testDateSpan_firstWeekDaySunday() throws {
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
 
-        guard let cellViewModels = lastValue else {
-            return XCTFail()
-        }
+        let cellViewModels = try XCTUnwrap(lastValue)
 
         XCTAssertEqual(cellViewModels.count, 42)
         XCTAssertEqual(cellViewModels.first.map(\.date), .make(year: 2020, month: 12, day: 27))
         XCTAssertEqual(cellViewModels.last.map(\.date), .make(year: 2021, month: 2, day: 6))
     }
 
-    func testDateSpan_firstWeekDayMonday() {
+    func testDateSpan_firstWeekDayMonday() throws {
 
         dateProvider.m_calendar.firstWeekday = 2
 
@@ -142,9 +138,7 @@ class CalendarViewModelTests: XCTestCase {
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
 
-        guard let cellViewModels = lastValue else {
-            return XCTFail()
-        }
+        let cellViewModels = try XCTUnwrap(lastValue)
 
         XCTAssertEqual(cellViewModels.count, 42)
         XCTAssertEqual(cellViewModels.first.map(\.date), .make(year: 2020, month: 12, day: 28))
@@ -253,19 +247,17 @@ class CalendarViewModelTests: XCTestCase {
         XCTAssertEqual(weekNumbers, Array(5...10))
     }
 
-    func testHoverDistinctly() {
+    func testHoverDistinctly() throws {
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
 
-        (1...5).map {
+        try (1...5).map {
             Date.make(year: 2021, month: 1, day: $0)
         }
         .forEach { date in
             hoverSubject.onNext(date)
 
-            guard let hovered = lastValue?.filter(\.isHovered) else {
-                return XCTFail()
-            }
+            let hovered = try XCTUnwrap(lastValue?.filter(\.isHovered))
 
             XCTAssertEqual(hovered.count, 1)
             XCTAssertEqual(hovered.first.map(\.date), date)
@@ -301,17 +293,15 @@ class CalendarViewModelTests: XCTestCase {
         lastValue?.filter(\.isHovered).isEmpty == false
     }
 
-    func testSelectDateDistinctly() {
+    func testSelectDateDistinctly() throws {
 
-        (1...5).map {
+        try (1...5).map {
             Date.make(year: 2021, month: 1, day: $0)
         }
         .forEach { date in
             dateSubject.onNext(date)
 
-            guard let selected = lastValue?.filter(\.isSelected) else {
-                return XCTFail()
-            }
+            let selected = try XCTUnwrap(lastValue?.filter(\.isSelected))
 
             XCTAssertEqual(selected.count, 1)
             XCTAssertEqual(selected.first.map(\.date), date)
