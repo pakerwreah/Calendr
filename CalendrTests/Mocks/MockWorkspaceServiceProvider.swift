@@ -10,11 +10,11 @@ import Foundation
 
 class MockWorkspaceServiceProvider: WorkspaceServiceProviding {
 
+    var m_urlForApplication: URL?
     var m_supportsScheme = false
+    var didOpen: ((URL) -> Void)?
 
-    func supports(scheme: String) -> Bool {
-        return m_supportsScheme
-    }
-
-    func open(_ url: URL) { }
+    func urlForApplication(toOpen url: URL) -> URL? { m_urlForApplication }
+    func supports(scheme: String) -> Bool { m_supportsScheme }
+    func open(_ url: URL) { didOpen?(url) }
 }

@@ -18,8 +18,12 @@ class MockCalendarServiceProvider: CalendarServiceProviding {
     let (spyCompleteObservable, spyCompleteObserver) = PublishSubject<Void>.pipe()
     let (spyRescheduleObservable, spyRescheduleObserver) = PublishSubject<Date>.pipe()
 
+    var didRequestAccess: (() -> Void)?
+
     var m_calendars: [CalendarModel] = []
     var m_events: [EventModel] = []
+
+    func requestAccess() { didRequestAccess?() }
 
     func calendars() -> Observable<[CalendarModel]> { .just(m_calendars) }
 

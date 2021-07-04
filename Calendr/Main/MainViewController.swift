@@ -40,15 +40,29 @@ class MainViewController: NSViewController {
     // Reactive
     private let disposeBag = DisposeBag()
     private let dateClick = PublishSubject<Date>()
-    private let initialDate = BehaviorSubject<Date>(value: Date())
+    private let initialDate: BehaviorSubject<Date>
     private let selectedDate = PublishSubject<Date>()
 
     // Properties
-    private let calendarService = CalendarServiceProvider()
-    private let workspace = WorkspaceServiceProvider()
-    private let dateProvider = DateProvider(calendar: .autoupdatingCurrent)
+    private let workspace: WorkspaceServiceProviding
+    private let calendarService: CalendarServiceProviding
+    private let dateProvider: DateProviding
+    private let notificationCenter: NotificationCenter
 
-    init() {
+    init(
+        workspace: WorkspaceServiceProviding,
+        calendarService: CalendarServiceProviding,
+        dateProvider: DateProviding,
+        userDefaults: UserDefaults,
+        notificationCenter: NotificationCenter
+    ) {
+
+        self.workspace = workspace
+        self.calendarService = calendarService
+        self.dateProvider = dateProvider
+        self.notificationCenter = notificationCenter
+
+        initialDate = BehaviorSubject(value: dateProvider.now)
 
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         statusItem.behavior = .terminationOnRemoval
@@ -59,20 +73,20 @@ class MainViewController: NSViewController {
 
         settingsViewModel = SettingsViewModel(
             dateProvider: dateProvider,
-            userDefaults: .standard,
-            notificationCenter: .default
+            userDefaults: userDefaults,
+            notificationCenter: notificationCenter
         )
 
         statusItemViewModel = StatusItemViewModel(
             dateObservable: initialDate,
             settings: settingsViewModel,
             dateProvider: dateProvider,
-            notificationCenter: .default
+            notificationCenter: notificationCenter
         )
 
         calendarPickerViewModel = CalendarPickerViewModel(
             calendarService: calendarService,
-            userDefaults: .standard
+            userDefaults: userDefaults
         )
 
         settingsViewController = SettingsViewController(
@@ -92,7 +106,7 @@ class MainViewController: NSViewController {
             calendarService: calendarService,
             dateProvider: dateProvider,
             settings: settingsViewModel,
-            notificationCenter: .default
+            notificationCenter: notificationCenter
         )
 
         calendarView = CalendarView(
@@ -283,10 +297,10 @@ class MainViewController: NSViewController {
             .disposed(by: disposeBag)
 
         Observable.merge(
-            NotificationCenter.default.rx.notification(.NSCalendarDayChanged).toVoid(),
+            notificationCenter.rx.notification(.NSCalendarDayChanged).toVoid(),
             rx.viewDidDisappear
         )
-        .map { Date() }
+        .map { [dateProvider] in dateProvider.now }
         .bind(to: initialDate)
         .disposed(by: disposeBag)
 
@@ -298,9 +312,9 @@ class MainViewController: NSViewController {
             .bind(to: titleLabel.rx.text)
             .disposed(by: disposeBag)
 
-        calendarBtn.rx.tap.bind {
-            if let appUrl = NSWorkspace.shared.urlForApplication(toOpen: URL(string: "webcal://")!) {
-                NSWorkspace.shared.open(appUrl)
+        calendarBtn.rx.tap.bind { [workspace] in
+            if let appUrl = workspace.urlForApplication(toOpen: URL(string: "webcal://")!) {
+                workspace.open(appUrl)
             }
         }
         .disposed(by: disposeBag)
@@ -421,7 +435,7 @@ class MainViewController: NSViewController {
 
 
         let dateSelector = DateSelector(
-            calendar: .autoupdatingCurrent,
+            calendar: dateProvider.calendar,
             initial: initialDate,
             selected: selectedDate,
             reset: resetBtn.rx.tap.asObservable(),

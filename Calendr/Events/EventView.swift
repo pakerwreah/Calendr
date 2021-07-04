@@ -156,7 +156,7 @@ class EventView: NSView {
                 .disposed(by: disposeBag)
 
             videoBtn.rx.tap
-                .bind { NSWorkspace.shared.open(url) }
+                .bind { [viewModel] in viewModel.workspace.open(url) }
                 .disposed(by: disposeBag)
         }
 

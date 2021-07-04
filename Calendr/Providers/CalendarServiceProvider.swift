@@ -12,6 +12,7 @@ protocol CalendarServiceProviding {
 
     var changeObservable: Observable<Void> { get }
 
+    func requestAccess()
     func calendars() -> Observable<[CalendarModel]>
     func events(from start: Date, to end: Date, calendars: [String]) -> Observable<[EventModel]>
     func completeReminder(id: String) -> Observable<Void>

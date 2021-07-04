@@ -16,7 +16,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         guard NSClassFromString("XCTestCase") == nil else { return }
 
-        viewController = MainViewController()
+        viewController = MainViewController(
+            workspace: WorkspaceServiceProvider(),
+            calendarService: CalendarServiceProvider(),
+            dateProvider: DateProvider(calendar: .autoupdatingCurrent),
+            userDefaults: .standard,
+            notificationCenter: .default
+        )
 
         // 🔨 Fix issue with NSColor.cgColor returning the wrong color when switching between dark & light themes
         appearanceObserver = NSApp.observe(\.effectiveAppearance, options: [.new]) { app, change in

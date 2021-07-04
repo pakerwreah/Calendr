@@ -29,6 +29,8 @@ class EventViewModel {
     private let calendarService: CalendarServiceProviding
     private let settings: EventSettings
 
+    let workspace: WorkspaceServiceProviding
+
     init(
         event: EventModel,
         dateProvider: DateProviding,
@@ -42,6 +44,7 @@ class EventViewModel {
         self.settings = settings
         self.dateProvider = dateProvider
         self.calendarService = calendarService
+        self.workspace = workspace
 
         title = event.title
         color = event.calendar.color
