@@ -9,38 +9,24 @@
 
 import SwiftUI
 
-private final class EventViewPreview: NSViewRepresentable {
+struct EventViewPreview: PreviewProvider {
 
-    let now = Date()
-    let dateProvider = DateProvider(calendar: .current)
-    let calendarService = CalendarServiceProvider()
-    let workspace = WorkspaceServiceProvider()
-    lazy var settings = SettingsViewModel(
-        dateProvider: dateProvider,
-        userDefaults: .init(),
-        notificationCenter: .init()
-    )
+    static let dateProvider = MockDateProvider()
+    static let calendarService = MockCalendarServiceProvider()
+    static let workspace = WorkspaceServiceProvider()
+    static let settings = MockEventSettings()
 
-    func makeNSView(context: Context) -> EventView {
+    static func make(_ color: ColorScheme) -> some View {
         EventView(
             viewModel: EventViewModel(
-                event: EventModel(
-                    id: "",
-                    start: now + 5,
-                    end: now + 15,
+                event: .make(
+                    start: dateProvider.now + 5,
+                    end: dateProvider.now + 15,
                     title: "Test Event",
                     location: "Brasil",
                     notes: "Join at http://meet.google.com",
-                    url: nil,
-                    isAllDay: false,
-                    isPending: false,
                     type: .event,
-                    calendar: CalendarModel(
-                        identifier: "",
-                        account: "",
-                        title: "",
-                        color: .systemYellow
-                    )
+                    calendar: .make(color: .systemYellow)
                 ),
                 dateProvider: dateProvider,
                 calendarService: calendarService,
@@ -48,23 +34,12 @@ private final class EventViewPreview: NSViewRepresentable {
                 settings: settings
             )
         )
-    }
-
-    func updateNSView(_ nsView: EventView, context: Context) {
-    }
-}
-
-struct EventView_Previews: PreviewProvider {
-
-    static func make(_ color: ColorScheme) -> some View {
-        ZStack {
-            Color(.controlBackgroundColor)
-            EventViewPreview()
-        }
+        .preview()
         .frame(width: 180, height: 50)
         .preferredColorScheme(color)
     }
 
+    /// live preview doesn't work well with both color schemes enabled
     static var previews: some View {
         make(.dark)
         make(.light)

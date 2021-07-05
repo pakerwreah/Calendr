@@ -14,7 +14,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
 
-        guard NSClassFromString("XCTestCase") == nil else { return }
+        guard !BuildConfig.isTesting else { return }
+
+        // 🔨 Fix issue with NSColor.cgColor returning the wrong color when switching between dark & light themes
+        appearanceObserver = NSApp.observe(\.effectiveAppearance, options: [.new]) { app, change in
+            NSAppearance.current = change.newValue
+        }
+
+        guard !BuildConfig.isPreview else { return }
 
         viewController = MainViewController(
             workspace: WorkspaceServiceProvider(),
@@ -23,10 +30,5 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             userDefaults: .standard,
             notificationCenter: .default
         )
-
-        // 🔨 Fix issue with NSColor.cgColor returning the wrong color when switching between dark & light themes
-        appearanceObserver = NSApp.observe(\.effectiveAppearance, options: [.new]) { app, change in
-            NSAppearance.current = change.newValue
-        }
     }
 }

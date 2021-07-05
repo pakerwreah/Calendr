@@ -10,6 +10,8 @@ import RxRelay
 
 extension ObservableType {
 
+    static func void() -> Observable<Void> { .just(()) }
+
     func toVoid() -> Observable<Void> {
         map { _ in () }
     }

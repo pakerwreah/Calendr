@@ -24,7 +24,7 @@ class CalendarExtensionTests: XCTestCase {
         ]
 
         for (start, end, expected) in ranges {
-            let result = Calendar.reference.isDate(date, in: (start, end))
+            let result = Calendar.gregorian.isDate(date, in: (start, end))
             XCTAssertEqual(expected, result, "\(start) - \(end))")
         }
     }
