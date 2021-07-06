@@ -1,9 +1,11 @@
 //
-//  Date.swift
-//  CalendrTests
+//  Date+Factory.swift
+//  Calendr
 //
 //  Created by Paker on 01/01/21.
 //
+
+#if DEBUG
 
 import Foundation
 
@@ -19,7 +21,7 @@ extension Date {
         timezone: TimeZone? = nil
     ) -> Date {
 
-        var calendar = Calendar.reference
+        var calendar = Calendar.gregorian
         timezone.map { calendar.timeZone = $0 }
 
         return calendar.date(
@@ -35,3 +37,5 @@ extension Date {
     }
 
 }
+
+#endif

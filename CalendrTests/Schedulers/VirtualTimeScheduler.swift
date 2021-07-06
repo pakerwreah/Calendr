@@ -7,6 +7,7 @@
 
 import Foundation
 import RxSwift
+@testable import Calendr
 
 extension VirtualTimeScheduler where VirtualTime == RxTime {
 
@@ -14,7 +15,7 @@ extension VirtualTimeScheduler where VirtualTime == RxTime {
         advanceTo(clock + interval.timeInterval)
     }
 
-    func advance(_ value: Int, _ component: Calendar.Component, using calendar: Calendar = .reference) {
+    func advance(_ value: Int, _ component: Calendar.Component, using calendar: Calendar = .gregorian) {
         advanceTo(calendar.date(byAdding: component, value: value, to: clock)!)
     }
 }

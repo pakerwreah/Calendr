@@ -1,12 +1,13 @@
 //
-//  EventModel.swift
-//  CalendrTests
+//  EventModel+Factory.swift
+//  Calendr
 //
 //  Created by Paker on 14/01/21.
 //
 
+#if DEBUG
+
 import Foundation
-@testable import Calendr
 
 extension EventModel {
 
@@ -27,7 +28,7 @@ extension EventModel {
         .init(
             id: id,
             start: start,
-            end: type.isReminder ? Calendar.reference.endOfDay(for: start) : end,
+            end: type.isReminder ? Calendar.gregorian.endOfDay(for: start) : end,
             title: title,
             location: location,
             notes: notes,
@@ -39,3 +40,5 @@ extension EventModel {
         )
     }
 }
+
+#endif

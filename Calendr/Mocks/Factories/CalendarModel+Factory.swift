@@ -1,12 +1,13 @@
 //
-//  CalendarModel.swift
-//  CalendrTests
+//  CalendarModel+Factory.swift
+//  Calendr
 //
 //  Created by Paker on 21/02/2021.
 //
 
-import Cocoa
-@testable import Calendr
+#if DEBUG
+
+import AppKit
 
 extension CalendarModel {
     
@@ -25,3 +26,5 @@ extension CalendarModel {
         )
     }
 }
+
+#endif
