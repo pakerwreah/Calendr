@@ -45,6 +45,7 @@ class NextEventView: NSView {
         nextEventView.height(equalTo: Constants.height)
         nextEventView.wantsLayer = true
         nextEventView.layer?.cornerRadius = 4
+        nextEventTitle.forceVibrancy = false
 
         [.dummy, colorBar, nextEventTitle, nextEventTime, .dummy].forEach(nextEventView.addArrangedSubview)
 
