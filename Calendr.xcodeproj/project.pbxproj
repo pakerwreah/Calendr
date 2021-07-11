@@ -37,6 +37,9 @@
 		3430676325F6C130000D4003 /* TrackedHistoricalScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3430676225F6C130000D4003 /* TrackedHistoricalScheduler.swift */; };
 		3430ED03259634E00045DA53 /* NSStackView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3430ED02259634E00045DA53 /* NSStackView+Rx.swift */; };
 		34424150267EA65200142028 /* ReminderOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3442414F267EA65200142028 /* ReminderOptions.swift */; };
+		34427692269B5760004CFE1C /* MockMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34427691269B5760004CFE1C /* MockMainViewController.swift */; };
+		3442769A269B5CA4004CFE1C /* UITestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34427699269B5CA4004CFE1C /* UITestCase.swift */; };
+		344276A2269B756E004CFE1C /* DummyTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 344276A1269B756E004CFE1C /* DummyTest.swift */; };
 		3449402E25C348B20020E664 /* GeneralSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3449402D25C348B20020E664 /* GeneralSettingsViewController.swift */; };
 		3449403225C348C70020E664 /* CalendarPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3449403125C348C70020E664 /* CalendarPickerViewController.swift */; };
 		345DD97326920D1B00294D90 /* CalendarViewPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345DD97226920D1B00294D90 /* CalendarViewPreview.swift */; };
@@ -117,6 +120,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		3442769C269B5CA4004CFE1C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 347D0F8C25952F89002451EC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 347D0F9325952F89002451EC;
+			remoteInfo = Calendr;
+		};
 		347D0FA525952F8A002451EC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 347D0F8C25952F89002451EC /* Project object */;
@@ -151,6 +161,11 @@
 		3430676225F6C130000D4003 /* TrackedHistoricalScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackedHistoricalScheduler.swift; sourceTree = "<group>"; };
 		3430ED02259634E00045DA53 /* NSStackView+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSStackView+Rx.swift"; sourceTree = "<group>"; };
 		3442414F267EA65200142028 /* ReminderOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderOptions.swift; sourceTree = "<group>"; };
+		34427691269B5760004CFE1C /* MockMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockMainViewController.swift; sourceTree = "<group>"; };
+		34427697269B5CA4004CFE1C /* CalendrUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CalendrUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		34427699269B5CA4004CFE1C /* UITestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestCase.swift; sourceTree = "<group>"; };
+		3442769B269B5CA4004CFE1C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		344276A1269B756E004CFE1C /* DummyTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DummyTest.swift; sourceTree = "<group>"; };
 		3449402D25C348B20020E664 /* GeneralSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsViewController.swift; sourceTree = "<group>"; };
 		3449403125C348C70020E664 /* CalendarPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPickerViewController.swift; sourceTree = "<group>"; };
 		345DD97226920D1B00294D90 /* CalendarViewPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewPreview.swift; sourceTree = "<group>"; };
@@ -242,6 +257,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		34427694269B5CA4004CFE1C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		347D0F9125952F89002451EC /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -322,6 +344,7 @@
 			children = (
 				347D0F9725952F89002451EC /* AppDelegate.swift */,
 				34F128E02597B9C9007DF31C /* MainViewController.swift */,
+				34427691269B5760004CFE1C /* MockMainViewController.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -350,11 +373,22 @@
 			path = Schedulers;
 			sourceTree = "<group>";
 		};
+		34427698269B5CA4004CFE1C /* CalendrUITests */ = {
+			isa = PBXGroup;
+			children = (
+				3442769B269B5CA4004CFE1C /* Info.plist */,
+				344276A1269B756E004CFE1C /* DummyTest.swift */,
+				34427699269B5CA4004CFE1C /* UITestCase.swift */,
+			);
+			path = CalendrUITests;
+			sourceTree = "<group>";
+		};
 		347D0F8B25952F89002451EC = {
 			isa = PBXGroup;
 			children = (
 				347D0F9625952F89002451EC /* Calendr */,
 				347D0FA725952F8A002451EC /* CalendrTests */,
+				34427698269B5CA4004CFE1C /* CalendrUITests */,
 				347D0F9525952F89002451EC /* Products */,
 			);
 			sourceTree = "<group>";
@@ -364,6 +398,7 @@
 			children = (
 				347D0F9425952F89002451EC /* Calendr.app */,
 				347D0FA425952F8A002451EC /* CalendrTests.xctest */,
+				34427697269B5CA4004CFE1C /* CalendrUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -542,6 +577,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		34427696269B5CA4004CFE1C /* CalendrUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3442769E269B5CA4004CFE1C /* Build configuration list for PBXNativeTarget "CalendrUITests" */;
+			buildPhases = (
+				34427693269B5CA4004CFE1C /* Sources */,
+				34427694269B5CA4004CFE1C /* Frameworks */,
+				34427695269B5CA4004CFE1C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3442769D269B5CA4004CFE1C /* PBXTargetDependency */,
+			);
+			name = CalendrUITests;
+			productName = CalendrUITests;
+			productReference = 34427697269B5CA4004CFE1C /* CalendrUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		347D0F9325952F89002451EC /* Calendr */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 347D0FB825952F8A002451EC /* Build configuration list for PBXNativeTarget "Calendr" */;
@@ -593,9 +646,13 @@
 		347D0F8C25952F89002451EC /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1230;
+				LastSwiftUpdateCheck = 1250;
 				LastUpgradeCheck = 1230;
 				TargetAttributes = {
+					34427696269B5CA4004CFE1C = {
+						CreatedOnToolsVersion = 12.5.1;
+						TestTargetID = 347D0F9325952F89002451EC;
+					};
 					347D0F9325952F89002451EC = {
 						CreatedOnToolsVersion = 12.3;
 						LastSwiftMigration = 1240;
@@ -628,11 +685,19 @@
 			targets = (
 				347D0F9325952F89002451EC /* Calendr */,
 				347D0FA325952F8A002451EC /* CalendrTests */,
+				34427696269B5CA4004CFE1C /* CalendrUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		34427695269B5CA4004CFE1C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		347D0F9225952F89002451EC /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -677,6 +742,15 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		34427693269B5CA4004CFE1C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				344276A2269B756E004CFE1C /* DummyTest.swift in Sources */,
+				3442769A269B5CA4004CFE1C /* UITestCase.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		347D0F9025952F89002451EC /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -726,6 +800,7 @@
 				34C72F9C25E9847300FD20FA /* EventListViewModel.swift in Sources */,
 				3421DA142693E75A00056837 /* MockCalendarServiceProvider.swift in Sources */,
 				3421DA202693F12400056837 /* EventModel+Factory.swift in Sources */,
+				34427692269B5760004CFE1C /* MockMainViewController.swift in Sources */,
 				3421DA1E2693F12400056837 /* Date+Factory.swift in Sources */,
 				3487A43825E706F800FCC7D7 /* NextEventViewModel.swift in Sources */,
 				34A6434D25F42375000A0F08 /* EventViewPreview.swift in Sources */,
@@ -793,6 +868,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		3442769D269B5CA4004CFE1C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 347D0F9325952F89002451EC /* Calendr */;
+			targetProxy = 3442769C269B5CA4004CFE1C /* PBXContainerItemProxy */;
+		};
 		347D0FA625952F8A002451EC /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 347D0F9325952F89002451EC /* Calendr */;
@@ -815,6 +895,44 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		3442769F269B5CA4004CFE1C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = CalendrUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.3;
+				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr.CalendrUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = Calendr;
+			};
+			name = Debug;
+		};
+		344276A0269B5CA4004CFE1C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = CalendrUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.3;
+				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr.CalendrUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = Calendr;
+			};
+			name = Release;
+		};
 		347D0FB625952F8A002451EC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1020,6 +1138,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		3442769E269B5CA4004CFE1C /* Build configuration list for PBXNativeTarget "CalendrUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3442769F269B5CA4004CFE1C /* Debug */,
+				344276A0269B5CA4004CFE1C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		347D0F8F25952F89002451EC /* Build configuration list for PBXProject "Calendr" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

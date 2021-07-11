@@ -12,7 +12,7 @@ import RxSwift
 
 struct CalendarViewPreview: PreviewProvider {
 
-    static let dateProvider = MockDateProvider(calendar: .gregorian.with(firstWeekday: 1))
+    static let dateProvider = MockDateProvider()
     static let calendarService = MockCalendarServiceProvider(dateProvider: dateProvider)
     static let settings = MockCalendarSettings()
     static let notificationCenter = NotificationCenter()
@@ -53,7 +53,9 @@ private extension MockCalendarServiceProvider {
             events: (0..<30).map { _ in
                 let date: Date = .random(from: dateProvider)
                 return .make(start: date, end: date, calendar: .make(color: .random()))
-            }
+            },
+            calendars: [],
+            dateProvider: dateProvider
         )
     }
 }

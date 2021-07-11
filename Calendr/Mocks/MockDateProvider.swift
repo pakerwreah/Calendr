@@ -11,7 +11,7 @@ import Foundation
 
 struct MockDateProvider: DateProviding {
 
-    var calendar: Calendar = .gregorian.with(locale: .init(identifier: "en_GB"))
+    var calendar: Calendar = .gregorian.with(locale: .init(identifier: "en_GB")).with(firstWeekday: 1)
 
     let initial = Date()
     var start: Date = .make(year: 2021, month: 1, day: 1)

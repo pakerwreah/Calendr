@@ -52,6 +52,24 @@
                ReferencedContainer = "container:Calendr.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "34427696269B5CA4004CFE1C"
+               BuildableName = "CalendrUITests.xctest"
+               BlueprintName = "CalendrUITests"
+               ReferencedContainer = "container:Calendr.xcodeproj">
+            </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "CalendrUITests/testForever()">
+               </Test>
+               <Test
+                  Identifier = "DummyTest/testForever()">
+               </Test>
+            </SkippedTests>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

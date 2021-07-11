@@ -38,7 +38,7 @@ struct EventListViewPreview: PreviewProvider {
                     .make(
                         start: .make(hour: 17, minute: 00),
                         end: .make(hour: 18, minute: 00),
-                        title: "some meeting 👔",
+                        title: "Some meeting 👔",
                         location: "zoom.us/j/9999999999",
                         calendar: .make(color: .systemGreen)
                     ),
