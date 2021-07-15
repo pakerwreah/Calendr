@@ -16,7 +16,7 @@ class MainViewController: NSViewController {
     private let settingsViewController: SettingsViewController
 
     // Views
-    private let statusItem: NSStatusItem
+    private let mainStatusItem: NSStatusItem
     private let eventStatusItem: NSStatusItem
     private let nextEventView: NextEventView
     private let calendarView: CalendarView
@@ -49,6 +49,8 @@ class MainViewController: NSViewController {
     private let dateProvider: DateProviding
     private let notificationCenter: NotificationCenter
 
+    // MARK: - Initalization
+
     init(
         workspace: WorkspaceServiceProviding,
         calendarService: CalendarServiceProviding,
@@ -64,9 +66,10 @@ class MainViewController: NSViewController {
 
         initialDate = BehaviorSubject(value: dateProvider.now)
 
-        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        statusItem.behavior = .terminationOnRemoval
-        statusItem.isVisible = true
+        mainStatusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+        mainStatusItem.autosaveName = "main_status_item"
+        mainStatusItem.behavior = .terminationOnRemoval
+        mainStatusItem.isVisible = true
 
         eventStatusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         eventStatusItem.autosaveName = "event_status_item"
@@ -153,12 +156,18 @@ class MainViewController: NSViewController {
 
         setUpPopover()
 
-        setUpStatusItem()
+        setUpMainStatusItem()
 
         setUpEventStatusItem()
 
         calendarService.requestAccess()
     }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    // MARK: - Lifecycle
 
     override func loadView() {
 
@@ -202,6 +211,113 @@ class MainViewController: NSViewController {
         )
         .bind { $0.material = $1 }
         .disposed(by: disposeBag)
+    }
+
+    override func viewDidAppear() {
+        view.window?.makeKey()
+    }
+
+    // MARK: - Setup
+
+    private func setUpBindings() {
+
+        makeDateSelector()
+            .asObservable()
+            .observe(on: MainScheduler.asyncInstance)
+            .bind(to: selectedDate)
+            .disposed(by: disposeBag)
+
+        Observable.merge(
+            notificationCenter.rx.notification(.NSCalendarDayChanged).toVoid(),
+            rx.viewDidDisappear
+        )
+        .map { [dateProvider] in dateProvider.now }
+        .bind(to: initialDate)
+        .disposed(by: disposeBag)
+
+        dateClick
+            .bind(to: selectedDate)
+            .disposed(by: disposeBag)
+
+        calendarViewModel.title
+            .bind(to: titleLabel.rx.text)
+            .disposed(by: disposeBag)
+
+        calendarBtn.rx.tap.bind { [workspace] in
+            if let appUrl = workspace.urlForApplication(toOpen: URL(string: "webcal://")!) {
+                workspace.open(appUrl)
+            }
+        }
+        .disposed(by: disposeBag)
+
+        settingsBtn.rx.tap.bind { [weak self, settingsViewController] in
+            self?.presentAsModalWindow(settingsViewController)
+        }
+        .disposed(by: disposeBag)
+
+        let pinIconOn = Self.pinBtnIcon(.on)
+        let pinIconOff = Self.pinBtnIcon(.off)
+
+        pinBtn.rx.state.map { $0 == .on ? pinIconOn : pinIconOff }
+            .bind(to: pinBtn.rx.attributedTitle)
+            .disposed(by: disposeBag)
+    }
+
+    private func setUpPopover() {
+
+        popover.contentViewController = self
+
+        popover.rx.observe(\.isShown)
+            .observe(on: MainScheduler.asyncInstance)
+            .bind(to: popover.rx.animates)
+            .disposed(by: disposeBag)
+
+        settingsViewController.rx.viewWillAppear
+            .map { .applicationDefined }
+            .bind(to: popover.rx.behavior)
+            .disposed(by: disposeBag)
+
+        settingsViewController.rx.viewDidDisappear
+            .withLatestFrom(pinBtn.rx.state)
+            .matching(.off)
+            .toVoid()
+            .startWith(())
+            .map { .transient }
+            .bind(to: popover.rx.behavior)
+            .disposed(by: disposeBag)
+
+        pinBtn.rx.state
+            .map { $0 == .on ? .applicationDefined : .transient }
+            .bind(to: popover.rx.behavior)
+            .disposed(by: disposeBag)
+    }
+
+    private func setUpMainStatusItem() {
+
+        guard let statusBarButton = mainStatusItem.button else { return }
+
+        let menu = NSMenu()
+        menu.addItem(withTitle: Strings.quit, action: #selector(NSApp.terminate), keyEquivalent: "q")
+        mainStatusItem.menu = menu
+
+        statusBarButton.rx.leftClickGesture()
+            .when(.recognized)
+            .toVoid()
+            .filter { [popover] in
+                !popover.isShown
+            }
+            .bind { [popover] in
+                popover.show(relativeTo: .zero, of: statusBarButton, preferredEdge: .maxY)
+            }
+            .disposed(by: disposeBag)
+
+        popover.rx.observe(\.isShown)
+            .bind(to: statusBarButton.rx.isHighlighted)
+            .disposed(by: disposeBag)
+
+        statusItemViewModel.text
+            .bind(to: statusBarButton.rx.attributedTitle)
+            .disposed(by: disposeBag)
     }
 
     private func setUpEventStatusItem() {
@@ -255,6 +371,15 @@ class MainViewController: NSViewController {
         statusBarButton.sendAction(on: .leftMouseDown)
     }
 
+    // MARK: - Factories
+
+    private func styleButton(_ button: NSButton) {
+        button.size(equalTo: 22)
+        button.bezelStyle = .regularSquare
+        button.isBordered = false
+        button.refusesFirstResponder = true
+    }
+
     private func makeHeader() -> NSView {
 
         titleLabel.font = .systemFont(ofSize: 14, weight: .medium)
@@ -284,54 +409,6 @@ class MainViewController: NSViewController {
         return NSStackView(views: [pinBtn, .spacer, calendarBtn, settingsBtn])
     }
 
-    override func viewDidAppear() {
-        view.window?.makeKey()
-    }
-
-    private func setUpBindings() {
-
-        makeDateSelector()
-            .asObservable()
-            .observe(on: MainScheduler.asyncInstance)
-            .bind(to: selectedDate)
-            .disposed(by: disposeBag)
-
-        Observable.merge(
-            notificationCenter.rx.notification(.NSCalendarDayChanged).toVoid(),
-            rx.viewDidDisappear
-        )
-        .map { [dateProvider] in dateProvider.now }
-        .bind(to: initialDate)
-        .disposed(by: disposeBag)
-
-        dateClick
-            .bind(to: selectedDate)
-            .disposed(by: disposeBag)
-
-        calendarViewModel.title
-            .bind(to: titleLabel.rx.text)
-            .disposed(by: disposeBag)
-
-        calendarBtn.rx.tap.bind { [workspace] in
-            if let appUrl = workspace.urlForApplication(toOpen: URL(string: "webcal://")!) {
-                workspace.open(appUrl)
-            }
-        }
-        .disposed(by: disposeBag)
-
-        settingsBtn.rx.tap.bind { [weak self, settingsViewController] in
-            self?.presentAsModalWindow(settingsViewController)
-        }
-        .disposed(by: disposeBag)
-
-        let pinIconOn = Self.pinBtnIcon(.on)
-        let pinIconOff = Self.pinBtnIcon(.off)
-
-        pinBtn.rx.state.map { $0 == .on ? pinIconOn : pinIconOff }
-            .bind(to: pinBtn.rx.attributedTitle)
-            .disposed(by: disposeBag)
-    }
-
     private static func pinBtnIcon(_ state: NSControl.StateValue) -> NSAttributedString {
 
         let attachment = NSTextAttachment()
@@ -341,70 +418,6 @@ class MainViewController: NSViewController {
         attributed.addAttribute(.baselineOffset, value: -1, range: NSRange(location: 0, length: attributed.length))
 
         return attributed
-    }
-
-    private func setUpStatusItem() {
-
-        guard let statusBarButton = statusItem.button else { return }
-
-        let menu = NSMenu()
-        menu.addItem(withTitle: Strings.quit, action: #selector(NSApp.terminate), keyEquivalent: "q")
-        statusItem.menu = menu
-
-        statusBarButton.rx.leftClickGesture()
-            .when(.recognized)
-            .toVoid()
-            .filter { [popover] in
-                !popover.isShown
-            }
-            .bind { [popover] in
-                popover.show(relativeTo: .zero, of: statusBarButton, preferredEdge: .maxY)
-            }
-            .disposed(by: disposeBag)
-
-        popover.rx.observe(\.isShown)
-            .bind(to: statusBarButton.rx.isHighlighted)
-            .disposed(by: disposeBag)
-
-        statusItemViewModel.text
-            .bind(to: statusBarButton.rx.attributedTitle)
-            .disposed(by: disposeBag)
-    }
-
-    private func setUpPopover() {
-
-        popover.contentViewController = self
-
-        popover.rx.observe(\.isShown)
-            .observe(on: MainScheduler.asyncInstance)
-            .bind(to: popover.rx.animates)
-            .disposed(by: disposeBag)
-
-        settingsViewController.rx.viewWillAppear
-            .map { .applicationDefined }
-            .bind(to: popover.rx.behavior)
-            .disposed(by: disposeBag)
-
-        settingsViewController.rx.viewDidDisappear
-            .withLatestFrom(pinBtn.rx.state)
-            .matching(.off)
-            .toVoid()
-            .startWith(())
-            .map { .transient }
-            .bind(to: popover.rx.behavior)
-            .disposed(by: disposeBag)
-
-        pinBtn.rx.state
-            .map { $0 == .on ? .applicationDefined : .transient }
-            .bind(to: popover.rx.behavior)
-            .disposed(by: disposeBag)
-    }
-
-    private func styleButton(_ button: NSButton) {
-        button.size(equalTo: 22)
-        button.bezelStyle = .regularSquare
-        button.isBordered = false
-        button.refusesFirstResponder = true
     }
 
     private func makeDateSelector() -> DateSelector {
@@ -446,9 +459,5 @@ class MainViewController: NSViewController {
         )
 
         return dateSelector
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }
