@@ -30,9 +30,19 @@ class CalendarView: NSView {
 
         super.init(frame: .zero)
 
+        setUpAccessibility()
+
         configureLayout()
 
         setUpBindings()
+    }
+
+    private func setUpAccessibility() {
+
+        guard BuildConfig.isUITesting else { return }
+
+        setAccessibilityElement(true)
+        setAccessibilityIdentifier(Accessibility.Calendar.view)
     }
 
     private func configureLayout() {
