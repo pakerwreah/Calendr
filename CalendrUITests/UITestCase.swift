@@ -9,15 +9,9 @@ import XCTest
 
 class UITestCase: XCTestCase {
 
-    var app: XCUIApplication!
-
     override func setUp() {
-        app = XCUIApplication()
+        let app = XCUIApplication()
         app.launchArguments = ["-uitest"]
         app.launch()
-    }
-
-    override func tearDown() {
-        app = nil
     }
 }
