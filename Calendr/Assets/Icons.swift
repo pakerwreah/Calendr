@@ -19,6 +19,8 @@ enum Icons {
         static let next = NSImage(systemName: "chevron.forward")
         static let calendar = NSImage(systemName: "calendar")
         static let settings = NSImage(systemName: "ellipsis.circle")
+        static let pinned = NSImage(systemName: "lock")
+        static let unpinned = NSImage(systemName: "lock.open")
     }
 
     enum Settings {

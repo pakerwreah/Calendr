@@ -334,10 +334,8 @@ class MainViewController: NSViewController {
 
     private static func pinBtnIcon(_ state: NSControl.StateValue) -> NSAttributedString {
 
-        let imageName = state == .on ? NSImage.lockLockedTemplateName : NSImage.lockUnlockedTemplateName
-
         let attachment = NSTextAttachment()
-        attachment.image = NSImage(named: imageName)
+        attachment.image = state == .on ? Icons.Calendar.pinned : Icons.Calendar.unpinned
 
         let attributed = NSMutableAttributedString(attachment: attachment)
         attributed.addAttribute(.baselineOffset, value: -1, range: NSRange(location: 0, length: attributed.length))
