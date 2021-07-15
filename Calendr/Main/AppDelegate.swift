@@ -23,12 +23,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         guard !BuildConfig.isPreview else { return }
 
-        #if DEBUG
         guard !BuildConfig.isUITesting else {
             viewController = MockMainViewController()
             return
         }
-        #endif
 
         viewController = MainViewController(
             workspace: WorkspaceServiceProvider(),

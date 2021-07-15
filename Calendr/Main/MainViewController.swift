@@ -152,6 +152,8 @@ class MainViewController: NSViewController {
 
         super.init(nibName: nil, bundle: nil)
 
+        setUpAccessibility()
+
         setUpBindings()
 
         setUpPopover()
@@ -218,6 +220,24 @@ class MainViewController: NSViewController {
     }
 
     // MARK: - Setup
+
+    private func setUpAccessibility() {
+
+        NSApp.setAccessibilityChildren([view])
+
+        view.setAccessibilityIdentifier(Accessibility.Main.view)
+
+        mainStatusItem.button?.setAccessibilityIdentifier(Accessibility.MenuBar.main)
+        eventStatusItem.button?.setAccessibilityIdentifier(Accessibility.MenuBar.event)
+
+        titleLabel.setAccessibilityIdentifier(Accessibility.Calendar.title)
+        prevBtn.setAccessibilityIdentifier(Accessibility.Calendar.prevBtn)
+        resetBtn.setAccessibilityIdentifier(Accessibility.Calendar.resetBtn)
+        nextBtn.setAccessibilityIdentifier(Accessibility.Calendar.nextBtn)
+        pinBtn.setAccessibilityIdentifier(Accessibility.Calendar.pinBtn)
+        calendarBtn.setAccessibilityIdentifier(Accessibility.Calendar.calendarBtn)
+        settingsBtn.setAccessibilityIdentifier(Accessibility.Calendar.settingsBtn)
+    }
 
     private func setUpBindings() {
 

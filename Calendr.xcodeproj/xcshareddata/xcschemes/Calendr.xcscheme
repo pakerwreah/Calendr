@@ -53,7 +53,7 @@
             </BuildableReference>
          </TestableReference>
          <TestableReference
-            skipped = "NO">
+            skipped = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "34427696269B5CA4004CFE1C"
@@ -61,14 +61,59 @@
                BlueprintName = "CalendrUITests"
                ReferencedContainer = "container:Calendr.xcodeproj">
             </BuildableReference>
-            <SkippedTests>
+            <SelectedTests>
+               <Test
+                  Identifier = "CalendarViewTests/testDate_withDownArrowTapped_shouldSelectNextWeek()">
+               </Test>
+               <Test
+                  Identifier = "CalendarViewTests/testDate_withInitialState_shouldDisplayEventDots()">
+               </Test>
+               <Test
+                  Identifier = "CalendarViewTests/testDate_withLeftArrowTapped_shouldSelectPreviousDate()">
+               </Test>
+               <Test
+                  Identifier = "CalendarViewTests/testDate_withMouseHovered_shouldHoverDate()">
+               </Test>
+               <Test
+                  Identifier = "CalendarViewTests/testDate_withNextMonthDateSelected_shouldDisplayNextMonth()">
+               </Test>
+               <Test
+                  Identifier = "CalendarViewTests/testDate_withPreviousMonthDateSelected_shouldDisplayPreviousMonth()">
+               </Test>
+               <Test
+                  Identifier = "CalendarViewTests/testDate_withRightArrowTapped_shouldSelectPreviousDate()">
+               </Test>
+               <Test
+                  Identifier = "CalendarViewTests/testDate_withUpArrowTapped_shouldSelectPreviousWeek()">
+               </Test>
+               <Test
+                  Identifier = "CalendarViewTests/testMonth_withInitialState_shouldDisplayInitialMonth()">
+               </Test>
+               <Test
+                  Identifier = "CalendarViewTests/testMonth_withNextButtonClicked_shouldDisplayNextMonth()">
+               </Test>
+               <Test
+                  Identifier = "CalendarViewTests/testMonth_withPrevButton_shouldDisplayPreviousMonth()">
+               </Test>
+               <Test
+                  Identifier = "CalendarViewTests/testMonth_withResetButtonClicked_shouldDisplayInitialMonth()">
+               </Test>
+               <Test
+                  Identifier = "CalendarViewTests/testWeekDays()">
+               </Test>
+               <Test
+                  Identifier = "CalendarViewTests/testWeekNumbers()">
+               </Test>
                <Test
                   Identifier = "CalendrUITests/testForever()">
                </Test>
                <Test
                   Identifier = "DummyTest/testForever()">
                </Test>
-            </SkippedTests>
+               <Test
+                  Identifier = "MainViewTests/testMainStatusItemClicked_ShouldDisplayMainView()">
+               </Test>
+            </SelectedTests>
          </TestableReference>
       </Testables>
    </TestAction>
