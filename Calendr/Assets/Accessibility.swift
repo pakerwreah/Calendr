@@ -35,4 +35,8 @@ enum Accessibility {
         static let hovered = "calendar_date_hovered"
         static let event = "calendar_event_dot"
     }
+
+    enum EventDetails {
+        static let view = "event_details_view"
+    }
 }
