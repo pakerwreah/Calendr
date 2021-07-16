@@ -42,6 +42,10 @@ extension UITestCase {
                 .otherElements.matching(identifier: Accessibility.Calendar.event).array
         }
     }
+
+    enum EventDetails {
+        static var view: XCUIElement { app.otherElements[Accessibility.EventDetails.view] }
+    }
 }
 
 // MARK: - Helpers

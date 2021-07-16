@@ -33,10 +33,29 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
 
         super.init(nibName: nil, bundle: nil)
 
+        setUpAccessibility()
+
         setUpBindings()
     }
 
+    private func setUpAccessibility() {
+
+        guard BuildConfig.isUITesting else { return }
+
+        NSApp.addAccessibilityChild(view)
+
+        view.setAccessibilityElement(true)
+        view.setAccessibilityIdentifier(Accessibility.EventDetails.view)
+    }
+
+    deinit {
+        guard BuildConfig.isUITesting else { return }
+        
+        NSApp.removeAccessibilityChild(view)
+    }
+
     override func loadView() {
+
         view = NSView()
 
         view.widthAnchor.constraint(lessThanOrEqualToConstant: 310).activate()

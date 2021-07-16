@@ -21,7 +21,20 @@ class MainViewTests: UITestCase {
         XCTAssertFalse(Main.view.buttons.firstMatch.isHittable)
     }
 
-    // TODO: Click event status item and check it opens the popover
+    func testEventStatusItemClicked_ShouldDisplayEventDetails() {
+
+        XCTAssertTrue(MenuBar.event.waitForExistence(timeout: 1))
+
+        MenuBar.event.click()
+
+        XCTAssertTrue(EventDetails.view.waitForExistence(timeout: 1))
+        XCTAssertTrue(EventDetails.view.didAppear)
+
+        EventDetails.view.outside.click()
+
+        XCTAssertFalse(EventDetails.view.exists)
+    }
+
     // TODO: Click settings button and check that it opens SettingsViewController
     // TODO: Click calendar button and check that it opens Calendar.app
 }

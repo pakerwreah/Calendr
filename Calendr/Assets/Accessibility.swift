@@ -37,4 +37,8 @@ enum Accessibility {
         static let settingsBtn = "settings_button"
         static let pinBtn = "pin_button"
     }
+
+    enum EventDetails {
+        static let view = "event_details_view"
+    }
 }
