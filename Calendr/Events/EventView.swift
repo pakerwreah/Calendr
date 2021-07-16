@@ -195,7 +195,7 @@ class EventView: NSView {
         .toVoid()
         .map(viewModel.makeDetails)
         .withUnretained(self)
-        .flatMapLatest { view, viewModel -> Observable<Void> in
+        .flatMapFirst { view, viewModel -> Observable<Void> in
             let vc = EventDetailsViewController(viewModel: viewModel)
             let popover = NSPopover()
             popover.behavior = .transient
