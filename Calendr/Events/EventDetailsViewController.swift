@@ -149,14 +149,24 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         super.viewDidAppear()
 
         view.window?.makeKey()
-        view.window?.makeFirstResponder(self)
-
     }
 
+    private var popover: NSPopover?
+
     func popoverWillClose(_ notification: Notification) {
-        // 🔨 Fix a bug when selecting some text and closing the popover
-        // causes the resignFirstResponder to go crazy and doesn't select anymore
+        // 🔨 Prevent retain cycle
         view.window?.makeFirstResponder(nil)
+    }
+
+    func popoverShouldClose(_ popover: NSPopover) -> Bool {
+        self.popover = popover
+        return true
+    }
+
+    func popoverDidClose(_ notification: Notification) {
+        // 🔨 Prevent retain cycle
+        popover?.contentViewController = nil
+        popover = nil
     }
 
     private func makeLine() -> NSView {
