@@ -9,6 +9,8 @@ import Cocoa
 
 class AboutViewController: NSViewController {
 
+    private let quitButton = NSButton(title: Strings.quit, target: NSApp, action: #selector(NSApp.terminate))
+
     override func loadView() {
 
         let link = NSTextView()
@@ -31,8 +33,22 @@ class AboutViewController: NSViewController {
             Label(text: "© 2020 - \(BuildConfig.date.suffix(4)) Carlos Enumo", align: .center),
             link,
             .spacer(height: 4),
-            NSButton(title: Strings.quit, target: NSApp, action: #selector(NSApp.terminate))
+            quitButton
         ])
         .with(orientation: .vertical)
+    }
+
+    override func viewDidLoad() {
+
+        super.viewDidLoad()
+
+        guard BuildConfig.isUITesting else { return }
+
+        view.setAccessibilityElement(true)
+        view.setAccessibilityIdentifier(Accessibility.Settings.About.view)
+
+        quitButton.setAccessibilityElement(true)
+        quitButton.setAccessibilityRole(.button)
+        quitButton.setAccessibilityIdentifier(Accessibility.Settings.About.quitBtn)
     }
 }

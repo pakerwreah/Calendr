@@ -17,11 +17,22 @@ class CalendarPickerViewController: NSViewController {
     private let contentStackView = NSStackView(.vertical)
 
     init(viewModel: CalendarPickerViewModel) {
+
         self.viewModel = viewModel
 
         super.init(nibName: nil, bundle: nil)
 
+        setUpAccessibility()
+
         setUpBindings()
+    }
+
+    private func setUpAccessibility() {
+
+        guard BuildConfig.isUITesting else { return }
+
+        view.setAccessibilityElement(true)
+        view.setAccessibilityIdentifier(Accessibility.Settings.Calendars.view)
     }
 
     override func loadView() {

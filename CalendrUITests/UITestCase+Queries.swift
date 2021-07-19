@@ -49,6 +49,33 @@ extension UITestCase {
     enum EventDetails {
         static var view: XCUIElement { app.otherElements[Accessibility.EventDetails.view] }
     }
+
+    enum Settings {
+        static var window: XCUIElement { app.dialogs[Accessibility.Settings.window] }
+        static var view: XCUIElement { app.otherElements[Accessibility.Settings.view] }
+        static var tabs: [XCUIElement] { window.toolbars.buttons.array }
+
+        enum Tab {
+            private static func predicate(for label: String) -> NSPredicate { NSPredicate(format: "label = %@", label) }
+
+            static var general: XCUIElement { window.toolbars.buttons.element(matching: predicate(for: "General")) }
+            static var calendars: XCUIElement { window.toolbars.buttons.element(matching: predicate(for: "Calendars")) }
+            static var about: XCUIElement { window.toolbars.buttons.element(matching: predicate(for: "About")) }
+        }
+
+        enum General {
+            static var view: XCUIElement { Settings.view.otherElements[Accessibility.Settings.General.view] }
+        }
+
+        enum Calendars {
+            static var view: XCUIElement { Settings.view.otherElements[Accessibility.Settings.Calendars.view] }
+        }
+
+        enum About {
+            static var view: XCUIElement { Settings.view.otherElements[Accessibility.Settings.About.view] }
+            static var quitBtn: XCUIElement { view.descendants(matching: .button)[Accessibility.Settings.About.quitBtn] }
+        }
+    }
 }
 
 // MARK: - Helpers

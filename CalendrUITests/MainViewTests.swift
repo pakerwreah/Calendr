@@ -67,5 +67,16 @@ class MainViewTests: UITestCase {
         XCTAssertEqual(calendar.state, .runningForeground)
     }
 
-    // TODO: Click settings button and check that it opens SettingsViewController
+    func testSettingsButtonClicked_shouldOpenSettings() {
+
+        MenuBar.main.click()
+        Main.settingsBtn.click()
+
+        XCTAssertTrue(Settings.window.didAppear)
+        XCTAssertTrue(Settings.view.didAppear)
+
+        Settings.window.buttons[XCUIIdentifierCloseWindow].click()
+
+        XCTAssertFalse(Settings.window.exists)
+    }
 }

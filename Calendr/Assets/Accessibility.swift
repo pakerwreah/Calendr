@@ -39,4 +39,22 @@ enum Accessibility {
     enum EventDetails {
         static let view = "event_details_view"
     }
+
+    enum Settings {
+        static let window = "settings_window"
+        static let view = "settings_view"
+
+        enum General {
+            static let view = "settings_general_view"
+        }
+
+        enum Calendars {
+            static let view = "settings_calendars_view"
+        }
+
+        enum About {
+            static let view = "settings_about_view"
+            static let quitBtn = "settings_about_quit"
+        }
+    }
 }
