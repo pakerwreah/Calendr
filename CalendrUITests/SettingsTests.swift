@@ -39,4 +39,29 @@ class SettingsTests: UITestCase {
 
         XCTAssertEqual(app.state, .notRunning)
     }
+
+    func testSettingsCalendarPicker() {
+
+        MenuBar.main.click()
+        Main.settingsBtn.click()
+        Settings.Tab.calendars.click()
+
+        let checkbox = Settings.Calendars.view.checkBoxes
+            .element(matching: NSPredicate(format: "title = %@", "Personal"))
+
+        XCTAssert(checkbox.waitForExistence(timeout: 1))
+
+        let initial = Calendar.events.count
+
+        XCTAssert(initial > 0)
+
+        checkbox.click()
+
+        XCTAssertEqual(Calendar.events.count, initial - 1)
+
+        // click label
+        checkbox.coordinate(withNormalizedOffset: .init(dx: 0.3, dy: 0.5)).click()
+
+        XCTAssertEqual(Calendar.events.count, initial)
+    }
 }
