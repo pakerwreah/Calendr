@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3408B26E26A5008700DA8429 /* SettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3408B26D26A5008700DA8429 /* SettingsTests.swift */; };
 		3408D13E25982DB400CF1425 /* DateSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3408D13D25982DB400CF1425 /* DateSelector.swift */; };
 		3408F17625FAAA4B00C1EAD4 /* EventDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3408F17525FAAA4B00C1EAD4 /* EventDetailsViewController.swift */; };
 		34091737267E81870023B76D /* NSImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34091736267E81870023B76D /* NSImage.swift */; };
@@ -143,6 +144,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3408B26D26A5008700DA8429 /* SettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTests.swift; sourceTree = "<group>"; };
 		3408D13D25982DB400CF1425 /* DateSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateSelector.swift; sourceTree = "<group>"; };
 		3408F17525FAAA4B00C1EAD4 /* EventDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailsViewController.swift; sourceTree = "<group>"; };
 		34091736267E81870023B76D /* NSImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSImage.swift; sourceTree = "<group>"; };
@@ -390,6 +392,7 @@
 				3442769B269B5CA4004CFE1C /* Info.plist */,
 				3492C45B269F77E0009CFAD2 /* CalendarViewTests.swift */,
 				3492C465269FD6CE009CFAD2 /* MainViewTests.swift */,
+				3408B26D26A5008700DA8429 /* SettingsTests.swift */,
 				34427699269B5CA4004CFE1C /* UITestCase.swift */,
 				3492C45D269F7966009CFAD2 /* UITestCase+Queries.swift */,
 			);
@@ -770,6 +773,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3408B26E26A5008700DA8429 /* SettingsTests.swift in Sources */,
 				3492C466269FD6CE009CFAD2 /* MainViewTests.swift in Sources */,
 				3492C45E269F7966009CFAD2 /* UITestCase+Queries.swift in Sources */,
 				3492C464269FD64D009CFAD2 /* Accessibility.swift in Sources */,

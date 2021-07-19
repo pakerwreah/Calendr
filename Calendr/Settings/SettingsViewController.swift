@@ -21,41 +21,27 @@ class SettingsViewController: NSTabViewController {
         tabStyle = .toolbar
 
         let general = NSTabViewItem(viewController: GeneralSettingsViewController(viewModel: settingsViewModel))
-        let calendar = NSTabViewItem(viewController: CalendarPickerViewController(viewModel: calendarsViewModel))
+        let calendars = NSTabViewItem(viewController: CalendarPickerViewController(viewModel: calendarsViewModel))
         let about = NSTabViewItem(viewController: AboutViewController())
 
         general.label = Strings.Settings.Tab.general
         general.image = Icons.Settings.general
 
-        calendar.label = Strings.Settings.Tab.calendars
-        calendar.image = Icons.Settings.calendars
+        calendars.label = Strings.Settings.Tab.calendars
+        calendars.image = Icons.Settings.calendars
 
         about.label = Strings.Settings.Tab.about
         about.image = Icons.Settings.about
 
-        tabViewItems = [general, calendar, about]
+        tabViewItems = [general, calendars, about]
+
+        setUpAccessibility()
 
         setUpBindings()
     }
 
-    private func setUpBindings() {
-
-        for (i, vc) in tabViewItems.compactMap(\.viewController).enumerated() {
-
-            Observable.merge(
-                NotificationCenter.default.rx.notification(NSLocale.currentLocaleDidChangeNotification).toVoid(),
-                vc.rx.viewDidLayout
-            )
-            .withLatestFrom(rx.observe(\.selectedTabViewItemIndex))
-            .matching(i)
-            .toVoid()
-            .map { vc.view.fittingSize }
-            .distinctUntilChanged()
-            .skip(i > 0 ? 1 : 0)
-            .map(sizeWithPadding)
-            .bind(to: rx.preferredContentSize)
-            .disposed(by: disposeBag)
-        }
+    deinit {
+        tearDownAccessibility()
     }
 
     override func loadView() {
@@ -75,9 +61,20 @@ class SettingsViewController: NSTabViewController {
 
     override func viewDidAppear() {
 
+        super.viewDidAppear()
+
+        setUpAccessibilityWindow()
+
         view.window?.styleMask.remove(.resizable)
 
         NSApp.activate(ignoringOtherApps: true)
+    }
+
+    override func viewDidDisappear() {
+
+        super.viewDidDisappear()
+
+        tearDownAccessibilityWindow()
     }
 
     override func tabView(_ tabView: NSTabView, didSelect tabViewItem: NSTabViewItem?) {
@@ -102,6 +99,26 @@ class SettingsViewController: NSTabViewController {
         }
     }
 
+    private func setUpBindings() {
+
+        for (i, vc) in tabViewItems.compactMap(\.viewController).enumerated() {
+
+            Observable.merge(
+                NotificationCenter.default.rx.notification(NSLocale.currentLocaleDidChangeNotification).toVoid(),
+                vc.rx.viewDidLayout
+            )
+            .withLatestFrom(rx.observe(\.selectedTabViewItemIndex))
+            .matching(i)
+            .toVoid()
+            .map { vc.view.fittingSize }
+            .distinctUntilChanged()
+            .skip(i > 0 ? 1 : 0)
+            .map(sizeWithPadding)
+            .bind(to: rx.preferredContentSize)
+            .disposed(by: disposeBag)
+        }
+    }
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -118,4 +135,41 @@ private enum Constants {
 
     static let padding: CGFloat = 24
     static let minWidth: CGFloat = 180
+}
+
+// MARK: - Accessibility
+
+extension SettingsViewController {
+
+    private func setUpAccessibility() {
+
+        guard BuildConfig.isUITesting else { return }
+
+        NSApp.addAccessibilityChild(view)
+
+        view.setAccessibilityIdentifier(Accessibility.Settings.view)
+    }
+
+    private func tearDownAccessibility() {
+
+        guard BuildConfig.isUITesting else { return }
+
+        NSApp.removeAccessibilityChild(view)
+    }
+
+    private func setUpAccessibilityWindow() {
+
+        guard BuildConfig.isUITesting, let window = view.window else { return }
+
+        window.setAccessibilityIdentifier(Accessibility.Settings.window)
+
+        NSApp.addAccessibilityChild(window)
+    }
+
+    private func tearDownAccessibilityWindow() {
+
+        guard BuildConfig.isUITesting, let window = view.window else { return }
+
+        NSApp.removeAccessibilityChild(window)
+    }
 }

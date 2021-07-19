@@ -23,14 +23,26 @@ class GeneralSettingsViewController: NSViewController {
     private let dateFormatDropdown = Dropdown()
 
     init(viewModel: SettingsViewModel) {
+
         self.viewModel = viewModel
 
         super.init(nibName: nil, bundle: nil)
 
+        setUpAccessibility()
+
         setUpBindings()
     }
 
+    private func setUpAccessibility() {
+
+        guard BuildConfig.isUITesting else { return }
+
+        view.setAccessibilityElement(true)
+        view.setAccessibilityIdentifier(Accessibility.Settings.General.view)
+    }
+
     override func loadView() {
+
         view = NSView()
 
         let stackView = NSStackView(views: [
