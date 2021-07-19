@@ -53,6 +53,19 @@ class MainViewTests: UITestCase {
         XCTAssertFalse(EventDetails.view.exists)
     }
 
+    func testCalendarButtonClicked_shouldOpenCalendarApp() {
+
+        let calendar = XCUIApplication(url: NSWorkspace.shared.urlForApplication(toOpen: URL(string: "webcal://")!)!)
+
+        MenuBar.main.click()
+
+        XCTAssertEqual(app.state, .runningForeground)
+
+        Main.calendarBtn.click()
+
+        XCTAssertEqual(app.state, .runningBackground)
+        XCTAssertEqual(calendar.state, .runningForeground)
+    }
+
     // TODO: Click settings button and check that it opens SettingsViewController
-    // TODO: Click calendar button and check that it opens Calendar.app
 }
