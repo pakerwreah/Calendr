@@ -85,6 +85,7 @@ extension XCUIElement {
     var didAppear: Bool { exists && !frame.isEmpty }
 
     var text: String { value as! String }
+    var isChecked: Bool { value as! Bool }
 
     var outside: XCUICoordinate { coordinate(withNormalizedOffset: .zero).withOffset(.init(dx: -100, dy: 100)) }
 }

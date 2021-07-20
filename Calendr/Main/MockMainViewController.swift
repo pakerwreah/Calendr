@@ -14,7 +14,10 @@ class MockMainViewController: MainViewController {
     init() {
 
         let dateProvider = MockDateProvider(start: .make(year: 2021, month: 1, day: 1, hour: 15, minute: 45))
+
         let userDefaults = UserDefaults(suiteName: Self.className())!
+        userDefaults.setVolatileDomain([:], forName: UserDefaults.registrationDomain)
+        userDefaults.removePersistentDomain(forName: Self.className())
 
         userDefaults.setValuesForKeys([
             Prefs.statusItemDateStyle: DateFormatter.Style.full.rawValue,
