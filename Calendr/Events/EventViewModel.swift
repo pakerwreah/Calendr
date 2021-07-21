@@ -128,8 +128,7 @@ class EventViewModel {
         if secondsToEnd > 0 {
 
             isPast = Observable<Int>.timer(.seconds(secondsToEnd), scheduler: scheduler)
-                .toVoid()
-                .map { true }
+                .map(true)
                 .startWith(false)
                 .share(replay: 1)
 

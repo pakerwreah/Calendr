@@ -16,6 +16,10 @@ extension ObservableType {
         map { _ in () }
     }
 
+    func map<T>(_ value: T) -> Observable<T> {
+        map { _ in value }
+    }
+
     func toOptional() -> Observable<Element?> {
         map { value -> Element? in value }
     }

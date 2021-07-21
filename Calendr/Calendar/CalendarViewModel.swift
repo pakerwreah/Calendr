@@ -179,7 +179,7 @@ class CalendarViewModel {
 
         // Clear hover when month changes
         let hoverObservable: Observable<Date?> = Observable.merge(
-            dateRangeObservable.toVoid().map { nil }, hoverObservable
+            dateRangeObservable.map(nil), hoverObservable
         )
 
         // Check which cell is hovered

@@ -20,8 +20,8 @@ extension Reactive where Base: NSView {
 
     var isHovered: Observable<Bool> {
         .merge(
-            mouseEntered.map { true },
-            mouseExited.map { false }
+            mouseEntered.map(true),
+            mouseExited.map(false)
         )
     }
 
