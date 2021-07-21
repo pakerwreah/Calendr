@@ -34,7 +34,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
 
         NotificationCenter.default.rx
             .notification(.EKEventStoreChanged, object: store)
-            .toVoid()
+            .void()
             .bind(to: changeObserver)
             .disposed(by: disposeBag)
     }

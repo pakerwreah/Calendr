@@ -21,7 +21,7 @@ class StatusItemViewModel {
 
         let localeChangeObservable = notificationCenter.rx
             .notification(NSLocale.currentLocaleDidChangeNotification)
-            .toVoid()
+            .void()
 
         let dateFormatterObservable = settings.statusItemDateStyle
             .repeat(when: localeChangeObservable)

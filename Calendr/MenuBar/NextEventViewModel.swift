@@ -33,7 +33,7 @@ class NextEventViewModel {
             .flatMapLatest { [dateProvider] events -> Observable<NextEventTuple?> in
 
                 Observable<Int>.interval(.seconds(1), scheduler: scheduler)
-                    .toVoid()
+                    .void()
                     .startWith(())
                     .map {
                         events

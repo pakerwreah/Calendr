@@ -28,7 +28,7 @@ class CalendarViewModel {
 
         let calendarObservable = notificationCenter.rx
             .notification(NSLocale.currentLocaleDidChangeNotification)
-            .toVoid()
+            .void()
             .startWith(())
             .map { dateProvider.calendar }
             .share(replay: 1)
@@ -128,7 +128,7 @@ class CalendarViewModel {
                 to: cellViewModels.last!.date,
                 calendars: calendars
             )
-            .toOptional()
+            .optional()
             .startWith(nil)
         }
         .share(replay: 1)
@@ -137,7 +137,7 @@ class CalendarViewModel {
 
         // Check if today has changed
         let todayObservable = dateObservable
-            .toVoid()
+            .void()
             .map { dateProvider.now }
             .distinctUntilChanged { a, b in
                 timezone == dateProvider.calendar.timeZone && dateProvider.calendar.isDate(a, inSameDayAs: b)

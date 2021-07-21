@@ -11,11 +11,11 @@ import RxSwift
 extension Reactive where Base: NSView {
 
     var mouseEntered: Observable<Void> {
-        methodInvoked(#selector(Base.mouseEntered)).toVoid()
+        methodInvoked(#selector(Base.mouseEntered)).void()
     }
 
     var mouseExited: Observable<Void> {
-        methodInvoked(#selector(Base.mouseExited)).toVoid()
+        methodInvoked(#selector(Base.mouseExited)).void()
     }
 
     var isHovered: Observable<Bool> {
@@ -26,6 +26,6 @@ extension Reactive where Base: NSView {
     }
 
     var updateLayer: Observable<Void> {
-        methodInvoked(#selector(Base.updateLayer)).toVoid()
+        methodInvoked(#selector(Base.updateLayer)).void()
     }
 }

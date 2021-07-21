@@ -188,7 +188,7 @@ class EventDetailsViewModelTests: XCTestCase {
         var callback = false
 
         calendarService.spyRescheduleObservable
-            .toVoid()
+            .void()
             .bind { reschedule = true }
             .disposed(by: disposeBag)
 

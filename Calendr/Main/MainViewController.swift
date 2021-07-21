@@ -253,7 +253,7 @@ class MainViewController: NSViewController {
             .disposed(by: disposeBag)
 
         Observable.merge(
-            notificationCenter.rx.notification(.NSCalendarDayChanged).toVoid(),
+            notificationCenter.rx.notification(.NSCalendarDayChanged).void(),
             rx.viewDidDisappear
         )
         .map { [dateProvider] in dateProvider.now }
@@ -303,7 +303,7 @@ class MainViewController: NSViewController {
         settingsViewController.rx.viewDidDisappear
             .withLatestFrom(pinBtn.rx.state)
             .matching(.off)
-            .toVoid()
+            .void()
             .startWith(())
             .map { .transient }
             .bind(to: popover.rx.behavior)
@@ -325,7 +325,7 @@ class MainViewController: NSViewController {
 
         statusBarButton.rx.leftClickGesture()
             .when(.recognized)
-            .toVoid()
+            .void()
             .filter { [popover] in
                 !popover.isShown
             }
@@ -462,10 +462,10 @@ class MainViewController: NSViewController {
             return event
         }
 
-        let keyLeft = keySubject.matching(123).toVoid()
-        let keyRight = keySubject.matching(124).toVoid()
-        let keyDown = keySubject.matching(125).toVoid()
-        let keyUp = keySubject.matching(126).toVoid()
+        let keyLeft = keySubject.matching(123).void()
+        let keyRight = keySubject.matching(124).void()
+        let keyDown = keySubject.matching(125).void()
+        let keyUp = keySubject.matching(126).void()
 
 
         let dateSelector = DateSelector(

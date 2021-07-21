@@ -72,7 +72,7 @@ class EventListViewModel {
                         Observable<Int>.timer(.seconds($0), scheduler: scheduler)
                     }
             )
-            .toVoid()
+            .void()
             .startWith(())
             .map {
                 events.filter {

@@ -11,30 +11,30 @@ import RxSwift
 extension Reactive where Base: NSViewController {
 
     var viewDidLoad: Observable<Void> {
-        methodInvoked(#selector(Base.viewDidLoad)).toVoid()
+        methodInvoked(#selector(Base.viewDidLoad)).void()
     }
 
     var viewWillAppear: Observable<Void> {
-        methodInvoked(#selector(Base.viewWillAppear)).toVoid()
+        methodInvoked(#selector(Base.viewWillAppear)).void()
     }
 
     var viewDidAppear: Observable<Void> {
-        methodInvoked(#selector(Base.viewDidAppear)).toVoid()
+        methodInvoked(#selector(Base.viewDidAppear)).void()
     }
 
     var viewWillDisappear: Observable<Void> {
-        methodInvoked(#selector(Base.viewWillDisappear)).toVoid()
+        methodInvoked(#selector(Base.viewWillDisappear)).void()
     }
 
     var viewDidDisappear: Observable<Void> {
-        methodInvoked(#selector(Base.viewDidDisappear)).toVoid()
+        methodInvoked(#selector(Base.viewDidDisappear)).void()
     }
 
     var viewWillLayout: Observable<Void> {
-        methodInvoked(#selector(Base.viewWillLayout)).toVoid()
+        methodInvoked(#selector(Base.viewWillLayout)).void()
     }
 
     var viewDidLayout: Observable<Void> {
-        methodInvoked(#selector(Base.viewDidLayout)).toVoid()
+        methodInvoked(#selector(Base.viewDidLayout)).void()
     }
 }

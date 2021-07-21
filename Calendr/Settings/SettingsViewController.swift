@@ -104,12 +104,12 @@ class SettingsViewController: NSTabViewController {
         for (i, vc) in tabViewItems.compactMap(\.viewController).enumerated() {
 
             Observable.merge(
-                NotificationCenter.default.rx.notification(NSLocale.currentLocaleDidChangeNotification).toVoid(),
+                NotificationCenter.default.rx.notification(NSLocale.currentLocaleDidChangeNotification).void(),
                 vc.rx.viewDidLayout
             )
             .withLatestFrom(rx.observe(\.selectedTabViewItemIndex))
             .matching(i)
-            .toVoid()
+            .void()
             .map { vc.view.fittingSize }
             .distinctUntilChanged()
             .skip(i > 0 ? 1 : 0)

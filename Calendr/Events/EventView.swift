@@ -192,7 +192,7 @@ class EventView: NSView {
             gesture.delaysPrimaryMouseButtonEvents = false
         }
         .when(.recognized)
-        .toVoid()
+        .void()
         .map(viewModel.makeDetails)
         .withUnretained(self)
         .flatMapFirst { view, viewModel -> Observable<Void> in

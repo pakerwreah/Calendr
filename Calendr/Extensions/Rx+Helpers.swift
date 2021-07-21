@@ -12,7 +12,7 @@ extension ObservableType {
 
     static func void() -> Observable<Void> { .just(()) }
 
-    func toVoid() -> Observable<Void> {
+    func void() -> Observable<Void> {
         map { _ in () }
     }
 
@@ -20,7 +20,7 @@ extension ObservableType {
         map { _ in value }
     }
 
-    func toOptional() -> Observable<Element?> {
+    func optional() -> Observable<Element?> {
         map { value -> Element? in value }
     }
 

@@ -164,7 +164,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
             .share(replay: 1)
 
         dateFormatOptions = notificationCenter.rx.notification(NSLocale.currentLocaleDidChangeNotification)
-            .toVoid()
+            .void()
             .startWith(())
             .map {
                 let dateFormatter = DateFormatter(locale: dateProvider.calendar.locale)

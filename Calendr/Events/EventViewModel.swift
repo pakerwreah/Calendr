@@ -133,10 +133,10 @@ class EventViewModel {
                 .share(replay: 1)
 
             clock = Observable<Int>.timer(.seconds(secondsToStart), scheduler: scheduler)
-                .toVoid()
+                .void()
                 .concat(
                     Observable<Int>.interval(.seconds(1), scheduler: scheduler)
-                        .toVoid()
+                        .void()
                         .startWith(())
                 )
                 .startWith(())
