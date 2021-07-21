@@ -226,6 +226,8 @@ class MainViewController: NSViewController {
 
     private func setUpAccessibility() {
 
+        guard BuildConfig.isUITesting else { return }
+
         NSApp.addAccessibilityChild(view)
 
         view.setAccessibilityIdentifier(Accessibility.Main.view)
@@ -288,8 +290,6 @@ class MainViewController: NSViewController {
 
     private func setUpPopover() {
 
-        popover.contentViewController = self
-
         popover.rx.observe(\.isShown)
             .observe(on: MainScheduler.asyncInstance)
             .bind(to: popover.rx.animates)
@@ -329,7 +329,8 @@ class MainViewController: NSViewController {
             .filter { [popover] in
                 !popover.isShown
             }
-            .bind { [popover] in
+            .bind { [weak self, popover] in
+                popover.contentViewController = self
                 popover.show(relativeTo: .zero, of: statusBarButton, preferredEdge: .maxY)
             }
             .disposed(by: disposeBag)
@@ -366,19 +367,18 @@ class MainViewController: NSViewController {
             .bind(to: eventStatusItem.rx.isVisible)
             .disposed(by: disposeBag)
 
-        func makeDetails(event: EventModel) -> EventDetailsViewModel {
-            EventDetailsViewModel(
-                event: event,
-                dateProvider: dateProvider,
-                calendarService: calendarService,
-                settings: settingsViewModel
-            )
-        }
-
         statusBarButton.rx.tap
             .withLatestFrom(nextEventViewModel.event)
             .skipNil()
-            .map(makeDetails)
+            .map { [dateProvider, calendarService, settingsViewModel] event in
+
+                EventDetailsViewModel(
+                    event: event,
+                    dateProvider: dateProvider,
+                    calendarService: calendarService,
+                    settings: settingsViewModel
+                )
+            }
             .flatMapFirst { viewModel -> Observable<Void> in
                 let vc = EventDetailsViewController(viewModel: viewModel)
                 let popover = NSPopover()
