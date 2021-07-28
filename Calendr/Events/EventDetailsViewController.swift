@@ -12,6 +12,8 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
 
     private let disposeBag = DisposeBag()
 
+    private let scrollView = NSScrollView()
+
     private let _title = Label()
     private let url = Label()
     private let location = Label()
@@ -57,9 +59,9 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
 
         view = NSView()
 
-        view.widthAnchor.constraint(lessThanOrEqualToConstant: 310).activate()
+        view.widthAnchor.constraint(lessThanOrEqualToConstant: 400).activate()
 
-        let contentStackView = NSStackView(
+        let detailsStackView = NSStackView(
             views: fields
                 .enumerated()
                 .map { index, field in
@@ -69,6 +71,23 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
                 }
         )
         .with(orientation: .vertical)
+
+        detailsStackView.layoutSubtreeIfNeeded()
+
+        scrollView.hasVerticalScroller = true
+        scrollView.scrollerStyle = .overlay
+        scrollView.drawsBackground = false
+        scrollView.documentView = detailsStackView
+
+        scrollView.contentView.edges(to: scrollView)
+        scrollView.contentView.top(equalTo: detailsStackView)
+        scrollView.contentView.leading(equalTo: detailsStackView)
+        scrollView.contentView.trailing(equalTo: detailsStackView)
+
+        scrollView.height(equalTo: detailsStackView).priority = .defaultHigh
+        scrollView.heightAnchor.constraint(lessThanOrEqualToConstant: 0.8 * NSScreen.main!.visibleFrame.height).activate()
+
+        let contentStackView = NSStackView(views: [scrollView]).with(orientation: .vertical)
 
         view.addSubview(contentStackView)
 
@@ -169,6 +188,11 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         super.viewDidAppear()
 
         view.window?.makeKey()
+    }
+
+    func popoverDidShow(_ notification: Notification) {
+
+        scrollView.flashScrollers()
     }
 
     private var popover: NSPopover?
