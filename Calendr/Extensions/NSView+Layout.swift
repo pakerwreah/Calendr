@@ -7,6 +7,20 @@
 
 import Cocoa
 
+protocol LayoutItem {
+    var leadingAnchor: NSLayoutXAxisAnchor { get }
+    var trailingAnchor: NSLayoutXAxisAnchor { get }
+    var topAnchor: NSLayoutYAxisAnchor { get }
+    var bottomAnchor: NSLayoutYAxisAnchor { get }
+    var widthAnchor: NSLayoutDimension { get }
+    var heightAnchor: NSLayoutDimension { get }
+    var centerXAnchor: NSLayoutXAxisAnchor { get }
+    var centerYAnchor: NSLayoutYAxisAnchor { get }
+}
+
+extension NSView: LayoutItem { }
+extension NSLayoutGuide: LayoutItem { }
+
 extension NSView {
 
     typealias LayoutConstraints = (
@@ -69,31 +83,31 @@ extension NSView {
     }
 
     @discardableResult
-    func leading(equalTo view: NSView, constant: CGFloat = 0) -> NSLayoutConstraint {
+    func leading(equalTo view: LayoutItem, constant: CGFloat = 0) -> NSLayoutConstraint {
 
         leading(equalTo: view.leadingAnchor, constant: constant)
     }
 
     @discardableResult
-    func trailing(equalTo view: NSView, constant: CGFloat = 0) -> NSLayoutConstraint {
+    func trailing(equalTo view: LayoutItem, constant: CGFloat = 0) -> NSLayoutConstraint {
 
         trailing(equalTo: view.trailingAnchor, constant: constant)
     }
 
     @discardableResult
-    func top(equalTo view: NSView, constant: CGFloat = 0) -> NSLayoutConstraint {
+    func top(equalTo view: LayoutItem, constant: CGFloat = 0) -> NSLayoutConstraint {
 
         top(equalTo: view.topAnchor, constant: constant)
     }
 
     @discardableResult
-    func bottom(equalTo view: NSView, constant: CGFloat = 0) -> NSLayoutConstraint {
+    func bottom(equalTo view: LayoutItem, constant: CGFloat = 0) -> NSLayoutConstraint {
 
         bottom(equalTo: view.bottomAnchor, constant: constant)
     }
 
     @discardableResult
-    func edges(to view: NSView, constant: CGFloat = 0) -> LayoutConstraints {
+    func edges(to view: LayoutItem, constant: CGFloat = 0) -> LayoutConstraints {
         (
             top(equalTo: view, constant: constant),
             trailing(equalTo: view, constant: constant),
@@ -103,7 +117,7 @@ extension NSView {
     }
 
     @discardableResult
-    func center(in view: NSView, orientation: NSLayoutConstraint.Orientation, constant: CGFloat = 0) -> NSLayoutConstraint {
+    func center(in view: LayoutItem, orientation: NSLayoutConstraint.Orientation, constant: CGFloat = 0) -> NSLayoutConstraint {
 
         forAutoLayout()
 
@@ -116,7 +130,7 @@ extension NSView {
     }
 
     @discardableResult
-    func center(in view: NSView, constant: CGPoint = .zero) -> CenterLayoutConstraints {
+    func center(in view: LayoutItem, constant: CGPoint = .zero) -> CenterLayoutConstraints {
         (
             center(in: view, orientation: .horizontal, constant: constant.x),
             center(in: view, orientation: .vertical, constant: constant.y)
@@ -124,7 +138,7 @@ extension NSView {
     }
 
     @discardableResult
-    func width(equalTo view: NSView, constant: CGFloat = 0) -> NSLayoutConstraint {
+    func width(equalTo view: LayoutItem, constant: CGFloat = 0) -> NSLayoutConstraint {
 
         forAutoLayout()
             .widthAnchor
@@ -142,7 +156,7 @@ extension NSView {
     }
 
     @discardableResult
-    func height(equalTo view: NSView, constant: CGFloat = 0) -> NSLayoutConstraint {
+    func height(equalTo view: LayoutItem, constant: CGFloat = 0) -> NSLayoutConstraint {
 
         forAutoLayout()
             .heightAnchor
@@ -159,7 +173,7 @@ extension NSView {
     }
 
     @discardableResult
-    func size(equalTo view: NSView, constant: CGFloat = 0) -> SizeLayoutConstraints {
+    func size(equalTo view: LayoutItem, constant: CGFloat = 0) -> SizeLayoutConstraints {
         (
             width(equalTo: view, constant: constant),
             height(equalTo: view, constant: constant)
