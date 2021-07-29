@@ -20,6 +20,7 @@ extension UITestCase {
         static var resetBtn: XCUIElement { view.buttons[Accessibility.Main.resetBtn] }
         static var nextBtn: XCUIElement { view.buttons[Accessibility.Main.nextBtn] }
         static var pinBtn: XCUIElement { view.checkBoxes[Accessibility.Main.pinBtn] }
+        static var remindersBtn: XCUIElement { view.buttons[Accessibility.Main.remindersBtn] }
         static var calendarBtn: XCUIElement { view.buttons[Accessibility.Main.calendarBtn] }
         static var settingsBtn: XCUIElement { view.buttons[Accessibility.Main.settingsBtn] }
     }

@@ -53,6 +53,22 @@ class MainViewTests: UITestCase {
         XCTAssertFalse(EventDetails.view.exists)
     }
 
+    func testRemindersButtonClicked_shouldOpenRemindersApp() {
+
+        let reminders = XCUIApplication(
+            url: NSWorkspace.shared.urlForApplication(toOpen: URL(string: "x-apple-reminderkit://")!)!
+        )
+
+        MenuBar.main.click()
+
+        XCTAssertEqual(app.state, .runningForeground)
+
+        Main.remindersBtn.click()
+
+        XCTAssertEqual(app.state, .runningBackground)
+        XCTAssertEqual(reminders.state, .runningForeground)
+    }
+
     func testCalendarButtonClicked_shouldOpenCalendarApp() {
 
         let calendar = XCUIApplication(url: NSWorkspace.shared.urlForApplication(toOpen: URL(string: "webcal://")!)!)

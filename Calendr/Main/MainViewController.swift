@@ -26,6 +26,7 @@ class MainViewController: NSViewController {
     private let resetBtn = NSButton()
     private let nextBtn = NSButton()
     private let pinBtn = NSButton()
+    private let remindersBtn = NSButton()
     private let calendarBtn = NSButton()
     private let settingsBtn = NSButton()
 
@@ -244,6 +245,7 @@ class MainViewController: NSViewController {
         resetBtn.setAccessibilityIdentifier(Accessibility.Main.resetBtn)
         nextBtn.setAccessibilityIdentifier(Accessibility.Main.nextBtn)
         pinBtn.setAccessibilityIdentifier(Accessibility.Main.pinBtn)
+        remindersBtn.setAccessibilityIdentifier(Accessibility.Main.remindersBtn)
         calendarBtn.setAccessibilityIdentifier(Accessibility.Main.calendarBtn)
         settingsBtn.setAccessibilityIdentifier(Accessibility.Main.settingsBtn)
     }
@@ -271,6 +273,13 @@ class MainViewController: NSViewController {
         calendarViewModel.title
             .bind(to: titleLabel.rx.text)
             .disposed(by: disposeBag)
+
+        remindersBtn.rx.tap.bind { [workspace] in
+            if let appUrl = workspace.urlForApplication(toOpen: URL(string: "x-apple-reminderkit://")!) {
+                workspace.open(appUrl)
+            }
+        }
+        .disposed(by: disposeBag)
 
         calendarBtn.rx.tap.bind { [workspace] in
             if let appUrl = workspace.urlForApplication(toOpen: URL(string: "webcal://")!) {
@@ -419,16 +428,17 @@ class MainViewController: NSViewController {
 
     private func makeToolBar() -> NSView {
 
-        [pinBtn, calendarBtn, settingsBtn].forEach(styleButton)
+        [pinBtn, remindersBtn, calendarBtn, settingsBtn].forEach(styleButton)
 
         pinBtn.setButtonType(.toggle)
         pinBtn.image = Icons.Calendar.unpinned
         pinBtn.alternateImage = Icons.Calendar.pinned
 
+        remindersBtn.image = Icons.Calendar.reminders.with(size: 13)
         calendarBtn.image = Icons.Calendar.calendar.with(scale: .large)
         settingsBtn.image = Icons.Calendar.settings.with(scale: .large)
 
-        return NSStackView(views: [pinBtn, .spacer, calendarBtn, settingsBtn])
+        return NSStackView(views: [pinBtn, .spacer, remindersBtn, calendarBtn, settingsBtn])
     }
 
     private func makeDateSelector() -> DateSelector {
