@@ -15,6 +15,7 @@ enum Accessibility {
         static let prevBtn = "main_prev_button"
         static let resetBtn = "main_reset_button"
         static let nextBtn = "main_next_button"
+        static let remindersBtn = "main_reminders_button"
         static let calendarBtn = "main_calendar_button"
         static let settingsBtn = "main_settings_button"
         static let pinBtn = "main_pin_button"
