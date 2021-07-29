@@ -24,8 +24,8 @@ enum Icons {
     }
 
     enum Settings {
-        static let general = NSImage(systemName: "house")
-        static let calendars = NSImage(systemName: "list.bullet")
+        static let general = NSImage(systemName: "gear")
+        static let calendars = NSImage(systemName: "calendar.badge.plus")
         static let about = NSImage(systemName: "book")
     }
 
