@@ -57,6 +57,12 @@ class EventListView: NSView {
             }
             .bind(to: contentStackView.rx.arrangedSubviews)
             .disposed(by: disposeBag)
+
+        viewModel.asObservable()
+            .observe(on: MainScheduler.instance)
+            .map(\.isEmpty)
+            .bind(to: rx.isHidden)
+            .disposed(by: disposeBag)
     }
 
     private func makeLine() -> NSView {

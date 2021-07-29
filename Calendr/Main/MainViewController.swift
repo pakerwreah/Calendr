@@ -175,14 +175,18 @@ class MainViewController: NSViewController {
 
         view = NSView()
 
+        let header = makeHeader()
+        let toolBar = makeToolBar()
+
         let mainView = NSStackView(views: [
-            makeHeader(),
+            header,
             calendarView,
-            makeToolBar(),
+            toolBar,
             eventListView
         ])
         .with(orientation: .vertical)
         .with(spacing: 4)
+        .with(spacing: 0, after: header)
 
         view.addSubview(mainView)
 

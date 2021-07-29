@@ -119,8 +119,7 @@ class GeneralSettingsViewController: NSViewController {
         .with(orientation: .vertical)
         .with(alignment: .left)
         .with(spacing: 6)
-
-        stackView.setCustomSpacing(12, after: divider)
+        .with(spacing: 12, after: divider)
 
         return stackView
     }
