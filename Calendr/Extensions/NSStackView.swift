@@ -29,6 +29,11 @@ extension NSStackView {
         return self
     }
 
+    func with(spacing: CGFloat, after view: NSView) -> Self {
+        setCustomSpacing(spacing, after: view)
+        return self
+    }
+
     func with(insets: NSEdgeInsets) -> Self {
         self.edgeInsets = insets
         return self
