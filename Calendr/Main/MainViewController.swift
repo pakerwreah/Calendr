@@ -279,13 +279,6 @@ class MainViewController: NSViewController {
             self?.presentAsModalWindow(settingsViewController)
         }
         .disposed(by: disposeBag)
-
-        let pinIconOn = Self.pinBtnIcon(.on)
-        let pinIconOff = Self.pinBtnIcon(.off)
-
-        pinBtn.rx.state.map { $0 == .on ? pinIconOn : pinIconOff }
-            .bind(to: pinBtn.rx.attributedTitle)
-            .disposed(by: disposeBag)
     }
 
     private func setUpPopover() {
@@ -424,23 +417,14 @@ class MainViewController: NSViewController {
 
         [pinBtn, calendarBtn, settingsBtn].forEach(styleButton)
 
-        pinBtn.setButtonType(.onOff)
+        pinBtn.setButtonType(.toggle)
+        pinBtn.image = Icons.Calendar.unpinned
+        pinBtn.alternateImage = Icons.Calendar.pinned
 
         calendarBtn.image = Icons.Calendar.calendar.with(scale: .large)
         settingsBtn.image = Icons.Calendar.settings.with(scale: .large)
 
         return NSStackView(views: [pinBtn, .spacer, calendarBtn, settingsBtn])
-    }
-
-    private static func pinBtnIcon(_ state: NSControl.StateValue) -> NSAttributedString {
-
-        let attachment = NSTextAttachment()
-        attachment.image = state == .on ? Icons.Calendar.pinned : Icons.Calendar.unpinned
-
-        let attributed = NSMutableAttributedString(attachment: attachment)
-        attributed.addAttribute(.baselineOffset, value: -1, range: NSRange(location: 0, length: attributed.length))
-
-        return attributed
     }
 
     private func makeDateSelector() -> DateSelector {
