@@ -72,8 +72,6 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         )
         .with(orientation: .vertical)
 
-        detailsStackView.layoutSubtreeIfNeeded()
-
         scrollView.hasVerticalScroller = true
         scrollView.scrollerStyle = .overlay
         scrollView.drawsBackground = false
@@ -83,9 +81,8 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         scrollView.contentView.top(equalTo: detailsStackView)
         scrollView.contentView.leading(equalTo: detailsStackView)
         scrollView.contentView.trailing(equalTo: detailsStackView)
-
-        scrollView.height(equalTo: detailsStackView).priority = .defaultHigh
-        scrollView.heightAnchor.constraint(lessThanOrEqualToConstant: 0.8 * NSScreen.main!.visibleFrame.height).activate()
+        scrollView.contentView.height(equalTo: detailsStackView).priority = .dragThatCanResizeWindow
+        scrollView.contentView.heightAnchor.constraint(lessThanOrEqualToConstant: 0.8 * NSScreen.main!.visibleFrame.height).activate()
 
         let contentStackView = NSStackView(views: [scrollView]).with(orientation: .vertical)
 
