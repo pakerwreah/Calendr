@@ -434,7 +434,7 @@ class MainViewController: NSViewController {
         pinBtn.image = Icons.Calendar.unpinned
         pinBtn.alternateImage = Icons.Calendar.pinned
 
-        remindersBtn.image = Icons.Calendar.reminders.with(size: 13)
+        remindersBtn.image = Icons.Calendar.reminders.with(scale: .large)
         calendarBtn.image = Icons.Calendar.calendar.with(scale: .large)
         settingsBtn.image = Icons.Calendar.settings.with(scale: .large)
 
