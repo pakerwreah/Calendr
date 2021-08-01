@@ -82,10 +82,11 @@ class CalendarViewModel {
         )
         .map { month, firstWeekday -> [CalendarCellViewModel] in
 
-            let currentWeekDay = dateProvider.calendar.component(.weekday, from: month.start)
+            let monthStartWeekDay = dateProvider.calendar.component(.weekday, from: month.start)
+
             let start = dateProvider.calendar.date(
                 byAdding: .day,
-                value: firstWeekday - currentWeekDay,
+                value: { $0 <= 0 ? $0 : $0 - 7 }(firstWeekday - monthStartWeekDay),
                 to: month.start
             )!
 

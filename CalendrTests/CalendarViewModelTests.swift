@@ -145,6 +145,21 @@ class CalendarViewModelTests: XCTestCase {
         XCTAssertEqual(cellViewModels.last.map(\.date), .make(year: 2021, month: 2, day: 7))
     }
 
+    func testDateSpan_firstWeekDayGreaterThanMonthStart() throws {
+
+        dateProvider.m_calendar.firstWeekday = 2
+
+        notificationCenter.post(name: NSLocale.currentLocaleDidChangeNotification, object: nil)
+
+        dateSubject.onNext(.make(year: 2021, month: 8, day: 1))
+
+        let cellViewModels = try XCTUnwrap(lastValue)
+
+        XCTAssertEqual(cellViewModels.count, 42)
+        XCTAssertEqual(cellViewModels.first.map(\.date), .make(year: 2021, month: 7, day: 26))
+        XCTAssertEqual(cellViewModels.last.map(\.date), .make(year: 2021, month: 9, day: 5))
+    }
+
     func testWeekDays_firstWeekDaySunday() {
 
         var weekDays: [WeekDay]?
