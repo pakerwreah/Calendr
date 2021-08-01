@@ -400,6 +400,15 @@ class MainViewController: NSViewController {
         statusBarButton.sendAction(on: .leftMouseDown)
     }
 
+    override func mouseEntered(with event: NSEvent) {
+
+        super.mouseEntered(with: event)
+
+        guard !NSApp.isActive else { return }
+
+        NSApp.activate(ignoringOtherApps: true)
+    }
+
     // MARK: - Factories
 
     private func styleButton(_ button: NSButton) {

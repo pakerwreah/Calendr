@@ -204,9 +204,7 @@ class EventView: NSView {
             popover.show(relativeTo: .zero, of: view, preferredEdge: .minX)
             return popover.rx.deallocated
         }
-        .bind(with: self) { view, _ in
-            view.window?.makeKey()
-        }
+        .subscribe()
         .disposed(by: disposeBag)
     }
 
