@@ -207,7 +207,10 @@ class EventView: NSView {
             popover.show(relativeTo: .zero, of: view, preferredEdge: .minX)
             return popover.rx.deallocated
         }
-        .subscribe()
+        .bind { [weak self] in
+            // 🔨 Allow clicking outside to dismiss the main view after dismissing the event details
+            self?.window?.makeKey()
+        }
         .disposed(by: disposeBag)
     }
 
