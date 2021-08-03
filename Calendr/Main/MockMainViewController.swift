@@ -102,7 +102,7 @@ private extension MockCalendarServiceProvider {
                             start: time(17, 00),
                             end: time(18, 00),
                             title: "Some meeting 👔",
-                            location: "zoom.us/j/9999999999",
+                            location: "https://zoom.us/j/9999999999",
                             calendar: .meetings
                         ),
                         .make(

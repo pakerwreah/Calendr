@@ -16,12 +16,12 @@ class EventView: NSView {
 
     private let viewModel: EventViewModel
 
-    private let icon = Label()
+    private let icon = NSImageView()
     private let title = Label()
     private let subtitle = Label()
     private let duration = Label()
     private let progress = NSView()
-    private let videoBtn = NSButton()
+    private let linkBtn = NSButton()
     private let hoverLayer = CALayer()
 
     private lazy var progressTop = progress.top(equalTo: self)
@@ -44,11 +44,12 @@ class EventView: NSView {
         switch viewModel.type {
 
         case .birthday:
-            icon.stringValue = "🎁"
-            icon.textColor = .systemRed
+            icon.image = Icons.Event.birthday.with(scale: .small)
+            icon.contentTintColor = .systemRed
 
         case .reminder:
-            icon.stringValue = "🔔"
+            icon.image = Icons.Event.reminder.with(scale: .small).with(size: 11)
+            icon.contentTintColor = .headerTextColor
 
         case .event:
             icon.isHidden = true
@@ -62,7 +63,7 @@ class EventView: NSView {
         duration.stringValue = viewModel.duration
         duration.isHidden = duration.isEmpty
 
-        videoBtn.isHidden = viewModel.linkURL == nil
+        linkBtn.isHidden = viewModel.linkURL == nil
 
         if viewModel.isPending {
             layer?.backgroundColor = Self.pendingBackground
@@ -80,8 +81,8 @@ class EventView: NSView {
         hoverLayer.backgroundColor = NSColor.gray.cgColor.copy(alpha: 0.2)
         layer?.addSublayer(hoverLayer)
 
-        icon.forceVibrancy = false
-        icon.font = Fonts.SegoeUISymbol.regular.font(size: 10)
+        icon.height(equalTo: 12)
+        icon.imageAlignment = .alignBottom
         icon.setContentHuggingPriority(.required, for: .horizontal)
         icon.setContentCompressionResistancePriority(.required, for: .horizontal)
 
@@ -104,17 +105,15 @@ class EventView: NSView {
         colorBar.layer?.cornerRadius = 2
         colorBar.width(equalTo: 4)
 
-        videoBtn.setContentCompressionResistancePriority(.required, for: .horizontal)
-        videoBtn.refusesFirstResponder = true
-        videoBtn.bezelStyle = .roundRect
-        videoBtn.isBordered = false
-        videoBtn.font = Fonts.SegoeUISymbol.regular.font(size: 13)
-        videoBtn.title = viewModel.isMeeting ? "📹" : "🌐"
-        videoBtn.width(equalTo: 22)
+        linkBtn.setContentCompressionResistancePriority(.required, for: .horizontal)
+        linkBtn.refusesFirstResponder = true
+        linkBtn.bezelStyle = .roundRect
+        linkBtn.isBordered = false
+        linkBtn.width(equalTo: 22)
 
         let titleStackView = NSStackView(views: [icon, title]).with(spacing: 4).with(alignment: .top)
 
-        let subtitleStackView = NSStackView(views: [subtitle, videoBtn]).with(spacing: 0)
+        let subtitleStackView = NSStackView(views: [subtitle, linkBtn]).with(spacing: 0)
 
         subtitleStackView.rx.isContentHidden
             .bind(to: subtitleStackView.rx.isHidden)
@@ -146,12 +145,20 @@ class EventView: NSView {
             .disposed(by: disposeBag)
 
         if let url = viewModel.linkURL {
+            (
+                viewModel.isMeeting
+                    ? viewModel.isInProgress.map { $0 ? Icons.Event.video_fill : Icons.Event.video }
+                    : .just(Icons.Event.link)
+            )
+            .map { $0.with(scale: .small) }
+            .bind(to: linkBtn.rx.image)
+            .disposed(by: disposeBag)
 
             viewModel.isInProgress.map { $0 ? .controlAccentColor : .secondaryLabelColor }
-                .bind(to: videoBtn.rx.contentTintColor)
+                .bind(to: linkBtn.rx.contentTintColor)
                 .disposed(by: disposeBag)
 
-            videoBtn.rx.tap
+            linkBtn.rx.tap
                 .bind { [viewModel] in viewModel.workspace.open(url) }
                 .disposed(by: disposeBag)
         }
