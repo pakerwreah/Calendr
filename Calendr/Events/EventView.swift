@@ -151,10 +151,6 @@ class EventView: NSView {
                 .bind(to: videoBtn.rx.contentTintColor)
                 .disposed(by: disposeBag)
 
-            viewModel.isInProgress
-                .bind(to: videoBtn.rx.isEnabled)
-                .disposed(by: disposeBag)
-
             videoBtn.rx.tap
                 .bind { [viewModel] in viewModel.workspace.open(url) }
                 .disposed(by: disposeBag)
