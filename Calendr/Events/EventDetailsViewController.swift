@@ -180,14 +180,10 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         }
     }
 
-    override func viewDidAppear() {
-
-        super.viewDidAppear()
-
-        view.window?.makeKey()
-    }
-
     func popoverDidShow(_ notification: Notification) {
+        // 🔨 Allow dismiss with the escape key
+        view.window?.makeKey()
+        view.window?.makeFirstResponder(self)
 
         scrollView.flashScrollers()
     }
