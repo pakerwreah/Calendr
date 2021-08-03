@@ -30,6 +30,14 @@ enum Icons {
         static let about = NSImage(systemName: "book")
     }
 
+    enum Event {
+        static let birthday = NSImage(systemName: "gift")
+        static let reminder = NSImage(systemName: "bell.fill")
+        static let link = NSImage(systemName: "link")
+        static let video = NSImage(systemName: "video")
+        static let video_fill = NSImage(systemName: "video.fill")
+    }
+
     enum EventDetails {
         static let options = NSImage(systemName: "chevron.down")
     }
