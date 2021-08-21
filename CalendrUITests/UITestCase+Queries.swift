@@ -26,8 +26,8 @@ extension UITestCase {
     }
 
     enum MenuBar {
-        static var main: XCUIElement { app.statusItems[Accessibility.MenuBar.main] }
-        static var event: XCUIElement { app.statusItems[Accessibility.MenuBar.event] }
+        static var main: XCUIElement { app.statusItems[Accessibility.MenuBar.main].wait() }
+        static var event: XCUIElement { app.statusItems[Accessibility.MenuBar.event].wait(timeout: 2) }
     }
 
     enum Calendar {
@@ -83,12 +83,17 @@ extension UITestCase {
 
 extension XCUIElement {
 
-    var didAppear: Bool { exists && !frame.isEmpty }
+    var didAppear: Bool { waitForExistence(timeout: 1) && !frame.isEmpty }
 
     var text: String { value as! String }
     var isChecked: Bool { value as! Bool }
 
     var outside: XCUICoordinate { coordinate(withNormalizedOffset: .zero).withOffset(.init(dx: -100, dy: 100)) }
+
+    func wait(timeout: TimeInterval = 1) -> Self {
+        _ = waitForExistence(timeout: timeout)
+        return self
+    }
 }
 
 extension XCUIElementQuery {
