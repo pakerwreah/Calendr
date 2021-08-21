@@ -1,0 +1,31 @@
+{
+  "configurations" : [
+    {
+      "id" : "E7F0FFA7-F7B2-42B7-B3C3-D164A52AE12D",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:Calendr.xcodeproj",
+      "identifier" : "347D0F9325952F89002451EC",
+      "name" : "Calendr"
+    },
+    "uiTestingScreenshotsLifetime" : "keepNever",
+    "userAttachmentLifetime" : "keepNever"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:Calendr.xcodeproj",
+        "identifier" : "347D0FA325952F8A002451EC",
+        "name" : "CalendrTests"
+      }
+    }
+  ],
+  "version" : 1
+}
