@@ -166,6 +166,8 @@
 		3430675D25F6BC15000D4003 /* HistoricalSchedulerTimeConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoricalSchedulerTimeConverter.swift; sourceTree = "<group>"; };
 		3430676225F6C130000D4003 /* TrackedHistoricalScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackedHistoricalScheduler.swift; sourceTree = "<group>"; };
 		3430ED02259634E00045DA53 /* NSStackView+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSStackView+Rx.swift"; sourceTree = "<group>"; };
+		343B74C826D168A80081A440 /* UnitTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = UnitTests.xctestplan; path = CalendrTests/UnitTests.xctestplan; sourceTree = SOURCE_ROOT; };
+		343B74C926D169E80081A440 /* UITests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = UITests.xctestplan; sourceTree = "<group>"; };
 		3442414F267EA65200142028 /* ReminderOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderOptions.swift; sourceTree = "<group>"; };
 		34427691269B5760004CFE1C /* MockMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockMainViewController.swift; sourceTree = "<group>"; };
 		34427697269B5CA4004CFE1C /* CalendrUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CalendrUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -390,6 +392,7 @@
 				3408B26D26A5008700DA8429 /* SettingsTests.swift */,
 				34427699269B5CA4004CFE1C /* UITestCase.swift */,
 				3492C45D269F7966009CFAD2 /* UITestCase+Queries.swift */,
+				343B74C926D169E80081A440 /* UITests.xctestplan */,
 			);
 			path = CalendrUITests;
 			sourceTree = "<group>";
@@ -452,6 +455,7 @@
 				34C72F7D25E844E500FD20FA /* NextEventViewModelTests.swift */,
 				3421AD3C25BA1D0800A4F468 /* SettingsViewModelTests.swift */,
 				341B2B4125D0B19500336342 /* StatusItemViewModelTests.swift */,
+				343B74C826D168A80081A440 /* UnitTests.xctestplan */,
 				348E703A25C617DD00B3B160 /* Mocks */,
 				3430676125F6C117000D4003 /* Schedulers */,
 			);
