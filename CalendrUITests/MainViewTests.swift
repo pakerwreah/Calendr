@@ -9,6 +9,8 @@ import XCTest
 
 class MainViewTests: UITestCase {
 
+    func waitFadeAnimation() { Thread.sleep(forTimeInterval: 0.5) }
+
     func testMainStatusItemClicked_shouldDisplayMainView() {
 
         MenuBar.main.click()
@@ -18,6 +20,7 @@ class MainViewTests: UITestCase {
 
         Main.view.outside.click()
 
+        waitFadeAnimation()
         XCTAssertFalse(Main.pinBtn.isHittable)
     }
 
@@ -31,25 +34,27 @@ class MainViewTests: UITestCase {
         Main.pinBtn.click()
         Main.view.outside.click()
 
+        waitFadeAnimation()
         XCTAssertTrue(Main.pinBtn.isHittable)
+
+        app.activate()
 
         Main.pinBtn.click()
         Main.view.outside.click()
 
+        waitFadeAnimation()
         XCTAssertFalse(Main.pinBtn.isHittable)
     }
 
     func testEventStatusItemClicked_shouldDisplayEventDetails() {
 
-        XCTAssertTrue(MenuBar.event.waitForExistence(timeout: 1))
-
         MenuBar.event.click()
 
-        XCTAssertTrue(EventDetails.view.waitForExistence(timeout: 1))
         XCTAssertTrue(EventDetails.view.didAppear)
 
         EventDetails.view.outside.click()
 
+        waitFadeAnimation()
         XCTAssertFalse(EventDetails.view.exists)
     }
 
@@ -61,12 +66,15 @@ class MainViewTests: UITestCase {
 
         MenuBar.main.click()
 
+        XCTAssertTrue(Main.view.didAppear)
         XCTAssertEqual(app.state, .runningForeground)
 
         Main.remindersBtn.click()
 
-        XCTAssertEqual(app.state, .runningBackground)
-        XCTAssertEqual(reminders.state, .runningForeground)
+        XCTAssert(app.wait(for: .runningBackground, timeout: 1))
+        XCTAssert(reminders.wait(for: .runningForeground, timeout: 1))
+
+        reminders.terminate()
     }
 
     func testCalendarButtonClicked_shouldOpenCalendarApp() {
@@ -75,12 +83,15 @@ class MainViewTests: UITestCase {
 
         MenuBar.main.click()
 
+        XCTAssertTrue(Main.view.didAppear)
         XCTAssertEqual(app.state, .runningForeground)
 
         Main.calendarBtn.click()
 
-        XCTAssertEqual(app.state, .runningBackground)
-        XCTAssertEqual(calendar.state, .runningForeground)
+        XCTAssert(app.wait(for: .runningBackground, timeout: 1))
+        XCTAssert(calendar.wait(for: .runningForeground, timeout: 1))
+
+        calendar.terminate()
     }
 
     func testSettingsButtonClicked_shouldOpenSettings() {

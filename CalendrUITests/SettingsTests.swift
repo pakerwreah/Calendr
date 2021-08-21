@@ -14,6 +14,8 @@ class SettingsTests: UITestCase {
         MenuBar.main.click()
         Main.settingsBtn.click()
 
+        XCTAssert(Settings.view.didAppear)
+
         XCTAssertEqual(Settings.tabs.map(\.title), ["General", "Calendars", "About"])
         XCTAssertTrue(Settings.General.view.didAppear)
 
@@ -34,16 +36,22 @@ class SettingsTests: UITestCase {
 
         MenuBar.main.click()
         Main.settingsBtn.click()
+
+        XCTAssert(Settings.view.didAppear)
+
         Settings.Tab.about.click()
         Settings.About.quitBtn.click()
 
-        XCTAssertEqual(app.state, .notRunning)
+        XCTAssert(app.wait(for: .notRunning, timeout: 1))
     }
 
     func testSettingsCalendarPicker() {
 
         MenuBar.main.click()
         Main.settingsBtn.click()
+
+        XCTAssert(Settings.view.didAppear)
+
         Settings.Tab.calendars.click()
 
         let checkbox = Settings.Calendars.view.checkBoxes
@@ -70,6 +78,8 @@ class SettingsTests: UITestCase {
         MenuBar.main.click()
         Main.settingsBtn.click()
 
+        XCTAssert(Settings.view.didAppear)
+
         let showIcon = Settings.General.view.checkBoxes
             .element(matching: NSPredicate(format: "title = %@", "Show icon"))
 
@@ -88,6 +98,8 @@ class SettingsTests: UITestCase {
         MenuBar.main.click()
         Main.settingsBtn.click()
 
+        XCTAssert(Settings.view.didAppear)
+
         let showDate = Settings.General.view.checkBoxes
             .element(matching: NSPredicate(format: "title = %@", "Show date"))
 
@@ -104,6 +116,8 @@ class SettingsTests: UITestCase {
 
         MenuBar.main.click()
         Main.settingsBtn.click()
+
+        XCTAssert(Settings.view.didAppear)
 
         let showIcon = Settings.General.view.checkBoxes
             .element(matching: NSPredicate(format: "title = %@", "Show icon"))
@@ -126,6 +140,8 @@ class SettingsTests: UITestCase {
 
         MenuBar.main.click()
         Main.settingsBtn.click()
+
+        XCTAssert(Settings.view.didAppear)
 
         let showIcon = Settings.General.view.checkBoxes
             .element(matching: NSPredicate(format: "title = %@", "Show icon"))
@@ -154,6 +170,8 @@ class SettingsTests: UITestCase {
         MenuBar.main.click()
         Main.settingsBtn.click()
 
+        XCTAssert(Settings.view.didAppear)
+
         let checkbox = Settings.General.view.checkBoxes
             .element(matching: NSPredicate(format: "title = %@", "Show next event"))
 
@@ -171,6 +189,8 @@ class SettingsTests: UITestCase {
         MenuBar.main.click()
         Main.settingsBtn.click()
 
+        XCTAssert(Settings.view.didAppear)
+
         let dropdown = Settings.General.view.popUpButtons.element
 
         XCTAssertEqual(dropdown.text, "Friday, 1 January 2021")
@@ -187,6 +207,8 @@ class SettingsTests: UITestCase {
 
         MenuBar.main.click()
         Main.settingsBtn.click()
+
+        XCTAssert(Settings.view.didAppear)
 
         let checkbox = Settings.General.view.checkBoxes
             .element(matching: NSPredicate(format: "title = %@", "Show week numbers"))
