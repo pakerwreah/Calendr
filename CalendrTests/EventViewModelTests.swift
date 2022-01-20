@@ -132,7 +132,7 @@ class EventViewModelTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(viewModel.duration, "3:00 PM - 4:00 PM")
+        XCTAssertEqual(viewModel.duration, "3:00-4:00 PM")
     }
 
     func testDuration_endsMidnight() {

@@ -9,18 +9,20 @@ import Foundation
 
 extension DateFormatter {
 
-    convenience init(locale: Locale?) {
+    convenience init(calendar: Calendar) {
         self.init()
-        self.locale = locale
+        self.calendar = calendar
+        self.locale = calendar.locale
+        self.timeZone = calendar.timeZone
     }
 
-    convenience init(format: String, locale: Locale?) {
-        self.init(locale: locale)
+    convenience init(format: String, calendar: Calendar) {
+        self.init(calendar: calendar)
         dateFormat = format
     }
 
-    convenience init(template: String, locale: Locale?) {
-        self.init(locale: locale)
+    convenience init(template: String, calendar: Calendar) {
+        self.init(calendar: calendar)
         setLocalizedDateFormatFromTemplate(template)
     }
 

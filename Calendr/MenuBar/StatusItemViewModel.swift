@@ -26,7 +26,7 @@ class StatusItemViewModel {
         let dateFormatterObservable = settings.statusItemDateStyle
             .repeat(when: localeChangeObservable)
             .map { dateStyle in
-                DateFormatter(locale: dateProvider.calendar.locale).with(style: dateStyle)
+                DateFormatter(calendar: dateProvider.calendar).with(style: dateStyle)
             }
 
         text = Observable.combineLatest(

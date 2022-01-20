@@ -82,7 +82,7 @@ class EventViewModel {
 
             let formatter = DateIntervalFormatter()
             formatter.dateTemplate = "jm"
-            formatter.locale = dateProvider.calendar.locale!
+            formatter.calendar = dateProvider.calendar
 
             let end: Date
 
@@ -102,16 +102,13 @@ class EventViewModel {
 
             let formatter = DateIntervalFormatter()
             formatter.dateTemplate = meta.isSameMonth ? "ddMMMM" : "ddMMM"
-            formatter.locale = dateProvider.calendar.locale!
+            formatter.calendar = dateProvider.calendar
 
             duration = formatter.string(from: event.start, to: meta.fixedEnd)
 
         } else {
 
-            let formatter = DateFormatter(
-                template: "ddMMyyyyHm",
-                locale: dateProvider.calendar.locale!
-            )
+            let formatter = DateFormatter(template: "ddMMyyyyHm", calendar: dateProvider.calendar)
             let start = formatter.string(from: event.start)
             let end = formatter.string(from: showTime ? event.end : meta.fixedEnd)
 
