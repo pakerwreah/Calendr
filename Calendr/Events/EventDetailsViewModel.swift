@@ -28,7 +28,7 @@ class EventDetailsViewModel {
         event: EventModel,
         dateProvider: DateProviding,
         calendarService: CalendarServiceProviding,
-        settings: EventSettings
+        settings: PopoverSettings
     ) {
 
         type = event.type

@@ -16,7 +16,7 @@ class EventViewModelFadeTests: XCTestCase {
     let dateProvider = MockDateProvider()
     let calendarService = MockCalendarServiceProvider()
     let workspace = MockWorkspaceServiceProvider()
-    let settings = MockEventSettings()
+    let settings = MockPopoverSettings()
 
     func testFade_isAllDay_shouldNotFade() {
 

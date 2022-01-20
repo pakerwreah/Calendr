@@ -16,7 +16,7 @@ class EventViewModelProgressTests: XCTestCase {
     let dateProvider = MockDateProvider()
     let calendarService = MockCalendarServiceProvider()
     let workspace = MockWorkspaceServiceProvider()
-    let settings = MockEventSettings()
+    let settings = MockPopoverSettings()
 
     func testProgress_isAllDay_shouldNotCalculateProgress() {
 

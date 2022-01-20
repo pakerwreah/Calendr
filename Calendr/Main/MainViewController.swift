@@ -91,7 +91,8 @@ class MainViewController: NSViewController {
 
         calendarPickerViewModel = CalendarPickerViewModel(
             calendarService: calendarService,
-            userDefaults: userDefaults
+            userDefaults: userDefaults,
+            settings: settingsViewModel
         )
 
         settingsViewController = SettingsViewController(

@@ -16,7 +16,7 @@ class EventDetailsViewModelTests: XCTestCase {
     let dateProvider = MockDateProvider()
     let calendarService = MockCalendarServiceProvider()
     let workspace = MockWorkspaceServiceProvider()
-    let settings = MockEventSettings()
+    let settings = MockPopoverSettings()
 
     override func setUp() {
         dateProvider.m_calendar.locale = Locale(identifier: "en_US")

@@ -1,5 +1,5 @@
 //
-//  MockEventSettings.swift
+//  MockPopoverSettings.swift
 //  Calendr
 //
 //  Created by Paker on 05/07/2021.
@@ -9,7 +9,7 @@
 
 import RxSwift
 
-struct MockEventSettings: EventSettings {
+struct MockPopoverSettings: PopoverSettings {
 
     let popoverMaterial: Observable<PopoverMaterial>
 

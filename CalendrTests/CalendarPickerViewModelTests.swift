@@ -14,12 +14,13 @@ class CalendarPickerViewModelTests: XCTestCase {
     let disposeBag = DisposeBag()
 
     let userDefaults = UserDefaults(suiteName: className())!
-
-    private let calendarService = MockCalendarServiceProvider()
+    let calendarService = MockCalendarServiceProvider()
+    let settings = MockPopoverSettings()
 
     lazy var viewModel = CalendarPickerViewModel(
         calendarService: calendarService,
-        userDefaults: userDefaults
+        userDefaults: userDefaults,
+        settings: settings
     )
 
     var enabledCalendars: [String]? {

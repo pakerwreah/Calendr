@@ -27,7 +27,7 @@ class EventViewModel {
     private let event: EventModel
     private let dateProvider: DateProviding
     private let calendarService: CalendarServiceProviding
-    private let settings: EventSettings
+    private let settings: PopoverSettings
 
     let workspace: WorkspaceServiceProviding
 
@@ -36,7 +36,7 @@ class EventViewModel {
         dateProvider: DateProviding,
         calendarService: CalendarServiceProviding,
         workspace: WorkspaceServiceProviding,
-        settings: EventSettings,
+        settings: PopoverSettings,
         scheduler: SchedulerType = WallTimeScheduler()
     ) {
 

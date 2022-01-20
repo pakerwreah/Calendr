@@ -21,11 +21,11 @@ protocol CalendarSettings {
     var showWeekNumbers: Observable<Bool> { get }
 }
 
-protocol EventSettings {
+protocol PopoverSettings {
     var popoverMaterial: Observable<PopoverMaterial> { get }
 }
 
-protocol EventListSettings: EventSettings {
+protocol EventListSettings: PopoverSettings {
     var showPastEvents: Observable<Bool> { get }
 }
 
