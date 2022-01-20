@@ -22,6 +22,7 @@ extension UITestCase {
         static var pinBtn: XCUIElement { view.checkBoxes[Accessibility.Main.pinBtn] }
         static var remindersBtn: XCUIElement { view.buttons[Accessibility.Main.remindersBtn] }
         static var calendarBtn: XCUIElement { view.buttons[Accessibility.Main.calendarBtn] }
+        static var pickerBtn: XCUIElement { view.buttons[Accessibility.Main.pickerBtn] }
         static var settingsBtn: XCUIElement { view.buttons[Accessibility.Main.settingsBtn] }
     }
 
@@ -49,6 +50,10 @@ extension UITestCase {
 
     enum EventDetails {
         static var view: XCUIElement { app.otherElements[Accessibility.EventDetails.view] }
+    }
+
+    enum CalendarPicker {
+        static var view: XCUIElement { app.otherElements[Accessibility.CalendarPicker.view] }
     }
 
     enum Settings {
@@ -88,7 +93,7 @@ extension XCUIElement {
     var text: String { value as! String }
     var isChecked: Bool { value as! Bool }
 
-    var outside: XCUICoordinate { coordinate(withNormalizedOffset: .zero).withOffset(.init(dx: -100, dy: 100)) }
+    var outside: XCUICoordinate { coordinate(withNormalizedOffset: .zero).withOffset(.init(dx: -500, dy: 500)) }
 
     func wait(timeout: TimeInterval = 1) -> Self {
         _ = waitForExistence(timeout: timeout)

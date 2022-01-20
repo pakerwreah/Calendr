@@ -8,7 +8,7 @@
 import Cocoa
 import RxSwift
 
-class CalendarPickerViewController: NSViewController {
+class CalendarPickerViewController: NSViewController, NSPopoverDelegate {
 
     private let disposeBag = DisposeBag()
 
@@ -16,9 +16,12 @@ class CalendarPickerViewController: NSViewController {
 
     private let contentStackView = NSStackView(.vertical)
 
-    init(viewModel: CalendarPickerViewModel) {
+    private let isPopover: Bool
+
+    init(viewModel: CalendarPickerViewModel, isPopover: Bool = false) {
 
         self.viewModel = viewModel
+        self.isPopover = isPopover
 
         super.init(nibName: nil, bundle: nil)
 
@@ -32,7 +35,11 @@ class CalendarPickerViewController: NSViewController {
         guard BuildConfig.isUITesting else { return }
 
         view.setAccessibilityElement(true)
-        view.setAccessibilityIdentifier(Accessibility.Settings.Calendars.view)
+        view.setAccessibilityIdentifier(
+            isPopover
+                ? Accessibility.CalendarPicker.view
+                : Accessibility.Settings.Calendars.view
+        )
     }
 
     override func loadView() {
@@ -41,7 +48,7 @@ class CalendarPickerViewController: NSViewController {
 
         view.addSubview(contentStackView)
 
-        contentStackView.edges(to: view)
+        contentStackView.edges(to: view, constant: isPopover ? 16 : 0)
         contentStackView.alignment = .left
     }
 
@@ -92,6 +99,30 @@ class CalendarPickerViewController: NSViewController {
             .disposed(by: disposeBag)
 
         return checkbox
+    }
+
+    func popoverDidShow(_ notification: Notification) {
+        // 🔨 Allow dismiss with the escape key
+        view.window?.makeKey()
+        view.window?.makeFirstResponder(self)
+    }
+
+    private var popover: NSPopover?
+
+    func popoverWillClose(_ notification: Notification) {
+        // 🔨 Prevent retain cycle
+        view.window?.makeFirstResponder(nil)
+    }
+
+    func popoverShouldClose(_ popover: NSPopover) -> Bool {
+        self.popover = popover
+        return true
+    }
+
+    func popoverDidClose(_ notification: Notification) {
+        // 🔨 Prevent retain cycle
+        popover?.contentViewController = nil
+        popover = nil
     }
 
     required init?(coder: NSCoder) {

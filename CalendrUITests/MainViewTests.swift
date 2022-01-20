@@ -29,7 +29,6 @@ class MainViewTests: UITestCase {
         MenuBar.main.click()
 
         XCTAssertTrue(Main.view.didAppear)
-        XCTAssertEqual(app.state, .runningForeground)
 
         Main.pinBtn.click()
         Main.view.outside.click()
@@ -67,7 +66,6 @@ class MainViewTests: UITestCase {
         MenuBar.main.click()
 
         XCTAssertTrue(Main.view.didAppear)
-        XCTAssertEqual(app.state, .runningForeground)
 
         Main.remindersBtn.click()
 
@@ -84,7 +82,6 @@ class MainViewTests: UITestCase {
         MenuBar.main.click()
 
         XCTAssertTrue(Main.view.didAppear)
-        XCTAssertEqual(app.state, .runningForeground)
 
         Main.calendarBtn.click()
 
@@ -92,6 +89,19 @@ class MainViewTests: UITestCase {
         XCTAssert(calendar.wait(for: .runningForeground, timeout: 1))
 
         calendar.terminate()
+    }
+
+    func testPickerButtonClicked_shouldOpenCalendarPicker() {
+
+        MenuBar.main.click()
+        Main.pickerBtn.click()
+
+        XCTAssertTrue(CalendarPicker.view.didAppear)
+
+        CalendarPicker.view.outside.click()
+
+        waitFadeAnimation()
+        XCTAssertFalse(CalendarPicker.view.exists)
     }
 
     func testSettingsButtonClicked_shouldOpenSettings() {
