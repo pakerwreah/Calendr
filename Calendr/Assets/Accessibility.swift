@@ -19,6 +19,7 @@ enum Accessibility {
         static let calendarBtn = "main_calendar_button"
         static let settingsBtn = "main_settings_button"
         static let pinBtn = "main_pin_button"
+        static let pickerBtn = "main_picker_button"
     }
 
     enum MenuBar {
@@ -39,6 +40,10 @@ enum Accessibility {
 
     enum EventDetails {
         static let view = "event_details_view"
+    }
+
+    enum CalendarPicker {
+        static let view = "calendar_picker_view"
     }
 
     enum Settings {

@@ -17,6 +17,7 @@ enum Icons {
         static let prev = NSImage(systemName: "chevron.backward")
         static let reset = NSImage(systemName: "arrow.clockwise")
         static let next = NSImage(systemName: "chevron.forward")
+        static let picker = NSImage(systemName: "checkmark.square")
         static let reminders = NSImage(systemName: "list.bullet")
         static let calendar = NSImage(systemName: "calendar")
         static let settings = NSImage(systemName: "ellipsis.circle")
