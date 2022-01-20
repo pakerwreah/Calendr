@@ -12,6 +12,7 @@ class DateIntervalFormatter: Foundation.DateIntervalFormatter {
     override var calendar: Calendar! {
         didSet {
             locale = calendar.locale
+            timeZone = calendar.timeZone
         }
     }
 

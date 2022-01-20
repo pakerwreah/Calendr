@@ -21,6 +21,7 @@
 		341B2B3E25D06A6F00336342 /* Dropdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341B2B3D25D06A6F00336342 /* Dropdown.swift */; };
 		341B2B4225D0B19500336342 /* StatusItemViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341B2B4125D0B19500336342 /* StatusItemViewModelTests.swift */; };
 		341B2B4825D0C9A600336342 /* NSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341B2B4725D0C9A600336342 /* NSView.swift */; };
+		3421930827999FB7002BCD36 /* TimeZone+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3421930727999FB7002BCD36 /* TimeZone+Factory.swift */; };
 		3421AD3D25BA1D0800A4F468 /* SettingsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3421AD3C25BA1D0800A4F468 /* SettingsViewModelTests.swift */; };
 		3421DA0E2693E35000056837 /* EventListViewPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3421DA0D2693E35000056837 /* EventListViewPreview.swift */; };
 		3421DA122693E70E00056837 /* MockEventSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3421DA112693E70E00056837 /* MockEventSettings.swift */; };
@@ -151,6 +152,7 @@
 		341B2B3D25D06A6F00336342 /* Dropdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dropdown.swift; sourceTree = "<group>"; };
 		341B2B4125D0B19500336342 /* StatusItemViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemViewModelTests.swift; sourceTree = "<group>"; };
 		341B2B4725D0C9A600336342 /* NSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSView.swift; sourceTree = "<group>"; };
+		3421930727999FB7002BCD36 /* TimeZone+Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TimeZone+Factory.swift"; sourceTree = "<group>"; };
 		3421AD3C25BA1D0800A4F468 /* SettingsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModelTests.swift; sourceTree = "<group>"; };
 		3421DA0D2693E35000056837 /* EventListViewPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventListViewPreview.swift; sourceTree = "<group>"; };
 		3421DA112693E70E00056837 /* MockEventSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockEventSettings.swift; sourceTree = "<group>"; };
@@ -332,6 +334,7 @@
 				3421DA1B2693F12400056837 /* CalendarModel+Factory.swift */,
 				3421DA1A2693F12400056837 /* Date+Factory.swift */,
 				3421DA1C2693F12400056837 /* EventModel+Factory.swift */,
+				3421930727999FB7002BCD36 /* TimeZone+Factory.swift */,
 			);
 			path = Factories;
 			sourceTree = "<group>";
@@ -795,6 +798,7 @@
 				3421DA122693E70E00056837 /* MockEventSettings.swift in Sources */,
 				3477F3E825FD52AA008EA888 /* NSViewController+Rx.swift in Sources */,
 				34B5A09325B0CE6F00F7F7ED /* SettingsViewController.swift in Sources */,
+				3421930827999FB7002BCD36 /* TimeZone+Factory.swift in Sources */,
 				345DD97326920D1B00294D90 /* CalendarViewPreview.swift in Sources */,
 				3492C460269FCF5B009CFAD2 /* Accessibility.swift in Sources */,
 				348E704B25C61B8D00B3B160 /* Radio.swift in Sources */,

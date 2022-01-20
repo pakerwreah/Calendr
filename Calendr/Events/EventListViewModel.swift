@@ -33,10 +33,7 @@ class EventListViewModel {
         dateComponentsFormatter.unitsStyle = .abbreviated
         dateComponentsFormatter.allowedUnits = [.hour, .minute]
 
-        let dateFormatter = DateFormatter(
-            locale: dateProvider.calendar.locale
-        )
-        .with(style: .short)
+        let dateFormatter = DateFormatter(calendar: dateProvider.calendar).with(style: .short)
 
         func makeEventViewModel(_ event: EventModel) -> EventViewModel {
             EventViewModel(

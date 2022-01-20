@@ -18,13 +18,10 @@ extension Date {
         hour: Int = 0,
         minute: Int = 0,
         second: Int = 0,
-        timezone: TimeZone? = nil
+        timeZone: TimeZone = .utc
     ) -> Date {
 
-        var calendar = Calendar.gregorian
-        timezone.map { calendar.timeZone = $0 }
-
-        return calendar.date(
+        Calendar.gregorian.with(timeZone: timeZone).date(
             from: .init(
                 year: year,
                 month: month,

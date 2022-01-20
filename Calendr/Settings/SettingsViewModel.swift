@@ -167,7 +167,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
             .void()
             .startWith(())
             .map {
-                let dateFormatter = DateFormatter(locale: dateProvider.calendar.locale)
+                let dateFormatter = DateFormatter(calendar: dateProvider.calendar)
                 var options: [String] = []
 
                 for i: UInt in 1...4 {
