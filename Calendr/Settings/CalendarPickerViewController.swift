@@ -54,6 +54,16 @@ class CalendarPickerViewController: NSViewController, NSPopoverDelegate {
 
     private func setUpBindings() {
 
+        let popoverView = view.rx.observe(\.superview)
+            .compactMap { $0 as? NSVisualEffectView }
+            .take(1)
+
+        Observable.combineLatest(
+            popoverView, viewModel.popoverMaterial
+        )
+        .bind { $0.material = $1 }
+        .disposed(by: disposeBag)
+
         viewModel.calendars
             .observe(on: MainScheduler.instance)
             .compactMap { [weak self] calendars -> [NSView]? in

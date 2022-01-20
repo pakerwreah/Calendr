@@ -17,11 +17,9 @@ class CalendarViewModelTests: XCTestCase {
     let hoverSubject = PublishSubject<Date?>()
     let calendarsSubject = PublishSubject<[String]>()
 
-    private let calendarService = MockCalendarServiceProvider()
-    private let settings = MockCalendarSettings()
-
+    let calendarService = MockCalendarServiceProvider()
+    let settings = MockCalendarSettings()
     let dateProvider = MockDateProvider()
-
     let notificationCenter = NotificationCenter()
 
     lazy var viewModel = CalendarViewModel(

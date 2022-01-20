@@ -24,7 +24,7 @@
 		3421930827999FB7002BCD36 /* TimeZone+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3421930727999FB7002BCD36 /* TimeZone+Factory.swift */; };
 		3421AD3D25BA1D0800A4F468 /* SettingsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3421AD3C25BA1D0800A4F468 /* SettingsViewModelTests.swift */; };
 		3421DA0E2693E35000056837 /* EventListViewPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3421DA0D2693E35000056837 /* EventListViewPreview.swift */; };
-		3421DA122693E70E00056837 /* MockEventSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3421DA112693E70E00056837 /* MockEventSettings.swift */; };
+		3421DA122693E70E00056837 /* MockPopoverSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3421DA112693E70E00056837 /* MockPopoverSettings.swift */; };
 		3421DA142693E75A00056837 /* MockCalendarServiceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3421DA132693E75A00056837 /* MockCalendarServiceProvider.swift */; };
 		3421DA162693EDEB00056837 /* MockCalendarSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3421DA152693EDEB00056837 /* MockCalendarSettings.swift */; };
 		3421DA182693EEBD00056837 /* MockDateProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3421DA172693EEBD00056837 /* MockDateProvider.swift */; };
@@ -103,7 +103,7 @@
 		34C459BC25DF114300561C29 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C459BB25DF114300561C29 /* AboutViewController.swift */; };
 		34C72F7E25E844E500FD20FA /* NextEventViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C72F7D25E844E500FD20FA /* NextEventViewModelTests.swift */; };
 		34C72F8425E88B6600FD20FA /* MockStatusItemSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C72F8325E88B6600FD20FA /* MockStatusItemSettings.swift */; };
-		34C72F8825E88C0300FD20FA /* MockEventSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C72F8725E88C0300FD20FA /* MockEventSettings.swift */; };
+		34C72F8825E88C0300FD20FA /* MockPopoverSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C72F8725E88C0300FD20FA /* MockPopoverSettings.swift */; };
 		34C72F8C25E88DA100FD20FA /* MockCalendarSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C72F8B25E88DA100FD20FA /* MockCalendarSettings.swift */; };
 		34C72F9625E8A05700FD20FA /* MockNextEventSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C72F9525E8A05700FD20FA /* MockNextEventSettings.swift */; };
 		34C72F9C25E9847300FD20FA /* EventListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C72F9B25E9847300FD20FA /* EventListViewModel.swift */; };
@@ -155,7 +155,7 @@
 		3421930727999FB7002BCD36 /* TimeZone+Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TimeZone+Factory.swift"; sourceTree = "<group>"; };
 		3421AD3C25BA1D0800A4F468 /* SettingsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModelTests.swift; sourceTree = "<group>"; };
 		3421DA0D2693E35000056837 /* EventListViewPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventListViewPreview.swift; sourceTree = "<group>"; };
-		3421DA112693E70E00056837 /* MockEventSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockEventSettings.swift; sourceTree = "<group>"; };
+		3421DA112693E70E00056837 /* MockPopoverSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPopoverSettings.swift; sourceTree = "<group>"; };
 		3421DA132693E75A00056837 /* MockCalendarServiceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCalendarServiceProvider.swift; sourceTree = "<group>"; };
 		3421DA152693EDEB00056837 /* MockCalendarSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCalendarSettings.swift; sourceTree = "<group>"; };
 		3421DA172693EEBD00056837 /* MockDateProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDateProvider.swift; sourceTree = "<group>"; };
@@ -247,7 +247,7 @@
 		34C459BB25DF114300561C29 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		34C72F7D25E844E500FD20FA /* NextEventViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextEventViewModelTests.swift; sourceTree = "<group>"; };
 		34C72F8325E88B6600FD20FA /* MockStatusItemSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockStatusItemSettings.swift; sourceTree = "<group>"; };
-		34C72F8725E88C0300FD20FA /* MockEventSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockEventSettings.swift; sourceTree = "<group>"; };
+		34C72F8725E88C0300FD20FA /* MockPopoverSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPopoverSettings.swift; sourceTree = "<group>"; };
 		34C72F8B25E88DA100FD20FA /* MockCalendarSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCalendarSettings.swift; sourceTree = "<group>"; };
 		34C72F9525E8A05700FD20FA /* MockNextEventSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNextEventSettings.swift; sourceTree = "<group>"; };
 		34C72F9B25E9847300FD20FA /* EventListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventListViewModel.swift; sourceTree = "<group>"; };
@@ -322,7 +322,7 @@
 				3421DA152693EDEB00056837 /* MockCalendarSettings.swift */,
 				3421DA172693EEBD00056837 /* MockDateProvider.swift */,
 				34F201322693F562006CE2FF /* MockEventListSettings.swift */,
-				3421DA112693E70E00056837 /* MockEventSettings.swift */,
+				3421DA112693E70E00056837 /* MockPopoverSettings.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -543,8 +543,8 @@
 				34C72F8B25E88DA100FD20FA /* MockCalendarSettings.swift */,
 				348E703B25C617F100B3B160 /* MockDateProvider.swift */,
 				3477F3D925FD44C1008EA888 /* MockEventListSettings.swift */,
-				34C72F8725E88C0300FD20FA /* MockEventSettings.swift */,
 				34C72F9525E8A05700FD20FA /* MockNextEventSettings.swift */,
+				34C72F8725E88C0300FD20FA /* MockPopoverSettings.swift */,
 				34C72F8325E88B6600FD20FA /* MockStatusItemSettings.swift */,
 				34651F7925E325EA00518C5A /* MockWorkspaceServiceProvider.swift */,
 			);
@@ -795,7 +795,7 @@
 				341B2B3E25D06A6F00336342 /* Dropdown.swift in Sources */,
 				347D0F9825952F89002451EC /* AppDelegate.swift in Sources */,
 				3449403225C348C70020E664 /* CalendarPickerViewController.swift in Sources */,
-				3421DA122693E70E00056837 /* MockEventSettings.swift in Sources */,
+				3421DA122693E70E00056837 /* MockPopoverSettings.swift in Sources */,
 				3477F3E825FD52AA008EA888 /* NSViewController+Rx.swift in Sources */,
 				34B5A09325B0CE6F00F7F7ED /* SettingsViewController.swift in Sources */,
 				3421930827999FB7002BCD36 /* TimeZone+Factory.swift in Sources */,
@@ -883,7 +883,7 @@
 				349E4CEF25CF48ED00A6FC18 /* VirtualTimeScheduler.swift in Sources */,
 				34924CE4259FCB36009C3450 /* DateSelectorTests.swift in Sources */,
 				34C72F8C25E88DA100FD20FA /* MockCalendarSettings.swift in Sources */,
-				34C72F8825E88C0300FD20FA /* MockEventSettings.swift in Sources */,
+				34C72F8825E88C0300FD20FA /* MockPopoverSettings.swift in Sources */,
 				34C2CF9125C2070400FC2CFF /* EventViewModelTests.swift in Sources */,
 				3477F3DA25FD44C1008EA888 /* MockEventListSettings.swift in Sources */,
 				34C72F7E25E844E500FD20FA /* NextEventViewModelTests.swift in Sources */,
