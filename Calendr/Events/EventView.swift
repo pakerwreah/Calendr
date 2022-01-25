@@ -7,7 +7,7 @@
 
 import Cocoa
 import RxSwift
-import RxGesture
+import RxCocoa
 import CoreImage.CIFilterBuiltins
 
 class EventView: NSView {
@@ -190,12 +190,10 @@ class EventView: NSView {
             .bind(to: layer!.rx.backgroundColor)
             .disposed(by: disposeBag)
 
-        rx.leftClickGesture { gesture, _ in
-            // NSClickGestureRecognizer overrides other events by default when buttonMask is 0x1 🤦🏻‍♂️
-            gesture.delaysPrimaryMouseButtonEvents = false
+        rx.click {
+            // do not delay other click events
+            $0.delaysPrimaryMouseButtonEvents = false
         }
-        .when(.recognized)
-        .void()
         .map(viewModel.makeDetails)
         .withUnretained(self)
         .flatMapFirst { view, viewModel -> Observable<Void> in

@@ -7,7 +7,6 @@
 
 import Cocoa
 import RxSwift
-import RxGesture
 
 class MainViewController: NSViewController {
 
@@ -348,9 +347,7 @@ class MainViewController: NSViewController {
         menu.addItem(withTitle: Strings.quit, action: #selector(NSApp.terminate), keyEquivalent: "q")
         mainStatusItem.menu = menu
 
-        statusBarButton.rx.leftClickGesture()
-            .when(.recognized)
-            .void()
+        statusBarButton.rx.click
             .filter { [popover] in
                 !popover.isShown
             }

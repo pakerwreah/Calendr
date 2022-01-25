@@ -123,8 +123,7 @@ class CalendarCellView: NSView {
             .bind(to: eventsStackView.rx.arrangedSubviews)
             .disposed(by: disposeBag)
 
-        rx.leftClickGesture()
-            .when(.recognized)
+        rx.click
             .withLatestFrom(viewModel.map(\.date))
             .bind(to: clickObserver)
             .disposed(by: disposeBag)

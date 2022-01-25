@@ -17,7 +17,6 @@
 		3418208026755CC80075B3DC /* RxTest in Frameworks */ = {isa = PBXBuildFile; productRef = 3418207F26755CC80075B3DC /* RxTest */; };
 		3418208226755CC80075B3DC /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = 3418208126755CC80075B3DC /* RxRelay */; };
 		3418208426755CC80075B3DC /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 3418208326755CC80075B3DC /* RxCocoa */; };
-		3418208726755D7F0075B3DC /* RxGesture in Frameworks */ = {isa = PBXBuildFile; productRef = 3418208626755D7F0075B3DC /* RxGesture */; };
 		341B2B3E25D06A6F00336342 /* Dropdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341B2B3D25D06A6F00336342 /* Dropdown.swift */; };
 		341B2B4225D0B19500336342 /* StatusItemViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341B2B4125D0B19500336342 /* StatusItemViewModelTests.swift */; };
 		341B2B4825D0C9A600336342 /* NSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341B2B4725D0C9A600336342 /* NSView.swift */; };
@@ -94,6 +93,7 @@
 		34AC60C626925FA5005312B6 /* PreviewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34AC60C526925FA5005312B6 /* PreviewExtensions.swift */; };
 		34B1C7C525EDA01F00E5CA80 /* EventIntervalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B1C7C425EDA01F00E5CA80 /* EventIntervalView.swift */; };
 		34B23E9C25C0C94000DADCD6 /* NSButton+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B23E9B25C0C94000DADCD6 /* NSButton+Rx.swift */; };
+		34B2C59E279FFF0600B52BF3 /* NSClickGestureRecognizer+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B2C59D279FFF0600B52BF3 /* NSClickGestureRecognizer+Rx.swift */; };
 		34B5A09325B0CE6F00F7F7ED /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B5A09225B0CE6F00F7F7ED /* SettingsViewController.swift */; };
 		34B5A09725B0F8A500F7F7ED /* NSButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B5A09625B0F8A500F7F7ED /* NSButton.swift */; };
 		34B5A09D25B118EC00F7F7ED /* CalendarPickerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B5A09C25B118EC00F7F7ED /* CalendarPickerViewModel.swift */; };
@@ -237,6 +237,7 @@
 		34AC60C526925FA5005312B6 /* PreviewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewExtensions.swift; sourceTree = "<group>"; };
 		34B1C7C425EDA01F00E5CA80 /* EventIntervalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventIntervalView.swift; sourceTree = "<group>"; };
 		34B23E9B25C0C94000DADCD6 /* NSButton+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSButton+Rx.swift"; sourceTree = "<group>"; };
+		34B2C59D279FFF0600B52BF3 /* NSClickGestureRecognizer+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSClickGestureRecognizer+Rx.swift"; sourceTree = "<group>"; };
 		34B5A09225B0CE6F00F7F7ED /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		34B5A09625B0F8A500F7F7ED /* NSButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSButton.swift; sourceTree = "<group>"; };
 		34B5A09C25B118EC00F7F7ED /* CalendarPickerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPickerViewModel.swift; sourceTree = "<group>"; };
@@ -283,7 +284,6 @@
 			files = (
 				3418208426755CC80075B3DC /* RxCocoa in Frameworks */,
 				3418208226755CC80075B3DC /* RxRelay in Frameworks */,
-				3418208726755D7F0075B3DC /* RxGesture in Frameworks */,
 				3418207E26755CC80075B3DC /* RxSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -500,6 +500,7 @@
 				34E60D6026A0D6D6004DA082 /* NSAccessibilityProtocol+Rx.swift */,
 				34B5A09625B0F8A500F7F7ED /* NSButton.swift */,
 				34B23E9B25C0C94000DADCD6 /* NSButton+Rx.swift */,
+				34B2C59D279FFF0600B52BF3 /* NSClickGestureRecognizer+Rx.swift */,
 				34D19FBF262299D300B2732C /* NSEdgeInsets.swift */,
 				34091736267E81870023B76D /* NSImage.swift */,
 				34A4C3E825963FB200D0F949 /* NSStackView.swift */,
@@ -641,7 +642,6 @@
 				3418207D26755CC80075B3DC /* RxSwift */,
 				3418208126755CC80075B3DC /* RxRelay */,
 				3418208326755CC80075B3DC /* RxCocoa */,
-				3418208626755D7F0075B3DC /* RxGesture */,
 			);
 			productName = Calendr;
 			productReference = 347D0F9425952F89002451EC /* Calendr.app */;
@@ -705,7 +705,6 @@
 			mainGroup = 347D0F8B25952F89002451EC;
 			packageReferences = (
 				3418207C26755CC80075B3DC /* XCRemoteSwiftPackageReference "RxSwift" */,
-				3418208526755D7F0075B3DC /* XCRemoteSwiftPackageReference "RxGesture" */,
 			);
 			productRefGroup = 347D0F9525952F89002451EC /* Products */;
 			projectDirPath = "";
@@ -846,6 +845,7 @@
 				34B5A09725B0F8A500F7F7ED /* NSButton.swift in Sources */,
 				34CC382D25B636A6006CBD99 /* Checkbox.swift in Sources */,
 				3430ED03259634E00045DA53 /* NSStackView+Rx.swift in Sources */,
+				34B2C59E279FFF0600B52BF3 /* NSClickGestureRecognizer+Rx.swift in Sources */,
 				34E004A725B61D5200241419 /* StatusItemViewModel.swift in Sources */,
 				34D19FC0262299D300B2732C /* NSEdgeInsets.swift in Sources */,
 				34702168259E761100827AE7 /* Calendar.swift in Sources */,
@@ -1218,14 +1218,6 @@
 				minimumVersion = 6.2.0;
 			};
 		};
-		3418208526755D7F0075B3DC /* XCRemoteSwiftPackageReference "RxGesture" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/RxSwiftCommunity/RxGesture";
-			requirement = {
-				kind = exactVersion;
-				version = 4.0.2;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1248,11 +1240,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3418207C26755CC80075B3DC /* XCRemoteSwiftPackageReference "RxSwift" */;
 			productName = RxCocoa;
-		};
-		3418208626755D7F0075B3DC /* RxGesture */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 3418208526755D7F0075B3DC /* XCRemoteSwiftPackageReference "RxGesture" */;
-			productName = RxGesture;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
