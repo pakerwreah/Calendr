@@ -26,32 +26,27 @@ class DateSelectorTests: XCTestCase {
     var values = [String]()
 
     override func setUp() {
-        // ⚠️ Reentrancy anomaly was detected. ¯\_(ツ)_/¯
-        // Normally we only need to .observeOn(MainScheduler.asyncInstance)
-        // but since we're testing, we need to sync the flow to get the output
-        // It still works without this "fix", but I don't feel comfortable with the warning
+        // 🔨 Prevent reentrancy anomaly warning
+        let scheduler = HistoricalScheduler()
 
-        let dispatchGroup = DispatchGroup()
-        let wait = { (_: Any) in dispatchGroup.wait() }
+        let advance = { (_: Any) in scheduler.advance(.seconds(1)) }
 
         let selector = DateSelector(
             calendar: .gregorian,
-            initial: initial.do(onNext: wait),
+            initial: initial.do(onNext: advance),
             selected: selected,
-            reset: reset.do(onNext: wait),
-            prevDay: prevDay.do(onNext: wait),
-            nextDay: nextDay.do(onNext: wait),
-            prevWeek: prevWeek.do(onNext: wait),
-            nextWeek: nextWeek.do(onNext: wait),
-            prevMonth: prevMonth.do(onNext: wait),
-            nextMonth: nextMonth.do(onNext: wait)
+            reset: reset.do(onNext: advance),
+            prevDay: prevDay.do(onNext: advance),
+            nextDay: nextDay.do(onNext: advance),
+            prevWeek: prevWeek.do(onNext: advance),
+            nextWeek: nextWeek.do(onNext: advance),
+            prevMonth: prevMonth.do(onNext: advance),
+            nextMonth: nextMonth.do(onNext: advance)
         )
 
         selector
             .asObservable()
-            .do(onNext: { _ in dispatchGroup.enter() })
-            .delay(.milliseconds(1), scheduler: SerialDispatchQueueScheduler(qos: .default))
-            .do(afterNext: { _ in dispatchGroup.leave() })
+            .observe(on: scheduler)
             .bind(to: selected)
             .disposed(by: disposeBag)
 
