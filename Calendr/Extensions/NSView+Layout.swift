@@ -222,11 +222,6 @@ extension NSView {
 
 extension NSLayoutConstraint {
 
-    func with(priority: NSLayoutConstraint.Priority) -> Self {
-        self.priority = priority
-        return self
-    }
-
     @discardableResult
     func activate() -> Self {
         isActive = true

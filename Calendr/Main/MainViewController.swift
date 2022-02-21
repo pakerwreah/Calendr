@@ -179,12 +179,13 @@ class MainViewController: NSViewController {
 
         let header = makeHeader()
         let toolBar = makeToolBar()
+        let eventList = makeEventList()
 
         let mainView = NSStackView(views: [
             header,
             calendarView,
             toolBar,
-            eventListView
+            eventList
         ])
         .with(orientation: .vertical)
         .with(spacing: 4)
@@ -198,6 +199,9 @@ class MainViewController: NSViewController {
         mainView.top(equalTo: view, constant: margin)
         mainView.leading(equalTo: view, constant: margin)
         mainView.trailing(equalTo: view, constant: margin)
+        mainView
+            .heightAnchor.constraint(lessThanOrEqualToConstant: 0.9 * NSScreen.main!.visibleFrame.height)
+            .activate()
 
         mainView.rx.observe(\.frame)
             .distinctUntilChanged()
@@ -426,6 +430,28 @@ class MainViewController: NSViewController {
     }
 
     // MARK: - Factories
+
+    private func makeEventList() -> NSView {
+
+        let scrollView = NSScrollView()
+
+        scrollView.drawsBackground = false
+        scrollView.documentView = eventListView
+
+        scrollView.contentView.edges(to: scrollView)
+        scrollView.contentView.edges(to: eventListView).bottom.priority = .dragThatCanResizeWindow
+
+        calendarViewModel.asObservable()
+            .compactMap { $0.first(where: \.isSelected)?.date }
+            .distinctUntilChanged()
+            .observe(on: MainScheduler.instance)
+            .bind { [view = eventListView] _ in
+                view.scroll(.init(x: 0, y: view.bounds.height))
+            }
+            .disposed(by: disposeBag)
+
+        return scrollView
+    }
 
     private func styleButton(_ button: NSButton) {
         button.size(equalTo: 22)
