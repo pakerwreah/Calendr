@@ -1,0 +1,40 @@
+/*
+  Localizable.strings
+  Calendr
+
+  Created by Clemens on 21/02/2022.
+
+*/
+
+"quit" = "Programm beenden";
+
+"settings.tab.general" = "Allgemein";
+"settings.tab.calendars" = "Kalender";
+"settings.tab.about" = "Über";
+
+"settings.menu_bar" = "Menüleiste";
+"settings.menu_bar.show_icon" = "Zeige Icon";
+"settings.menu_bar.show_date" = "Zeige Datum";
+"settings.menu_bar.date_format" = "Datumsformat";
+"settings.menu_bar.date_format.info" = "In Systemeinstellungen konfigurieren";
+"settings.menu_bar.show_next_event" = "Zeige nächsten Termin";
+
+"settings.calendar" = "Kalender";
+"settings.calendar.show_week_numbers" = "Zeige Kalenderwochen";
+
+"settings.events" = "Termine";
+"settings.events.finished" = "Erledigt";
+"settings.events.finished.fade" = "Verblassen";
+"settings.events.finished.hide" = "Verstecken";
+
+"settings.transparency" = "Transparent";
+
+"formatter.date.all_day" = "Ganztägige Ereignisse";
+"formatter.date.today" = "Heute";
+"formatter.date.relative.in" = "in %@";
+"formatter.date.relative.ago" = "vor %@";
+"formatter.date.relative.left" = "%@ verbleibend";
+
+"reminder.options.button" = "Optionen";
+"reminder.options.complete" = "Erledigt";
+"reminder.options.remind" = "Erinnerung %@";
