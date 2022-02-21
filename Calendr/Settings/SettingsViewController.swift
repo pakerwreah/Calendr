@@ -52,7 +52,7 @@ class SettingsViewController: NSTabViewController {
 
         view.removeFromSuperview()
 
-        view = NSView()
+        view = NSView().forAutoLayout()
 
         view.addSubview(contentView)
 
