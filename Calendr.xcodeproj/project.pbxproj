@@ -262,6 +262,7 @@
 		34E1902225B76CFE00E9491B /* CalendarPickerViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPickerViewModelTests.swift; sourceTree = "<group>"; };
 		34E60D6026A0D6D6004DA082 /* NSAccessibilityProtocol+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAccessibilityProtocol+Rx.swift"; sourceTree = "<group>"; };
 		34E60D6226A0EA32004DA082 /* NSAccessibilityProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSAccessibilityProtocol.swift; sourceTree = "<group>"; };
+		34E66E2627C41B5C00A7A77A /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34F128D025968044007DF31C /* Label.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Label.swift; sourceTree = "<group>"; };
 		34F128E02597B9C9007DF31C /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		34F128F12597C340007DF31C /* WeekDayCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekDayCellView.swift; sourceTree = "<group>"; };
@@ -701,6 +702,7 @@
 				fr,
 				Base,
 				es,
+				de,
 			);
 			mainGroup = 347D0F8B25952F89002451EC;
 			packageReferences = (
@@ -921,6 +923,7 @@
 				34651F2E25E1C99900518C5A /* pt */,
 				34651F4E25E1EAFB00518C5A /* fr */,
 				34651F8925E4099700518C5A /* es */,
+				34E66E2627C41B5C00A7A77A /* de */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
