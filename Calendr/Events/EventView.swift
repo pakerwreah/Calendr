@@ -220,6 +220,13 @@ class EventView: NSView {
     override func updateTrackingAreas() {
         trackingAreas.forEach(removeTrackingArea(_:))
         addTrackingRect(bounds, owner: self, userData: nil, assumeInside: false)
+
+        // 🔨 Fix unhover not detected when scrolling
+        guard let mouseLocation = window?.mouseLocationOutsideOfEventStream,
+              isMousePoint(convert(mouseLocation, from: nil), in: bounds)
+        else {
+            return hoverLayer.isHidden = true
+        }
     }
 
     private static let pendingBackground: CGColor = {
