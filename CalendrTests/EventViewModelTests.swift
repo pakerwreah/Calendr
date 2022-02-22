@@ -29,6 +29,42 @@ class EventViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.isPending, true)
     }
 
+    func testSubtitle_withExtraSpacesInLocation_withURLInLocation_shouldShowTrimmedLocation() {
+
+        let viewModel = mock(
+            event: .make(location: " \n Location https://someurl.com ")
+        )
+
+        XCTAssertEqual(viewModel.subtitle, "Location someurl.com")
+    }
+
+    func testSubtitle_withExtraSpacesInLocation_withURLInLocation_shouldShowURL() {
+
+        let viewModel = mock(
+            event: .make(location: " \n https://someurl.com ")
+        )
+
+        XCTAssertEqual(viewModel.subtitle, "someurl.com")
+    }
+
+    func testSubtitle_withEmptyLocation_withURL_shouldShowURL() {
+
+        let viewModel = mock(
+            event: .make(location: " ", url: URL(string: "https://someurl.com")!)
+        )
+
+        XCTAssertEqual(viewModel.subtitle, "someurl.com")
+    }
+
+    func testSubtitle_withEmptyLocation_withURLInNotes_shouldShowURL() {
+
+        let viewModel = mock(
+            event: .make(location: " ", notes: " \nSome \nnotes https://someurl.com ")
+        )
+
+        XCTAssertEqual(viewModel.subtitle, "someurl.com")
+    }
+
     func testSubtitle_withLocation_withoutURL_shouldShowLocation() {
 
         let viewModel = mock(
@@ -65,7 +101,7 @@ class EventViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.subtitle, "Some address")
     }
 
-    func testSubtitle_withoutLocation_withoutURL_withUrlInNotes_shouldShowURL() {
+    func testSubtitle_withoutLocation_withoutURL_withURLInNotes_shouldShowURL() {
 
         let viewModel = mock(
             event: .make(notes: "Some notes https://someurl.com")

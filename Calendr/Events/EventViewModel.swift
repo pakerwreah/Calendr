@@ -66,8 +66,10 @@ class EventViewModel {
 
         let url = linkURL?.absoluteString
 
-        subtitle = (event.location ?? url ?? event.notes)?
-            .replacingOccurrences(of: "https://", with: "")
+        subtitle = [event.location, url, event.notes]
+            .lazy
+            .compactMap { $0?.replacingOccurrences(of: "https://", with: "").trimmed }
+            .first(where: \.isEmpty.isFalse)?
             .prefix(while: \.isNewline.isFalse)
             .trimmed ?? ""
 
