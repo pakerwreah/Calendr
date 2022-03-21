@@ -81,6 +81,27 @@ class NextEventViewModelTests: XCTestCase {
         XCTAssertEqual(hasEvent, false)
     }
 
+    func testNextEventLength() {
+
+        var title: String?
+
+        viewModel.title
+            .bind { title = $0 }
+            .disposed(by: disposeBag)
+
+        eventsSubject.onNext([
+            .make(title: "This is an event with a text")
+        ])
+
+        settings.eventStatusItemLengthObserver.onNext(30)
+
+        XCTAssertEqual(title, "This is an event with a text")
+
+        settings.eventStatusItemLengthObserver.onNext(10)
+
+        XCTAssertEqual(title, "This is an...")
+    }
+
     func testNextEvent_barColor() {
 
         var color: NSColor?

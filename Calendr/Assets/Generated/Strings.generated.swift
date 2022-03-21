@@ -75,6 +75,8 @@ internal enum Strings {
     internal enum MenuBar {
       /// Date format
       internal static var dateFormat: String { return Strings.tr("Localizable", "settings.menu_bar.date_format") }
+      /// Width
+      internal static var nextEventLength: String { return Strings.tr("Localizable", "settings.menu_bar.next_event_length") }
       /// Show date
       internal static var showDate: String { return Strings.tr("Localizable", "settings.menu_bar.show_date") }
       /// Show icon

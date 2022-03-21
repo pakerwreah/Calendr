@@ -13,7 +13,11 @@ class MockNextEventSettings: NextEventSettings {
     var toggleStatusItem: AnyObserver<Bool>
     var showEventStatusItem: Observable<Bool>
 
+    var eventStatusItemLengthObserver: AnyObserver<Int>
+    var eventStatusItemLength: Observable<Int>
+
     init() {
         (showEventStatusItem, toggleStatusItem) = BehaviorSubject.pipe(value: true)
+        (eventStatusItemLength, eventStatusItemLengthObserver) = BehaviorSubject.pipe(value: 18)
     }
 }
