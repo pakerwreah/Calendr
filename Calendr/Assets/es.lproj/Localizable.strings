@@ -18,6 +18,7 @@
 "settings.menu_bar.date_format" = "Formato de fecha";
 "settings.menu_bar.date_format.info" = "Configurable en Preferencias del Sistema";
 "settings.menu_bar.show_next_event" = "Mostrar próximo evento";
+"settings.menu_bar.next_event_length" = "Ancho";
 
 "settings.calendar" = "Calendario";
 "settings.calendar.show_week_numbers" = "Mostrar número de semana";

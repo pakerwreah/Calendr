@@ -81,7 +81,6 @@ class NextEventView: NSView {
             .disposed(by: disposeBag)
 
         viewModel.title
-            .map { $0.count > Constants.maxLength ? "\($0.prefix(Constants.maxLength).trimmed)..." : $0 }
             .bind(to: nextEventTitle.rx.stringValue)
             .disposed(by: disposeBag)
 
@@ -103,5 +102,4 @@ class NextEventView: NSView {
 private enum Constants {
 
     static let height: CGFloat = 20
-    static let maxLength: Int = 30
 }

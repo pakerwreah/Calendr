@@ -64,10 +64,14 @@ class NextEventViewModel {
             .map { $0.isInProgress ? $0.event.calendar.color.withAlphaComponent(0.2): .clear }
             .distinctUntilChanged()
         
-        title = nextEventObservable
-            .skipNil()
-            .map(\.event.title)
-            .distinctUntilChanged()
+        title = Observable.combineLatest(
+            nextEventObservable
+                .skipNil()
+                .map(\.event.title),
+            settings.eventStatusItemLength
+        )
+        .map { $0.count > $1 ? "\($0.prefix($1).trimmed)..." : $0 }
+        .distinctUntilChanged()
 
         let dateFormatter = DateComponentsFormatter()
         dateFormatter.calendar = dateProvider.calendar

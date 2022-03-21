@@ -22,6 +22,24 @@ class GeneralSettingsViewController: NSViewController {
     private let hidePastEventsRadio = Radio(title: Strings.Settings.Events.Finished.hide)
     private let dateFormatDropdown = Dropdown()
 
+    private let nextEventLengthSlider: NSSlider = {
+        let slider = NSSlider(value: 20, minValue: 10, maxValue: 30, target: nil, action: nil)
+        slider.allowsTickMarkValuesOnly = true
+        slider.numberOfTickMarks = 6
+        slider.controlSize = .small
+        slider.refusesFirstResponder = true
+        return slider
+    }()
+
+    private let transparencySlider: NSSlider = {
+        let slider = NSSlider(value: 0, minValue: 0, maxValue: 5, target: nil, action: nil)
+        slider.allowsTickMarkValuesOnly = true
+        slider.numberOfTickMarks = 6
+        slider.controlSize = .small
+        slider.refusesFirstResponder = true
+        return slider
+    }()
+
     init(viewModel: SettingsViewModel) {
 
         self.viewModel = viewModel
@@ -61,11 +79,17 @@ class GeneralSettingsViewController: NSViewController {
 
     private lazy var menuBarContent: NSView = {
 
+        let nextEventLengthView = NSStackView(views: [
+            Label(text: "\(Strings.Settings.MenuBar.nextEventLength):"),
+            nextEventLengthSlider
+        ])
+
         let checkboxes = NSStackView(views: [
             NSStackView(views: [
                 showMenuBarIconCheckbox, showMenuBarDateCheckbox
             ]),
-            showNextEventCheckbox
+            showNextEventCheckbox,
+            nextEventLengthView
         ])
         .with(orientation: .vertical)
 
@@ -88,15 +112,6 @@ class GeneralSettingsViewController: NSViewController {
         NSStackView(views: [
             Label(text: "\(Strings.Settings.Events.finished):"), fadePastEventsRadio, hidePastEventsRadio
         ])
-    }()
-
-    private let transparencySlider: NSSlider = {
-        let slider = NSSlider(value: 0, minValue: 0, maxValue: 5, target: nil, action: nil)
-        slider.allowsTickMarkValuesOnly = true
-        slider.numberOfTickMarks = 6
-        slider.controlSize = .small
-        slider.refusesFirstResponder = true
-        return slider
     }()
 
     private func makeSection(title: String, content: NSView) -> NSView {
@@ -143,6 +158,16 @@ class GeneralSettingsViewController: NSViewController {
             observable: viewModel.showEventStatusItem,
             observer: viewModel.toggleEventStatusItem
         )
+
+        viewModel.eventStatusItemLength
+            .bind(to: nextEventLengthSlider.rx.integerValue)
+            .disposed(by: disposeBag)
+
+        nextEventLengthSlider.rx.value
+            .skip(1)
+            .map(Int.init)
+            .bind(to: viewModel.eventStatusItemLengthObserver)
+            .disposed(by: disposeBag)
 
         bind(
             control: showWeekNumbersCheckbox,
