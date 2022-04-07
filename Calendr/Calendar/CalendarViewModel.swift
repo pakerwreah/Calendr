@@ -207,13 +207,13 @@ class CalendarViewModel {
         calendarScaling = settings.calendarScaling
 
         cellSize = calendarScaling
-            .map { 25 * $0 + 10 * ($0 - 1) }
+            .map { Constants.cellSize * $0 + 10 * ($0 - 1) }
             .distinctUntilChanged()
             .share(replay: 1)
 
         weekNumbersWidth = Observable
             .combineLatest(weekNumbers, cellSize)
-            .map { $0 != nil ? $1 * 0.85 : 0 }
+            .map { $0 != nil ? $1 * Constants.weekNumberCellRatio : 0 }
             .distinctUntilChanged()
             .share(replay: 1)
     }
@@ -239,4 +239,10 @@ private extension CalendarCellViewModel {
             events: events ?? self.events
         )
     }
+}
+
+private enum Constants {
+
+    static let cellSize: CGFloat = 25
+    static let weekNumberCellRatio: CGFloat = 0.85
 }
