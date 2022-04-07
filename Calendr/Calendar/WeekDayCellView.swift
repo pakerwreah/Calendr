@@ -14,7 +14,7 @@ class WeekDayCellView: NSView {
 
     private let label = Label()
 
-    init(viewModel: Observable<String>) {
+    init(weekDay: Observable<String>, scaling: Observable<Double>) {
 
         super.init(frame: .zero)
 
@@ -22,9 +22,14 @@ class WeekDayCellView: NSView {
 
         configureLayout()
 
-        viewModel
+        weekDay
             .observe(on: MainScheduler.instance)
             .bind(to: label.rx.text)
+            .disposed(by: disposeBag)
+
+        scaling
+            .map { .boldSystemFont(ofSize: Constants.fontSize * $0) }
+            .bind(to: label.rx.font)
             .disposed(by: disposeBag)
     }
 
@@ -44,12 +49,15 @@ class WeekDayCellView: NSView {
 
         label.alignment = .center
         label.textColor = .secondaryLabelColor
-        label.font = .boldSystemFont(ofSize: 11)
-        label.size(equalTo: CGSize(width: 24, height: 13))
         label.center(in: self)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+}
+
+private enum Constants {
+
+    static let fontSize: CGFloat = 11
 }

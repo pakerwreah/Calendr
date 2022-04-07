@@ -14,7 +14,7 @@ class WeekNumberCellView: NSView {
 
     private let label = Label()
 
-    init(viewModel: Observable<Int>) {
+    init(weekNumber: Observable<Int>, scaling: Observable<Double>) {
         
         super.init(frame: .zero)
 
@@ -22,10 +22,15 @@ class WeekNumberCellView: NSView {
 
         configureLayout()
 
-        viewModel
+        weekNumber
             .map(String.init)
             .observe(on: MainScheduler.instance)
             .bind(to: label.rx.text)
+            .disposed(by: disposeBag)
+
+        scaling
+            .map { .systemFont(ofSize: Constants.fontSize * $0) }
+            .bind(to: label.rx.font)
             .disposed(by: disposeBag)
     }
 
@@ -44,7 +49,6 @@ class WeekNumberCellView: NSView {
         addSubview(label)
 
         label.textColor = .secondaryLabelColor
-        label.font = .systemFont(ofSize: 10)
         label.center(in: self, constant: CGPoint(x: -2, y: 0))
     }
 
@@ -53,3 +57,7 @@ class WeekNumberCellView: NSView {
     }
 }
 
+private enum Constants {
+
+    static let fontSize: CGFloat = 10
+}

@@ -19,6 +19,7 @@ protocol StatusItemSettings {
 
 protocol CalendarSettings {
     var showWeekNumbers: Observable<Bool> { get }
+    var calendarScaling: Observable<Double> { get }
 }
 
 protocol PopoverSettings {
@@ -45,6 +46,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
     let toggleWeekNumbers: AnyObserver<Bool>
     let togglePastEvents: AnyObserver<Bool>
     let transparencyObserver: AnyObserver<Int>
+    let calendarScalingObserver: AnyObserver<Double>
 
     // Observables
     var showStatusItemIcon: Observable<Bool>
@@ -56,6 +58,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
     let showPastEvents: Observable<Bool>
     let popoverTransparency: Observable<Int>
     let popoverMaterial: Observable<PopoverMaterial>
+    let calendarScaling: Observable<Double>
 
     let dateFormatOptions: Observable<[String]>
 
@@ -73,7 +76,8 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
             Prefs.eventStatusItemLength: 18,
             Prefs.showWeekNumbers: false,
             Prefs.showPastEvents: true,
-            Prefs.transparencyLevel: 2
+            Prefs.transparencyLevel: 2,
+            Prefs.calendarScaling: 1
         ])
 
         let statusItemIconBehavior = BehaviorSubject(
@@ -100,6 +104,9 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
         let transparencyBehavior = BehaviorSubject(
             value: userDefaults.integer(forKey: Prefs.transparencyLevel)
         )
+        let calendarScalingBehavior = BehaviorSubject(
+            value: userDefaults.double(forKey: Prefs.calendarScaling)
+        )
 
         toggleStatusItemIcon = statusItemIconBehavior.asObserver()
         toggleStatusItemDate = statusItemDateBehavior.asObserver()
@@ -109,6 +116,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
         toggleWeekNumbers = showWeekNumbersBehavior.asObserver()
         togglePastEvents = showPastEventsBehavior.asObserver()
         transparencyObserver = transparencyBehavior.asObserver()
+        calendarScalingObserver = calendarScalingBehavior.asObserver()
 
         let statusItemIconAndDate = Observable.combineLatest(
             statusItemIconBehavior, statusItemDateBehavior
@@ -162,6 +170,12 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
         popoverTransparency = transparencyBehavior
             .do(onNext: {
                 userDefaults.setValue($0, forKey: Prefs.transparencyLevel)
+            })
+            .share(replay: 1)
+
+        calendarScaling = calendarScalingBehavior
+            .do(onNext: {
+                userDefaults.setValue($0, forKey: Prefs.calendarScaling)
             })
             .share(replay: 1)
 

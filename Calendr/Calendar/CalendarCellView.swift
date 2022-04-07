@@ -15,6 +15,7 @@ class CalendarCellView: NSView {
     private let viewModel: Observable<CalendarCellViewModel>
     private let hoverObserver: AnyObserver<Date?>
     private let clickObserver: AnyObserver<Date>
+    private let calendarScaling: Observable<Double>
 
     private let label = Label()
     private let eventsStackView = NSStackView()
@@ -23,12 +24,14 @@ class CalendarCellView: NSView {
     init(
         viewModel: Observable<CalendarCellViewModel>,
         hoverObserver: AnyObserver<Date?>,
-        clickObserver: AnyObserver<Date>
+        clickObserver: AnyObserver<Date>,
+        calendarScaling: Observable<Double>
     ) {
 
         self.viewModel = viewModel
         self.hoverObserver = hoverObserver
         self.clickObserver = clickObserver
+        self.calendarScaling = calendarScaling
 
         super.init(frame: .zero)
 
@@ -68,13 +71,10 @@ class CalendarCellView: NSView {
         forAutoLayout()
 
         wantsLayer = true
-        borderLayer.borderWidth = 2
-        borderLayer.cornerRadius = 5
+        borderLayer.cornerRadius = Constants.cornerRadius
         layer!.addSublayer(borderLayer)
 
         label.alignment = .center
-        label.font = .systemFont(ofSize: 12)
-        label.size(equalTo: CGSize(width: 24, height: 13))
         label.textColor = .headerTextColor
 
         let eventsContainer = NSView()
@@ -84,7 +84,6 @@ class CalendarCellView: NSView {
         eventsStackView.top(equalTo: eventsContainer)
         eventsStackView.bottom(equalTo: eventsContainer)
         eventsStackView.center(in: eventsContainer, orientation: .horizontal)
-        eventsStackView.height(equalTo: Constants.eventDotSize)
 
         let contentStackView = NSStackView(views: [label, eventsContainer])
             .with(orientation: .vertical)
@@ -96,6 +95,18 @@ class CalendarCellView: NSView {
     }
 
     private func setUpBindings() {
+
+        calendarScaling
+            .map { .systemFont(ofSize: Constants.fontSize * $0) }
+            .bind(to: label.rx.font)
+            .disposed(by: disposeBag)
+
+        calendarScaling
+            .bind { [weak self, borderLayer] in
+                borderLayer.borderWidth = Constants.borderWidth * $0
+                self?.updateLayer()
+            }
+            .disposed(by: disposeBag)
 
         viewModel
             .map(\.text)
@@ -116,12 +127,15 @@ class CalendarCellView: NSView {
             .bind(to: borderLayer.rx.borderColor)
             .disposed(by: disposeBag)
 
-        viewModel
-            .map(\.dots)
-            .distinctUntilChanged()
-            .compactMap { $0?.map(makeEventDot) }
-            .bind(to: eventsStackView.rx.arrangedSubviews)
-            .disposed(by: disposeBag)
+        Observable.combineLatest(
+            viewModel.map(\.dots).distinctUntilChanged(),
+            calendarScaling
+        )
+        .map { dots, scaling in
+            (dots.isEmpty ? [.clear] : dots).map { makeEventDot(color: $0, scaling: scaling) }
+        }
+        .bind(to: eventsStackView.rx.arrangedSubviews)
+        .disposed(by: disposeBag)
 
         rx.click
             .withLatestFrom(viewModel.map(\.date))
@@ -151,17 +165,18 @@ class CalendarCellView: NSView {
     }
 }
 
-private func makeEventDot(color: NSColor) -> NSView {
+private func makeEventDot(color: NSColor, scaling: Double) -> NSView {
 
     let view = NSView()
+    let size = Constants.eventDotSize * scaling
 
-    view.size(equalTo: Constants.eventDotSize)
+    view.size(equalTo: size)
 
     view.wantsLayer = true
 
     view.layer.map { layer in
         layer.backgroundColor = color.cgColor
-        layer.cornerRadius = Constants.eventDotSize / 2
+        layer.cornerRadius = size / 2
     }
 
     if BuildConfig.isUITesting {
@@ -174,5 +189,9 @@ private func makeEventDot(color: NSColor) -> NSView {
 
 private enum Constants {
 
+    static let fontSize: CGFloat = 12
     static let eventDotSize: CGFloat = 3
+
+    static let borderWidth: CGFloat = 2
+    static let cornerRadius: CGFloat = 5
 }

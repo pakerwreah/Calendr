@@ -53,13 +53,6 @@ class CalendarView: NSView {
         gridView.rowSpacing = 0
         gridView.columnSpacing = 0
 
-        for row in 0..<gridView.numberOfRows {
-            gridView.row(at: row).height = Constants.cellSize
-            for col in 0..<gridView.numberOfColumns {
-                gridView.column(at: col).width = Constants.cellSize
-            }
-        }
-
         addSubview(gridView)
 
         gridView.edges(to: self)
@@ -67,17 +60,35 @@ class CalendarView: NSView {
 
     private func setUpBindings() {
 
-        let weekNumbersWidth = viewModel.weekNumbers.map { $0 != nil ? Constants.weekNumberCellSize : 0 }
+        viewModel.cellSize
+            .bind { [gridView] cellSize in
+                for row in 0..<gridView.numberOfRows {
+                    gridView.row(at: row).height = cellSize
+                    for col in 0..<gridView.numberOfColumns {
+                        gridView.column(at: col).width = cellSize
+                    }
+                }
+            }
+            .disposed(by: disposeBag)
 
-        weekNumbersWidth
+        viewModel.weekNumbers
             .observe(on: MainScheduler.instance)
+            .map(\.isNil)
+            .bind(to: gridView.column(at: 0).rx.isHidden)
+            .disposed(by: disposeBag)
+
+        viewModel.weekNumbersWidth
+            .observe(on: MainScheduler.instance)
+            .map { CGFloat($0) }
             .bind(to: gridView.column(at: 0).rx.width)
             .disposed(by: disposeBag)
 
         Observable.combineLatest(
-            weekNumbersWidth, viewModel.weekDays
+            viewModel.weekNumbersWidth,
+            viewModel.weekDays,
+            viewModel.cellSize
         )
-        .map { offset, weekDays -> [CALayer] in
+        .map { offset, weekDays, cellSize -> [CALayer] in
 
             let weekends = weekDays
                 .enumerated()
@@ -87,10 +98,10 @@ class CalendarView: NSView {
             return IndexSet(weekends).rangeView.map { range in
                 let layer = CALayer()
                 layer.frame = CGRect(
-                    x: offset + CGFloat(range.startIndex) * Constants.cellSize,
+                    x: offset + CGFloat(range.startIndex) * cellSize,
                     y: 0,
-                    width: CGFloat(range.count) * Constants.cellSize,
-                    height: 6 * Constants.cellSize
+                    width: CGFloat(range.count) * cellSize,
+                    height: 6 * cellSize
                 )
                 layer.backgroundColor = Constants.weekendBackgroundColor
                 layer.cornerRadius = Constants.cornerRadius
@@ -106,12 +117,18 @@ class CalendarView: NSView {
         .disposed(by: disposeBag)
 
         for i in 0..<7 {
-            let cellView = WeekDayCellView(viewModel: viewModel.weekDays.map(\.[i].title))
+            let cellView = WeekDayCellView(
+                weekDay: viewModel.weekDays.map(\.[i].title),
+                scaling: viewModel.calendarScaling
+            )
             gridView.cell(atColumnIndex: 1 + i, rowIndex: 0).contentView = cellView
         }
 
         for i in 0..<6 {
-            let cellView = WeekNumberCellView(viewModel: viewModel.weekNumbers.skipNil().map(\.[i]))
+            let cellView = WeekNumberCellView(
+                weekNumber: viewModel.weekNumbers.skipNil().map(\.[i]),
+                scaling: viewModel.calendarScaling
+            )
             gridView.cell(atColumnIndex: 0, rowIndex: 1 + i).contentView = cellView
         }
 
@@ -126,7 +143,8 @@ class CalendarView: NSView {
             let cellView = CalendarCellView(
                 viewModel: cellViewModel,
                 hoverObserver: hoverObserver,
-                clickObserver: clickObserver
+                clickObserver: clickObserver,
+                calendarScaling: viewModel.calendarScaling
             )
             gridView.cell(atColumnIndex: 1 + day % 7, rowIndex: 1 + day / 7).contentView = cellView
         }
@@ -140,8 +158,6 @@ class CalendarView: NSView {
 
 private enum Constants {
 
-    static let cellSize: CGFloat = 25
-    static let weekNumberCellSize: CGFloat = 21
     static let cornerRadius: CGFloat = 5
     static let weekendBackgroundColor = NSColor.gray.cgColor.copy(alpha: 0.2)
 }

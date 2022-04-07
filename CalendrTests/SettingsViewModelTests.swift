@@ -45,9 +45,19 @@ class SettingsViewModelTests: XCTestCase {
         set { userDefaults.setValue(newValue, forKey: Prefs.showEventStatusItem) }
     }
 
+    var userDefaultsEventStatusItemLength: Int? {
+        get { userDefaults.object(forKey: Prefs.eventStatusItemLength) as! Int? }
+        set { userDefaults.setValue(newValue, forKey: Prefs.eventStatusItemLength) }
+    }
+
     var userDefaultsShowWeekNumbers: Bool? {
         get { userDefaults.object(forKey: Prefs.showWeekNumbers) as! Bool? }
         set { userDefaults.setValue(newValue, forKey: Prefs.showWeekNumbers) }
+    }
+
+    var userDefaultsCalendarScaling: Double? {
+        get { userDefaults.object(forKey: Prefs.calendarScaling) as! Double? }
+        set { userDefaults.setValue(newValue, forKey: Prefs.calendarScaling) }
     }
 
     var userDefaultsShowPastEvents: Bool? {
@@ -71,7 +81,9 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertNil(userDefaultsDateEnabled)
         XCTAssertNil(userDefaultsDateStyle)
         XCTAssertNil(userDefaultsShowEventStatusItem)
+        XCTAssertNil(userDefaultsEventStatusItemLength)
         XCTAssertNil(userDefaultsShowWeekNumbers)
+        XCTAssertNil(userDefaultsCalendarScaling)
         XCTAssertNil(userDefaultsShowPastEvents)
         XCTAssertNil(userDefaultsTransparency)
 
@@ -79,7 +91,9 @@ class SettingsViewModelTests: XCTestCase {
         var showStatusItemDate: Bool?
         var statusItemDateStyle: DateStyle?
         var showEventStatusItem: Bool?
+        var eventStatusItemLength: Int?
         var showWeekNumbers: Bool?
+        var calendarScaling: Double?
         var showPastEvents: Bool?
         var popoverTransparency: Int?
         var popoverMaterial: PopoverMaterial?
@@ -100,8 +114,16 @@ class SettingsViewModelTests: XCTestCase {
             .bind { showEventStatusItem = $0 }
             .disposed(by: disposeBag)
 
+        viewModel.eventStatusItemLength
+            .bind { eventStatusItemLength = $0 }
+            .disposed(by: disposeBag)
+
         viewModel.showWeekNumbers
             .bind { showWeekNumbers = $0 }
+            .disposed(by: disposeBag)
+
+        viewModel.calendarScaling
+            .bind { calendarScaling = $0 }
             .disposed(by: disposeBag)
 
         viewModel.showPastEvents
@@ -120,7 +142,9 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(showStatusItemDate, true)
         XCTAssertEqual(statusItemDateStyle, .short)
         XCTAssertEqual(showEventStatusItem, false)
+        XCTAssertEqual(eventStatusItemLength, 18)
         XCTAssertEqual(showWeekNumbers, false)
+        XCTAssertEqual(calendarScaling, 1)
         XCTAssertEqual(showPastEvents, true)
         XCTAssertEqual(popoverTransparency, 2)
         XCTAssertEqual(popoverMaterial, .headerView)
@@ -129,7 +153,9 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(userDefaultsDateEnabled, true)
         XCTAssertEqual(userDefaultsDateStyle, 1)
         XCTAssertEqual(userDefaultsShowEventStatusItem, false)
+        XCTAssertEqual(userDefaultsEventStatusItemLength, 18)
         XCTAssertEqual(userDefaultsShowWeekNumbers, false)
+        XCTAssertEqual(userDefaultsCalendarScaling, 1)
         XCTAssertEqual(userDefaultsShowPastEvents, true)
         XCTAssertEqual(userDefaultsTransparency, 2)
     }
@@ -212,6 +238,25 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(userDefaultsShowEventStatusItem, true)
     }
 
+    func testChangeEventStatusItemLength() {
+
+        userDefaultsEventStatusItemLength = 20
+
+        var eventStatusItemLength: Int?
+
+        viewModel.eventStatusItemLength
+            .bind { eventStatusItemLength = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(eventStatusItemLength, 20)
+        XCTAssertEqual(userDefaultsEventStatusItemLength, 20)
+
+        viewModel.eventStatusItemLengthObserver.onNext(30)
+
+        XCTAssertEqual(eventStatusItemLength, 30)
+        XCTAssertEqual(userDefaultsEventStatusItemLength, 30)
+    }
+
     func testToggleShowWeekNumbers() {
 
         userDefaultsShowWeekNumbers = true
@@ -236,6 +281,24 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(userDefaultsShowWeekNumbers, true)
     }
 
+    func testChangeCalendarScaling() {
+
+        userDefaultsCalendarScaling = 1.2
+
+        var calendarScaling: Double?
+
+        viewModel.calendarScaling
+            .bind { calendarScaling = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(calendarScaling, 1.2)
+        XCTAssertEqual(userDefaultsCalendarScaling, 1.2)
+
+        viewModel.calendarScalingObserver.onNext(1.1)
+
+        XCTAssertEqual(calendarScaling, 1.1)
+        XCTAssertEqual(userDefaultsCalendarScaling, 1.1)
+    }
 
     func testToggleShowPastEvents() {
 

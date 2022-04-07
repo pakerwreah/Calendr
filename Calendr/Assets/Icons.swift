@@ -23,6 +23,8 @@ enum Icons {
         static let settings = NSImage(systemName: "ellipsis.circle")
         static let pinned = NSImage(systemName: "lock")
         static let unpinned = NSImage(systemName: "lock.open")
+        static let scalingMinus = NSImage(systemName: "minus.magnifyingglass")
+        static let scalingPlus = NSImage(systemName: "plus.magnifyingglass")
     }
 
     enum Settings {

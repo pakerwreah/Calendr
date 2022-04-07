@@ -210,6 +210,10 @@ class EventView: NSView {
             self?.window?.makeKey()
         }
         .disposed(by: disposeBag)
+
+        rx.observe(\.frame)
+            .bind { [weak self] _ in self?.updateLayer() }
+            .disposed(by: disposeBag)
     }
 
     override func updateLayer() {

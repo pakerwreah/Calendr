@@ -10,10 +10,12 @@ import RxSwift
 
 class MockCalendarSettings: CalendarSettings {
 
-    var toggleWeekNumbers: AnyObserver<Bool>
-    var showWeekNumbers: Observable<Bool>
+    let toggleWeekNumbers: AnyObserver<Bool>
+    let showWeekNumbers: Observable<Bool>
+    let calendarScaling: Observable<Double>
 
     init() {
         (showWeekNumbers, toggleWeekNumbers) = BehaviorSubject.pipe(value: false)
+        calendarScaling = .just(1)
     }
 }

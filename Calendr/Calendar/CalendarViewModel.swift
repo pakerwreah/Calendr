@@ -15,6 +15,9 @@ class CalendarViewModel {
     let title: Observable<String>
     let weekDays: Observable<[WeekDay]>
     let weekNumbers: Observable<[Int]?>
+    let calendarScaling: Observable<Double>
+    let cellSize: Observable<Double>
+    let weekNumbersWidth: Observable<Double>
 
     init(
         dateObservable: Observable<Date>,
@@ -99,7 +102,7 @@ class CalendarViewModel {
                     isToday: false,
                     isSelected: false,
                     isHovered: false,
-                    events: nil
+                    events: []
                 )
             }
         }
@@ -200,6 +203,19 @@ class CalendarViewModel {
         }
         .distinctUntilChanged()
         .share(replay: 1)
+
+        calendarScaling = settings.calendarScaling
+
+        cellSize = calendarScaling
+            .map { 25 * $0 + 10 * ($0 - 1) }
+            .distinctUntilChanged()
+            .share(replay: 1)
+
+        weekNumbersWidth = Observable
+            .combineLatest(weekNumbers, cellSize)
+            .map { $0 != nil ? $1 * 0.85 : 0 }
+            .distinctUntilChanged()
+            .share(replay: 1)
     }
 
     func asObservable() -> Observable<[CalendarCellViewModel]> { cellViewModelsObservable }

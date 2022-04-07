@@ -384,8 +384,8 @@ class CalendarViewModelTests: XCTestCase {
 
         for (date, expected) in expectedEvents {
             let events = lastValue?
-                .first(where: { $0.date == date })
-                .flatMap(\.events)?
+                .first(where: { $0.date == date })?
+                .events
                 .map(\.title)
 
             XCTAssertEqual(events, expected, "\(date)")
@@ -404,8 +404,8 @@ class CalendarViewModelTests: XCTestCase {
 
         for (date, expected) in expectedEvents {
             let events = lastValue?
-                .first(where: { $0.date == date })
-                .flatMap(\.dots)
+                .first(where: { $0.date == date })?
+                .dots
 
             XCTAssertEqual(events?.count, expected.count, "\(date)")
             XCTAssertEqual(events.map(Set.init), expected, "\(date)")

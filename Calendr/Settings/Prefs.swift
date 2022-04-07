@@ -17,4 +17,5 @@ enum Prefs {
     static let showWeekNumbers = "show_week_numbers"
     static let showPastEvents = "show_past_events"
     static let transparencyLevel = "transparency_level"
+    static let calendarScaling = "calendar_scaling"
 }

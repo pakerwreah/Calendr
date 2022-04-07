@@ -22,23 +22,9 @@ class GeneralSettingsViewController: NSViewController {
     private let hidePastEventsRadio = Radio(title: Strings.Settings.Events.Finished.hide)
     private let dateFormatDropdown = Dropdown()
 
-    private let nextEventLengthSlider: NSSlider = {
-        let slider = NSSlider(value: 20, minValue: 10, maxValue: 30, target: nil, action: nil)
-        slider.allowsTickMarkValuesOnly = true
-        slider.numberOfTickMarks = 6
-        slider.controlSize = .small
-        slider.refusesFirstResponder = true
-        return slider
-    }()
-
-    private let transparencySlider: NSSlider = {
-        let slider = NSSlider(value: 0, minValue: 0, maxValue: 5, target: nil, action: nil)
-        slider.allowsTickMarkValuesOnly = true
-        slider.numberOfTickMarks = 6
-        slider.controlSize = .small
-        slider.refusesFirstResponder = true
-        return slider
-    }()
+    private let nextEventLengthSlider = NSSlider.make(minValue: 10, maxValue: 30)
+    private let transparencySlider = NSSlider.make(minValue: 0, maxValue: 5)
+    private let calendarScalingSlider = NSSlider.make(minValue: 1, maxValue: 1.2, numberOfTickMarks: 5)
 
     init(viewModel: SettingsViewModel) {
 
@@ -65,9 +51,9 @@ class GeneralSettingsViewController: NSViewController {
 
         let stackView = NSStackView(views: [
             makeSection(title: Strings.Settings.menuBar, content: menuBarContent),
-            makeSection(title: Strings.Settings.calendar, content: showWeekNumbersCheckbox),
+            makeSection(title: Strings.Settings.calendar, content: calendarContent),
             makeSection(title: Strings.Settings.events, content: eventsContent),
-            makeSection(title: Strings.Settings.transparency, content: transparencySlider)
+            makeSection(title: Strings.Settings.transparency, content: transparencySlider),
         ])
         .with(spacing: Constants.contentSpacing)
         .with(orientation: .vertical)
@@ -106,6 +92,18 @@ class GeneralSettingsViewController: NSViewController {
         return NSStackView(views: [checkboxes, dateFormat])
             .with(spacing: Constants.contentSpacing)
             .with(orientation: .vertical)
+    }()
+
+    private lazy var calendarContent: NSView = {
+        NSStackView(views: [
+            showWeekNumbersCheckbox,
+            NSStackView(views: [
+                NSImageView(image: Icons.Calendar.scalingMinus),
+                calendarScalingSlider,
+                NSImageView(image: Icons.Calendar.scalingPlus)
+            ])
+        ])
+        .with(orientation: .vertical)
     }()
 
     private lazy var eventsContent: NSView = {
@@ -197,6 +195,15 @@ class GeneralSettingsViewController: NSViewController {
             .bind(to: viewModel.transparencyObserver)
             .disposed(by: disposeBag)
 
+        viewModel.calendarScaling
+            .bind(to: calendarScalingSlider.rx.doubleValue)
+            .disposed(by: disposeBag)
+
+        calendarScalingSlider.rx.value
+            .skip(1)
+            .bind(to: viewModel.calendarScalingObserver)
+            .disposed(by: disposeBag)
+
         let dateFormatStyle = dateFormatDropdown.rx.controlProperty(
             getter: { (dropdown: NSPopUpButton) -> DateStyle in
                 DateStyle(rawValue: UInt(dropdown.indexOfSelectedItem + 1)) ?? .none
@@ -237,6 +244,18 @@ class GeneralSettingsViewController: NSViewController {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+private extension NSSlider {
+
+    static func make(minValue: Double, maxValue: Double, numberOfTickMarks: Int = 6) -> NSSlider {
+        let slider = NSSlider(value: 0, minValue: minValue, maxValue: maxValue, target: nil, action: nil)
+        slider.allowsTickMarkValuesOnly = true
+        slider.numberOfTickMarks = numberOfTickMarks
+        slider.controlSize = .small
+        slider.refusesFirstResponder = true
+        return slider
     }
 }
 

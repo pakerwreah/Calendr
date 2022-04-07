@@ -122,7 +122,7 @@ class MainViewController: NSViewController {
 
         let eventsObservable = calendarViewModel.asObservable()
             .compactMap {
-                $0.first(where: \.isSelected).flatMap(\.events)
+                $0.first(where: \.isSelected)?.events
             }
             .distinctUntilChanged()
 
@@ -139,7 +139,7 @@ class MainViewController: NSViewController {
 
         let todayEventsObservable = calendarViewModel.asObservable()
             .compactMap {
-                $0.first(where: \.isToday).flatMap(\.events)
+                $0.first(where: \.isToday)?.events
             }
             .debounce(.seconds(1), scheduler: MainScheduler.instance)
             .distinctUntilChanged()
