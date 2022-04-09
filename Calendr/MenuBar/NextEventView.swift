@@ -8,7 +8,7 @@
 import Cocoa
 import RxSwift
 
-class NextEventView: NSView {
+class NextEventView: NSView, NSWindowDelegate {
 
     private let disposeBag = DisposeBag()
 
@@ -37,6 +37,17 @@ class NextEventView: NSView {
         configureLayout()
 
         setUpBindings()
+    }
+
+    override func viewDidMoveToWindow() {
+        super.viewDidMoveToWindow()
+
+        window?.delegate = self
+    }
+
+    func windowDidChangeScreen(_ notification: Notification) {
+
+        viewModel.didChangeScreen()
     }
 
     private func configureLayout() {

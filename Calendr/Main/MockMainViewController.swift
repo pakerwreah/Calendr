@@ -31,6 +31,7 @@ class MockMainViewController: MainViewController {
             workspace: WorkspaceServiceProvider(),
             calendarService: MockCalendarServiceProvider(dateProvider: dateProvider),
             dateProvider: dateProvider,
+            screenProvider: ScreenProvider(),
             userDefaults: userDefaults,
             notificationCenter: NotificationCenter()
         )

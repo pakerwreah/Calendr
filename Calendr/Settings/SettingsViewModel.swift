@@ -33,6 +33,7 @@ protocol EventListSettings: PopoverSettings {
 protocol NextEventSettings {
     var showEventStatusItem: Observable<Bool> { get }
     var eventStatusItemLength: Observable<Int> { get }
+    var eventStatusItemDetectNotch: Observable<Bool> { get }
 }
 
 class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings, EventListSettings  {
@@ -43,6 +44,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
     let statusItemDateStyleObserver: AnyObserver<DateStyle>
     let toggleEventStatusItem: AnyObserver<Bool>
     let eventStatusItemLengthObserver: AnyObserver<Int>
+    let toggleEventStatusItemDetectNotch: AnyObserver<Bool>
     let toggleWeekNumbers: AnyObserver<Bool>
     let togglePastEvents: AnyObserver<Bool>
     let transparencyObserver: AnyObserver<Int>
@@ -54,6 +56,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
     var statusItemDateStyle: Observable<DateStyle>
     let showEventStatusItem: Observable<Bool>
     let eventStatusItemLength: Observable<Int>
+    let eventStatusItemDetectNotch: Observable<Bool>
     let showWeekNumbers: Observable<Bool>
     let showPastEvents: Observable<Bool>
     let popoverTransparency: Observable<Int>
@@ -74,6 +77,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
             Prefs.statusItemDateStyle: 1,
             Prefs.showEventStatusItem: false,
             Prefs.eventStatusItemLength: 18,
+            Prefs.eventStatusItemDetectNotch: false,
             Prefs.showWeekNumbers: false,
             Prefs.showPastEvents: true,
             Prefs.transparencyLevel: 2,
@@ -95,6 +99,9 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
         let eventStatusItemLengthBehavior = BehaviorSubject(
             value: userDefaults.integer(forKey: Prefs.eventStatusItemLength)
         )
+        let eventStatusItemDetectNotchBehavior = BehaviorSubject(
+            value: userDefaults.bool(forKey: Prefs.eventStatusItemDetectNotch)
+        )
         let showWeekNumbersBehavior = BehaviorSubject(
             value: userDefaults.bool(forKey: Prefs.showWeekNumbers)
         )
@@ -113,6 +120,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
         statusItemDateStyleObserver = statusItemDateStyleBehavior.asObserver()
         toggleEventStatusItem = showEventStatusItemBehavior.asObserver()
         eventStatusItemLengthObserver = eventStatusItemLengthBehavior.asObserver()
+        toggleEventStatusItemDetectNotch = eventStatusItemDetectNotchBehavior.asObserver()
         toggleWeekNumbers = showWeekNumbersBehavior.asObserver()
         togglePastEvents = showPastEventsBehavior.asObserver()
         transparencyObserver = transparencyBehavior.asObserver()
@@ -152,6 +160,12 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
         eventStatusItemLength = eventStatusItemLengthBehavior
             .do(onNext: {
                 userDefaults.setValue($0, forKey: Prefs.eventStatusItemLength)
+            })
+            .share(replay: 1)
+
+        eventStatusItemDetectNotch = eventStatusItemDetectNotchBehavior
+            .do(onNext: {
+                userDefaults.setValue($0, forKey: Prefs.eventStatusItemDetectNotch)
             })
             .share(replay: 1)
 

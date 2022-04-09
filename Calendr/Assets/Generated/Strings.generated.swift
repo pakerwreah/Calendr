@@ -75,6 +75,8 @@ internal enum Strings {
     internal enum MenuBar {
       /// Date format
       internal static var dateFormat: String { return Strings.tr("Localizable", "settings.menu_bar.date_format") }
+      /// Shorten if 'notch' is present
+      internal static var nextEventDetectNotch: String { return Strings.tr("Localizable", "settings.menu_bar.next_event_detect_notch") }
       /// Width
       internal static var nextEventLength: String { return Strings.tr("Localizable", "settings.menu_bar.next_event_length") }
       /// Show date

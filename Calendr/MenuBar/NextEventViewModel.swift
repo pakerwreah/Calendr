@@ -17,12 +17,19 @@ class NextEventViewModel {
     let hasEvent: Observable<Bool>
     let event: Observable<EventModel?>
 
+    private let screenProvider: ScreenProviding
+    private let hasNotch: BehaviorSubject<Bool>
+
     init(
         settings: NextEventSettings,
         eventsObservable: Observable<[EventModel]>,
         dateProvider: DateProviding,
+        screenProvider: ScreenProviding,
         scheduler: SchedulerType = MainScheduler.instance
     ) {
+
+        self.screenProvider = screenProvider
+        hasNotch = .init(value: screenProvider.hasNotch)
 
         typealias NextEventTuple = (event: EventModel, isInProgress: Bool)
 
@@ -63,15 +70,21 @@ class NextEventViewModel {
             .skipNil()
             .map { $0.isInProgress ? $0.event.calendar.color.withAlphaComponent(0.2): .clear }
             .distinctUntilChanged()
-        
-        title = Observable.combineLatest(
-            nextEventObservable
-                .skipNil()
-                .map(\.event.title),
-            settings.eventStatusItemLength
-        )
-        .map { $0.count > $1 ? "\($0.prefix($1).trimmed)..." : $0 }
-        .distinctUntilChanged()
+
+        let hasNotch = Observable
+            .combineLatest(settings.eventStatusItemDetectNotch, hasNotch)
+            .map { $0 && $1 }
+            .distinctUntilChanged()
+
+        let eventStatusItemLength = Observable
+            .combineLatest(hasNotch, settings.eventStatusItemLength)
+            .map { $0 ? min($1, Constants.compactMaxWidth) : $1 }
+
+        let nextEventTitle = nextEventObservable.skipNil().map(\.event.title)
+
+        title = Observable.combineLatest(nextEventTitle, eventStatusItemLength, hasNotch)
+            .map { $0.count > $1 ? "\($0.prefix($1).trimmed)\($2 ? "." : "...")": $0 }
+            .distinctUntilChanged()
 
         let dateFormatter = DateComponentsFormatter()
         dateFormatter.calendar = dateProvider.calendar
@@ -121,4 +134,11 @@ class NextEventViewModel {
             .map(\.isNotNil)
             .distinctUntilChanged()
     }
+
+    func didChangeScreen() { hasNotch.onNext(screenProvider.hasNotch) }
+}
+
+private enum Constants {
+
+    static let compactMaxWidth = 15
 }

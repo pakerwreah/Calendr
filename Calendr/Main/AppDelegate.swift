@@ -34,6 +34,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             workspace: WorkspaceServiceProvider(),
             calendarService: CalendarServiceProvider(),
             dateProvider: DateProvider(calendar: .autoupdatingCurrent),
+            screenProvider: ScreenProvider(),
             userDefaults: .standard,
             notificationCenter: .default
         )

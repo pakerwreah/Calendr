@@ -17,6 +17,7 @@ class GeneralSettingsViewController: NSViewController {
     private let showMenuBarIconCheckbox = Checkbox(title: Strings.Settings.MenuBar.showIcon)
     private let showMenuBarDateCheckbox = Checkbox(title: Strings.Settings.MenuBar.showDate)
     private let showNextEventCheckbox = Checkbox(title: Strings.Settings.MenuBar.showNextEvent)
+    private let nextEventDetectNotchCheckbox = Checkbox(title: Strings.Settings.MenuBar.nextEventDetectNotch)
     private let showWeekNumbersCheckbox = Checkbox(title: Strings.Settings.Calendar.showWeekNumbers)
     private let fadePastEventsRadio = Radio(title: Strings.Settings.Events.Finished.fade)
     private let hidePastEventsRadio = Radio(title: Strings.Settings.Events.Finished.hide)
@@ -70,12 +71,19 @@ class GeneralSettingsViewController: NSViewController {
             nextEventLengthSlider
         ])
 
+        if #available(macOS 12, *) {
+            nextEventDetectNotchCheckbox.font = .systemFont(ofSize: 11, weight: .light)
+        } else {
+            nextEventDetectNotchCheckbox.isHidden = true
+        }
+
         let checkboxes = NSStackView(views: [
             NSStackView(views: [
                 showMenuBarIconCheckbox, showMenuBarDateCheckbox
             ]),
             showNextEventCheckbox,
-            nextEventLengthView
+            nextEventLengthView,
+            nextEventDetectNotchCheckbox
         ])
         .with(orientation: .vertical)
 
@@ -160,6 +168,12 @@ class GeneralSettingsViewController: NSViewController {
         viewModel.eventStatusItemLength
             .bind(to: nextEventLengthSlider.rx.integerValue)
             .disposed(by: disposeBag)
+
+        bind(
+            control: nextEventDetectNotchCheckbox,
+            observable: viewModel.eventStatusItemDetectNotch,
+            observer: viewModel.toggleEventStatusItemDetectNotch
+        )
 
         nextEventLengthSlider.rx.value
             .skip(1)

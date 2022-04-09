@@ -19,6 +19,7 @@
 "settings.menu_bar.date_format.info" = "Configurable dans les Préférences Système";
 "settings.menu_bar.show_next_event" = "Afficher prochain événement";
 "settings.menu_bar.next_event_length" = "Largeur";
+"settings.menu_bar.next_event_detect_notch" = "Raccourcir si 'notch' est présent";
 
 "settings.calendar" = "Calendrier";
 "settings.calendar.show_week_numbers" = "Afficher les numéros des semaines";

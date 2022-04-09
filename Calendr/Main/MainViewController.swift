@@ -56,6 +56,7 @@ class MainViewController: NSViewController {
         workspace: WorkspaceServiceProviding,
         calendarService: CalendarServiceProviding,
         dateProvider: DateProviding,
+        screenProvider: ScreenProviding,
         userDefaults: UserDefaults,
         notificationCenter: NotificationCenter
     ) {
@@ -147,7 +148,8 @@ class MainViewController: NSViewController {
         nextEventViewModel = NextEventViewModel(
             settings: settingsViewModel,
             eventsObservable: todayEventsObservable,
-            dateProvider: dateProvider
+            dateProvider: dateProvider,
+            screenProvider: screenProvider
         )
 
         nextEventView = NextEventView(viewModel: nextEventViewModel)

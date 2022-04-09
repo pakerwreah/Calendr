@@ -50,6 +50,8 @@
 		34651F6E25E3171D00518C5A /* EventViewModelLinkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34651F6D25E3171D00518C5A /* EventViewModelLinkTests.swift */; };
 		34651F7425E3207200518C5A /* WorkspaceServiceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34651F7325E3207200518C5A /* WorkspaceServiceProvider.swift */; };
 		34651F7A25E325EA00518C5A /* MockWorkspaceServiceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34651F7925E325EA00518C5A /* MockWorkspaceServiceProvider.swift */; };
+		346E70C92802278E00A785FF /* ScreenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346E70C82802278E00A785FF /* ScreenProvider.swift */; };
+		346E70CB2802289F00A785FF /* MockScreenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346E70CA2802289F00A785FF /* MockScreenProvider.swift */; };
 		3470214A259DFF3000827AE7 /* CalendarServiceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34702149259DFF3000827AE7 /* CalendarServiceProvider.swift */; };
 		34702150259E163000827AE7 /* CalendarModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3470214F259E163000827AE7 /* CalendarModel.swift */; };
 		34702168259E761100827AE7 /* Calendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34702167259E761100827AE7 /* Calendar.swift */; };
@@ -190,6 +192,8 @@
 		34651F7325E3207200518C5A /* WorkspaceServiceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkspaceServiceProvider.swift; sourceTree = "<group>"; };
 		34651F7925E325EA00518C5A /* MockWorkspaceServiceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockWorkspaceServiceProvider.swift; sourceTree = "<group>"; };
 		34651F8925E4099700518C5A /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		346E70C82802278E00A785FF /* ScreenProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenProvider.swift; sourceTree = "<group>"; };
+		346E70CA2802289F00A785FF /* MockScreenProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockScreenProvider.swift; sourceTree = "<group>"; };
 		34702149259DFF3000827AE7 /* CalendarServiceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarServiceProvider.swift; sourceTree = "<group>"; };
 		3470214F259E163000827AE7 /* CalendarModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarModel.swift; sourceTree = "<group>"; };
 		34702167259E761100827AE7 /* Calendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Calendar.swift; sourceTree = "<group>"; };
@@ -533,6 +537,7 @@
 			children = (
 				34702149259DFF3000827AE7 /* CalendarServiceProvider.swift */,
 				34FD09D825AE269600AAAAE2 /* DateProvider.swift */,
+				346E70C82802278E00A785FF /* ScreenProvider.swift */,
 				34651F7325E3207200518C5A /* WorkspaceServiceProvider.swift */,
 			);
 			path = Providers;
@@ -547,6 +552,7 @@
 				3477F3D925FD44C1008EA888 /* MockEventListSettings.swift */,
 				34C72F9525E8A05700FD20FA /* MockNextEventSettings.swift */,
 				34C72F8725E88C0300FD20FA /* MockPopoverSettings.swift */,
+				346E70CA2802289F00A785FF /* MockScreenProvider.swift */,
 				34C72F8325E88B6600FD20FA /* MockStatusItemSettings.swift */,
 				34651F7925E325EA00518C5A /* MockWorkspaceServiceProvider.swift */,
 			);
@@ -829,6 +835,7 @@
 				34F96CEE25B523ED0020DEEA /* main.swift in Sources */,
 				348B8D0425B2925100E518FE /* SettingsViewModel.swift in Sources */,
 				34F128D125968044007DF31C /* Label.swift in Sources */,
+				346E70C92802278E00A785FF /* ScreenProvider.swift in Sources */,
 				34F128F22597C340007DF31C /* WeekDayCellView.swift in Sources */,
 				34C72F9C25E9847300FD20FA /* EventListViewModel.swift in Sources */,
 				3421DA142693E75A00056837 /* MockCalendarServiceProvider.swift in Sources */,
@@ -888,6 +895,7 @@
 				34C72F8825E88C0300FD20FA /* MockPopoverSettings.swift in Sources */,
 				34C2CF9125C2070400FC2CFF /* EventViewModelTests.swift in Sources */,
 				3477F3DA25FD44C1008EA888 /* MockEventListSettings.swift in Sources */,
+				346E70CB2802289F00A785FF /* MockScreenProvider.swift in Sources */,
 				34C72F7E25E844E500FD20FA /* NextEventViewModelTests.swift in Sources */,
 				348E703725C6173400B3B160 /* EventViewModelProgressTests.swift in Sources */,
 				3477F3D425FAF079008EA888 /* MockCalendarServiceProvider.swift in Sources */,
@@ -1101,7 +1109,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.5.0;
+				MARKETING_VERSION = 1.5.1;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Config/Calendr-Bridging-Header.h";
@@ -1125,7 +1133,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.5.0;
+				MARKETING_VERSION = 1.5.1;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Config/Calendr-Bridging-Header.h";
