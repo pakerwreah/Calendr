@@ -15,6 +15,7 @@ class AboutViewController: NSViewController {
 
         let link = NSTextView()
         link.string = "https://github.com/pakerwreah"
+        link.backgroundColor = .clear
         link.linkTextAttributes?[.underlineColor] = NSColor.clear
         link.isAutomaticLinkDetectionEnabled = true
         link.checkTextInDocument(nil)
