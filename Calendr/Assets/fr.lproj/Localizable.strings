@@ -23,6 +23,7 @@
 
 "settings.calendar" = "Calendrier";
 "settings.calendar.show_week_numbers" = "Afficher les numéros des semaines";
+"settings.calendar.preserve_selected_date" = "Conserver la date sélectionnée lors du masquage";
 
 "settings.events" = "Événements";
 "settings.events.finished" = "Terminés";

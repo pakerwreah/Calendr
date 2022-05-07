@@ -12,10 +12,12 @@ import RxSwift
 struct MockCalendarSettings: CalendarSettings {
 
     let showWeekNumbers: Observable<Bool>
+    let preserveSelectedDate: Observable<Bool>
     let calendarScaling: Observable<Double>
 
     init(showWeekNumbers: Bool = true) {
         self.showWeekNumbers = .just(showWeekNumbers)
+        self.preserveSelectedDate = .just(false)
         self.calendarScaling = .just(1)
     }
 }
