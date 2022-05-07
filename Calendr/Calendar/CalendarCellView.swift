@@ -144,7 +144,10 @@ class CalendarCellView: NSView {
             .disposed(by: disposeBag)
 
         Observable.merge(
-            rx.mouseEntered.withLatestFrom(viewModel.map(\.date)).optional(),
+            rx.mouseEntered
+                .delay(.milliseconds(10), scheduler: MainScheduler.instance)
+                .withLatestFrom(viewModel.map(\.date))
+                .optional(),
             rx.mouseExited.map(nil)
         )
         .bind(to: hoverObserver)

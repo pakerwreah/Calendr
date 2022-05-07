@@ -101,7 +101,7 @@ class CalendarViewTests: UITestCase {
         XCTAssertEqual(Calendar.selected.text, "31")
     }
 
-    func testDate_withRightArrowTapped_shouldSelectPreviousDate() {
+    func testDate_withRightArrowTapped_shouldSelectNextDate() {
 
         MenuBar.main.click()
 

@@ -100,10 +100,7 @@ class MainViewController: NSViewController {
             calendarsViewModel: calendarPickerViewModel
         )
 
-        let hoverSubject = PublishSubject<Date?>()
-
-        // prevent getting 2 events while moving between cells
-        let hoverObservable = hoverSubject.debounce(.milliseconds(1), scheduler: MainScheduler.instance)
+        let (hoverObservable, hoverObserver) = PublishSubject<Date?>.pipe()
 
         calendarViewModel = CalendarViewModel(
             dateObservable: selectedDate,
@@ -117,7 +114,7 @@ class MainViewController: NSViewController {
 
         calendarView = CalendarView(
             viewModel: calendarViewModel,
-            hoverObserver: hoverSubject.asObserver(),
+            hoverObserver: hoverObserver,
             clickObserver: dateClick.asObserver()
         )
 

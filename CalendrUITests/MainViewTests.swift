@@ -9,8 +9,6 @@ import XCTest
 
 class MainViewTests: UITestCase {
 
-    func waitFadeAnimation() { Thread.sleep(forTimeInterval: 0.5) }
-
     func testMainStatusItemClicked_shouldDisplayMainView() {
 
         MenuBar.main.click()
@@ -20,7 +18,6 @@ class MainViewTests: UITestCase {
 
         Main.view.outside.click()
 
-        waitFadeAnimation()
         XCTAssertFalse(Main.pinBtn.isHittable)
     }
 
@@ -33,7 +30,6 @@ class MainViewTests: UITestCase {
         Main.pinBtn.click()
         Main.view.outside.click()
 
-        waitFadeAnimation()
         XCTAssertTrue(Main.pinBtn.isHittable)
 
         app.activate()
@@ -41,7 +37,6 @@ class MainViewTests: UITestCase {
         Main.pinBtn.click()
         Main.view.outside.click()
 
-        waitFadeAnimation()
         XCTAssertFalse(Main.pinBtn.isHittable)
     }
 
@@ -53,7 +48,6 @@ class MainViewTests: UITestCase {
 
         EventDetails.view.outside.click()
 
-        waitFadeAnimation()
         XCTAssertFalse(EventDetails.view.exists)
     }
 
@@ -100,7 +94,6 @@ class MainViewTests: UITestCase {
 
         CalendarPicker.view.outside.click()
 
-        waitFadeAnimation()
         XCTAssertFalse(CalendarPicker.view.exists)
     }
 

@@ -203,7 +203,7 @@ class SettingsTests: UITestCase {
         XCTAssertTrue(MenuBar.main.title.hasSuffix("01/01/2021"))
     }
 
-    func testSettingsGeneral_toggleShowWeekNumbers() {
+    func testSettingsGeneral_toggleShowWeekNumbers() throws {
 
         MenuBar.main.click()
         Main.settingsBtn.click()
@@ -213,12 +213,13 @@ class SettingsTests: UITestCase {
         let checkbox = Settings.General.view.checkBoxes
             .element(matching: NSPredicate(format: "title = %@", "Show week numbers"))
 
-        XCTAssertTrue(Calendar.weekNumbers.first!.isHittable)
+        XCTAssert(try XCTUnwrap(Calendar.weekNumbers.first).isHittable)
 
         checkbox.click()
-        XCTAssertFalse(Calendar.weekNumbers.first!.isHittable)
+        XCTAssert(Calendar.weekNumbers.isEmpty)
 
         checkbox.click()
-        XCTAssertTrue(Calendar.weekNumbers.first!.isHittable)
+        XCTAssert(try XCTUnwrap(Calendar.weekNumbers.first).isHittable)
+    }
     }
 }
