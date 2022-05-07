@@ -117,6 +117,16 @@ extension NSView {
     }
 
     @discardableResult
+    func edges(to view: LayoutItem, insets: NSEdgeInsets) -> LayoutConstraints {
+        (
+            top(equalTo: view, constant: insets.top),
+            trailing(equalTo: view, constant: insets.right),
+            bottom(equalTo: view, constant: insets.bottom),
+            leading(equalTo: view, constant: insets.left)
+        )
+    }
+
+    @discardableResult
     func center(in view: LayoutItem, orientation: NSLayoutConstraint.Orientation, constant: CGFloat = 0) -> NSLayoutConstraint {
 
         forAutoLayout()

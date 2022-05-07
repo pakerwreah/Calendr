@@ -35,6 +35,7 @@ class AboutViewController: NSViewController {
             .spacer(height: 4),
             quitButton
         ])
+        .with(insets: .init(bottom: 1))
         .with(orientation: .vertical)
     }
 

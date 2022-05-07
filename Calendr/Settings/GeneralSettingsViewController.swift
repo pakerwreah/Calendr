@@ -61,7 +61,7 @@ class GeneralSettingsViewController: NSViewController {
 
         view.addSubview(stackView)
 
-        stackView.edges(to: view)
+        stackView.edges(to: view, insets: .init(bottom: 1))
     }
 
     private lazy var menuBarContent: NSView = {

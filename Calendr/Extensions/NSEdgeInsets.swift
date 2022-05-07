@@ -20,4 +20,8 @@ extension NSEdgeInsets {
     init(horizontal: CGFloat = 0, vertical: CGFloat = 0) {
         self.init(top: vertical, left: horizontal, bottom: vertical, right: horizontal)
     }
+
+    init(_ value: CGFloat) {
+        self.init(horizontal: value, vertical: value)
+    }
 }
