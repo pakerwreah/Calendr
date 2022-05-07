@@ -221,5 +221,37 @@ class SettingsTests: UITestCase {
         checkbox.click()
         XCTAssert(try XCTUnwrap(Calendar.weekNumbers.first).isHittable)
     }
+
+    func testSettingsGeneral_togglePreserveSelectedDate() {
+
+        MenuBar.main.click()
+
+        let day2 = Calendar.dates[6]
+
+        day2.click()
+        XCTAssertEqual(Calendar.selected.text, "2")
+
+        Main.view.outside.click()
+        MenuBar.main.click()
+
+        XCTAssertEqual(Calendar.selected.text, "1")
+
+        Main.settingsBtn.click()
+        XCTAssert(Settings.view.didAppear)
+
+        let checkbox = Settings.General.view.checkBoxes
+            .element(matching: NSPredicate(format: "title = %@", "Preserve selected date on hide"))
+
+        checkbox.click()
+
+        Settings.window.buttons[XCUIIdentifierCloseWindow].click()
+
+        day2.click()
+        XCTAssertEqual(Calendar.selected.text, "2")
+
+        Main.view.outside.click()
+        MenuBar.main.click()
+
+        XCTAssertEqual(Calendar.selected.text, "2")
     }
 }
