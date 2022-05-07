@@ -59,6 +59,8 @@ internal enum Strings {
     /// Transparency
     internal static var transparency: String { return Strings.tr("Localizable", "settings.transparency") }
     internal enum Calendar {
+      /// Preserve selected date on hide
+      internal static var preserveSelectedDate: String { return Strings.tr("Localizable", "settings.calendar.preserve_selected_date") }
       /// Show week numbers
       internal static var showWeekNumbers: String { return Strings.tr("Localizable", "settings.calendar.show_week_numbers") }
     }

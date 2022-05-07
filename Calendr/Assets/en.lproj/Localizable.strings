@@ -23,6 +23,7 @@
 
 "settings.calendar" = "Calendar";
 "settings.calendar.show_week_numbers" = "Show week numbers";
+"settings.calendar.preserve_selected_date" = "Preserve selected date on hide";
 
 "settings.events" = "Events";
 "settings.events.finished" = "Finished";
