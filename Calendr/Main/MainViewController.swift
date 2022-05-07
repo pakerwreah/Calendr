@@ -470,7 +470,7 @@ class MainViewController: NSViewController {
         [prevBtn, resetBtn, nextBtn].forEach(styleButton)
 
         prevBtn.image = Icons.Calendar.prev
-        resetBtn.image = Icons.Calendar.reset
+        resetBtn.image = Icons.Calendar.reset.with(scale: .small)
         nextBtn.image = Icons.Calendar.next
 
         return NSStackView(views: [
