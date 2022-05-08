@@ -148,6 +148,26 @@ class CalendarView: NSView {
             )
             gridView.cell(atColumnIndex: 1 + day % 7, rowIndex: 1 + day / 7).contentView = cellView
         }
+
+        rx.mouseExited
+            .map(nil)
+            .bind(to: hoverObserver)
+            .disposed(by: disposeBag)
+    }
+
+    override func updateTrackingAreas() {
+
+        let offsetX = gridView.column(at: 0).width
+        let offsetY = gridView.row(at: 0).height
+
+        let rect = CGRect(
+            x: offsetX, y: 0,
+            width: gridView.bounds.width - offsetX,
+            height: gridView.bounds.height - offsetY
+        )
+
+        gridView.trackingAreas.forEach(gridView.removeTrackingArea(_:))
+        gridView.addTrackingRect(rect, owner: self, userData: nil, assumeInside: false)
     }
 
     required init?(coder: NSCoder) {

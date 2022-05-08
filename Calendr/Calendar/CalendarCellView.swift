@@ -143,21 +143,19 @@ class CalendarCellView: NSView {
             .bind(to: clickObserver)
             .disposed(by: disposeBag)
 
-        Observable.merge(
-            rx.mouseEntered
-                .delay(.milliseconds(10), scheduler: MainScheduler.instance)
-                .withLatestFrom(viewModel.map(\.date))
-                .optional(),
-            rx.mouseExited.map(nil)
-        )
-        .bind(to: hoverObserver)
-        .disposed(by: disposeBag)
+        rx.mouseEntered
+            .withLatestFrom(viewModel.map(\.date))
+            .bind(to: hoverObserver)
+            .disposed(by: disposeBag)
     }
 
     override func updateLayer() {
         super.updateLayer()
         borderLayer.frame = bounds
     }
+
+    // Prevent propagating event to superview
+    override func mouseExited(with event: NSEvent) { }
 
     override func updateTrackingAreas() {
         trackingAreas.forEach(removeTrackingArea(_:))
