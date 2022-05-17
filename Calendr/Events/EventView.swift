@@ -48,7 +48,7 @@ class EventView: NSView {
             icon.contentTintColor = .systemRed
 
         case .reminder:
-            icon.image = Icons.Event.reminder.with(scale: .small).with(size: 11)
+            icon.image = Icons.Event.reminder.with(scale: .small).with(size: 9)
             icon.contentTintColor = .headerTextColor
 
         case .event:
@@ -81,8 +81,6 @@ class EventView: NSView {
         hoverLayer.backgroundColor = NSColor.gray.cgColor.copy(alpha: 0.2)
         layer?.addSublayer(hoverLayer)
 
-        icon.height(equalTo: 12)
-        icon.imageAlignment = .alignBottom
         icon.setContentHuggingPriority(.required, for: .horizontal)
         icon.setContentCompressionResistancePriority(.required, for: .horizontal)
 
@@ -111,7 +109,7 @@ class EventView: NSView {
         linkBtn.isBordered = false
         linkBtn.width(equalTo: 22)
 
-        let titleStackView = NSStackView(views: [icon, title]).with(spacing: 4).with(alignment: .top)
+        let titleStackView = NSStackView(views: [icon, title]).with(spacing: 4).with(alignment: .firstBaseline)
 
         let subtitleStackView = NSStackView(views: [subtitle, linkBtn]).with(spacing: 0)
 
