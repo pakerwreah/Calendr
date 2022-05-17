@@ -23,6 +23,7 @@ class EventView: NSView {
     private let progress = NSView()
     private let linkBtn = NSButton()
     private let hoverLayer = CALayer()
+    private let colorBar = NSView()
 
     private lazy var progressTop = progress.top(equalTo: self)
 
@@ -41,6 +42,8 @@ class EventView: NSView {
 
     private func setData() {
 
+        colorBar.layer?.backgroundColor = viewModel.color.cgColor
+
         switch viewModel.type {
 
         case .birthday:
@@ -51,7 +54,20 @@ class EventView: NSView {
             icon.image = Icons.Event.reminder.with(scale: .small).with(size: 9)
             icon.contentTintColor = .headerTextColor
 
-        case .event:
+        case .event(let status):
+            switch status {
+            case .accepted, .unknown:
+                break
+
+            case .pending:
+                layer?.backgroundColor = Self.pendingBackground
+
+            case .maybe:
+                colorBar.layer?.borderWidth = 1
+                colorBar.layer?.borderColor = viewModel.color.cgColor
+                colorBar.layer?.backgroundColor = nil
+            }
+
             icon.isHidden = true
         }
 
@@ -64,10 +80,6 @@ class EventView: NSView {
         duration.isHidden = duration.isEmpty
 
         linkBtn.isHidden = viewModel.linkURL == nil
-
-        if viewModel.isPending {
-            layer?.backgroundColor = Self.pendingBackground
-        }
     }
 
     private func configureLayout() {
@@ -97,9 +109,7 @@ class EventView: NSView {
         subtitle.textColor = .secondaryLabelColor
         subtitle.font = .systemFont(ofSize: 11)
 
-        let colorBar = NSView()
         colorBar.wantsLayer = true
-        colorBar.layer?.backgroundColor = viewModel.color.cgColor
         colorBar.layer?.cornerRadius = 2
         colorBar.width(equalTo: 4)
 

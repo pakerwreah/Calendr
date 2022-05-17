@@ -194,6 +194,22 @@ extension EKEvent {
     }
 }
 
+private extension EventStatus {
+
+    init(from status: EKParticipantStatus) {
+        switch status {
+        case .accepted:
+            self = .accepted
+        case .pending:
+            self = .pending
+        case .tentative:
+            self = .maybe
+        default:
+            self = .unknown
+        }
+    }
+}
+
 private extension CalendarModel {
 
     init(from calendar: EKCalendar) {
@@ -218,8 +234,7 @@ private extension EventModel {
             notes: event.notes,
             url: event.url,
             isAllDay: event.isAllDay,
-            isPending: event.status == .pending,
-            type: event.birthdayContactIdentifier.isNotNil ? .birthday : .event,
+            type: event.birthdayContactIdentifier.isNotNil ? .birthday : .event(.init(from: event.status)),
             calendar: .init(from: event.calendar)
         )
     }
@@ -234,7 +249,6 @@ private extension EventModel {
             notes: reminder.notes,
             url: reminder.url, // doesn't work
             isAllDay: reminder.dueDateComponents!.hour == nil,
-            isPending: false,
             type: .reminder,
             calendar: .init(from: reminder.calendar)
         )

@@ -20,8 +20,7 @@ extension EventModel {
         notes: String? = nil,
         url: URL? = nil,
         isAllDay: Bool = false,
-        isPending: Bool = false,
-        type: EventType = .event,
+        type: EventType = .event(.accepted),
         calendar: CalendarModel = .make()
     ) -> EventModel {
 
@@ -34,7 +33,6 @@ extension EventModel {
             notes: notes,
             url: url,
             isAllDay: isAllDay || type.isBirthday,
-            isPending: isPending,
             type: type,
             calendar: calendar
         )

@@ -14,7 +14,6 @@ class EventViewModel {
     let subtitle: String
     let duration: String
     let color: NSColor
-    let isPending: Bool
     let type: EventType
     let isMeeting: Bool
     let linkURL: URL?
@@ -48,7 +47,6 @@ class EventViewModel {
 
         title = event.title
         color = event.calendar.color
-        isPending = event.isPending
         type = event.type
 
         let links = !event.type.isBirthday

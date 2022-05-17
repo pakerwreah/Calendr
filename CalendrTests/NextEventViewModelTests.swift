@@ -203,8 +203,8 @@ class NextEventViewModelTests: XCTestCase {
             .disposed(by: disposeBag)
 
         eventsSubject.onNext([
-            .make(start: now, end: now + 1, title: "Event 1", isPending: true),
-            .make(start: now + 1, end: now + 2, title: "Event 2", isPending: false)
+            .make(start: now, end: now + 1, title: "Event 1", type: .event(.pending)),
+            .make(start: now + 1, end: now + 2, title: "Event 2", type: .event(.accepted))
         ])
 
         XCTAssertEqual(title, "Event 2")

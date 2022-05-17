@@ -21,12 +21,12 @@ class EventViewModelTests: XCTestCase {
     func testBasicInfo() {
 
         let viewModel = mock(
-            event: .make(title: "Title", isPending: true, calendar: .make(color: .black))
+            event: .make(title: "Title", type: .event(.pending), calendar: .make(color: .black))
         )
 
         XCTAssertEqual(viewModel.title, "Title")
         XCTAssertEqual(viewModel.color, .black)
-        XCTAssertEqual(viewModel.isPending, true)
+        XCTAssertEqual(viewModel.type, .event(.pending))
     }
 
     func testSubtitle_withExtraSpacesInLocation_withURLInLocation_shouldShowTrimmedLocation() {

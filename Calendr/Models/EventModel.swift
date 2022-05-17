@@ -16,19 +16,25 @@ struct EventModel: Equatable {
     let notes: String?
     let url: URL?
     let isAllDay: Bool
-    let isPending: Bool
     let type: EventType
     let calendar: CalendarModel
 }
 
-enum EventType {
-    case event
+enum EventStatus {
+    case accepted
+    case pending
+    case maybe
+    case unknown
+}
+
+enum EventType: Equatable {
+    case event(EventStatus)
     case birthday
     case reminder
 }
 
 extension EventType {
-    var isEvent: Bool { self ~= .event }
+    var isEvent: Bool { if case .event = self { return true } else { return false } }
     var isBirthday: Bool { self ~= .birthday }
     var isReminder: Bool { self ~= .reminder }
 }
@@ -38,4 +44,6 @@ extension EventModel {
     func meta(using dateProvider: DateProviding) -> EventMeta {
         EventMeta(event: self, dateProvider: dateProvider)
     }
+
+    var isPending: Bool { if case .event(.pending) = type { return true } else { return false } }
 }

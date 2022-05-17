@@ -25,7 +25,7 @@ struct EventViewPreview: PreviewProvider {
                     title: "Test Event",
                     location: "Brasil",
                     notes: "Join at http://meet.google.com",
-                    type: .event,
+                    type: .event(.unknown),
                     calendar: .make(color: .systemYellow)
                 ),
                 dateProvider: dateProvider,
@@ -37,6 +37,7 @@ struct EventViewPreview: PreviewProvider {
         .preview()
         .frame(width: 180, height: 50)
         .preferredColorScheme(color)
+        .padding(5)
     }
 
     /// live preview doesn't work well with both color schemes enabled
