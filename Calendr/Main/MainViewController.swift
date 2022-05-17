@@ -48,6 +48,7 @@ class MainViewController: NSViewController {
     private let workspace: WorkspaceServiceProviding
     private let calendarService: CalendarServiceProviding
     private let dateProvider: DateProviding
+    private let screenProvider: ScreenProviding
     private let notificationCenter: NotificationCenter
 
     // MARK: - Initalization
@@ -64,6 +65,7 @@ class MainViewController: NSViewController {
         self.workspace = workspace
         self.calendarService = calendarService
         self.dateProvider = dateProvider
+        self.screenProvider = screenProvider
         self.notificationCenter = notificationCenter
 
         initialDate = BehaviorSubject(value: dateProvider.now)
@@ -86,6 +88,7 @@ class MainViewController: NSViewController {
             dateObservable: initialDate,
             settings: settingsViewModel,
             dateProvider: dateProvider,
+            screenProvider: screenProvider,
             notificationCenter: notificationCenter
         )
 
@@ -97,7 +100,8 @@ class MainViewController: NSViewController {
 
         settingsViewController = SettingsViewController(
             settingsViewModel: settingsViewModel,
-            calendarsViewModel: calendarPickerViewModel
+            calendarsViewModel: calendarPickerViewModel,
+            notificationCenter: notificationCenter
         )
 
         let (hoverObservable, hoverObserver) = PublishSubject<Date?>.pipe()

@@ -15,6 +15,7 @@ protocol StatusItemSettings {
     var showStatusItemIcon: Observable<Bool> { get }
     var showStatusItemDate: Observable<Bool> { get }
     var statusItemDateStyle: Observable<DateStyle> { get }
+    var eventStatusItemDetectNotch: Observable<Bool> { get }
 }
 
 protocol CalendarSettings {

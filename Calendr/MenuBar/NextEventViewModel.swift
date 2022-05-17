@@ -17,9 +17,6 @@ class NextEventViewModel {
     let hasEvent: Observable<Bool>
     let event: Observable<EventModel?>
 
-    private let screenProvider: ScreenProviding
-    private let hasNotch: BehaviorSubject<Bool>
-
     init(
         settings: NextEventSettings,
         eventsObservable: Observable<[EventModel]>,
@@ -27,9 +24,6 @@ class NextEventViewModel {
         screenProvider: ScreenProviding,
         scheduler: SchedulerType = MainScheduler.instance
     ) {
-
-        self.screenProvider = screenProvider
-        hasNotch = .init(value: screenProvider.hasNotch)
 
         typealias NextEventTuple = (event: EventModel, isInProgress: Bool)
 
@@ -71,18 +65,18 @@ class NextEventViewModel {
             .map { $0.isInProgress ? $0.event.calendar.color.withAlphaComponent(0.2): .clear }
             .distinctUntilChanged()
 
-        let hasNotch = Observable
-            .combineLatest(settings.eventStatusItemDetectNotch, hasNotch)
+        let shouldCompact = Observable
+            .combineLatest(settings.eventStatusItemDetectNotch, screenProvider.hasNotchObservable)
             .map { $0 && $1 }
             .distinctUntilChanged()
 
         let eventStatusItemLength = Observable
-            .combineLatest(hasNotch, settings.eventStatusItemLength)
+            .combineLatest(shouldCompact, settings.eventStatusItemLength)
             .map { $0 ? min($1, Constants.compactMaxWidth) : $1 }
 
         let nextEventTitle = nextEventObservable.skipNil().map(\.event.title)
 
-        title = Observable.combineLatest(nextEventTitle, eventStatusItemLength, hasNotch)
+        title = Observable.combineLatest(nextEventTitle, eventStatusItemLength, shouldCompact)
             .map { $0.count > $1 ? "\($0.prefix($1).trimmed)\($2 ? "." : "...")": $0 }
             .distinctUntilChanged()
 
@@ -134,8 +128,6 @@ class NextEventViewModel {
             .map(\.isNotNil)
             .distinctUntilChanged()
     }
-
-    func didChangeScreen() { hasNotch.onNext(screenProvider.hasNotch) }
 }
 
 private enum Constants {

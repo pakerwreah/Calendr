@@ -16,6 +16,7 @@ class StatusItemViewModelTests: XCTestCase {
     let dateSubject = PublishSubject<Date>()
 
     let dateProvider = MockDateProvider()
+    let screenProvider = MockScreenProvider()
     let settings = MockStatusItemSettings()
 
     let notificationCenter = NotificationCenter()
@@ -24,11 +25,14 @@ class StatusItemViewModelTests: XCTestCase {
         dateObservable: dateSubject,
         settings: settings,
         dateProvider: dateProvider,
+        screenProvider: screenProvider,
         notificationCenter: notificationCenter
     )
 
     var lastAttributed: NSAttributedString?
-    var lastValue: String? { lastAttributed?.string }
+    var lastValue: String? { // remove attachments
+        lastAttributed?.string.replacingOccurrences(of: "[^ \\w,/-]", with: "", options: .regularExpression)
+    }
 
     override func setUp() {
 
@@ -79,6 +83,24 @@ class StatusItemViewModelTests: XCTestCase {
 
         setUp(showIcon: false, showDate: true)
         XCTAssertEqual(lastAttributed?.containsAttachments, false)
+
+        setUp(showIcon: false, showDate: false)
+        XCTAssertEqual(lastAttributed?.containsAttachments, true)
+    }
+
+    func testIconVisibility_withNotchDetected() {
+
+        settings.eventStatusItemDetectNotchObserver.onNext(true)
+        screenProvider.hasNotchObserver.onNext(true)
+
+        setUp(showIcon: true, showDate: true)
+        XCTAssertEqual(lastAttributed?.containsAttachments, false)
+
+        setUp(showIcon: false, showDate: true)
+        XCTAssertEqual(lastAttributed?.containsAttachments, false)
+
+        setUp(showIcon: false, showDate: false)
+        XCTAssertEqual(lastAttributed?.containsAttachments, true)
     }
 
     func testDateVisibility() {

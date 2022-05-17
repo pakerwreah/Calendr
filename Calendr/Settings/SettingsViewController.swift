@@ -10,9 +10,16 @@ import RxSwift
 
 class SettingsViewController: NSTabViewController {
 
+    private let notificationCenter: NotificationCenter
     private let disposeBag = DisposeBag()
 
-    init(settingsViewModel: SettingsViewModel, calendarsViewModel: CalendarPickerViewModel) {
+    init(
+        settingsViewModel: SettingsViewModel,
+        calendarsViewModel: CalendarPickerViewModel,
+        notificationCenter: NotificationCenter
+    ) {
+
+        self.notificationCenter = notificationCenter
 
         super.init(nibName: nil, bundle: nil)
 
@@ -104,7 +111,7 @@ class SettingsViewController: NSTabViewController {
         for (i, vc) in tabViewItems.compactMap(\.viewController).enumerated() {
 
             Observable.merge(
-                NotificationCenter.default.rx.notification(NSLocale.currentLocaleDidChangeNotification).void(),
+                notificationCenter.rx.notification(NSLocale.currentLocaleDidChangeNotification).void(),
                 vc.rx.viewDidLayout
             )
             .withLatestFrom(rx.observe(\.selectedTabViewItemIndex))

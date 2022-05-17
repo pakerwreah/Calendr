@@ -16,6 +16,7 @@ class StatusItemViewModel {
         dateObservable: Observable<Date>,
         settings: StatusItemSettings,
         dateProvider: DateProviding,
+        screenProvider: ScreenProviding,
         notificationCenter: NotificationCenter
     ) {
 
@@ -29,9 +30,26 @@ class StatusItemViewModel {
                 DateFormatter(calendar: dateProvider.calendar).with(style: dateStyle)
             }
 
+        let shouldCompact = Observable
+            .combineLatest(settings.eventStatusItemDetectNotch, screenProvider.hasNotchObservable)
+            .map { $0 && $1 }
+            .distinctUntilChanged()
+
+        let showIcon = Observable
+            .combineLatest(
+                settings.showStatusItemIcon,
+                settings.showStatusItemDate,
+                shouldCompact
+            )
+            .map { showIcon, showDate, shouldCompact -> Bool in
+                guard showDate else { return true }
+                return showIcon && !shouldCompact
+            }
+            .distinctUntilChanged()
+
         text = Observable.combineLatest(
             dateObservable,
-            settings.showStatusItemIcon,
+            showIcon,
             settings.showStatusItemDate,
             dateFormatterObservable
         )

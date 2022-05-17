@@ -124,8 +124,7 @@ class NextEventViewModelTests: XCTestCase {
 
         XCTAssertEqual(title, "This is an event with a text")
 
-        screenProvider.hasNotch = true
-        viewModel.didChangeScreen()
+        screenProvider.hasNotchObserver.onNext(true)
 
         XCTAssertEqual(title, "This is an even.")
 

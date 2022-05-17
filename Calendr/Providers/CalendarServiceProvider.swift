@@ -29,10 +29,11 @@ class CalendarServiceProvider: CalendarServiceProviding {
 
     let changeObservable: Observable<Void>
 
-    init() {
+    init(notificationCenter: NotificationCenter) {
+
         (changeObservable, changeObserver) = PublishSubject<Void>.pipe()
 
-        NotificationCenter.default.rx
+        notificationCenter.rx
             .notification(.EKEventStoreChanged, object: store)
             .void()
             .bind(to: changeObserver)

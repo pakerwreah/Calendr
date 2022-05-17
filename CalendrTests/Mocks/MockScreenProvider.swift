@@ -5,10 +5,16 @@
 //  Created by Paker on 09/04/22.
 //
 
-import Foundation
+import RxSwift
 @testable import Calendr
 
 class MockScreenProvider: ScreenProviding {
-    var hasNotch: Bool = false
+
+    var hasNotchObserver: AnyObserver<Bool>
+    var hasNotchObservable: Observable<Bool>
+
+    init() {
+        (hasNotchObservable, hasNotchObserver) = BehaviorSubject.pipe(value: false)
+    }
 }
 
