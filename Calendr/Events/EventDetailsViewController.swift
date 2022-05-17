@@ -13,6 +13,7 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
     private let disposeBag = DisposeBag()
 
     private let scrollView = NSScrollView()
+    private let statusIcon = NSImageView()
 
     private let _title = Label()
     private let url = Label()
@@ -61,13 +62,17 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
 
         view.widthAnchor.constraint(lessThanOrEqualToConstant: 400).activate()
 
+        statusIcon.setContentCompressionResistancePriority(.required, for: .horizontal)
+
         let detailsStackView = NSStackView(
             views: fields
                 .enumerated()
                 .map { index, field in
-                    index > 0
-                        ? NSStackView(views: [makeLine(), field]).with(orientation: .vertical)
-                        : field
+                    if index == 0 {
+                        return NSStackView(views: [field, statusIcon]).with(alignment: .firstBaseline)
+                    } else {
+                        return NSStackView(views: [makeLine(), field]).with(orientation: .vertical)
+                    }
                 }
         )
         .with(orientation: .vertical)
@@ -151,7 +156,30 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         .bind { $0.material = $1 }
         .disposed(by: disposeBag)
 
-        if viewModel.type.isReminder {
+        switch viewModel.type {
+
+        case .event(.accepted):
+            statusIcon.image = Icons.EventDetails.Status.accepted
+            statusIcon.contentTintColor = .systemGreen
+
+        case .event(.maybe):
+            statusIcon.image = Icons.EventDetails.Status.maybe
+            statusIcon.contentTintColor = .systemOrange
+
+        case .event(.pending):
+            statusIcon.image = Icons.EventDetails.Status.pending
+            statusIcon.contentTintColor = .systemGray
+
+        case .event(.unknown):
+            break
+
+        case .birthday:
+            statusIcon.image = Icons.Event.birthday
+            statusIcon.contentTintColor = .systemRed
+
+        case .reminder:
+            statusIcon.image = Icons.Event.reminder.with(size: 12)
+            statusIcon.contentTintColor = .headerTextColor
 
             optionsButton.rx.tap.bind { [optionsButton, reminderOptions] in
                 reminderOptions.popUp(

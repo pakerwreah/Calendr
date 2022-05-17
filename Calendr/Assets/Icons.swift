@@ -42,6 +42,13 @@ enum Icons {
     }
 
     enum EventDetails {
+
+        enum Status {
+            static let accepted = NSImage(systemName: "checkmark.circle")
+            static let maybe = NSImage(systemName: "questionmark.circle")
+            static let pending = NSImage(systemName: "questionmark.circle")
+        }
+
         static let options = NSImage(systemName: "chevron.down")
     }
 }
