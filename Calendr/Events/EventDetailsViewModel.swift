@@ -16,6 +16,7 @@ class EventDetailsViewModel {
     let url: String
     let location: String
     let notes: String
+    let participants: [Participant]
 
     let popoverMaterial: Observable<PopoverMaterial>
 
@@ -36,6 +37,11 @@ class EventDetailsViewModel {
         url = (type.isBirthday ? nil : event.url?.absoluteString) ?? ""
         location = event.location ?? ""
         notes = event.notes ?? ""
+        participants = event.participants.sorted {
+            ($0.isOrganizer, $0.isCurrentUser, $0.status, $0.name)
+            <
+            ($1.isOrganizer, $1.isCurrentUser, $1.status, $1.name)
+        }
 
         let formatter = DateIntervalFormatter()
         formatter.dateStyle = .medium

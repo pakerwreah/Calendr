@@ -13,6 +13,15 @@ internal enum Strings {
   /// Quit
   internal static var quit: String { return Strings.tr("Localizable", "quit") }
 
+  internal enum EventDetails {
+    internal enum Participant {
+      /// me
+      internal static var me: String { return Strings.tr("Localizable", "event_details.participant.me") }
+      /// organizer
+      internal static var organizer: String { return Strings.tr("Localizable", "event_details.participant.organizer") }
+    }
+  }
+
   internal enum Formatter {
     internal enum Date {
       /// All day

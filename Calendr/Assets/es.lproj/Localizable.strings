@@ -41,3 +41,6 @@
 "reminder.options.button" = "Opciones";
 "reminder.options.complete" = "Completado";
 "reminder.options.remind" = "Recordar %@";
+
+"event_details.participant.organizer" = "organizador";
+"event_details.participant.me" = "me";

@@ -194,16 +194,30 @@ extension EKEvent {
     }
 }
 
+private extension Participant {
+
+    init(from participant: EKParticipant, isOrganizer: Bool) {
+        self.init(
+            name: participant.name ?? participant.url.absoluteString.replacingOccurrences(of: "mailto:", with: ""),
+            status: .init(from: participant.participantStatus),
+            isOrganizer: isOrganizer,
+            isCurrentUser: participant.isCurrentUser
+        )
+    }
+}
+
 private extension EventStatus {
 
     init(from status: EKParticipantStatus) {
         switch status {
         case .accepted:
             self = .accepted
-        case .pending:
-            self = .pending
         case .tentative:
             self = .maybe
+        case .declined:
+            self = .declined
+        case .pending:
+            self = .pending
         default:
             self = .unknown
         }
@@ -222,6 +236,23 @@ private extension CalendarModel {
     }
 }
 
+private extension EventType {
+
+    init(from event: EKEvent) {
+        self = event.birthdayContactIdentifier.isNotNil ? .birthday : .event(.init(from: event.status))
+    }
+}
+
+private extension Array where Element == Participant {
+
+    init(from event: EKEvent) {
+        let attendees: [EKParticipant] = (event.attendees ?? []) + (event.organizer.map { [$0] } ?? [])
+        self.init(
+            Set(attendees.map { .init(from: $0, isOrganizer: $0.url == event.organizer?.url) })
+        )
+    }
+}
+
 private extension EventModel {
 
     init(from event: EKEvent) {
@@ -234,8 +265,9 @@ private extension EventModel {
             notes: event.notes,
             url: event.url,
             isAllDay: event.isAllDay,
-            type: event.birthdayContactIdentifier.isNotNil ? .birthday : .event(.init(from: event.status)),
-            calendar: .init(from: event.calendar)
+            type: .init(from: event),
+            calendar: .init(from: event.calendar),
+            participants: .init(from: event)
         )
     }
 
@@ -250,7 +282,8 @@ private extension EventModel {
             url: reminder.url, // doesn't work
             isAllDay: reminder.dueDateComponents!.hour == nil,
             type: .reminder,
-            calendar: .init(from: reminder.calendar)
+            calendar: .init(from: reminder.calendar),
+            participants: []
         )
     }
 }

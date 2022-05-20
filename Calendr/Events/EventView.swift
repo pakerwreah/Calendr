@@ -56,7 +56,7 @@ class EventView: NSView {
 
         case .event(let status):
             switch status {
-            case .accepted, .unknown:
+            case .accepted, .declined, .unknown:
                 break
 
             case .pending:
