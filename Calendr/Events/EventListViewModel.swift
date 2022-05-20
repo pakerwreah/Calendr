@@ -83,12 +83,8 @@ class EventListViewModel {
 
             let allDayViewModels: [EventListItem] = events
                 .filter(\.isAllDay)
-                .sorted {
-                    $0.calendar.color.hashValue < $1.calendar.color.hashValue
-                }
-                .map {
-                    .event(makeEventViewModel($0))
-                }
+                .sorted(by: \.calendar.color.hashValue)
+                .map { .event(makeEventViewModel($0)) }
 
             let viewModels = events
                 .filter(\.isAllDay.isFalse)

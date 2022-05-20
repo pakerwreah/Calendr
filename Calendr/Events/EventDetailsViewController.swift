@@ -14,16 +14,14 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
 
     private let scrollView = NSScrollView()
     private let statusIcon = NSImageView()
+    private let participantsStackView = NSStackView(.vertical)
+    private let detailsStackView = NSStackView(.vertical)
 
-    private let _title = Label()
-    private let url = Label()
-    private let location = Label()
-    private let duration = Label()
-    private let notes = Label()
-
-    private var fields: [Label] {
-        [_title, url, location, duration, notes]
-    }
+    private let titleLabel = Label()
+    private let urlLabel = Label()
+    private let locationLabel = Label()
+    private let durationLabel = Label()
+    private let notesLabel = Label()
 
     private lazy var optionsButton = NSButton()
     private lazy var reminderOptions = ReminderOptions()
@@ -64,23 +62,10 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
 
         statusIcon.setContentCompressionResistancePriority(.required, for: .horizontal)
 
-        let detailsStackView = NSStackView(
-            views: fields
-                .enumerated()
-                .map { index, field in
-                    if index == 0 {
-                        return NSStackView(views: [field, statusIcon]).with(alignment: .firstBaseline)
-                    } else {
-                        return NSStackView(views: [makeLine(), field]).with(orientation: .vertical)
-                    }
-                }
-        )
-        .with(orientation: .vertical)
-
         scrollView.hasVerticalScroller = true
         scrollView.scrollerStyle = .overlay
         scrollView.drawsBackground = false
-        scrollView.documentView = detailsStackView
+        scrollView.documentView = detailsStackView.forAutoLayout()
 
         scrollView.contentView.edges(to: scrollView)
         scrollView.contentView.top(equalTo: detailsStackView)
@@ -95,19 +80,19 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
 
         contentStackView.edges(to: view, constant: 12)
 
-        for field in fields {
-            field.textColor = .labelColor
-            field.lineBreakMode = .byWordWrapping
-            field.isSelectable = true
+        for label in  [titleLabel, urlLabel, locationLabel, durationLabel, notesLabel] {
+            label.textColor = .labelColor
+            label.lineBreakMode = .byWordWrapping
+            label.isSelectable = true
         }
 
-        _title.forceVibrancy = false
-        _title.textColor = .headerTextColor
-        _title.font = .header
+        titleLabel.forceVibrancy = false
+        titleLabel.textColor = .headerTextColor
+        titleLabel.font = .header
 
-        location.font = .small
-        url.font = .small
-        duration.font = .default
+        locationLabel.font = .small
+        urlLabel.font = .small
+        durationLabel.font = .default
 
         if viewModel.type.isReminder {
             optionsButton.title = Strings.Reminder.Options.button
@@ -126,21 +111,113 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
 
         super.viewDidLoad()
 
-        _title.stringValue = viewModel.title
-        url.stringValue = viewModel.url
-        location.stringValue = viewModel.location
-        duration.stringValue = viewModel.duration
-
-        if ["<", ">"].allSatisfy(viewModel.notes.contains),
-           let html = viewModel.notes.html(font: .default, color: .labelColor) {
-            notes.attributedStringValue = html
-        } else {
-            notes.font = .default
-            notes.stringValue = viewModel.notes
+        if !viewModel.title.isEmpty {
+            titleLabel.stringValue = viewModel.title
+            detailsStackView.addArrangedSubview(
+                NSStackView(views: [titleLabel, statusIcon]).with(alignment: .firstBaseline)
+            )
         }
 
-        for field in fields {
-            field.superview?.isHidden = field.isEmpty
+        if !viewModel.url.isEmpty {
+            urlLabel.stringValue = viewModel.url
+            detailsStackView.addArrangedSubview(makeLine())
+            detailsStackView.addArrangedSubview(urlLabel)
+        }
+
+        if !viewModel.location.isEmpty {
+            locationLabel.stringValue = viewModel.location
+            detailsStackView.addArrangedSubview(makeLine())
+            detailsStackView.addArrangedSubview(locationLabel)
+        }
+
+        if !viewModel.duration.isEmpty {
+            durationLabel.stringValue = viewModel.duration
+            detailsStackView.addArrangedSubview(makeLine())
+            detailsStackView.addArrangedSubview(durationLabel)
+        }
+
+        if !viewModel.participants.isEmpty {
+
+            for participant in viewModel.participants {
+
+                let status = NSImageView()
+
+                var info: String = participant.name
+
+                if participant.isOrganizer {
+                    info += " (\(Strings.EventDetails.Participant.organizer))"
+                }
+
+                if participant.isCurrentUser {
+                    info += " (\(Strings.EventDetails.Participant.me))"
+                }
+
+                let label = Label(text: info, font: .small)
+                label.lineBreakMode = .byTruncatingMiddle
+
+                switch participant.status {
+                case .accepted:
+                    status.image = Icons.EventDetails.Status.accepted
+                    status.contentTintColor = .systemGreen
+
+                case .maybe:
+                    status.image = Icons.EventDetails.Status.maybe
+                    status.contentTintColor = .systemOrange
+
+                case .declined:
+                    status.image = Icons.EventDetails.Status.declined
+                    status.contentTintColor = .systemRed
+
+                case .pending, .unknown:
+                    status.image = Icons.EventDetails.Status.pending
+                    status.contentTintColor = .systemGray
+                }
+
+                let stack = NSStackView(views: [status, label])
+                label.setContentCompressionResistancePriority(.required, for: .vertical)
+
+                participantsStackView.addArrangedSubview(stack)
+            }
+
+            let scrollView = NSScrollView()
+            detailsStackView.addArrangedSubview(makeLine())
+            detailsStackView.addArrangedSubview(scrollView)
+
+            scrollView.hasVerticalScroller = true
+            scrollView.scrollerStyle = .legacy
+            scrollView.drawsBackground = false
+            scrollView.documentView = participantsStackView.forAutoLayout()
+            scrollView.contentView.edges(to: scrollView)
+            scrollView.contentView.width(equalTo: participantsStackView, constant: 20)
+            scrollView.contentView.height(equalTo: participantsStackView).priority = .defaultHigh
+            scrollView.contentView.heightAnchor.constraint(lessThanOrEqualToConstant: 222).activate()
+            participantsStackView.layoutSubtreeIfNeeded()
+            participantsStackView.scroll(.init(x: 0, y: participantsStackView.frame.height))
+        }
+
+        if !viewModel.notes.isEmpty {
+            if ["<", ">"].allSatisfy(viewModel.notes.contains),
+               let html = viewModel.notes.html(font: .default, color: .labelColor) {
+                notesLabel.attributedStringValue = html
+            } else {
+                notesLabel.font = .default
+                notesLabel.stringValue = viewModel.notes
+            }
+            detailsStackView.addArrangedSubview(makeLine())
+            detailsStackView.addArrangedSubview(notesLabel)
+        }
+
+        switch viewModel.type {
+        case .event:
+            break
+
+        case .birthday:
+            statusIcon.image = Icons.Event.birthday
+            statusIcon.contentTintColor = .systemRed
+
+        case .reminder:
+            statusIcon.image = Icons.Event.reminder.with(size: 12)
+            statusIcon.contentTintColor = .headerTextColor
         }
     }
 
@@ -156,31 +233,7 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         .bind { $0.material = $1 }
         .disposed(by: disposeBag)
 
-        switch viewModel.type {
-
-        case .event(.accepted):
-            statusIcon.image = Icons.EventDetails.Status.accepted
-            statusIcon.contentTintColor = .systemGreen
-
-        case .event(.maybe):
-            statusIcon.image = Icons.EventDetails.Status.maybe
-            statusIcon.contentTintColor = .systemOrange
-
-        case .event(.pending):
-            statusIcon.image = Icons.EventDetails.Status.pending
-            statusIcon.contentTintColor = .systemGray
-
-        case .event(.unknown):
-            break
-
-        case .birthday:
-            statusIcon.image = Icons.Event.birthday
-            statusIcon.contentTintColor = .systemRed
-
-        case .reminder:
-            statusIcon.image = Icons.Event.reminder.with(size: 12)
-            statusIcon.contentTintColor = .headerTextColor
-
+        if viewModel.type.isReminder {
             optionsButton.rx.tap.bind { [optionsButton, reminderOptions] in
                 reminderOptions.popUp(
                     positioning: nil,

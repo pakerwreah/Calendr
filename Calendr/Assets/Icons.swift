@@ -46,6 +46,7 @@ enum Icons {
         enum Status {
             static let accepted = NSImage(systemName: "checkmark.circle")
             static let maybe = NSImage(systemName: "questionmark.circle")
+            static let declined = NSImage(systemName: "x.circle")
             static let pending = NSImage(systemName: "questionmark.circle")
         }
 

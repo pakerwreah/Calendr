@@ -38,8 +38,6 @@ extension CalendarCellViewModel {
     }
 
     var dots: [NSColor] {
-        Set(events.map(\.calendar.color)).sorted {
-            $0.hashValue < $1.hashValue
-        }
+        Set(events.map(\.calendar.color)).sorted(by: \.hashValue)
     }
 }

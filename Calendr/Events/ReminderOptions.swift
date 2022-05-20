@@ -47,7 +47,7 @@ class ReminderOptions: NSMenu {
         actionObserver.onNext(.remind(option.value))
     }
 
-    private func addItem(withTitle string: String, action selector: Selector?) {
+    private func addItem(withTitle string: String, action selector: Selector) {
         addItem(withTitle: string, action: selector, keyEquivalent: "").target = self
     }
 

@@ -18,13 +18,29 @@ struct EventModel: Equatable {
     let isAllDay: Bool
     let type: EventType
     let calendar: CalendarModel
+    let participants: [Participant]
 }
 
-enum EventStatus {
+enum EventStatus: Comparable {
     case accepted
-    case pending
     case maybe
+    case pending
+    case declined
     case unknown
+
+    private var comparisonValue: Int {
+        switch self {
+        case .accepted: return 1
+        case .maybe: return 2
+        case .declined: return 3
+        case .pending: return 4
+        case .unknown: return 5
+        }
+    }
+
+    static func < (lhs: Self, rhs: Self) -> Bool {
+        return lhs.comparisonValue < rhs.comparisonValue
+    }
 }
 
 enum EventType: Equatable {
@@ -46,4 +62,11 @@ extension EventModel {
     }
 
     var isPending: Bool { if case .event(.pending) = type { return true } else { return false } }
+}
+
+struct Participant: Hashable {
+    let name: String
+    let status: EventStatus
+    let isOrganizer: Bool
+    let isCurrentUser: Bool
 }

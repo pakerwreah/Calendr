@@ -21,7 +21,8 @@ extension EventModel {
         url: URL? = nil,
         isAllDay: Bool = false,
         type: EventType = .event(.accepted),
-        calendar: CalendarModel = .make()
+        calendar: CalendarModel = .make(),
+        participants: [Participant] = []
     ) -> EventModel {
 
         .init(
@@ -34,7 +35,8 @@ extension EventModel {
             url: url,
             isAllDay: isAllDay || type.isBirthday,
             type: type,
-            calendar: calendar
+            calendar: calendar,
+            participants: participants
         )
     }
 }

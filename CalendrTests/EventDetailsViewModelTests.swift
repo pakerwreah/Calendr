@@ -208,6 +208,23 @@ class EventDetailsViewModelTests: XCTestCase {
         XCTAssertFalse(callback)
     }
 
+    func testParticipants_shouldReturnCorrectOrder() {
+
+        let viewModel = mock(
+            event: .make(
+                participants: [
+                    .init(name: "c", status: .unknown, isOrganizer: false, isCurrentUser: false),
+                    .init(name: "b", status: .unknown, isOrganizer: false, isCurrentUser: false),
+                    .init(name: "me", status: .unknown, isOrganizer: false, isCurrentUser: true),
+                    .init(name: "organizer", status: .unknown, isOrganizer: true, isCurrentUser: false),
+                    .init(name: "a", status: .unknown, isOrganizer: false, isCurrentUser: false),
+                ]
+            )
+        )
+
+        XCTAssertEqual(viewModel.participants.map(\.name), ["organizer", "me", "a", "b", "c"])
+    }
+
     func mock(event: EventModel) -> EventDetailsViewModel {
 
         EventDetailsViewModel(
