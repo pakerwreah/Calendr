@@ -43,6 +43,7 @@ class MainViewController: NSViewController {
     private let dateClick = PublishSubject<Date>()
     private let initialDate: BehaviorSubject<Date>
     private let selectedDate = PublishSubject<Date>()
+    private let isShowingDetails = BehaviorSubject<Bool>(value: false)
 
     // Properties
     private let workspace: WorkspaceServiceProviding
@@ -131,10 +132,12 @@ class MainViewController: NSViewController {
         eventListViewModel = EventListViewModel(
             dateObservable: selectedDate,
             eventsObservable: eventsObservable,
+            isShowingDetails: isShowingDetails,
             dateProvider: dateProvider,
             calendarService: calendarService,
             workspace: workspace,
-            settings: settingsViewModel
+            settings: settingsViewModel,
+            scheduler: WallTimeScheduler()
         )
 
         eventListView = EventListView(viewModel: eventListViewModel)
@@ -309,7 +312,9 @@ class MainViewController: NSViewController {
             }
             .bind { [weak self] in
                 // 🔨 Allow clicking outside to dismiss the main view after dismissing the calendar picker
-                self?.view.window?.makeKey()
+                if NSApp.keyWindow == nil {
+                    self?.view.window?.makeKey()
+                }
             }
             .disposed(by: disposeBag)
 
@@ -397,19 +402,13 @@ class MainViewController: NSViewController {
             .disposed(by: disposeBag)
 
         statusBarButton.rx.tap
+            .withUnretained(self)
+            .flatMapFirst { (self, _) in self.isShowingDetails.filter(\.isFalse).take(1) }
             .withLatestFrom(nextEventViewModel.event)
             .skipNil()
-            .map { [dateProvider, calendarService, settingsViewModel] event in
-
-                EventDetailsViewModel(
-                    event: event,
-                    dateProvider: dateProvider,
-                    calendarService: calendarService,
-                    settings: settingsViewModel
-                )
-            }
-            .flatMapFirst { viewModel -> Observable<Void> in
-                let vc = EventDetailsViewController(viewModel: viewModel)
+            .withUnretained(self)
+            .flatMapFirst { (self, event) -> Observable<Void> in
+                let vc = EventDetailsViewController(viewModel: self.makeEventDetailsViewModel(with: event))
                 let popover = NSPopover()
                 popover.behavior = .transient
                 popover.contentViewController = vc
@@ -421,6 +420,16 @@ class MainViewController: NSViewController {
             .disposed(by: disposeBag)
 
         statusBarButton.sendAction(on: .leftMouseDown)
+    }
+
+    private func makeEventDetailsViewModel(with event: EventModel) -> EventDetailsViewModel {
+        .init(
+            event: event,
+            dateProvider: dateProvider,
+            calendarService: calendarService,
+            settings: settingsViewModel,
+            isShowingObserver: isShowingDetails.asObserver()
+        )
     }
 
     override func mouseEntered(with event: NSEvent) {

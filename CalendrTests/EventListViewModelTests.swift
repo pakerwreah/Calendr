@@ -25,6 +25,7 @@ class EventListViewModelTests: XCTestCase {
     lazy var viewModel = EventListViewModel(
         dateObservable: dateSubject,
         eventsObservable: eventsSubject,
+        isShowingDetails: .init(value: false),
         dateProvider: dateProvider,
         calendarService: calendarService,
         workspace: workspace,

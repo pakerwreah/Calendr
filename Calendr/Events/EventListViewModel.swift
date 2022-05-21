@@ -16,17 +16,23 @@ enum EventListItem {
 
 class EventListViewModel {
 
-    private let viewModels: Observable<[EventListItem]>
+    private let disposeBag = DisposeBag()
+
+    private let viewModels = BehaviorSubject<[EventListItem]>(value: [])
+    private let isShowingDetails: BehaviorSubject<Bool>
 
     init(
         dateObservable: Observable<Date>,
         eventsObservable: Observable<[EventModel]>,
+        isShowingDetails: BehaviorSubject<Bool>,
         dateProvider: DateProviding,
         calendarService: CalendarServiceProviding,
         workspace: WorkspaceServiceProviding,
         settings: EventListSettings,
-        scheduler: SchedulerType = WallTimeScheduler()
+        scheduler: SchedulerType
     ) {
+
+        self.isShowingDetails = isShowingDetails
 
         let dateComponentsFormatter = DateComponentsFormatter()
         dateComponentsFormatter.calendar = dateProvider.calendar
@@ -42,13 +48,18 @@ class EventListViewModel {
                 calendarService: calendarService,
                 workspace: workspace,
                 settings: settings,
+                isShowingDetails: isShowingDetails.asObserver(),
                 scheduler: scheduler
             )
         }
 
-        viewModels = Observable.combineLatest(
-            eventsObservable, dateObservable, settings.showPastEvents
+        Observable.combineLatest(
+            Observable.combineLatest(eventsObservable, dateObservable, settings.showPastEvents),
+            isShowingDetails
         )
+        .filter(\.1.isFalse)
+        .map(\.0)
+        .distinctUntilChanged(==)
         .flatMapLatest { events, date, showPast -> Observable<([EventModel], Date, Bool)> in
 
             let isToday = dateProvider.calendar.isDate(date, inSameDayAs: dateProvider.now)
@@ -131,7 +142,8 @@ class EventListViewModel {
 
             return viewModels
         }
-        .share(replay: 1)
+        .bind(to: viewModels)
+        .disposed(by: disposeBag)
     }
 
     func asObservable() -> Observable<[EventListItem]> { viewModels }

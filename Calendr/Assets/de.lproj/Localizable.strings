@@ -44,3 +44,14 @@
 
 "event_details.participant.organizer" = "Veranstalter";
 "event_details.participant.me" = "mich";
+
+"event_status.label" = "mein status:";
+
+"event_status.accepted" = "Akzeptiert";
+"event_status.maybe" = "Vielleicht";
+"event_status.declined" = "Abgelehnt";
+"event_status.pending" = "Ausstehend";
+
+"event_status.action.accept" = "Akzeptieren";
+"event_status.action.maybe" = "Vielleicht";
+"event_status.action.decline" = "Ablehnen";

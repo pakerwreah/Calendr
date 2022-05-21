@@ -22,6 +22,27 @@ internal enum Strings {
     }
   }
 
+  internal enum EventStatus {
+    /// Accepted
+    internal static var accepted: String { return Strings.tr("Localizable", "event_status.accepted") }
+    /// Declined
+    internal static var declined: String { return Strings.tr("Localizable", "event_status.declined") }
+    /// my status:
+    internal static var label: String { return Strings.tr("Localizable", "event_status.label") }
+    /// Maybe
+    internal static var maybe: String { return Strings.tr("Localizable", "event_status.maybe") }
+    /// Pending
+    internal static var pending: String { return Strings.tr("Localizable", "event_status.pending") }
+    internal enum Action {
+      /// Accept
+      internal static var accept: String { return Strings.tr("Localizable", "event_status.action.accept") }
+      /// Decline
+      internal static var decline: String { return Strings.tr("Localizable", "event_status.action.decline") }
+      /// Maybe
+      internal static var maybe: String { return Strings.tr("Localizable", "event_status.action.maybe") }
+    }
+  }
+
   internal enum Formatter {
     internal enum Date {
       /// All day

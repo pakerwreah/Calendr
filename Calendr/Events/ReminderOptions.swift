@@ -8,7 +8,7 @@
 import AppKit
 import RxSwift
 
-class ReminderOptions: NSMenu {
+class ReminderOptions: NSMenu, ObservableConvertibleType {
 
     enum Action {
         case complete

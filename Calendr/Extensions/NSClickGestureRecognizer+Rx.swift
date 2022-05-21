@@ -50,5 +50,6 @@ extension Reactive where Base: NSView {
                 base.removeGestureRecognizer(click)
             }
         }
+        .share(replay: 1)
     }
 }

@@ -246,7 +246,9 @@ class EventViewModelTests: XCTestCase {
             dateProvider: dateProvider,
             calendarService: calendarService,
             workspace: workspace,
-            settings: settings
+            settings: settings,
+            isShowingDetails: .dummy(),
+            scheduler: MainScheduler.instance
         )
     }
 }

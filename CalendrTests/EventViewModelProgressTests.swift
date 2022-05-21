@@ -243,6 +243,7 @@ class EventViewModelProgressTests: XCTestCase {
             calendarService: calendarService,
             workspace: workspace,
             settings: settings,
+            isShowingDetails: .dummy(),
             scheduler: scheduler
         )
     }

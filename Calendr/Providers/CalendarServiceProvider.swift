@@ -17,6 +17,7 @@ protocol CalendarServiceProviding {
     func events(from start: Date, to end: Date, calendars: [String]) -> Observable<[EventModel]>
     func completeReminder(id: String) -> Observable<Void>
     func rescheduleReminder(id: String, to: Date) -> Observable<Void>
+    func changeEventStatus(id: String, to: EventStatus) -> Observable<Void>
 }
 
 class CalendarServiceProvider: CalendarServiceProviding {
@@ -141,7 +142,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
             defer { observer.onCompleted() }
 
             guard let reminder = store.calendarItem(withIdentifier: id) as? EKReminder else {
-                assertionFailure("🔥 Not a reminder")
+                observer.onError(.unexpected("🔥 Not a reminder"))
                 return disposable
             }
 
@@ -167,7 +168,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
             defer { observer.onCompleted() }
 
             guard let reminder = store.calendarItem(withIdentifier: id) as? EKReminder else {
-                assertionFailure("🔥 Not a reminder")
+                observer.onError(.unexpected("🔥 Not a reminder"))
                 return disposable
             }
 
@@ -176,6 +177,50 @@ class CalendarServiceProvider: CalendarServiceProviding {
                 reminder.alarms?.forEach(reminder.removeAlarm)
                 reminder.addAlarm(EKAlarm(absoluteDate: date))
                 try store.save(reminder, commit: true)
+                observer.onNext(())
+            } catch {
+                observer.onError(error)
+            }
+
+            return disposable
+        }
+        .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+    }
+
+    func changeEventStatus(id: String, to status: EventStatus) -> Observable<Void> {
+
+        Observable.create { [store] observer in
+
+            let disposable = Disposables.create()
+
+            defer { observer.onCompleted() }
+
+            guard let event = store.event(withIdentifier: id) else {
+                observer.onError(.unexpected("🔥 Event not found"))
+                return disposable
+            }
+
+            guard
+                let user = event.attendees?.first(where: \.isCurrentUser)
+            else {
+                observer.onError(.unexpected("🔥 User not found"))
+                return disposable
+            }
+
+            do {
+                switch status {
+                case .accepted:
+                    user.setValue(EKParticipantStatus.accepted.rawValue, forKey: "participantStatus")
+                case .maybe:
+                    user.setValue(EKParticipantStatus.tentative.rawValue, forKey: "participantStatus")
+                case .declined:
+                    user.setValue(EKParticipantStatus.declined.rawValue, forKey: "participantStatus")
+                default:
+                    return disposable
+                }
+
+                try store.save(event, span: .thisEvent)
+
                 observer.onNext(())
             } catch {
                 observer.onError(error)
@@ -318,4 +363,16 @@ private extension Date {
     var dateComponents: DateComponents {
         Calendar.autoupdatingCurrent.dateComponents(in: .autoupdatingCurrent, from: self)
     }
+}
+
+private struct UnexpectedError: LocalizedError {
+
+    let message: String
+
+    var errorDescription: String? { message }
+}
+
+private extension Error where Self == UnexpectedError {
+
+    static func unexpected(_ message: String) -> Self { .init(message: message) }
 }

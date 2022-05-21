@@ -124,16 +124,17 @@ class CalendarViewModel {
             enabledCalendars.startWith([])
         )
         .repeat(when: calendarService.changeObservable)
-        .flatMapLatest { cellViewModels, calendars -> Observable<[EventModel]?> in
+        .flatMapLatest { cellViewModels, calendars -> Observable<[EventModel]> in
 
             calendarService.events(
                 from: cellViewModels.first!.date,
                 to: cellViewModels.last!.date,
                 calendars: calendars
             )
-            .optional()
-            .startWith(nil)
         }
+        .optional()
+        .startWith(nil)
+        .distinctUntilChanged()
         .share(replay: 1)
 
         var timezone = dateProvider.calendar.timeZone

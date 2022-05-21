@@ -215,7 +215,9 @@ class EventView: NSView {
         }
         .bind { [weak self] in
             // 🔨 Allow clicking outside to dismiss the main view after dismissing the event details
-            self?.window?.makeKey()
+            if NSApp.keyWindow == nil {
+                self?.window?.makeKey()
+            }
         }
         .disposed(by: disposeBag)
 

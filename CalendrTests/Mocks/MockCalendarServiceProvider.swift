@@ -17,6 +17,7 @@ class MockCalendarServiceProvider: CalendarServiceProviding {
     let (spyEventsObservable, spyEventsObserver) = PublishSubject<EventsArgs>.pipe()
     let (spyCompleteObservable, spyCompleteObserver) = PublishSubject<Void>.pipe()
     let (spyRescheduleObservable, spyRescheduleObserver) = PublishSubject<Date>.pipe()
+    let (spyChangeEventStatusObservable, spyChangeEventStatusObserver) = PublishSubject<EventStatus>.pipe()
 
     var didRequestAccess: (() -> Void)?
 
@@ -39,6 +40,11 @@ class MockCalendarServiceProvider: CalendarServiceProviding {
 
     func rescheduleReminder(id: String, to date: Date) -> Observable<Void> {
         spyRescheduleObserver.onNext(date)
+        return .just(())
+    }
+
+    func changeEventStatus(id: String, to status: EventStatus) -> Observable<Void> {
+        spyChangeEventStatusObserver.onNext(status)
         return .just(())
     }
 }
