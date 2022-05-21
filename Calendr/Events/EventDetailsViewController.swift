@@ -13,7 +13,8 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
     private let disposeBag = DisposeBag()
 
     private let scrollView = NSScrollView()
-    private let statusIcon = NSImageView()
+    private let eventTypeIcon = NSImageView()
+    private let contentStackView = NSStackView(.vertical)
     private let participantsStackView = NSStackView(.vertical)
     private let detailsStackView = NSStackView(.vertical)
 
@@ -23,10 +24,17 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
     private let durationLabel = Label()
     private let notesLabel = Label()
 
-    private lazy var optionsButton = NSButton()
+    private let optionsLabel = Label()
+    private let optionsButton = NSButton()
+    private lazy var eventOptions = EventOptions(current: eventStatus)
     private lazy var reminderOptions = ReminderOptions()
 
     private let viewModel: EventDetailsViewModel
+
+    private var eventStatus: EventStatus {
+        if case .event(let status) = viewModel.type { return status }
+        return .unknown
+    }
 
     init(viewModel: EventDetailsViewModel) {
 
@@ -60,7 +68,7 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
 
         view.widthAnchor.constraint(lessThanOrEqualToConstant: 400).activate()
 
-        statusIcon.setContentCompressionResistancePriority(.required, for: .horizontal)
+        eventTypeIcon.setContentCompressionResistancePriority(.required, for: .horizontal)
 
         scrollView.hasVerticalScroller = true
         scrollView.scrollerStyle = .overlay
@@ -74,11 +82,22 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         scrollView.contentView.height(equalTo: detailsStackView).priority = .dragThatCanResizeWindow
         scrollView.contentView.heightAnchor.constraint(lessThanOrEqualToConstant: 0.8 * NSScreen.main!.visibleFrame.height).activate()
 
-        let contentStackView = NSStackView(views: [scrollView]).with(orientation: .vertical)
+        contentStackView.addArrangedSubview(scrollView)
 
         view.addSubview(contentStackView)
 
         contentStackView.edges(to: view, constant: 12)
+
+        setUpIcon()
+        setUpLabels()
+        setUpOptions()
+
+        addInformation()
+        addParticipants()
+        addNotes()
+    }
+
+    private func setUpLabels() {
 
         for label in  [titleLabel, urlLabel, locationLabel, durationLabel, notesLabel] {
             label.textColor = .labelColor
@@ -93,28 +112,77 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         locationLabel.font = .small
         urlLabel.font = .small
         durationLabel.font = .default
+    }
 
-        if viewModel.type.isReminder {
+    private func setUpOptions() {
+
+        switch viewModel.type {
+
+        case .event(.accepted):
+            addEventStatusButton(icon: Icons.EventStatus.accepted, color: .systemGreen, title: Strings.EventStatus.accepted)
+
+        case .event(.maybe):
+            addEventStatusButton(icon: Icons.EventStatus.maybe, color: .systemOrange, title: Strings.EventStatus.maybe)
+
+        case .event(.pending):
+            addEventStatusButton(icon: Icons.EventStatus.pending, color: .systemGray, title: Strings.EventStatus.pending)
+
+        case .reminder:
             optionsButton.title = Strings.Reminder.Options.button
+            optionsButton.image = Icons.EventDetails.optionsArrow.with(scale: .small)
             optionsButton.bezelStyle = .texturedRounded
-            optionsButton.image = Icons.EventDetails.options.with(scale: .small)
             optionsButton.imagePosition = .imageTrailing
+            addOptionsButton()
 
-            let optionsStackView = NSStackView(views: [.spacer, optionsButton])
-            optionsStackView.setHuggingPriority(.defaultHigh, for: .vertical)
-            optionsStackView.edgeInsets.top = 4
-            contentStackView.addArrangedSubview(optionsStackView)
+        default:
+            break
         }
     }
 
-    override func viewDidLoad() {
+    private func addEventStatusButton(icon: NSImage, color: NSColor, title: String) {
 
-        super.viewDidLoad()
+        optionsLabel.stringValue = Strings.EventStatus.label
+        optionsLabel.textColor = .secondaryLabelColor
+        optionsButton.image = icon.with(color: color)
+        optionsButton.title = title
+        optionsButton.imagePosition = .imageLeading
+        addOptionsButton()
+    }
+
+    private func addOptionsButton() {
+
+        optionsButton.bezelStyle = .texturedRounded
+        optionsButton.setTitleColor(color: .labelColor)
+        optionsButton.refusesFirstResponder = true
+        optionsButton.setContentCompressionResistancePriority(.required, for: .vertical)
+        let optionsStackView = NSStackView(views: [.spacer, optionsLabel, optionsButton]).with(alignment: .centerY)
+        optionsStackView.setHuggingPriority(.defaultHigh, for: .vertical)
+        optionsStackView.edgeInsets.top = 4
+        contentStackView.addArrangedSubview(optionsStackView)
+    }
+
+    private func setUpIcon() {
+
+        switch viewModel.type {
+        case .event:
+            break
+
+        case .birthday:
+            eventTypeIcon.image = Icons.Event.birthday
+            eventTypeIcon.contentTintColor = .systemRed
+
+        case .reminder:
+            eventTypeIcon.image = Icons.Event.reminder.with(size: 12)
+            eventTypeIcon.contentTintColor = .headerTextColor
+        }
+    }
+
+    private func addInformation() {
 
         if !viewModel.title.isEmpty {
             titleLabel.stringValue = viewModel.title
             detailsStackView.addArrangedSubview(
-                NSStackView(views: [titleLabel, statusIcon]).with(alignment: .firstBaseline)
+                NSStackView(views: [titleLabel, eventTypeIcon]).with(alignment: .firstBaseline)
             )
         }
 
@@ -135,90 +203,82 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
             detailsStackView.addArrangedSubview(makeLine())
             detailsStackView.addArrangedSubview(durationLabel)
         }
+    }
 
-        if !viewModel.participants.isEmpty {
+    private func addNotes() {
 
-            for participant in viewModel.participants {
+        guard !viewModel.notes.isEmpty else { return }
+        let notes = viewModel.notes
 
-                let status = NSImageView()
+        if ["<", ">"].allSatisfy(notes.contains), let html = notes.html(font: .default, color: .labelColor) {
+            notesLabel.attributedStringValue = html
+        } else {
+            notesLabel.font = .default
+            notesLabel.stringValue = notes
+        }
+        detailsStackView.addArrangedSubview(makeLine())
+        detailsStackView.addArrangedSubview(notesLabel)
+    }
 
-                var info: String = participant.name
+    private func addParticipants() {
 
-                if participant.isOrganizer {
-                    info += " (\(Strings.EventDetails.Participant.organizer))"
-                }
+        guard !viewModel.participants.isEmpty else { return }
 
-                if participant.isCurrentUser {
-                    info += " (\(Strings.EventDetails.Participant.me))"
-                }
+        for participant in viewModel.participants {
 
-                let label = Label(text: info, font: .small)
-                label.lineBreakMode = .byTruncatingMiddle
+            let status = NSImageView()
 
-                switch participant.status {
-                case .accepted:
-                    status.image = Icons.EventDetails.Status.accepted
-                    status.contentTintColor = .systemGreen
+            var info: String = participant.name
 
-                case .maybe:
-                    status.image = Icons.EventDetails.Status.maybe
-                    status.contentTintColor = .systemOrange
-
-                case .declined:
-                    status.image = Icons.EventDetails.Status.declined
-                    status.contentTintColor = .systemRed
-
-                case .pending, .unknown:
-                    status.image = Icons.EventDetails.Status.pending
-                    status.contentTintColor = .systemGray
-                }
-
-                let stack = NSStackView(views: [status, label])
-                label.setContentCompressionResistancePriority(.required, for: .vertical)
-
-                participantsStackView.addArrangedSubview(stack)
+            if participant.isOrganizer {
+                info += " (\(Strings.EventDetails.Participant.organizer))"
             }
 
-            let scrollView = NSScrollView()
-            detailsStackView.addArrangedSubview(makeLine())
-            detailsStackView.addArrangedSubview(scrollView)
-
-            scrollView.hasVerticalScroller = true
-            scrollView.scrollerStyle = .legacy
-            scrollView.drawsBackground = false
-            scrollView.documentView = participantsStackView.forAutoLayout()
-            scrollView.contentView.edges(to: scrollView)
-            scrollView.contentView.width(equalTo: participantsStackView, constant: 20)
-            scrollView.contentView.height(equalTo: participantsStackView).priority = .defaultHigh
-            scrollView.contentView.heightAnchor.constraint(lessThanOrEqualToConstant: 222).activate()
-            participantsStackView.layoutSubtreeIfNeeded()
-            participantsStackView.scroll(.init(x: 0, y: participantsStackView.frame.height))
-        }
-
-        if !viewModel.notes.isEmpty {
-            if ["<", ">"].allSatisfy(viewModel.notes.contains),
-               let html = viewModel.notes.html(font: .default, color: .labelColor) {
-                notesLabel.attributedStringValue = html
-            } else {
-                notesLabel.font = .default
-                notesLabel.stringValue = viewModel.notes
+            if participant.isCurrentUser {
+                info += " (\(Strings.EventDetails.Participant.me))"
             }
-            detailsStackView.addArrangedSubview(makeLine())
-            detailsStackView.addArrangedSubview(notesLabel)
+
+            let label = Label(text: info, font: .small)
+            label.lineBreakMode = .byTruncatingMiddle
+
+            switch participant.status {
+            case .accepted:
+                status.image = Icons.EventStatus.accepted
+                status.contentTintColor = .systemGreen
+
+            case .maybe:
+                status.image = Icons.EventStatus.maybe
+                status.contentTintColor = .systemOrange
+
+            case .declined:
+                status.image = Icons.EventStatus.declined
+                status.contentTintColor = .systemRed
+
+            case .pending, .unknown:
+                status.image = Icons.EventStatus.pending
+                status.contentTintColor = .systemGray
+            }
+
+            let stack = NSStackView(views: [status, label])
+            label.setContentCompressionResistancePriority(.required, for: .vertical)
+
+            participantsStackView.addArrangedSubview(stack)
         }
 
-        switch viewModel.type {
-        case .event:
-            break
+        let scrollView = NSScrollView()
+        detailsStackView.addArrangedSubview(makeLine())
+        detailsStackView.addArrangedSubview(scrollView)
 
-        case .birthday:
-            statusIcon.image = Icons.Event.birthday
-            statusIcon.contentTintColor = .systemRed
-
-        case .reminder:
-            statusIcon.image = Icons.Event.reminder.with(size: 12)
-            statusIcon.contentTintColor = .headerTextColor
-        }
+        scrollView.hasVerticalScroller = true
+        scrollView.scrollerStyle = .legacy
+        scrollView.drawsBackground = false
+        scrollView.documentView = participantsStackView.forAutoLayout()
+        scrollView.contentView.edges(to: scrollView)
+        scrollView.contentView.width(equalTo: participantsStackView, constant: 20)
+        scrollView.contentView.height(equalTo: participantsStackView).priority = .defaultHigh
+        scrollView.contentView.heightAnchor.constraint(lessThanOrEqualToConstant: 222).activate()
+        participantsStackView.layoutSubtreeIfNeeded()
+        participantsStackView.scroll(.init(x: 0, y: participantsStackView.frame.height))
     }
 
     private func setUpBindings() {
@@ -233,32 +293,49 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         .bind { $0.material = $1 }
         .disposed(by: disposeBag)
 
-        if viewModel.type.isReminder {
-            optionsButton.rx.tap.bind { [optionsButton, reminderOptions] in
-                reminderOptions.popUp(
-                    positioning: nil,
-                    at: NSPoint(x: 0, y: optionsButton.bounds.height),
-                    in: optionsButton
-                )
-            }
+        switch viewModel.type {
+        case .event(.accepted),
+             .event(.maybe),
+             .event(.pending):
+            setUpOptionsMenuBindings(options: eventOptions, observer: viewModel.eventActionObserver)
+
+        case .reminder:
+            setUpOptionsMenuBindings(options: reminderOptions, observer: viewModel.reminderActionObserver)
+
+        default:
+            break
+        }
+    }
+
+    private func setUpOptionsMenuBindings<T: NSMenu & ObservableConvertibleType>(
+        options: T,
+        observer: AnyObserver<T.Element>
+    ) {
+
+        optionsButton.rx.tap.bind { [optionsButton] in
+            options.popUp(
+                positioning: nil,
+                at: NSPoint(x: 0, y: optionsButton.bounds.height),
+                in: optionsButton
+            )
+        }
+        .disposed(by: disposeBag)
+
+        options.asObservable()
+            .bind(to: observer)
             .disposed(by: disposeBag)
 
-            reminderOptions.asObservable()
-                .bind(to: viewModel.reminderActionObserver)
-                .disposed(by: disposeBag)
-
-            viewModel.reminderActionCallback
-                .observe(on: MainScheduler.instance)
-                .subscribe(
-                    onNext: { [weak self] in
-                        self?.view.window?.close()
-                    },
-                    onError: { error in
-                        NSAlert(error: error).runModal()
-                    }
-                )
-                .disposed(by: disposeBag)
-        }
+        viewModel.actionCallback
+            .observe(on: MainScheduler.instance)
+            .subscribe(
+                onNext: { [weak self] in
+                    self?.view.window?.performClose(nil)
+                },
+                onError: { error in
+                    NSAlert(error: error).runModal()
+                }
+            )
+            .disposed(by: disposeBag)
     }
 
     func popoverDidShow(_ notification: Notification) {
@@ -267,6 +344,9 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         view.window?.makeFirstResponder(self)
 
         scrollView.flashScrollers()
+        optionsButton.refusesFirstResponder = false
+
+        viewModel.isShowingObserver.onNext(true)
     }
 
     private var popover: NSPopover?
@@ -285,6 +365,8 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         // 🔨 Prevent retain cycle
         popover?.contentViewController = nil
         popover = nil
+
+        viewModel.isShowingObserver.onNext(false)
     }
 
     private func makeLine() -> NSView {

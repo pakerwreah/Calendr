@@ -20,17 +20,25 @@ class EventDetailsViewModel {
 
     let popoverMaterial: Observable<PopoverMaterial>
 
+    private let eventActionObservable: Observable<EventOptions.Action>
+    let eventActionObserver: AnyObserver<EventOptions.Action>
+
     private let reminderActionObservable: Observable<ReminderOptions.Action>
     let reminderActionObserver: AnyObserver<ReminderOptions.Action>
 
-    let reminderActionCallback: Observable<Void>
+    let actionCallback: Observable<Void>
+
+    let isShowingObserver: AnyObserver<Bool>
 
     init(
         event: EventModel,
         dateProvider: DateProviding,
         calendarService: CalendarServiceProviding,
-        settings: PopoverSettings
+        settings: PopoverSettings,
+        isShowingObserver: AnyObserver<Bool>
     ) {
+
+        self.isShowingObserver = isShowingObserver
 
         type = event.type
         title = event.title
@@ -72,9 +80,23 @@ class EventDetailsViewModel {
 
         popoverMaterial = settings.popoverMaterial
 
+        (eventActionObservable, eventActionObserver) = PublishSubject.pipe()
+
+        let eventActionCallback = !type.isEvent ? .empty() : eventActionObservable
+            .flatMapFirst { action -> Observable<Void> in
+                switch action {
+                case .accept:
+                    return calendarService.changeEventStatus(id: event.id, to: .accepted)
+                case .maybe:
+                    return calendarService.changeEventStatus(id: event.id, to: .maybe)
+                case .decline:
+                    return calendarService.changeEventStatus(id: event.id, to: .declined)
+                }
+            }
+
         (reminderActionObservable, reminderActionObserver) = PublishSubject.pipe()
 
-        reminderActionCallback = !type.isReminder ? .empty() : reminderActionObservable
+        let reminderActionCallback = !type.isReminder ? .empty() : reminderActionObservable
             .flatMapFirst { action -> Observable<Void> in
                 switch action {
                 case .complete:
@@ -84,5 +106,7 @@ class EventDetailsViewModel {
                     return calendarService.rescheduleReminder(id: event.id, to: date)
                 }
             }
+
+        actionCallback = .merge(eventActionCallback, reminderActionCallback)
     }
 }

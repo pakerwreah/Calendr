@@ -23,6 +23,8 @@ class EventViewModel {
     let isFaded: Observable<Bool>
     let progress: Observable<CGFloat?>
 
+    private let isShowingDetails: AnyObserver<Bool>
+
     private let event: EventModel
     private let dateProvider: DateProviding
     private let calendarService: CalendarServiceProviding
@@ -36,7 +38,8 @@ class EventViewModel {
         calendarService: CalendarServiceProviding,
         workspace: WorkspaceServiceProviding,
         settings: PopoverSettings,
-        scheduler: SchedulerType = WallTimeScheduler()
+        isShowingDetails: AnyObserver<Bool>,
+        scheduler: SchedulerType
     ) {
 
         self.event = event
@@ -44,6 +47,7 @@ class EventViewModel {
         self.dateProvider = dateProvider
         self.calendarService = calendarService
         self.workspace = workspace
+        self.isShowingDetails = isShowingDetails
 
         title = event.title
         color = event.calendar.color
@@ -173,11 +177,12 @@ class EventViewModel {
     }
 
     func makeDetails() -> EventDetailsViewModel {
-        EventDetailsViewModel(
+        .init(
             event: event,
             dateProvider: dateProvider,
             calendarService: calendarService,
-            settings: settings
+            settings: settings,
+            isShowingObserver: isShowingDetails
         )
     }
 }

@@ -125,7 +125,7 @@ class EventDetailsViewModelTests: XCTestCase {
             .bind { date = $0 }
             .disposed(by: disposeBag)
 
-        viewModel.reminderActionCallback
+        viewModel.actionCallback
             .bind { callback = true }
             .disposed(by: disposeBag)
 
@@ -148,7 +148,7 @@ class EventDetailsViewModelTests: XCTestCase {
             .bind { date = $0 }
             .disposed(by: disposeBag)
 
-        viewModel.reminderActionCallback
+        viewModel.actionCallback
             .bind { callback = true }
             .disposed(by: disposeBag)
 
@@ -169,7 +169,7 @@ class EventDetailsViewModelTests: XCTestCase {
             .bind { complete = true }
             .disposed(by: disposeBag)
 
-        viewModel.reminderActionCallback
+        viewModel.actionCallback
             .bind { callback = true }
             .disposed(by: disposeBag)
 
@@ -196,7 +196,7 @@ class EventDetailsViewModelTests: XCTestCase {
             .bind { complete = true }
             .disposed(by: disposeBag)
 
-        viewModel.reminderActionCallback
+        viewModel.actionCallback
             .bind { callback = true }
             .disposed(by: disposeBag)
 
@@ -225,13 +225,35 @@ class EventDetailsViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.participants.map(\.name), ["organizer", "me", "a", "b", "c"])
     }
 
+    func testStatusChanged_shouldChangeStatus() {
+
+        let viewModel = mock(event: .make(type: .event(.pending)))
+
+        var status: EventStatus?
+        var callback = false
+
+        calendarService.spyChangeEventStatusObservable
+            .bind { status = $0 }
+            .disposed(by: disposeBag)
+
+        viewModel.actionCallback
+            .bind { callback = true }
+            .disposed(by: disposeBag)
+
+        viewModel.eventActionObserver.onNext(.accept)
+
+        XCTAssertEqual(status, .accepted)
+        XCTAssert(callback)
+    }
+
     func mock(event: EventModel) -> EventDetailsViewModel {
 
         EventDetailsViewModel(
             event: event,
             dateProvider: dateProvider,
             calendarService: calendarService,
-            settings: settings
+            settings: settings,
+            isShowingObserver: .dummy()
         )
     }
 }

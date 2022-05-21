@@ -8,6 +8,7 @@
 #if DEBUG
 
 import SwiftUI
+import RxSwift
 
 struct EventListViewPreview: PreviewProvider {
 
@@ -49,10 +50,12 @@ struct EventListViewPreview: PreviewProvider {
                         calendar: .make(color: .systemOrange)
                     ),
                 ]),
+                isShowingDetails: .init(value: false),
                 dateProvider: dateProvider,
                 calendarService: calendarService,
                 workspace: workspace,
-                settings: settings
+                settings: settings,
+                scheduler: MainScheduler.instance
             )
         )
         .preview()

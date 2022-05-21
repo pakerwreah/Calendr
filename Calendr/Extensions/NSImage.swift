@@ -18,4 +18,14 @@ extension NSImage {
     func with(size: CGFloat, weight: NSFont.Weight = .medium) -> NSImage {
         withSymbolConfiguration(.init(pointSize: size, weight: weight))!
     }
+
+    func with(color: NSColor) -> NSImage {
+        let image = self.copy() as! NSImage
+        image.lockFocus()
+        color.set()
+        NSRect(origin: .zero, size: image.size).fill(using: .sourceIn)
+        image.unlockFocus()
+        image.isTemplate = false
+        return image
+    }
 }

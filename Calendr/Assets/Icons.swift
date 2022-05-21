@@ -41,15 +41,14 @@ enum Icons {
         static let video_fill = NSImage(systemName: "video.fill")
     }
 
+    enum EventStatus {
+        static let accepted = NSImage(systemName: "checkmark.circle")
+        static let maybe = NSImage(systemName: "questionmark.circle")
+        static let declined = NSImage(systemName: "x.circle")
+        static let pending = NSImage(systemName: "questionmark.circle")
+    }
+
     enum EventDetails {
-
-        enum Status {
-            static let accepted = NSImage(systemName: "checkmark.circle")
-            static let maybe = NSImage(systemName: "questionmark.circle")
-            static let declined = NSImage(systemName: "x.circle")
-            static let pending = NSImage(systemName: "questionmark.circle")
-        }
-
-        static let options = NSImage(systemName: "chevron.down")
+        static let optionsArrow = NSImage(systemName: "chevron.down")
     }
 }

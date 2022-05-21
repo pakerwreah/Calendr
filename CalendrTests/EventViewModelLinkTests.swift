@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import RxSwift
 @testable import Calendr
 
 class EventViewModelLinkTests: XCTestCase {
@@ -151,7 +152,9 @@ class EventViewModelLinkTests: XCTestCase {
             dateProvider: dateProvider,
             calendarService: calendarService,
             workspace: workspace,
-            settings: settings
+            settings: settings,
+            isShowingDetails: .dummy(),
+            scheduler: MainScheduler.instance
         )
     }
 }
