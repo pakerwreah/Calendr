@@ -43,31 +43,25 @@ class CalendarServiceProvider: CalendarServiceProviding {
 
     func requestAccess() {
         requestAccess(for: .event) {
-            self.requestAccess(for: .reminder)
+            self.requestAccess(for: .reminder) {
+                self.changeObserver.onNext(())
+            }
         }
     }
 
     private func requestAccess(for type: EKEntityType, completion: (() -> Void)? = nil) {
 
-        if EKEventStore.authorizationStatus(for: type) == .authorized {
-            if let completion = completion {
-                completion()
+        store.requestAccess(to: type) { granted, error in
+
+            if let error = error {
+                print(error.localizedDescription)
+            } else if granted {
+                print("Access granted for \(type)!")
             } else {
-                changeObserver.onNext(())
+                print("Access denied for \(type)!")
             }
-        } else {
-            store.requestAccess(to: type) { granted, error in
 
-                if let error = error {
-                    print(error.localizedDescription)
-                } else if granted {
-                    print("Access granted for \(type)!")
-                } else {
-                    print("Access denied for \(type)!")
-                }
-
-                completion?()
-            }
+            completion?()
         }
     }
 
