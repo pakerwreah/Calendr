@@ -133,6 +133,24 @@ class NextEventViewModelTests: XCTestCase {
         XCTAssertEqual(title, "This is an.")
     }
 
+    func testNextEvent_barStyle() {
+
+        var style: EventBarStyle?
+
+        viewModel.barStyle
+            .bind { style = $0 }
+            .disposed(by: disposeBag)
+
+        eventsSubject.onNext([.make(type: .reminder)])
+        XCTAssertEqual(style, .filled)
+
+        eventsSubject.onNext([.make(type: .event(.accepted))])
+        XCTAssertEqual(style, .filled)
+
+        eventsSubject.onNext([.make(type: .event(.maybe))])
+        XCTAssertEqual(style, .bordered)
+    }
+
     func testNextEvent_barColor() {
 
         var color: NSColor?

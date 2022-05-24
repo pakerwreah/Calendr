@@ -70,10 +70,22 @@ class NextEventView: NSView {
 
     private func setUpBindings() {
 
-        viewModel.barColor
-            .map(\.cgColor)
-            .bind(to: colorBar.layer!.rx.backgroundColor)
-            .disposed(by: disposeBag)
+        Observable.combineLatest(
+            viewModel.barColor.map(\.cgColor),
+            viewModel.barStyle
+        )
+        .bind { [layer = colorBar.layer] color, style in
+            switch style {
+            case .filled:
+                layer?.backgroundColor = color
+
+            case .bordered:
+                layer?.borderWidth = 1
+                layer?.borderColor = color
+                layer?.backgroundColor = nil
+            }
+        }
+        .disposed(by: disposeBag)
 
         viewModel.backgroundColor
             .map(\.cgColor)

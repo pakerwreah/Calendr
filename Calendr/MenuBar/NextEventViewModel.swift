@@ -12,6 +12,7 @@ class NextEventViewModel {
 
     let title: Observable<String>
     let time: Observable<String>
+    let barStyle: Observable<EventBarStyle>
     let barColor: Observable<NSColor>
     let backgroundColor: Observable<NSColor>
     let hasEvent: Observable<Bool>
@@ -55,9 +56,14 @@ class NextEventViewModel {
 
         event = nextEventObservable.map { $0?.event }
 
-        barColor = nextEventObservable
+        barColor = event
             .skipNil()
-            .map(\.event.calendar.color)
+            .map(\.calendar.color)
+            .distinctUntilChanged()
+
+        barStyle = event
+            .skipNil()
+            .map { $0.type ~= .event(.maybe) ? .bordered : .filled }
             .distinctUntilChanged()
 
         backgroundColor = nextEventObservable
@@ -74,7 +80,7 @@ class NextEventViewModel {
             .combineLatest(shouldCompact, settings.eventStatusItemLength)
             .map { $0 ? min($1, Constants.compactMaxWidth) : $1 }
 
-        let nextEventTitle = nextEventObservable.skipNil().map(\.event.title)
+        let nextEventTitle = event.skipNil().map(\.title)
 
         title = Observable.combineLatest(nextEventTitle, eventStatusItemLength, shouldCompact)
             .map { $0.count > $1 ? "\($0.prefix($1).trimmed)\($2 ? "." : "...")": $0 }
