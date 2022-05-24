@@ -8,12 +8,18 @@
 import Cocoa
 import RxSwift
 
+enum EventBarStyle {
+    case filled
+    case bordered
+}
+
 class EventViewModel {
 
     let title: String
     let subtitle: String
     let duration: String
     let color: NSColor
+    let barStyle: EventBarStyle
     let type: EventType
     let isMeeting: Bool
     let linkURL: URL?
@@ -52,6 +58,7 @@ class EventViewModel {
         title = event.title
         color = event.calendar.color
         type = event.type
+        barStyle = type ~= .event(.maybe) ? .bordered : .filled
 
         let links = !event.type.isBirthday
             ? workspace.detectLinks([event.location, event.url?.absoluteString, event.notes])

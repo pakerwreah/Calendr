@@ -42,8 +42,6 @@ class EventView: NSView {
 
     private func setData() {
 
-        colorBar.layer?.backgroundColor = viewModel.color.cgColor
-
         switch viewModel.type {
 
         case .birthday:
@@ -55,20 +53,19 @@ class EventView: NSView {
             icon.contentTintColor = .headerTextColor
 
         case .event(let status):
-            switch status {
-            case .accepted, .declined, .unknown:
-                break
-
-            case .pending:
+            if status ~= .pending {
                 layer?.backgroundColor = Self.pendingBackground
-
-            case .maybe:
-                colorBar.layer?.borderWidth = 1
-                colorBar.layer?.borderColor = viewModel.color.cgColor
-                colorBar.layer?.backgroundColor = nil
             }
-
             icon.isHidden = true
+        }
+
+        switch viewModel.barStyle {
+        case .filled:
+            colorBar.layer?.backgroundColor = viewModel.color.cgColor
+
+        case .bordered:
+            colorBar.layer?.borderWidth = 1
+            colorBar.layer?.borderColor = viewModel.color.cgColor
         }
 
         title.stringValue = viewModel.title

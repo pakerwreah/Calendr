@@ -239,6 +239,18 @@ class EventViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.duration, "Jan 1 - Feb 2")
     }
 
+    func testBarStyle() {
+
+        XCTAssertEqual(mock(type: .birthday).barStyle, .filled)
+        XCTAssertEqual(mock(type: .reminder).barStyle, .filled)
+        XCTAssertEqual(mock(type: .event(.accepted)).barStyle, .filled)
+        XCTAssertEqual(mock(type: .event(.pending)).barStyle, .filled)
+        XCTAssertEqual(mock(type: .event(.declined)).barStyle, .filled)
+        XCTAssertEqual(mock(type: .event(.maybe)).barStyle, .bordered)
+    }
+
+    func mock(type: EventType) -> EventViewModel { mock(event: .make(type: type)) }
+
     func mock(event: EventModel) -> EventViewModel {
 
         EventViewModel(
