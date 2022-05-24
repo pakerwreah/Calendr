@@ -46,7 +46,7 @@ struct MockCalendarServiceProvider: CalendarServiceProviding {
 
     func rescheduleReminder(id: String, to: Date) -> Observable<Void> { .void() }
 
-    func changeEventStatus(id: String, to: EventStatus) -> Observable<Void> { .void() }
+    func changeEventStatus(id: String, date: Date, to: EventStatus) -> Observable<Void> { .void() }
 
     func requestAccess() { changeObserver.onNext(()) }
 }
