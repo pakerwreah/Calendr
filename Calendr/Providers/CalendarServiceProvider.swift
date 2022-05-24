@@ -17,7 +17,7 @@ protocol CalendarServiceProviding {
     func events(from start: Date, to end: Date, calendars: [String]) -> Observable<[EventModel]>
     func completeReminder(id: String) -> Observable<Void>
     func rescheduleReminder(id: String, to: Date) -> Observable<Void>
-    func changeEventStatus(id: String, to: EventStatus) -> Observable<Void>
+    func changeEventStatus(id: String, date: Date, to: EventStatus) -> Observable<Void>
 }
 
 class CalendarServiceProvider: CalendarServiceProviding {
@@ -181,7 +181,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
         .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
     }
 
-    func changeEventStatus(id: String, to status: EventStatus) -> Observable<Void> {
+    func changeEventStatus(id: String, date: Date, to status: EventStatus) -> Observable<Void> {
 
         Observable.create { [store] observer in
 
@@ -189,7 +189,9 @@ class CalendarServiceProvider: CalendarServiceProviding {
 
             defer { observer.onCompleted() }
 
-            guard let event = store.event(withIdentifier: id) else {
+            let predicate = store.predicateForEvents(withStart: date, end: date, calendars: nil)
+
+            guard let event = store.events(matching: predicate).first(where: { $0.eventIdentifier == id }) else {
                 observer.onError(.unexpected("🔥 Event not found"))
                 return disposable
             }
@@ -202,18 +204,23 @@ class CalendarServiceProvider: CalendarServiceProviding {
             }
 
             do {
+                let new_status: EKParticipantStatus
+
                 switch status {
                 case .accepted:
-                    user.setValue(EKParticipantStatus.accepted.rawValue, forKey: "participantStatus")
+                    new_status = .accepted
                 case .maybe:
-                    user.setValue(EKParticipantStatus.tentative.rawValue, forKey: "participantStatus")
+                    new_status = .tentative
                 case .declined:
-                    user.setValue(EKParticipantStatus.declined.rawValue, forKey: "participantStatus")
+                    new_status = .declined
                 default:
                     return disposable
                 }
 
-                try store.save(event, span: .thisEvent)
+                if event.status != new_status {
+                    user.setValue(new_status.rawValue, forKey: "participantStatus")
+                    try store.save(event, span: .thisEvent)
+                }
 
                 observer.onNext(())
             } catch {

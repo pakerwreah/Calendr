@@ -43,7 +43,7 @@ class MockCalendarServiceProvider: CalendarServiceProviding {
         return .just(())
     }
 
-    func changeEventStatus(id: String, to status: EventStatus) -> Observable<Void> {
+    func changeEventStatus(id: String, date: Date, to status: EventStatus) -> Observable<Void> {
         spyChangeEventStatusObserver.onNext(status)
         return .just(())
     }

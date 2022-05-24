@@ -86,11 +86,11 @@ class EventDetailsViewModel {
             .flatMapFirst { action -> Observable<Void> in
                 switch action {
                 case .accept:
-                    return calendarService.changeEventStatus(id: event.id, to: .accepted)
+                    return calendarService.changeEventStatus(id: event.id, date: event.start, to: .accepted)
                 case .maybe:
-                    return calendarService.changeEventStatus(id: event.id, to: .maybe)
+                    return calendarService.changeEventStatus(id: event.id, date: event.start, to: .maybe)
                 case .decline:
-                    return calendarService.changeEventStatus(id: event.id, to: .declined)
+                    return calendarService.changeEventStatus(id: event.id, date: event.start, to: .declined)
                 }
             }
 
