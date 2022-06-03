@@ -77,6 +77,8 @@ class NextEventView: NSView {
         .bind { [layer = colorBar.layer] color, style in
             switch style {
             case .filled:
+                layer?.borderWidth = 0
+                layer?.borderColor = nil
                 layer?.backgroundColor = color
 
             case .bordered:
