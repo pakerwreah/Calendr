@@ -272,7 +272,7 @@ class MainViewController: NSViewController {
 
         Observable.merge(
             notificationCenter.rx.notification(.NSCalendarDayChanged).void(),
-            rx.viewDidDisappear.withLatestFrom(settingsViewModel.preserveSelectedDate).filter(\.isFalse).void()
+            rx.viewDidDisappear.withLatestFrom(settingsViewModel.preserveSelectedDate).filter(!).void()
         )
         .map { [dateProvider] in dateProvider.now }
         .bind(to: initialDate)
@@ -403,7 +403,7 @@ class MainViewController: NSViewController {
 
         statusBarButton.rx.tap
             .withUnretained(self)
-            .flatMapFirst { (self, _) in self.isShowingDetails.filter(\.isFalse).take(1) }
+            .flatMapFirst { (self, _) in self.isShowingDetails.filter(!).take(1) }
             .withLatestFrom(nextEventViewModel.event)
             .skipNil()
             .withUnretained(self)
