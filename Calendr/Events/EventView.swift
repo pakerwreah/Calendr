@@ -199,7 +199,7 @@ class EventView: NSView {
             // do not delay other click events
             $0.delaysPrimaryMouseButtonEvents = false
         }
-        .map(viewModel.makeDetails)
+        .map { [viewModel] in viewModel.makeDetails() }
         .withUnretained(self)
         .flatMapFirst { view, viewModel -> Observable<Void> in
             let vc = EventDetailsViewController(viewModel: viewModel)

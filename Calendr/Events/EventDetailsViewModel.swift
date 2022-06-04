@@ -17,7 +17,9 @@ class EventDetailsViewModel {
     let location: String
     let notes: String
     let participants: [Participant]
+    let link: EventLink?
 
+    let isInProgress: Observable<Bool>
     let popoverMaterial: Observable<PopoverMaterial>
 
     private let eventActionObservable: Observable<EventOptions.Action>
@@ -30,12 +32,16 @@ class EventDetailsViewModel {
 
     let isShowingObserver: AnyObserver<Bool>
 
+    let workspace: WorkspaceServiceProviding
+
     init(
         event: EventModel,
         dateProvider: DateProviding,
         calendarService: CalendarServiceProviding,
+        workspace: WorkspaceServiceProviding,
         settings: PopoverSettings,
-        isShowingObserver: AnyObserver<Bool>
+        isShowingObserver: AnyObserver<Bool>,
+        isInProgress: Observable<Bool>
     ) {
 
         self.isShowingObserver = isShowingObserver
@@ -50,6 +56,10 @@ class EventDetailsViewModel {
             <
             ($1.isOrganizer, $1.isCurrentUser, $1.status, $1.name)
         }
+
+        self.isInProgress = isInProgress
+        self.workspace = workspace
+        link = event.detectLink(using: workspace)
 
         let formatter = DateIntervalFormatter()
         formatter.dateStyle = .medium

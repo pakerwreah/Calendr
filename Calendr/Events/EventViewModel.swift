@@ -168,8 +168,10 @@ class EventViewModel {
             event: event,
             dateProvider: dateProvider,
             calendarService: calendarService,
+            workspace: workspace,
             settings: settings,
-            isShowingObserver: isShowingDetails
+            isShowingObserver: isShowingDetails,
+            isInProgress: isInProgress
         )
     }
 }

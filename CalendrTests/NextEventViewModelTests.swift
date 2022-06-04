@@ -17,13 +17,19 @@ class NextEventViewModelTests: XCTestCase {
 
     let settings = MockNextEventSettings()
     let dateProvider = MockDateProvider()
+    let calendarService = MockCalendarServiceProvider()
+    let workspace = MockWorkspaceServiceProvider()
     let screenProvider = MockScreenProvider()
 
     lazy var viewModel = NextEventViewModel(
         settings: settings,
         eventsObservable: eventsSubject,
         dateProvider: dateProvider,
-        screenProvider: screenProvider
+        calendarService: calendarService,
+        workspace: workspace,
+        screenProvider: screenProvider,
+        isShowingDetails: .dummy(),
+        scheduler: MainScheduler.instance
     )
 
     var now: Date {

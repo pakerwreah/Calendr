@@ -32,8 +32,10 @@ struct EventDetailsPreview: PreviewProvider {
                 ),
                 dateProvider: dateProvider,
                 calendarService: calendarService,
+                workspace: workspace,
                 settings: settings,
-                isShowingObserver: .dummy()
+                isShowingObserver: .dummy(),
+                isInProgress: .just(false)
             )
         )
         vc.view.width(equalTo: 300)
@@ -56,8 +58,10 @@ struct EventDetailsPreview: PreviewProvider {
                 ),
                 dateProvider: dateProvider,
                 calendarService: calendarService,
+                workspace: workspace,
                 settings: settings,
-                isShowingObserver: .dummy()
+                isShowingObserver: .dummy(),
+                isInProgress: .just(false)
             )
         )
         vc.view.width(equalTo: 300)
@@ -76,8 +80,10 @@ struct EventDetailsPreview: PreviewProvider {
                 ),
                 dateProvider: dateProvider,
                 calendarService: calendarService,
+                workspace: workspace,
                 settings: settings,
-                isShowingObserver: .dummy()
+                isShowingObserver: .dummy(),
+                isInProgress: .just(false)
             )
         )
         vc.view.width(equalTo: 250)
@@ -95,8 +101,10 @@ struct EventDetailsPreview: PreviewProvider {
                 ),
                 dateProvider: dateProvider,
                 calendarService: calendarService,
+                workspace: workspace,
                 settings: settings,
-                isShowingObserver: .dummy()
+                isShowingObserver: .dummy(),
+                isInProgress: .just(false)
             )
         )
         vc.view.width(equalTo: 250)

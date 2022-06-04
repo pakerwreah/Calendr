@@ -8,7 +8,7 @@
 import RxSwift
 @testable import Calendr
 
-class MockNextEventSettings: NextEventSettings {
+class MockNextEventSettings: MockPopoverSettings, NextEventSettings {
 
     var toggleStatusItem: AnyObserver<Bool>
     var showEventStatusItem: Observable<Bool>
@@ -19,9 +19,10 @@ class MockNextEventSettings: NextEventSettings {
     var toggleEventStatusItemDetectNotch: AnyObserver<Bool>
     var eventStatusItemDetectNotch: Observable<Bool>
 
-    init() {
+    override init() {
         (showEventStatusItem, toggleStatusItem) = BehaviorSubject.pipe(value: true)
         (eventStatusItemLength, eventStatusItemLengthObserver) = BehaviorSubject.pipe(value: 18)
         (eventStatusItemDetectNotch, toggleEventStatusItemDetectNotch) = BehaviorSubject.pipe(value: false)
+        super.init()
     }
 }

@@ -17,6 +17,7 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
     private let contentStackView = NSStackView(.vertical)
     private let participantsStackView = NSStackView(.vertical)
     private let detailsStackView = NSStackView(.vertical)
+    private let linkBtn = NSButton()
 
     private let titleLabel = Label()
     private let urlLabel = Label()
@@ -68,8 +69,6 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
 
         view.widthAnchor.constraint(lessThanOrEqualToConstant: 400).activate()
 
-        eventTypeIcon.setContentCompressionResistancePriority(.required, for: .horizontal)
-
         scrollView.hasVerticalScroller = true
         scrollView.scrollerStyle = .overlay
         scrollView.drawsBackground = false
@@ -89,6 +88,7 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         contentStackView.edges(to: view, constant: 12)
 
         setUpIcon()
+        setUpLinkButton()
         setUpLabels()
         setUpOptions()
 
@@ -165,7 +165,8 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
 
         switch viewModel.type {
         case .event:
-            break
+            eventTypeIcon.isHidden = true
+            return
 
         case .birthday:
             eventTypeIcon.image = Icons.Event.birthday
@@ -175,6 +176,36 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
             eventTypeIcon.image = Icons.Event.reminder.with(size: 12)
             eventTypeIcon.contentTintColor = .headerTextColor
         }
+
+        eventTypeIcon.setContentCompressionResistancePriority(.required, for: .horizontal)
+    }
+
+    private func setUpLinkButton() {
+
+        guard let link = viewModel.link else {
+            linkBtn.isHidden = true
+            return
+        }
+
+        linkBtn.setContentCompressionResistancePriority(.required, for: .horizontal)
+        linkBtn.refusesFirstResponder = true
+        linkBtn.bezelStyle = .roundRect
+        linkBtn.isBordered = false
+
+        viewModel.isInProgress
+            .bind { [linkBtn] isInProgress in
+                if link.isMeeting {
+                    linkBtn.image = isInProgress ? Icons.Event.video_fill : Icons.Event.video
+                } else {
+                    linkBtn.image = Icons.Event.link
+                }
+                linkBtn.contentTintColor = isInProgress ? .controlAccentColor : .secondaryLabelColor
+            }
+            .disposed(by: disposeBag)
+
+        linkBtn.rx.tap
+            .bind { [viewModel] in viewModel.workspace.open(link.url) }
+            .disposed(by: disposeBag)
     }
 
     private func addInformation() {
@@ -182,7 +213,7 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         if !viewModel.title.isEmpty {
             titleLabel.stringValue = viewModel.title
             detailsStackView.addArrangedSubview(
-                NSStackView(views: [titleLabel, eventTypeIcon]).with(alignment: .firstBaseline)
+                NSStackView(views: [titleLabel, eventTypeIcon, linkBtn]).with(alignment: .firstBaseline)
             )
         }
 

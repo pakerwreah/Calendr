@@ -153,7 +153,11 @@ class MainViewController: NSViewController {
             settings: settingsViewModel,
             eventsObservable: todayEventsObservable,
             dateProvider: dateProvider,
-            screenProvider: screenProvider
+            calendarService: calendarService,
+            workspace: workspace,
+            screenProvider: screenProvider,
+            isShowingDetails: isShowingDetails.asObserver(),
+            scheduler: MainScheduler.instance
         )
 
         nextEventView = NextEventView(viewModel: nextEventViewModel)
@@ -403,12 +407,11 @@ class MainViewController: NSViewController {
 
         statusBarButton.rx.tap
             .withUnretained(self)
-            .flatMapFirst { (self, _) in self.isShowingDetails.filter(!).take(1) }
-            .withLatestFrom(nextEventViewModel.event)
+            .flatMapFirst { (self, _) in self.isShowingDetails.filter(!).take(1).void() }
+            .compactMap { [nextEventViewModel] in nextEventViewModel.makeDetails() }
             .skipNil()
-            .withUnretained(self)
-            .flatMapFirst { (self, event) -> Observable<Void> in
-                let vc = EventDetailsViewController(viewModel: self.makeEventDetailsViewModel(with: event))
+            .flatMapFirst { viewModel -> Observable<Void> in
+                let vc = EventDetailsViewController(viewModel: viewModel)
                 let popover = NSPopover()
                 popover.behavior = .transient
                 popover.contentViewController = vc
@@ -420,16 +423,6 @@ class MainViewController: NSViewController {
             .disposed(by: disposeBag)
 
         statusBarButton.sendAction(on: .leftMouseDown)
-    }
-
-    private func makeEventDetailsViewModel(with event: EventModel) -> EventDetailsViewModel {
-        .init(
-            event: event,
-            dateProvider: dateProvider,
-            calendarService: calendarService,
-            settings: settingsViewModel,
-            isShowingObserver: isShowingDetails.asObserver()
-        )
     }
 
     override func mouseEntered(with event: NSEvent) {

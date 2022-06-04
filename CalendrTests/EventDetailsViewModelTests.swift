@@ -252,8 +252,10 @@ class EventDetailsViewModelTests: XCTestCase {
             event: event,
             dateProvider: dateProvider,
             calendarService: calendarService,
+            workspace: workspace,
             settings: settings,
-            isShowingObserver: .dummy()
+            isShowingObserver: .dummy(),
+            isInProgress: .just(false)
         )
     }
 }

@@ -7,6 +7,7 @@
 
 import Cocoa
 import RxSwift
+import RxRelay
 
 class NextEventViewModel {
 
@@ -16,15 +17,34 @@ class NextEventViewModel {
     let barColor: Observable<NSColor>
     let backgroundColor: Observable<NSColor>
     let hasEvent: Observable<Bool>
-    let event: Observable<EventModel?>
+    let isInProgress: Observable<Bool>
+
+    private let disposeBag = DisposeBag()
+    private let event = BehaviorRelay<EventModel?>(value: nil)
+
+    private let isShowingDetails: AnyObserver<Bool>
+
+    private let dateProvider: DateProviding
+    private let calendarService: CalendarServiceProviding
+    private let settings: PopoverSettings
+    private let workspace: WorkspaceServiceProviding
 
     init(
         settings: NextEventSettings,
         eventsObservable: Observable<[EventModel]>,
         dateProvider: DateProviding,
+        calendarService: CalendarServiceProviding,
+        workspace: WorkspaceServiceProviding,
         screenProvider: ScreenProviding,
-        scheduler: SchedulerType = MainScheduler.instance
+        isShowingDetails: AnyObserver<Bool>,
+        scheduler: SchedulerType
     ) {
+
+        self.dateProvider = dateProvider
+        self.calendarService = calendarService
+        self.settings = settings
+        self.workspace = workspace
+        self.isShowingDetails = isShowingDetails
 
         typealias NextEventTuple = (event: EventModel, isInProgress: Bool)
 
@@ -54,7 +74,12 @@ class NextEventViewModel {
             }
             .share(replay: 1)
 
-        event = nextEventObservable.map { $0?.event }
+        nextEventObservable
+            .map(\.?.event)
+            .bind(to: event)
+            .disposed(by: disposeBag)
+
+        isInProgress = nextEventObservable.map { $0?.isInProgress ?? false }
 
         barColor = event
             .skipNil()
@@ -133,6 +158,19 @@ class NextEventViewModel {
         hasEvent = nextEventObservable
             .map(\.isNotNil)
             .distinctUntilChanged()
+    }
+
+    func makeDetails() -> EventDetailsViewModel? {
+        guard let event = event.value else { return nil }
+        return .init(
+            event: event,
+            dateProvider: dateProvider,
+            calendarService: calendarService,
+            workspace: workspace,
+            settings: settings,
+            isShowingObserver: isShowingDetails,
+            isInProgress: isInProgress
+        )
     }
 }
 

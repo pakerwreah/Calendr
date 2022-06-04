@@ -32,7 +32,7 @@ protocol EventListSettings: PopoverSettings {
     var showPastEvents: Observable<Bool> { get }
 }
 
-protocol NextEventSettings {
+protocol NextEventSettings: PopoverSettings {
     var showEventStatusItem: Observable<Bool> { get }
     var eventStatusItemLength: Observable<Int> { get }
     var eventStatusItemDetectNotch: Observable<Bool> { get }
