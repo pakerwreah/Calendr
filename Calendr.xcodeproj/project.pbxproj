@@ -52,6 +52,8 @@
 		34651F6E25E3171D00518C5A /* EventViewModelLinkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34651F6D25E3171D00518C5A /* EventViewModelLinkTests.swift */; };
 		34651F7425E3207200518C5A /* WorkspaceServiceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34651F7325E3207200518C5A /* WorkspaceServiceProvider.swift */; };
 		34651F7A25E325EA00518C5A /* MockWorkspaceServiceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34651F7925E325EA00518C5A /* MockWorkspaceServiceProvider.swift */; };
+		3468E651284BD3D600B21EC8 /* EventLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3468E650284BD3D600B21EC8 /* EventLink.swift */; };
+		3468E653284BD44600B21EC8 /* EventBarStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3468E652284BD44600B21EC8 /* EventBarStyle.swift */; };
 		346E70C92802278E00A785FF /* ScreenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346E70C82802278E00A785FF /* ScreenProvider.swift */; };
 		346E70CB2802289F00A785FF /* MockScreenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346E70CA2802289F00A785FF /* MockScreenProvider.swift */; };
 		3470214A259DFF3000827AE7 /* CalendarServiceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34702149259DFF3000827AE7 /* CalendarServiceProvider.swift */; };
@@ -197,6 +199,8 @@
 		34651F7325E3207200518C5A /* WorkspaceServiceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkspaceServiceProvider.swift; sourceTree = "<group>"; };
 		34651F7925E325EA00518C5A /* MockWorkspaceServiceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockWorkspaceServiceProvider.swift; sourceTree = "<group>"; };
 		34651F8925E4099700518C5A /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3468E650284BD3D600B21EC8 /* EventLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventLink.swift; sourceTree = "<group>"; };
+		3468E652284BD44600B21EC8 /* EventBarStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventBarStyle.swift; sourceTree = "<group>"; };
 		346E70C82802278E00A785FF /* ScreenProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenProvider.swift; sourceTree = "<group>"; };
 		346E70CA2802289F00A785FF /* MockScreenProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockScreenProvider.swift; sourceTree = "<group>"; };
 		34702149259DFF3000827AE7 /* CalendarServiceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarServiceProvider.swift; sourceTree = "<group>"; };
@@ -533,9 +537,11 @@
 			isa = PBXGroup;
 			children = (
 				3470214F259E163000827AE7 /* CalendarModel.swift */,
+				3468E650284BD3D600B21EC8 /* EventLink.swift */,
 				34D19FCB2622B9CC00B2732C /* EventMeta.swift */,
 				347D0FF125954920002451EC /* EventModel.swift */,
 				348E701E25C43C5200B3B160 /* WeekDay.swift */,
+				3468E652284BD44600B21EC8 /* EventBarStyle.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -825,6 +831,7 @@
 				3421DA182693EEBD00056837 /* MockDateProvider.swift in Sources */,
 				348E701F25C43C5200B3B160 /* WeekDay.swift in Sources */,
 				34091737267E81870023B76D /* NSImage.swift in Sources */,
+				3468E653284BD44600B21EC8 /* EventBarStyle.swift in Sources */,
 				34F128E12597B9C9007DF31C /* MainViewController.swift in Sources */,
 				3477F3E425FD5285008EA888 /* NSView+Rx.swift in Sources */,
 				348B8CFC25B290C200E518FE /* Prefs.swift in Sources */,
@@ -879,6 +886,7 @@
 				34A4C3E925963FB200D0F949 /* NSStackView.swift in Sources */,
 				3453E6FF28393943002DCC3C /* EventOptions.swift in Sources */,
 				34924CEE259FD064009C3450 /* DateFormatter.swift in Sources */,
+				3468E651284BD3D600B21EC8 /* EventLink.swift in Sources */,
 				3470214A259DFF3000827AE7 /* CalendarServiceProvider.swift in Sources */,
 				3408D13E25982DB400CF1425 /* DateSelector.swift in Sources */,
 				349355B225BCB07B00957945 /* EventViewModel.swift in Sources */,

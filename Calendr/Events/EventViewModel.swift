@@ -8,11 +8,6 @@
 import Cocoa
 import RxSwift
 
-enum EventBarStyle {
-    case filled
-    case bordered
-}
-
 class EventViewModel {
 
     let title: String
@@ -21,8 +16,7 @@ class EventViewModel {
     let color: NSColor
     let barStyle: EventBarStyle
     let type: EventType
-    let isMeeting: Bool
-    let linkURL: URL?
+    let link: EventLink?
 
     let isInProgress: Observable<Bool>
     let backgroundColor: Observable<NSColor>
@@ -59,23 +53,9 @@ class EventViewModel {
         color = event.calendar.color
         type = event.type
         barStyle = type ~= .event(.maybe) ? .bordered : .filled
+        link = event.detectLink(using: workspace)
 
-        let links = !event.type.isBirthday
-            ? workspace.detectLinks([event.location, event.url?.absoluteString, event.notes])
-            : []
-
-        if let meetingURL = links.compactMap(workspace.detectMeeting).first {
-            isMeeting = true
-            linkURL = meetingURL
-        }
-        else {
-            isMeeting = false
-            linkURL = links.first
-        }
-
-        let url = linkURL?.absoluteString
-
-        subtitle = [event.location, url, event.notes]
+        subtitle = [event.location, link?.url.absoluteString, event.notes]
             .lazy
             .compactMap { $0?.replacingOccurrences(of: "https://", with: "").trimmed }
             .first(where: \.isEmpty.isFalse)?

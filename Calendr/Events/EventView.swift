@@ -76,7 +76,7 @@ class EventView: NSView {
         duration.stringValue = viewModel.duration
         duration.isHidden = duration.isEmpty
 
-        linkBtn.isHidden = viewModel.linkURL == nil
+        linkBtn.isHidden = viewModel.link == nil
     }
 
     private func configureLayout() {
@@ -149,9 +149,9 @@ class EventView: NSView {
             .bind(to: hoverLayer.rx.isHidden)
             .disposed(by: disposeBag)
 
-        if let url = viewModel.linkURL {
+        if let link = viewModel.link {
             (
-                viewModel.isMeeting
+                link.isMeeting
                     ? viewModel.isInProgress.map { $0 ? Icons.Event.video_fill : Icons.Event.video }
                     : .just(Icons.Event.link)
             )
@@ -164,7 +164,7 @@ class EventView: NSView {
                 .disposed(by: disposeBag)
 
             linkBtn.rx.tap
-                .bind { [viewModel] in viewModel.workspace.open(url) }
+                .bind { [viewModel] in viewModel.workspace.open(link.url) }
                 .disposed(by: disposeBag)
         }
 
