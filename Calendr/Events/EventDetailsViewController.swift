@@ -374,9 +374,6 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         view.window?.makeKey()
         view.window?.makeFirstResponder(self)
 
-        scrollView.flashScrollers()
-        optionsButton.refusesFirstResponder = false
-
         viewModel.isShowingObserver.onNext(true)
     }
 
