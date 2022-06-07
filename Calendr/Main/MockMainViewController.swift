@@ -107,11 +107,19 @@ private extension MockCalendarServiceProvider {
                             calendar: .meetings
                         ),
                         .make(
+                            start: time(18, 30),
+                            end: time(18, 45),
+                            title: "Declined event 🙅🏻‍♂️",
+                            notes: "Not interested",
+                            type: .event(.declined),
+                            calendar: .gmail
+                        ),
+                        .make(
                             start: time(19, 00),
                             title: "Take the trash out",
                             type: .reminder,
                             calendar: .reminders
-                        ),
+                        )
                     ]
                 },
                 [

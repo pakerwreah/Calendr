@@ -102,7 +102,8 @@ class CalendarViewModel {
                     isToday: false,
                     isSelected: false,
                     isHovered: false,
-                    events: []
+                    events: [],
+                    calendar: dateProvider.calendar
                 )
             }
         }
@@ -121,16 +122,18 @@ class CalendarViewModel {
         // Get events for current dates
         let eventsObservable = Observable.combineLatest(
             dateCellsObservable,
-            enabledCalendars.startWith([])
+            enabledCalendars.startWith([]),
+            settings.showDeclinedEvents
         )
         .repeat(when: calendarService.changeObservable)
-        .flatMapLatest { cellViewModels, calendars -> Observable<[EventModel]> in
+        .flatMapLatest { cellViewModels, calendars, showDeclinedEvents -> Observable<[EventModel]> in
 
             calendarService.events(
                 from: cellViewModels.first!.date,
                 to: cellViewModels.last!.date,
                 calendars: calendars
             )
+            .map { $0.filter { showDeclinedEvents || $0.status != .declined } }
         }
         .optional()
         .startWith(nil)

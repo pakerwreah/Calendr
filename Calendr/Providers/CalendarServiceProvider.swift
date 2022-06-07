@@ -97,9 +97,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
 
             let predicate = store.predicateForEvents(withStart: start, end: end, calendars: calendars)
 
-            let events = store.events(matching: predicate)
-                .filter { $0.status != .declined }
-                .map(EventModel.init(from:))
+            let events = store.events(matching: predicate).map(EventModel.init(from:))
 
             observer.onNext(events)
             observer.onCompleted()

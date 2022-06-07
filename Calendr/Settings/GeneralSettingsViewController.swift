@@ -19,6 +19,7 @@ class GeneralSettingsViewController: NSViewController {
     private let showNextEventCheckbox = Checkbox(title: Strings.Settings.MenuBar.showNextEvent)
     private let nextEventDetectNotchCheckbox = Checkbox(title: Strings.Settings.MenuBar.nextEventDetectNotch)
     private let showWeekNumbersCheckbox = Checkbox(title: Strings.Settings.Calendar.showWeekNumbers)
+    private let showDeclinedEventsCheckbox = Checkbox(title: Strings.Settings.Calendar.showDeclinedEvents)
     private let preserveSelectedDateCheckbox = Checkbox(title: Strings.Settings.Calendar.preserveSelectedDate)
     private let fadePastEventsRadio = Radio(title: Strings.Settings.Events.Finished.fade)
     private let hidePastEventsRadio = Radio(title: Strings.Settings.Events.Finished.hide)
@@ -105,13 +106,15 @@ class GeneralSettingsViewController: NSViewController {
 
     private lazy var calendarContent: NSView = {
         NSStackView(views: [
-            showWeekNumbersCheckbox,
-            preserveSelectedDateCheckbox,
             NSStackView(views: [
                 NSImageView(image: Icons.Calendar.scalingMinus),
                 calendarScalingSlider,
                 NSImageView(image: Icons.Calendar.scalingPlus)
-            ])
+            ]),
+            .dummy,
+            showWeekNumbersCheckbox,
+            showDeclinedEventsCheckbox,
+            preserveSelectedDateCheckbox
         ])
         .with(orientation: .vertical)
     }()
@@ -187,6 +190,12 @@ class GeneralSettingsViewController: NSViewController {
             control: showWeekNumbersCheckbox,
             observable: viewModel.showWeekNumbers,
             observer: viewModel.toggleWeekNumbers
+        )
+
+        bind(
+            control: showDeclinedEventsCheckbox,
+            observable: viewModel.showDeclinedEvents,
+            observer: viewModel.toggleDeclinedEvents
         )
 
         bind(

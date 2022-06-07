@@ -11,6 +11,7 @@ import RxSwift
 class EventDetailsViewModel {
 
     let type: EventType
+    let status: EventStatus
     let title: String
     let duration: String
     let url: String
@@ -47,6 +48,7 @@ class EventDetailsViewModel {
         self.isShowingObserver = isShowingObserver
 
         type = event.type
+        status = event.status
         title = event.title
         url = (type.isBirthday ? nil : event.url?.absoluteString) ?? ""
         location = event.location ?? ""

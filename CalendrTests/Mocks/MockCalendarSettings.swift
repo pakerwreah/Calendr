@@ -13,11 +13,15 @@ class MockCalendarSettings: CalendarSettings {
     let showWeekNumbers: Observable<Bool>
     let toggleWeekNumbers: AnyObserver<Bool>
 
+    let showDeclinedEvents: Observable<Bool>
+    let toggleDeclinedEvents: AnyObserver<Bool>
+
     let preserveSelectedDate: Observable<Bool>
     let calendarScaling: Observable<Double>
 
     init() {
         (showWeekNumbers, toggleWeekNumbers) = BehaviorSubject.pipe(value: false)
+        (showDeclinedEvents, toggleDeclinedEvents) = BehaviorSubject.pipe(value: false)
         preserveSelectedDate = .just(false)
         calendarScaling = .just(1)
     }

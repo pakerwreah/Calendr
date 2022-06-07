@@ -50,7 +50,7 @@ class NextEventViewModel {
 
         let nextEventObservable = Observable.combineLatest(settings.showEventStatusItem, eventsObservable)
             .map { isEnabled, events in
-                isEnabled ? events.filter { !$0.isAllDay && !$0.isPending } : []
+                isEnabled ? events.filter { !$0.isAllDay && ![.pending, .declined].contains($0.status) } : []
             }
             .flatMapLatest { [dateProvider] events -> Observable<NextEventTuple?> in
 

@@ -27,15 +27,10 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
 
     private let optionsLabel = Label()
     private let optionsButton = NSButton()
-    private lazy var eventOptions = EventOptions(current: eventStatus)
+    private lazy var eventOptions = EventOptions(current: viewModel.status)
     private lazy var reminderOptions = ReminderOptions()
 
     private let viewModel: EventDetailsViewModel
-
-    private var eventStatus: EventStatus {
-        if case .event(let status) = viewModel.type { return status }
-        return .unknown
-    }
 
     init(viewModel: EventDetailsViewModel) {
 
@@ -126,6 +121,9 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
 
         case .event(.pending):
             addEventStatusButton(icon: Icons.EventStatus.pending, color: .systemGray, title: Strings.EventStatus.pending)
+
+        case .event(.declined):
+            addEventStatusButton(icon: Icons.EventStatus.declined, color: .systemRed, title: Strings.EventStatus.declined)
 
         case .reminder:
             optionsButton.title = Strings.Reminder.Options.button
@@ -325,9 +323,7 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         .disposed(by: disposeBag)
 
         switch viewModel.type {
-        case .event(.accepted),
-             .event(.maybe),
-             .event(.pending):
+        case .event(let status) where status != .unknown:
             setUpOptionsMenuBindings(options: eventOptions, observer: viewModel.eventActionObserver)
 
         case .reminder:

@@ -91,6 +91,8 @@ internal enum Strings {
     internal enum Calendar {
       /// Preserve selected date on hide
       internal static var preserveSelectedDate: String { return Strings.tr("Localizable", "settings.calendar.preserve_selected_date") }
+      /// Show declined events
+      internal static var showDeclinedEvents: String { return Strings.tr("Localizable", "settings.calendar.show_declined_events") }
       /// Show week numbers
       internal static var showWeekNumbers: String { return Strings.tr("Localizable", "settings.calendar.show_week_numbers") }
     }

@@ -20,6 +20,7 @@ protocol StatusItemSettings {
 
 protocol CalendarSettings {
     var showWeekNumbers: Observable<Bool> { get }
+    var showDeclinedEvents: Observable<Bool> { get }
     var preserveSelectedDate: Observable<Bool> { get }
     var calendarScaling: Observable<Double> { get }
 }
@@ -48,6 +49,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
     let eventStatusItemLengthObserver: AnyObserver<Int>
     let toggleEventStatusItemDetectNotch: AnyObserver<Bool>
     let toggleWeekNumbers: AnyObserver<Bool>
+    let toggleDeclinedEvents: AnyObserver<Bool>
     let togglePreserveSelectedDate: AnyObserver<Bool>
     let togglePastEvents: AnyObserver<Bool>
     let transparencyObserver: AnyObserver<Int>
@@ -61,6 +63,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
     let eventStatusItemLength: Observable<Int>
     let eventStatusItemDetectNotch: Observable<Bool>
     let showWeekNumbers: Observable<Bool>
+    let showDeclinedEvents: Observable<Bool>
     let preserveSelectedDate: Observable<Bool>
     let showPastEvents: Observable<Bool>
     let popoverTransparency: Observable<Int>
@@ -83,6 +86,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
             Prefs.eventStatusItemLength: 18,
             Prefs.eventStatusItemDetectNotch: false,
             Prefs.showWeekNumbers: false,
+            Prefs.showDeclinedEvents: false,
             Prefs.preserveSelectedDate: false,
             Prefs.showPastEvents: true,
             Prefs.transparencyLevel: 2,
@@ -110,6 +114,9 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
         let showWeekNumbersBehavior = BehaviorSubject(
             value: userDefaults.bool(forKey: Prefs.showWeekNumbers)
         )
+        let showDeclinedEventsBehavior = BehaviorSubject(
+            value: userDefaults.bool(forKey: Prefs.showDeclinedEvents)
+        )
         let preserveSelectedDateBehavior = BehaviorSubject(
             value: userDefaults.bool(forKey: Prefs.preserveSelectedDate)
         )
@@ -130,6 +137,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
         eventStatusItemLengthObserver = eventStatusItemLengthBehavior.asObserver()
         toggleEventStatusItemDetectNotch = eventStatusItemDetectNotchBehavior.asObserver()
         toggleWeekNumbers = showWeekNumbersBehavior.asObserver()
+        toggleDeclinedEvents = showDeclinedEventsBehavior.asObserver()
         togglePreserveSelectedDate = preserveSelectedDateBehavior.asObserver()
         togglePastEvents = showPastEventsBehavior.asObserver()
         transparencyObserver = transparencyBehavior.asObserver()
@@ -181,6 +189,12 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
         showWeekNumbers = showWeekNumbersBehavior
             .do(onNext: {
                 userDefaults.setValue($0, forKey: Prefs.showWeekNumbers)
+            })
+            .share(replay: 1)
+
+        showDeclinedEvents = showDeclinedEventsBehavior
+            .do(onNext: {
+                userDefaults.setValue($0, forKey: Prefs.showDeclinedEvents)
             })
             .share(replay: 1)
 

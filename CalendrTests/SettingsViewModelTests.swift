@@ -55,6 +55,11 @@ class SettingsViewModelTests: XCTestCase {
         set { userDefaults.setValue(newValue, forKey: Prefs.showWeekNumbers) }
     }
 
+    var userDefaultsShowDeclinedEvents: Bool? {
+        get { userDefaults.object(forKey: Prefs.showDeclinedEvents) as! Bool? }
+        set { userDefaults.setValue(newValue, forKey: Prefs.showDeclinedEvents) }
+    }
+
     var userDefaultsPreserveSelectedDate: Bool? {
         get { userDefaults.object(forKey: Prefs.preserveSelectedDate) as! Bool? }
         set { userDefaults.setValue(newValue, forKey: Prefs.preserveSelectedDate) }
@@ -88,6 +93,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertNil(userDefaultsShowEventStatusItem)
         XCTAssertNil(userDefaultsEventStatusItemLength)
         XCTAssertNil(userDefaultsShowWeekNumbers)
+        XCTAssertNil(userDefaultsShowDeclinedEvents)
         XCTAssertNil(userDefaultsPreserveSelectedDate)
         XCTAssertNil(userDefaultsCalendarScaling)
         XCTAssertNil(userDefaultsShowPastEvents)
@@ -99,6 +105,7 @@ class SettingsViewModelTests: XCTestCase {
         var showEventStatusItem: Bool?
         var eventStatusItemLength: Int?
         var showWeekNumbers: Bool?
+        var showDeclinedEvents: Bool?
         var preserveSelectedDate: Bool?
         var calendarScaling: Double?
         var showPastEvents: Bool?
@@ -129,6 +136,10 @@ class SettingsViewModelTests: XCTestCase {
             .bind { showWeekNumbers = $0 }
             .disposed(by: disposeBag)
 
+        viewModel.showDeclinedEvents
+            .bind { showDeclinedEvents = $0 }
+            .disposed(by: disposeBag)
+
         viewModel.preserveSelectedDate
             .bind { preserveSelectedDate = $0 }
             .disposed(by: disposeBag)
@@ -155,6 +166,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(showEventStatusItem, false)
         XCTAssertEqual(eventStatusItemLength, 18)
         XCTAssertEqual(showWeekNumbers, false)
+        XCTAssertEqual(showDeclinedEvents, false)
         XCTAssertEqual(preserveSelectedDate, false)
         XCTAssertEqual(calendarScaling, 1)
         XCTAssertEqual(showPastEvents, true)
@@ -167,6 +179,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(userDefaultsShowEventStatusItem, false)
         XCTAssertEqual(userDefaultsEventStatusItemLength, 18)
         XCTAssertEqual(userDefaultsShowWeekNumbers, false)
+        XCTAssertEqual(userDefaultsShowDeclinedEvents, false)
         XCTAssertEqual(userDefaultsPreserveSelectedDate, false)
         XCTAssertEqual(userDefaultsCalendarScaling, 1)
         XCTAssertEqual(userDefaultsShowPastEvents, true)
@@ -292,6 +305,30 @@ class SettingsViewModelTests: XCTestCase {
 
         XCTAssertEqual(showWeekNumbers, true)
         XCTAssertEqual(userDefaultsShowWeekNumbers, true)
+    }
+
+    func testToggleShowDeclinedEvents() {
+
+        userDefaultsShowDeclinedEvents = true
+
+        var showDeclinedEvents: Bool?
+
+        viewModel.showDeclinedEvents
+            .bind { showDeclinedEvents = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(showDeclinedEvents, true)
+        XCTAssertEqual(userDefaultsShowDeclinedEvents, true)
+
+        viewModel.toggleDeclinedEvents.onNext(false)
+
+        XCTAssertEqual(showDeclinedEvents, false)
+        XCTAssertEqual(userDefaultsShowDeclinedEvents, false)
+
+        viewModel.toggleDeclinedEvents.onNext(true)
+
+        XCTAssertEqual(showDeclinedEvents, true)
+        XCTAssertEqual(userDefaultsShowDeclinedEvents, true)
     }
 
     func testTogglePreserveSelectedDate() {

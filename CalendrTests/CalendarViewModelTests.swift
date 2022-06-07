@@ -48,6 +48,7 @@ class CalendarViewModelTests: XCTestCase {
                 end: .make(year: 2021, month: 1, day: 4),
                 title: "Event 1",
                 isAllDay: true,
+                type: .event(.accepted),
                 calendar: calendarService.m_calendars[0]
             ),
             .make(
@@ -55,6 +56,7 @@ class CalendarViewModelTests: XCTestCase {
                 end: .make(year: 2021, month: 1, day: 2),
                 title: "Event 2",
                 isAllDay: true,
+                type: .event(.maybe),
                 calendar: calendarService.m_calendars[0]
             ),
             .make(
@@ -62,6 +64,7 @@ class CalendarViewModelTests: XCTestCase {
                 end: .make(year: 2021, month: 1, day: 2, hour: 9),
                 title: "Event 3",
                 isAllDay: false,
+                type: .event(.pending),
                 calendar: calendarService.m_calendars[1]
             ),
             .make(
@@ -69,6 +72,23 @@ class CalendarViewModelTests: XCTestCase {
                 end: .make(year: 2021, month: 1, day: 3, hour: 15),
                 title: "Event 4",
                 isAllDay: false,
+                type: .event(.unknown),
+                calendar: calendarService.m_calendars[2]
+            ),
+            .make(
+                start: .make(year: 2021, month: 1, day: 3, hour: 15),
+                end: .make(year: 2021, month: 1, day: 3, hour: 16),
+                title: "Event 5",
+                isAllDay: false,
+                type: .event(.declined),
+                calendar: calendarService.m_calendars[2]
+            ),
+            .make(
+                start: .make(year: 2021, month: 1, day: 4, hour: 10),
+                end: .make(year: 2021, month: 1, day: 4, hour: 11),
+                title: "Event 6",
+                isAllDay: false,
+                type: .event(.declined),
                 calendar: calendarService.m_calendars[2]
             )
         ]
@@ -392,6 +412,28 @@ class CalendarViewModelTests: XCTestCase {
         }
     }
 
+    func testEventsPerDate_withDeclinedEvents() {
+
+        settings.toggleDeclinedEvents.onNext(true)
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+
+        let expectedEvents: [(date: Date, events: [String])] = [
+            (.make(year: 2021, month: 1, day: 1), ["Event 1"]),
+            (.make(year: 2021, month: 1, day: 2), ["Event 1", "Event 2", "Event 3"]),
+            (.make(year: 2021, month: 1, day: 3), ["Event 1", "Event 4", "Event 5"]),
+            (.make(year: 2021, month: 1, day: 4), ["Event 6"]),
+        ]
+
+        for (date, expected) in expectedEvents {
+            let events = lastValue?
+                .first(where: { $0.date == date })?
+                .events
+                .map(\.title)
+
+            XCTAssertEqual(events, expected, "\(date)")
+        }
+    }
+
     func testEventDotsPerDate() {
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
@@ -400,6 +442,28 @@ class CalendarViewModelTests: XCTestCase {
             (.make(year: 2021, month: 1, day: 1), [.white]),
             (.make(year: 2021, month: 1, day: 2), [.white, .black]),
             (.make(year: 2021, month: 1, day: 3), [.white, .clear]),
+        ]
+
+        for (date, expected) in expectedEvents {
+            let events = lastValue?
+                .first(where: { $0.date == date })?
+                .dots
+
+            XCTAssertEqual(events?.count, expected.count, "\(date)")
+            XCTAssertEqual(events.map(Set.init), expected, "\(date)")
+        }
+    }
+
+    func testEventDotsPerDate_withDeclinedEvents() {
+
+        settings.toggleDeclinedEvents.onNext(true)
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+
+        let expectedEvents: [(date: Date, events: Set<NSColor>)] = [
+            (.make(year: 2021, month: 1, day: 1), [.white]),
+            (.make(year: 2021, month: 1, day: 2), [.white, .black]),
+            (.make(year: 2021, month: 1, day: 3), [.white, .clear]),
+            (.make(year: 2021, month: 1, day: 4), [.clear]),
         ]
 
         for (date, expected) in expectedEvents {

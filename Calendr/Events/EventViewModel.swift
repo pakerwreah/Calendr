@@ -16,6 +16,7 @@ class EventViewModel {
     let color: NSColor
     let barStyle: EventBarStyle
     let type: EventType
+    let isDeclined: Bool
     let link: EventLink?
 
     let isInProgress: Observable<Bool>
@@ -52,7 +53,8 @@ class EventViewModel {
         title = event.title
         color = event.calendar.color
         type = event.type
-        barStyle = type ~= .event(.maybe) ? .bordered : .filled
+        isDeclined = event.status ~= .declined
+        barStyle = event.status ~= .maybe ? .bordered : .filled
         link = event.detectLink(using: workspace)
 
         subtitle = [event.location, link?.url.absoluteString, event.notes]
@@ -154,7 +156,13 @@ class EventViewModel {
             .concat(Observable.just(nil))
             .share(replay: 1)
 
-        isFaded = event.isAllDay || !meta.endsToday ? .just(false) : isPast
+        if isDeclined {
+            isFaded = .just(true)
+        } else if event.isAllDay || !meta.endsToday {
+            isFaded = .just(false)
+        } else {
+            isFaded = isPast
+        }
 
         isInProgress = progress.map(\.isNotNil).distinctUntilChanged()
 

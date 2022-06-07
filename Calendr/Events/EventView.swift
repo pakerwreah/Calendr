@@ -68,7 +68,10 @@ class EventView: NSView {
             colorBar.layer?.borderColor = viewModel.color.cgColor
         }
 
-        title.stringValue = viewModel.title
+        title.attributedStringValue = .init(
+            string: viewModel.title,
+            attributes: viewModel.isDeclined ? [.strikethroughStyle: NSUnderlineStyle.single.rawValue] : [:]
+        )
 
         subtitle.stringValue = viewModel.subtitle
         subtitle.isHidden = subtitle.isEmpty

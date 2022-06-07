@@ -222,6 +222,29 @@ class SettingsTests: UITestCase {
         XCTAssert(try XCTUnwrap(Calendar.weekNumbers.first).isHittable)
     }
 
+    func testSettingsGeneral_toggleShowDeclinedEvents() {
+
+        MenuBar.main.click()
+        Main.settingsBtn.click()
+
+        XCTAssert(Settings.view.didAppear)
+
+        let checkbox = Settings.General.view.checkBoxes
+            .element(matching: NSPredicate(format: "title = %@", "Show declined events"))
+
+        XCTAssertFalse(checkbox.isChecked)
+
+        let initial = Calendar.events.count
+
+        checkbox.click()
+        XCTAssertTrue(checkbox.isChecked)
+        XCTAssertEqual(Calendar.events.count, initial + 1)
+
+        checkbox.click()
+        XCTAssertFalse(checkbox.isChecked)
+        XCTAssertEqual(Calendar.events.count, initial)
+    }
+
     func testSettingsGeneral_togglePreserveSelectedDate() {
 
         MenuBar.main.click()

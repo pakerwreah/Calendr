@@ -57,11 +57,9 @@ extension EventType {
 
 extension EventModel {
 
-    func meta(using dateProvider: DateProviding) -> EventMeta {
-        EventMeta(event: self, dateProvider: dateProvider)
-    }
+    func meta(using dateProvider: DateProviding) -> EventMeta { .init(event: self, dateProvider: dateProvider) }
 
-    var isPending: Bool { if case .event(.pending) = type { return true } else { return false } }
+    var status: EventStatus { if case .event(let status) = type { return status } else { return .unknown } }
 }
 
 struct Participant: Hashable {

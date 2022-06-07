@@ -17,6 +17,7 @@ enum Prefs {
     static let eventStatusItemDetectNotch = "event_status_item_detect_notch"
     static let showWeekNumbers = "show_week_numbers"
     static let preserveSelectedDate = "preserve_selected_date"
+    static let showDeclinedEvents = "show_declined_events"
     static let showPastEvents = "show_past_events"
     static let transparencyLevel = "transparency_level"
     static let calendarScaling = "calendar_scaling"

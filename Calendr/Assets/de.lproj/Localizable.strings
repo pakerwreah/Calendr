@@ -24,6 +24,7 @@
 "settings.calendar" = "Kalender";
 "settings.calendar.show_week_numbers" = "Zeige Kalenderwochen";
 "settings.calendar.preserve_selected_date" = "Ausgewähltes Datum beim Ausblenden beibehalten";
+"settings.calendar.show_declined_events" = "Abgelehnte Ereignisse anzeigen";
 
 "settings.events" = "Termine";
 "settings.events.finished" = "Erledigt";

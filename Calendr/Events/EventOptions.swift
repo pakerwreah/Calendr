@@ -31,7 +31,9 @@ class EventOptions: NSMenu, ObservableConvertibleType {
         if current != .maybe {
             addOption(.maybe)
         }
-        addOption(.decline)
+        if current != .declined {
+            addOption(.decline)
+        }
     }
 
     @objc private func triggerAction(_ option: Option) {

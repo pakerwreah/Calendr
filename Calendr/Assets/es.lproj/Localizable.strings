@@ -24,6 +24,7 @@
 "settings.calendar" = "Calendario";
 "settings.calendar.show_week_numbers" = "Mostrar número de semana";
 "settings.calendar.preserve_selected_date" = "Conservar la fecha seleccionada al ocultar";
+"settings.calendar.show_declined_events" = "Mostrar eventos rechazados";
 
 "settings.events" = "Eventos";
 "settings.events.finished" = "Finalizados";
