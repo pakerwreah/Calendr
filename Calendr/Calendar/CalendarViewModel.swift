@@ -162,7 +162,8 @@ class CalendarViewModel {
                     isToday: dateProvider.calendar.isDate(vm.date, inSameDayAs: today),
                     events: events?.filter { event in
                         dateProvider.calendar.isDate(vm.date, in: (event.start, event.end))
-                    }
+                    },
+                    calendar: dateProvider.calendar
                 )
             }
         }
@@ -175,7 +176,10 @@ class CalendarViewModel {
         .map { cellViewModels, selectedDate -> [CalendarCellViewModel] in
 
             cellViewModels.map {
-                $0.with(isSelected: dateProvider.calendar.isDate($0.date, inSameDayAs: selectedDate))
+                $0.with(
+                    isSelected: dateProvider.calendar.isDate($0.date, inSameDayAs: selectedDate),
+                    calendar: dateProvider.calendar
+                )
             }
         }
         .distinctUntilChanged()
@@ -194,11 +198,14 @@ class CalendarViewModel {
 
             if let hoveredDate = hoveredDate {
                 return cellViewModels.map {
-                    $0.with(isHovered: dateProvider.calendar.isDate($0.date, inSameDayAs: hoveredDate))
+                    $0.with(
+                        isHovered: dateProvider.calendar.isDate($0.date, inSameDayAs: hoveredDate),
+                        calendar: dateProvider.calendar
+                    )
                 }
             } else {
                 return cellViewModels.map {
-                    $0.with(isHovered: false)
+                    $0.with(isHovered: false, calendar: dateProvider.calendar)
                 }
             }
         }
@@ -228,7 +235,8 @@ private extension CalendarCellViewModel {
         isToday: Bool? = nil,
         isSelected: Bool? = nil,
         isHovered: Bool? = nil,
-        events: [EventModel]? = nil
+        events: [EventModel]? = nil,
+        calendar: Calendar
     ) -> Self {
 
         CalendarCellViewModel(
@@ -237,7 +245,8 @@ private extension CalendarCellViewModel {
             isToday: isToday ?? self.isToday,
             isSelected: isSelected ?? self.isSelected,
             isHovered: isHovered ?? self.isHovered,
-            events: events ?? self.events
+            events: events ?? self.events,
+            calendar: calendar
         )
     }
 }

@@ -227,7 +227,7 @@ class CalendarViewModelTests: XCTestCase {
     // Monday is the default first day of week for ISO8601
     func testWeekNumbers_iso8601Calendar_firstWeekDayMonday() {
 
-        dateProvider.m_calendar = Calendar(identifier: .iso8601)
+        dateProvider.m_calendar = Calendar(identifier: .iso8601).with(timeZone: .utc)
 
         var weekNumbers: [Int]?
 
@@ -244,7 +244,7 @@ class CalendarViewModelTests: XCTestCase {
 
     func testWeekNumbers_iso8601Calendar_firstWeekDaySunday() {
 
-        dateProvider.m_calendar = Calendar(identifier: .iso8601)
+        dateProvider.m_calendar = Calendar(identifier: .iso8601).with(timeZone: .utc)
         dateProvider.m_calendar.firstWeekday = 1
 
         var weekNumbers: [Int]?
