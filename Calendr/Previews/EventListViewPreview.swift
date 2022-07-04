@@ -22,8 +22,7 @@ struct EventListViewPreview: PreviewProvider {
     static func make(_ color: ColorScheme) -> some View {
         EventListView(
             viewModel: EventListViewModel(
-                dateObservable: .just(now),
-                eventsObservable: .just([
+                eventsObservable: .just((now, [
                     .make(
                         start: .make(hour: 15, minute: 30),
                         end: .make(hour: 15, minute: 50),
@@ -49,7 +48,7 @@ struct EventListViewPreview: PreviewProvider {
                         type: .reminder,
                         calendar: .make(color: .systemOrange)
                     ),
-                ]),
+                ])),
                 isShowingDetails: .init(value: false),
                 dateProvider: dateProvider,
                 calendarService: calendarService,

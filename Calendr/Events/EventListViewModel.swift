@@ -22,8 +22,7 @@ class EventListViewModel {
     private let isShowingDetails: BehaviorSubject<Bool>
 
     init(
-        dateObservable: Observable<Date>,
-        eventsObservable: Observable<[EventModel]>,
+        eventsObservable: Observable<(Date, [EventModel])>,
         isShowingDetails: BehaviorSubject<Bool>,
         dateProvider: DateProviding,
         calendarService: CalendarServiceProviding,
@@ -54,11 +53,15 @@ class EventListViewModel {
         }
 
         Observable.combineLatest(
-            Observable.combineLatest(eventsObservable, dateObservable, settings.showPastEvents),
+            eventsObservable,
+            settings.showPastEvents,
             isShowingDetails
         )
-        .filter(\.1.isFalse)
-        .map(\.0)
+        .compactMap { dateEvents, showPast, isShowingDetails -> ([EventModel], Date, Bool)? in
+            guard !isShowingDetails else { return nil }
+            let (date, events) = dateEvents
+            return (events, date, showPast)
+        }
         .distinctUntilChanged(==)
         .flatMapLatest { events, date, showPast -> Observable<([EventModel], Date, Bool)> in
 

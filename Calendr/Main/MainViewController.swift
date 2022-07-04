@@ -124,13 +124,12 @@ class MainViewController: NSViewController {
         )
 
         let eventsObservable = calendarViewModel.asObservable()
-            .compactMap {
-                $0.first(where: \.isSelected)?.events
-            }
-            .distinctUntilChanged()
+            .compactMap { $0.first(where: \.isHovered) ?? $0.first(where: \.isSelected) }
+            .map { ($0.date, $0.events) }
+            .distinctUntilChanged(==)
+            .debounce(.milliseconds(50), scheduler: MainScheduler.instance)
 
         eventListViewModel = EventListViewModel(
-            dateObservable: selectedDate,
             eventsObservable: eventsObservable,
             isShowingDetails: isShowingDetails,
             dateProvider: dateProvider,

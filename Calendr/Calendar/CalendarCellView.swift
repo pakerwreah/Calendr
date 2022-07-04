@@ -158,7 +158,12 @@ class CalendarCellView: NSView {
     override func mouseExited(with event: NSEvent) { }
 
     override func updateTrackingAreas() {
-        trackingAreas.forEach(removeTrackingArea(_:))
+
+        if let trackingArea = trackingAreas.first {
+            guard trackingArea.rect != bounds else { return }
+            removeTrackingArea(trackingArea)
+        }
+
         addTrackingRect(bounds, owner: self, userData: nil, assumeInside: false)
     }
 

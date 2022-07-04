@@ -166,7 +166,11 @@ class CalendarView: NSView {
             height: gridView.bounds.height - offsetY
         )
 
-        gridView.trackingAreas.forEach(gridView.removeTrackingArea(_:))
+        if let trackingArea = gridView.trackingAreas.first {
+            guard trackingArea.rect != rect else { return }
+            gridView.removeTrackingArea(trackingArea)
+        }
+
         gridView.addTrackingRect(rect, owner: self, userData: nil, assumeInside: false)
     }
 

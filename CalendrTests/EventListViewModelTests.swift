@@ -23,8 +23,7 @@ class EventListViewModelTests: XCTestCase {
     lazy var scheduler = TrackedHistoricalScheduler(initialClock: dateProvider.now)
 
     lazy var viewModel = EventListViewModel(
-        dateObservable: dateSubject,
-        eventsObservable: eventsSubject,
+        eventsObservable: Observable.combineLatest(dateSubject, eventsSubject),
         isShowingDetails: .init(value: false),
         dateProvider: dateProvider,
         calendarService: calendarService,
