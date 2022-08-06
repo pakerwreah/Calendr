@@ -5,7 +5,6 @@ strings:
       output: ${PROJECT_DIR}/${TARGET_NAME}/Assets/Generated/Strings.generated.swift
       params:
         enumName: Strings
-        lookupFunction: lookupFunction
 
 fonts:
   inputs: ${PROJECT_DIR}/${TARGET_NAME}/Assets

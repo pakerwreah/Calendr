@@ -3,134 +3,132 @@
 
 import Foundation
 
-// swiftlint:disable superfluous_disable_command file_length implicit_return
+// swiftlint:disable superfluous_disable_command file_length implicit_return prefer_self_in_static_references
 
 // MARK: - Strings
 
 // swiftlint:disable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:disable nesting type_body_length type_name vertical_whitespace_opening_braces
 internal enum Strings {
-  /// Quit
-  internal static var quit: String { return Strings.tr("Localizable", "quit") }
-
+  /// Localizable.strings
+  ///   Calendr
+  /// 
+  ///   Created by Paker on 20/02/2021.
+  internal static let quit = Strings.tr("Localizable", "quit", fallback: #"Quit"#)
   internal enum EventDetails {
     internal enum Participant {
       /// me
-      internal static var me: String { return Strings.tr("Localizable", "event_details.participant.me") }
+      internal static let me = Strings.tr("Localizable", "event_details.participant.me", fallback: #"me"#)
       /// organizer
-      internal static var organizer: String { return Strings.tr("Localizable", "event_details.participant.organizer") }
+      internal static let organizer = Strings.tr("Localizable", "event_details.participant.organizer", fallback: #"organizer"#)
     }
   }
-
   internal enum EventStatus {
     /// Accepted
-    internal static var accepted: String { return Strings.tr("Localizable", "event_status.accepted") }
+    internal static let accepted = Strings.tr("Localizable", "event_status.accepted", fallback: #"Accepted"#)
     /// Declined
-    internal static var declined: String { return Strings.tr("Localizable", "event_status.declined") }
+    internal static let declined = Strings.tr("Localizable", "event_status.declined", fallback: #"Declined"#)
     /// my status:
-    internal static var label: String { return Strings.tr("Localizable", "event_status.label") }
+    internal static let label = Strings.tr("Localizable", "event_status.label", fallback: #"my status:"#)
     /// Maybe
-    internal static var maybe: String { return Strings.tr("Localizable", "event_status.maybe") }
+    internal static let maybe = Strings.tr("Localizable", "event_status.maybe", fallback: #"Maybe"#)
     /// Pending
-    internal static var pending: String { return Strings.tr("Localizable", "event_status.pending") }
+    internal static let pending = Strings.tr("Localizable", "event_status.pending", fallback: #"Pending"#)
     internal enum Action {
       /// Accept
-      internal static var accept: String { return Strings.tr("Localizable", "event_status.action.accept") }
+      internal static let accept = Strings.tr("Localizable", "event_status.action.accept", fallback: #"Accept"#)
       /// Decline
-      internal static var decline: String { return Strings.tr("Localizable", "event_status.action.decline") }
+      internal static let decline = Strings.tr("Localizable", "event_status.action.decline", fallback: #"Decline"#)
       /// Maybe
-      internal static var maybe: String { return Strings.tr("Localizable", "event_status.action.maybe") }
+      internal static let maybe = Strings.tr("Localizable", "event_status.action.maybe", fallback: #"Maybe"#)
     }
   }
-
   internal enum Formatter {
     internal enum Date {
       /// All day
-      internal static var allDay: String { return Strings.tr("Localizable", "formatter.date.all_day") }
+      internal static let allDay = Strings.tr("Localizable", "formatter.date.all_day", fallback: #"All day"#)
       /// Today
-      internal static var today: String { return Strings.tr("Localizable", "formatter.date.today") }
+      internal static let today = Strings.tr("Localizable", "formatter.date.today", fallback: #"Today"#)
       internal enum Relative {
         /// %@ ago
         internal static func ago(_ p1: Any) -> String {
-          return Strings.tr("Localizable", "formatter.date.relative.ago", String(describing: p1))
+          return Strings.tr("Localizable", "formatter.date.relative.ago", String(describing: p1), fallback: #"%@ ago"#)
         }
         /// in %@
         internal static func `in`(_ p1: Any) -> String {
-          return Strings.tr("Localizable", "formatter.date.relative.in", String(describing: p1))
+          return Strings.tr("Localizable", "formatter.date.relative.in", String(describing: p1), fallback: #"in %@"#)
         }
         /// %@ left
         internal static func `left`(_ p1: Any) -> String {
-          return Strings.tr("Localizable", "formatter.date.relative.left", String(describing: p1))
+          return Strings.tr("Localizable", "formatter.date.relative.left", String(describing: p1), fallback: #"%@ left"#)
         }
       }
     }
   }
-
   internal enum Reminder {
     internal enum Options {
       /// Options
-      internal static var button: String { return Strings.tr("Localizable", "reminder.options.button") }
+      internal static let button = Strings.tr("Localizable", "reminder.options.button", fallback: #"Options"#)
       /// Complete
-      internal static var complete: String { return Strings.tr("Localizable", "reminder.options.complete") }
+      internal static let complete = Strings.tr("Localizable", "reminder.options.complete", fallback: #"Complete"#)
       /// Remind %@
       internal static func remind(_ p1: Any) -> String {
-        return Strings.tr("Localizable", "reminder.options.remind", String(describing: p1))
+        return Strings.tr("Localizable", "reminder.options.remind", String(describing: p1), fallback: #"Remind %@"#)
       }
     }
   }
-
   internal enum Settings {
     /// Calendar
-    internal static var calendar: String { return Strings.tr("Localizable", "settings.calendar") }
+    internal static let calendar = Strings.tr("Localizable", "settings.calendar", fallback: #"Calendar"#)
     /// Events
-    internal static var events: String { return Strings.tr("Localizable", "settings.events") }
+    internal static let events = Strings.tr("Localizable", "settings.events", fallback: #"Events"#)
     /// Menu Bar
-    internal static var menuBar: String { return Strings.tr("Localizable", "settings.menu_bar") }
+    internal static let menuBar = Strings.tr("Localizable", "settings.menu_bar", fallback: #"Menu Bar"#)
     /// Transparency
-    internal static var transparency: String { return Strings.tr("Localizable", "settings.transparency") }
+    internal static let transparency = Strings.tr("Localizable", "settings.transparency", fallback: #"Transparency"#)
     internal enum Calendar {
       /// Preserve selected date on hide
-      internal static var preserveSelectedDate: String { return Strings.tr("Localizable", "settings.calendar.preserve_selected_date") }
+      internal static let preserveSelectedDate = Strings.tr("Localizable", "settings.calendar.preserve_selected_date", fallback: #"Preserve selected date on hide"#)
       /// Show declined events
-      internal static var showDeclinedEvents: String { return Strings.tr("Localizable", "settings.calendar.show_declined_events") }
+      internal static let showDeclinedEvents = Strings.tr("Localizable", "settings.calendar.show_declined_events", fallback: #"Show declined events"#)
       /// Show week numbers
-      internal static var showWeekNumbers: String { return Strings.tr("Localizable", "settings.calendar.show_week_numbers") }
+      internal static let showWeekNumbers = Strings.tr("Localizable", "settings.calendar.show_week_numbers", fallback: #"Show week numbers"#)
     }
     internal enum Events {
       /// Finished
-      internal static var finished: String { return Strings.tr("Localizable", "settings.events.finished") }
+      internal static let finished = Strings.tr("Localizable", "settings.events.finished", fallback: #"Finished"#)
       internal enum Finished {
         /// Fade
-        internal static var fade: String { return Strings.tr("Localizable", "settings.events.finished.fade") }
+        internal static let fade = Strings.tr("Localizable", "settings.events.finished.fade", fallback: #"Fade"#)
         /// Hide
-        internal static var hide: String { return Strings.tr("Localizable", "settings.events.finished.hide") }
+        internal static let hide = Strings.tr("Localizable", "settings.events.finished.hide", fallback: #"Hide"#)
       }
     }
     internal enum MenuBar {
       /// Date format
-      internal static var dateFormat: String { return Strings.tr("Localizable", "settings.menu_bar.date_format") }
+      internal static let dateFormat = Strings.tr("Localizable", "settings.menu_bar.date_format", fallback: #"Date format"#)
       /// Shorten if 'notch' is present
-      internal static var nextEventDetectNotch: String { return Strings.tr("Localizable", "settings.menu_bar.next_event_detect_notch") }
+      internal static let nextEventDetectNotch = Strings.tr("Localizable", "settings.menu_bar.next_event_detect_notch", fallback: #"Shorten if 'notch' is present"#)
       /// Width
-      internal static var nextEventLength: String { return Strings.tr("Localizable", "settings.menu_bar.next_event_length") }
+      internal static let nextEventLength = Strings.tr("Localizable", "settings.menu_bar.next_event_length", fallback: #"Width"#)
       /// Show date
-      internal static var showDate: String { return Strings.tr("Localizable", "settings.menu_bar.show_date") }
+      internal static let showDate = Strings.tr("Localizable", "settings.menu_bar.show_date", fallback: #"Show date"#)
       /// Show icon
-      internal static var showIcon: String { return Strings.tr("Localizable", "settings.menu_bar.show_icon") }
+      internal static let showIcon = Strings.tr("Localizable", "settings.menu_bar.show_icon", fallback: #"Show icon"#)
       /// Show next event
-      internal static var showNextEvent: String { return Strings.tr("Localizable", "settings.menu_bar.show_next_event") }
+      internal static let showNextEvent = Strings.tr("Localizable", "settings.menu_bar.show_next_event", fallback: #"Show next event"#)
       internal enum DateFormat {
         /// Configurable in System Preferences
-        internal static var info: String { return Strings.tr("Localizable", "settings.menu_bar.date_format.info") }
+        internal static let info = Strings.tr("Localizable", "settings.menu_bar.date_format.info", fallback: #"Configurable in System Preferences"#)
       }
     }
     internal enum Tab {
       /// About
-      internal static var about: String { return Strings.tr("Localizable", "settings.tab.about") }
+      internal static let about = Strings.tr("Localizable", "settings.tab.about", fallback: #"About"#)
       /// Calendars
-      internal static var calendars: String { return Strings.tr("Localizable", "settings.tab.calendars") }
+      internal static let calendars = Strings.tr("Localizable", "settings.tab.calendars", fallback: #"Calendars"#)
       /// General
-      internal static var general: String { return Strings.tr("Localizable", "settings.tab.general") }
+      internal static let general = Strings.tr("Localizable", "settings.tab.general", fallback: #"General"#)
     }
   }
 }
@@ -140,8 +138,20 @@ internal enum Strings {
 // MARK: - Implementation Details
 
 extension Strings {
-  private static func tr(_ table: String, _ key: String, _ args: CVarArg...) -> String {
-    let format = lookupFunction(key, table)
+  private static func tr(_ table: String, _ key: String, _ args: CVarArg..., fallback value: String) -> String {
+    let format = BundleToken.bundle.localizedString(forKey: key, value: value, table: table)
     return String(format: format, locale: Locale.current, arguments: args)
   }
 }
+
+// swiftlint:disable convenience_type
+private final class BundleToken {
+  static let bundle: Bundle = {
+    #if SWIFT_PACKAGE
+    return Bundle.module
+    #else
+    return Bundle(for: BundleToken.self)
+    #endif
+  }()
+}
+// swiftlint:enable convenience_type

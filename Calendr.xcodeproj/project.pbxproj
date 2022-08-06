@@ -46,7 +46,6 @@
 		345DD97326920D1B00294D90 /* CalendarViewPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345DD97226920D1B00294D90 /* CalendarViewPreview.swift */; };
 		34651F1525E1BB8400518C5A /* Strings.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34651F1425E1BB8400518C5A /* Strings.generated.swift */; };
 		34651F2F25E1C99900518C5A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 34651F2C25E1C99900518C5A /* Localizable.strings */; };
-		34651F4B25E1D78F00518C5A /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34651F4A25E1D78F00518C5A /* Strings.swift */; };
 		34651F5425E22A3900518C5A /* DateIntervalFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34651F5325E22A3900518C5A /* DateIntervalFormatter.swift */; };
 		34651F5A25E2F08500518C5A /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34651F5925E2F08500518C5A /* String.swift */; };
 		34651F6E25E3171D00518C5A /* EventViewModelLinkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34651F6D25E3171D00518C5A /* EventViewModelLinkTests.swift */; };
@@ -191,7 +190,6 @@
 		34651F1425E1BB8400518C5A /* Strings.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Strings.generated.swift; sourceTree = "<group>"; };
 		34651F2D25E1C99900518C5A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34651F2E25E1C99900518C5A /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/Localizable.strings; sourceTree = "<group>"; };
-		34651F4A25E1D78F00518C5A /* Strings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
 		34651F4E25E1EAFB00518C5A /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34651F5325E22A3900518C5A /* DateIntervalFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateIntervalFormatter.swift; sourceTree = "<group>"; };
 		34651F5925E2F08500518C5A /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
@@ -384,7 +382,6 @@
 			children = (
 				3492C45F269FCF5B009CFAD2 /* Accessibility.swift */,
 				3409173A267E90210023B76D /* Icons.swift */,
-				34651F4A25E1D78F00518C5A /* Strings.swift */,
 				347D0F9925952F8A002451EC /* Images.xcassets */,
 				3492C461269FCFB7009CFAD2 /* Generated */,
 				34651F2C25E1C99900518C5A /* Localizable.strings */,
@@ -785,7 +782,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [[ -z $CI ]]; then\n    swiftgen config run --config \"Calendr/Config/swiftgen.yml\"\nfi\n";
+			shellScript = "if [[ -z $CI ]]; then\n    if ! [ -x \"$(command -v swiftgen)\" ]; then\n        echo \"error: Please install SwiftGen\"\n        exit -1\n    fi\n    swiftgen --config \"Calendr/Config/swiftgen.yml\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -881,7 +878,6 @@
 				34651F1525E1BB8400518C5A /* Strings.generated.swift in Sources */,
 				34651F5425E22A3900518C5A /* DateIntervalFormatter.swift in Sources */,
 				3421DA162693EDEB00056837 /* MockCalendarSettings.swift in Sources */,
-				34651F4B25E1D78F00518C5A /* Strings.swift in Sources */,
 				347D0FF225954920002451EC /* EventModel.swift in Sources */,
 				34A4C3E925963FB200D0F949 /* NSStackView.swift in Sources */,
 				3453E6FF28393943002DCC3C /* EventOptions.swift in Sources */,
