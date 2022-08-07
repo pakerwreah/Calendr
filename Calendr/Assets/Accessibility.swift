@@ -38,6 +38,11 @@ enum Accessibility {
         static let event = "calendar_event_dot"
     }
 
+    enum EventList {
+        static let view = "event_list_view"
+        static let event = "event_list_event_view"
+    }
+
     enum EventDetails {
         static let view = "event_details_view"
     }

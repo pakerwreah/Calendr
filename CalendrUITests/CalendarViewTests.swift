@@ -144,6 +144,41 @@ class CalendarViewTests: UITestCase {
 
         Calendar.dates[10].hover()
         XCTAssertEqual(Calendar.hovered.text, "6")
+
+        Main.view.outside.hover()
+        XCTAssertFalse(Calendar.hovered.exists)
+    }
+
+    func testDate_withMouseHovered_shouldShowDateEvents() {
+
+        MenuBar.main.click()
+
+        Calendar.dates[8].hover()
+        XCTAssertEqual(EventList.eventsTexts, [["Test event 🚧", "4-7 January"]])
+
+        Calendar.dates[15].hover()
+        XCTAssertEqual(EventList.eventsTexts, [["Test event 🚧", "11-14 January"]])
+
+        Main.view.outside.hover()
+        XCTAssertEqual(EventList.eventsTexts, [
+            [
+                "Drink some tea 🫖",
+                "15:30-15:50"
+            ],
+            [
+                "Update Calendr screenshot 📷",
+                "16:00-17:00"
+            ],
+            [
+                "Some meeting 👔",
+                "zoom.us/j/9999999999",
+                "17:00-18:00"
+            ],
+            [
+                "Take the trash out",
+                "19:00"
+            ]
+        ])
     }
 
     // MARK: - Event dots
@@ -151,5 +186,12 @@ class CalendarViewTests: UITestCase {
     func testDate_withInitialState_shouldDisplayEventDots() {
 
         XCTAssertEqual(Calendar.events.count, 4)
+    }
+}
+
+private extension UITestCase.EventList {
+
+    static var eventsTexts: [[String]] {
+        events.map { $0.staticTexts.array.map(\.text) }
     }
 }

@@ -33,11 +33,21 @@ class EventView: NSView {
 
         super.init(frame: .zero)
 
+        setUpAccessibility()
+
         configureLayout()
 
         setUpBindings()
 
         setData()
+    }
+
+    private func setUpAccessibility() {
+
+        guard BuildConfig.isUITesting else { return }
+
+        setAccessibilityElement(true)
+        setAccessibilityIdentifier(Accessibility.EventList.event)
     }
 
     private func setData() {

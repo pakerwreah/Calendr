@@ -27,8 +27,8 @@ extension UITestCase {
     }
 
     enum MenuBar {
-        static var main: XCUIElement { app.statusItems[Accessibility.MenuBar.main].wait() }
-        static var event: XCUIElement { app.statusItems[Accessibility.MenuBar.event].wait(timeout: 2) }
+        static var main: XCUIElement { app.statusItems[Accessibility.MenuBar.main].wait(0.1) }
+        static var event: XCUIElement { app.statusItems[Accessibility.MenuBar.event].wait(1.5) }
     }
 
     enum Calendar {
@@ -46,6 +46,11 @@ extension UITestCase {
             view.otherElements.matching(identifier: Accessibility.Calendar.selected)
                 .otherElements.matching(identifier: Accessibility.Calendar.event).array
         }
+    }
+
+    enum EventList {
+        static var view: XCUIElement { Main.view.otherElements[Accessibility.EventList.view].wait(0.1) }
+        static var events: [XCUIElement] { view.otherElements.matching(identifier: Accessibility.EventList.event).array }
     }
 
     enum EventDetails {
@@ -95,8 +100,8 @@ extension XCUIElement {
 
     var outside: XCUICoordinate { coordinate(withNormalizedOffset: .zero).withOffset(.init(dx: -500, dy: 500)) }
 
-    func wait(timeout: TimeInterval = 1) -> Self {
-        _ = waitForExistence(timeout: timeout)
+    func wait(_ timeout: TimeInterval, file: StaticString = #filePath, line: UInt = #line) -> Self {
+        XCTAssert(waitForExistence(timeout: timeout), "Missing '\(self)' element", file: file, line: line)
         return self
     }
 }
