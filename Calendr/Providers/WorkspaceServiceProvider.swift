@@ -9,12 +9,16 @@ import AppKit.NSWorkspace
 
 protocol WorkspaceServiceProviding {
 
+    var notificationCenter: NotificationCenter { get }
+
     func urlForApplication(toOpen url: URL) -> URL?
     func supports(scheme: String) -> Bool
     func open(_ url: URL)
 }
 
 class WorkspaceServiceProvider: WorkspaceServiceProviding {
+
+    let notificationCenter: NotificationCenter = NSWorkspace.shared.notificationCenter
 
     func urlForApplication(toOpen url: URL) -> URL? {
         NSWorkspace.shared.urlForApplication(toOpen: url)

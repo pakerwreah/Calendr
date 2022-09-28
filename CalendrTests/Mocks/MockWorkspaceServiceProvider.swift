@@ -10,6 +10,8 @@ import Foundation
 
 class MockWorkspaceServiceProvider: WorkspaceServiceProviding {
 
+    let notificationCenter: NotificationCenter = .init()
+
     var m_urlForApplication: URL?
     var m_supportsScheme = false
     var didOpen: ((URL) -> Void)?

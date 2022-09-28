@@ -275,6 +275,7 @@ class MainViewController: NSViewController {
 
         Observable.merge(
             notificationCenter.rx.notification(.NSCalendarDayChanged).void(),
+            workspace.notificationCenter.rx.notification(NSWorkspace.didWakeNotification).void(),
             rx.viewDidDisappear.withLatestFrom(settingsViewModel.preserveSelectedDate).filter(!).void()
         )
         .map { [dateProvider] in dateProvider.now }
