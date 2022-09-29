@@ -59,6 +59,14 @@ extension CalendarCellViewModel {
     }
 
     var dots: [NSColor] {
-        Set(events.map(\.calendar.color)).sorted(by: \.hashValue)
+        let colors = events.map(\.calendar)
+            .sorted {
+                ($0.account.localizedLowercase, $0.title.localizedLowercase)
+                <
+                ($1.account.localizedLowercase, $1.title.localizedLowercase)
+            }
+            .map(\.color)
+
+        return NSOrderedSet(array: colors).array as! [NSColor]
     }
 }

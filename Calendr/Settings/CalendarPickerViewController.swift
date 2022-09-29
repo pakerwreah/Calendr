@@ -70,9 +70,12 @@ class CalendarPickerViewController: NSViewController, NSPopoverDelegate {
                 guard let self = self else { return nil }
 
                 return Dictionary(grouping: calendars, by: { $0.account })
-                    .sorted(by: { $0.key < $1.key })
+                    .sorted(by: \.key.localizedLowercase)
                     .flatMap { account, calendars in
-                        self.makeCalendarSection(title: account, calendars: calendars)
+                        self.makeCalendarSection(
+                            title: account,
+                            calendars: calendars.sorted(by: \.title.localizedLowercase)
+                        )
                     }
             }
             .bind(to: contentStackView.rx.arrangedSubviews)
