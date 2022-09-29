@@ -130,7 +130,7 @@ class NextEventViewModelTests: XCTestCase {
 
         XCTAssertEqual(title, "This is an event with a text")
 
-        screenProvider.hasNotchObserver.onNext(true)
+        screenProvider.screenObserver.onNext(MockScreen(hasNotch: true))
 
         XCTAssertEqual(title, "This is an even.")
 

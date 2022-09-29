@@ -8,25 +8,42 @@
 import AppKit.NSScreen
 import RxSwift
 
+protocol Screen {
+    var hasNotch: Bool { get }
+    var visibleFrame: NSRect { get }
+}
+
 protocol ScreenProviding {
-    var hasNotchObservable: Observable<Bool> { get }
+    var screenObservable: Observable<Screen> { get }
 }
 
 class ScreenProvider: ScreenProviding {
 
-    private static var hasNotch: Bool {
-        guard #available(macOS 12, *) else { return false }
-        return NSScreen.main?.auxiliaryTopRightArea != nil
-    }
-
-    let hasNotchObservable: Observable<Bool>
+    let screenObservable: Observable<Screen>
 
     init(notificationCenter: NotificationCenter) {
 
-        hasNotchObservable = notificationCenter.rx.notification(NSWindow.didChangeScreenNotification)
+        screenObservable = notificationCenter.rx.notification(NSWindow.didChangeScreenNotification)
             .void()
             .startWith(())
-            .map { Self.hasNotch }
+            .compactMap { NSScreen.main }
+            .share(replay: 1)
+    }
+}
+
+extension ScreenProviding {
+
+    var hasNotchObservable: Observable<Bool> {
+        screenObservable
+            .map(\.hasNotch)
             .distinctUntilChanged()
+    }
+}
+
+extension NSScreen: Screen {
+
+    var hasNotch: Bool {
+        guard #available(macOS 12, *) else { return false }
+        return auxiliaryTopRightArea != nil
     }
 }

@@ -9,6 +9,13 @@ import Cocoa
 
 extension NSView {
 
+    func scrollTop() { scroll(.init(x: 0, y: frame.height)) }
+}
+
+// MARK: - Factory
+
+extension NSView {
+
     static var dummy: NSView {
         NSView.spacer.with(width: 0).with(height: 0)
     }

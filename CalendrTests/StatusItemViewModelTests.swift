@@ -91,7 +91,7 @@ class StatusItemViewModelTests: XCTestCase {
     func testIconVisibility_withNotchDetected() {
 
         settings.eventStatusItemDetectNotchObserver.onNext(true)
-        screenProvider.hasNotchObserver.onNext(true)
+        screenProvider.screenObserver.onNext(MockScreen(hasNotch: true))
 
         setUp(showIcon: true, showDate: true)
         XCTAssertEqual(lastAttributed?.containsAttachments, false)

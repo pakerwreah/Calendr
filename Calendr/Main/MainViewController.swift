@@ -208,9 +208,15 @@ class MainViewController: NSViewController {
         mainView.top(equalTo: view, constant: margin)
         mainView.leading(equalTo: view, constant: margin)
         mainView.trailing(equalTo: view, constant: margin)
-        mainView
-            .heightAnchor.constraint(lessThanOrEqualToConstant: 0.9 * NSScreen.main!.visibleFrame.height)
+
+        let heightConstraint = mainView
+            .heightAnchor.constraint(lessThanOrEqualToConstant: 0)
             .activate()
+
+        screenProvider.screenObservable
+            .map { 0.9 * $0.visibleFrame.height }
+            .bind(to: heightConstraint.rx.constant)
+            .disposed(by: disposeBag)
 
         mainView.rx.observe(\.frame)
             .distinctUntilChanged()
@@ -239,6 +245,8 @@ class MainViewController: NSViewController {
         super.viewDidAppear()
         
         view.window?.makeKey()
+
+        eventListView.scrollTop()
     }
 
     // MARK: - Setup

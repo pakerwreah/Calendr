@@ -307,7 +307,7 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         scrollView.contentView.height(equalTo: participantsStackView).priority = .defaultHigh
         scrollView.contentView.heightAnchor.constraint(lessThanOrEqualToConstant: 222).activate()
         participantsStackView.layoutSubtreeIfNeeded()
-        participantsStackView.scroll(.init(x: 0, y: participantsStackView.frame.height))
+        participantsStackView.scrollTop()
     }
 
     private func setUpBindings() {
