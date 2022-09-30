@@ -22,10 +22,6 @@ class CalendarPickerViewModelTests: XCTestCase {
         popoverSettings: nil
     )
 
-    var enabledCalendars: [String]? {
-        userDefaults.stringArray(forKey: Prefs.enabledCalendars)
-    }
-
     override func setUp() {
         userDefaults.setVolatileDomain([:], forName: UserDefaults.registrationDomain)
         userDefaults.removePersistentDomain(forName: className)
@@ -58,11 +54,10 @@ class CalendarPickerViewModelTests: XCTestCase {
             .bind { enabled = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertNil(enabledCalendars)
+        XCTAssertNil(userDefaults.enabledCalendars)
 
         calendarService.changeObserver.onNext(())
 
-        XCTAssertEqual(enabledCalendars, enabled)
         XCTAssertEqual(enabled, ["1", "2", "3"])
     }
 
@@ -74,9 +69,9 @@ class CalendarPickerViewModelTests: XCTestCase {
             .bind { enabled = $0 }
             .disposed(by: disposeBag)
 
-        userDefaults.setValue(["1", "2"], forKey: Prefs.enabledCalendars)
-
         calendarService.changeObserver.onNext(())
+
+        userDefaults.enabledCalendars = ["1", "2"]
 
         XCTAssertEqual(enabled, ["1", "2"])
     }
@@ -93,16 +88,16 @@ class CalendarPickerViewModelTests: XCTestCase {
 
         viewModel.toggleCalendar.onNext("2")
 
-        XCTAssertEqual(enabledCalendars, enabled)
+        XCTAssertEqual(userDefaults.enabledCalendars, enabled)
         XCTAssertEqual(enabled, ["1", "3"])
 
         viewModel.toggleCalendar.onNext("2")
 
-        XCTAssertEqual(enabledCalendars, enabled)
+        XCTAssertEqual(userDefaults.enabledCalendars, enabled)
         XCTAssertEqual(enabled, ["1", "3", "2"])
     }
 
-    func testNewCalendar_shouldBeDisabled() {
+    func testNewCalendar_shouldBeEnabled() {
 
         var enabled: [String]?
 
@@ -113,6 +108,27 @@ class CalendarPickerViewModelTests: XCTestCase {
         calendarService.changeObserver.onNext(())
 
         XCTAssertEqual(enabled, ["1", "2", "3"])
+
+        calendarService.m_calendars.append(.init(identifier: "4", account: "", title: "", color: .clear))
+
+        calendarService.changeObserver.onNext(())
+
+        XCTAssertEqual(enabled, ["1", "2", "3", "4"])
+    }
+
+    func testNewCalendar_afterSelectingCalendars_shouldBeDisabled() {
+
+        var enabled: [String]?
+
+        viewModel.enabledCalendars
+            .bind { enabled = $0 }
+            .disposed(by: disposeBag)
+
+        calendarService.changeObserver.onNext(())
+
+        XCTAssertEqual(enabled, ["1", "2", "3"])
+
+        userDefaults.enabledCalendars = ["1", "2", "3"]
 
         calendarService.m_calendars.append(.init(identifier: "4", account: "", title: "", color: .clear))
 

@@ -21,6 +21,10 @@ class CalendarPickerViewModel {
 
     var isPopover: Bool { popoverSettings != nil }
 
+    private let userDefaults: UserDefaults
+    private let toggleCalendarSubject = PublishRelay<String>()
+    private let disposeBag = DisposeBag()
+
     init(
         calendarService: CalendarServiceProviding,
         userDefaults: UserDefaults,
@@ -31,33 +35,34 @@ class CalendarPickerViewModel {
             .flatMapLatest(calendarService.calendars)
             .share(replay: 1)
 
-        let toggleCalendarSubject = PublishRelay<String>()
-
         self.toggleCalendar = toggleCalendarSubject.asObserver()
 
-        self.enabledCalendars = calendars.map { calendars in
-            {
-                userDefaults
-                    .stringArray(forKey: Prefs.enabledCalendars)?
-                    .filter($0.contains) ?? $0
-
-            }(calendars.map(\.identifier))
+        self.enabledCalendars = Observable.combineLatest(
+            calendars, userDefaults.rx.observe(\.enabledCalendars)
+        )
+        .map { calendars, enabled in
+            let identifiers = calendars.map(\.identifier)
+            guard let enabled = enabled else { return identifiers }
+            return enabled.filter(identifiers.contains)
         }
-        .flatMapLatest { initial in
+        .share(replay: 1)
 
-            toggleCalendarSubject.scan(initial) { identifiers, toggled in
+        self.userDefaults = userDefaults
+        self.popoverSettings = popoverSettings
 
+        setUpBindings()
+    }
+
+    private func setUpBindings() {
+
+        toggleCalendarSubject
+            .withLatestFrom(enabledCalendars) { ($0, $1) }
+            .map { toggled, identifiers in
                 identifiers.contains(toggled)
                     ? identifiers.filter { $0 != toggled }
                     : identifiers + [toggled]
             }
-            .startWith(initial)
-        }
-        .do(onNext: {
-            userDefaults.setValue($0, forKey: Prefs.enabledCalendars)
-        })
-        .share(replay: 1)
-
-        self.popoverSettings = popoverSettings
+            .bind(to: userDefaults.rx.enabledCalendars)
+            .disposed(by: disposeBag)
     }
 }

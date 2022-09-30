@@ -93,42 +93,18 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
             Prefs.calendarScaling: 1
         ])
 
-        let statusItemIconBehavior = BehaviorSubject(
-            value: userDefaults.bool(forKey: Prefs.statusItemIconEnabled)
-        )
-        let statusItemDateBehavior = BehaviorSubject(
-            value: userDefaults.bool(forKey: Prefs.statusItemDateEnabled)
-        )
-        let statusItemDateStyleBehavior = BehaviorSubject(
-            value: DateStyle(rawValue: UInt(userDefaults.integer(forKey: Prefs.statusItemDateStyle))) ?? .none
-        )
-        let showEventStatusItemBehavior = BehaviorSubject(
-            value: userDefaults.bool(forKey: Prefs.showEventStatusItem)
-        )
-        let eventStatusItemLengthBehavior = BehaviorSubject(
-            value: userDefaults.integer(forKey: Prefs.eventStatusItemLength)
-        )
-        let eventStatusItemDetectNotchBehavior = BehaviorSubject(
-            value: userDefaults.bool(forKey: Prefs.eventStatusItemDetectNotch)
-        )
-        let showWeekNumbersBehavior = BehaviorSubject(
-            value: userDefaults.bool(forKey: Prefs.showWeekNumbers)
-        )
-        let showDeclinedEventsBehavior = BehaviorSubject(
-            value: userDefaults.bool(forKey: Prefs.showDeclinedEvents)
-        )
-        let preserveSelectedDateBehavior = BehaviorSubject(
-            value: userDefaults.bool(forKey: Prefs.preserveSelectedDate)
-        )
-        let showPastEventsBehavior = BehaviorSubject(
-            value: userDefaults.bool(forKey: Prefs.showPastEvents)
-        )
-        let transparencyBehavior = BehaviorSubject(
-            value: userDefaults.integer(forKey: Prefs.transparencyLevel)
-        )
-        let calendarScalingBehavior = BehaviorSubject(
-            value: userDefaults.double(forKey: Prefs.calendarScaling)
-        )
+        let statusItemIconBehavior = BehaviorSubject(value: userDefaults.statusItemIconEnabled)
+        let statusItemDateBehavior = BehaviorSubject(value: userDefaults.statusItemDateEnabled)
+        let statusItemDateStyleBehavior = BehaviorSubject(value: DateStyle(rawValue: userDefaults.statusItemDateStyle) ?? .none)
+        let showEventStatusItemBehavior = BehaviorSubject(value: userDefaults.showEventStatusItem)
+        let eventStatusItemLengthBehavior = BehaviorSubject(value: userDefaults.eventStatusItemLength)
+        let eventStatusItemDetectNotchBehavior = BehaviorSubject(value: userDefaults.eventStatusItemDetectNotch)
+        let showWeekNumbersBehavior = BehaviorSubject(value: userDefaults.showWeekNumbers)
+        let showDeclinedEventsBehavior = BehaviorSubject(value: userDefaults.showDeclinedEvents)
+        let preserveSelectedDateBehavior = BehaviorSubject(value: userDefaults.preserveSelectedDate)
+        let showPastEventsBehavior = BehaviorSubject(value: userDefaults.showPastEvents)
+        let transparencyBehavior = BehaviorSubject(value: userDefaults.transparencyLevel)
+        let calendarScalingBehavior = BehaviorSubject(value: userDefaults.calendarScaling)
 
         toggleStatusItemIcon = statusItemIconBehavior.asObserver()
         toggleStatusItemDate = statusItemDateBehavior.asObserver()
@@ -152,73 +128,73 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
 
         showStatusItemIcon = statusItemIconAndDate.map(\.0)
             .do(onNext: {
-                userDefaults.setValue($0, forKey: Prefs.statusItemIconEnabled)
+                userDefaults.statusItemIconEnabled = $0
             })
             .share(replay: 1)
 
         showStatusItemDate = statusItemIconAndDate.map(\.1)
             .do(onNext: {
-                userDefaults.setValue($0, forKey: Prefs.statusItemDateEnabled)
+                userDefaults.statusItemDateEnabled = $0
             })
             .share(replay: 1)
 
         statusItemDateStyle = statusItemDateStyleBehavior
             .do(onNext: {
-                userDefaults.setValue($0.rawValue, forKey: Prefs.statusItemDateStyle)
+                userDefaults.statusItemDateStyle = $0.rawValue
             })
             .share(replay: 1)
 
         showEventStatusItem = showEventStatusItemBehavior
             .do(onNext: {
-                userDefaults.setValue($0, forKey: Prefs.showEventStatusItem)
+                userDefaults.showEventStatusItem = $0
             })
             .share(replay: 1)
 
         eventStatusItemLength = eventStatusItemLengthBehavior
             .do(onNext: {
-                userDefaults.setValue($0, forKey: Prefs.eventStatusItemLength)
+                userDefaults.eventStatusItemLength = $0
             })
             .share(replay: 1)
 
         eventStatusItemDetectNotch = eventStatusItemDetectNotchBehavior
             .do(onNext: {
-                userDefaults.setValue($0, forKey: Prefs.eventStatusItemDetectNotch)
+                userDefaults.eventStatusItemDetectNotch = $0
             })
             .share(replay: 1)
 
         showWeekNumbers = showWeekNumbersBehavior
             .do(onNext: {
-                userDefaults.setValue($0, forKey: Prefs.showWeekNumbers)
+                userDefaults.showWeekNumbers = $0
             })
             .share(replay: 1)
 
         showDeclinedEvents = showDeclinedEventsBehavior
             .do(onNext: {
-                userDefaults.setValue($0, forKey: Prefs.showDeclinedEvents)
+                userDefaults.showDeclinedEvents = $0
             })
             .share(replay: 1)
 
         preserveSelectedDate = preserveSelectedDateBehavior
             .do(onNext: {
-                userDefaults.setValue($0, forKey: Prefs.preserveSelectedDate)
+                userDefaults.preserveSelectedDate = $0
             })
             .share(replay: 1)
 
         showPastEvents = showPastEventsBehavior
             .do(onNext: {
-                userDefaults.setValue($0, forKey: Prefs.showPastEvents)
+                userDefaults.showPastEvents = $0
             })
             .share(replay: 1)
 
         popoverTransparency = transparencyBehavior
             .do(onNext: {
-                userDefaults.setValue($0, forKey: Prefs.transparencyLevel)
+                userDefaults.transparencyLevel = $0
             })
             .share(replay: 1)
 
         calendarScaling = calendarScalingBehavior
             .do(onNext: {
-                userDefaults.setValue($0, forKey: Prefs.calendarScaling)
+                userDefaults.calendarScaling = $0
             })
             .share(replay: 1)
 
