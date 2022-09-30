@@ -46,7 +46,7 @@ class EventListViewModel {
                 dateProvider: dateProvider,
                 calendarService: calendarService,
                 workspace: workspace,
-                settings: settings,
+                popoverSettings: settings,
                 isShowingDetails: isShowingDetails.asObserver(),
                 scheduler: scheduler
             )

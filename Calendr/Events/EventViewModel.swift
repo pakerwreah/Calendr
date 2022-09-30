@@ -29,7 +29,7 @@ class EventViewModel {
     private let event: EventModel
     private let dateProvider: DateProviding
     private let calendarService: CalendarServiceProviding
-    private let settings: PopoverSettings
+    private let popoverSettings: PopoverSettings
 
     let workspace: WorkspaceServiceProviding
 
@@ -38,13 +38,13 @@ class EventViewModel {
         dateProvider: DateProviding,
         calendarService: CalendarServiceProviding,
         workspace: WorkspaceServiceProviding,
-        settings: PopoverSettings,
+        popoverSettings: PopoverSettings,
         isShowingDetails: AnyObserver<Bool>,
         scheduler: SchedulerType
     ) {
 
         self.event = event
-        self.settings = settings
+        self.popoverSettings = popoverSettings
         self.dateProvider = dateProvider
         self.calendarService = calendarService
         self.workspace = workspace
@@ -177,7 +177,7 @@ class EventViewModel {
             dateProvider: dateProvider,
             calendarService: calendarService,
             workspace: workspace,
-            settings: settings,
+            popoverSettings: popoverSettings,
             isShowingObserver: isShowingDetails,
             isInProgress: isInProgress
         )

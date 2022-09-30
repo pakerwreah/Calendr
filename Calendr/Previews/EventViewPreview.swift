@@ -15,7 +15,7 @@ struct EventViewPreview: PreviewProvider {
     static let dateProvider = MockDateProvider()
     static let calendarService = MockCalendarServiceProvider()
     static let workspace = WorkspaceServiceProvider()
-    static let settings = MockPopoverSettings()
+    static let popoverSettings = MockPopoverSettings()
 
     static func make(_ color: ColorScheme) -> some View {
         EventView(
@@ -32,7 +32,7 @@ struct EventViewPreview: PreviewProvider {
                 dateProvider: dateProvider,
                 calendarService: calendarService,
                 workspace: workspace,
-                settings: settings,
+                popoverSettings: popoverSettings,
                 isShowingDetails: .dummy(),
                 scheduler: MainScheduler.instance
             )

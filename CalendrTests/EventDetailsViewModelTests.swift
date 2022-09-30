@@ -16,7 +16,7 @@ class EventDetailsViewModelTests: XCTestCase {
     let dateProvider = MockDateProvider()
     let calendarService = MockCalendarServiceProvider()
     let workspace = MockWorkspaceServiceProvider()
-    let settings = MockPopoverSettings()
+    let popoverSettings = MockPopoverSettings()
 
     override func setUp() {
         dateProvider.m_calendar.locale = Locale(identifier: "en_US")
@@ -253,7 +253,7 @@ class EventDetailsViewModelTests: XCTestCase {
             dateProvider: dateProvider,
             calendarService: calendarService,
             workspace: workspace,
-            settings: settings,
+            popoverSettings: popoverSettings,
             isShowingObserver: .dummy(),
             isInProgress: .just(false)
         )

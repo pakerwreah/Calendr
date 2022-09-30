@@ -15,7 +15,7 @@ struct EventDetailsPreview: PreviewProvider {
     static let dateProvider = MockDateProvider()
     static let calendarService = MockCalendarServiceProvider()
     static let workspace = WorkspaceServiceProvider()
-    static let settings = MockPopoverSettings()
+    static let popoverSettings = MockPopoverSettings()
     static var vcs: [NSViewController] = []
 
     static func makeMeeting() -> some View {
@@ -33,7 +33,7 @@ struct EventDetailsPreview: PreviewProvider {
                 dateProvider: dateProvider,
                 calendarService: calendarService,
                 workspace: workspace,
-                settings: settings,
+                popoverSettings: popoverSettings,
                 isShowingObserver: .dummy(),
                 isInProgress: .just(false)
             )
@@ -59,7 +59,7 @@ struct EventDetailsPreview: PreviewProvider {
                 dateProvider: dateProvider,
                 calendarService: calendarService,
                 workspace: workspace,
-                settings: settings,
+                popoverSettings: popoverSettings,
                 isShowingObserver: .dummy(),
                 isInProgress: .just(false)
             )
@@ -81,7 +81,7 @@ struct EventDetailsPreview: PreviewProvider {
                 dateProvider: dateProvider,
                 calendarService: calendarService,
                 workspace: workspace,
-                settings: settings,
+                popoverSettings: popoverSettings,
                 isShowingObserver: .dummy(),
                 isInProgress: .just(false)
             )
@@ -102,7 +102,7 @@ struct EventDetailsPreview: PreviewProvider {
                 dateProvider: dateProvider,
                 calendarService: calendarService,
                 workspace: workspace,
-                settings: settings,
+                popoverSettings: popoverSettings,
                 isShowingObserver: .dummy(),
                 isInProgress: .just(false)
             )

@@ -16,7 +16,7 @@ class EventViewModelTests: XCTestCase {
     let dateProvider = MockDateProvider()
     let calendarService = MockCalendarServiceProvider()
     let workspace = MockWorkspaceServiceProvider()
-    let settings = MockPopoverSettings()
+    let popoverSettings = MockPopoverSettings()
 
     func testBasicInfo() {
 
@@ -258,7 +258,7 @@ class EventViewModelTests: XCTestCase {
             dateProvider: dateProvider,
             calendarService: calendarService,
             workspace: workspace,
-            settings: settings,
+            popoverSettings: popoverSettings,
             isShowingDetails: .dummy(),
             scheduler: MainScheduler.instance
         )

@@ -317,7 +317,7 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
             .take(1)
 
         Observable.combineLatest(
-            popoverView, viewModel.popoverMaterial
+            popoverView, viewModel.popoverSettings.popoverMaterial
         )
         .bind { $0.material = $1 }
         .disposed(by: disposeBag)

@@ -26,7 +26,7 @@ class NextEventViewModel {
 
     private let dateProvider: DateProviding
     private let calendarService: CalendarServiceProviding
-    private let settings: PopoverSettings
+    private let popoverSettings: PopoverSettings
     private let workspace: WorkspaceServiceProviding
 
     init(
@@ -42,7 +42,7 @@ class NextEventViewModel {
 
         self.dateProvider = dateProvider
         self.calendarService = calendarService
-        self.settings = settings
+        self.popoverSettings = settings
         self.workspace = workspace
         self.isShowingDetails = isShowingDetails
 
@@ -167,7 +167,7 @@ class NextEventViewModel {
             dateProvider: dateProvider,
             calendarService: calendarService,
             workspace: workspace,
-            settings: settings,
+            popoverSettings: popoverSettings,
             isShowingObserver: isShowingDetails,
             isInProgress: isInProgress
         )

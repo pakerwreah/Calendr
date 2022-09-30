@@ -14,7 +14,7 @@ class EventViewModelLinkTests: XCTestCase {
     let dateProvider = MockDateProvider()
     let calendarService = MockCalendarServiceProvider()
     let workspace = MockWorkspaceServiceProvider()
-    let settings = MockPopoverSettings()
+    let popoverSettings = MockPopoverSettings()
 
     func testLink_withRegularLocation_withoutURL_shouldNotShowLinkButton() {
 
@@ -170,7 +170,7 @@ class EventViewModelLinkTests: XCTestCase {
             dateProvider: dateProvider,
             calendarService: calendarService,
             workspace: workspace,
-            settings: settings,
+            popoverSettings: popoverSettings,
             isShowingDetails: .dummy(),
             scheduler: MainScheduler.instance
         )
