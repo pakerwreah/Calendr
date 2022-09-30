@@ -36,6 +36,7 @@ class MainViewController: NSViewController {
     private let statusItemViewModel: StatusItemViewModel
     private let nextEventViewModel: NextEventViewModel
     private let calendarPickerViewModel: CalendarPickerViewModel
+    private let calendarsViewModel: CalendarPickerViewModel
     private let eventListViewModel: EventListViewModel
 
     // Reactive
@@ -96,12 +97,18 @@ class MainViewController: NSViewController {
         calendarPickerViewModel = CalendarPickerViewModel(
             calendarService: calendarService,
             userDefaults: userDefaults,
-            settings: settingsViewModel
+            popoverSettings: settingsViewModel
+        )
+
+        calendarsViewModel = CalendarPickerViewModel(
+            calendarService: calendarService,
+            userDefaults: userDefaults,
+            popoverSettings: nil
         )
 
         settingsViewController = SettingsViewController(
             settingsViewModel: settingsViewModel,
-            calendarsViewModel: calendarPickerViewModel,
+            calendarsViewModel: calendarsViewModel,
             notificationCenter: notificationCenter
         )
 
@@ -314,7 +321,7 @@ class MainViewController: NSViewController {
 
         pickerBtn.rx.tap
             .flatMapFirst { [pickerBtn, calendarPickerViewModel] _ -> Observable<Void> in
-                let vc = CalendarPickerViewController(viewModel: calendarPickerViewModel, isPopover: true)
+                let vc = CalendarPickerViewController(viewModel: calendarPickerViewModel)
                 let popover = NSPopover()
                 popover.behavior = .transient
                 popover.contentViewController = vc

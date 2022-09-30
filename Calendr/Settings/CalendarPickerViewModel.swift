@@ -17,9 +17,15 @@ class CalendarPickerViewModel {
     // Observables
     let calendars: Observable<[CalendarModel]>
     let enabledCalendars: Observable<[String]>
-    let popoverMaterial: Observable<PopoverMaterial>
+    let popoverSettings: PopoverSettings?
 
-    init(calendarService: CalendarServiceProviding, userDefaults: UserDefaults, settings: PopoverSettings) {
+    var isPopover: Bool { popoverSettings != nil }
+
+    init(
+        calendarService: CalendarServiceProviding,
+        userDefaults: UserDefaults,
+        popoverSettings: PopoverSettings?
+    ) {
 
         self.calendars = calendarService.changeObservable
             .flatMapLatest(calendarService.calendars)
@@ -52,6 +58,6 @@ class CalendarPickerViewModel {
         })
         .share(replay: 1)
 
-        self.popoverMaterial = settings.popoverMaterial
+        self.popoverSettings = popoverSettings
     }
 }

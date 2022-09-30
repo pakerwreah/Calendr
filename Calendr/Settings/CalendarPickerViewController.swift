@@ -16,12 +16,9 @@ class CalendarPickerViewController: NSViewController, NSPopoverDelegate {
 
     private let contentStackView = NSStackView(.vertical)
 
-    private let isPopover: Bool
-
-    init(viewModel: CalendarPickerViewModel, isPopover: Bool = false) {
+    init(viewModel: CalendarPickerViewModel) {
 
         self.viewModel = viewModel
-        self.isPopover = isPopover
 
         super.init(nibName: nil, bundle: nil)
 
@@ -36,7 +33,7 @@ class CalendarPickerViewController: NSViewController, NSPopoverDelegate {
 
         view.setAccessibilityElement(true)
         view.setAccessibilityIdentifier(
-            isPopover
+            viewModel.isPopover
                 ? Accessibility.CalendarPicker.view
                 : Accessibility.Settings.Calendars.view
         )
@@ -46,23 +43,43 @@ class CalendarPickerViewController: NSViewController, NSPopoverDelegate {
 
         view = NSView()
 
-        view.addSubview(contentStackView)
+        let scrollView = NSScrollView()
 
-        contentStackView.edges(to: view, constant: isPopover ? 16 : 0)
+        view.addSubview(scrollView)
+
+        let insets: NSEdgeInsets = viewModel.isPopover ? .init(top: 16, left: 16, bottom: 16, right: 20) : .init()
+
+        scrollView.edges(to: view, insets: insets)
+
+        scrollView.drawsBackground = false
+        scrollView.documentView = contentStackView.forAutoLayout()
+
+        scrollView.contentView.edges(to: scrollView)
+        scrollView.contentView.top(equalTo: contentStackView)
+        scrollView.contentView.leading(equalTo: contentStackView)
+        scrollView.contentView.trailing(equalTo: contentStackView)
+        scrollView.contentView.height(equalTo: contentStackView).priority = .dragThatCanResizeWindow
+        scrollView.contentView.heightAnchor.constraint(
+            lessThanOrEqualToConstant: viewModel.isPopover ? 0.8 * NSScreen.main!.visibleFrame.height : 600
+        ).activate()
+
         contentStackView.alignment = .left
     }
 
     private func setUpBindings() {
 
-        let popoverView = view.rx.observe(\.superview)
-            .compactMap { $0 as? NSVisualEffectView }
-            .take(1)
+        if let popoverSettings = viewModel.popoverSettings {
 
-        Observable.combineLatest(
-            popoverView, viewModel.popoverMaterial
-        )
-        .bind { $0.material = $1 }
-        .disposed(by: disposeBag)
+            let popoverView = view.rx.observe(\.superview)
+                .compactMap { $0 as? NSVisualEffectView }
+                .take(1)
+
+            Observable.combineLatest(
+                popoverView, popoverSettings.popoverMaterial
+            )
+            .bind { $0.material = $1 }
+            .disposed(by: disposeBag)
+        }
 
         viewModel.calendars
             .observe(on: MainScheduler.instance)
