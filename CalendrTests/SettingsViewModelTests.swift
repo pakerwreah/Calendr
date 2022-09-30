@@ -500,7 +500,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(showStatusItemIcon, true)
         XCTAssertEqual(showStatusItemDate, false)
 
-        XCTAssertEqual(userDefaultsStatusItemIconEnabled, true)
+        XCTAssertEqual(userDefaultsStatusItemIconEnabled, false)
         XCTAssertEqual(userDefaultsStatusItemDateEnabled, false)
     }
 
@@ -578,7 +578,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(showStatusItemIcon, true)
         XCTAssertEqual(showStatusItemDate, false)
 
-        XCTAssertEqual(userDefaultsStatusItemIconEnabled, true)
+        XCTAssertEqual(userDefaultsStatusItemIconEnabled, false)
         XCTAssertEqual(userDefaultsStatusItemDateEnabled, false)
     }
 }

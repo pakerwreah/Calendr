@@ -11,6 +11,20 @@ import RxSwift
 typealias DateStyle = DateFormatter.Style
 typealias PopoverMaterial = NSVisualEffectView.Material
 
+extension PopoverMaterial {
+
+    init(transparency: Int) {
+        self = [
+            .contentBackground,
+            .sheet,
+            .headerView,
+            .menu,
+            .popover,
+            .hudWindow
+        ][transparency]
+    }
+}
+
 protocol StatusItemSettings {
     var showStatusItemIcon: Observable<Bool> { get }
     var showStatusItemDate: Observable<Bool> { get }
@@ -93,122 +107,39 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
             Prefs.calendarScaling: 1
         ])
 
-        let statusItemIconBehavior = BehaviorSubject(value: userDefaults.statusItemIconEnabled)
-        let statusItemDateBehavior = BehaviorSubject(value: userDefaults.statusItemDateEnabled)
-        let statusItemDateStyleBehavior = BehaviorSubject(value: DateStyle(rawValue: userDefaults.statusItemDateStyle) ?? .none)
-        let showEventStatusItemBehavior = BehaviorSubject(value: userDefaults.showEventStatusItem)
-        let eventStatusItemLengthBehavior = BehaviorSubject(value: userDefaults.eventStatusItemLength)
-        let eventStatusItemDetectNotchBehavior = BehaviorSubject(value: userDefaults.eventStatusItemDetectNotch)
-        let showWeekNumbersBehavior = BehaviorSubject(value: userDefaults.showWeekNumbers)
-        let showDeclinedEventsBehavior = BehaviorSubject(value: userDefaults.showDeclinedEvents)
-        let preserveSelectedDateBehavior = BehaviorSubject(value: userDefaults.preserveSelectedDate)
-        let showPastEventsBehavior = BehaviorSubject(value: userDefaults.showPastEvents)
-        let transparencyBehavior = BehaviorSubject(value: userDefaults.transparencyLevel)
-        let calendarScalingBehavior = BehaviorSubject(value: userDefaults.calendarScaling)
-
-        toggleStatusItemIcon = statusItemIconBehavior.asObserver()
-        toggleStatusItemDate = statusItemDateBehavior.asObserver()
-        statusItemDateStyleObserver = statusItemDateStyleBehavior.asObserver()
-        toggleEventStatusItem = showEventStatusItemBehavior.asObserver()
-        eventStatusItemLengthObserver = eventStatusItemLengthBehavior.asObserver()
-        toggleEventStatusItemDetectNotch = eventStatusItemDetectNotchBehavior.asObserver()
-        toggleWeekNumbers = showWeekNumbersBehavior.asObserver()
-        toggleDeclinedEvents = showDeclinedEventsBehavior.asObserver()
-        togglePreserveSelectedDate = preserveSelectedDateBehavior.asObserver()
-        togglePastEvents = showPastEventsBehavior.asObserver()
-        transparencyObserver = transparencyBehavior.asObserver()
-        calendarScalingObserver = calendarScalingBehavior.asObserver()
+        toggleStatusItemIcon = userDefaults.rx.observer(for: \.statusItemIconEnabled)
+        toggleStatusItemDate = userDefaults.rx.observer(for: \.statusItemDateEnabled)
+        statusItemDateStyleObserver = userDefaults.rx.observer(for: \.statusItemDateStyle).mapObserver(\.rawValue)
+        toggleEventStatusItem = userDefaults.rx.observer(for: \.showEventStatusItem)
+        eventStatusItemLengthObserver = userDefaults.rx.observer(for: \.eventStatusItemLength)
+        toggleEventStatusItemDetectNotch = userDefaults.rx.observer(for: \.eventStatusItemDetectNotch)
+        toggleWeekNumbers = userDefaults.rx.observer(for: \.showWeekNumbers)
+        toggleDeclinedEvents = userDefaults.rx.observer(for: \.showDeclinedEvents)
+        togglePreserveSelectedDate = userDefaults.rx.observer(for: \.preserveSelectedDate)
+        togglePastEvents = userDefaults.rx.observer(for: \.showPastEvents)
+        transparencyObserver = userDefaults.rx.observer(for: \.transparencyLevel)
+        calendarScalingObserver = userDefaults.rx.observer(for: \.calendarScaling)
 
         let statusItemIconAndDate = Observable.combineLatest(
-            statusItemIconBehavior, statusItemDateBehavior
+            userDefaults.rx.observe(\.statusItemIconEnabled),
+            userDefaults.rx.observe(\.statusItemDateEnabled)
         )
         .map { iconEnabled, dateEnabled in
             (iconEnabled || !dateEnabled, dateEnabled)
         }
 
         showStatusItemIcon = statusItemIconAndDate.map(\.0)
-            .do(onNext: {
-                userDefaults.statusItemIconEnabled = $0
-            })
-            .share(replay: 1)
-
         showStatusItemDate = statusItemIconAndDate.map(\.1)
-            .do(onNext: {
-                userDefaults.statusItemDateEnabled = $0
-            })
-            .share(replay: 1)
-
-        statusItemDateStyle = statusItemDateStyleBehavior
-            .do(onNext: {
-                userDefaults.statusItemDateStyle = $0.rawValue
-            })
-            .share(replay: 1)
-
-        showEventStatusItem = showEventStatusItemBehavior
-            .do(onNext: {
-                userDefaults.showEventStatusItem = $0
-            })
-            .share(replay: 1)
-
-        eventStatusItemLength = eventStatusItemLengthBehavior
-            .do(onNext: {
-                userDefaults.eventStatusItemLength = $0
-            })
-            .share(replay: 1)
-
-        eventStatusItemDetectNotch = eventStatusItemDetectNotchBehavior
-            .do(onNext: {
-                userDefaults.eventStatusItemDetectNotch = $0
-            })
-            .share(replay: 1)
-
-        showWeekNumbers = showWeekNumbersBehavior
-            .do(onNext: {
-                userDefaults.showWeekNumbers = $0
-            })
-            .share(replay: 1)
-
-        showDeclinedEvents = showDeclinedEventsBehavior
-            .do(onNext: {
-                userDefaults.showDeclinedEvents = $0
-            })
-            .share(replay: 1)
-
-        preserveSelectedDate = preserveSelectedDateBehavior
-            .do(onNext: {
-                userDefaults.preserveSelectedDate = $0
-            })
-            .share(replay: 1)
-
-        showPastEvents = showPastEventsBehavior
-            .do(onNext: {
-                userDefaults.showPastEvents = $0
-            })
-            .share(replay: 1)
-
-        popoverTransparency = transparencyBehavior
-            .do(onNext: {
-                userDefaults.transparencyLevel = $0
-            })
-            .share(replay: 1)
-
-        calendarScaling = calendarScalingBehavior
-            .do(onNext: {
-                userDefaults.calendarScaling = $0
-            })
-            .share(replay: 1)
-
-        popoverMaterial = transparencyBehavior
-            .map { value -> PopoverMaterial in
-                [.contentBackground,
-                 .sheet,
-                 .headerView,
-                 .menu,
-                 .popover,
-                 .hudWindow
-                ][value]
-            }
-            .share(replay: 1)
+        statusItemDateStyle = userDefaults.rx.observe(\.statusItemDateStyle).map { DateStyle(rawValue: $0) ?? .none }
+        showEventStatusItem = userDefaults.rx.observe(\.showEventStatusItem)
+        eventStatusItemLength = userDefaults.rx.observe(\.eventStatusItemLength)
+        eventStatusItemDetectNotch = userDefaults.rx.observe(\.eventStatusItemDetectNotch)
+        showWeekNumbers = userDefaults.rx.observe(\.showWeekNumbers)
+        showDeclinedEvents = userDefaults.rx.observe(\.showDeclinedEvents)
+        preserveSelectedDate = userDefaults.rx.observe(\.preserveSelectedDate)
+        showPastEvents = userDefaults.rx.observe(\.showPastEvents)
+        popoverTransparency = userDefaults.rx.observe(\.transparencyLevel)
+        calendarScaling = userDefaults.rx.observe(\.calendarScaling)
 
         dateFormatOptions = notificationCenter.rx.notification(NSLocale.currentLocaleDidChangeNotification)
             .void()
@@ -225,5 +156,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
                 return options
             }
             .share(replay: 1)
+
+        popoverMaterial = popoverTransparency.map(PopoverMaterial.init(transparency:))
     }
 }
