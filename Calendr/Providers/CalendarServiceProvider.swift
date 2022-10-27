@@ -187,7 +187,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
 
             defer { observer.onCompleted() }
 
-            let predicate = store.predicateForEvents(withStart: date, end: date, calendars: nil)
+            let predicate = store.predicateForEvents(withStart: date, end: date + 1, calendars: nil)
 
             guard let event = store.events(matching: predicate).first(where: { $0.eventIdentifier == id }) else {
                 observer.onError(.unexpected("🔥 Event not found"))
