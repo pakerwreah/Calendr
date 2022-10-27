@@ -33,6 +33,28 @@ extension Date {
         )!
     }
 
+    enum At {
+        case start
+        case end
+    }
+
+    static func make(
+        year: Int,
+        month: Int,
+        day: Int,
+        at: At,
+        timeZone: TimeZone = .utc
+    ) -> Date {
+
+        make(
+            year: year,
+            month: month,
+            day: day,
+            hour: at ~= .start ? 0 : 23,
+            minute: at ~= .start ? 0 : 59,
+            second: at ~= .start ? 0 : 59
+        )
+    }
 }
 
 #endif
