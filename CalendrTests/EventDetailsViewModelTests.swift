@@ -73,7 +73,11 @@ class EventDetailsViewModelTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(viewModel.duration, "Jan 1, 2021, 10:00 AM")
+        if #available(macOS 13, *) {
+            XCTAssertEqual(viewModel.duration, "Jan 1, 2021 at 10:00 AM")
+        } else {
+            XCTAssertEqual(viewModel.duration, "Jan 1, 2021, 10:00 AM")
+        }
     }
 
     func testDuration_isMultiDay() {
@@ -85,7 +89,11 @@ class EventDetailsViewModelTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(viewModel.duration, "Jan 1, 2021, 10:00 AM - Jan 2, 2021, 8:00 PM")
+        if #available(macOS 13, *) {
+            XCTAssertEqual(viewModel.duration, "Jan 1, 2021 at 10:00 AM - Jan 2, 2021 at 8:00 PM")
+        } else {
+            XCTAssertEqual(viewModel.duration, "Jan 1, 2021, 10:00 AM - Jan 2, 2021, 8:00 PM")
+        }
     }
 
     func testDuration_isSameDay() {
