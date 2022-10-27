@@ -491,8 +491,8 @@ class CalendarViewModelTests: XCTestCase {
         dateSubject.onNext(.make(year: 2021, month: 2, day: 1))
 
         XCTAssertEqual(ranges, [
-            [.make(year: 2020, month: 12, day: 27), .make(year: 2021, month: 2, day: 6)], // calendar
-            [.make(year: 2021, month: 1, day: 31), .make(year: 2021, month: 3, day: 13)] // month change
+            [.make(year: 2020, month: 12, day: 27), .make(year: 2021, month: 2, day: 6, at: .end)], // calendar
+            [.make(year: 2021, month: 1, day: 31), .make(year: 2021, month: 3, day: 13, at: .end)] // month change
         ])
     }
 

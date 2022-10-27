@@ -128,9 +128,14 @@ class CalendarViewModel {
         .repeat(when: calendarService.changeObservable)
         .flatMapLatest { cellViewModels, calendars, showDeclinedEvents -> Observable<[EventModel]> in
 
-            calendarService.events(
+            guard let endOfLastDate = dateProvider.calendar.date(
+                bySettingHour: 23, minute: 59, second: 59,
+                of: cellViewModels.last!.date
+            ) else { return .empty() }
+
+            return calendarService.events(
                 from: cellViewModels.first!.date,
-                to: cellViewModels.last!.date,
+                to: endOfLastDate,
                 calendars: calendars
             )
             .map { $0.filter { showDeclinedEvents || $0.status != .declined } }
