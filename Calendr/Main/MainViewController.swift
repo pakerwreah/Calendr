@@ -519,7 +519,8 @@ class MainViewController: NSViewController {
 
         NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event -> NSEvent? in
 
-            if event.keyCode == 53, let vc = self?.presentedViewControllers?.last {
+            if let vc = self?.presentedViewControllers?.last {
+                guard event.keyCode == 53 else { return event }
                 self?.dismiss(vc)
                 return nil
             }

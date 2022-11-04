@@ -16,7 +16,7 @@
 "settings.menu_bar.show_icon" = "Zeige Icon";
 "settings.menu_bar.show_date" = "Zeige Datum";
 "settings.menu_bar.date_format" = "Datumsformat";
-"settings.menu_bar.date_format.info" = "In Systemeinstellungen konfigurieren";
+"settings.menu_bar.date_format_custom" = "Benutzerdefiniert";
 "settings.menu_bar.show_next_event" = "Zeige nächsten Termin";
 "settings.menu_bar.next_event_length" = "Breite";
 "settings.menu_bar.next_event_detect_notch" = "Kürzen, wenn 'notch' vorhanden ist";

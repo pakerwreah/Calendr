@@ -12,6 +12,7 @@ enum Prefs {
     static let statusItemIconEnabled = "status_item_icon_enabled"
     static let statusItemDateEnabled = "status_item_date_enabled"
     static let statusItemDateStyle = "status_item_date_style"
+    static let statusItemDateFormat = "status_item_date_format"
     static let showEventStatusItem = "show_event_status_item"
     static let eventStatusItemLength = "event_status_item_length"
     static let eventStatusItemDetectNotch = "event_status_item_detect_notch"
@@ -43,6 +44,11 @@ extension UserDefaults {
     @objc dynamic var statusItemDateStyle: UInt {
         get { UInt(integer(forKey: Prefs.statusItemDateStyle)) }
         set { set(newValue, forKey: Prefs.statusItemDateStyle) }
+    }
+    
+    @objc dynamic var statusItemDateFormat: String {
+        get { string(forKey: Prefs.statusItemDateFormat) ?? "" }
+        set { set(newValue, forKey: Prefs.statusItemDateFormat) }
     }
 
     @objc dynamic var showEventStatusItem: Bool {

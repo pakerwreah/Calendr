@@ -31,7 +31,7 @@ class StatusItemViewModelTests: XCTestCase {
 
     var lastAttributed: NSAttributedString?
     var lastValue: String? { // remove attachments
-        lastAttributed?.string.replacingOccurrences(of: "[^ \\w,/-]", with: "", options: .regularExpression)
+        lastAttributed?.string.replacingOccurrences(of: "[^ ?\\w,/-]", with: "", options: .regularExpression)
     }
 
     override func setUp() {
@@ -130,5 +130,14 @@ class StatusItemViewModelTests: XCTestCase {
 
         settings.dateStyleObserver.onNext(.full)
         XCTAssertEqual(lastValue, "Friday, January 1, 2021")
+
+        settings.dateStyleObserver.onNext(.none)
+        XCTAssertEqual(lastValue, "???")
+
+        settings.dateFormatObserver.onNext("E d MMM YY")
+        XCTAssertEqual(lastValue, "Fri 1 Jan 21")
+
+        settings.dateStyleObserver.onNext(.short)
+        XCTAssertEqual(lastValue, "1/1/21")
     }
 }

@@ -42,7 +42,7 @@ class MainViewTests: UITestCase {
 
     func testEventStatusItemClicked_shouldDisplayEventDetails() {
 
-        MenuBar.event.click()
+        MenuBar.event.wait(.eventTimeout).click()
 
         XCTAssertTrue(EventDetails.view.didAppear)
 

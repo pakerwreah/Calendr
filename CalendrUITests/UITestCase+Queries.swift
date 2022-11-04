@@ -27,8 +27,8 @@ extension UITestCase {
     }
 
     enum MenuBar {
-        static var main: XCUIElement { app.statusItems[Accessibility.MenuBar.main].wait(0.1) }
-        static var event: XCUIElement { app.statusItems[Accessibility.MenuBar.event].wait(1.5) }
+        static var main: XCUIElement { app.statusItems[Accessibility.MenuBar.main].wait(.shortTimeout) }
+        static var event: XCUIElement { app.statusItems[Accessibility.MenuBar.event] }
     }
 
     enum Calendar {
@@ -49,7 +49,7 @@ extension UITestCase {
     }
 
     enum EventList {
-        static var view: XCUIElement { Main.view.otherElements[Accessibility.EventList.view].wait(0.1) }
+        static var view: XCUIElement { Main.view.otherElements[Accessibility.EventList.view].wait(.shortTimeout) }
         static var events: [XCUIElement] { view.otherElements.matching(identifier: Accessibility.EventList.event).array }
     }
 
@@ -76,6 +76,8 @@ extension UITestCase {
 
         enum General {
             static var view: XCUIElement { Settings.view.otherElements[Accessibility.Settings.General.view] }
+            static var dateFormatDropdown: XCUIElement { view.popUpButtons[Accessibility.Settings.General.dateFormatDropdown] }
+            static var dateFormatInput: XCUIElement { view.textFields[Accessibility.Settings.General.dateFormatInput] }
         }
 
         enum Calendars {
@@ -90,6 +92,11 @@ extension UITestCase {
 }
 
 // MARK: - Helpers
+
+extension TimeInterval {
+    static let shortTimeout: Self = 0.1
+    static let eventTimeout: Self = 1.5
+}
 
 extension XCUIElement {
 
