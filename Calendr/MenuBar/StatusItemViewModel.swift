@@ -24,10 +24,20 @@ class StatusItemViewModel {
             .notification(NSLocale.currentLocaleDidChangeNotification)
             .void()
 
-        let dateFormatterObservable = settings.statusItemDateStyle
+        let dateFormatterObservable = Observable
+            .combineLatest(settings.statusItemDateStyle, settings.statusItemDateFormat)
             .repeat(when: localeChangeObservable)
-            .map { dateStyle in
-                DateFormatter(calendar: dateProvider.calendar).with(style: dateStyle)
+            .map { style, format in
+
+                let formatter = DateFormatter(calendar: dateProvider.calendar)
+
+                if style.isCustom {
+                    formatter.dateFormat = format
+                } else {
+                    formatter.dateStyle = style
+                }
+
+                return formatter
             }
 
         let shouldCompact = Observable
@@ -74,7 +84,8 @@ class StatusItemViewModel {
                 if title.length > 0 {
                     title.append(NSAttributedString(string: "  "))
                 }
-                title.append(NSAttributedString(string: dateFormatter.string(from: date)))
+                let text = dateFormatter.string(from: date)
+                title.append(NSAttributedString(string: text.isEmpty ? "???" : text))
             }
 
             return title

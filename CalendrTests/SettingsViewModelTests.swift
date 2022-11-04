@@ -158,7 +158,7 @@ class SettingsViewModelTests: XCTestCase {
 
         var options: [String]?
 
-        viewModel.dateFormatOptions
+        viewModel.dateStyleOptions
             .bind { options = $0 }
             .disposed(by: disposeBag)
 
@@ -166,7 +166,8 @@ class SettingsViewModelTests: XCTestCase {
             "1/1/21",
             "Jan 1, 2021",
             "January 1, 2021",
-            "Friday, January 1, 2021"
+            "Friday, January 1, 2021",
+            "Custom..."
         ])
     }
 
@@ -176,7 +177,7 @@ class SettingsViewModelTests: XCTestCase {
 
         var options: [String]?
 
-        viewModel.dateFormatOptions
+        viewModel.dateStyleOptions
             .bind { options = $0 }
             .disposed(by: disposeBag)
 
@@ -191,7 +192,8 @@ class SettingsViewModelTests: XCTestCase {
 
     func testDateStyleSelected() {
 
-        userDefaults.statusItemDateStyle = 2
+        userDefaults.statusItemDateStyle = 1
+        XCTAssertEqual(userDefaultsStatusItemDateStyle, 1)
 
         var statusItemDateStyle: DateStyle?
 
@@ -202,8 +204,34 @@ class SettingsViewModelTests: XCTestCase {
         viewModel.statusItemDateStyleObserver.onNext(.medium)
 
         XCTAssertEqual(statusItemDateStyle, .medium)
-
         XCTAssertEqual(userDefaultsStatusItemDateStyle, 2)
+    }
+
+    func testCustomDateStyleSelected() throws {
+
+        userDefaults.statusItemDateStyle = 0
+        XCTAssertEqual(userDefaultsStatusItemDateStyle, 0)
+
+        var isDateFormatInputVisible: Bool?
+
+        viewModel.isDateFormatInputVisible
+            .bind { isDateFormatInputVisible = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(isDateFormatInputVisible, true)
+
+        viewModel.statusItemDateStyleObserver.onNext(.short)
+        XCTAssertEqual(isDateFormatInputVisible, false)
+
+        // this should fail, but it doesn't, so we test it ¯\_(ツ)_/¯
+        viewModel.statusItemDateStyleObserver.onNext(try XCTUnwrap(.init(rawValue: 5)))
+        XCTAssertEqual(isDateFormatInputVisible, true)
+
+        viewModel.statusItemDateStyleObserver.onNext(.full)
+        XCTAssertEqual(isDateFormatInputVisible, false)
+
+        viewModel.statusItemDateStyleObserver.onNext(.none)
+        XCTAssertEqual(isDateFormatInputVisible, true)
     }
 
     func testToggleShowEventStatusItem() {

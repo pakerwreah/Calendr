@@ -24,6 +24,7 @@ class GeneralSettingsViewController: NSViewController {
     private let fadePastEventsRadio = Radio(title: Strings.Settings.Events.Finished.fade)
     private let hidePastEventsRadio = Radio(title: Strings.Settings.Events.Finished.hide)
     private let dateFormatDropdown = Dropdown()
+    private let dateFormatTextField = NSTextField()
 
     private let nextEventLengthSlider = NSSlider.make(minValue: 10, maxValue: 30)
     private let transparencySlider = NSSlider.make(minValue: 0, maxValue: 5)
@@ -46,6 +47,9 @@ class GeneralSettingsViewController: NSViewController {
 
         view.setAccessibilityElement(true)
         view.setAccessibilityIdentifier(Accessibility.Settings.General.view)
+
+        dateFormatDropdown.setAccessibilityIdentifier(Accessibility.Settings.General.dateFormatDropdown)
+        dateFormatTextField.setAccessibilityIdentifier(Accessibility.Settings.General.dateFormatInput)
     }
 
     override func loadView() {
@@ -89,13 +93,12 @@ class GeneralSettingsViewController: NSViewController {
         ])
         .with(orientation: .vertical)
 
+        dateFormatTextField.placeholderString = viewModel.dateFormatPlaceholder
+
         let dateFormat = NSStackView(views: [
             Label(text: "\(Strings.Settings.MenuBar.dateFormat):"),
             dateFormatDropdown,
-            Label(
-                text: " \(Strings.Settings.MenuBar.DateFormat.info)",
-                font: .systemFont(ofSize: 10, weight: .light)
-            )
+            dateFormatTextField
         ])
         .with(orientation: .vertical)
 
@@ -240,7 +243,7 @@ class GeneralSettingsViewController: NSViewController {
                 DateStyle(rawValue: UInt(dropdown.indexOfSelectedItem + 1)) ?? .none
             },
             setter: { (dropdown: NSPopUpButton, style: DateStyle) in
-                dropdown.selectItem(at: Int(style.rawValue) - 1)
+                dropdown.selectItem(at: (style.isCustom ? dropdown.numberOfItems : Int(style.rawValue)) - 1)
             }
         )
 
@@ -250,7 +253,7 @@ class GeneralSettingsViewController: NSViewController {
             .disposed(by: disposeBag)
 
         Observable.combineLatest(
-            viewModel.dateFormatOptions, viewModel.statusItemDateStyle
+            viewModel.dateStyleOptions, viewModel.statusItemDateStyle
         )
         .bind { [dateFormatDropdown] options, dateStyle in
             dateFormatDropdown.removeAllItems()
@@ -258,6 +261,26 @@ class GeneralSettingsViewController: NSViewController {
             dateFormatStyle.onNext(dateStyle)
         }
         .disposed(by: disposeBag)
+
+        viewModel.isDateFormatInputVisible
+            .map(!)
+            .bind(to: dateFormatTextField.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        viewModel.isDateFormatInputVisible
+            .map(true)
+            .bind(to: view.rx.needsLayout)
+            .disposed(by: disposeBag)
+
+        dateFormatTextField.rx.text
+            .skip(1)
+            .skipNil()
+            .bind(to: viewModel.statusItemDateFormatObserver)
+            .disposed(by: disposeBag)
+
+        viewModel.statusItemDateFormat
+            .bind(to: dateFormatTextField.rx.text)
+            .disposed(by: disposeBag)
     }
 
     private func bind(control: NSButton, observable: Observable<Bool>, observer: AnyObserver<Bool>) {

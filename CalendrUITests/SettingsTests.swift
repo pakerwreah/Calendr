@@ -175,13 +175,13 @@ class SettingsTests: UITestCase {
         let checkbox = Settings.General.view.checkBoxes
             .element(matching: NSPredicate(format: "title = %@", "Show next event"))
 
-        XCTAssertTrue(MenuBar.event.exists)
+        XCTAssertTrue(MenuBar.event.waitForExistence(timeout: .eventTimeout))
 
         checkbox.click()
-        XCTAssertFalse(MenuBar.event.exists)
+        XCTAssertFalse(MenuBar.event.waitForExistence(timeout: .eventTimeout))
 
         checkbox.click()
-        XCTAssertTrue(MenuBar.event.exists)
+        XCTAssertTrue(MenuBar.event.waitForExistence(timeout: .eventTimeout))
     }
 
     func testSettingsGeneral_changeDateFormat() {
@@ -191,7 +191,8 @@ class SettingsTests: UITestCase {
 
         XCTAssert(Settings.view.didAppear)
 
-        let dropdown = Settings.General.view.popUpButtons.element
+        let dropdown = Settings.General.dateFormatDropdown
+        let input = Settings.General.dateFormatInput
 
         XCTAssertEqual(dropdown.text, "Friday, 1 January 2021")
         XCTAssertTrue(MenuBar.main.title.hasSuffix("Friday, 1 January 2021"))
@@ -201,6 +202,20 @@ class SettingsTests: UITestCase {
 
         XCTAssertEqual(dropdown.text, "01/01/2021")
         XCTAssertTrue(MenuBar.main.title.hasSuffix("01/01/2021"))
+
+        dropdown.click()
+        dropdown.menuItems.allElementsBoundByIndex.last?.click()
+
+        XCTAssertEqual(dropdown.text, "Custom...")
+        XCTAssertTrue(MenuBar.main.title.hasSuffix("Fri 1 Jan 2020"))
+
+        input.rightClick()
+        input.click()
+        input.typeKey(.delete, modifierFlags: [])
+        XCTAssertTrue(MenuBar.main.title.hasSuffix("???"))
+
+        input.typeText("E")
+        XCTAssertTrue(MenuBar.main.title.hasSuffix("Fri"))
     }
 
     func testSettingsGeneral_toggleShowWeekNumbers() throws {

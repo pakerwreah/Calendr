@@ -107,6 +107,8 @@ internal enum Strings {
     internal enum MenuBar {
       /// Date format
       internal static let dateFormat = Strings.tr("Localizable", "settings.menu_bar.date_format", fallback: "Date format")
+      /// Custom
+      internal static let dateFormatCustom = Strings.tr("Localizable", "settings.menu_bar.date_format_custom", fallback: "Custom")
       /// Shorten if 'notch' is present
       internal static let nextEventDetectNotch = Strings.tr("Localizable", "settings.menu_bar.next_event_detect_notch", fallback: "Shorten if 'notch' is present")
       /// Width
@@ -117,10 +119,6 @@ internal enum Strings {
       internal static let showIcon = Strings.tr("Localizable", "settings.menu_bar.show_icon", fallback: "Show icon")
       /// Show next event
       internal static let showNextEvent = Strings.tr("Localizable", "settings.menu_bar.show_next_event", fallback: "Show next event")
-      internal enum DateFormat {
-        /// Configurable in System Preferences
-        internal static let info = Strings.tr("Localizable", "settings.menu_bar.date_format.info", fallback: "Configurable in System Preferences")
-      }
     }
     internal enum Tab {
       /// About
