@@ -18,8 +18,7 @@ class CalendarPickerViewModelTests: XCTestCase {
 
     lazy var viewModel = CalendarPickerViewModel(
         calendarService: calendarService,
-        userDefaults: userDefaults,
-        popoverSettings: nil
+        userDefaults: userDefaults
     )
 
     override func setUp() {

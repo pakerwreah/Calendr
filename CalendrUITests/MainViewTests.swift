@@ -85,10 +85,11 @@ class MainViewTests: UITestCase {
         calendar.terminate()
     }
 
-    func testPickerButtonClicked_shouldOpenCalendarPicker() {
+    func testSettingsMenu_withPickerButtonHovered_shouldOpenCalendarPicker() {
 
         MenuBar.main.click()
-        Main.pickerBtn.click()
+        Main.settingsBtn.click()
+        Main.settingsBtn.menuItems.element(matching: NSPredicate(format: "title = %@", "Calendars")).hover()
 
         XCTAssertTrue(CalendarPicker.view.didAppear)
 
@@ -97,10 +98,11 @@ class MainViewTests: UITestCase {
         XCTAssertFalse(CalendarPicker.view.exists)
     }
 
-    func testSettingsButtonClicked_shouldOpenSettings() {
+    func testSettingsMenu_withPreferencesButtonClicked_shouldOpenSettings() {
 
         MenuBar.main.click()
         Main.settingsBtn.click()
+        Main.settingsBtn.menuItems.element(matching: NSPredicate(format: "title = %@", "Preferences")).click()
 
         XCTAssertTrue(Settings.window.didAppear)
         XCTAssertTrue(Settings.view.didAppear)
@@ -108,5 +110,14 @@ class MainViewTests: UITestCase {
         Settings.window.buttons[XCUIIdentifierCloseWindow].click()
 
         XCTAssertFalse(Settings.window.exists)
+    }
+
+    func testSettingsMenu_withQuitButtonClicked_shouldCloseApp() {
+
+        MenuBar.main.click()
+        Main.settingsBtn.click()
+        Main.settingsBtn.menuItems.element(matching: NSPredicate(format: "title = %@", "Quit")).click()
+
+        XCTAssert(app.wait(for: .notRunning, timeout: 1))
     }
 }

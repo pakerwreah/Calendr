@@ -27,7 +27,6 @@ class MainViewController: NSViewController {
     private let pinBtn = NSButton()
     private let remindersBtn = NSButton()
     private let calendarBtn = NSButton()
-    private let pickerBtn = NSButton()
     private let settingsBtn = NSButton()
 
     // ViewModels
@@ -36,7 +35,6 @@ class MainViewController: NSViewController {
     private let statusItemViewModel: StatusItemViewModel
     private let nextEventViewModel: NextEventViewModel
     private let calendarPickerViewModel: CalendarPickerViewModel
-    private let calendarsViewModel: CalendarPickerViewModel
     private let eventListViewModel: EventListViewModel
 
     // Reactive
@@ -96,19 +94,12 @@ class MainViewController: NSViewController {
 
         calendarPickerViewModel = CalendarPickerViewModel(
             calendarService: calendarService,
-            userDefaults: userDefaults,
-            popoverSettings: settingsViewModel
-        )
-
-        calendarsViewModel = CalendarPickerViewModel(
-            calendarService: calendarService,
-            userDefaults: userDefaults,
-            popoverSettings: nil
+            userDefaults: userDefaults
         )
 
         settingsViewController = SettingsViewController(
             settingsViewModel: settingsViewModel,
-            calendarsViewModel: calendarsViewModel,
+            calendarsViewModel: calendarPickerViewModel,
             notificationCenter: notificationCenter
         )
 
@@ -175,6 +166,8 @@ class MainViewController: NSViewController {
         setUpBindings()
 
         setUpPopover()
+
+        setUpSettings()
 
         setUpMainStatusItem()
 
@@ -276,7 +269,6 @@ class MainViewController: NSViewController {
         pinBtn.setAccessibilityIdentifier(Accessibility.Main.pinBtn)
         remindersBtn.setAccessibilityIdentifier(Accessibility.Main.remindersBtn)
         calendarBtn.setAccessibilityIdentifier(Accessibility.Main.calendarBtn)
-        pickerBtn.setAccessibilityIdentifier(Accessibility.Main.pickerBtn)
         settingsBtn.setAccessibilityIdentifier(Accessibility.Main.settingsBtn)
     }
 
@@ -318,29 +310,39 @@ class MainViewController: NSViewController {
             }
         }
         .disposed(by: disposeBag)
+    }
 
-        pickerBtn.rx.tap
-            .flatMapFirst { [pickerBtn, calendarPickerViewModel] _ -> Observable<Void> in
-                let vc = CalendarPickerViewController(viewModel: calendarPickerViewModel)
-                let popover = NSPopover()
-                popover.behavior = .transient
-                popover.contentViewController = vc
-                popover.delegate = vc
-                popover.show(relativeTo: .zero, of: pickerBtn, preferredEdge: .maxX)
-                return popover.rx.deallocated
-            }
-            .bind { [weak self] in
-                // 🔨 Allow clicking outside to dismiss the main view after dismissing the calendar picker
-                if NSApp.keyWindow == nil {
-                    self?.view.window?.makeKey()
-                }
-            }
-            .disposed(by: disposeBag)
+    private func setUpSettings() {
 
-        settingsBtn.rx.tap.bind { [weak self, settingsViewController] in
-            self?.presentAsModalWindow(settingsViewController)
+        let settingsMenu = NSMenu()
+
+        settingsMenu.addItem(withTitle: Strings.Settings.title, action: #selector(openSettings), keyEquivalent: "")
+
+        settingsMenu.addItem(.separator())
+
+        let pickerMenuItem = settingsMenu.addItem(withTitle: Strings.Settings.Tab.calendars, action: nil, keyEquivalent: "")
+        let pickerSubmenu = NSMenu()
+        let pickerSubmenuItem = NSMenuItem()
+        pickerSubmenu.addItem(pickerSubmenuItem)
+        pickerMenuItem.submenu = pickerSubmenu
+
+        let pickerViewController = CalendarPickerViewController(viewModel: calendarPickerViewModel, configuration: .picker)
+        pickerSubmenuItem.view = pickerViewController.view.forAutoLayout()
+        addChild(pickerViewController)
+
+        settingsMenu.addItem(.separator())
+
+        settingsMenu.addItem(withTitle: Strings.quit, action: #selector(NSApp.terminate), keyEquivalent: "q")
+
+        settingsBtn.rx.tap.bind { [settingsBtn] in
+            settingsMenu.popUp(positioning: nil, at: .init(x: 0, y: settingsBtn.frame.height), in: settingsBtn)
         }
         .disposed(by: disposeBag)
+    }
+
+    @objc private func openSettings() {
+
+        presentAsModalWindow(settingsViewController)
     }
 
     private func setUpPopover() {
@@ -499,7 +501,7 @@ class MainViewController: NSViewController {
 
     private func makeToolBar() -> NSView {
 
-        [pinBtn, remindersBtn, calendarBtn, pickerBtn, settingsBtn].forEach(styleButton)
+        [pinBtn, remindersBtn, calendarBtn, settingsBtn].forEach(styleButton)
 
         pinBtn.setButtonType(.toggle)
         pinBtn.image = Icons.Calendar.unpinned
@@ -507,10 +509,9 @@ class MainViewController: NSViewController {
 
         remindersBtn.image = Icons.Calendar.reminders.with(scale: .large)
         calendarBtn.image = Icons.Calendar.calendar.with(scale: .large)
-        pickerBtn.image = Icons.Calendar.picker.with(scale: .large)
         settingsBtn.image = Icons.Calendar.settings.with(scale: .large)
 
-        return NSStackView(views: [pinBtn, .spacer, remindersBtn, calendarBtn, pickerBtn, settingsBtn])
+        return NSStackView(views: [pinBtn, .spacer, remindersBtn, calendarBtn, settingsBtn])
     }
 
     private func makeDateSelector() -> DateSelector {

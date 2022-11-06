@@ -12,6 +12,11 @@ extension UITestCase {
     static let app = XCUIApplication()
     var app: XCUIApplication { Self.app }
 
+    enum MenuBar {
+        static var main: XCUIElement { app.statusItems[Accessibility.MenuBar.main].wait(.shortTimeout) }
+        static var event: XCUIElement { app.statusItems[Accessibility.MenuBar.event] }
+    }
+
     enum Main {
         static var view: XCUIElement { app.otherElements[Accessibility.Main.view] }
 
@@ -22,13 +27,7 @@ extension UITestCase {
         static var pinBtn: XCUIElement { view.checkBoxes[Accessibility.Main.pinBtn] }
         static var remindersBtn: XCUIElement { view.buttons[Accessibility.Main.remindersBtn] }
         static var calendarBtn: XCUIElement { view.buttons[Accessibility.Main.calendarBtn] }
-        static var pickerBtn: XCUIElement { view.buttons[Accessibility.Main.pickerBtn] }
         static var settingsBtn: XCUIElement { view.buttons[Accessibility.Main.settingsBtn] }
-    }
-
-    enum MenuBar {
-        static var main: XCUIElement { app.statusItems[Accessibility.MenuBar.main].wait(.shortTimeout) }
-        static var event: XCUIElement { app.statusItems[Accessibility.MenuBar.event] }
     }
 
     enum Calendar {
