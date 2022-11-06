@@ -8,6 +8,7 @@
 
 "quit" = "Quit";
 
+"settings.title" = "Preferences";
 "settings.tab.general" = "General";
 "settings.tab.calendars" = "Calendars";
 "settings.tab.about" = "About";

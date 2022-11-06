@@ -84,6 +84,8 @@ internal enum Strings {
     internal static let events = Strings.tr("Localizable", "settings.events", fallback: "Events")
     /// Menu Bar
     internal static let menuBar = Strings.tr("Localizable", "settings.menu_bar", fallback: "Menu Bar")
+    /// Preferences
+    internal static let title = Strings.tr("Localizable", "settings.title", fallback: "Preferences")
     /// Transparency
     internal static let transparency = Strings.tr("Localizable", "settings.transparency", fallback: "Transparency")
     internal enum Calendar {

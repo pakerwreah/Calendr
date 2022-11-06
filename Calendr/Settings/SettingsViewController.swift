@@ -28,7 +28,9 @@ class SettingsViewController: NSTabViewController {
         tabStyle = .toolbar
 
         let general = NSTabViewItem(viewController: GeneralSettingsViewController(viewModel: settingsViewModel))
-        let calendars = NSTabViewItem(viewController: CalendarPickerViewController(viewModel: calendarsViewModel))
+        let calendars = NSTabViewItem(
+            viewController: CalendarPickerViewController(viewModel: calendarsViewModel, configuration: .settings)
+        )
         let about = NSTabViewItem(viewController: AboutViewController())
 
         general.label = Strings.Settings.Tab.general

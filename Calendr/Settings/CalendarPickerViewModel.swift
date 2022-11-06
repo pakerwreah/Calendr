@@ -17,9 +17,6 @@ class CalendarPickerViewModel {
     // Observables
     let calendars: Observable<[CalendarModel]>
     let enabledCalendars: Observable<[String]>
-    let popoverSettings: PopoverSettings?
-
-    var isPopover: Bool { popoverSettings != nil }
 
     private let userDefaults: UserDefaults
     private let toggleCalendarSubject = PublishRelay<String>()
@@ -27,8 +24,7 @@ class CalendarPickerViewModel {
 
     init(
         calendarService: CalendarServiceProviding,
-        userDefaults: UserDefaults,
-        popoverSettings: PopoverSettings?
+        userDefaults: UserDefaults
     ) {
 
         self.calendars = calendarService.changeObservable
@@ -48,7 +44,6 @@ class CalendarPickerViewModel {
         .share(replay: 1)
 
         self.userDefaults = userDefaults
-        self.popoverSettings = popoverSettings
 
         setUpBindings()
     }

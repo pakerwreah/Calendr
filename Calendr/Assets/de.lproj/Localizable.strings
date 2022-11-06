@@ -8,6 +8,7 @@
 
 "quit" = "Programm beenden";
 
+"settings.title" = "Einstellungen";
 "settings.tab.general" = "Allgemein";
 "settings.tab.calendars" = "Kalender";
 "settings.tab.about" = "Über";

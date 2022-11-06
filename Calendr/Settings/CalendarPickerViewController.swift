@@ -8,7 +8,12 @@
 import Cocoa
 import RxSwift
 
-class CalendarPickerViewController: NSViewController, NSPopoverDelegate {
+enum CalendarPickerConfiguration {
+    case settings
+    case picker
+}
+
+class CalendarPickerViewController: NSViewController {
 
     private let disposeBag = DisposeBag()
 
@@ -16,9 +21,12 @@ class CalendarPickerViewController: NSViewController, NSPopoverDelegate {
 
     private let contentStackView = NSStackView(.vertical)
 
-    init(viewModel: CalendarPickerViewModel) {
+    private let configuration: CalendarPickerConfiguration
+
+    init(viewModel: CalendarPickerViewModel, configuration: CalendarPickerConfiguration) {
 
         self.viewModel = viewModel
+        self.configuration = configuration
 
         super.init(nibName: nil, bundle: nil)
 
@@ -32,11 +40,7 @@ class CalendarPickerViewController: NSViewController, NSPopoverDelegate {
         guard BuildConfig.isUITesting else { return }
 
         view.setAccessibilityElement(true)
-        view.setAccessibilityIdentifier(
-            viewModel.isPopover
-                ? Accessibility.CalendarPicker.view
-                : Accessibility.Settings.Calendars.view
-        )
+        view.setAccessibilityIdentifier(configuration.accessibilityIdentifier)
     }
 
     override func loadView() {
@@ -47,9 +51,7 @@ class CalendarPickerViewController: NSViewController, NSPopoverDelegate {
 
         view.addSubview(scrollView)
 
-        let insets: NSEdgeInsets = viewModel.isPopover ? .init(top: 16, left: 16, bottom: 16, right: 20) : .init()
-
-        scrollView.edges(to: view, insets: insets)
+        scrollView.edges(to: view, insets: configuration.insets)
 
         scrollView.drawsBackground = false
         scrollView.documentView = contentStackView.forAutoLayout()
@@ -58,28 +60,17 @@ class CalendarPickerViewController: NSViewController, NSPopoverDelegate {
         scrollView.contentView.top(equalTo: contentStackView)
         scrollView.contentView.leading(equalTo: contentStackView)
         scrollView.contentView.trailing(equalTo: contentStackView)
-        scrollView.contentView.height(equalTo: contentStackView).priority = .dragThatCanResizeWindow
-        scrollView.contentView.heightAnchor.constraint(
-            lessThanOrEqualToConstant: viewModel.isPopover ? 0.8 * NSScreen.main!.visibleFrame.height : 600
-        ).activate()
+        let height = scrollView.contentView.height(equalTo: contentStackView)
+
+        if configuration ~= .settings {
+            height.priority = .dragThatCanResizeWindow
+            scrollView.contentView.heightAnchor.constraint(lessThanOrEqualToConstant: 600).activate()
+        }
 
         contentStackView.alignment = .left
     }
 
     private func setUpBindings() {
-
-        if let popoverSettings = viewModel.popoverSettings {
-
-            let popoverView = view.rx.observe(\.superview)
-                .compactMap { $0 as? NSVisualEffectView }
-                .take(1)
-
-            Observable.combineLatest(
-                popoverView, popoverSettings.popoverMaterial
-            )
-            .bind { $0.material = $1 }
-            .disposed(by: disposeBag)
-        }
 
         viewModel.calendars
             .observe(on: MainScheduler.instance)
@@ -131,31 +122,30 @@ class CalendarPickerViewController: NSViewController, NSPopoverDelegate {
         return checkbox
     }
 
-    func popoverDidShow(_ notification: Notification) {
-        // 🔨 Allow dismiss with the escape key
-        view.window?.makeKey()
-        view.window?.makeFirstResponder(self)
-    }
-
-    private var popover: NSPopover?
-
-    func popoverWillClose(_ notification: Notification) {
-        // 🔨 Prevent retain cycle
-        view.window?.makeFirstResponder(nil)
-    }
-
-    func popoverShouldClose(_ popover: NSPopover) -> Bool {
-        self.popover = popover
-        return true
-    }
-
-    func popoverDidClose(_ notification: Notification) {
-        // 🔨 Prevent retain cycle
-        popover?.contentViewController = nil
-        popover = nil
-    }
-
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+// MARK: - Extensions
+
+extension CalendarPickerConfiguration {
+
+    var accessibilityIdentifier: String {
+        switch self {
+        case .settings:
+            return Accessibility.Settings.Calendars.view
+        case .picker:
+            return Accessibility.CalendarPicker.view
+        }
+    }
+
+    var insets: NSEdgeInsets {
+        switch self {
+        case .settings:
+            return .init()
+        case .picker:
+            return .init(top: 16, left: 16, bottom: 16, right: 20)
+        }
     }
 }
