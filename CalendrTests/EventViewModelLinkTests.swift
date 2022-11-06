@@ -99,7 +99,7 @@ class EventViewModelLinkTests: XCTestCase {
 
     func testLink_withZoomURL_withZoomInstalled() throws {
 
-        workspace.m_supportsScheme = true
+        workspace.m_urlForApplication = URL(string: "dummy")
 
         let httpLink = "https://something.zoom.us/j/0000000000?pwd=xxxxxxxxxx"
         let appLink = "zoommtg://something.zoom.us/join?confno=0000000000&pwd=xxxxxxxxxx"
@@ -126,7 +126,7 @@ class EventViewModelLinkTests: XCTestCase {
 
     func testLink_withTeamsURL_withTeamsInstalled() throws {
 
-        workspace.m_supportsScheme = true
+        workspace.m_urlForApplication = URL(string: "dummy")
 
         let httpLink = "https://teams.microsoft.com/l/meetup-join/xxxxxxxxxx"
         let appLink = "msteams://teams.microsoft.com/l/meetup-join/xxxxxxxxxx"

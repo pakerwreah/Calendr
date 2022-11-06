@@ -31,7 +31,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         #endif
 
         viewController = MainViewController(
-            workspace: WorkspaceServiceProvider(),
+            workspace: NSWorkspace.shared,
             calendarService: CalendarServiceProvider(notificationCenter: .default),
             dateProvider: DateProvider(calendar: .autoupdatingCurrent),
             screenProvider: ScreenProvider(notificationCenter: .default),

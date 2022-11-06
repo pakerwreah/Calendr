@@ -14,7 +14,7 @@ struct EventViewPreview: PreviewProvider {
 
     static let dateProvider = MockDateProvider()
     static let calendarService = MockCalendarServiceProvider()
-    static let workspace = WorkspaceServiceProvider()
+    static let workspace = NSWorkspace.shared
     static let popoverSettings = MockPopoverSettings()
 
     static func make(_ color: ColorScheme) -> some View {

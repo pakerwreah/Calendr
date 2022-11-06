@@ -12,23 +12,14 @@ protocol WorkspaceServiceProviding {
     var notificationCenter: NotificationCenter { get }
 
     func urlForApplication(toOpen url: URL) -> URL?
-    func supports(scheme: String) -> Bool
-    func open(_ url: URL)
+    @discardableResult func open(_ url: URL) -> Bool
 }
 
-class WorkspaceServiceProvider: WorkspaceServiceProviding {
-
-    let notificationCenter: NotificationCenter = NSWorkspace.shared.notificationCenter
-
-    func urlForApplication(toOpen url: URL) -> URL? {
-        NSWorkspace.shared.urlForApplication(toOpen: url)
-    }
+extension WorkspaceServiceProviding {
 
     func supports(scheme: String) -> Bool {
-        URL(string: scheme).map(urlForApplication(toOpen:)) != nil
-    }
-
-    func open(_ url: URL) {
-        NSWorkspace.shared.open(url)
+        URL(string: scheme).flatMap(urlForApplication(toOpen:)) != nil
     }
 }
+
+extension NSWorkspace: WorkspaceServiceProviding { }

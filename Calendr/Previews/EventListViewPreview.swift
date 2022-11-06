@@ -14,7 +14,7 @@ struct EventListViewPreview: PreviewProvider {
 
     static let dateProvider = MockDateProvider(start: .make(hour: 16, minute: 45))
     static let calendarService = MockCalendarServiceProvider()
-    static let workspace = WorkspaceServiceProvider()
+    static let workspace = NSWorkspace.shared
     static let settings = MockEventListSettings()
 
     static var now: Date { dateProvider.now }
