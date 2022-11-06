@@ -7,7 +7,7 @@
 
 #if DEBUG
 
-import Foundation
+import AppKit.NSWorkspace
 
 class MockMainViewController: MainViewController {
 
@@ -28,7 +28,7 @@ class MockMainViewController: MainViewController {
         ])
 
         super.init(
-            workspace: WorkspaceServiceProvider(),
+            workspace: NSWorkspace.shared,
             calendarService: MockCalendarServiceProvider(dateProvider: dateProvider),
             dateProvider: dateProvider,
             screenProvider: ScreenProvider(notificationCenter: .default),
