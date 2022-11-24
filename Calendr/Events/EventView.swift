@@ -21,7 +21,7 @@ class EventView: NSView {
     private let subtitle = Label()
     private let duration = Label()
     private let progress = NSView()
-    private let linkBtn = NSButton()
+    private let linkBtn = ImageButton()
     private let hoverLayer = CALayer()
     private let colorBar = NSView()
 
@@ -123,10 +123,6 @@ class EventView: NSView {
         colorBar.layer?.cornerRadius = 2
         colorBar.width(equalTo: 4)
 
-        linkBtn.setContentCompressionResistancePriority(.required, for: .horizontal)
-        linkBtn.refusesFirstResponder = true
-        linkBtn.bezelStyle = .roundRect
-        linkBtn.isBordered = false
         linkBtn.width(equalTo: 22)
 
         let titleStackView = NSStackView(views: [icon, title]).with(spacing: 4).with(alignment: .firstBaseline)

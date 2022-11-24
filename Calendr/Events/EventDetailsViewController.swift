@@ -17,7 +17,7 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
     private let contentStackView = NSStackView(.vertical)
     private let participantsStackView = NSStackView(.vertical)
     private let detailsStackView = NSStackView(.vertical)
-    private let linkBtn = NSButton()
+    private let linkBtn = ImageButton()
 
     private let titleLabel = Label()
     private let urlLabel = Label()
@@ -190,11 +190,6 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
             linkBtn.isHidden = true
             return
         }
-
-        linkBtn.setContentCompressionResistancePriority(.required, for: .horizontal)
-        linkBtn.refusesFirstResponder = true
-        linkBtn.bezelStyle = .roundRect
-        linkBtn.isBordered = false
 
         viewModel.isInProgress
             .bind { [linkBtn] isInProgress in
