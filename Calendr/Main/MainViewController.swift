@@ -21,13 +21,13 @@ class MainViewController: NSViewController {
     private let calendarView: CalendarView
     private let eventListView: EventListView
     private let titleLabel = Label()
-    private let prevBtn = NSButton()
-    private let resetBtn = NSButton()
-    private let nextBtn = NSButton()
-    private let pinBtn = NSButton()
-    private let remindersBtn = NSButton()
-    private let calendarBtn = NSButton()
-    private let settingsBtn = NSButton()
+    private let prevBtn = ImageButton()
+    private let resetBtn = ImageButton()
+    private let nextBtn = ImageButton()
+    private let pinBtn = ImageButton()
+    private let remindersBtn = ImageButton()
+    private let calendarBtn = ImageButton()
+    private let settingsBtn = ImageButton()
 
     // ViewModels
     private let calendarViewModel: CalendarViewModel
@@ -476,19 +476,12 @@ class MainViewController: NSViewController {
         return scrollView
     }
 
-    private func styleButton(_ button: NSButton) {
-        button.size(equalTo: 22)
-        button.bezelStyle = .regularSquare
-        button.isBordered = false
-        button.refusesFirstResponder = true
-    }
-
     private func makeHeader() -> NSView {
 
         titleLabel.font = .systemFont(ofSize: 14, weight: .medium)
         titleLabel.textColor = .headerTextColor
 
-        [prevBtn, resetBtn, nextBtn].forEach(styleButton)
+        [prevBtn, resetBtn, nextBtn].forEach { $0.size(equalTo: 22) }
 
         prevBtn.image = Icons.Calendar.prev
         resetBtn.image = Icons.Calendar.reset.with(scale: .small)
@@ -502,7 +495,7 @@ class MainViewController: NSViewController {
 
     private func makeToolBar() -> NSView {
 
-        [pinBtn, remindersBtn, calendarBtn, settingsBtn].forEach(styleButton)
+        [pinBtn, remindersBtn, calendarBtn, settingsBtn].forEach { $0.size(equalTo: 22) }
 
         pinBtn.setButtonType(.toggle)
         pinBtn.image = Icons.Calendar.unpinned

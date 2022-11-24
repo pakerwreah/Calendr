@@ -120,6 +120,7 @@
 		34D19FC0262299D300B2732C /* NSEdgeInsets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D19FBF262299D300B2732C /* NSEdgeInsets.swift */; };
 		34D19FC62622A02C00B2732C /* EventDetailsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D19FC52622A02C00B2732C /* EventDetailsViewModelTests.swift */; };
 		34D19FCC2622B9CD00B2732C /* EventMeta.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D19FCB2622B9CC00B2732C /* EventMeta.swift */; };
+		34D25E4A292F9E2100557E70 /* ImageButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D25E49292F9E2100557E70 /* ImageButton.swift */; };
 		34D55FE325F06669007F5C81 /* Sequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D55FE225F06669007F5C81 /* Sequence.swift */; };
 		34E004A725B61D5200241419 /* StatusItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E004A625B61D5200241419 /* StatusItemViewModel.swift */; };
 		34E1902325B76CFE00E9491B /* CalendarPickerViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E1902225B76CFE00E9491B /* CalendarPickerViewModelTests.swift */; };
@@ -274,6 +275,7 @@
 		34D19FBF262299D300B2732C /* NSEdgeInsets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSEdgeInsets.swift; sourceTree = "<group>"; };
 		34D19FC52622A02C00B2732C /* EventDetailsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailsViewModelTests.swift; sourceTree = "<group>"; };
 		34D19FCB2622B9CC00B2732C /* EventMeta.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventMeta.swift; sourceTree = "<group>"; };
+		34D25E49292F9E2100557E70 /* ImageButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageButton.swift; sourceTree = "<group>"; };
 		34D55FE225F06669007F5C81 /* Sequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sequence.swift; sourceTree = "<group>"; };
 		34E004A625B61D5200241419 /* StatusItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemViewModel.swift; sourceTree = "<group>"; };
 		34E1902225B76CFE00E9491B /* CalendarPickerViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPickerViewModelTests.swift; sourceTree = "<group>"; };
@@ -503,6 +505,7 @@
 			children = (
 				34CC382C25B636A6006CBD99 /* Checkbox.swift */,
 				341B2B3D25D06A6F00336342 /* Dropdown.swift */,
+				34D25E49292F9E2100557E70 /* ImageButton.swift */,
 				34F128D025968044007DF31C /* Label.swift */,
 				348E704A25C61B8D00B3B160 /* Radio.swift */,
 				341FAC5C292EFFFC0005F934 /* TextView.swift */,
@@ -847,6 +850,7 @@
 				3421DA212693F12400056837 /* Calendar+Factory.swift in Sources */,
 				34934CD628E69520009635D4 /* Prefs+UserDefaults.swift in Sources */,
 				34FD09D925AE269600AAAAE2 /* DateProvider.swift in Sources */,
+				34D25E4A292F9E2100557E70 /* ImageButton.swift in Sources */,
 				34AC60C626925FA5005312B6 /* PreviewExtensions.swift in Sources */,
 				3477F3CE25FAE56A008EA888 /* EventDetailsViewModel.swift in Sources */,
 				3487A43C25E70F5B00FCC7D7 /* NextEventView.swift in Sources */,
