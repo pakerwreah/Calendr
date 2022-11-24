@@ -23,7 +23,7 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
     private let urlLabel = Label()
     private let locationLabel = Label()
     private let durationLabel = Label()
-    private let notesLabel = Label()
+    private let notesTextView = TextView()
 
     private let optionsLabel = Label()
     private let optionsButton = NSButton()
@@ -94,7 +94,7 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
 
     private func setUpLabels() {
 
-        for label in  [titleLabel, urlLabel, locationLabel, durationLabel, notesLabel] {
+        for label in  [titleLabel, urlLabel, locationLabel, durationLabel] {
             label.textColor = .labelColor
             label.lineBreakMode = .byWordWrapping
             label.isSelectable = true
@@ -107,6 +107,12 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         locationLabel.font = .small
         urlLabel.font = .small
         durationLabel.font = .default
+
+        notesTextView.textColor = .labelColor
+        notesTextView.isSelectable = true
+        notesTextView.drawsBackground = false
+        notesTextView.isAutomaticLinkDetectionEnabled = true
+        notesTextView.textContainer?.lineFragmentPadding = .zero
     }
 
     private func setUpOptions() {
@@ -240,13 +246,21 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         let notes = viewModel.notes
 
         if ["<", ">"].allSatisfy(notes.contains), let html = notes.html(font: .default, color: .labelColor) {
-            notesLabel.attributedStringValue = html
+            notesTextView.textStorage?.setAttributedString(html)
         } else {
-            notesLabel.font = .default
-            notesLabel.stringValue = notes
+            notesTextView.font = .default
+            notesTextView.string = notes
         }
+        notesTextView.checkTextInDocument(nil)
+        notesTextView.isEditable = false
+
         detailsStackView.addArrangedSubview(makeLine())
-        detailsStackView.addArrangedSubview(notesLabel)
+        detailsStackView.addArrangedSubview(notesTextView)
+    }
+
+    override func viewWillAppear() {
+        super.viewWillAppear()
+        notesTextView.height(equalTo: notesTextView.contentSize.height)
     }
 
     private func addParticipants() {
@@ -269,6 +283,7 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
 
             let label = Label(text: info, font: .small)
             label.lineBreakMode = .byTruncatingMiddle
+            label.isSelectable = true
 
             switch participant.status {
             case .accepted:

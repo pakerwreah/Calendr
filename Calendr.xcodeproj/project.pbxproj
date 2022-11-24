@@ -20,6 +20,7 @@
 		341B2B3E25D06A6F00336342 /* Dropdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341B2B3D25D06A6F00336342 /* Dropdown.swift */; };
 		341B2B4225D0B19500336342 /* StatusItemViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341B2B4125D0B19500336342 /* StatusItemViewModelTests.swift */; };
 		341B2B4825D0C9A600336342 /* NSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341B2B4725D0C9A600336342 /* NSView.swift */; };
+		341FAC5D292EFFFC0005F934 /* TextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341FAC5C292EFFFC0005F934 /* TextView.swift */; };
 		3421930827999FB7002BCD36 /* TimeZone+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3421930727999FB7002BCD36 /* TimeZone+Factory.swift */; };
 		3421AD3D25BA1D0800A4F468 /* SettingsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3421AD3C25BA1D0800A4F468 /* SettingsViewModelTests.swift */; };
 		3421DA0E2693E35000056837 /* EventListViewPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3421DA0D2693E35000056837 /* EventListViewPreview.swift */; };
@@ -58,6 +59,7 @@
 		3470214A259DFF3000827AE7 /* CalendarServiceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34702149259DFF3000827AE7 /* CalendarServiceProvider.swift */; };
 		34702150259E163000827AE7 /* CalendarModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3470214F259E163000827AE7 /* CalendarModel.swift */; };
 		34702168259E761100827AE7 /* Calendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34702167259E761100827AE7 /* Calendar.swift */; };
+		3470654B292EFCF90079C68A /* NSTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3470654A292EFCF90079C68A /* NSTextView.swift */; };
 		3477F3CE25FAE56A008EA888 /* EventDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3477F3CD25FAE56A008EA888 /* EventDetailsViewModel.swift */; };
 		3477F3D425FAF079008EA888 /* MockCalendarServiceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3477F3D325FAF079008EA888 /* MockCalendarServiceProvider.swift */; };
 		3477F3DA25FD44C1008EA888 /* MockEventListSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3477F3D925FD44C1008EA888 /* MockEventListSettings.swift */; };
@@ -159,6 +161,7 @@
 		341B2B3D25D06A6F00336342 /* Dropdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dropdown.swift; sourceTree = "<group>"; };
 		341B2B4125D0B19500336342 /* StatusItemViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemViewModelTests.swift; sourceTree = "<group>"; };
 		341B2B4725D0C9A600336342 /* NSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSView.swift; sourceTree = "<group>"; };
+		341FAC5C292EFFFC0005F934 /* TextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextView.swift; sourceTree = "<group>"; };
 		3421930727999FB7002BCD36 /* TimeZone+Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TimeZone+Factory.swift"; sourceTree = "<group>"; };
 		3421AD3C25BA1D0800A4F468 /* SettingsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModelTests.swift; sourceTree = "<group>"; };
 		3421DA0D2693E35000056837 /* EventListViewPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventListViewPreview.swift; sourceTree = "<group>"; };
@@ -205,6 +208,7 @@
 		34702149259DFF3000827AE7 /* CalendarServiceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarServiceProvider.swift; sourceTree = "<group>"; };
 		3470214F259E163000827AE7 /* CalendarModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarModel.swift; sourceTree = "<group>"; };
 		34702167259E761100827AE7 /* Calendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Calendar.swift; sourceTree = "<group>"; };
+		3470654A292EFCF90079C68A /* NSTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSTextView.swift; sourceTree = "<group>"; };
 		3477F3CD25FAE56A008EA888 /* EventDetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailsViewModel.swift; sourceTree = "<group>"; };
 		3477F3D325FAF079008EA888 /* MockCalendarServiceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCalendarServiceProvider.swift; sourceTree = "<group>"; };
 		3477F3D925FD44C1008EA888 /* MockEventListSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockEventListSettings.swift; sourceTree = "<group>"; };
@@ -498,9 +502,10 @@
 			isa = PBXGroup;
 			children = (
 				34CC382C25B636A6006CBD99 /* Checkbox.swift */,
+				341B2B3D25D06A6F00336342 /* Dropdown.swift */,
 				34F128D025968044007DF31C /* Label.swift */,
 				348E704A25C61B8D00B3B160 /* Radio.swift */,
-				341B2B3D25D06A6F00336342 /* Dropdown.swift */,
+				341FAC5C292EFFFC0005F934 /* TextView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -521,6 +526,7 @@
 				34091736267E81870023B76D /* NSImage.swift */,
 				34A4C3E825963FB200D0F949 /* NSStackView.swift */,
 				3430ED02259634E00045DA53 /* NSStackView+Rx.swift */,
+				3470654A292EFCF90079C68A /* NSTextView.swift */,
 				341B2B4725D0C9A600336342 /* NSView.swift */,
 				347D0FE6259544B4002451EC /* NSView+Layout.swift */,
 				3477F3E325FD5285008EA888 /* NSView+Rx.swift */,
@@ -808,6 +814,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				347D0FDF259533C3002451EC /* CalendarView.swift in Sources */,
+				341FAC5D292EFFFC0005F934 /* TextView.swift in Sources */,
 				3421DA1F2693F12400056837 /* CalendarModel+Factory.swift in Sources */,
 				34B5A09D25B118EC00F7F7ED /* CalendarPickerViewModel.swift in Sources */,
 				3421DA0E2693E35000056837 /* EventListViewPreview.swift in Sources */,
@@ -869,6 +876,7 @@
 				347D0FE7259544B4002451EC /* NSView+Layout.swift in Sources */,
 				34B1C7C525EDA01F00E5CA80 /* EventIntervalView.swift in Sources */,
 				3408F17625FAAA4B00C1EAD4 /* EventDetailsViewController.swift in Sources */,
+				3470654B292EFCF90079C68A /* NSTextView.swift in Sources */,
 				341692C225F1AA570019E8A8 /* WallTimeScheduler.swift in Sources */,
 				34B5A09725B0F8A500F7F7ED /* NSButton.swift in Sources */,
 				34CC382D25B636A6006CBD99 /* Checkbox.swift in Sources */,

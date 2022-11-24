@@ -16,7 +16,7 @@ extension StringProtocol {
     func html(font: NSFont, color: NSColor) -> NSAttributedString? {
 
         guard
-            let data = data(using: .unicode),
+            let data = replacingOccurrences(of: "\n", with: "<br>").data(using: .unicode),
             let attribStr = NSMutableAttributedString(html: data, documentAttributes: nil)
         else { return nil }
 
