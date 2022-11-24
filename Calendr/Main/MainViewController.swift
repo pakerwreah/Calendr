@@ -245,6 +245,7 @@ class MainViewController: NSViewController {
         super.viewDidAppear()
         
         view.window?.makeKey()
+        NSApp.activate(ignoringOtherApps: true)
 
         eventListView.scrollTop()
     }

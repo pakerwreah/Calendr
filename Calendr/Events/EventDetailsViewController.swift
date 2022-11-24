@@ -385,6 +385,9 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         view.window?.makeKey()
         view.window?.makeFirstResponder(self)
 
+        // 🔨 Fix cursor not changing when hovering text
+        NSApp.activate(ignoringOtherApps: true)
+
         viewModel.isShowingObserver.onNext(true)
     }
 
