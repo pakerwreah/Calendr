@@ -11,12 +11,12 @@ import RxSwift
 class MainViewController: NSViewController {
 
     // ViewControllers
-    private let popover = NSPopover()
     private let settingsViewController: SettingsViewController
 
     // Views
     private let mainStatusItem: NSStatusItem
     private let eventStatusItem: NSStatusItem
+    private let mainStackView = NSStackView()
     private let nextEventView: NextEventView
     private let calendarView: CalendarView
     private let eventListView: EventListView
@@ -39,6 +39,7 @@ class MainViewController: NSViewController {
 
     // Reactive
     private let disposeBag = DisposeBag()
+    private var popoverDisposeBag = DisposeBag()
     private let dateClick = PublishSubject<Date>()
     private let initialDate: BehaviorSubject<Date>
     private let selectedDate = PublishSubject<Date>()
@@ -165,8 +166,6 @@ class MainViewController: NSViewController {
 
         setUpBindings()
 
-        setUpPopover()
-
         setUpSettings()
 
         setUpMainStatusItem()
@@ -190,26 +189,20 @@ class MainViewController: NSViewController {
         let toolBar = makeToolBar()
         let eventList = makeEventList()
 
-        let mainView = NSStackView(views: [
-            header,
-            calendarView,
-            toolBar,
-            eventList
-        ])
-        .with(orientation: .vertical)
-        .with(spacing: 4)
-        .with(spacing: 0, after: header)
+        [header, calendarView, toolBar, eventList].forEach(mainStackView.addArrangedSubview)
 
-        view.addSubview(mainView)
+        mainStackView.orientation = .vertical
+        mainStackView.spacing = 4
+        mainStackView.setCustomSpacing(0, after: header)
 
-        let margin: CGFloat = 8
+        view.addSubview(mainStackView)
 
-        mainView.width(equalTo: calendarView)
-        mainView.top(equalTo: view, constant: margin)
-        mainView.leading(equalTo: view, constant: margin)
-        mainView.trailing(equalTo: view, constant: margin)
+        mainStackView.width(equalTo: calendarView)
+        mainStackView.top(equalTo: view, constant: Constants.MainStackView.margin)
+        mainStackView.leading(equalTo: view, constant: Constants.MainStackView.margin)
+        mainStackView.trailing(equalTo: view, constant: Constants.MainStackView.margin)
 
-        let heightConstraint = mainView
+        let heightConstraint = mainStackView
             .heightAnchor.constraint(lessThanOrEqualToConstant: 0)
             .activate()
 
@@ -218,20 +211,8 @@ class MainViewController: NSViewController {
             .bind(to: heightConstraint.rx.constant)
             .disposed(by: disposeBag)
 
-        mainView.rx.observe(\.frame)
-            .distinctUntilChanged()
-            .observe(on: MainScheduler.asyncInstance)
-            .map { [view] frame in
-                var size = view.frame.size
-                size.height = frame.height + 2 * margin
-                return size
-            }
-            .bind(to: popover.rx.contentSize)
-            .disposed(by: disposeBag)
-
         let popoverView = view.rx.observe(\.superview)
             .compactMap { $0 as? NSVisualEffectView }
-            .take(1)
 
         Observable.combineLatest(
             popoverView, settingsViewModel.popoverMaterial
@@ -346,31 +327,55 @@ class MainViewController: NSViewController {
         presentAsModalWindow(settingsViewController)
     }
 
-    private func setUpPopover() {
+    private func setUpPopover(_ popover: NSPopover) {
+
+        guard let statusBarButton = mainStatusItem.button else { return }
+
+        popover.contentViewController = self
 
         popover.rx.observe(\.isShown)
             .observe(on: MainScheduler.asyncInstance)
+            .startWith(false)
             .bind(to: popover.rx.animates)
-            .disposed(by: disposeBag)
+            .disposed(by: popoverDisposeBag)
+
+        popover.rx.observe(\.isShown)
+            .bind(to: statusBarButton.rx.isHighlighted)
+            .disposed(by: popoverDisposeBag)
+
+        statusItemViewModel.text
+            .bind(to: statusBarButton.rx.attributedTitle)
+            .disposed(by: popoverDisposeBag)
+
+        mainStackView.rx.observe(\.frame)
+            .distinctUntilChanged()
+            .observe(on: MainScheduler.asyncInstance)
+            .map { [view] frame in
+                var size = view.frame.size
+                size.height = frame.height + 2 * Constants.MainStackView.margin
+                return size
+            }
+            .bind(to: popover.rx.contentSize)
+            .disposed(by: popoverDisposeBag)
 
         settingsViewController.rx.viewWillAppear
-            .map { .applicationDefined }
+            .map(.applicationDefined)
             .bind(to: popover.rx.behavior)
-            .disposed(by: disposeBag)
+            .disposed(by: popoverDisposeBag)
 
         settingsViewController.rx.viewDidDisappear
             .withLatestFrom(pinBtn.rx.state)
             .matching(.off)
             .void()
             .startWith(())
-            .map { .transient }
+            .map(.transient)
             .bind(to: popover.rx.behavior)
-            .disposed(by: disposeBag)
+            .disposed(by: popoverDisposeBag)
 
         pinBtn.rx.state
             .map { $0 == .on ? .applicationDefined : .transient }
             .bind(to: popover.rx.behavior)
-            .disposed(by: disposeBag)
+            .disposed(by: popoverDisposeBag)
     }
 
     private func setUpMainStatusItem() {
@@ -382,17 +387,16 @@ class MainViewController: NSViewController {
         mainStatusItem.menu = menu
 
         statusBarButton.rx.click
-            .filter { [popover] in
-                !popover.isShown
-            }
-            .bind { [weak self, popover] in
-                popover.contentViewController = self
+            .flatMapFirst { [weak self] _ -> Observable<Void> in
+                guard let self else { return .empty() }
+                let popover = NSPopover()
+                self.setUpPopover(popover)
                 popover.show(relativeTo: .zero, of: statusBarButton, preferredEdge: .maxY)
+                return popover.rx.deallocated
             }
-            .disposed(by: disposeBag)
-
-        popover.rx.observe(\.isShown)
-            .bind(to: statusBarButton.rx.isHighlighted)
+            .bind { [weak self] in
+                self?.popoverDisposeBag = DisposeBag()
+            }
             .disposed(by: disposeBag)
 
         statusItemViewModel.text
@@ -548,5 +552,12 @@ class MainViewController: NSViewController {
         )
 
         return dateSelector
+    }
+}
+
+private enum Constants {
+
+    enum MainStackView {
+        static let margin: CGFloat = 8
     }
 }
