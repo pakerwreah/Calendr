@@ -386,22 +386,21 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         viewModel.isShowingObserver.onNext(true)
     }
 
-    private var popover: NSPopover?
+    func popoverWillShow(_ notification: Notification) {
+
+        notification.popover.animates = false
+    }
 
     func popoverWillClose(_ notification: Notification) {
         // 🔨 Prevent retain cycle
         view.window?.makeFirstResponder(nil)
-    }
 
-    func popoverShouldClose(_ popover: NSPopover) -> Bool {
-        self.popover = popover
-        return true
+        notification.popover.animates = true
     }
 
     func popoverDidClose(_ notification: Notification) {
         // 🔨 Prevent retain cycle
-        popover?.contentViewController = nil
-        popover = nil
+        notification.popover.contentViewController = nil
 
         viewModel.isShowingObserver.onNext(false)
     }
@@ -430,4 +429,9 @@ private extension NSFont {
     static let `default` = systemFont(ofSize: 13)
     static let header = systemFont(ofSize: 16)
     static let small = systemFont(ofSize: 12)
+}
+
+private extension Notification {
+
+    var popover: NSPopover { object as! NSPopover  }
 }
