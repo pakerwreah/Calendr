@@ -21,6 +21,22 @@ class MainViewTests: UITestCase {
         XCTAssertFalse(Main.pinBtn.isHittable)
     }
 
+    func testPinButtonClicked_withEscapeKey_shouldNotHideMainView() {
+
+        MenuBar.main.click()
+
+        XCTAssertTrue(Main.view.didAppear)
+
+        Main.pinBtn.click()
+        Main.view.typeKey(.escape, modifierFlags: [])
+        XCTAssertTrue(Main.pinBtn.isHittable)
+
+        Main.pinBtn.click()
+        Main.view.typeKey(.escape, modifierFlags: [])
+
+        XCTAssertFalse(Main.pinBtn.isHittable)
+    }
+
     func testPinButtonClicked_shouldNotHideMainView() {
 
         MenuBar.main.click()
@@ -119,5 +135,41 @@ class MainViewTests: UITestCase {
         Main.settingsBtn.menuItem("Quit").click()
 
         XCTAssert(app.wait(for: .notRunning, timeout: 1))
+    }
+
+    func testSettingsMenu_withSearchMenuItemClicked_shouldShowSearchInput() {
+
+        MenuBar.main.click()
+        XCTAssertFalse(Main.searchInput.exists)
+
+        Main.settingsBtn.click()
+        Main.settingsBtn.menuItem("Search").click()
+
+        XCTAssertTrue(Main.searchInput.exists)
+        XCTAssertTrue(Main.searchInput.hasFocus)
+    }
+
+    func testSearch_withKeyboardShortcut_shouldShowSearchInput() {
+
+        MenuBar.main.click()
+        XCTAssertFalse(Main.searchInput.exists)
+
+        Main.view.typeKey("f", modifierFlags: [.command])
+        XCTAssertTrue(Main.searchInput.exists)
+        XCTAssertTrue(Main.searchInput.hasFocus)
+    }
+
+    func testSearch_withEscapeKey_withSearchFieldFocused_shouldHideSearchInput() {
+
+        MenuBar.main.click()
+        Main.view.typeKey("f", modifierFlags: [.command])
+        XCTAssertTrue(Main.searchInput.exists)
+        XCTAssertTrue(Main.searchInput.hasFocus)
+
+        Main.view.typeKey(.escape, modifierFlags: [])
+        XCTAssertFalse(Main.searchInput.exists)
+
+        // ensure main view is still visible
+        XCTAssertTrue(Main.pinBtn.isHittable)
     }
 }
