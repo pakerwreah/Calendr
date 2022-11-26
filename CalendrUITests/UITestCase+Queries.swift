@@ -112,6 +112,15 @@ extension XCUIElement {
 
     var outside: XCUICoordinate { coordinate(withNormalizedOffset: .zero).withOffset(.init(dx: -500, dy: 500)) }
 
+    var hasFocus: Bool { value(forKey: "hasKeyboardFocus") as? Bool ?? false }
+
+    func replaceText(_ text: String) {
+
+        guard let current = value as? String else { return }
+
+        typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: current.count)+text)
+    }
+
     func wait(_ timeout: TimeInterval, file: StaticString = #filePath, line: UInt = #line) -> Self {
         XCTAssert(waitForExistence(timeout: timeout), "Missing '\(self)' element", file: file, line: line)
         return self

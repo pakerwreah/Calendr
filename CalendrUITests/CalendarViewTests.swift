@@ -187,6 +187,40 @@ class CalendarViewTests: UITestCase {
 
         XCTAssertEqual(Calendar.events.count, 4)
     }
+
+    func testSearch_shouldFilterEvents() {
+
+        MenuBar.main.click()
+        XCTAssertFalse(Main.searchInput.exists)
+
+        Main.view.typeKey("f", modifierFlags: [.command])
+        XCTAssertTrue(Main.searchInput.exists)
+        XCTAssertTrue(Main.searchInput.hasFocus)
+
+        Main.searchInput.typeText("some")
+        XCTAssertEqual(Calendar.events.count, 2)
+        XCTAssertEqual(EventList.eventsTexts, [
+            [
+                "Drink some tea 🫖",
+                "15:30-15:50"
+            ],
+            [
+                "Some meeting 👔",
+                "zoom.us/j/9999999999",
+                "17:00-18:00"
+            ]
+        ])
+
+        Main.searchInput.replaceText("zoom")
+        XCTAssertEqual(Calendar.events.count, 1)
+        XCTAssertEqual(EventList.eventsTexts, [
+            [
+                "Some meeting 👔",
+                "zoom.us/j/9999999999",
+                "17:00-18:00"
+            ]
+        ])
+    }
 }
 
 private extension UITestCase.EventList {
