@@ -12,7 +12,7 @@ class SettingsTests: UITestCase {
     func testSettingsTabs() {
 
         MenuBar.main.click()
-        Main.settingsBtn.click()
+        Main.openSettings()
 
         XCTAssert(Settings.view.didAppear)
 
@@ -35,7 +35,7 @@ class SettingsTests: UITestCase {
     func testSettingsAbout_withQuitClicked_shouldCloseApp() {
 
         MenuBar.main.click()
-        Main.settingsBtn.click()
+        Main.openSettings()
 
         XCTAssert(Settings.view.didAppear)
 
@@ -48,14 +48,14 @@ class SettingsTests: UITestCase {
     func testSettingsCalendarPicker() {
 
         MenuBar.main.click()
-        Main.settingsBtn.click()
+        Main.openSettings()
 
         XCTAssert(Settings.view.didAppear)
 
         Settings.Tab.calendars.click()
 
         let checkbox = Settings.Calendars.view.checkBoxes
-            .element(matching: NSPredicate(format: "title = %@", "Personal"))
+            .element(matching: .title("Personal"))
 
         XCTAssert(checkbox.waitForExistence(timeout: 1))
 
@@ -76,12 +76,12 @@ class SettingsTests: UITestCase {
     func testSettingsGeneral_toggleShowIcon() {
 
         MenuBar.main.click()
-        Main.settingsBtn.click()
+        Main.openSettings()
 
         XCTAssert(Settings.view.didAppear)
 
         let showIcon = Settings.General.view.checkBoxes
-            .element(matching: NSPredicate(format: "title = %@", "Show icon"))
+            .element(matching: .title("Show icon"))
 
         showIcon.click()
         XCTAssertFalse(showIcon.isChecked)
@@ -96,12 +96,12 @@ class SettingsTests: UITestCase {
     func testSettingsGeneral_toggleShowDate() {
 
         MenuBar.main.click()
-        Main.settingsBtn.click()
+        Main.openSettings()
 
         XCTAssert(Settings.view.didAppear)
 
         let showDate = Settings.General.view.checkBoxes
-            .element(matching: NSPredicate(format: "title = %@", "Show date"))
+            .element(matching: .title("Show date"))
 
         showDate.click()
         XCTAssertFalse(showDate.isChecked)
@@ -115,15 +115,15 @@ class SettingsTests: UITestCase {
     func testSettingsGeneral_toggleShowDateOffWithShowIconOff() {
 
         MenuBar.main.click()
-        Main.settingsBtn.click()
+        Main.openSettings()
 
         XCTAssert(Settings.view.didAppear)
 
         let showIcon = Settings.General.view.checkBoxes
-            .element(matching: NSPredicate(format: "title = %@", "Show icon"))
+            .element(matching: .title("Show icon"))
 
         let showDate = Settings.General.view.checkBoxes
-            .element(matching: NSPredicate(format: "title = %@", "Show date"))
+            .element(matching: .title("Show date"))
 
         showIcon.click()
         XCTAssertFalse(showIcon.isChecked)
@@ -139,15 +139,15 @@ class SettingsTests: UITestCase {
     func testSettingsGeneral_toggleShowIconOffWithShowDateOff() {
 
         MenuBar.main.click()
-        Main.settingsBtn.click()
+        Main.openSettings()
 
         XCTAssert(Settings.view.didAppear)
 
         let showIcon = Settings.General.view.checkBoxes
-            .element(matching: NSPredicate(format: "title = %@", "Show icon"))
+            .element(matching: .title("Show icon"))
 
         let showDate = Settings.General.view.checkBoxes
-            .element(matching: NSPredicate(format: "title = %@", "Show date"))
+            .element(matching: .title("Show date"))
 
         showDate.click()
         XCTAssertTrue(showIcon.isChecked)
@@ -168,12 +168,12 @@ class SettingsTests: UITestCase {
     func testSettingsGeneral_toggleShowNextEvent() {
 
         MenuBar.main.click()
-        Main.settingsBtn.click()
+        Main.openSettings()
 
         XCTAssert(Settings.view.didAppear)
 
         let checkbox = Settings.General.view.checkBoxes
-            .element(matching: NSPredicate(format: "title = %@", "Show next event"))
+            .element(matching: .title("Show next event"))
 
         XCTAssertTrue(MenuBar.event.waitForExistence(timeout: .eventTimeout))
 
@@ -187,7 +187,7 @@ class SettingsTests: UITestCase {
     func testSettingsGeneral_changeDateFormat() {
 
         MenuBar.main.click()
-        Main.settingsBtn.click()
+        Main.openSettings()
 
         XCTAssert(Settings.view.didAppear)
 
@@ -209,8 +209,6 @@ class SettingsTests: UITestCase {
         XCTAssertEqual(dropdown.text, "Custom...")
         XCTAssertTrue(MenuBar.main.title.hasSuffix("Fri 1 Jan 2020"))
 
-        input.rightClick()
-        input.click()
         input.typeKey(.delete, modifierFlags: [])
         XCTAssertTrue(MenuBar.main.title.hasSuffix("???"))
 
@@ -221,12 +219,12 @@ class SettingsTests: UITestCase {
     func testSettingsGeneral_toggleShowWeekNumbers() throws {
 
         MenuBar.main.click()
-        Main.settingsBtn.click()
+        Main.openSettings()
 
         XCTAssert(Settings.view.didAppear)
 
         let checkbox = Settings.General.view.checkBoxes
-            .element(matching: NSPredicate(format: "title = %@", "Show week numbers"))
+            .element(matching: .title("Show week numbers"))
 
         XCTAssert(try XCTUnwrap(Calendar.weekNumbers.first).isHittable)
 
@@ -240,12 +238,12 @@ class SettingsTests: UITestCase {
     func testSettingsGeneral_toggleShowDeclinedEvents() {
 
         MenuBar.main.click()
-        Main.settingsBtn.click()
+        Main.openSettings()
 
         XCTAssert(Settings.view.didAppear)
 
         let checkbox = Settings.General.view.checkBoxes
-            .element(matching: NSPredicate(format: "title = %@", "Show declined events"))
+            .element(matching: .title("Show declined events"))
 
         XCTAssertFalse(checkbox.isChecked)
 
@@ -264,9 +262,7 @@ class SettingsTests: UITestCase {
 
         MenuBar.main.click()
 
-        let day2 = Calendar.dates[6]
-
-        day2.click()
+        Calendar.dates[6].click()
         XCTAssertEqual(Calendar.selected.text, "2")
 
         Main.view.outside.click()
@@ -274,17 +270,17 @@ class SettingsTests: UITestCase {
 
         XCTAssertEqual(Calendar.selected.text, "1")
 
-        Main.settingsBtn.click()
+        Main.openSettings()
         XCTAssert(Settings.view.didAppear)
 
         let checkbox = Settings.General.view.checkBoxes
-            .element(matching: NSPredicate(format: "title = %@", "Preserve selected date on hide"))
+            .element(matching: .title("Preserve selected date on hide"))
 
         checkbox.click()
 
         Settings.window.buttons[XCUIIdentifierCloseWindow].click()
 
-        day2.click()
+        Calendar.dates[6].click()
         XCTAssertEqual(Calendar.selected.text, "2")
 
         Main.view.outside.click()
