@@ -10,6 +10,15 @@ import RxSwift
 
 class MainViewController: NSViewController {
 
+    private enum Key: UInt16 {
+        case f = 3
+        case escape = 53
+        case left = 123
+        case right = 124
+        case down = 125
+        case up = 126
+    }
+
     // ViewControllers
     private let settingsViewController: SettingsViewController
 
@@ -21,6 +30,7 @@ class MainViewController: NSViewController {
     private let calendarView: CalendarView
     private let eventListView: EventListView
     private let titleLabel = Label()
+    private let searchInput = NSSearchField()
     private let prevBtn = ImageButton()
     private let resetBtn = ImageButton()
     private let nextBtn = ImageButton()
@@ -44,6 +54,8 @@ class MainViewController: NSViewController {
     private let initialDate: BehaviorSubject<Date>
     private let selectedDate = PublishSubject<Date>()
     private let isShowingDetails = BehaviorSubject<Bool>(value: false)
+    private let searchInputText = BehaviorSubject<String>(value: "")
+    private let keySubject = PublishSubject<Key>()
 
     // Properties
     private let workspace: WorkspaceServiceProviding
@@ -107,6 +119,7 @@ class MainViewController: NSViewController {
         let (hoverObservable, hoverObserver) = PublishSubject<Date?>.pipe()
 
         calendarViewModel = CalendarViewModel(
+            searchObservable: searchInputText,
             dateObservable: selectedDate,
             hoverObservable: hoverObservable,
             enabledCalendars: calendarPickerViewModel.enabledCalendars,
@@ -172,6 +185,8 @@ class MainViewController: NSViewController {
 
         setUpEventStatusItem()
 
+        setUpKeyboard()
+
         calendarService.requestAccess()
     }
 
@@ -189,11 +204,19 @@ class MainViewController: NSViewController {
         let toolBar = makeToolBar()
         let eventList = makeEventList()
 
-        [header, calendarView, toolBar, eventList].forEach(mainStackView.addArrangedSubview)
+        [header, searchInput, calendarView, toolBar, eventList].forEach(mainStackView.addArrangedSubview)
 
         mainStackView.orientation = .vertical
-        mainStackView.spacing = 4
-        mainStackView.setCustomSpacing(0, after: header)
+        let mainStackSpacing: CGFloat = 4
+        mainStackView.spacing = mainStackSpacing
+
+        searchInput.focusRingType = .none
+
+        searchInput.rx.observe(\.isHidden)
+            .bind { [mainStackView] in
+                mainStackView.setCustomSpacing($0 ? 0 : mainStackSpacing, after: header)
+            }
+            .disposed(by: disposeBag)
 
         view.addSubview(mainStackView)
 
@@ -221,6 +244,13 @@ class MainViewController: NSViewController {
         .disposed(by: disposeBag)
     }
 
+    override func viewWillAppear() {
+
+        super.viewWillAppear()
+
+        hideSearchInput()
+    }
+
     override func viewDidAppear() {
 
         super.viewDidAppear()
@@ -229,6 +259,15 @@ class MainViewController: NSViewController {
         NSApp.activate(ignoringOtherApps: true)
 
         eventListView.scrollTop()
+    }
+
+    override func mouseEntered(with event: NSEvent) {
+
+        super.mouseEntered(with: event)
+
+        guard !NSApp.isActive else { return }
+
+        NSApp.activate(ignoringOtherApps: true)
     }
 
     // MARK: - Setup
@@ -292,6 +331,15 @@ class MainViewController: NSViewController {
             }
         }
         .disposed(by: disposeBag)
+
+        searchInput.rx.text
+            .skipNil()
+            .bind(to: searchInputText)
+            .disposed(by: disposeBag)
+
+        searchInputText
+            .bind(to: searchInput.rx.stringValue)
+            .disposed(by: disposeBag)
     }
 
     private func setUpSettings() {
@@ -312,6 +360,8 @@ class MainViewController: NSViewController {
         pickerSubmenuItem.view = pickerViewController.view.forAutoLayout()
         addChild(pickerViewController)
 
+        settingsMenu.addItem(withTitle: Strings.search, action: #selector(showSearchInput), keyEquivalent: "f")
+
         settingsMenu.addItem(.separator())
 
         settingsMenu.addItem(withTitle: Strings.quit, action: #selector(NSApp.terminate), keyEquivalent: "q")
@@ -325,6 +375,18 @@ class MainViewController: NSViewController {
     @objc private func openSettings() {
 
         presentAsModalWindow(settingsViewController)
+    }
+
+    @objc private func showSearchInput() {
+
+        searchInput.isHidden = false
+        searchInput.focus()
+    }
+
+    private func hideSearchInput() {
+
+        searchInputText.onNext("")
+        searchInput.isHidden = true
     }
 
     private func setUpPopover(_ popover: NSPopover) {
@@ -447,13 +509,35 @@ class MainViewController: NSViewController {
         statusBarButton.sendAction(on: .leftMouseDown)
     }
 
-    override func mouseEntered(with event: NSEvent) {
+    private func setUpKeyboard() {
 
-        super.mouseEntered(with: event)
+        NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self, searchInput, keySubject] event -> NSEvent? in
 
-        guard !NSApp.isActive else { return }
+            guard let key = Key(rawValue: event.keyCode) else { return event }
 
-        NSApp.activate(ignoringOtherApps: true)
+            if let vc = self?.presentedViewControllers?.last {
+                guard key ~= .escape else { return event }
+                self?.dismiss(vc)
+                return nil
+            }
+
+            if searchInput.hasFocus, key ~= .escape {
+                self?.hideSearchInput()
+                return nil
+            }
+
+            if event.modifierFlags.contains(.command), key ~= .f {
+                self?.showSearchInput()
+                return nil
+            }
+
+            if !searchInput.hasFocus, [.left, .right, .down, .up].contains(key) {
+                keySubject.onNext(key)
+                return nil
+            }
+
+            return event
+        }
     }
 
     // MARK: - Factories
@@ -514,29 +598,10 @@ class MainViewController: NSViewController {
 
     private func makeDateSelector() -> DateSelector {
 
-        let keySubject = PublishSubject<UInt16>()
-
-        NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event -> NSEvent? in
-
-            if let vc = self?.presentedViewControllers?.last {
-                guard event.keyCode == 53 else { return event }
-                self?.dismiss(vc)
-                return nil
-            }
-
-            if 123...126 ~= event.keyCode {
-                keySubject.onNext(event.keyCode)
-                return nil
-            }
-
-            return event
-        }
-
-        let keyLeft = keySubject.matching(123).void()
-        let keyRight = keySubject.matching(124).void()
-        let keyDown = keySubject.matching(125).void()
-        let keyUp = keySubject.matching(126).void()
-
+        let keyLeft = keySubject.matching(.left).void()
+        let keyRight = keySubject.matching(.right).void()
+        let keyDown = keySubject.matching(.down).void()
+        let keyUp = keySubject.matching(.up).void()
 
         let dateSelector = DateSelector(
             calendar: dateProvider.calendar,

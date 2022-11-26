@@ -7,6 +7,7 @@
 */
 
 "quit" = "Quitter";
+"search" = "Rechercher";
 
 "settings.title" = "Préférences";
 "settings.tab.general" = "Général";

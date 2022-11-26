@@ -15,6 +15,8 @@ internal enum Strings {
   /// 
   ///   Created by Paker on 20/02/2021.
   internal static let quit = Strings.tr("Localizable", "quit", fallback: "Quit")
+  /// Search
+  internal static let search = Strings.tr("Localizable", "search", fallback: "Search")
   internal enum EventDetails {
     internal enum Participant {
       /// me
