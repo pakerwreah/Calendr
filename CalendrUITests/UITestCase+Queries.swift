@@ -28,6 +28,12 @@ extension UITestCase {
         static var remindersBtn: XCUIElement { view.buttons[Accessibility.Main.remindersBtn] }
         static var calendarBtn: XCUIElement { view.buttons[Accessibility.Main.calendarBtn] }
         static var settingsBtn: XCUIElement { view.buttons[Accessibility.Main.settingsBtn] }
+        static var searchInput: XCUIElement { view.searchFields.element }
+
+        static func openSettings() {
+            settingsBtn.click()
+            settingsBtn.menuItem("Preferences").click()
+        }
     }
 
     enum Calendar {
@@ -110,6 +116,10 @@ extension XCUIElement {
         XCTAssert(waitForExistence(timeout: timeout), "Missing '\(self)' element", file: file, line: line)
         return self
     }
+
+    func menuItem(_ title: String) -> XCUIElement {
+        menuItems.element(matching: .title(title))
+    }
 }
 
 extension XCUIElementQuery {
@@ -138,4 +148,9 @@ private extension NSPredicate {
             return item.identifier.components(separatedBy: ",").contains(identifier)
         }
     }
+}
+
+extension NSPredicate {
+
+    static func title(_ title: String) -> NSPredicate { .init(format: "title = %@", title) }
 }
