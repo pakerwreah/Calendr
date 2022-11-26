@@ -9,19 +9,29 @@ import Cocoa
 
 class AboutViewController: NSViewController {
 
-    private let quitButton = NSButton(title: Strings.quit, target: NSApp, action: #selector(NSApp.terminate))
+    private let quitButton: NSButton
+    private let linkView: TextView
+
+    init() {
+        quitButton = NSButton(title: Strings.quit, target: NSApp, action: #selector(NSApp.terminate))
+        quitButton.refusesFirstResponder = true
+
+        linkView = TextView()
+        linkView.string = "https://github.com/pakerwreah"
+        linkView.backgroundColor = .clear
+        linkView.linkTextAttributes?[.underlineColor] = NSColor.clear
+        linkView.isAutomaticLinkDetectionEnabled = true
+        linkView.checkTextInDocument(nil)
+        linkView.isEditable = false
+        linkView.alignment = .center
+        linkView.height(equalTo: 15)
+
+        super.init(nibName: nil, bundle: nil)
+
+        setUpAccessibility()
+    }
 
     override func loadView() {
-
-        let link = NSTextView()
-        link.string = "https://github.com/pakerwreah"
-        link.backgroundColor = .clear
-        link.linkTextAttributes?[.underlineColor] = NSColor.clear
-        link.isAutomaticLinkDetectionEnabled = true
-        link.checkTextInDocument(nil)
-        link.isEditable = false
-        link.alignment = .center
-        link.height(equalTo: 15)
 
         view = NSStackView(views: [
             Label(text: "Calendr", font: .systemFont(ofSize: 16, weight: .semibold), align: .center),
@@ -32,7 +42,7 @@ class AboutViewController: NSViewController {
             Label(text: #"¯\_(ツ)_/¯"#, font: .systemFont(ofSize: 16), align: .center),
             .spacer(height: 4),
             Label(text: "© 2020 - \(BuildConfig.date.suffix(4)) Carlos Enumo", align: .center),
-            link,
+            linkView,
             .spacer(height: 4),
             quitButton
         ])
@@ -40,9 +50,7 @@ class AboutViewController: NSViewController {
         .with(orientation: .vertical)
     }
 
-    override func viewDidLoad() {
-
-        super.viewDidLoad()
+    func setUpAccessibility() {
 
         guard BuildConfig.isUITesting else { return }
 
@@ -52,5 +60,9 @@ class AboutViewController: NSViewController {
         quitButton.setAccessibilityElement(true)
         quitButton.setAccessibilityRole(.button)
         quitButton.setAccessibilityIdentifier(Accessibility.Settings.About.quitBtn)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }

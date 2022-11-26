@@ -36,6 +36,8 @@ class GeneralSettingsViewController: NSViewController {
 
         super.init(nibName: nil, bundle: nil)
 
+        dateFormatTextField.refusesFirstResponder = true
+
         setUpAccessibility()
 
         setUpBindings()
@@ -270,6 +272,12 @@ class GeneralSettingsViewController: NSViewController {
         viewModel.isDateFormatInputVisible
             .map(true)
             .bind(to: view.rx.needsLayout)
+            .disposed(by: disposeBag)
+
+        viewModel.isDateFormatInputVisible
+            .skip(1)
+            .matching(true)
+            .bind(to: dateFormatTextField.rx.hasFocus)
             .disposed(by: disposeBag)
 
         dateFormatTextField.rx.text

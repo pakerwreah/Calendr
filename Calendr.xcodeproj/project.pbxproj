@@ -85,6 +85,7 @@
 		34924CD6259FB814009C3450 /* CalendarExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34924CD5259FB814009C3450 /* CalendarExtensionTests.swift */; };
 		34924CE4259FCB36009C3450 /* DateSelectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34924CE3259FCB36009C3450 /* DateSelectorTests.swift */; };
 		34924CEE259FD064009C3450 /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34924CED259FD064009C3450 /* DateFormatter.swift */; };
+		34926A712931B18C0090C8FC /* NSControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34926A702931B18C0090C8FC /* NSControl.swift */; };
 		3492C45C269F77E0009CFAD2 /* CalendarViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3492C45B269F77E0009CFAD2 /* CalendarViewTests.swift */; };
 		3492C45E269F7966009CFAD2 /* UITestCase+Queries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3492C45D269F7966009CFAD2 /* UITestCase+Queries.swift */; };
 		3492C460269FCF5B009CFAD2 /* Accessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3492C45F269FCF5B009CFAD2 /* Accessibility.swift */; };
@@ -240,6 +241,7 @@
 		34924CD5259FB814009C3450 /* CalendarExtensionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarExtensionTests.swift; sourceTree = "<group>"; };
 		34924CE3259FCB36009C3450 /* DateSelectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateSelectorTests.swift; sourceTree = "<group>"; };
 		34924CED259FD064009C3450 /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
+		34926A702931B18C0090C8FC /* NSControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSControl.swift; sourceTree = "<group>"; };
 		3492C45B269F77E0009CFAD2 /* CalendarViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewTests.swift; sourceTree = "<group>"; };
 		3492C45D269F7966009CFAD2 /* UITestCase+Queries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITestCase+Queries.swift"; sourceTree = "<group>"; };
 		3492C45F269FCF5B009CFAD2 /* Accessibility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Accessibility.swift; sourceTree = "<group>"; };
@@ -525,6 +527,7 @@
 				34B5A09625B0F8A500F7F7ED /* NSButton.swift */,
 				34B23E9B25C0C94000DADCD6 /* NSButton+Rx.swift */,
 				34B2C59D279FFF0600B52BF3 /* NSClickGestureRecognizer+Rx.swift */,
+				34926A702931B18C0090C8FC /* NSControl.swift */,
 				34D19FBF262299D300B2732C /* NSEdgeInsets.swift */,
 				34091736267E81870023B76D /* NSImage.swift */,
 				34A4C3E825963FB200D0F949 /* NSStackView.swift */,
@@ -860,6 +863,7 @@
 				341B2B4825D0C9A600336342 /* NSView.swift in Sources */,
 				34D19FCC2622B9CD00B2732C /* EventMeta.swift in Sources */,
 				34424150267EA65200142028 /* ReminderOptions.swift in Sources */,
+				34926A712931B18C0090C8FC /* NSControl.swift in Sources */,
 				34F96CEE25B523ED0020DEEA /* main.swift in Sources */,
 				348B8D0425B2925100E518FE /* SettingsViewModel.swift in Sources */,
 				34F128D125968044007DF31C /* Label.swift in Sources */,
