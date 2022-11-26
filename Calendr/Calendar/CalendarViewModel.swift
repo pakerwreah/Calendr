@@ -20,6 +20,7 @@ class CalendarViewModel {
     let weekNumbersWidth: Observable<Double>
 
     init(
+        searchObservable: Observable<String>,
         dateObservable: Observable<Date>,
         hoverObservable: Observable<Date?>,
         enabledCalendars: Observable<[String]>,
@@ -122,11 +123,10 @@ class CalendarViewModel {
         // Get events for current dates
         let eventsObservable = Observable.combineLatest(
             dateCellsObservable,
-            enabledCalendars.startWith([]),
-            settings.showDeclinedEvents
+            enabledCalendars.startWith([])
         )
         .repeat(when: calendarService.changeObservable)
-        .flatMapLatest { cellViewModels, calendars, showDeclinedEvents -> Observable<[EventModel]> in
+        .flatMapLatest { cellViewModels, calendars -> Observable<[EventModel]> in
 
             guard let endOfLastDate = dateProvider.calendar.date(
                 bySettingHour: 23, minute: 59, second: 59,
@@ -138,7 +138,21 @@ class CalendarViewModel {
                 to: endOfLastDate,
                 calendars: calendars
             )
-            .map { $0.filter { showDeclinedEvents || $0.status != .declined } }
+        }
+        .distinctUntilChanged()
+        .share(replay: 1)
+
+        let filteredEventsObservable = Observable.combineLatest(
+            eventsObservable,
+            settings.showDeclinedEvents,
+            searchObservable
+        )
+        .map { events, showDeclinedEvents, searchTerm in
+            events.filter {
+                (showDeclinedEvents || $0.status != .declined)
+                &&
+                (searchTerm.isEmpty || $0.contains(searchTerm))
+            }
         }
         .optional()
         .startWith(nil)
@@ -161,7 +175,7 @@ class CalendarViewModel {
 
         // Check which cell is today
         let isTodayObservable = Observable.combineLatest(
-            dateCellsObservable, eventsObservable, todayObservable
+            dateCellsObservable, filteredEventsObservable, todayObservable
         )
         .map { cellViewModels, events, today -> [CalendarCellViewModel] in
 
@@ -263,4 +277,18 @@ private enum Constants {
 
     static let cellSize: CGFloat = 25
     static let weekNumberCellRatio: CGFloat = 0.85
+}
+
+private extension EventModel {
+
+    func contains(_ searchTerm: String) -> Bool {
+        [
+            title,
+            location,
+            url?.absoluteString,
+            notes,
+            participants.map(\.name).joined(separator: " ")
+        ]
+        .contains { $0?.localizedCaseInsensitiveContains(searchTerm) ?? false }
+    }
 }

@@ -23,6 +23,7 @@ struct CalendarViewPreview: PreviewProvider {
     static func make(_ color: ColorScheme) -> some View {
         CalendarView(
             viewModel: CalendarViewModel(
+                searchObservable: .just(""),
                 dateObservable: selected,
                 hoverObservable: hovered,
                 enabledCalendars: .empty(),

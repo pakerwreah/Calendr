@@ -13,6 +13,7 @@ class CalendarViewModelTests: XCTestCase {
 
     let disposeBag = DisposeBag()
     
+    let searchSubject = BehaviorSubject<String>(value: "")
     let dateSubject = PublishSubject<Date>()
     let hoverSubject = PublishSubject<Date?>()
     let calendarsSubject = PublishSubject<[String]>()
@@ -23,6 +24,7 @@ class CalendarViewModelTests: XCTestCase {
     let notificationCenter = NotificationCenter()
 
     lazy var viewModel = CalendarViewModel(
+        searchObservable: searchSubject,
         dateObservable: dateSubject,
         hoverObservable: hoverSubject,
         enabledCalendars: calendarsSubject,
@@ -396,20 +398,11 @@ class CalendarViewModelTests: XCTestCase {
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
 
-        let expectedEvents: [(date: Date, events: [String])] = [
+        assertExpectedEvents({ $0.events.map(\.title) }, [
             (.make(year: 2021, month: 1, day: 1), ["Event 1"]),
             (.make(year: 2021, month: 1, day: 2), ["Event 1", "Event 2", "Event 3"]),
             (.make(year: 2021, month: 1, day: 3), ["Event 1", "Event 4"]),
-        ]
-
-        for (date, expected) in expectedEvents {
-            let events = lastValue?
-                .first(where: { $0.date == date })?
-                .events
-                .map(\.title)
-
-            XCTAssertEqual(events, expected, "\(date)")
-        }
+        ])
     }
 
     func testEventsPerDate_withDeclinedEvents() {
@@ -417,41 +410,23 @@ class CalendarViewModelTests: XCTestCase {
         settings.toggleDeclinedEvents.onNext(true)
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
 
-        let expectedEvents: [(date: Date, events: [String])] = [
+        assertExpectedEvents({ $0.events.map(\.title) }, [
             (.make(year: 2021, month: 1, day: 1), ["Event 1"]),
             (.make(year: 2021, month: 1, day: 2), ["Event 1", "Event 2", "Event 3"]),
             (.make(year: 2021, month: 1, day: 3), ["Event 1", "Event 4", "Event 5"]),
             (.make(year: 2021, month: 1, day: 4), ["Event 6"]),
-        ]
-
-        for (date, expected) in expectedEvents {
-            let events = lastValue?
-                .first(where: { $0.date == date })?
-                .events
-                .map(\.title)
-
-            XCTAssertEqual(events, expected, "\(date)")
-        }
+        ])
     }
 
     func testEventDotsPerDate() {
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
 
-        let expectedEvents: [(date: Date, events: Set<NSColor>)] = [
+        assertExpectedEvents(\.dots, [
             (.make(year: 2021, month: 1, day: 1), [.white]),
             (.make(year: 2021, month: 1, day: 2), [.white, .black]),
             (.make(year: 2021, month: 1, day: 3), [.white, .clear]),
-        ]
-
-        for (date, expected) in expectedEvents {
-            let events = lastValue?
-                .first(where: { $0.date == date })?
-                .dots
-
-            XCTAssertEqual(events?.count, expected.count, "\(date)")
-            XCTAssertEqual(events.map(Set.init), expected, "\(date)")
-        }
+        ])
     }
 
     func testEventDotsPerDate_withDeclinedEvents() {
@@ -459,21 +434,38 @@ class CalendarViewModelTests: XCTestCase {
         settings.toggleDeclinedEvents.onNext(true)
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
 
-        let expectedEvents: [(date: Date, events: Set<NSColor>)] = [
+        assertExpectedEvents(\.dots, [
             (.make(year: 2021, month: 1, day: 1), [.white]),
             (.make(year: 2021, month: 1, day: 2), [.white, .black]),
             (.make(year: 2021, month: 1, day: 3), [.white, .clear]),
             (.make(year: 2021, month: 1, day: 4), [.clear]),
-        ]
+        ])
+    }
 
-        for (date, expected) in expectedEvents {
-            let events = lastValue?
-                .first(where: { $0.date == date })?
-                .dots
+    func testEventDotsPerDate_withSearch() {
 
-            XCTAssertEqual(events?.count, expected.count, "\(date)")
-            XCTAssertEqual(events.map(Set.init), expected, "\(date)")
-        }
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+
+        searchSubject.onNext("3")
+        assertExpectedEvents(\.dots, [
+            (.make(year: 2021, month: 1, day: 1), []),
+            (.make(year: 2021, month: 1, day: 2), [.black]),
+            (.make(year: 2021, month: 1, day: 3), [])
+        ])
+
+        searchSubject.onNext("1")
+        assertExpectedEvents(\.dots, [
+            (.make(year: 2021, month: 1, day: 1), [.white]),
+            (.make(year: 2021, month: 1, day: 2), [.white]),
+            (.make(year: 2021, month: 1, day: 3), [.white])
+        ])
+
+        searchSubject.onNext("")
+        assertExpectedEvents(\.dots, [
+            (.make(year: 2021, month: 1, day: 1), [.white]),
+            (.make(year: 2021, month: 1, day: 2), [.white, .black]),
+            (.make(year: 2021, month: 1, day: 3), [.white, .clear]),
+        ])
     }
 
     func testServiceProviderEventsDateRange() {
@@ -515,5 +507,22 @@ class CalendarViewModelTests: XCTestCase {
             ["1", "2", "3"], // month change
             ["1", "3"] // calendar
         ])
+    }
+
+    // MARK: - Helpers
+
+    private func assertExpectedEvents<T, U: Collection<T> & Equatable>(
+        _ pick: (CalendarCellViewModel) -> U,
+        _ expectedEvents: [(date: Date, events: U)],
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+
+        for (date, expected) in expectedEvents {
+            let events = lastValue?.first(where: { $0.date == date }).map(pick)
+
+            XCTAssertEqual(events?.count, expected.count, "\(date)", file: file, line: line)
+            XCTAssertEqual(events, expected, "\(date)", file: file, line: line)
+        }
     }
 }
