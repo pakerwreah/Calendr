@@ -10,13 +10,32 @@ import RxSwift
 
 class MainViewController: NSViewController {
 
-    private enum Key: UInt16 {
-        case f = 3
-        case escape = 53
-        case left = 123
-        case right = 124
-        case down = 125
-        case up = 126
+    private enum Key: Equatable {
+
+        enum Arrow {
+            case left
+            case right
+            case down
+            case up
+        }
+        case escape
+        case arrow(Arrow)
+        case command(Character)
+
+        static func from(_ event: NSEvent) -> Self? {
+            switch event.keyCode {
+            case 53: return .escape
+            case 123: return .arrow(.left)
+            case 124: return .arrow(.right)
+            case 125: return .arrow(.down)
+            case 126: return .arrow(.up)
+            default:
+                if event.modifierFlags.contains(.command), let char = event.characters?.first {
+                    return .command(char)
+                }
+            }
+            return nil
+        }
     }
 
     // ViewControllers
@@ -55,7 +74,7 @@ class MainViewController: NSViewController {
     private let selectedDate = PublishSubject<Date>()
     private let isShowingDetails = BehaviorSubject<Bool>(value: false)
     private let searchInputText = BehaviorSubject<String>(value: "")
-    private let keySubject = PublishSubject<Key>()
+    private let arrowSubject = PublishSubject<Key.Arrow>()
 
     // Properties
     private let workspace: WorkspaceServiceProviding
@@ -515,31 +534,33 @@ class MainViewController: NSViewController {
             guard
                 let self,
                 (try? self.isShowingDetails.value()) == false,
-                let key = Key(rawValue: event.keyCode)
+                let key = Key.from(event)
             else { return event }
 
             if let vc = self.presentedViewControllers?.last {
                 guard key ~= .escape else { return event }
                 self.dismiss(vc)
-                return nil
+                return .none
             }
 
-            if self.searchInput.hasFocus, key ~= .escape {
-                self.hideSearchInput()
-                return nil
-            }
+            switch key {
+            case .command("q"):
+                NSApp.terminate(nil)
 
-            if event.modifierFlags.contains(.command), key ~= .f {
+            case .command("f"):
                 self.showSearchInput()
-                return nil
+
+            case .escape where self.searchInput.hasFocus:
+                self.hideSearchInput()
+
+            case .arrow(let arrow) where !self.searchInput.hasFocus:
+                self.arrowSubject.onNext(arrow)
+
+            default:
+                return event
             }
 
-            if !self.searchInput.hasFocus, [.left, .right, .down, .up].contains(key) {
-                self.keySubject.onNext(key)
-                return nil
-            }
-
-            return event
+            return .none
         }
     }
 
@@ -601,10 +622,10 @@ class MainViewController: NSViewController {
 
     private func makeDateSelector() -> DateSelector {
 
-        let keyLeft = keySubject.matching(.left).void()
-        let keyRight = keySubject.matching(.right).void()
-        let keyDown = keySubject.matching(.down).void()
-        let keyUp = keySubject.matching(.up).void()
+        let keyLeft = arrowSubject.matching(.left).void()
+        let keyRight = arrowSubject.matching(.right).void()
+        let keyDown = arrowSubject.matching(.down).void()
+        let keyUp = arrowSubject.matching(.up).void()
 
         let dateSelector = DateSelector(
             calendar: dateProvider.calendar,
