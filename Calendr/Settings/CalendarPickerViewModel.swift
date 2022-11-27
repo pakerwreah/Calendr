@@ -7,7 +7,6 @@
 
 import Foundation
 import RxSwift
-import RxRelay
 
 class CalendarPickerViewModel {
 
@@ -19,7 +18,7 @@ class CalendarPickerViewModel {
     let enabledCalendars: Observable<[String]>
 
     private let userDefaults: UserDefaults
-    private let toggleCalendarSubject = PublishRelay<String>()
+    private let toggleCalendarSubject = PublishSubject<String>()
     private let disposeBag = DisposeBag()
 
     init(

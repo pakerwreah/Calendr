@@ -6,7 +6,6 @@
 //
 
 import RxSwift
-import RxRelay
 
 extension ObservableType {
 
@@ -48,17 +47,6 @@ extension BehaviorSubject {
 
     static func pipe(value: Element) -> (output: Observable<Element>, input: AnyObserver<Element>) {
         { ($0.asObservable(), $0.asObserver()) }(Self.init(value: value))
-    }
-}
-
-extension PublishRelay {
-
-    func asObserver() -> AnyObserver<Element> {
-        AnyObserver { [weak self] event in
-            if let value = event.element {
-                self?.accept(value)
-            }
-        }
     }
 }
 
