@@ -23,7 +23,7 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
     private let urlLabel = Label()
     private let locationLabel = Label()
     private let durationLabel = Label()
-    private let notesTextView = TextView()
+    private let notesTextView = NSTextView()
 
     private let optionsLabel = Label()
     private let optionsButton = NSButton()

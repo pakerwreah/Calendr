@@ -10,13 +10,13 @@ import Cocoa
 class AboutViewController: NSViewController {
 
     private let quitButton: NSButton
-    private let linkView: TextView
+    private let linkView: NSTextView
 
     init() {
         quitButton = NSButton(title: Strings.quit, target: NSApp, action: #selector(NSApp.terminate))
         quitButton.refusesFirstResponder = true
 
-        linkView = TextView()
+        linkView = NSTextView()
         linkView.string = "https://github.com/pakerwreah"
         linkView.backgroundColor = .clear
         linkView.linkTextAttributes?[.underlineColor] = NSColor.clear
