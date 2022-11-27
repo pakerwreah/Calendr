@@ -511,28 +511,31 @@ class MainViewController: NSViewController {
 
     private func setUpKeyboard() {
 
-        NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self, searchInput, keySubject] event -> NSEvent? in
+        NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event -> NSEvent? in
+            guard
+                let self,
+                (try? self.isShowingDetails.value()) == false,
+                let key = Key(rawValue: event.keyCode)
+            else { return event }
 
-            guard let key = Key(rawValue: event.keyCode) else { return event }
-
-            if let vc = self?.presentedViewControllers?.last {
+            if let vc = self.presentedViewControllers?.last {
                 guard key ~= .escape else { return event }
-                self?.dismiss(vc)
+                self.dismiss(vc)
                 return nil
             }
 
-            if searchInput.hasFocus, key ~= .escape {
-                self?.hideSearchInput()
+            if self.searchInput.hasFocus, key ~= .escape {
+                self.hideSearchInput()
                 return nil
             }
 
             if event.modifierFlags.contains(.command), key ~= .f {
-                self?.showSearchInput()
+                self.showSearchInput()
                 return nil
             }
 
-            if !searchInput.hasFocus, [.left, .right, .down, .up].contains(key) {
-                keySubject.onNext(key)
+            if !self.searchInput.hasFocus, [.left, .right, .down, .up].contains(key) {
+                self.keySubject.onNext(key)
                 return nil
             }
 
