@@ -15,7 +15,6 @@
 		341692C225F1AA570019E8A8 /* WallTimeScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341692C125F1AA570019E8A8 /* WallTimeScheduler.swift */; };
 		3418207E26755CC80075B3DC /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 3418207D26755CC80075B3DC /* RxSwift */; };
 		3418208026755CC80075B3DC /* RxTest in Frameworks */ = {isa = PBXBuildFile; productRef = 3418207F26755CC80075B3DC /* RxTest */; };
-		3418208226755CC80075B3DC /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = 3418208126755CC80075B3DC /* RxRelay */; };
 		3418208426755CC80075B3DC /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 3418208326755CC80075B3DC /* RxCocoa */; };
 		341B2B3E25D06A6F00336342 /* Dropdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341B2B3D25D06A6F00336342 /* Dropdown.swift */; };
 		341B2B4225D0B19500336342 /* StatusItemViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341B2B4125D0B19500336342 /* StatusItemViewModelTests.swift */; };
@@ -304,7 +303,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				3418208426755CC80075B3DC /* RxCocoa in Frameworks */,
-				3418208226755CC80075B3DC /* RxRelay in Frameworks */,
 				3418207E26755CC80075B3DC /* RxSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -671,7 +669,6 @@
 			name = Calendr;
 			packageProductDependencies = (
 				3418207D26755CC80075B3DC /* RxSwift */,
-				3418208126755CC80075B3DC /* RxRelay */,
 				3418208326755CC80075B3DC /* RxCocoa */,
 			);
 			productName = Calendr;
@@ -1279,11 +1276,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3418207C26755CC80075B3DC /* XCRemoteSwiftPackageReference "RxSwift" */;
 			productName = RxTest;
-		};
-		3418208126755CC80075B3DC /* RxRelay */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 3418207C26755CC80075B3DC /* XCRemoteSwiftPackageReference "RxSwift" */;
-			productName = RxRelay;
 		};
 		3418208326755CC80075B3DC /* RxCocoa */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -7,7 +7,6 @@
 
 import Cocoa
 import RxSwift
-import RxRelay
 
 class NextEventViewModel {
 
@@ -20,7 +19,7 @@ class NextEventViewModel {
     let isInProgress: Observable<Bool>
 
     private let disposeBag = DisposeBag()
-    private let event = BehaviorRelay<EventModel?>(value: nil)
+    private let event = BehaviorSubject<EventModel?>(value: nil)
 
     private let isShowingDetails: AnyObserver<Bool>
 
@@ -161,7 +160,7 @@ class NextEventViewModel {
     }
 
     func makeDetails() -> EventDetailsViewModel? {
-        guard let event = event.value else { return nil }
+        guard let event = try? event.value() else { return nil }
         return .init(
             event: event,
             dateProvider: dateProvider,
