@@ -86,10 +86,17 @@ class SettingsViewController: NSTabViewController {
         tearDownAccessibilityWindow()
     }
 
+    override func tabView(_ tabView: NSTabView, willSelect tabViewItem: NSTabViewItem?) {
+
+        super.tabView(tabView, willSelect: tabViewItem)
+
+        view.window?.makeFirstResponder(nil)
+    }
+
     override func tabView(_ tabView: NSTabView, didSelect tabViewItem: NSTabViewItem?) {
 
         super.tabView(tabView, didSelect: tabViewItem)
-        
+
         guard let itemView = tabViewItem?.view, let window = view.window else { return }
 
         itemView.isHidden = true
