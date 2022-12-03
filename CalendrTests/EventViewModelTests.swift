@@ -168,11 +168,7 @@ class EventViewModelTests: XCTestCase {
             )
         )
 
-        if #available(macOS 12, *) {
-            XCTAssertEqual(viewModel.duration, "3:00-4:00 PM")
-        } else {
-            XCTAssertEqual(viewModel.duration, "3:00 PM - 4:00 PM")
-        }
+        XCTAssertEqual(viewModel.duration, "3:00-4:00 PM")
     }
 
     func testDuration_endsMidnight() {

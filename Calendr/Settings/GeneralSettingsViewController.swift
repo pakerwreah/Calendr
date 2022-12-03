@@ -79,11 +79,7 @@ class GeneralSettingsViewController: NSViewController {
             nextEventLengthSlider
         ])
 
-        if #available(macOS 12, *) {
-            nextEventDetectNotchCheckbox.font = .systemFont(ofSize: 11, weight: .light)
-        } else {
-            nextEventDetectNotchCheckbox.isHidden = true
-        }
+        nextEventDetectNotchCheckbox.font = .systemFont(ofSize: 11, weight: .light)
 
         let checkboxes = NSStackView(views: [
             NSStackView(views: [
