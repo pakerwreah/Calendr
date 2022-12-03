@@ -42,8 +42,5 @@ extension ScreenProviding {
 
 extension NSScreen: Screen {
 
-    var hasNotch: Bool {
-        guard #available(macOS 12, *) else { return false }
-        return auxiliaryTopRightArea != nil
-    }
+    var hasNotch: Bool { auxiliaryTopRightArea != nil }
 }

@@ -71,13 +71,10 @@ class StatusItemViewModel {
                 let attachment = NSTextAttachment()
                 attachment.image = Icons.MenuBar.icon.with(scale: .large)
                 title.append(NSAttributedString(attachment: attachment))
-
-                if #available(macOS 12, *) {
-                    title.addAttributes(
-                        [.font: NSFont.systemFont(ofSize: 15), .baselineOffset: -0.5],
-                        range: NSRange(location: 0, length: title.length)
-                    )
-                }
+                title.addAttributes(
+                    [.font: NSFont.systemFont(ofSize: 13)],
+                    range: NSRange(location: 0, length: title.length)
+                )
             }
 
             if showDate {
