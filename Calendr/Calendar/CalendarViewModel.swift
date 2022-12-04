@@ -10,7 +10,8 @@ import RxSwift
 
 class CalendarViewModel {
 
-    private let cellViewModelsObservable: Observable<[CalendarCellViewModel]>
+    let cellViewModelsObservable: Observable<[CalendarCellViewModel]>
+    let focusedEventsObservable: Observable<(Date, [EventModel])>
 
     let title: Observable<String>
     let weekDays: Observable<[WeekDay]>
@@ -246,9 +247,25 @@ class CalendarViewModel {
             .map { $0 != nil ? $1 * Constants.weekNumberCellRatio : 0 }
             .distinctUntilChanged()
             .share(replay: 1)
-    }
 
-    func asObservable() -> Observable<[CalendarCellViewModel]> { cellViewModelsObservable }
+        focusedEventsObservable = cellViewModelsObservable
+            .compactMap { [dateProvider] dates in
+                guard
+                    let focused = dates.first(where: \.isHovered) ?? dates.first(where: \.isSelected)
+                else { return nil }
+
+                guard focused.isToday else { return (focused.date, focused.events) }
+
+                let overdue = dates
+                    .filter { dateProvider.calendar.isDate($0.date, lessThan: dateProvider.now, granularity: .day) }
+                    .flatMap(\.events)
+                    .filter(\.type.isReminder)
+
+                return (focused.date, overdue + focused.events)
+            }
+            .distinctUntilChanged(==)
+            .share(replay: 1)
+    }
 }
 
 private extension CalendarCellViewModel {

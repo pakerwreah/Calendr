@@ -40,9 +40,9 @@ class EventListViewModelTests: XCTestCase {
 
     var eventListItems: [EventListItemTest]?
 
-    func testEvents(adding value: Int = 0, _ component: Calendar.Component = .day) -> [EventModel] {
+    func testEvents() -> [EventModel] {
 
-        let date = dateProvider.calendar.date(byAdding: component, value: value, to: dateProvider.now)!
+        let date = dateProvider.now
         let yesterday = dateProvider.calendar.date(byAdding: .day, value: -1, to: date)!
 
         return [
@@ -288,5 +288,37 @@ class EventListViewModelTests: XCTestCase {
 
         XCTAssertFalse(scheduler.log.isEmpty)
         XCTAssertTrue(zip(scheduler.log, events.filter(\.isAllDay.isFalse).map(\.end)).allSatisfy(>))
+    }
+
+    func testEventList_shouldShowOverdueReminders() {
+
+        let yesterday = dateProvider.calendar.date(byAdding: .day, value: -1, to: dateProvider.now)!
+        let twoDaysAgo = dateProvider.calendar.date(byAdding: .day, value: -2, to: dateProvider.now)!
+
+        eventsSubject.onNext(
+            testEvents() +
+            [
+                .make(start: yesterday, title: "Overdue 1", type: .reminder),
+                .make(start: yesterday + 10, title: "Overdue 2", type: .reminder),
+                .make(start: twoDaysAgo, title: "Overdue 3", type: .reminder),
+            ]
+        )
+
+        XCTAssertEqual(eventListItems, [
+            .section("All day"),
+            .event("All day 1"),
+            .event("All day 2"),
+            .section("2020-12-30"),
+            .event("Overdue 3"),
+            .section("2020-12-31"),
+            .event("Overdue 1"),
+            .event("Overdue 2"),
+            .section("Today"),
+            .event("Multi day"),
+            .event("Event 3"),
+            .interval("1m"),
+            .event("Event 2"),
+            .event("Event 1")
+        ])
     }
 }

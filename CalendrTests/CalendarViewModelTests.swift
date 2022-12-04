@@ -96,7 +96,7 @@ class CalendarViewModelTests: XCTestCase {
         ]
 
         viewModel
-            .asObservable()
+            .cellViewModelsObservable
             .bind { [weak self] in
                 self?.lastValue = $0
             }
@@ -440,6 +440,54 @@ class CalendarViewModelTests: XCTestCase {
             (.make(year: 2021, month: 1, day: 3), [.white, .clear]),
             (.make(year: 2021, month: 1, day: 4), [.clear]),
         ])
+    }
+
+    func testEvents_withOverdueReminder_withSelectedDateToday() {
+
+        calendarService.m_events.append(
+            .make(
+                start: .make(year: 2020, month: 12, day: 31),
+                title: "Overdue",
+                type: .reminder,
+                calendar: calendarService.m_calendars[0]
+            )
+        )
+
+        var events: (Date, [EventModel])?
+
+        viewModel
+            .focusedEventsObservable
+            .bind { events = $0 }
+            .disposed(by: disposeBag)
+
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+
+        XCTAssertEqual(events?.1.map(\.title), ["Overdue" ,"Event 1"])
+    }
+
+    func testEvents_withOverdueReminder_withSelectedDateNotToday() {
+
+        dateProvider.now = .make(year: 2021, month: 1, day: 2)
+
+        calendarService.m_events.append(
+            .make(
+                start: .make(year: 2020, month: 12, day: 31),
+                title: "Overdue",
+                type: .reminder,
+                calendar: calendarService.m_calendars[0]
+            )
+        )
+
+        var events: (Date, [EventModel])?
+
+        viewModel
+            .focusedEventsObservable
+            .bind { events = $0 }
+            .disposed(by: disposeBag)
+
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+
+        XCTAssertEqual(events?.1.map(\.title), ["Event 1"])
     }
 
     func testEventDotsPerDate_withSearch() {
