@@ -154,10 +154,7 @@ class MainViewController: NSViewController {
             clickObserver: dateClick.asObserver()
         )
 
-        let eventsObservable = calendarViewModel.asObservable()
-            .compactMap { $0.first(where: \.isHovered) ?? $0.first(where: \.isSelected) }
-            .map { ($0.date, $0.events) }
-            .distinctUntilChanged(==)
+        let eventsObservable = calendarViewModel.focusedEventsObservable
             .debounce(.milliseconds(50), scheduler: MainScheduler.instance)
 
         eventListViewModel = EventListViewModel(
@@ -172,7 +169,7 @@ class MainViewController: NSViewController {
 
         eventListView = EventListView(viewModel: eventListViewModel)
 
-        let todayEventsObservable = calendarViewModel.asObservable()
+        let todayEventsObservable = calendarViewModel.cellViewModelsObservable
             .compactMap {
                 $0.first(where: \.isToday)?.events
             }
@@ -576,7 +573,7 @@ class MainViewController: NSViewController {
         scrollView.contentView.edges(to: scrollView)
         scrollView.contentView.edges(to: eventListView).bottom.priority = .dragThatCanResizeWindow
 
-        calendarViewModel.asObservable()
+        calendarViewModel.cellViewModelsObservable
             .compactMap { $0.first(where: \.isSelected)?.date }
             .distinctUntilChanged()
             .observe(on: MainScheduler.instance)

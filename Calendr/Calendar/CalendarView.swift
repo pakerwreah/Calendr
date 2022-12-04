@@ -134,7 +134,7 @@ class CalendarView: NSView {
 
         for day in 0..<42 {
             let cellViewModel = viewModel
-                .asObservable()
+                .cellViewModelsObservable
                 .map(\.[day])
                 .distinctUntilChanged()
                 .share(replay: 1)

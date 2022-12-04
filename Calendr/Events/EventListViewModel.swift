@@ -63,17 +63,17 @@ class EventListViewModel {
             return (events, date, showPast)
         }
         .distinctUntilChanged(==)
-        .flatMapLatest { events, date, showPast -> Observable<([EventModel], Date, Bool)> in
+        .flatMapLatest { events, date, showPastEvents -> Observable<([EventModel], Date, Bool)> in
 
-            let isToday = dateProvider.calendar.isDate(date, inSameDayAs: dateProvider.now)
+            let isTodaySelected = dateProvider.calendar.isDate(date, inSameDayAs: dateProvider.now)
 
-            guard isToday && !showPast else { return .just((events, date, isToday)) }
+            guard isTodaySelected && !showPastEvents else { return .just((events, date, isTodaySelected)) }
 
             // schedule refresh for every event end to hide past events
             return Observable.merge(
                 events
                     .filter {
-                        !$0.isAllDay && $0.meta(using: dateProvider).endsToday
+                        !$0.isAllDay && !$0.type.isReminder && $0.meta(using: dateProvider).endsToday
                     }
                     .map {
                         Int(dateProvider.now.distance(to: $0.end).rounded(.up)) + 1
@@ -87,21 +87,46 @@ class EventListViewModel {
             .startWith(())
             .map {
                 events.filter {
-                    $0.isAllDay || !$0.meta(using: dateProvider).isPast
+                    $0.isAllDay || $0.type.isReminder || !$0.meta(using: dateProvider).isPast
                 }
             }
-            .map { ($0, date, isToday) }
+            .map { ($0, date, isTodaySelected) }
         }
         // build event list
-        .map { events, date, isToday in
+        .map { events, date, isTodaySelected in
 
-            let allDayViewModels: [EventListItem] = events
+            var allDayViewModels: [EventListItem] = events
                 .filter(\.isAllDay)
                 .sorted(by: \.calendar.color.hashValue)
                 .map { .event(makeEventViewModel($0)) }
 
-            let viewModels = events
-                .filter(\.isAllDay.isFalse)
+            if !allDayViewModels.isEmpty {
+                allDayViewModels.insert(.section(Strings.Formatter.Date.allDay), at: 0)
+            }
+
+            func isOverdue(_ event: EventModel) -> Bool {
+                event.type.isReminder
+                && dateProvider.calendar.isDate(event.start, lessThan: dateProvider.now, granularity: .day)
+            }
+
+            let overdueViewModels: [EventListItem] = events
+                .filter(isOverdue)
+                .sorted(by: \.start)
+                .prevMap { prev, curr -> [EventListItem] in
+
+                    let viewModel = makeEventViewModel(curr)
+                    let eventItem: EventListItem = .event(viewModel)
+
+                    guard let prev, dateProvider.calendar.isDate(curr.start, inSameDayAs: prev.start) else {
+                        return [.section(dateFormatter.string(from: curr.start)), eventItem]
+                    }
+
+                    return [eventItem]
+                }
+                .flatten()
+
+            let viewModels: [EventListItem] = events
+                .filter { !$0.isAllDay && !isOverdue($0) }
                 .sorted {
                     ($0.start, $0.end) < ($1.start, $1.end)
                 }
@@ -110,9 +135,9 @@ class EventListViewModel {
                     let viewModel = makeEventViewModel(curr)
                     let eventItem: EventListItem = .event(viewModel)
 
-                    guard let prev = prev else {
+                    guard let prev else {
                         // if first event, show today section
-                        let title = isToday
+                        let title = isTodaySelected
                             ? Strings.Formatter.Date.today
                             : dateFormatter.string(from: date)
 
@@ -139,11 +164,7 @@ class EventListViewModel {
                 }
                 .flatten()
 
-            guard allDayViewModels.isEmpty else {
-                return [.section(Strings.Formatter.Date.allDay)] + allDayViewModels + viewModels
-            }
-
-            return viewModels
+            return allDayViewModels + overdueViewModels + viewModels
         }
         .bind(to: viewModels)
         .disposed(by: disposeBag)
