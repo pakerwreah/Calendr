@@ -10,34 +10,6 @@ import RxSwift
 
 class MainViewController: NSViewController {
 
-    private enum Key: Equatable {
-
-        enum Arrow {
-            case left
-            case right
-            case down
-            case up
-        }
-        case escape
-        case arrow(Arrow)
-        case command(Character)
-
-        static func from(_ event: NSEvent) -> Self? {
-            switch event.keyCode {
-            case 53: return .escape
-            case 123: return .arrow(.left)
-            case 124: return .arrow(.right)
-            case 125: return .arrow(.down)
-            case 126: return .arrow(.up)
-            default:
-                if event.modifierFlags.contains(.command), let char = event.characters?.first {
-                    return .command(char)
-                }
-            }
-            return nil
-        }
-    }
-
     // ViewControllers
     private let settingsViewController: SettingsViewController
 
@@ -74,9 +46,10 @@ class MainViewController: NSViewController {
     private let selectedDate = PublishSubject<Date>()
     private let isShowingDetails = BehaviorSubject<Bool>(value: false)
     private let searchInputText = BehaviorSubject<String>(value: "")
-    private let arrowSubject = PublishSubject<Key.Arrow>()
+    private let arrowSubject = PublishSubject<Keyboard.Key.Arrow>()
 
     // Properties
+    private let keyboard = Keyboard()
     private let workspace: WorkspaceServiceProviding
     private let calendarService: CalendarServiceProviding
     private let dateProvider: DateProviding
@@ -527,11 +500,11 @@ class MainViewController: NSViewController {
 
     private func setUpKeyboard() {
 
-        NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event -> NSEvent? in
+        keyboard.handler = { [weak self] event -> NSEvent? in
             guard
                 let self,
                 (try? self.isShowingDetails.value()) == false,
-                let key = Key.from(event)
+                let key = Keyboard.Key.from(event)
             else { return event }
 
             if let vc = self.presentedViewControllers?.last {
