@@ -21,6 +21,8 @@ class NextEventViewModelTests: XCTestCase {
     let workspace = MockWorkspaceServiceProvider()
     let screenProvider = MockScreenProvider()
 
+    let hoursToCheck = 2
+
     lazy var viewModel = NextEventViewModel(
         settings: settings,
         enabledCalendars: calendarsSubject,
@@ -29,7 +31,8 @@ class NextEventViewModelTests: XCTestCase {
         workspace: workspace,
         screenProvider: screenProvider,
         isShowingDetails: .dummy(),
-        scheduler: MainScheduler.instance
+        scheduler: MainScheduler.instance,
+        hoursToCheck: hoursToCheck
     )
 
     var now: Date {
@@ -89,6 +92,33 @@ class NextEventViewModelTests: XCTestCase {
         XCTAssertEqual(hasEvent, false)
     }
 
+    func testNextEvent_hoursToCheck() {
+
+        var hasEvent: Bool?
+
+        viewModel.hasEvent
+            .bind { hasEvent = $0 }
+            .disposed(by: disposeBag)
+
+        dateProvider.now = .make(year: 2021, month: 1, day: 1, at: .end)
+
+        var start = now + TimeInterval(hoursToCheck * 3600)
+
+        calendarService.changeEvents([
+            .make(start: start, end: start + 1)
+        ])
+
+        XCTAssertEqual(hasEvent, true)
+
+        start += 1
+
+        calendarService.changeEvents([
+            .make(start: start, end: start + 1)
+        ])
+
+        XCTAssertEqual(hasEvent, false)
+    }
+
     func testNextEventLength() {
 
         var title: String?
@@ -98,7 +128,7 @@ class NextEventViewModelTests: XCTestCase {
             .disposed(by: disposeBag)
 
         calendarService.changeEvents([
-            .make(title: "This is an event with a text")
+            .make(start: now, title: "This is an event with a text")
         ])
 
         settings.eventStatusItemLengthObserver.onNext(30)
@@ -119,7 +149,7 @@ class NextEventViewModelTests: XCTestCase {
             .disposed(by: disposeBag)
 
         calendarService.changeEvents([
-            .make(title: "This is an event with a text")
+            .make(start: now, title: "This is an event with a text")
         ])
 
         settings.eventStatusItemLengthObserver.onNext(30)
@@ -147,13 +177,13 @@ class NextEventViewModelTests: XCTestCase {
             .bind { style = $0 }
             .disposed(by: disposeBag)
 
-        calendarService.changeEvents([.make(type: .reminder)])
+        calendarService.changeEvents([.make(start: now, type: .reminder)])
         XCTAssertEqual(style, .filled)
 
-        calendarService.changeEvents([.make(type: .event(.accepted))])
+        calendarService.changeEvents([.make(start: now, type: .event(.accepted))])
         XCTAssertEqual(style, .filled)
 
-        calendarService.changeEvents([.make(type: .event(.maybe))])
+        calendarService.changeEvents([.make(start: now, type: .event(.maybe))])
         XCTAssertEqual(style, .bordered)
     }
 

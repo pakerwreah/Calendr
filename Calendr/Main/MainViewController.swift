@@ -150,7 +150,8 @@ class MainViewController: NSViewController {
             workspace: workspace,
             screenProvider: screenProvider,
             isShowingDetails: isShowingDetails.asObserver(),
-            scheduler: MainScheduler.instance
+            scheduler: MainScheduler.instance,
+            hoursToCheck: 6
         )
 
         nextEventView = NextEventView(viewModel: nextEventViewModel)

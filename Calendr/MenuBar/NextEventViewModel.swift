@@ -36,7 +36,8 @@ class NextEventViewModel {
         workspace: WorkspaceServiceProviding,
         screenProvider: ScreenProviding,
         isShowingDetails: AnyObserver<Bool>,
-        scheduler: SchedulerType
+        scheduler: SchedulerType,
+        hoursToCheck: Int
     ) {
 
         self.dateProvider = dateProvider
@@ -53,12 +54,9 @@ class NextEventViewModel {
                 !isEnabled ? .just([]) : enabledCalendars
                     .repeat(when: calendarService.changeObservable)
                     .flatMapLatest { calendars -> Observable<[EventModel]> in
-
-                        calendarService.events(
-                            from: dateProvider.calendar.startOfDay(for: dateProvider.now),
-                            to: dateProvider.calendar.endOfDay(for: dateProvider.now),
-                            calendars: calendars
-                        )
+                        let start = dateProvider.calendar.startOfDay(for: dateProvider.now)
+                        let end = dateProvider.calendar.date(byAdding: .hour, value: 24 + hoursToCheck, to: start)!
+                        return calendarService.events(from: start, to: end, calendars: calendars)
                     }
                     .map { $0.filter { !$0.isAllDay && ![.pending, .declined].contains($0.status) } }
             }
@@ -74,6 +72,8 @@ class NextEventViewModel {
                                 dateProvider.calendar.isDate(
                                     dateProvider.now, lessThan: event.end, granularity: .second
                                 )
+                                &&
+                                Int(dateProvider.now.distance(to: event.start)) <= 3600 * hoursToCheck
                             })
                             .map { event -> NextEventTuple in
                                 let isInProgress = dateProvider.calendar.isDate(
