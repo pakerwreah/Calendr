@@ -71,22 +71,10 @@ class NextEventView: NSView {
     private func setUpBindings() {
 
         Observable.combineLatest(
-            viewModel.barColor.map(\.cgColor),
-            viewModel.barStyle
+            viewModel.barStyle,
+            viewModel.barColor.map(\.cgColor)
         )
-        .bind { [layer = colorBar.layer] color, style in
-            switch style {
-            case .filled:
-                layer?.borderWidth = 0
-                layer?.borderColor = nil
-                layer?.backgroundColor = color
-
-            case .bordered:
-                layer?.borderWidth = 1
-                layer?.borderColor = color
-                layer?.backgroundColor = nil
-            }
-        }
+        .bind(to: colorBar.layer!.rx.eventBarStyle)
         .disposed(by: disposeBag)
 
         viewModel.backgroundColor
@@ -110,6 +98,28 @@ class NextEventView: NSView {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+private extension Reactive where Base: CALayer {
+
+    var eventBarStyle: Binder<(EventBarStyle, CGColor)> {
+
+        Binder(self.base) { layer, values in
+            let (style, color) = values
+
+            switch style {
+            case .filled:
+                layer.borderWidth = 0
+                layer.borderColor = nil
+                layer.backgroundColor = color
+
+            case .bordered:
+                layer.borderWidth = 1
+                layer.borderColor = color
+                layer.backgroundColor = nil
+            }
+        }
     }
 }
 

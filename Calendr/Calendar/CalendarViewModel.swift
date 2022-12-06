@@ -11,7 +11,7 @@ import RxSwift
 class CalendarViewModel {
 
     let cellViewModelsObservable: Observable<[CalendarCellViewModel]>
-    let focusedEventsObservable: Observable<(Date, [EventModel])>
+    let focusedDateEventsObservable: Observable<(Date, [EventModel])>
 
     let title: Observable<String>
     let weekDays: Observable<[WeekDay]>
@@ -129,14 +129,9 @@ class CalendarViewModel {
         .repeat(when: calendarService.changeObservable)
         .flatMapLatest { cellViewModels, calendars -> Observable<[EventModel]> in
 
-            guard let endOfLastDate = dateProvider.calendar.date(
-                bySettingHour: 23, minute: 59, second: 59,
-                of: cellViewModels.last!.date
-            ) else { return .empty() }
-
-            return calendarService.events(
-                from: cellViewModels.first!.date,
-                to: endOfLastDate,
+            calendarService.events(
+                from: dateProvider.calendar.startOfDay(for: cellViewModels.first!.date),
+                to: dateProvider.calendar.endOfDay(for: cellViewModels.last!.date),
                 calendars: calendars
             )
         }
@@ -248,8 +243,8 @@ class CalendarViewModel {
             .distinctUntilChanged()
             .share(replay: 1)
 
-        focusedEventsObservable = cellViewModelsObservable
-            .compactMap { [dateProvider] dates in
+        focusedDateEventsObservable = cellViewModelsObservable
+            .compactMap { dates in
                 guard
                     let focused = dates.first(where: \.isHovered) ?? dates.first(where: \.isSelected)
                 else { return nil }

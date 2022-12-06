@@ -13,7 +13,7 @@ class NextEventViewModelTests: XCTestCase {
 
     let disposeBag = DisposeBag()
 
-    let eventsSubject = PublishSubject<[EventModel]>()
+    let calendarsSubject = BehaviorSubject<[String]>(value: [])
 
     let settings = MockNextEventSettings()
     let dateProvider = MockDateProvider()
@@ -23,7 +23,7 @@ class NextEventViewModelTests: XCTestCase {
 
     lazy var viewModel = NextEventViewModel(
         settings: settings,
-        eventsObservable: eventsSubject,
+        enabledCalendars: calendarsSubject,
         dateProvider: dateProvider,
         calendarService: calendarService,
         workspace: workspace,
@@ -48,7 +48,7 @@ class NextEventViewModelTests: XCTestCase {
             .bind { hasEvent = $0 }
             .disposed(by: disposeBag)
 
-        eventsSubject.onNext([
+        calendarService.changeEvents([
             .make(start: now - 2, end: now - 1)
         ])
 
@@ -63,7 +63,7 @@ class NextEventViewModelTests: XCTestCase {
             .bind { hasEvent = $0 }
             .disposed(by: disposeBag)
 
-        eventsSubject.onNext([
+        calendarService.changeEvents([
             .make(start: now, end: now + 1)
         ])
 
@@ -78,7 +78,7 @@ class NextEventViewModelTests: XCTestCase {
             .bind { hasEvent = $0 }
             .disposed(by: disposeBag)
 
-        eventsSubject.onNext([
+        calendarService.changeEvents([
             .make(start: now, end: now + 1)
         ])
 
@@ -97,7 +97,7 @@ class NextEventViewModelTests: XCTestCase {
             .bind { title = $0 }
             .disposed(by: disposeBag)
 
-        eventsSubject.onNext([
+        calendarService.changeEvents([
             .make(title: "This is an event with a text")
         ])
 
@@ -118,7 +118,7 @@ class NextEventViewModelTests: XCTestCase {
             .bind { title = $0 }
             .disposed(by: disposeBag)
 
-        eventsSubject.onNext([
+        calendarService.changeEvents([
             .make(title: "This is an event with a text")
         ])
 
@@ -147,13 +147,13 @@ class NextEventViewModelTests: XCTestCase {
             .bind { style = $0 }
             .disposed(by: disposeBag)
 
-        eventsSubject.onNext([.make(type: .reminder)])
+        calendarService.changeEvents([.make(type: .reminder)])
         XCTAssertEqual(style, .filled)
 
-        eventsSubject.onNext([.make(type: .event(.accepted))])
+        calendarService.changeEvents([.make(type: .event(.accepted))])
         XCTAssertEqual(style, .filled)
 
-        eventsSubject.onNext([.make(type: .event(.maybe))])
+        calendarService.changeEvents([.make(type: .event(.maybe))])
         XCTAssertEqual(style, .bordered)
     }
 
@@ -165,7 +165,7 @@ class NextEventViewModelTests: XCTestCase {
             .bind { color = $0 }
             .disposed(by: disposeBag)
 
-        eventsSubject.onNext([
+        calendarService.changeEvents([
             .make(start: now, end: now + 1, calendar: .make(color: .white))
         ])
 
@@ -180,7 +180,7 @@ class NextEventViewModelTests: XCTestCase {
             .bind { color = $0 }
             .disposed(by: disposeBag)
 
-        eventsSubject.onNext([
+        calendarService.changeEvents([
             .make(start: now + 1, end: now + 2, calendar: .make(color: .white))
         ])
 
@@ -195,7 +195,7 @@ class NextEventViewModelTests: XCTestCase {
             .bind { color = $0 }
             .disposed(by: disposeBag)
 
-        eventsSubject.onNext([
+        calendarService.changeEvents([
             .make(start: now - 1, end: now + 1, calendar: .make(color: .white))
         ])
 
@@ -210,7 +210,7 @@ class NextEventViewModelTests: XCTestCase {
             .bind { title = $0 }
             .disposed(by: disposeBag)
 
-        eventsSubject.onNext([
+        calendarService.changeEvents([
             .make(start: now, end: now + 1, title: "Event 1", isAllDay: true),
             .make(start: now + 1, end: now + 2, title: "Event 2", isAllDay: false)
         ])
@@ -226,7 +226,7 @@ class NextEventViewModelTests: XCTestCase {
             .bind { title = $0 }
             .disposed(by: disposeBag)
 
-        eventsSubject.onNext([
+        calendarService.changeEvents([
             .make(start: now, end: now + 1, title: "Event 1", type: .event(.pending)),
             .make(start: now + 1, end: now + 2, title: "Event 2", type: .event(.accepted))
         ])
@@ -242,7 +242,7 @@ class NextEventViewModelTests: XCTestCase {
             .bind { time = $0 }
             .disposed(by: disposeBag)
 
-        eventsSubject.onNext([
+        calendarService.changeEvents([
             .make(start: now + 30, end: now + 60)
         ])
 
@@ -257,7 +257,7 @@ class NextEventViewModelTests: XCTestCase {
             .bind { time = $0 }
             .disposed(by: disposeBag)
 
-        eventsSubject.onNext([
+        calendarService.changeEvents([
             .make(start: now + 59, end: now + 60)
         ])
 
@@ -272,7 +272,7 @@ class NextEventViewModelTests: XCTestCase {
             .bind { time = $0 }
             .disposed(by: disposeBag)
 
-        eventsSubject.onNext([
+        calendarService.changeEvents([
             .make(start: now + 60, end: now + 70)
         ])
 
@@ -287,7 +287,7 @@ class NextEventViewModelTests: XCTestCase {
             .bind { time = $0 }
             .disposed(by: disposeBag)
 
-        eventsSubject.onNext([
+        calendarService.changeEvents([
             .make(start: now + 65, end: now + 70)
         ])
 
@@ -302,7 +302,7 @@ class NextEventViewModelTests: XCTestCase {
             .bind { time = $0 }
             .disposed(by: disposeBag)
 
-        eventsSubject.onNext([
+        calendarService.changeEvents([
             .make(start: now + 3600, end: now + 3610)
         ])
 
@@ -317,7 +317,7 @@ class NextEventViewModelTests: XCTestCase {
             .bind { time = $0 }
             .disposed(by: disposeBag)
 
-        eventsSubject.onNext([
+        calendarService.changeEvents([
             .make(start: now + 6000, end: now + 6010)
         ])
 
@@ -332,7 +332,7 @@ class NextEventViewModelTests: XCTestCase {
             .bind { time = $0 }
             .disposed(by: disposeBag)
 
-        eventsSubject.onNext([
+        calendarService.changeEvents([
             .make(start: now, end: now + 30)
         ])
 
@@ -347,7 +347,7 @@ class NextEventViewModelTests: XCTestCase {
             .bind { time = $0 }
             .disposed(by: disposeBag)
 
-        eventsSubject.onNext([
+        calendarService.changeEvents([
             .make(start: now, end: now + 59)
         ])
 
@@ -362,7 +362,7 @@ class NextEventViewModelTests: XCTestCase {
             .bind { time = $0 }
             .disposed(by: disposeBag)
 
-        eventsSubject.onNext([
+        calendarService.changeEvents([
             .make(start: now, end: now + 60)
         ])
 
@@ -377,7 +377,7 @@ class NextEventViewModelTests: XCTestCase {
             .bind { time = $0 }
             .disposed(by: disposeBag)
 
-        eventsSubject.onNext([
+        calendarService.changeEvents([
             .make(start: now, end: now + 65)
         ])
 
@@ -392,7 +392,7 @@ class NextEventViewModelTests: XCTestCase {
             .bind { time = $0 }
             .disposed(by: disposeBag)
 
-        eventsSubject.onNext([
+        calendarService.changeEvents([
             .make(start: now, end: now + 3600)
         ])
 
@@ -407,7 +407,7 @@ class NextEventViewModelTests: XCTestCase {
             .bind { time = $0 }
             .disposed(by: disposeBag)
 
-        eventsSubject.onNext([
+        calendarService.changeEvents([
             .make(start: now, end: now + 6000)
         ])
 
@@ -422,7 +422,7 @@ class NextEventViewModelTests: XCTestCase {
             .bind { time = $0 }
             .disposed(by: disposeBag)
 
-        eventsSubject.onNext([
+        calendarService.changeEvents([
             .make(start: now + 6000, type: .reminder)
         ])
 
@@ -441,7 +441,7 @@ class NextEventViewModelTests: XCTestCase {
             .bind { time = $0 }
             .disposed(by: disposeBag)
 
-        eventsSubject.onNext([
+        calendarService.changeEvents([
             .make(start: start, type: .reminder)
         ])
 
@@ -449,3 +449,10 @@ class NextEventViewModelTests: XCTestCase {
     }
 }
 
+private extension MockCalendarServiceProvider {
+
+    func changeEvents(_ events: [EventModel]) {
+        m_events = events
+        changeObserver.onNext(())
+    }
+}

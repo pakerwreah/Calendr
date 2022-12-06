@@ -46,6 +46,6 @@ extension Calendar {
     }
 
     func endOfDay(for date: Date) -> Date {
-        startOfDay(for: self.date(byAdding: .day, value: 1, to: date)!)
+        self.date(bySettingHour: 23, minute: 59, second: 59, of: date)!
     }
 }

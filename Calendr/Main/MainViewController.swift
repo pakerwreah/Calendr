@@ -127,11 +127,11 @@ class MainViewController: NSViewController {
             clickObserver: dateClick.asObserver()
         )
 
-        let eventsObservable = calendarViewModel.focusedEventsObservable
+        let eventListEventsObservable = calendarViewModel.focusedDateEventsObservable
             .debounce(.milliseconds(50), scheduler: MainScheduler.instance)
 
         eventListViewModel = EventListViewModel(
-            eventsObservable: eventsObservable,
+            eventsObservable: eventListEventsObservable,
             isShowingDetails: isShowingDetails,
             dateProvider: dateProvider,
             calendarService: calendarService,
@@ -142,16 +142,9 @@ class MainViewController: NSViewController {
 
         eventListView = EventListView(viewModel: eventListViewModel)
 
-        let todayEventsObservable = calendarViewModel.cellViewModelsObservable
-            .compactMap {
-                $0.first(where: \.isToday)?.events
-            }
-            .debounce(.seconds(1), scheduler: MainScheduler.instance)
-            .distinctUntilChanged()
-
         nextEventViewModel = NextEventViewModel(
             settings: settingsViewModel,
-            eventsObservable: todayEventsObservable,
+            enabledCalendars: calendarPickerViewModel.enabledCalendars,
             dateProvider: dateProvider,
             calendarService: calendarService,
             workspace: workspace,
