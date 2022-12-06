@@ -30,7 +30,7 @@ class NextEventViewModel {
 
     init(
         settings: NextEventSettings,
-        eventsObservable: Observable<[EventModel]>,
+        enabledCalendars: Observable<[String]>,
         dateProvider: DateProviding,
         calendarService: CalendarServiceProviding,
         workspace: WorkspaceServiceProviding,
@@ -47,10 +47,22 @@ class NextEventViewModel {
 
         typealias NextEventTuple = (event: EventModel, isInProgress: Bool)
 
-        let nextEventObservable = Observable.combineLatest(settings.showEventStatusItem, eventsObservable)
-            .map { isEnabled, events in
-                isEnabled ? events.filter { !$0.isAllDay && ![.pending, .declined].contains($0.status) } : []
+        let nextEventObservable = settings.showEventStatusItem
+            .flatMapLatest { isEnabled -> Observable<[EventModel]> in
+
+                !isEnabled ? .just([]) : enabledCalendars
+                    .repeat(when: calendarService.changeObservable)
+                    .flatMapLatest { calendars -> Observable<[EventModel]> in
+
+                        calendarService.events(
+                            from: dateProvider.calendar.startOfDay(for: dateProvider.now),
+                            to: dateProvider.calendar.endOfDay(for: dateProvider.now),
+                            calendars: calendars
+                        )
+                    }
+                    .map { $0.filter { !$0.isAllDay && ![.pending, .declined].contains($0.status) } }
             }
+            .distinctUntilChanged()
             .flatMapLatest { [dateProvider] events -> Observable<NextEventTuple?> in
 
                 Observable<Int>.interval(.seconds(1), scheduler: scheduler)

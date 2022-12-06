@@ -456,7 +456,7 @@ class CalendarViewModelTests: XCTestCase {
         var events: (Date, [EventModel])?
 
         viewModel
-            .focusedEventsObservable
+            .focusedDateEventsObservable
             .bind { events = $0 }
             .disposed(by: disposeBag)
 
@@ -481,7 +481,7 @@ class CalendarViewModelTests: XCTestCase {
         var events: (Date, [EventModel])?
 
         viewModel
-            .focusedEventsObservable
+            .focusedDateEventsObservable
             .bind { events = $0 }
             .disposed(by: disposeBag)
 
