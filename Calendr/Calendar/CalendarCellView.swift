@@ -123,7 +123,7 @@ class CalendarCellView: NSView {
 
         viewModel
             .repeat(when: rx.updateLayer)
-            .map(\.borderColor.cgColor)
+            .map(\.borderColor.effectiveCGColor)
             .distinctUntilChanged()
             .bind(to: borderLayer.rx.borderColor)
             .disposed(by: disposeBag)
@@ -180,11 +180,8 @@ private func makeEventDot(color: NSColor, scaling: Double) -> NSView {
     view.size(equalTo: size)
 
     view.wantsLayer = true
-
-    view.layer.map { layer in
-        layer.backgroundColor = color.cgColor
-        layer.cornerRadius = size / 2
-    }
+    view.layer!.backgroundColor = color.cgColor
+    view.layer!.cornerRadius = size / 2
 
     if BuildConfig.isUITesting {
         view.setAccessibilityElement(true)
