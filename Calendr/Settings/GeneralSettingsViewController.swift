@@ -162,7 +162,7 @@ class GeneralSettingsViewController: NSViewController {
         divider.wantsLayer = true
 
         divider.rx.updateLayer
-            .map { NSColor.tertiaryLabelColor.cgColor }
+            .map { NSColor.tertiaryLabelColor.effectiveCGColor }
             .bind(to: divider.layer!.rx.backgroundColor)
             .disposed(by: disposeBag)
 

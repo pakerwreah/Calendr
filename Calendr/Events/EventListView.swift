@@ -81,7 +81,7 @@ class EventListView: NSView {
         line.wantsLayer = true
 
         line.rx.updateLayer
-            .map { NSColor.tertiaryLabelColor.cgColor }
+            .map { NSColor.tertiaryLabelColor.effectiveCGColor }
             .bind(to: line.layer!.rx.backgroundColor)
             .disposed(by: disposeBag)
 

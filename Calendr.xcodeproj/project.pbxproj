@@ -121,6 +121,7 @@
 		34D19FC62622A02C00B2732C /* EventDetailsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D19FC52622A02C00B2732C /* EventDetailsViewModelTests.swift */; };
 		34D19FCC2622B9CD00B2732C /* EventMeta.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D19FCB2622B9CC00B2732C /* EventMeta.swift */; };
 		34D25E4A292F9E2100557E70 /* ImageButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D25E49292F9E2100557E70 /* ImageButton.swift */; };
+		34D3655829402D5700849457 /* NSColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D3655729402D5700849457 /* NSColor.swift */; };
 		34D55FE325F06669007F5C81 /* Sequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D55FE225F06669007F5C81 /* Sequence.swift */; };
 		34E004A725B61D5200241419 /* StatusItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E004A625B61D5200241419 /* StatusItemViewModel.swift */; };
 		34E1902325B76CFE00E9491B /* CalendarPickerViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E1902225B76CFE00E9491B /* CalendarPickerViewModelTests.swift */; };
@@ -277,6 +278,7 @@
 		34D19FC52622A02C00B2732C /* EventDetailsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailsViewModelTests.swift; sourceTree = "<group>"; };
 		34D19FCB2622B9CC00B2732C /* EventMeta.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventMeta.swift; sourceTree = "<group>"; };
 		34D25E49292F9E2100557E70 /* ImageButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageButton.swift; sourceTree = "<group>"; };
+		34D3655729402D5700849457 /* NSColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSColor.swift; sourceTree = "<group>"; };
 		34D55FE225F06669007F5C81 /* Sequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sequence.swift; sourceTree = "<group>"; };
 		34E004A625B61D5200241419 /* StatusItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemViewModel.swift; sourceTree = "<group>"; };
 		34E1902225B76CFE00E9491B /* CalendarPickerViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPickerViewModelTests.swift; sourceTree = "<group>"; };
@@ -525,6 +527,7 @@
 				34B5A09625B0F8A500F7F7ED /* NSButton.swift */,
 				34B23E9B25C0C94000DADCD6 /* NSButton+Rx.swift */,
 				34B2C59D279FFF0600B52BF3 /* NSClickGestureRecognizer+Rx.swift */,
+				34D3655729402D5700849457 /* NSColor.swift */,
 				34926A702931B18C0090C8FC /* NSControl.swift */,
 				34D19FBF262299D300B2732C /* NSEdgeInsets.swift */,
 				34091736267E81870023B76D /* NSImage.swift */,
@@ -897,6 +900,7 @@
 				3421DA162693EDEB00056837 /* MockCalendarSettings.swift in Sources */,
 				347D0FF225954920002451EC /* EventModel.swift in Sources */,
 				34A4C3E925963FB200D0F949 /* NSStackView.swift in Sources */,
+				34D3655829402D5700849457 /* NSColor.swift in Sources */,
 				3453E6FF28393943002DCC3C /* EventOptions.swift in Sources */,
 				34924CEE259FD064009C3450 /* DateFormatter.swift in Sources */,
 				3468E651284BD3D600B21EC8 /* EventLink.swift in Sources */,
