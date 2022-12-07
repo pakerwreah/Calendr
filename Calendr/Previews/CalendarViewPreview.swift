@@ -20,7 +20,7 @@ struct CalendarViewPreview: PreviewProvider {
     static let hovered = BehaviorSubject<Date?>(value: .random(from: dateProvider))
     static let selected = BehaviorSubject<Date>(value: .random(inMonth: dateProvider))
 
-    static func make(_ color: ColorScheme) -> some View {
+    static var previews: some View {
         CalendarView(
             viewModel: CalendarViewModel(
                 searchObservable: .just(""),
@@ -37,13 +37,6 @@ struct CalendarViewPreview: PreviewProvider {
         )
         .preview()
         .fixedSize()
-        .preferredColorScheme(color)
-    }
-
-    /// live preview doesn't work well with both color schemes enabled
-    static var previews: some View {
-        make(.dark)
-        make(.light)
     }
 }
 

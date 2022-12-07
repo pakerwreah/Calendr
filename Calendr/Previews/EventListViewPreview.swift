@@ -19,7 +19,7 @@ struct EventListViewPreview: PreviewProvider {
 
     static var now: Date { dateProvider.now }
 
-    static func make(_ color: ColorScheme) -> some View {
+    static var previews: some View {
         EventListView(
             viewModel: EventListViewModel(
                 eventsObservable: .just((now, [
@@ -61,13 +61,6 @@ struct EventListViewPreview: PreviewProvider {
         .frame(width: 210)
         .fixedSize()
         .padding(5)
-        .preferredColorScheme(color)
-    }
-
-    /// live preview doesn't work well with both color schemes enabled
-    static var previews: some View {
-        make(.dark)
-        make(.light)
     }
 }
 
