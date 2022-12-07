@@ -16,11 +16,11 @@ struct MockCalendarSettings: CalendarSettings {
     let showDeclinedEvents: Observable<Bool>
     let calendarScaling: Observable<Double>
 
-    init(showWeekNumbers: Bool = true) {
+    init(showWeekNumbers: Bool = true, calendarScaling: Double = 1) {
         self.showWeekNumbers = .just(showWeekNumbers)
         self.preserveSelectedDate = .just(false)
         self.showDeclinedEvents = .just(false)
-        self.calendarScaling = .just(1)
+        self.calendarScaling = .just(calendarScaling)
     }
 }
 
