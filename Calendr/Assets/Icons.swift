@@ -30,6 +30,7 @@ enum Icons {
         static let general = NSImage(systemName: "gear")
         static let calendars = NSImage(systemName: "calendar.badge.plus")
         static let about = NSImage(systemName: "book")
+        static let tooltip = NSImage(systemName: "info.circle")
     }
 
     enum Event {

@@ -10,9 +10,12 @@ import Cocoa
 class ImageButton: NSButton {
 
     private var trackingArea: NSTrackingArea?
+    private let cursor: NSCursor?
 
-    init() {
+    init(image: NSImage? = nil, cursor: NSCursor? = .pointingHand) {
+        self.cursor = cursor
         super.init(frame: .zero)
+        self.image = image
 
         isBordered = false
         bezelStyle = .roundRect
@@ -36,7 +39,7 @@ class ImageButton: NSButton {
 
         trackingArea = NSTrackingArea(
             rect: bounds,
-            options: [.cursorUpdate, .mouseMoved, .activeAlways],
+            options: [.cursorUpdate, .mouseMoved, .mouseEnteredAndExited, .activeAlways],
             owner: self
         )
 
@@ -47,11 +50,16 @@ class ImageButton: NSButton {
 
     override func cursorUpdate(with event: NSEvent) {
         super.cursorUpdate(with: event)
-        NSCursor.pointingHand.set()
+        cursor?.set()
     }
 
     override func mouseMoved(with event: NSEvent) {
         super.mouseMoved(with: event)
         cursorUpdate(with: event)
+    }
+
+    override func mouseExited(with event: NSEvent) {
+        super.mouseExited(with: event)
+        super.cursorUpdate(with: event)
     }
 }

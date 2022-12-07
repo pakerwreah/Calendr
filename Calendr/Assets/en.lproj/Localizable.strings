@@ -27,6 +27,7 @@
 "settings.calendar.show_week_numbers" = "Show week numbers";
 "settings.calendar.preserve_selected_date" = "Preserve selected date on hide";
 "settings.calendar.show_declined_events" = "Show declined events";
+"settings.calendar.show_declined_events_tooltip" = "This only works if it is also enabled in the native Calendar app.";
 
 "settings.events" = "Events";
 "settings.events.finished" = "Finished";

@@ -105,6 +105,34 @@ class GeneralSettingsViewController: NSViewController {
             .with(orientation: .vertical)
     }()
 
+    private lazy var showDeclinedEventsTooltip: NSView = {
+
+        let tooltipViewController = NSViewController()
+        let view = NSView()
+        tooltipViewController.view = view
+        let label = Label(text: Strings.Settings.Calendar.showDeclinedEventsTooltip)
+        label.preferredMaxLayoutWidth = 190
+        label.lineBreakMode = NSLineBreakMode.byWordWrapping
+        view.addSubview(label)
+        label.edges(to: view, constant: 8)
+
+        let button = ImageButton(image: Icons.Settings.tooltip, cursor: nil)
+
+        let popover = NSPopover()
+        popover.contentViewController = tooltipViewController
+        popover.behavior = .transient
+        popover.animates = false
+
+        button.rx.isHovered
+            .bind { isHovered in
+                guard isHovered else { return popover.performClose(nil) }
+                popover.show(relativeTo: .zero, of: button, preferredEdge: .maxX)
+            }
+            .disposed(by: disposeBag)
+        
+        return button
+    }()
+
     private lazy var calendarContent: NSView = {
         NSStackView(views: [
             NSStackView(views: [
@@ -114,7 +142,7 @@ class GeneralSettingsViewController: NSViewController {
             ]),
             .dummy,
             showWeekNumbersCheckbox,
-            showDeclinedEventsCheckbox,
+            NSStackView(views: [showDeclinedEventsCheckbox, showDeclinedEventsTooltip]),
             preserveSelectedDateCheckbox
         ])
         .with(orientation: .vertical)
