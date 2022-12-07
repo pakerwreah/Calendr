@@ -27,6 +27,7 @@
 "settings.calendar.show_week_numbers" = "Mostrar números das semanas";
 "settings.calendar.preserve_selected_date" = "Preservar a data selecionada ao ocultar";
 "settings.calendar.show_declined_events" = "Mostrar eventos recusados";
+"settings.calendar.show_declined_events_tooltip" = "Isso só funciona se também estiver ativado no aplicativo Calendário nativo.";
 
 "settings.events" = "Eventos";
 "settings.events.finished" = "Terminados";
