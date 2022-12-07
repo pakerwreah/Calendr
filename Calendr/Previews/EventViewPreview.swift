@@ -17,7 +17,7 @@ struct EventViewPreview: PreviewProvider {
     static let workspace = NSWorkspace.shared
     static let popoverSettings = MockPopoverSettings()
 
-    static func make(_ color: ColorScheme) -> some View {
+    static var previews: some View {
         EventView(
             viewModel: EventViewModel(
                 event: .make(
@@ -26,7 +26,7 @@ struct EventViewPreview: PreviewProvider {
                     title: "Test Event",
                     location: "Brasil",
                     notes: "Join at http://meet.google.com",
-                    type: .event(.declined),
+                    type: .event(.accepted),
                     calendar: .make(color: .systemYellow)
                 ),
                 dateProvider: dateProvider,
@@ -39,14 +39,7 @@ struct EventViewPreview: PreviewProvider {
         )
         .preview()
         .frame(width: 180, height: 50)
-        .preferredColorScheme(color)
         .padding(5)
-    }
-
-    /// live preview doesn't work well with both color schemes enabled
-    static var previews: some View {
-        make(.dark)
-        make(.light)
     }
 }
 
