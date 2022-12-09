@@ -31,6 +31,8 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
     private lazy var reminderOptions = ReminderOptions()
 
     private let viewModel: EventDetailsViewModel
+    
+    private var animatesClose = true
 
     init(viewModel: EventDetailsViewModel) {
 
@@ -366,6 +368,7 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
             .observe(on: MainScheduler.instance)
             .subscribe(
                 onNext: { [weak self] in
+                    self?.animatesClose = false
                     self?.view.window?.performClose(nil)
                 },
                 onError: { error in
@@ -395,7 +398,7 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         // 🔨 Prevent retain cycle
         view.window?.makeFirstResponder(nil)
 
-        notification.popover.animates = true
+        notification.popover.animates = animatesClose
     }
 
     func popoverDidClose(_ notification: Notification) {
