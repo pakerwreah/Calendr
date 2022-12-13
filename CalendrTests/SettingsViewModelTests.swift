@@ -29,6 +29,7 @@ class SettingsViewModelTests: XCTestCase {
     var userDefaultsStatusItemDateEnabled: Bool? { userDefaults.object(forKey: Prefs.statusItemDateEnabled) as! Bool? }
     var userDefaultsStatusItemDateStyle: Int? { userDefaults.object(forKey: Prefs.statusItemDateStyle) as! Int? }
     var userDefaultsShowEventStatusItem: Bool? { userDefaults.object(forKey: Prefs.showEventStatusItem) as! Bool? }
+    var userDefaultsEventStatusItemCheckRange: Int? { userDefaults.object(forKey: Prefs.eventStatusItemCheckRange) as! Int? }
     var userDefaultsEventStatusItemLength: Int? { userDefaults.object(forKey: Prefs.eventStatusItemLength) as! Int? }
     var userDefaultsEventStatusItemDetectNotch: Bool? { userDefaults.object(forKey: Prefs.eventStatusItemDetectNotch) as! Bool? }
     var userDefaultsShowWeekNumbers: Bool? { userDefaults.object(forKey: Prefs.showWeekNumbers) as! Bool? }
@@ -49,6 +50,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertNil(userDefaultsStatusItemDateEnabled)
         XCTAssertNil(userDefaultsStatusItemDateStyle)
         XCTAssertNil(userDefaultsShowEventStatusItem)
+        XCTAssertNil(userDefaultsEventStatusItemCheckRange)
         XCTAssertNil(userDefaultsEventStatusItemLength)
         XCTAssertNil(userDefaultsEventStatusItemDetectNotch)
         XCTAssertNil(userDefaultsShowWeekNumbers)
@@ -62,6 +64,7 @@ class SettingsViewModelTests: XCTestCase {
         var showStatusItemDate: Bool?
         var statusItemDateStyle: DateStyle?
         var showEventStatusItem: Bool?
+        var eventStatusItemCheckRange: Int?
         var eventStatusItemLength: Int?
         var eventStatusItemDetectNotch: Bool?
         var showWeekNumbers: Bool?
@@ -90,6 +93,10 @@ class SettingsViewModelTests: XCTestCase {
 
         viewModel.eventStatusItemDetectNotch
             .bind { eventStatusItemDetectNotch = $0 }
+            .disposed(by: disposeBag)
+
+        viewModel.eventStatusItemCheckRange
+            .bind { eventStatusItemCheckRange = $0 }
             .disposed(by: disposeBag)
 
         viewModel.eventStatusItemLength
@@ -128,6 +135,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(showStatusItemDate, true)
         XCTAssertEqual(statusItemDateStyle, .short)
         XCTAssertEqual(showEventStatusItem, false)
+        XCTAssertEqual(eventStatusItemCheckRange, 6)
         XCTAssertEqual(eventStatusItemLength, 18)
         XCTAssertEqual(eventStatusItemDetectNotch, false)
         XCTAssertEqual(showWeekNumbers, false)
@@ -142,6 +150,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(userDefaultsStatusItemDateEnabled, true)
         XCTAssertEqual(userDefaultsStatusItemDateStyle, 1)
         XCTAssertEqual(userDefaultsShowEventStatusItem, false)
+        XCTAssertEqual(userDefaultsEventStatusItemCheckRange, 6)
         XCTAssertEqual(userDefaultsEventStatusItemLength, 18)
         XCTAssertEqual(userDefaultsEventStatusItemDetectNotch, false)
         XCTAssertEqual(userDefaultsShowWeekNumbers, false)
@@ -275,6 +284,25 @@ class SettingsViewModelTests: XCTestCase {
 
         XCTAssertEqual(eventStatusItemLength, 30)
         XCTAssertEqual(userDefaultsEventStatusItemLength, 30)
+    }
+
+    func testChangeEventStatusItemCheckRange() {
+
+        userDefaults.eventStatusItemCheckRange = 12
+
+        var eventStatusItemCheckRange: Int?
+
+        viewModel.eventStatusItemCheckRange
+            .bind { eventStatusItemCheckRange = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(eventStatusItemCheckRange, 12)
+        XCTAssertEqual(userDefaultsEventStatusItemCheckRange, 12)
+
+        viewModel.eventStatusItemCheckRangeObserver.onNext(18)
+
+        XCTAssertEqual(eventStatusItemCheckRange, 18)
+        XCTAssertEqual(userDefaultsEventStatusItemCheckRange, 18)
     }
 
     func testToggleEventStatusItemDetectNotch() {

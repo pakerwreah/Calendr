@@ -19,8 +19,8 @@
 "settings.menu_bar.show_date" = "Show date";
 "settings.menu_bar.date_format" = "Date format";
 "settings.menu_bar.date_format_custom" = "Custom";
+"settings.next_event" = "Next Event";
 "settings.menu_bar.show_next_event" = "Show next event";
-"settings.menu_bar.next_event_length" = "Width";
 "settings.menu_bar.next_event_detect_notch" = "Shorten if 'notch' is present";
 
 "settings.calendar" = "Calendar";

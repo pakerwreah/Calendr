@@ -22,8 +22,6 @@ enum Icons {
         static let settings = NSImage(systemName: "ellipsis.circle")
         static let pinned = NSImage(systemName: "pin.fill")
         static let unpinned = NSImage(systemName: "pin")
-        static let scalingMinus = NSImage(systemName: "minus.magnifyingglass")
-        static let scalingPlus = NSImage(systemName: "plus.magnifyingglass")
     }
 
     enum Settings {
@@ -31,6 +29,9 @@ enum Icons {
         static let calendars = NSImage(systemName: "calendar.badge.plus")
         static let about = NSImage(systemName: "book")
         static let tooltip = NSImage(systemName: "info.circle")
+        static let ruler = NSImage(systemName: "ruler")
+        static let zoomIn = NSImage(systemName: "plus.magnifyingglass")
+        static let zoomOut = NSImage(systemName: "minus.magnifyingglass")
     }
 
     enum Event {

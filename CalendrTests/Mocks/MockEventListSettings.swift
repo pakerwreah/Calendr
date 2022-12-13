@@ -10,8 +10,8 @@ import RxSwift
 
 class MockEventListSettings: MockPopoverSettings, EventListSettings {
 
-    var togglePastEvents: AnyObserver<Bool>
-    var showPastEvents: Observable<Bool>
+    let togglePastEvents: AnyObserver<Bool>
+    let showPastEvents: Observable<Bool>
 
     override init() {
         (showPastEvents, togglePastEvents) = BehaviorSubject.pipe(value: true)

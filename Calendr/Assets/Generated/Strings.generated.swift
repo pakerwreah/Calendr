@@ -86,6 +86,8 @@ internal enum Strings {
     internal static let events = Strings.tr("Localizable", "settings.events", fallback: "Events")
     /// Menu Bar
     internal static let menuBar = Strings.tr("Localizable", "settings.menu_bar", fallback: "Menu Bar")
+    /// Next Event
+    internal static let nextEvent = Strings.tr("Localizable", "settings.next_event", fallback: "Next Event")
     /// Preferences
     internal static let title = Strings.tr("Localizable", "settings.title", fallback: "Preferences")
     /// Transparency
@@ -117,8 +119,6 @@ internal enum Strings {
       internal static let dateFormatCustom = Strings.tr("Localizable", "settings.menu_bar.date_format_custom", fallback: "Custom")
       /// Shorten if 'notch' is present
       internal static let nextEventDetectNotch = Strings.tr("Localizable", "settings.menu_bar.next_event_detect_notch", fallback: "Shorten if 'notch' is present")
-      /// Width
-      internal static let nextEventLength = Strings.tr("Localizable", "settings.menu_bar.next_event_length", fallback: "Width")
       /// Show date
       internal static let showDate = Strings.tr("Localizable", "settings.menu_bar.show_date", fallback: "Show date")
       /// Show icon

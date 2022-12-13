@@ -16,8 +16,8 @@ struct MockScreen: Screen {
 
 class MockScreenProvider: ScreenProviding {
 
-    var screenObserver: AnyObserver<Screen>
-    var screenObservable: Observable<Screen>
+    let screenObserver: AnyObserver<Screen>
+    let screenObservable: Observable<Screen>
 
     init() {
         (screenObservable, screenObserver) = BehaviorSubject.pipe(value: MockScreen())

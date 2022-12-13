@@ -21,8 +21,6 @@ class NextEventViewModelTests: XCTestCase {
     let workspace = MockWorkspaceServiceProvider()
     let screenProvider = MockScreenProvider()
 
-    let hoursToCheck = 2
-
     lazy var viewModel = NextEventViewModel(
         settings: settings,
         enabledCalendars: calendarsSubject,
@@ -31,8 +29,7 @@ class NextEventViewModelTests: XCTestCase {
         workspace: workspace,
         screenProvider: screenProvider,
         isShowingDetails: .dummy(),
-        scheduler: MainScheduler.instance,
-        hoursToCheck: hoursToCheck
+        scheduler: MainScheduler.instance
     )
 
     var now: Date {
@@ -92,7 +89,7 @@ class NextEventViewModelTests: XCTestCase {
         XCTAssertEqual(hasEvent, false)
     }
 
-    func testNextEvent_hoursToCheck() {
+    func testNextEvent_checkRange() {
 
         var hasEvent: Bool?
 
@@ -102,7 +99,10 @@ class NextEventViewModelTests: XCTestCase {
 
         dateProvider.now = .make(year: 2021, month: 1, day: 1, at: .end)
 
+        let hoursToCheck = 2
         var start = now + TimeInterval(hoursToCheck * 3600)
+
+        settings.eventStatusItemCheckRangeObserver.onNext(hoursToCheck)
 
         calendarService.changeEvents([
             .make(start: start, end: start + 1)

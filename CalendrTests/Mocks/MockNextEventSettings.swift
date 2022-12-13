@@ -10,17 +10,21 @@ import RxSwift
 
 class MockNextEventSettings: MockPopoverSettings, NextEventSettings {
 
-    var toggleStatusItem: AnyObserver<Bool>
-    var showEventStatusItem: Observable<Bool>
+    let toggleStatusItem: AnyObserver<Bool>
+    let showEventStatusItem: Observable<Bool>
 
-    var eventStatusItemLengthObserver: AnyObserver<Int>
-    var eventStatusItemLength: Observable<Int>
+    let eventStatusItemCheckRangeObserver: AnyObserver<Int>
+    let eventStatusItemCheckRange: Observable<Int>
 
-    var toggleEventStatusItemDetectNotch: AnyObserver<Bool>
-    var eventStatusItemDetectNotch: Observable<Bool>
+    let eventStatusItemLengthObserver: AnyObserver<Int>
+    let eventStatusItemLength: Observable<Int>
+
+    let toggleEventStatusItemDetectNotch: AnyObserver<Bool>
+    let eventStatusItemDetectNotch: Observable<Bool>
 
     override init() {
         (showEventStatusItem, toggleStatusItem) = BehaviorSubject.pipe(value: true)
+        (eventStatusItemCheckRange, eventStatusItemCheckRangeObserver) = BehaviorSubject.pipe(value: 18)
         (eventStatusItemLength, eventStatusItemLengthObserver) = BehaviorSubject.pipe(value: 18)
         (eventStatusItemDetectNotch, toggleEventStatusItemDetectNotch) = BehaviorSubject.pipe(value: false)
         super.init()

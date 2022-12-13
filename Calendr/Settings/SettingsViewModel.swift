@@ -56,6 +56,7 @@ protocol EventListSettings: PopoverSettings {
 
 protocol NextEventSettings: PopoverSettings {
     var showEventStatusItem: Observable<Bool> { get }
+    var eventStatusItemCheckRange: Observable<Int> { get }
     var eventStatusItemLength: Observable<Int> { get }
     var eventStatusItemDetectNotch: Observable<Bool> { get }
 }
@@ -68,6 +69,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
     let statusItemDateStyleObserver: AnyObserver<DateStyle>
     let statusItemDateFormatObserver: AnyObserver<String>
     let toggleEventStatusItem: AnyObserver<Bool>
+    let eventStatusItemCheckRangeObserver: AnyObserver<Int>
     let eventStatusItemLengthObserver: AnyObserver<Int>
     let toggleEventStatusItemDetectNotch: AnyObserver<Bool>
     let toggleWeekNumbers: AnyObserver<Bool>
@@ -86,6 +88,8 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
     let dateFormatPlaceholder = "E d MMM YYYY"
     let isDateFormatInputVisible: Observable<Bool>
     let showEventStatusItem: Observable<Bool>
+    let eventStatusItemCheckRange: Observable<Int>
+    let eventStatusItemCheckRangeLabel: Observable<String>
     let eventStatusItemLength: Observable<Int>
     let eventStatusItemDetectNotch: Observable<Bool>
     let showWeekNumbers: Observable<Bool>
@@ -108,6 +112,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
             Prefs.statusItemDateStyle: DateStyle.short.rawValue,
             Prefs.statusItemDateFormat: dateFormatPlaceholder,
             Prefs.showEventStatusItem: false,
+            Prefs.eventStatusItemCheckRange: 6,
             Prefs.eventStatusItemLength: 18,
             Prefs.eventStatusItemDetectNotch: false,
             Prefs.showWeekNumbers: false,
@@ -123,6 +128,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
         statusItemDateStyleObserver = userDefaults.rx.observer(for: \.statusItemDateStyle).mapObserver(\.rawValue)
         statusItemDateFormatObserver = userDefaults.rx.observer(for: \.statusItemDateFormat)
         toggleEventStatusItem = userDefaults.rx.observer(for: \.showEventStatusItem)
+        eventStatusItemCheckRangeObserver = userDefaults.rx.observer(for: \.eventStatusItemCheckRange)
         eventStatusItemLengthObserver = userDefaults.rx.observer(for: \.eventStatusItemLength)
         toggleEventStatusItemDetectNotch = userDefaults.rx.observer(for: \.eventStatusItemDetectNotch)
         toggleWeekNumbers = userDefaults.rx.observer(for: \.showWeekNumbers)
@@ -145,6 +151,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
         statusItemDateStyle = userDefaults.rx.observe(\.statusItemDateStyle).map { DateStyle(rawValue: $0) ?? .none }
         statusItemDateFormat = userDefaults.rx.observe(\.statusItemDateFormat)
         showEventStatusItem = userDefaults.rx.observe(\.showEventStatusItem)
+        eventStatusItemCheckRange = userDefaults.rx.observe(\.eventStatusItemCheckRange)
         eventStatusItemLength = userDefaults.rx.observe(\.eventStatusItemLength)
         eventStatusItemDetectNotch = userDefaults.rx.observe(\.eventStatusItemDetectNotch)
         showWeekNumbers = userDefaults.rx.observe(\.showWeekNumbers)
@@ -153,6 +160,18 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
         showPastEvents = userDefaults.rx.observe(\.showPastEvents)
         popoverTransparency = userDefaults.rx.observe(\.transparencyLevel)
         calendarScaling = userDefaults.rx.observe(\.calendarScaling)
+
+        let hourDateFormatter = DateComponentsFormatter()
+        hourDateFormatter.calendar = dateProvider.calendar
+        hourDateFormatter.unitsStyle = .abbreviated
+
+        eventStatusItemCheckRangeLabel = eventStatusItemCheckRange
+            .map {
+                Strings.Formatter.Date.Relative.in(
+                    hourDateFormatter.string(from: DateComponents(hour: $0))!
+                )
+            }
+            .share(replay: 1)
 
         dateStyleOptions = notificationCenter.rx.notification(NSLocale.currentLocaleDidChangeNotification)
             .void()

@@ -36,8 +36,7 @@ class NextEventViewModel {
         workspace: WorkspaceServiceProviding,
         screenProvider: ScreenProviding,
         isShowingDetails: AnyObserver<Bool>,
-        scheduler: SchedulerType,
-        hoursToCheck: Int
+        scheduler: SchedulerType
     ) {
 
         self.dateProvider = dateProvider
@@ -46,22 +45,27 @@ class NextEventViewModel {
         self.workspace = workspace
         self.isShowingDetails = isShowingDetails
 
-        typealias NextEventTuple = (event: EventModel, isInProgress: Bool)
+        struct NextEvent: Equatable {
+            let event: EventModel
+            let isInProgress: Bool
+        }
 
-        let nextEventObservable = settings.showEventStatusItem
+        let eventsObservable = settings.showEventStatusItem
             .flatMapLatest { isEnabled -> Observable<[EventModel]> in
 
                 !isEnabled ? .just([]) : enabledCalendars
                     .repeat(when: calendarService.changeObservable)
                     .flatMapLatest { calendars -> Observable<[EventModel]> in
                         let start = dateProvider.calendar.startOfDay(for: dateProvider.now)
-                        let end = dateProvider.calendar.date(byAdding: .hour, value: 24 + hoursToCheck, to: start)!
+                        let end = dateProvider.calendar.date(byAdding: .hour, value: 48, to: start)!
                         return calendarService.events(from: start, to: end, calendars: calendars)
                     }
                     .map { $0.filter { !$0.isAllDay && ![.pending, .declined].contains($0.status) } }
             }
-            .distinctUntilChanged()
-            .flatMapLatest { [dateProvider] events -> Observable<NextEventTuple?> in
+
+        let nextEventObservable = Observable
+            .combineLatest(eventsObservable, settings.eventStatusItemCheckRange)
+            .flatMapLatest { [dateProvider] events, hoursToCheck -> Observable<NextEvent?> in
 
                 Observable<Int>.interval(.seconds(1), scheduler: scheduler)
                     .void()
@@ -75,14 +79,15 @@ class NextEventViewModel {
                                 &&
                                 Int(dateProvider.now.distance(to: event.start)) <= 3600 * hoursToCheck
                             })
-                            .map { event -> NextEventTuple in
+                            .map { event -> NextEvent in
                                 let isInProgress = dateProvider.calendar.isDate(
                                     dateProvider.now, greaterThanOrEqualTo: event.start, granularity: .second
                                 )
-                                return (event, isInProgress)
+                                return NextEvent(event: event, isInProgress: isInProgress)
                             }
                     }
             }
+            .distinctUntilChanged()
             .share(replay: 1)
 
         nextEventObservable
@@ -129,7 +134,10 @@ class NextEventViewModel {
 
         time = nextEventObservable
             .skipNil()
-            .map { [dateProvider] event, isInProgress in
+            .map { [dateProvider] nextEvent in
+
+                let event = nextEvent.event
+                let isInProgress = nextEvent.isInProgress
 
                 dateFormatter.allowedUnits = [.hour, .minute]
 

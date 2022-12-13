@@ -25,6 +25,7 @@ class GeneralSettingsViewController: NSViewController {
     private let hidePastEventsRadio = Radio(title: Strings.Settings.Events.Finished.hide)
     private let dateFormatDropdown = Dropdown()
     private let dateFormatTextField = NSTextField()
+    private let nextEventRangeStepper = NSStepper()
 
     private let nextEventLengthSlider = NSSlider.make(minValue: 10, maxValue: 30)
     private let transparencySlider = NSSlider.make(minValue: 0, maxValue: 5)
@@ -60,6 +61,7 @@ class GeneralSettingsViewController: NSViewController {
 
         let stackView = NSStackView(views: [
             makeSection(title: Strings.Settings.menuBar, content: menuBarContent),
+            makeSection(title: Strings.Settings.nextEvent, content: nextEventContent),
             makeSection(title: Strings.Settings.calendar, content: calendarContent),
             makeSection(title: Strings.Settings.events, content: eventsContent),
             makeSection(title: Strings.Settings.transparency, content: transparencySlider),
@@ -74,22 +76,7 @@ class GeneralSettingsViewController: NSViewController {
 
     private lazy var menuBarContent: NSView = {
 
-        let nextEventLengthView = NSStackView(views: [
-            Label(text: "\(Strings.Settings.MenuBar.nextEventLength):"),
-            nextEventLengthSlider
-        ])
-
-        nextEventDetectNotchCheckbox.font = .systemFont(ofSize: 11, weight: .light)
-
-        let checkboxes = NSStackView(views: [
-            NSStackView(views: [
-                showMenuBarIconCheckbox, showMenuBarDateCheckbox
-            ]),
-            showNextEventCheckbox,
-            nextEventLengthView,
-            nextEventDetectNotchCheckbox
-        ])
-        .with(orientation: .vertical)
+        let checkboxes = NSStackView(views: [showMenuBarIconCheckbox, showMenuBarDateCheckbox])
 
         dateFormatTextField.placeholderString = viewModel.dateFormatPlaceholder
 
@@ -103,6 +90,47 @@ class GeneralSettingsViewController: NSViewController {
         return NSStackView(views: [checkboxes, dateFormat])
             .with(spacing: Constants.contentSpacing)
             .with(orientation: .vertical)
+    }()
+
+    private lazy var nextEventContent: NSView = {
+
+        let nextEventLengthView = NSStackView(views: [
+            NSImageView(image: Icons.Settings.ruler.with(scale: .large)),
+            nextEventLengthSlider
+        ])
+
+        nextEventDetectNotchCheckbox.font = .systemFont(ofSize: 11, weight: .light)
+
+        nextEventRangeStepper.minValue = 1
+        nextEventRangeStepper.maxValue = 24
+        nextEventRangeStepper.valueWraps = false
+        nextEventRangeStepper.refusesFirstResponder = true
+
+        let stepperLabel = Label(font: showNextEventCheckbox.font)
+
+        let stepperProperty = nextEventRangeStepper.rx.controlProperty(
+            getter: \.integerValue,
+            setter: { $0.integerValue = $1}
+        )
+
+        viewModel.eventStatusItemCheckRange
+            .bind(to: stepperProperty)
+            .disposed(by: disposeBag)
+
+        stepperProperty
+            .bind(to: viewModel.eventStatusItemCheckRangeObserver)
+            .disposed(by: disposeBag)
+
+        viewModel.eventStatusItemCheckRangeLabel
+            .bind(to: stepperLabel.rx.text)
+            .disposed(by: disposeBag)
+
+        return NSStackView(views: [
+            NSStackView(views: [showNextEventCheckbox, stepperLabel, nextEventRangeStepper]),
+            nextEventLengthView,
+            nextEventDetectNotchCheckbox
+        ])
+        .with(orientation: .vertical)
     }()
 
     private lazy var showDeclinedEventsTooltip: NSView = {
@@ -136,9 +164,9 @@ class GeneralSettingsViewController: NSViewController {
     private lazy var calendarContent: NSView = {
         NSStackView(views: [
             NSStackView(views: [
-                NSImageView(image: Icons.Calendar.scalingMinus),
+                NSImageView(image: Icons.Settings.zoomOut),
                 calendarScalingSlider,
-                NSImageView(image: Icons.Calendar.scalingPlus)
+                NSImageView(image: Icons.Settings.zoomIn)
             ]),
             .dummy,
             showWeekNumbersCheckbox,

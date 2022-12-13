@@ -10,17 +10,17 @@ import RxSwift
 
 class MockStatusItemSettings: StatusItemSettings {
 
-    var toggleIcon: AnyObserver<Bool>
-    var toggleDate: AnyObserver<Bool>
-    var dateStyleObserver: AnyObserver<DateStyle>
-    var dateFormatObserver: AnyObserver<String>
-    var eventStatusItemDetectNotchObserver: AnyObserver<Bool>
+    let toggleIcon: AnyObserver<Bool>
+    let toggleDate: AnyObserver<Bool>
+    let dateStyleObserver: AnyObserver<DateStyle>
+    let dateFormatObserver: AnyObserver<String>
+    let eventStatusItemDetectNotchObserver: AnyObserver<Bool>
 
-    var showStatusItemIcon: Observable<Bool>
-    var showStatusItemDate: Observable<Bool>
-    var statusItemDateStyle: Observable<DateStyle>
-    var statusItemDateFormat: Observable<String>
-    var eventStatusItemDetectNotch: Observable<Bool>
+    let showStatusItemIcon: Observable<Bool>
+    let showStatusItemDate: Observable<Bool>
+    let statusItemDateStyle: Observable<DateStyle>
+    let statusItemDateFormat: Observable<String>
+    let eventStatusItemDetectNotch: Observable<Bool>
 
     init() {
         (showStatusItemIcon, toggleIcon) = BehaviorSubject.pipe(value: true)
