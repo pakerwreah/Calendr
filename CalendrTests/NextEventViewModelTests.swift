@@ -20,6 +20,7 @@ class NextEventViewModelTests: XCTestCase {
     let calendarService = MockCalendarServiceProvider()
     let workspace = MockWorkspaceServiceProvider()
     let screenProvider = MockScreenProvider()
+    let scheduler = HistoricalScheduler()
 
     lazy var viewModel = NextEventViewModel(
         settings: settings,
@@ -29,7 +30,7 @@ class NextEventViewModelTests: XCTestCase {
         workspace: workspace,
         screenProvider: screenProvider,
         isShowingDetails: .dummy(),
-        scheduler: MainScheduler.instance
+        scheduler: scheduler
     )
 
     var now: Date {
@@ -277,6 +278,11 @@ class NextEventViewModelTests: XCTestCase {
         ])
 
         XCTAssertEqual(time, "in 30s")
+
+        dateProvider.now.addTimeInterval(1)
+        scheduler.advance(.seconds(1))
+
+        XCTAssertEqual(time, "in 29s")
     }
 
     func testNextEvent_isNotInProgress_startsInLessThan1Minute() {
@@ -292,6 +298,16 @@ class NextEventViewModelTests: XCTestCase {
         ])
 
         XCTAssertEqual(time, "in 1m")
+
+        dateProvider.now.addTimeInterval(1)
+        scheduler.advance(.seconds(1))
+
+        XCTAssertEqual(time, "in 1m")
+
+        dateProvider.now.addTimeInterval(28)
+        scheduler.advance(.seconds(1))
+
+        XCTAssertEqual(time, "in 30s")
     }
 
     func testNextEvent_isNotInProgress_startsIn1Minute() {
@@ -322,6 +338,11 @@ class NextEventViewModelTests: XCTestCase {
         ])
 
         XCTAssertEqual(time, "in 2m")
+
+        dateProvider.now.addTimeInterval(5)
+        scheduler.advance(.seconds(1))
+
+        XCTAssertEqual(time, "in 1m")
     }
 
     func testNextEvent_isNotInProgress_startsIn1Hour() {
@@ -337,6 +358,11 @@ class NextEventViewModelTests: XCTestCase {
         ])
 
         XCTAssertEqual(time, "in 1h")
+
+        dateProvider.now.addTimeInterval(60)
+        scheduler.advance(.seconds(1))
+
+        XCTAssertEqual(time, "in 59m")
     }
 
     func testNextEvent_isNotInProgress_startsInMoreThan1Hour() {
@@ -352,6 +378,11 @@ class NextEventViewModelTests: XCTestCase {
         ])
 
         XCTAssertEqual(time, "in 1h 40m")
+
+        dateProvider.now.addTimeInterval(60)
+        scheduler.advance(.seconds(1))
+
+        XCTAssertEqual(time, "in 1h 39m")
     }
 
     func testNextEvent_isInProgress_endsIn30Seconds() {
@@ -367,6 +398,11 @@ class NextEventViewModelTests: XCTestCase {
         ])
 
         XCTAssertEqual(time, "30s left")
+
+        dateProvider.now.addTimeInterval(1)
+        scheduler.advance(.seconds(1))
+
+        XCTAssertEqual(time, "29s left")
     }
 
     func testNextEvent_isInProgress_endsInLessThan1Minute() {
@@ -382,6 +418,16 @@ class NextEventViewModelTests: XCTestCase {
         ])
 
         XCTAssertEqual(time, "1m left")
+
+        dateProvider.now.addTimeInterval(1)
+        scheduler.advance(.seconds(1))
+
+        XCTAssertEqual(time, "1m left")
+
+        dateProvider.now.addTimeInterval(28)
+        scheduler.advance(.seconds(1))
+
+        XCTAssertEqual(time, "30s left")
     }
 
     func testNextEvent_isInProgress_endsIn1Minute() {
@@ -412,6 +458,11 @@ class NextEventViewModelTests: XCTestCase {
         ])
 
         XCTAssertEqual(time, "2m left")
+
+        dateProvider.now.addTimeInterval(5)
+        scheduler.advance(.seconds(1))
+
+        XCTAssertEqual(time, "1m left")
     }
 
     func testNextEvent_isInProgress_endsIn1Hour() {
@@ -427,6 +478,11 @@ class NextEventViewModelTests: XCTestCase {
         ])
 
         XCTAssertEqual(time, "1h left")
+
+        dateProvider.now.addTimeInterval(60)
+        scheduler.advance(.seconds(1))
+
+        XCTAssertEqual(time, "59m left")
     }
 
     func testNextEvent_isInProgress_endsInMoreThan1Hour() {
@@ -442,6 +498,11 @@ class NextEventViewModelTests: XCTestCase {
         ])
 
         XCTAssertEqual(time, "1h 40m left")
+
+        dateProvider.now.addTimeInterval(60)
+        scheduler.advance(.seconds(1))
+
+        XCTAssertEqual(time, "1h 39m left")
     }
 
     func testNextEvent_isReminder() {
@@ -457,6 +518,11 @@ class NextEventViewModelTests: XCTestCase {
         ])
 
         XCTAssertEqual(time, "in 1h 40m")
+
+        dateProvider.now.addTimeInterval(60)
+        scheduler.advance(.seconds(1))
+
+        XCTAssertEqual(time, "in 1h 39m")
     }
 
     func testNextEvent_isPast_isReminder() {
@@ -476,6 +542,31 @@ class NextEventViewModelTests: XCTestCase {
         ])
 
         XCTAssertEqual(time, "1h 40m ago")
+
+        dateProvider.now.addTimeInterval(60)
+        scheduler.advance(.seconds(1))
+
+        XCTAssertEqual(time, "1h 41m ago")
+    }
+
+    func testNextEvent_becomesPast_isReminder() {
+
+        var time: String?
+
+        viewModel.time
+            .bind { time = $0 }
+            .disposed(by: disposeBag)
+
+        calendarService.changeEvents([
+            .make(start: dateProvider.now + 30, type: .reminder)
+        ])
+
+        XCTAssertEqual(time, "in 30s")
+
+        dateProvider.now.addTimeInterval(60)
+        scheduler.advance(.seconds(1))
+
+        XCTAssertEqual(time, "30s ago")
     }
 }
 

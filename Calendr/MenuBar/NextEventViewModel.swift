@@ -87,7 +87,6 @@ class NextEventViewModel {
                             }
                     }
             }
-            .distinctUntilChanged()
             .share(replay: 1)
 
         nextEventObservable
