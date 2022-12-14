@@ -65,14 +65,17 @@ class CalendarServiceProvider: CalendarServiceProviding {
         }
     }
 
+    private func storeCalendars() -> [EKCalendar] {
+        store.calendars(for: .event) + store.calendars(for: .reminder)
+    }
+
     func calendars() -> Observable<[CalendarModel]> {
 
-        Observable.create { [store] observer in
+        Observable.create { [weak self] observer in
 
-            observer.onNext(
-                (store.calendars(for: .event) + store.calendars(for: .reminder)).map(CalendarModel.init(from:))
-            )
-
+            if let self {
+                observer.onNext(self.storeCalendars().map(CalendarModel.init(from:)))
+            }
             observer.onCompleted()
 
             return Disposables.create()
@@ -82,7 +85,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
 
     func events(from start: Date, to end: Date, calendars: [String]) -> Observable<[EventModel]> {
 
-        let calendars = calendars.compactMap(store.calendar(withIdentifier:))
+        let calendars = storeCalendars().filter { calendars.contains($0.calendarIdentifier) }
 
         return Observable.zip(
             fetchEvents(from: start, to: end, calendars: calendars),
