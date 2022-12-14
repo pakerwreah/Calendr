@@ -115,8 +115,9 @@ class CalendarPickerViewController: NSViewController {
             .disposed(by: disposeBag)
 
         checkbox.rx.tap
-            .map { calendar.identifier }
-            .bind(to: viewModel.toggleCalendar)
+            .bind { [viewModel] in
+                viewModel.toggleCalendar.onNext(calendar.identifier)
+            }
             .disposed(by: disposeBag)
 
         return checkbox

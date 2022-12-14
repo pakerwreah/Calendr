@@ -28,6 +28,7 @@ class CalendarPickerViewModel {
 
         self.calendars = calendarService.changeObservable
             .flatMapLatest(calendarService.calendars)
+            .distinctUntilChanged()
             .share(replay: 1)
 
         self.toggleCalendar = toggleCalendarSubject.asObserver()
