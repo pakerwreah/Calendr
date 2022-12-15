@@ -33,6 +33,7 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
     private let viewModel: EventDetailsViewModel
     
     private var animatesClose = true
+    private var mouseMovedEventMonitor: Any?
 
     init(viewModel: EventDetailsViewModel) {
 
@@ -378,6 +379,26 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
             .disposed(by: disposeBag)
     }
 
+    private func setUpAutoClose() {
+
+        mouseMovedEventMonitor = NSEvent.addLocalMonitorForEvents(matching: .mouseMoved) { [weak self] event in
+
+            if !NSMouseInRect(NSEvent.mouseLocation, NSScreen.main!.frame, false) {
+                let parentViewController = self?.view.window?.parent?.contentViewController
+                self?.animatesClose = !(parentViewController is MainViewController)
+                self?.view.window?.performClose(nil)
+            }
+            return event
+        }
+    }
+
+    func popoverWillShow(_ notification: Notification) {
+
+        notification.popover.animates = false
+
+        setUpAutoClose()
+    }
+
     func popoverDidShow(_ notification: Notification) {
         // 🔨 Allow dismiss with the escape key
         view.window?.makeKey()
@@ -389,16 +410,13 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         viewModel.isShowingObserver.onNext(true)
     }
 
-    func popoverWillShow(_ notification: Notification) {
-
-        notification.popover.animates = false
-    }
-
     func popoverWillClose(_ notification: Notification) {
         // 🔨 Prevent retain cycle
         view.window?.makeFirstResponder(nil)
 
         notification.popover.animates = animatesClose
+
+        NSEvent.removeMonitor(mouseMovedEventMonitor!)
     }
 
     func popoverDidClose(_ notification: Notification) {
