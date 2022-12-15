@@ -24,6 +24,7 @@ class ScreenProvider: ScreenProviding {
     init(notificationCenter: NotificationCenter) {
 
         screenObservable = notificationCenter.rx.notification(NSWindow.didChangeScreenNotification)
+            .debounce(.milliseconds(1), scheduler: MainScheduler.instance)
             .void()
             .startWith(())
             .compactMap { NSScreen.main }
