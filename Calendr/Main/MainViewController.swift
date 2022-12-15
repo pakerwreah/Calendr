@@ -376,17 +376,6 @@ class MainViewController: NSViewController, NSPopoverDelegate {
         popover.contentViewController = self
         popover.delegate = self
 
-        mainStackView.rx.observe(\.frame)
-            .distinctUntilChanged()
-            .observe(on: MainScheduler.asyncInstance)
-            .map { [view] frame in
-                var size = view.frame.size
-                size.height = frame.height + 2 * Constants.MainStackView.margin
-                return size
-            }
-            .bind(to: popover.rx.contentSize)
-            .disposed(by: popoverDisposeBag)
-
         settingsViewController.rx.viewWillAppear
             .map(.applicationDefined)
             .bind(to: popover.rx.behavior)
@@ -425,6 +414,11 @@ class MainViewController: NSViewController, NSPopoverDelegate {
 
         guard let statusBarButton = mainStatusItem.button else { return }
 
+        // 🔨 Dirty hack to force a layout pass before showing the first popover
+        let wctrl = NSWindowController(window: NSWindow(contentViewController: self))
+        wctrl.showWindow(nil)
+        wctrl.close()
+
         let menu = NSMenu()
         menu.addItem(withTitle: Strings.quit, action: #selector(NSApp.terminate), keyEquivalent: "q")
         mainStatusItem.menu = menu
@@ -439,6 +433,30 @@ class MainViewController: NSViewController, NSPopoverDelegate {
             }
             .bind { [weak self] in
                 self?.popoverDisposeBag = DisposeBag()
+            }
+            .disposed(by: disposeBag)
+
+        mainStackView.rx.observe(\.frame)
+            .map(\.height)
+            .distinctUntilChanged()
+            .bind { [view] height in
+                guard let window = view.window else { return }
+
+                var size = view.frame.size
+                size.height = height + 2 * Constants.MainStackView.margin
+
+                guard view.frame.height > 0 else {
+                    DispatchQueue.main.async {
+                        window.setContentSize(size)
+                    }
+                    return
+                }
+
+                NSAnimationContext.runAnimationGroup { context in
+                    context.duration = 0.1
+                    context.allowsImplicitAnimation = true
+                    window.setContentSize(size)
+                }
             }
             .disposed(by: disposeBag)
 
