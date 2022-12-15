@@ -55,6 +55,7 @@ class MainViewController: NSViewController, NSPopoverDelegate {
     private let dateProvider: DateProviding
     private let screenProvider: ScreenProviding
     private let notificationCenter: NotificationCenter
+    private var mouseMovedEventMonitor: Any?
 
     // MARK: - Initalization
 
@@ -396,11 +397,24 @@ class MainViewController: NSViewController, NSPopoverDelegate {
             .disposed(by: popoverDisposeBag)
     }
 
+    private func setUpAutoClose() {
+
+        mouseMovedEventMonitor = NSEvent.addLocalMonitorForEvents(matching: .mouseMoved) { [view] event in
+
+            if !NSMouseInRect(NSEvent.mouseLocation, NSScreen.main!.frame, false) {
+                view.window?.performClose(nil)
+            }
+            return event
+        }
+    }
+
     func popoverWillShow(_ notification: Notification) {
 
         notification.popover.animates = false
 
         mainStatusItem.button!.isHighlighted = true
+
+        setUpAutoClose()
     }
 
     func popoverWillClose(_ notification: Notification) {
@@ -408,6 +422,8 @@ class MainViewController: NSViewController, NSPopoverDelegate {
         notification.popover.animates = true
 
         mainStatusItem.button!.isHighlighted = false
+
+        NSEvent.removeMonitor(mouseMovedEventMonitor!)
     }
 
     private func setUpMainStatusItem() {
@@ -439,13 +455,16 @@ class MainViewController: NSViewController, NSPopoverDelegate {
         mainStackView.rx.observe(\.frame)
             .map(\.height)
             .distinctUntilChanged()
-            .bind { [view] height in
+            .enumerated()
+            .bind { [view] layoutStep, height in
                 guard let window = view.window else { return }
 
                 var size = view.frame.size
                 size.height = height + 2 * Constants.MainStackView.margin
 
-                guard view.frame.height > 0 else {
+                // [0] Dummy window initialization
+                // [1] First popover open
+                guard layoutStep >= 2 else {
                     DispatchQueue.main.async {
                         window.setContentSize(size)
                     }
