@@ -35,6 +35,7 @@
 		3430675E25F6BC15000D4003 /* HistoricalSchedulerTimeConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3430675D25F6BC15000D4003 /* HistoricalSchedulerTimeConverter.swift */; };
 		3430676325F6C130000D4003 /* TrackedHistoricalScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3430676225F6C130000D4003 /* TrackedHistoricalScheduler.swift */; };
 		3430ED03259634E00045DA53 /* NSStackView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3430ED02259634E00045DA53 /* NSStackView+Rx.swift */; };
+		3433E87A294AA3D50042533A /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3433E879294AA3D50042533A /* Notification.swift */; };
 		34424150267EA65200142028 /* ReminderOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3442414F267EA65200142028 /* ReminderOptions.swift */; };
 		34427692269B5760004CFE1C /* MockMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34427691269B5760004CFE1C /* MockMainViewController.swift */; };
 		3442769A269B5CA4004CFE1C /* UITestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34427699269B5CA4004CFE1C /* UITestCase.swift */; };
@@ -179,6 +180,7 @@
 		3430675D25F6BC15000D4003 /* HistoricalSchedulerTimeConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoricalSchedulerTimeConverter.swift; sourceTree = "<group>"; };
 		3430676225F6C130000D4003 /* TrackedHistoricalScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackedHistoricalScheduler.swift; sourceTree = "<group>"; };
 		3430ED02259634E00045DA53 /* NSStackView+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSStackView+Rx.swift"; sourceTree = "<group>"; };
+		3433E879294AA3D50042533A /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		343B74C826D168A80081A440 /* UnitTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = UnitTests.xctestplan; path = CalendrTests/UnitTests.xctestplan; sourceTree = SOURCE_ROOT; };
 		343B74C926D169E80081A440 /* UITests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = UITests.xctestplan; sourceTree = "<group>"; };
 		3442414F267EA65200142028 /* ReminderOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderOptions.swift; sourceTree = "<group>"; };
@@ -522,6 +524,7 @@
 				34702167259E761100827AE7 /* Calendar.swift */,
 				34924CED259FD064009C3450 /* DateFormatter.swift */,
 				34651F5325E22A3900518C5A /* DateIntervalFormatter.swift */,
+				3433E879294AA3D50042533A /* Notification.swift */,
 				34E60D6226A0EA32004DA082 /* NSAccessibilityProtocol.swift */,
 				34E60D6026A0D6D6004DA082 /* NSAccessibilityProtocol+Rx.swift */,
 				34B5A09625B0F8A500F7F7ED /* NSButton.swift */,
@@ -891,6 +894,7 @@
 				3430ED03259634E00045DA53 /* NSStackView+Rx.swift in Sources */,
 				34B2C59E279FFF0600B52BF3 /* NSClickGestureRecognizer+Rx.swift in Sources */,
 				34E004A725B61D5200241419 /* StatusItemViewModel.swift in Sources */,
+				3433E87A294AA3D50042533A /* Notification.swift in Sources */,
 				34D19FC0262299D300B2732C /* NSEdgeInsets.swift in Sources */,
 				34702168259E761100827AE7 /* Calendar.swift in Sources */,
 				34F201332693F562006CE2FF /* MockEventListSettings.swift in Sources */,
@@ -1150,7 +1154,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.7.4;
+				MARKETING_VERSION = 1.7.5;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Config/Calendr-Bridging-Header.h";
@@ -1174,7 +1178,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.7.4;
+				MARKETING_VERSION = 1.7.5;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Config/Calendr-Bridging-Header.h";
