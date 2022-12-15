@@ -8,7 +8,7 @@
 import Cocoa
 import RxSwift
 
-class MainViewController: NSViewController {
+class MainViewController: NSViewController, NSPopoverDelegate {
 
     // ViewControllers
     private let settingsViewController: SettingsViewController
@@ -373,23 +373,8 @@ class MainViewController: NSViewController {
 
     private func setUpPopover(_ popover: NSPopover) {
 
-        guard let statusBarButton = mainStatusItem.button else { return }
-
         popover.contentViewController = self
-
-        popover.rx.observe(\.isShown)
-            .observe(on: MainScheduler.asyncInstance)
-            .startWith(false)
-            .bind(to: popover.rx.animates)
-            .disposed(by: popoverDisposeBag)
-
-        popover.rx.observe(\.isShown)
-            .bind(to: statusBarButton.rx.isHighlighted)
-            .disposed(by: popoverDisposeBag)
-
-        statusItemViewModel.text
-            .bind(to: statusBarButton.rx.attributedTitle)
-            .disposed(by: popoverDisposeBag)
+        popover.delegate = self
 
         mainStackView.rx.observe(\.frame)
             .distinctUntilChanged()
@@ -420,6 +405,20 @@ class MainViewController: NSViewController {
             .map { $0 == .on ? .applicationDefined : .transient }
             .bind(to: popover.rx.behavior)
             .disposed(by: popoverDisposeBag)
+    }
+
+    func popoverWillShow(_ notification: Notification) {
+
+        notification.popover.animates = false
+
+        mainStatusItem.button!.isHighlighted = true
+    }
+
+    func popoverWillClose(_ notification: Notification) {
+
+        notification.popover.animates = true
+
+        mainStatusItem.button!.isHighlighted = false
     }
 
     private func setUpMainStatusItem() {

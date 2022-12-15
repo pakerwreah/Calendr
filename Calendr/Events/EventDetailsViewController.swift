@@ -433,8 +433,3 @@ private extension NSFont {
     static let header = systemFont(ofSize: 16)
     static let small = systemFont(ofSize: 12)
 }
-
-private extension Notification {
-
-    var popover: NSPopover { object as! NSPopover  }
-}
