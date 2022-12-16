@@ -64,7 +64,8 @@ class CalendarView: NSView {
             .bind { [gridView] cellSize in
                 for row in 0..<gridView.numberOfRows {
                     gridView.row(at: row).height = cellSize
-                    for col in 0..<gridView.numberOfColumns {
+                    /// skip week number column, because it has dynamic width
+                    for col in 1..<gridView.numberOfColumns {
                         gridView.column(at: col).width = cellSize
                     }
                 }
