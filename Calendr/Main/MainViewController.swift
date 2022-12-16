@@ -426,21 +426,37 @@ class MainViewController: NSViewController, NSPopoverDelegate {
         NSEvent.removeMonitor(mouseMovedEventMonitor!)
     }
 
-    private func setUpMainStatusItem() {
+    private var contentSize: CGSize {
+        var size = view.frame.size
+        size.height = mainStackView.frame.height + 2 * Constants.MainStackView.margin
+        return size
+    }
 
-        guard let statusBarButton = mainStatusItem.button else { return }
+    // 🔨 Dirty hack to force a layout pass before showing the popover
+    private func forceLayout() {
 
-        // 🔨 Dirty hack to force a layout pass before showing the first popover
         let wctrl = NSWindowController(window: NSWindow(contentViewController: self))
         wctrl.showWindow(nil)
         wctrl.close()
 
+        view.window?.setContentSize(contentSize)
+    }
+
+    private func setUpMainStatusItem() {
+
+        guard let statusBarButton = mainStatusItem.button else { return }
+
         statusBarButton.rx.click
-            .flatMapFirst { [weak self] _ -> Observable<Void> in
+            .enumerated()
+            .flatMapFirst { [weak self] pass, _ -> Observable<Void> in
                 guard let self else { return .empty() }
+
+                self.forceLayout()
+
                 let popover = NSPopover()
                 self.setUpPopover(popover)
                 popover.show(relativeTo: .zero, of: statusBarButton, preferredEdge: .maxY)
+
                 return popover.rx.deallocated
             }
             .bind { [weak self] in
@@ -451,26 +467,13 @@ class MainViewController: NSViewController, NSPopoverDelegate {
         mainStackView.rx.observe(\.frame)
             .map(\.height)
             .distinctUntilChanged()
-            .enumerated()
-            .bind { [view] layoutStep, height in
-                guard let window = view.window else { return }
-
-                var size = view.frame.size
-                size.height = height + 2 * Constants.MainStackView.margin
-
-                // [0] Dummy window initialization
-                // [1] First popover open
-                guard layoutStep >= 2 else {
-                    DispatchQueue.main.async {
-                        window.setContentSize(size)
-                    }
-                    return
-                }
+            .bind { [weak self] _ in
+                guard let self, let window = self.view.window, window.isVisible else { return }
 
                 NSAnimationContext.runAnimationGroup { context in
                     context.duration = 0.1
                     context.allowsImplicitAnimation = true
-                    window.setContentSize(size)
+                    window.setContentSize(self.contentSize)
                 }
             }
             .disposed(by: disposeBag)
