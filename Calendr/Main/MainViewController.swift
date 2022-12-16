@@ -435,10 +435,6 @@ class MainViewController: NSViewController, NSPopoverDelegate {
         wctrl.showWindow(nil)
         wctrl.close()
 
-        let menu = NSMenu()
-        menu.addItem(withTitle: Strings.quit, action: #selector(NSApp.terminate), keyEquivalent: "q")
-        mainStatusItem.menu = menu
-
         statusBarButton.rx.click
             .flatMapFirst { [weak self] _ -> Observable<Void> in
                 guard let self else { return .empty() }
