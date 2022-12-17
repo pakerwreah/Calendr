@@ -24,6 +24,11 @@ extension NSStackView {
         return self
     }
 
+    func with(distribution: Distribution) -> Self {
+        self.distribution = distribution
+        return self
+    }
+
     func with(spacing: CGFloat) -> Self {
         self.spacing = spacing
         return self

@@ -31,11 +31,8 @@ class CalendarViewModel {
         notificationCenter: NotificationCenter
     ) {
 
-        let calendarObservable = notificationCenter.rx
-            .notification(NSLocale.currentLocaleDidChangeNotification)
-            .void()
-            .startWith(())
-            .map { dateProvider.calendar }
+        let calendarObservable = dateProvider
+            .calendarObservable(using: notificationCenter)
             .share(replay: 1)
 
         let dateFormatterObservable = calendarObservable
@@ -43,11 +40,6 @@ class CalendarViewModel {
             .map {
                 DateFormatter(format: "MMM yyyy", calendar: $0).with(context: .beginningOfSentence)
             }
-            .share(replay: 1)
-
-        let firstWeekdayObservable = calendarObservable
-            .map(\.firstWeekday)
-            .distinctUntilChanged()
             .share(replay: 1)
 
         title = Observable.combineLatest(
@@ -58,15 +50,16 @@ class CalendarViewModel {
         .share(replay: 1)
 
         weekDays = Observable.combineLatest(
-            dateFormatterObservable, firstWeekdayObservable
+            calendarObservable, settings.highlightedWeekdays
         )
-        .map { dateFormatter, firstWeekday in
-            (firstWeekday ..< firstWeekday + 7)
-                .map { ($0 - 1) % 7 }
-                .map { weekDay in
-                    WeekDay(
-                        title: dateFormatter.veryShortWeekdaySymbols[weekDay],
-                        isWeekend: [0, 6].contains(weekDay)
+        .map { calendar, highlightedWeekdays in
+            (calendar.firstWeekday ..< calendar.firstWeekday + 7)
+                .map {
+                    let weekDay = ($0 - 1) % 7
+                    return WeekDay(
+                        title: calendar.veryShortWeekdaySymbols[weekDay],
+                        isHighlighted: highlightedWeekdays.contains(weekDay),
+                        index: weekDay
                     )
                 }
         }
@@ -82,15 +75,15 @@ class CalendarViewModel {
 
         // Create cells for current month
         let dateCellsObservable = Observable.combineLatest(
-            dateRangeObservable, firstWeekdayObservable
+            dateRangeObservable, calendarObservable
         )
-        .map { month, firstWeekday -> [CalendarCellViewModel] in
+        .map { month, calendar -> [CalendarCellViewModel] in
 
-            let monthStartWeekDay = dateProvider.calendar.component(.weekday, from: month.start)
+            let monthStartWeekDay = calendar.component(.weekday, from: month.start)
 
-            let start = dateProvider.calendar.date(
+            let start = calendar.date(
                 byAdding: .day,
-                value: { $0 <= 0 ? $0 : $0 - 7 }(firstWeekday - monthStartWeekDay),
+                value: { $0 <= 0 ? $0 : $0 - 7 }(calendar.firstWeekday - monthStartWeekDay),
                 to: month.start
             )!
 

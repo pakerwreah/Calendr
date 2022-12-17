@@ -14,7 +14,11 @@ struct CalendarViewPreview: PreviewProvider {
 
     static let dateProvider = MockDateProvider()
     static let calendarService = MockCalendarServiceProvider(dateProvider: dateProvider)
-    static let settings = MockCalendarSettings(showWeekNumbers: true, calendarScaling: 1.3)
+    static let settings = MockCalendarSettings(
+        calendarScaling: 1.3,
+        highlightedWeekdays: [0, 1, 4, 6],
+        showWeekNumbers: true
+    )
     static let notificationCenter = NotificationCenter()
 
     static let hovered = BehaviorSubject<Date?>(value: .random(from: dateProvider))

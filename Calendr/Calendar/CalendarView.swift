@@ -93,7 +93,7 @@ class CalendarView: NSView {
 
             let weekends = weekDays
                 .enumerated()
-                .filter(\.element.isWeekend)
+                .filter(\.element.isHighlighted)
                 .map(\.offset)
 
             return IndexSet(weekends).rangeView.map { range in

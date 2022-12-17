@@ -10,6 +10,9 @@ import RxSwift
 
 class MockCalendarSettings: CalendarSettings {
 
+    let highlightedWeekdays: Observable<[Int]>
+    let highlightedWeekdaysObserver: AnyObserver<[Int]>
+
     let showWeekNumbers: Observable<Bool>
     let toggleWeekNumbers: AnyObserver<Bool>
 
@@ -17,9 +20,11 @@ class MockCalendarSettings: CalendarSettings {
     let toggleDeclinedEvents: AnyObserver<Bool>
 
     let preserveSelectedDate: Observable<Bool>
+
     let calendarScaling: Observable<Double>
 
     init() {
+        (highlightedWeekdays, highlightedWeekdaysObserver) = BehaviorSubject.pipe(value: [0, 6])
         (showWeekNumbers, toggleWeekNumbers) = BehaviorSubject.pipe(value: false)
         (showDeclinedEvents, toggleDeclinedEvents) = BehaviorSubject.pipe(value: false)
         preserveSelectedDate = .just(false)

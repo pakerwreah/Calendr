@@ -9,5 +9,6 @@ import Foundation
 
 struct WeekDay {
     let title: String
-    let isWeekend: Bool
+    let isHighlighted: Bool
+    let index: Int
 }

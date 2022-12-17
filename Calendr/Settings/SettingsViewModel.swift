@@ -40,10 +40,11 @@ protocol StatusItemSettings {
 }
 
 protocol CalendarSettings {
+    var calendarScaling: Observable<Double> { get }
+    var highlightedWeekdays: Observable<[Int]> { get }
     var showWeekNumbers: Observable<Bool> { get }
     var showDeclinedEvents: Observable<Bool> { get }
     var preserveSelectedDate: Observable<Bool> { get }
-    var calendarScaling: Observable<Double> { get }
 }
 
 protocol PopoverSettings {
@@ -72,12 +73,13 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
     let eventStatusItemCheckRangeObserver: AnyObserver<Int>
     let eventStatusItemLengthObserver: AnyObserver<Int>
     let toggleEventStatusItemDetectNotch: AnyObserver<Bool>
+    let calendarScalingObserver: AnyObserver<Double>
+    let toggleHighlightedWeekday: AnyObserver<Int>
     let toggleWeekNumbers: AnyObserver<Bool>
     let toggleDeclinedEvents: AnyObserver<Bool>
     let togglePreserveSelectedDate: AnyObserver<Bool>
     let togglePastEvents: AnyObserver<Bool>
     let transparencyObserver: AnyObserver<Int>
-    let calendarScalingObserver: AnyObserver<Double>
 
     // Observables
     let showStatusItemIcon: Observable<Bool>
@@ -92,13 +94,15 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
     let eventStatusItemCheckRangeLabel: Observable<String>
     let eventStatusItemLength: Observable<Int>
     let eventStatusItemDetectNotch: Observable<Bool>
+    let calendarScaling: Observable<Double>
+    let highlightedWeekdays: Observable<[Int]>
+    let highlightedWeekdaysOptions: Observable<[WeekDay]>
     let showWeekNumbers: Observable<Bool>
     let showDeclinedEvents: Observable<Bool>
     let preserveSelectedDate: Observable<Bool>
     let showPastEvents: Observable<Bool>
     let popoverTransparency: Observable<Int>
     let popoverMaterial: Observable<PopoverMaterial>
-    let calendarScaling: Observable<Double>
 
     init(
         dateProvider: DateProviding,
@@ -115,12 +119,13 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
             Prefs.eventStatusItemCheckRange: 6,
             Prefs.eventStatusItemLength: 18,
             Prefs.eventStatusItemDetectNotch: false,
+            Prefs.calendarScaling: 1,
+            Prefs.highlightedWeekdays: [0, 6],
             Prefs.showWeekNumbers: false,
             Prefs.showDeclinedEvents: false,
             Prefs.preserveSelectedDate: false,
             Prefs.showPastEvents: true,
-            Prefs.transparencyLevel: 2,
-            Prefs.calendarScaling: 1
+            Prefs.transparencyLevel: 2
         ])
 
         toggleStatusItemIcon = userDefaults.rx.observer(for: \.statusItemIconEnabled)
@@ -131,12 +136,13 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
         eventStatusItemCheckRangeObserver = userDefaults.rx.observer(for: \.eventStatusItemCheckRange)
         eventStatusItemLengthObserver = userDefaults.rx.observer(for: \.eventStatusItemLength)
         toggleEventStatusItemDetectNotch = userDefaults.rx.observer(for: \.eventStatusItemDetectNotch)
+        calendarScalingObserver = userDefaults.rx.observer(for: \.calendarScaling)
+        toggleHighlightedWeekday = userDefaults.rx.toggleObserver(for: \.highlightedWeekdays)
         toggleWeekNumbers = userDefaults.rx.observer(for: \.showWeekNumbers)
         toggleDeclinedEvents = userDefaults.rx.observer(for: \.showDeclinedEvents)
         togglePreserveSelectedDate = userDefaults.rx.observer(for: \.preserveSelectedDate)
         togglePastEvents = userDefaults.rx.observer(for: \.showPastEvents)
         transparencyObserver = userDefaults.rx.observer(for: \.transparencyLevel)
-        calendarScalingObserver = userDefaults.rx.observer(for: \.calendarScaling)
 
         let statusItemIconAndDate = Observable.combineLatest(
             userDefaults.rx.observe(\.statusItemIconEnabled),
@@ -154,37 +160,28 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
         eventStatusItemCheckRange = userDefaults.rx.observe(\.eventStatusItemCheckRange)
         eventStatusItemLength = userDefaults.rx.observe(\.eventStatusItemLength)
         eventStatusItemDetectNotch = userDefaults.rx.observe(\.eventStatusItemDetectNotch)
+        calendarScaling = userDefaults.rx.observe(\.calendarScaling)
+        highlightedWeekdays = userDefaults.rx.observe(\.highlightedWeekdays)
         showWeekNumbers = userDefaults.rx.observe(\.showWeekNumbers)
         showDeclinedEvents = userDefaults.rx.observe(\.showDeclinedEvents)
         preserveSelectedDate = userDefaults.rx.observe(\.preserveSelectedDate)
         showPastEvents = userDefaults.rx.observe(\.showPastEvents)
         popoverTransparency = userDefaults.rx.observe(\.transparencyLevel)
-        calendarScaling = userDefaults.rx.observe(\.calendarScaling)
 
-        let hourDateFormatter = DateComponentsFormatter()
-        hourDateFormatter.calendar = dateProvider.calendar
-        hourDateFormatter.unitsStyle = .abbreviated
-
-        eventStatusItemCheckRangeLabel = eventStatusItemCheckRange
-            .map {
-                Strings.Formatter.Date.Relative.in(
-                    hourDateFormatter.string(from: DateComponents(hour: $0))!
-                )
-            }
+        let calendarObservable = dateProvider
+            .calendarObservable(using: notificationCenter)
             .share(replay: 1)
 
-        dateStyleOptions = notificationCenter.rx.notification(NSLocale.currentLocaleDidChangeNotification)
-            .void()
-            .startWith(())
-            .map {
-                let dateFormatter = DateFormatter(calendar: dateProvider.calendar)
+        dateStyleOptions = calendarObservable
+            .map { calendar in
+                let dateFormatter = DateFormatter(calendar: calendar)
                 var options: [String] = []
 
                 for i: UInt in DateStyle.options.map(\.rawValue) {
                     dateFormatter.dateStyle = .init(rawValue: i) ?? .none
                     options.append(dateFormatter.string(from: dateProvider.now))
                 }
-                
+
                 options.append("\(Strings.Settings.MenuBar.dateFormatCustom)...")
 
                 return options
@@ -194,6 +191,41 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
         isDateFormatInputVisible = statusItemDateStyle
             .map(\.isCustom)
             .distinctUntilChanged()
+            .share(replay: 1)
+
+        eventStatusItemCheckRangeLabel = Observable
+            .combineLatest(
+                eventStatusItemCheckRange,
+                calendarObservable
+            )
+            .map { range, calendar in
+                let dateFormatter = DateComponentsFormatter()
+                dateFormatter.calendar = calendar
+                dateFormatter.unitsStyle = .abbreviated
+
+                return Strings.Formatter.Date.Relative.in(
+                    dateFormatter.string(from: DateComponents(hour: range))!
+                )
+            }
+            .share(replay: 1)
+
+        highlightedWeekdaysOptions = Observable
+            .combineLatest(
+                highlightedWeekdays,
+                calendarObservable
+            )
+            .map { highlightedWeekdays, calendar in
+
+                (calendar.firstWeekday ..< calendar.firstWeekday + 7)
+                    .map {
+                        let weekDay = ($0 - 1) % 7
+                        return WeekDay(
+                            title: calendar.veryShortWeekdaySymbols[weekDay],
+                            isHighlighted: highlightedWeekdays.contains(weekDay),
+                            index: weekDay
+                        )
+                    }
+            }
             .share(replay: 1)
 
         popoverMaterial = popoverTransparency.map(PopoverMaterial.init(transparency:))
