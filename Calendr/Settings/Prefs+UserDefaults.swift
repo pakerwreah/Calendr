@@ -23,6 +23,7 @@ enum Prefs {
     static let showPastEvents = "show_past_events"
     static let transparencyLevel = "transparency_level"
     static let calendarScaling = "calendar_scaling"
+    static let highlightedWeekdays = "highlighted_weekdays"
 }
 
 extension UserDefaults {
@@ -100,5 +101,10 @@ extension UserDefaults {
     @objc dynamic var calendarScaling: Double {
         get { double(forKey: Prefs.calendarScaling) }
         set { set(newValue, forKey: Prefs.calendarScaling) }
+    }
+
+    @objc dynamic var highlightedWeekdays: [Int] {
+        get { array(forKey: Prefs.highlightedWeekdays) as! [Int]  }
+        set { set(newValue, forKey: Prefs.highlightedWeekdays) }
     }
 }

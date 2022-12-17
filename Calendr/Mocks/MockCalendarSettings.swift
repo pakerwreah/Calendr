@@ -11,16 +11,18 @@ import RxSwift
 
 struct MockCalendarSettings: CalendarSettings {
 
-    let showWeekNumbers: Observable<Bool>
-    let preserveSelectedDate: Observable<Bool>
-    let showDeclinedEvents: Observable<Bool>
     let calendarScaling: Observable<Double>
+    let highlightedWeekdays: Observable<[Int]>
+    let showWeekNumbers: Observable<Bool>
+    let showDeclinedEvents: Observable<Bool>
+    let preserveSelectedDate: Observable<Bool>
 
-    init(showWeekNumbers: Bool = true, calendarScaling: Double = 1) {
+    init(calendarScaling: Double = 1, highlightedWeekdays: [Int] = [0, 6], showWeekNumbers: Bool = true) {
+        self.calendarScaling = .just(calendarScaling)
+        self.highlightedWeekdays = .just(highlightedWeekdays)
         self.showWeekNumbers = .just(showWeekNumbers)
         self.preserveSelectedDate = .just(false)
         self.showDeclinedEvents = .just(false)
-        self.calendarScaling = .just(calendarScaling)
     }
 }
 

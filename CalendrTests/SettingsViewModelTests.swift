@@ -32,10 +32,11 @@ class SettingsViewModelTests: XCTestCase {
     var userDefaultsEventStatusItemCheckRange: Int? { userDefaults.object(forKey: Prefs.eventStatusItemCheckRange) as! Int? }
     var userDefaultsEventStatusItemLength: Int? { userDefaults.object(forKey: Prefs.eventStatusItemLength) as! Int? }
     var userDefaultsEventStatusItemDetectNotch: Bool? { userDefaults.object(forKey: Prefs.eventStatusItemDetectNotch) as! Bool? }
+    var userDefaultsCalendarScaling: Double? { userDefaults.object(forKey: Prefs.calendarScaling) as! Double? }
+    var userDefaultsHighlightedWeekdays: [Int]? { userDefaults.object(forKey: Prefs.highlightedWeekdays) as! [Int]? }
     var userDefaultsShowWeekNumbers: Bool? { userDefaults.object(forKey: Prefs.showWeekNumbers) as! Bool? }
     var userDefaultsShowDeclinedEvents: Bool? { userDefaults.object(forKey: Prefs.showDeclinedEvents) as! Bool? }
     var userDefaultsPreserveSelectedDate: Bool? { userDefaults.object(forKey: Prefs.preserveSelectedDate) as! Bool? }
-    var userDefaultsCalendarScaling: Double? { userDefaults.object(forKey: Prefs.calendarScaling) as! Double? }
     var userDefaultsShowPastEvents: Bool? { userDefaults.object(forKey: Prefs.showPastEvents) as! Bool? }
     var userDefaultsTransparency: Int? { userDefaults.object(forKey: Prefs.transparencyLevel) as! Int? }
 
@@ -53,10 +54,11 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertNil(userDefaultsEventStatusItemCheckRange)
         XCTAssertNil(userDefaultsEventStatusItemLength)
         XCTAssertNil(userDefaultsEventStatusItemDetectNotch)
+        XCTAssertNil(userDefaultsCalendarScaling)
+        XCTAssertNil(userDefaultsHighlightedWeekdays)
         XCTAssertNil(userDefaultsShowWeekNumbers)
         XCTAssertNil(userDefaultsShowDeclinedEvents)
         XCTAssertNil(userDefaultsPreserveSelectedDate)
-        XCTAssertNil(userDefaultsCalendarScaling)
         XCTAssertNil(userDefaultsShowPastEvents)
         XCTAssertNil(userDefaultsTransparency)
 
@@ -67,10 +69,11 @@ class SettingsViewModelTests: XCTestCase {
         var eventStatusItemCheckRange: Int?
         var eventStatusItemLength: Int?
         var eventStatusItemDetectNotch: Bool?
+        var calendarScaling: Double?
+        var highlightedWeekdays: [Int]?
         var showWeekNumbers: Bool?
         var showDeclinedEvents: Bool?
         var preserveSelectedDate: Bool?
-        var calendarScaling: Double?
         var showPastEvents: Bool?
         var popoverTransparency: Int?
         var popoverMaterial: PopoverMaterial?
@@ -91,16 +94,24 @@ class SettingsViewModelTests: XCTestCase {
             .bind { showEventStatusItem = $0 }
             .disposed(by: disposeBag)
 
-        viewModel.eventStatusItemDetectNotch
-            .bind { eventStatusItemDetectNotch = $0 }
-            .disposed(by: disposeBag)
-
         viewModel.eventStatusItemCheckRange
             .bind { eventStatusItemCheckRange = $0 }
             .disposed(by: disposeBag)
 
         viewModel.eventStatusItemLength
             .bind { eventStatusItemLength = $0 }
+            .disposed(by: disposeBag)
+
+        viewModel.eventStatusItemDetectNotch
+            .bind { eventStatusItemDetectNotch = $0 }
+            .disposed(by: disposeBag)
+
+        viewModel.calendarScaling
+            .bind { calendarScaling = $0 }
+            .disposed(by: disposeBag)
+
+        viewModel.highlightedWeekdays
+            .bind { highlightedWeekdays = $0 }
             .disposed(by: disposeBag)
 
         viewModel.showWeekNumbers
@@ -113,10 +124,6 @@ class SettingsViewModelTests: XCTestCase {
 
         viewModel.preserveSelectedDate
             .bind { preserveSelectedDate = $0 }
-            .disposed(by: disposeBag)
-
-        viewModel.calendarScaling
-            .bind { calendarScaling = $0 }
             .disposed(by: disposeBag)
 
         viewModel.showPastEvents
@@ -138,10 +145,11 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(eventStatusItemCheckRange, 6)
         XCTAssertEqual(eventStatusItemLength, 18)
         XCTAssertEqual(eventStatusItemDetectNotch, false)
+        XCTAssertEqual(calendarScaling, 1)
+        XCTAssertEqual(highlightedWeekdays, [0, 6])
         XCTAssertEqual(showWeekNumbers, false)
         XCTAssertEqual(showDeclinedEvents, false)
         XCTAssertEqual(preserveSelectedDate, false)
-        XCTAssertEqual(calendarScaling, 1)
         XCTAssertEqual(showPastEvents, true)
         XCTAssertEqual(popoverTransparency, 2)
         XCTAssertEqual(popoverMaterial, .headerView)
@@ -153,10 +161,11 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(userDefaultsEventStatusItemCheckRange, 6)
         XCTAssertEqual(userDefaultsEventStatusItemLength, 18)
         XCTAssertEqual(userDefaultsEventStatusItemDetectNotch, false)
+        XCTAssertEqual(userDefaultsCalendarScaling, 1)
+        XCTAssertEqual(userDefaultsHighlightedWeekdays, [0, 6])
         XCTAssertEqual(userDefaultsShowWeekNumbers, false)
         XCTAssertEqual(userDefaultsShowDeclinedEvents, false)
         XCTAssertEqual(userDefaultsPreserveSelectedDate, false)
-        XCTAssertEqual(userDefaultsCalendarScaling, 1)
         XCTAssertEqual(userDefaultsShowPastEvents, true)
         XCTAssertEqual(userDefaultsTransparency, 2)
     }
@@ -329,6 +338,54 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(userDefaultsEventStatusItemDetectNotch, true)
     }
 
+    func testChangeCalendarScaling() {
+
+        userDefaults.calendarScaling = 1.2
+
+        var calendarScaling: Double?
+
+        viewModel.calendarScaling
+            .bind { calendarScaling = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(calendarScaling, 1.2)
+        XCTAssertEqual(userDefaultsCalendarScaling, 1.2)
+
+        viewModel.calendarScalingObserver.onNext(1.1)
+
+        XCTAssertEqual(calendarScaling, 1.1)
+        XCTAssertEqual(userDefaultsCalendarScaling, 1.1)
+    }
+
+    func testChangeHighlightedWeekdays() {
+
+        userDefaults.highlightedWeekdays = []
+
+        var highlightedWeekdays: [Int]?
+
+        viewModel.highlightedWeekdays
+            .bind { highlightedWeekdays = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(highlightedWeekdays, [])
+        XCTAssertEqual(userDefaultsHighlightedWeekdays, [])
+
+        viewModel.toggleHighlightedWeekday.onNext(1)
+
+        XCTAssertEqual(highlightedWeekdays, [1])
+        XCTAssertEqual(userDefaultsHighlightedWeekdays, [1])
+
+        viewModel.toggleHighlightedWeekday.onNext(2)
+
+        XCTAssertEqual(highlightedWeekdays, [1, 2])
+        XCTAssertEqual(userDefaultsHighlightedWeekdays, [1, 2])
+
+        viewModel.toggleHighlightedWeekday.onNext(2)
+
+        XCTAssertEqual(highlightedWeekdays, [1])
+        XCTAssertEqual(userDefaultsHighlightedWeekdays, [1])
+    }
+
     func testToggleShowWeekNumbers() {
 
         userDefaults.showWeekNumbers = true
@@ -399,25 +456,6 @@ class SettingsViewModelTests: XCTestCase {
 
         XCTAssertEqual(preserveSelectedDate, true)
         XCTAssertEqual(userDefaultsPreserveSelectedDate, true)
-    }
-
-    func testChangeCalendarScaling() {
-
-        userDefaults.calendarScaling = 1.2
-
-        var calendarScaling: Double?
-
-        viewModel.calendarScaling
-            .bind { calendarScaling = $0 }
-            .disposed(by: disposeBag)
-
-        XCTAssertEqual(calendarScaling, 1.2)
-        XCTAssertEqual(userDefaultsCalendarScaling, 1.2)
-
-        viewModel.calendarScalingObserver.onNext(1.1)
-
-        XCTAssertEqual(calendarScaling, 1.1)
-        XCTAssertEqual(userDefaultsCalendarScaling, 1.1)
     }
 
     func testToggleShowPastEvents() {

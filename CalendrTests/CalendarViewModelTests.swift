@@ -191,7 +191,6 @@ class CalendarViewModelTests: XCTestCase {
         let expected = ["S", "M", "T", "W", "T", "F", "S"]
 
         XCTAssertEqual(weekDays?.map(\.title), expected)
-        XCTAssertEqual(weekDays?.enumerated().filter(\.element.isWeekend).map(\.offset), [0, 6])
     }
 
     func testWeekDays_firstWeekDayMonday() {
@@ -209,7 +208,21 @@ class CalendarViewModelTests: XCTestCase {
         let expected = ["M", "T", "W", "T", "F", "S", "S"]
 
         XCTAssertEqual(weekDays?.map(\.title), expected)
-        XCTAssertEqual(weekDays?.enumerated().filter(\.element.isWeekend).map(\.offset), [5, 6])
+    }
+
+    func testWeekDays_isHighlighted() {
+
+        var weekDays: [WeekDay]?
+
+        viewModel.weekDays
+            .bind { weekDays = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(weekDays?.filter(\.isHighlighted).map(\.title), ["S", "S"])
+
+        settings.highlightedWeekdaysObserver.onNext([1, 2, 5])
+        
+        XCTAssertEqual(weekDays?.filter(\.isHighlighted).map(\.title), ["M", "T", "F"])
     }
 
     func testWeekNumbers_shouldReturnWeekNumbersIfEnabled() {
