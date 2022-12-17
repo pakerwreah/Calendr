@@ -412,16 +412,12 @@ class MainViewController: NSViewController, NSPopoverDelegate {
 
         notification.popover.animates = false
 
-        mainStatusItem.button!.isHighlighted = true
-
         setUpAutoClose()
     }
 
     func popoverWillClose(_ notification: Notification) {
 
         notification.popover.animates = true
-
-        mainStatusItem.button!.isHighlighted = false
 
         NSEvent.removeMonitor(mouseMovedEventMonitor!)
     }
@@ -446,7 +442,7 @@ class MainViewController: NSViewController, NSPopoverDelegate {
 
         guard let statusBarButton = mainStatusItem.button else { return }
 
-        statusBarButton.rx.click
+        statusBarButton.rx.tap
             .enumerated()
             .flatMapFirst { [weak self] pass, _ -> Observable<Void> in
                 guard let self else { return .empty() }
@@ -463,6 +459,8 @@ class MainViewController: NSViewController, NSPopoverDelegate {
                 self?.popoverDisposeBag = DisposeBag()
             }
             .disposed(by: disposeBag)
+
+        statusBarButton.sendAction(on: .leftMouseDown)
 
         mainStackView.rx.observe(\.frame)
             .map(\.height)
