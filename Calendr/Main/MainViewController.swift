@@ -481,6 +481,10 @@ class MainViewController: NSViewController, NSPopoverDelegate {
         statusItemViewModel.text
             .bind(to: statusBarButton.rx.attributedTitle)
             .disposed(by: disposeBag)
+
+        statusItemViewModel.image
+            .bind(to: statusBarButton.rx.image)
+            .disposed(by: disposeBag)
     }
 
     private func setUpEventStatusItem() {

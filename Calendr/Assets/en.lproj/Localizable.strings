@@ -17,6 +17,7 @@
 "settings.menu_bar" = "Menu Bar";
 "settings.menu_bar.show_icon" = "Show icon";
 "settings.menu_bar.show_date" = "Show date";
+"settings.menu_bar.show_background" = "Show opaque background";
 "settings.menu_bar.date_format" = "Date format";
 "settings.menu_bar.date_format_custom" = "Custom";
 "settings.next_event" = "Next Event";

@@ -11,6 +11,7 @@ import RxSwift
 class StatusItemViewModel {
 
     let text: Observable<NSAttributedString>
+    let image: Observable<NSImage?>
 
     init(
         dateObservable: Observable<Date>,
@@ -57,13 +58,14 @@ class StatusItemViewModel {
             }
             .distinctUntilChanged()
 
-        text = Observable.combineLatest(
+        let textObservable = Observable.combineLatest(
             dateObservable,
             showIcon,
             settings.showStatusItemDate,
+            settings.showStatusItemBackground,
             dateFormatterObservable
         )
-        .map { date, showIcon, showDate, dateFormatter in
+        .map { date, showIcon, showDate, showBackground, dateFormatter in
 
             let title = NSMutableAttributedString()
 
@@ -72,20 +74,63 @@ class StatusItemViewModel {
                 attachment.image = Icons.MenuBar.icon.with(scale: .large)
                 title.append(NSAttributedString(attachment: attachment))
                 title.addAttributes(
-                    [.font: NSFont.systemFont(ofSize: 13)],
+                    [.font: NSFont.systemFont(ofSize: showBackground ? 12 : 13)],
                     range: NSRange(location: 0, length: title.length)
                 )
             }
 
             if showDate {
                 if title.length > 0 {
-                    title.append(NSAttributedString(string: "  "))
+                    title.append(NSAttributedString(string: " "))
                 }
                 let text = dateFormatter.string(from: date)
-                title.append(NSAttributedString(string: text.isEmpty ? "???" : text))
+                title.append(
+                    NSAttributedString(
+                        string: text.isEmpty ? "???" : text,
+                        attributes: [.font: NSFont.systemFont(ofSize: 13)]
+                    )
+                )
             }
 
             return title
+        }
+        .share(replay: 1)
+
+        self.text = Observable.combineLatest(
+            textObservable,
+            settings.showStatusItemBackground
+        )
+        .map { text, showBackground in
+            showBackground ? .init() : text
+        }
+
+        self.image = Observable.combineLatest(
+            textObservable,
+            settings.showStatusItemBackground
+        )
+        .map { text, showBackground in
+            guard showBackground else { return nil }
+
+            let radius: CGFloat = 3
+            let padding: CGFloat = 4
+            var size = text.size()
+            size.width += 2 * padding
+
+            let textImage = NSImage(size: size, flipped: false) { _ in
+                text.draw(at: .init(x: padding, y: 0))
+                return true
+            }
+
+            let image = NSImage(size: size, flipped: false) {
+                NSBezierPath(roundedRect: $0, xRadius: radius, yRadius: radius).addClip()
+                NSColor.white.drawSwatch(in: $0)
+                textImage.draw(at: .zero, from: $0, operation: .destinationOut, fraction: 1)
+                return true
+            }
+
+            image.isTemplate = true
+
+            return image
         }
     }
 }

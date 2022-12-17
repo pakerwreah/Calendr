@@ -17,6 +17,7 @@
 "settings.menu_bar" = "Menüleiste";
 "settings.menu_bar.show_icon" = "Zeige Icon";
 "settings.menu_bar.show_date" = "Zeige Datum";
+"settings.menu_bar.show_background" = "Opaken Hintergrund anzeigen";
 "settings.menu_bar.date_format" = "Datumsformat";
 "settings.menu_bar.date_format_custom" = "Benutzerdefiniert";
 "settings.next_event" = "Nächsten Termin";
