@@ -1,5 +1,5 @@
 //
-//  NSClickGestureRecognizer+Rx.swift
+//  NSGestureRecognizer+Rx.swift
 //  Calendr
 //
 //  Created by Paker on 25/01/22.
@@ -16,29 +16,28 @@ private class GestureProxy {
         self.observer = observer
     }
 
-    @objc func clicked() {
+    @objc func recognized() {
         observer.onNext(())
     }
-}
-
-extension NSClickGestureRecognizer {
-
-    typealias Configuration = (NSClickGestureRecognizer) -> Void
 }
 
 extension Reactive where Base: NSView {
 
     var click: Observable<Void> { click { _ in } }
 
-    func click(_ configure: @escaping NSClickGestureRecognizer.Configuration) -> Observable<Void> {
+    func click<T: NSClickGestureRecognizer> (_ configure: @escaping (T) -> Void) -> Observable<Void> {
+        gesture(configure)
+    }
+
+    private func gesture<T: NSGestureRecognizer>(_ configure: @escaping (T) -> Void) -> Observable<Void> {
 
         Observable.create { observer in
 
             let target = GestureProxy(observer)
 
-            let click = NSClickGestureRecognizer(
+            let click = T.init(
                 target: target,
-                action: #selector(GestureProxy.clicked)
+                action: #selector(GestureProxy.recognized)
             )
 
             configure(click)
