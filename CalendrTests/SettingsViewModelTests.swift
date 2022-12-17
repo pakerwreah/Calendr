@@ -27,6 +27,7 @@ class SettingsViewModelTests: XCTestCase {
 
     var userDefaultsStatusItemIconEnabled: Bool? { userDefaults.object(forKey: Prefs.statusItemIconEnabled) as! Bool? }
     var userDefaultsStatusItemDateEnabled: Bool? { userDefaults.object(forKey: Prefs.statusItemDateEnabled) as! Bool? }
+    var userDefaultsStatusItemBackgroundEnabled: Bool? { userDefaults.object(forKey: Prefs.statusItemBackgroundEnabled) as! Bool? }
     var userDefaultsStatusItemDateStyle: Int? { userDefaults.object(forKey: Prefs.statusItemDateStyle) as! Int? }
     var userDefaultsShowEventStatusItem: Bool? { userDefaults.object(forKey: Prefs.showEventStatusItem) as! Bool? }
     var userDefaultsEventStatusItemCheckRange: Int? { userDefaults.object(forKey: Prefs.eventStatusItemCheckRange) as! Int? }
@@ -49,6 +50,7 @@ class SettingsViewModelTests: XCTestCase {
 
         XCTAssertNil(userDefaultsStatusItemIconEnabled)
         XCTAssertNil(userDefaultsStatusItemDateEnabled)
+        XCTAssertNil(userDefaultsStatusItemBackgroundEnabled)
         XCTAssertNil(userDefaultsStatusItemDateStyle)
         XCTAssertNil(userDefaultsShowEventStatusItem)
         XCTAssertNil(userDefaultsEventStatusItemCheckRange)
@@ -64,6 +66,7 @@ class SettingsViewModelTests: XCTestCase {
 
         var showStatusItemIcon: Bool?
         var showStatusItemDate: Bool?
+        var showStatusItemBackground: Bool?
         var statusItemDateStyle: DateStyle?
         var showEventStatusItem: Bool?
         var eventStatusItemCheckRange: Int?
@@ -84,6 +87,10 @@ class SettingsViewModelTests: XCTestCase {
 
         viewModel.showStatusItemDate
             .bind { showStatusItemDate = $0 }
+            .disposed(by: disposeBag)
+
+        viewModel.showStatusItemBackground
+            .bind { showStatusItemBackground = $0 }
             .disposed(by: disposeBag)
 
         viewModel.statusItemDateStyle
@@ -140,6 +147,7 @@ class SettingsViewModelTests: XCTestCase {
 
         XCTAssertEqual(showStatusItemIcon, true)
         XCTAssertEqual(showStatusItemDate, true)
+        XCTAssertEqual(showStatusItemBackground, false)
         XCTAssertEqual(statusItemDateStyle, .short)
         XCTAssertEqual(showEventStatusItem, false)
         XCTAssertEqual(eventStatusItemCheckRange, 6)
@@ -156,6 +164,7 @@ class SettingsViewModelTests: XCTestCase {
 
         XCTAssertEqual(userDefaultsStatusItemIconEnabled, true)
         XCTAssertEqual(userDefaultsStatusItemDateEnabled, true)
+        XCTAssertEqual(userDefaultsStatusItemBackgroundEnabled, false)
         XCTAssertEqual(userDefaultsStatusItemDateStyle, 1)
         XCTAssertEqual(userDefaultsShowEventStatusItem, false)
         XCTAssertEqual(userDefaultsEventStatusItemCheckRange, 6)
@@ -674,5 +683,29 @@ class SettingsViewModelTests: XCTestCase {
 
         XCTAssertEqual(userDefaultsStatusItemIconEnabled, false)
         XCTAssertEqual(userDefaultsStatusItemDateEnabled, false)
+    }
+
+    func testToggleShowStatusItemBackground() {
+
+        userDefaults.statusItemBackgroundEnabled = true
+
+        var showBackground: Bool?
+
+        viewModel.showStatusItemBackground
+            .bind { showBackground = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(showBackground, true)
+        XCTAssertEqual(userDefaultsStatusItemBackgroundEnabled, true)
+
+        viewModel.toggleStatusItemBackground.onNext(false)
+
+        XCTAssertEqual(showBackground, false)
+        XCTAssertEqual(userDefaultsStatusItemBackgroundEnabled, false)
+
+        viewModel.toggleStatusItemBackground.onNext(true)
+
+        XCTAssertEqual(showBackground, true)
+        XCTAssertEqual(userDefaultsStatusItemBackgroundEnabled, true)
     }
 }

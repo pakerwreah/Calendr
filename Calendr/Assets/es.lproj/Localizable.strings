@@ -17,6 +17,7 @@
 "settings.menu_bar" = "Barra de menús";
 "settings.menu_bar.show_icon" = "Mostrar icono";
 "settings.menu_bar.show_date" = "Mostrar fecha";
+"settings.menu_bar.show_background" = "Mostrar fondo opaco";
 "settings.menu_bar.date_format" = "Formato de fecha";
 "settings.menu_bar.date_format_custom" = "Personalizado";
 "settings.next_event" = "Próximo evento";

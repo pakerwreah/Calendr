@@ -17,6 +17,7 @@ class GeneralSettingsViewController: NSViewController {
     // Menu Bar
     private let showMenuBarIconCheckbox = Checkbox(title: Strings.Settings.MenuBar.showIcon)
     private let showMenuBarDateCheckbox = Checkbox(title: Strings.Settings.MenuBar.showDate)
+    private let showMenuBarBackgroundCheckbox = Checkbox(title: Strings.Settings.MenuBar.showBackground)
     private let dateFormatDropdown = Dropdown()
     private let dateFormatTextField = NSTextField()
 
@@ -85,8 +86,6 @@ class GeneralSettingsViewController: NSViewController {
 
     private lazy var menuBarContent: NSView = {
 
-        let checkboxes = NSStackView(views: [showMenuBarIconCheckbox, .spacer, showMenuBarDateCheckbox])
-
         dateFormatTextField.placeholderString = viewModel.dateFormatPlaceholder
 
         let dateFormat = NSStackView(views: [
@@ -96,9 +95,13 @@ class GeneralSettingsViewController: NSViewController {
         ])
         .with(orientation: .vertical)
 
-        return NSStackView(views: [checkboxes, dateFormat])
-            .with(spacing: Constants.contentSpacing)
-            .with(orientation: .vertical)
+        return NSStackView(views: [
+            NSStackView(views: [showMenuBarIconCheckbox, .spacer, showMenuBarDateCheckbox]),
+            showMenuBarBackgroundCheckbox,
+            dateFormat
+        ])
+        .with(spacing: Constants.contentSpacing)
+        .with(orientation: .vertical)
     }()
 
     private lazy var nextEventContent: NSView = {
@@ -249,6 +252,12 @@ class GeneralSettingsViewController: NSViewController {
             control: showMenuBarDateCheckbox,
             observable: viewModel.showStatusItemDate,
             observer: viewModel.toggleStatusItemDate
+        )
+
+        bind(
+            control: showMenuBarBackgroundCheckbox,
+            observable: viewModel.showStatusItemBackground,
+            observer: viewModel.toggleStatusItemBackground
         )
 
         setUpDateFormat()

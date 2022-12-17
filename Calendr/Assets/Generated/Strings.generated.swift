@@ -119,6 +119,8 @@ internal enum Strings {
       internal static let dateFormatCustom = Strings.tr("Localizable", "settings.menu_bar.date_format_custom", fallback: "Custom")
       /// Shorten if 'notch' is present
       internal static let nextEventDetectNotch = Strings.tr("Localizable", "settings.menu_bar.next_event_detect_notch", fallback: "Shorten if 'notch' is present")
+      /// Show opaque background
+      internal static let showBackground = Strings.tr("Localizable", "settings.menu_bar.show_background", fallback: "Show opaque background")
       /// Show date
       internal static let showDate = Strings.tr("Localizable", "settings.menu_bar.show_date", fallback: "Show date")
       /// Show icon

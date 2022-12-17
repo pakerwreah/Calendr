@@ -12,12 +12,14 @@ class MockStatusItemSettings: StatusItemSettings {
 
     let toggleIcon: AnyObserver<Bool>
     let toggleDate: AnyObserver<Bool>
+    let toggleBackground: AnyObserver<Bool>
     let dateStyleObserver: AnyObserver<DateStyle>
     let dateFormatObserver: AnyObserver<String>
     let eventStatusItemDetectNotchObserver: AnyObserver<Bool>
 
     let showStatusItemIcon: Observable<Bool>
     let showStatusItemDate: Observable<Bool>
+    let showStatusItemBackground: Observable<Bool>
     let statusItemDateStyle: Observable<DateStyle>
     let statusItemDateFormat: Observable<String>
     let eventStatusItemDetectNotch: Observable<Bool>
@@ -25,6 +27,7 @@ class MockStatusItemSettings: StatusItemSettings {
     init() {
         (showStatusItemIcon, toggleIcon) = BehaviorSubject.pipe(value: true)
         (showStatusItemDate, toggleDate) = BehaviorSubject.pipe(value: true)
+        (showStatusItemBackground, toggleBackground) = BehaviorSubject.pipe(value: false)
         (statusItemDateStyle, dateStyleObserver) = BehaviorSubject.pipe(value: .short)
         (statusItemDateFormat, dateFormatObserver) = BehaviorSubject.pipe(value: "")
         (eventStatusItemDetectNotch, eventStatusItemDetectNotchObserver) = BehaviorSubject.pipe(value: true)

@@ -140,4 +140,24 @@ class StatusItemViewModelTests: XCTestCase {
         settings.dateStyleObserver.onNext(.short)
         XCTAssertEqual(lastValue, "1/1/21")
     }
+
+    func testBackground() {
+
+        var image: NSImage?
+
+        viewModel.image
+            .bind { image = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssert(lastAttributed?.length ?? 0 > 0)
+        XCTAssertNil(image)
+
+        settings.toggleBackground.onNext(true)
+        XCTAssertEqual(lastAttributed?.length, 0)
+        XCTAssertNotNil(image)
+
+        settings.toggleBackground.onNext(false)
+        XCTAssert(lastAttributed?.length ?? 0 > 0)
+        XCTAssertNil(image)
+    }
 }
