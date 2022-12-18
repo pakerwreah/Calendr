@@ -47,8 +47,6 @@ class GeneralSettingsViewController: NSViewController {
 
         super.init(nibName: nil, bundle: nil)
 
-        dateFormatTextField.refusesFirstResponder = true
-
         setUpAccessibility()
 
         setUpBindings()
@@ -87,6 +85,8 @@ class GeneralSettingsViewController: NSViewController {
     private lazy var menuBarContent: NSView = {
 
         dateFormatTextField.placeholderString = viewModel.dateFormatPlaceholder
+        dateFormatTextField.refusesFirstResponder = true
+        dateFormatTextField.focusRingType = .none
 
         let dateFormat = NSStackView(views: [
             Label(text: "\(Strings.Settings.MenuBar.dateFormat):"),
@@ -117,6 +117,7 @@ class GeneralSettingsViewController: NSViewController {
         nextEventRangeStepper.maxValue = 24
         nextEventRangeStepper.valueWraps = false
         nextEventRangeStepper.refusesFirstResponder = true
+        nextEventRangeStepper.focusRingType = .none
 
         let stepperLabel = Label(font: showNextEventCheckbox.font)
 
