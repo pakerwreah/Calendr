@@ -54,6 +54,7 @@
 		34651F7A25E325EA00518C5A /* MockWorkspaceServiceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34651F7925E325EA00518C5A /* MockWorkspaceServiceProvider.swift */; };
 		3468E651284BD3D600B21EC8 /* EventLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3468E650284BD3D600B21EC8 /* EventLink.swift */; };
 		3468E653284BD44600B21EC8 /* EventBarStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3468E652284BD44600B21EC8 /* EventBarStyle.swift */; };
+		346CB088295E209600E018EF /* AutoLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346CB087295E209600E018EF /* AutoLauncher.swift */; };
 		346E70C92802278E00A785FF /* ScreenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346E70C82802278E00A785FF /* ScreenProvider.swift */; };
 		346E70CB2802289F00A785FF /* MockScreenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346E70CA2802289F00A785FF /* MockScreenProvider.swift */; };
 		3470214A259DFF3000827AE7 /* CalendarServiceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34702149259DFF3000827AE7 /* CalendarServiceProvider.swift */; };
@@ -92,7 +93,7 @@
 		3492C464269FD64D009CFAD2 /* Accessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3492C45F269FCF5B009CFAD2 /* Accessibility.swift */; };
 		3492C466269FD6CE009CFAD2 /* MainViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3492C465269FD6CE009CFAD2 /* MainViewTests.swift */; };
 		34934CD628E69520009635D4 /* Prefs+UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34934CD528E69520009635D4 /* Prefs+UserDefaults.swift */; };
-		34934CD828E71B0F009635D4 /* UserDefaults+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34934CD728E71B0F009635D4 /* UserDefaults+Rx.swift */; };
+		34934CD828E71B0F009635D4 /* NSObject+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34934CD728E71B0F009635D4 /* NSObject+Rx.swift */; };
 		349355A625BCA8D400957945 /* EventListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349355A525BCA8D400957945 /* EventListView.swift */; };
 		349355AA25BCA8DF00957945 /* EventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349355A925BCA8DF00957945 /* EventView.swift */; };
 		349355B225BCB07B00957945 /* EventViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349355B125BCB07B00957945 /* EventViewModel.swift */; };
@@ -207,6 +208,7 @@
 		34651F8925E4099700518C5A /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3468E650284BD3D600B21EC8 /* EventLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventLink.swift; sourceTree = "<group>"; };
 		3468E652284BD44600B21EC8 /* EventBarStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventBarStyle.swift; sourceTree = "<group>"; };
+		346CB087295E209600E018EF /* AutoLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoLauncher.swift; sourceTree = "<group>"; };
 		346E70C82802278E00A785FF /* ScreenProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenProvider.swift; sourceTree = "<group>"; };
 		346E70CA2802289F00A785FF /* MockScreenProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockScreenProvider.swift; sourceTree = "<group>"; };
 		34702149259DFF3000827AE7 /* CalendarServiceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarServiceProvider.swift; sourceTree = "<group>"; };
@@ -249,7 +251,7 @@
 		3492C45F269FCF5B009CFAD2 /* Accessibility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Accessibility.swift; sourceTree = "<group>"; };
 		3492C465269FD6CE009CFAD2 /* MainViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewTests.swift; sourceTree = "<group>"; };
 		34934CD528E69520009635D4 /* Prefs+UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Prefs+UserDefaults.swift"; sourceTree = "<group>"; };
-		34934CD728E71B0F009635D4 /* UserDefaults+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Rx.swift"; sourceTree = "<group>"; };
+		34934CD728E71B0F009635D4 /* NSObject+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+Rx.swift"; sourceTree = "<group>"; };
 		349355A525BCA8D400957945 /* EventListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventListView.swift; sourceTree = "<group>"; };
 		349355A925BCA8DF00957945 /* EventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventView.swift; sourceTree = "<group>"; };
 		349355B125BCB07B00957945 /* EventViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventViewModel.swift; sourceTree = "<group>"; };
@@ -534,6 +536,7 @@
 				34D19FBF262299D300B2732C /* NSEdgeInsets.swift */,
 				34B2C59D279FFF0600B52BF3 /* NSGestureRecognizer+Rx.swift */,
 				34091736267E81870023B76D /* NSImage.swift */,
+				34934CD728E71B0F009635D4 /* NSObject+Rx.swift */,
 				34A4C3E825963FB200D0F949 /* NSStackView.swift */,
 				3430ED02259634E00045DA53 /* NSStackView+Rx.swift */,
 				3470654A292EFCF90079C68A /* NSTextView.swift */,
@@ -544,7 +547,6 @@
 				34305BCA25992A4E00AB381D /* Rx+Helpers.swift */,
 				34D55FE225F06669007F5C81 /* Sequence.swift */,
 				34651F5925E2F08500518C5A /* String.swift */,
-				34934CD728E71B0F009635D4 /* UserDefaults+Rx.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -631,6 +633,7 @@
 			isa = PBXGroup;
 			children = (
 				34C459BB25DF114300561C29 /* AboutViewController.swift */,
+				346CB087295E209600E018EF /* AutoLauncher.swift */,
 				3449403125C348C70020E664 /* CalendarPickerViewController.swift */,
 				34B5A09C25B118EC00F7F7ED /* CalendarPickerViewModel.swift */,
 				3449402D25C348B20020E664 /* GeneralSettingsViewController.swift */,
@@ -848,7 +851,7 @@
 				34091737267E81870023B76D /* NSImage.swift in Sources */,
 				3468E653284BD44600B21EC8 /* EventBarStyle.swift in Sources */,
 				34F128E12597B9C9007DF31C /* MainViewController.swift in Sources */,
-				34934CD828E71B0F009635D4 /* UserDefaults+Rx.swift in Sources */,
+				34934CD828E71B0F009635D4 /* NSObject+Rx.swift in Sources */,
 				3477F3E425FD5285008EA888 /* NSView+Rx.swift in Sources */,
 				34D55FE325F06669007F5C81 /* Sequence.swift in Sources */,
 				347D0FED2595467A002451EC /* CalendarCellView.swift in Sources */,
@@ -878,6 +881,7 @@
 				34427692269B5760004CFE1C /* MockMainViewController.swift in Sources */,
 				34E60D6326A0EA32004DA082 /* NSAccessibilityProtocol.swift in Sources */,
 				34F7E03A28427AC00028FF25 /* EventDetailsPreview.swift in Sources */,
+				346CB088295E209600E018EF /* AutoLauncher.swift in Sources */,
 				3421DA1E2693F12400056837 /* Date+Factory.swift in Sources */,
 				3487A43825E706F800FCC7D7 /* NextEventViewModel.swift in Sources */,
 				34A6434D25F42375000A0F08 /* EventViewPreview.swift in Sources */,
@@ -1154,7 +1158,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.8.0;
+				MARKETING_VERSION = 1.8.1;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Config/Calendr-Bridging-Header.h";
@@ -1178,7 +1182,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.8.0;
+				MARKETING_VERSION = 1.8.1;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Config/Calendr-Bridging-Header.h";

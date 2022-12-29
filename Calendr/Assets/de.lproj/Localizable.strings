@@ -15,6 +15,7 @@
 "settings.tab.about" = "Über";
 
 "settings.menu_bar" = "Menüleiste";
+"settings.menu_bar.auto_launch" = "Beim Login starten";
 "settings.menu_bar.show_icon" = "Zeige Icon";
 "settings.menu_bar.show_date" = "Zeige Datum";
 "settings.menu_bar.show_background" = "Opaken Hintergrund anzeigen";

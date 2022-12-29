@@ -13,13 +13,13 @@ class SettingsViewModelTests: XCTestCase {
 
     let disposeBag = DisposeBag()
 
+    let autoLauncher = AutoLauncher()
     let dateProvider = MockDateProvider()
-
     let userDefaults = UserDefaults(suiteName: className())!
-
     let notificationCenter = NotificationCenter()
 
     lazy var viewModel = SettingsViewModel(
+        autoLauncher: autoLauncher,
         dateProvider: dateProvider,
         userDefaults: userDefaults,
         notificationCenter: notificationCenter
@@ -259,6 +259,23 @@ class SettingsViewModelTests: XCTestCase {
 
         viewModel.statusItemDateStyleObserver.onNext(.none)
         XCTAssertEqual(isDateFormatInputVisible, true)
+    }
+
+    func testToggleAutoLaunch() {
+
+        var autoLaunch: Bool?
+
+        viewModel.autoLaunch
+            .bind { autoLaunch = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(autoLaunch, false)
+        XCTAssertEqual(autoLauncher.isEnabled, false)
+
+        viewModel.toggleAutoLaunch.onNext(true)
+
+        XCTAssertEqual(autoLaunch, true)
+        XCTAssertEqual(autoLauncher.isEnabled, true)
     }
 
     func testToggleShowEventStatusItem() {
