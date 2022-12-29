@@ -15,6 +15,7 @@ class GeneralSettingsViewController: NSViewController {
     private let viewModel: SettingsViewModel
 
     // Menu Bar
+    private let autoLaunchCheckbox = Checkbox(title: Strings.Settings.MenuBar.autoLaunch)
     private let showMenuBarIconCheckbox = Checkbox(title: Strings.Settings.MenuBar.showIcon)
     private let showMenuBarDateCheckbox = Checkbox(title: Strings.Settings.MenuBar.showDate)
     private let showMenuBarBackgroundCheckbox = Checkbox(title: Strings.Settings.MenuBar.showBackground)
@@ -96,6 +97,7 @@ class GeneralSettingsViewController: NSViewController {
         .with(orientation: .vertical)
 
         return NSStackView(views: [
+            autoLaunchCheckbox,
             NSStackView(views: [showMenuBarIconCheckbox, .spacer, showMenuBarDateCheckbox]),
             showMenuBarBackgroundCheckbox,
             dateFormat
@@ -242,6 +244,12 @@ class GeneralSettingsViewController: NSViewController {
     }
 
     private func setUpMenuBar() {
+
+        bind(
+            control: autoLaunchCheckbox,
+            observable: viewModel.autoLaunch,
+            observer: viewModel.toggleAutoLaunch
+        )
 
         bind(
             control: showMenuBarIconCheckbox,

@@ -1,5 +1,5 @@
 //
-//  UserDefaults+Rx.swift
+//  NSObject+Rx.swift
 //  Calendr
 //
 //  Created by Paker on 30/09/22.
@@ -8,7 +8,7 @@
 import Foundation
 import RxSwift
 
-extension Reactive where Base: UserDefaults {
+extension Reactive where Base: NSObject {
 
     func observer<T>(for keyPath: ReferenceWritableKeyPath<Base, T>) -> AnyObserver<T> {
         .init {

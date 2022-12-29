@@ -15,6 +15,7 @@
 "settings.tab.about" = "About";
 
 "settings.menu_bar" = "Menu Bar";
+"settings.menu_bar.auto_launch" = "Launch at login";
 "settings.menu_bar.show_icon" = "Show icon";
 "settings.menu_bar.show_date" = "Show date";
 "settings.menu_bar.show_background" = "Show opaque background";

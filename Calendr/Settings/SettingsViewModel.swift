@@ -66,6 +66,7 @@ protocol NextEventSettings: PopoverSettings {
 class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings, EventListSettings  {
 
     // Observers
+    let toggleAutoLaunch: AnyObserver<Bool>
     let toggleStatusItemIcon: AnyObserver<Bool>
     let toggleStatusItemDate: AnyObserver<Bool>
     let toggleStatusItemBackground: AnyObserver<Bool>
@@ -84,6 +85,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
     let transparencyObserver: AnyObserver<Int>
 
     // Observables
+    let autoLaunch: Observable<Bool>
     let showStatusItemIcon: Observable<Bool>
     let showStatusItemDate: Observable<Bool>
     let showStatusItemBackground: Observable<Bool>
@@ -108,6 +110,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
     let popoverMaterial: Observable<PopoverMaterial>
 
     init(
+        autoLauncher: AutoLauncher,
         dateProvider: DateProviding,
         userDefaults: UserDefaults,
         notificationCenter: NotificationCenter
@@ -132,6 +135,9 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
             Prefs.transparencyLevel: 2
         ])
 
+        // MARK: - Observers
+
+        toggleAutoLaunch = autoLauncher.rx.observer(for: \.isEnabled)
         toggleStatusItemIcon = userDefaults.rx.observer(for: \.statusItemIconEnabled)
         toggleStatusItemDate = userDefaults.rx.observer(for: \.statusItemDateEnabled)
         toggleStatusItemBackground = userDefaults.rx.observer(for: \.statusItemBackgroundEnabled)
@@ -149,6 +155,11 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
         togglePastEvents = userDefaults.rx.observer(for: \.showPastEvents)
         transparencyObserver = userDefaults.rx.observer(for: \.transparencyLevel)
 
+        // MARK: - Observables
+
+        autoLaunch = autoLauncher.rx.observe(\.isEnabled)
+
+        /* ----- Icon and Date ----- */
         let statusItemIconAndDate = Observable.combineLatest(
             userDefaults.rx.observe(\.statusItemIconEnabled),
             userDefaults.rx.observe(\.statusItemDateEnabled)
@@ -159,6 +170,8 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
 
         showStatusItemIcon = statusItemIconAndDate.map(\.0)
         showStatusItemDate = statusItemIconAndDate.map(\.1)
+        /* ----------------------- */
+
         showStatusItemBackground = userDefaults.rx.observe(\.statusItemBackgroundEnabled)
         statusItemDateStyle = userDefaults.rx.observe(\.statusItemDateStyle).map { DateStyle(rawValue: $0) ?? .none }
         statusItemDateFormat = userDefaults.rx.observe(\.statusItemDateFormat)

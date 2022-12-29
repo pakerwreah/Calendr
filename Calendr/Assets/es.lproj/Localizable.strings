@@ -15,6 +15,7 @@
 "settings.tab.about" = "Acerca de";
 
 "settings.menu_bar" = "Barra de menús";
+"settings.menu_bar.auto_launch" = "Comenzar al iniciar sesión";
 "settings.menu_bar.show_icon" = "Mostrar icono";
 "settings.menu_bar.show_date" = "Mostrar fecha";
 "settings.menu_bar.show_background" = "Mostrar fondo opaco";

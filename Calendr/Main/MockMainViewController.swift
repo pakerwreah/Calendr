@@ -27,13 +27,16 @@ class MockMainViewController: MainViewController {
             Prefs.enabledCalendars: CalendarModel.all.map(\.identifier)
         ])
 
+        let notificationCenter = NotificationCenter()
+
         super.init(
+            autoLauncher: AutoLauncher(),
             workspace: NSWorkspace.shared,
             calendarService: MockCalendarServiceProvider(dateProvider: dateProvider),
             dateProvider: dateProvider,
-            screenProvider: ScreenProvider(notificationCenter: .default),
+            screenProvider: ScreenProvider(notificationCenter: notificationCenter),
             userDefaults: userDefaults,
-            notificationCenter: NotificationCenter()
+            notificationCenter: notificationCenter
         )
     }
 

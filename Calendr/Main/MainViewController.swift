@@ -60,6 +60,7 @@ class MainViewController: NSViewController, NSPopoverDelegate {
     // MARK: - Initalization
 
     init(
+        autoLauncher: AutoLauncher,
         workspace: WorkspaceServiceProviding,
         calendarService: CalendarServiceProviding,
         dateProvider: DateProviding,
@@ -85,6 +86,7 @@ class MainViewController: NSViewController, NSPopoverDelegate {
         eventStatusItem.autosaveName = "event_status_item"
 
         settingsViewModel = SettingsViewModel(
+            autoLauncher: autoLauncher,
             dateProvider: dateProvider,
             userDefaults: userDefaults,
             notificationCenter: notificationCenter
