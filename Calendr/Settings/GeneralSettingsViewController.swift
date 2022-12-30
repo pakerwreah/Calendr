@@ -81,6 +81,10 @@ class GeneralSettingsViewController: NSViewController {
         view.addSubview(stackView)
 
         stackView.edges(to: view, insets: .init(bottom: 1))
+
+        if #unavailable(macOS 13.0) {
+            autoLaunchCheckbox.isHidden = true
+        }
     }
 
     private lazy var menuBarContent: NSView = {
