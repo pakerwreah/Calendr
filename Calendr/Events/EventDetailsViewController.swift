@@ -35,6 +35,8 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
     private var animatesClose = true
     private var mouseMovedEventMonitor: Any?
 
+    private lazy var notesHeightConstraint = notesTextView.height(equalTo: 0)
+
     init(viewModel: EventDetailsViewModel) {
 
         self.viewModel = viewModel
@@ -66,6 +68,7 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         view = NSView()
 
         view.widthAnchor.constraint(lessThanOrEqualToConstant: 400).activate()
+        view.widthAnchor.constraint(greaterThanOrEqualTo: view.heightAnchor, multiplier: 0.5).activate().priority = .dragThatCanResizeWindow
 
         scrollView.hasVerticalScroller = true
         scrollView.scrollerStyle = .overlay
@@ -80,6 +83,9 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         scrollView.contentView.heightAnchor.constraint(lessThanOrEqualToConstant: 0.8 * NSScreen.main!.visibleFrame.height).activate()
 
         contentStackView.addArrangedSubview(scrollView)
+        contentStackView.setHuggingPriority(.required, for: .vertical)
+
+        detailsStackView.setHuggingPriority(.required, for: .vertical)
 
         view.addSubview(contentStackView)
 
@@ -212,11 +218,12 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
 
     private func addInformation() {
 
+        let titleStack = NSStackView(views: [titleLabel, eventTypeIcon, linkBtn]).with(alignment: .firstBaseline)
+        titleStack.setHuggingPriority(.required, for: .vertical)
+
         if !viewModel.title.isEmpty {
             titleLabel.stringValue = viewModel.title
-            detailsStackView.addArrangedSubview(
-                NSStackView(views: [titleLabel, eventTypeIcon, linkBtn]).with(alignment: .firstBaseline)
-            )
+            detailsStackView.addArrangedSubview(titleStack)
         }
 
         if !viewModel.url.isEmpty {
@@ -256,9 +263,9 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         detailsStackView.addArrangedSubview(notesTextView)
     }
 
-    override func viewWillAppear() {
-        super.viewWillAppear()
-        notesTextView.height(equalTo: notesTextView.contentSize.height)
+    override func viewDidLayout() {
+        super.viewDidLayout()
+        notesHeightConstraint.constant = notesTextView.contentSize.height
     }
 
     private func addParticipants() {
@@ -302,6 +309,7 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
             }
 
             let stack = NSStackView(views: [status, label])
+            stack.setHuggingPriority(.required, for: .vertical)
             label.setContentCompressionResistancePriority(.required, for: .vertical)
 
             participantsStackView.addArrangedSubview(stack)
@@ -319,6 +327,8 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         scrollView.contentView.width(equalTo: participantsStackView, constant: 20)
         scrollView.contentView.height(equalTo: participantsStackView).priority = .defaultHigh
         scrollView.contentView.heightAnchor.constraint(lessThanOrEqualToConstant: 222).activate()
+
+        participantsStackView.setHuggingPriority(.required, for: .vertical)
         participantsStackView.layoutSubtreeIfNeeded()
         participantsStackView.scrollTop()
     }
