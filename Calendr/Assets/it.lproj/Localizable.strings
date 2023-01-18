@@ -1,0 +1,62 @@
+/* 
+  Localizable.strings
+  Calendr
+
+  Created by Albiji on 18/01/2023.
+*/
+
+"quit" = "Esci";
+"search" = "Cerca";
+
+"settings.title" = "Preferenze";
+"settings.tab.general" = "Generali";
+"settings.tab.calendars" = "Calendari";
+"settings.tab.about" = "Informazioni";
+
+"settings.menu_bar" = "Barra dei menu";
+"settings.menu_bar.auto_launch" = "Avvia al login";
+"settings.menu_bar.show_icon" = "Mostra icona";
+"settings.menu_bar.show_date" = "Mostra data";
+"settings.menu_bar.show_background" = "Mostra sfondo opaco";
+"settings.menu_bar.date_format" = "Formato della data";
+"settings.menu_bar.date_format_custom" = "Personalizzato";
+"settings.next_event" = "Prossimo evento";
+"settings.menu_bar.show_next_event" = "Mostra il prossimo evento";
+"settings.menu_bar.next_event_detect_notch" = "Più corto se c'è il 'notch'";
+
+"settings.calendar" = "Calendario";
+"settings.calendar.show_week_numbers" = "Mostra i numeri delle settimane";
+"settings.calendar.preserve_selected_date" = "Mantieni le date selezionate quando nascondi";
+"settings.calendar.show_declined_events" = "Mostra eventi rifiutati";
+"settings.calendar.show_declined_events_tooltip" = "Questo funziona solo se attivato nell'app di sistema Calendar.";
+
+"settings.events" = "Eventi";
+"settings.events.finished" = "Finiti";
+"settings.events.finished.fade" = "Dissolvi";
+"settings.events.finished.hide" = "Nascondi";
+
+"settings.transparency" = "Transparenza";
+
+"formatter.date.all_day" = "Tutto il giorno";
+"formatter.date.today" = "Oggi";
+"formatter.date.relative.in" = "in %@";
+"formatter.date.relative.ago" = "%@ fa";
+"formatter.date.relative.left" = "%@ rimasto";
+
+"reminder.options.button" = "Opzioni";
+"reminder.options.complete" = "Completato";
+"reminder.options.remind" = "Ricorda%@";
+
+"event_details.participant.organizer" = "Organizzatore";
+"event_details.participant.me" = "io";
+
+"event_status.label" = "mio stato:";
+
+"event_status.accepted" = "Accettato";
+"event_status.maybe" = "Forse";
+"event_status.declined" = "Rifiutato";
+"event_status.pending" = "In attesa";
+
+"event_status.action.accept" = "Accetta";
+"event_status.action.maybe" = "Forse";
+"event_status.action.decline" = "Rifiuta";
