@@ -20,6 +20,15 @@ class EventListViewModel {
 
     private let viewModels = BehaviorSubject<[EventListItem]>(value: [])
     private let isShowingDetails: BehaviorSubject<Bool>
+    private let dateProvider: DateProviding
+    private let calendarService: CalendarServiceProviding
+    private let workspace: WorkspaceServiceProviding
+    private let settings: EventListSettings
+    private let scheduler: SchedulerType
+
+    private let dateFormatter: DateFormatter
+    private let relativeFormatter: RelativeDateTimeFormatter
+    private let dateComponentsFormatter: DateComponentsFormatter
 
     init(
         eventsObservable: Observable<(Date, [EventModel])>,
@@ -30,30 +39,23 @@ class EventListViewModel {
         settings: EventListSettings,
         scheduler: SchedulerType
     ) {
-
         self.isShowingDetails = isShowingDetails
+        self.dateProvider = dateProvider
+        self.calendarService = calendarService
+        self.workspace = workspace
+        self.settings = settings
+        self.scheduler = scheduler
 
-        let dateComponentsFormatter = DateComponentsFormatter()
+        dateFormatter = DateFormatter(calendar: dateProvider.calendar)
+        dateFormatter.dateStyle = .short
+
+        relativeFormatter = RelativeDateTimeFormatter()
+        relativeFormatter.dateTimeStyle = .named
+
+        dateComponentsFormatter = DateComponentsFormatter()
         dateComponentsFormatter.calendar = dateProvider.calendar
         dateComponentsFormatter.unitsStyle = .abbreviated
         dateComponentsFormatter.allowedUnits = [.hour, .minute]
-
-        let dateFormatter = DateFormatter(calendar: dateProvider.calendar).with(style: .short)
-        let relativeFormatter = RelativeDateTimeFormatter()
-        relativeFormatter.dateTimeStyle = .named
-
-        func makeEventViewModel(_ event: EventModel, _ isTodaySelected: Bool) -> EventViewModel {
-            EventViewModel(
-                event: event,
-                dateProvider: dateProvider,
-                calendarService: calendarService,
-                workspace: workspace,
-                popoverSettings: settings,
-                isShowingDetails: isShowingDetails.asObserver(),
-                isTodaySelected: isTodaySelected,
-                scheduler: scheduler
-            )
-        }
 
         Observable.combineLatest(
             eventsObservable,
@@ -96,91 +98,112 @@ class EventListViewModel {
             .map { ($0, date, isTodaySelected) }
         }
         // build event list
-        .map { events, date, isTodaySelected in
-
-            // MARK: Overdue reminders
-
-            func isOverdue(_ event: EventModel) -> Bool {
-                event.type.isReminder
-                && dateProvider.calendar.isDate(event.start, lessThan: dateProvider.now, granularity: .day)
-            }
-
-            let overdueViewModels: [EventListItem] = events
-                .filter(isOverdue)
-                .sorted(by: \.start)
-                .prevMap { prev, curr -> [EventListItem] in
-
-                    let viewModel = makeEventViewModel(curr, isTodaySelected)
-                    let eventItem: EventListItem = .event(viewModel)
-
-                    guard let prev, dateProvider.calendar.isDate(curr.start, inSameDayAs: prev.start) else {
-                        let label = isTodaySelected
-                            ? relativeFormatter.localizedString(for: curr.start, relativeTo: dateProvider.now).ucfirst
-                            : dateFormatter.string(from: curr.start)
-                        return [.section(label), eventItem]
-                    }
-
-                    return [eventItem]
-                }
-                .flatten()
-
-            // MARK: All day events
-
-            var allDayViewModels: [EventListItem] = events
-                .filter { $0.isAllDay && !isOverdue($0) }
-                .sorted(by: \.calendar.color.hashValue)
-                .map { .event(makeEventViewModel($0, isTodaySelected)) }
-
-            if !allDayViewModels.isEmpty {
-                allDayViewModels.insert(.section(Strings.Formatter.Date.allDay), at: 0)
-            }
-
-            // MARK: Today's events
-
-            let viewModels: [EventListItem] = events
-                .filter { !$0.isAllDay && !isOverdue($0) }
-                .sorted {
-                    ($0.start, $0.end) < ($1.start, $1.end)
-                }
-                .prevMap { prev, curr -> [EventListItem] in
-
-                    let viewModel = makeEventViewModel(curr, isTodaySelected)
-                    let eventItem: EventListItem = .event(viewModel)
-
-                    guard let prev else {
-                        // if first event, show today section
-                        let title = isTodaySelected
-                            ? Strings.Formatter.Date.today
-                            : dateFormatter.string(from: date)
-
-                        return [.section(title), eventItem]
-                    }
-
-                    // if not first, show interval between events
-                    if dateProvider.calendar.isDate(
-                        prev.end, lessThan: curr.start, granularity: .minute
-                    ),
-                    let diff = dateComponentsFormatter.string(
-                        from: prev.end, to: curr.start
-                    ) {
-                        let fade = Observable.merge(
-                            viewModel.isFaded,
-                            viewModel.isInProgress
-                        )
-                        .take(until: \.isTrue, behavior: .inclusive)
-
-                        return [.interval(diff, fade), eventItem]
-                    }
-
-                    return [eventItem]
-                }
-                .flatten()
-
-            return overdueViewModels + allDayViewModels + viewModels
+        .compactMap { [weak self] events, date, isTodaySelected in
+            self?.buildEventList(events, date, isTodaySelected)
         }
         .bind(to: viewModels)
         .disposed(by: disposeBag)
     }
 
     func asObservable() -> Observable<[EventListItem]> { viewModels }
+
+    // MARK: - Private
+
+    private func buildEventList(_ events: [EventModel], _ date: Date, _ isTodaySelected: Bool) -> [EventListItem] {
+        overdueViewModels(events, isTodaySelected)
+        + allDayViewModels(events, isTodaySelected)
+        + todayViewModels(events, date, isTodaySelected)
+    }
+
+    private func makeEventViewModel(_ event: EventModel, _ isTodaySelected: Bool) -> EventViewModel {
+        EventViewModel(
+            event: event,
+            dateProvider: dateProvider,
+            calendarService: calendarService,
+            workspace: workspace,
+            popoverSettings: settings,
+            isShowingDetails: isShowingDetails.asObserver(),
+            isTodaySelected: isTodaySelected,
+            scheduler: scheduler
+        )
+    }
+
+    private func isOverdue(_ event: EventModel) -> Bool {
+        event.type.isReminder
+        && dateProvider.calendar.isDate(event.start, lessThan: dateProvider.now, granularity: .day)
+    }
+
+    private func overdueViewModels(_ events: [EventModel], _ isTodaySelected: Bool) -> [EventListItem] {
+        events
+            .filter { isOverdue($0) && isTodaySelected }
+            .sorted(by: \.start)
+            .prevMap { prev, curr -> [EventListItem] in
+
+                let viewModel = makeEventViewModel(curr, isTodaySelected)
+                let eventItem: EventListItem = .event(viewModel)
+
+                guard let prev, dateProvider.calendar.isDate(curr.start, inSameDayAs: prev.start) else {
+                    let label = isTodaySelected
+                        ? relativeFormatter.localizedString(for: curr.start, relativeTo: dateProvider.now).ucfirst
+                        : dateFormatter.string(from: curr.start)
+                    return [.section(label), eventItem]
+                }
+
+                return [eventItem]
+            }
+            .flatten()
+    }
+
+    private func allDayViewModels(_ events: [EventModel], _ isTodaySelected: Bool) -> [EventListItem] {
+        var viewModels: [EventListItem] = events
+            .filter { $0.isAllDay && (!isOverdue($0) || !isTodaySelected) }
+            .sorted(by: \.calendar.color.hashValue)
+            .map { .event(makeEventViewModel($0, isTodaySelected)) }
+
+        if !viewModels.isEmpty {
+            viewModels.insert(.section(Strings.Formatter.Date.allDay), at: 0)
+        }
+        return viewModels
+    }
+
+    private func todayViewModels(_ events: [EventModel], _ date: Date, _ isTodaySelected: Bool) -> [EventListItem] {
+        events
+            .filter { !$0.isAllDay && (!isOverdue($0) || !isTodaySelected) }
+            .sorted {
+                ($0.start, $0.end) < ($1.start, $1.end)
+            }
+            .prevMap { prev, curr -> [EventListItem] in
+
+                let viewModel = makeEventViewModel(curr, isTodaySelected)
+                let eventItem: EventListItem = .event(viewModel)
+
+                guard let prev else {
+                    // if first event, show today section
+                    let title = isTodaySelected
+                        ? Strings.Formatter.Date.today
+                        : dateFormatter.string(from: date)
+
+                    return [.section(title), eventItem]
+                }
+
+                // if not first, show interval between events
+                if dateProvider.calendar.isDate(
+                    prev.end, lessThan: curr.start, granularity: .minute
+                ),
+                   let diff = dateComponentsFormatter.string(
+                    from: prev.end, to: curr.start
+                   ) {
+                    let fade = Observable.merge(
+                        viewModel.isFaded,
+                        viewModel.isInProgress
+                    )
+                    .take(until: \.isTrue, behavior: .inclusive)
+
+                    return [.interval(diff, fade), eventItem]
+                }
+
+                return [eventItem]
+            }
+            .flatten()
+    }
 }
