@@ -186,23 +186,19 @@ class EventListViewModel {
                     return [.section(title), eventItem]
                 }
 
-                // if not first, show interval between events
-                if dateProvider.calendar.isDate(
-                    prev.end, lessThan: curr.start, granularity: .minute
-                ),
-                   let diff = dateComponentsFormatter.string(
-                    from: prev.end, to: curr.start
-                   ) {
-                    let fade = Observable.merge(
-                        viewModel.isFaded,
-                        viewModel.isInProgress
-                    )
-                    .take(until: \.isTrue, behavior: .inclusive)
-
-                    return [.interval(diff, fade), eventItem]
+                // show interval between events
+                guard
+                    prev.end.distance(to: curr.start) >= 60,
+                    let interval = dateComponentsFormatter.string(from: prev.end, to: curr.start)
+                else {
+                    return [eventItem]
                 }
 
-                return [eventItem]
+                let fade = Observable
+                    .merge(viewModel.isFaded, viewModel.isInProgress)
+                    .take(until: \.isTrue, behavior: .inclusive)
+
+                return [.interval(interval, fade), eventItem]
             }
             .flatten()
     }
