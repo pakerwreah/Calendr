@@ -244,6 +244,7 @@ class EventViewModelProgressTests: XCTestCase {
             workspace: workspace,
             popoverSettings: popoverSettings,
             isShowingDetails: .dummy(),
+            isTodaySelected: true,
             scheduler: scheduler
         )
     }

@@ -35,4 +35,8 @@ extension StringProtocol {
 
         return attribStr
     }
+
+    var ucfirst: String {
+        replacingCharacters(in: ...startIndex, with: prefix(1).uppercased())
+    }
 }
