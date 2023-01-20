@@ -290,7 +290,7 @@ class EventListViewModelTests: XCTestCase {
         XCTAssertTrue(zip(scheduler.log, events.filter(\.isAllDay.isFalse).map(\.end)).allSatisfy(>))
     }
 
-    func testEventList_shouldShowOverdueReminders() {
+    func testEventList_withOverdueReminders_shouldShowInDedicatedSections() {
 
         let yesterday = dateProvider.calendar.date(byAdding: .day, value: -1, to: dateProvider.now)!
         let twoDaysAgo = dateProvider.calendar.date(byAdding: .day, value: -2, to: dateProvider.now)!
@@ -298,15 +298,15 @@ class EventListViewModelTests: XCTestCase {
         eventsSubject.onNext(
             testEvents() +
             [
-                .make(start: yesterday, title: "Overdue 1", isAllDay: true, type: .reminder),
+                .make(start: yesterday, title: "Overdue 1", type: .reminder),
                 .make(start: yesterday + 10, title: "Overdue 2", type: .reminder),
-                .make(start: twoDaysAgo, title: "Overdue 3", type: .reminder),
+                .make(start: twoDaysAgo, title: "All day overdue", isAllDay: true, type: .reminder),
             ]
         )
 
         XCTAssertEqual(eventListItems, [
             .section("2 days ago"),
-            .event("Overdue 3"),
+            .event("All day overdue"),
             .section("Yesterday"),
             .event("Overdue 1"),
             .event("Overdue 2"),
@@ -319,6 +319,35 @@ class EventListViewModelTests: XCTestCase {
             .interval("1m"),
             .event("Event 2"),
             .event("Event 1")
+        ])
+    }
+
+    func testEventList_withOverdueReminders_isNotToday_shouldShowNormally() {
+
+        let date = dateProvider.calendar.date(byAdding: .day, value: -1, to: dateProvider.now)!
+        dateSubject.onNext(date)
+
+        eventsSubject.onNext(
+            [
+                .make(start: date, end: date + 10, title: "Event 1"),
+                .make(start: date + 60, end: date + 120, title: "Event 2"),
+                .make(start: date + 200, title: "Overdue 1", type: .reminder),
+                .make(start: date + 300, title: "Overdue 2", type: .reminder),
+                .make(start: date, title: "All day event", isAllDay: true),
+                .make(start: date, title: "All day overdue", isAllDay: true, type: .reminder)
+            ]
+        )
+
+        XCTAssertEqual(eventListItems, [
+            .section("All day"),
+            .event("All day event"),
+            .event("All day overdue"),
+            .section("2020-12-31"),
+            .event("Event 1"),
+            .event("Event 2"),
+            .interval("1m"),
+            .event("Overdue 1"),
+            .event("Overdue 2")
         ])
     }
 }
