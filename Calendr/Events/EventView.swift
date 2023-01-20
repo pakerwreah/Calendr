@@ -177,7 +177,7 @@ class EventView: NSView {
                 .disposed(by: disposeBag)
         }
 
-        if viewModel.type.isEvent {
+        if viewModel.type.isEvent || viewModel.type.isReminder {
 
             viewModel.isFaded
                 .map { $0 ? 0.5 : 1 }

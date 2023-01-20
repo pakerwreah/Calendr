@@ -18,15 +18,16 @@ class ReminderOptions: NSMenu, ObservableConvertibleType {
     let actionObservable: Observable<Action>
     private let actionObserver: AnyObserver<Action>
 
-    private let formatter = RelativeDateTimeFormatter()
+    private let formatter: RelativeDateTimeFormatter
 
     init() {
 
         (actionObservable, actionObserver) = PublishSubject.pipe()
 
-        super.init(title: "")
-
+        formatter = RelativeDateTimeFormatter()
         formatter.dateTimeStyle = .named
+
+        super.init(title: "")
 
         addItem(withTitle: Strings.Reminder.Options.complete, action: #selector(completeAction))
 

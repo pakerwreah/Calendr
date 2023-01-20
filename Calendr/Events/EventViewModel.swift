@@ -40,6 +40,7 @@ class EventViewModel {
         workspace: WorkspaceServiceProviding,
         popoverSettings: PopoverSettings,
         isShowingDetails: AnyObserver<Bool>,
+        isTodaySelected: Bool,
         scheduler: SchedulerType
     ) {
 
@@ -158,6 +159,8 @@ class EventViewModel {
 
         if isDeclined {
             isFaded = .just(true)
+        } else if type.isReminder {
+            isFaded = .just(isTodaySelected && !meta.startsToday)
         } else if event.isAllDay || !meta.endsToday {
             isFaded = .just(false)
         } else {

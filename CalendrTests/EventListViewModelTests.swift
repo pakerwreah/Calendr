@@ -298,21 +298,21 @@ class EventListViewModelTests: XCTestCase {
         eventsSubject.onNext(
             testEvents() +
             [
-                .make(start: yesterday, title: "Overdue 1", type: .reminder),
+                .make(start: yesterday, title: "Overdue 1", isAllDay: true, type: .reminder),
                 .make(start: yesterday + 10, title: "Overdue 2", type: .reminder),
                 .make(start: twoDaysAgo, title: "Overdue 3", type: .reminder),
             ]
         )
 
         XCTAssertEqual(eventListItems, [
+            .section("2 days ago"),
+            .event("Overdue 3"),
+            .section("Yesterday"),
+            .event("Overdue 1"),
+            .event("Overdue 2"),
             .section("All day"),
             .event("All day 1"),
             .event("All day 2"),
-            .section("2020-12-30"),
-            .event("Overdue 3"),
-            .section("2020-12-31"),
-            .event("Overdue 1"),
-            .event("Overdue 2"),
             .section("Today"),
             .event("Multi day"),
             .event("Event 3"),

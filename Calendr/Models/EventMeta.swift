@@ -14,6 +14,7 @@ class EventMeta {
 
     // fix range ending at 00:00 of the next day
     lazy var fixedEnd = dateProvider.calendar.date(byAdding: .second, value: -1, to: event.end)!
+    lazy var startsToday = dateProvider.calendar.isDate(event.start, inSameDayAs: dateProvider.now)
     lazy var endsToday = dateProvider.calendar.isDate(fixedEnd, inSameDayAs: dateProvider.now)
     lazy var isSingleDay = dateProvider.calendar.isDate(event.start, inSameDayAs: fixedEnd)
     lazy var isSameMonth = dateProvider.calendar.isDate(event.start, equalTo: fixedEnd, toGranularity: .month)

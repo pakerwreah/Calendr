@@ -172,6 +172,7 @@ class EventViewModelLinkTests: XCTestCase {
             workspace: workspace,
             popoverSettings: popoverSettings,
             isShowingDetails: .dummy(),
+            isTodaySelected: true,
             scheduler: MainScheduler.instance
         )
     }
