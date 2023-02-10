@@ -51,7 +51,20 @@ class EventDetailsViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.url, "")
     }
 
-    func testDuration_isAllDay_shouldShowOnlyDate() {
+    func testDuration_isAllDay_isSingleDay_shouldShowOnlyDate() {
+
+        let viewModel = mock(
+            event: .make(
+                start: .make(year: 2021, month: 1, day: 1),
+                end: .make(year: 2021, month: 1, day: 1),
+                isAllDay: true
+            )
+        )
+
+        XCTAssertEqual(viewModel.duration, "Jan 1, 2021")
+    }
+
+    func testDuration_isAllDay_isMultiDay_shouldShowDateRange() {
 
         let viewModel = mock(
             event: .make(
@@ -61,7 +74,7 @@ class EventDetailsViewModelTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(viewModel.duration, "Jan 1, 2021")
+        XCTAssertEqual(viewModel.duration, "Jan 1 - 2, 2021")
     }
 
     func testDuration_isReminder_shouldShowOnlyStart() {

@@ -65,14 +65,14 @@ class EventViewModel {
             .prefix(while: \.isNewline.isFalse)
             .trimmed ?? ""
 
-        let meta = event.meta(using: dateProvider)
-        let showTime = !(meta.startsMidnight && meta.endsMidnight)
+        let range = event.range(using: dateProvider)
+        let showTime = !(range.startsMidnight && range.endsMidnight)
 
-        if event.isAllDay {
+        if event.isAllDay && range.isSingleDay {
 
             duration = ""
 
-        } else if meta.isSingleDay {
+        } else if range.isSingleDay {
 
             let formatter = DateIntervalFormatter()
             formatter.dateTemplate = "jm"
@@ -83,7 +83,7 @@ class EventViewModel {
             if event.type.isReminder {
                 end = event.start
             }
-            else if meta.endsMidnight {
+            else if range.endsMidnight {
                 end = dateProvider.calendar.startOfDay(for: event.start)
             }
             else {
@@ -95,16 +95,16 @@ class EventViewModel {
         } else if !showTime {
 
             let formatter = DateIntervalFormatter()
-            formatter.dateTemplate = meta.isSameMonth ? "ddMMMM" : "ddMMM"
+            formatter.dateTemplate = range.isSameMonth ? "ddMMMM" : "ddMMM"
             formatter.calendar = dateProvider.calendar
 
-            duration = formatter.string(from: event.start, to: meta.fixedEnd)
+            duration = formatter.string(from: event.start, to: range.fixedEnd)
 
         } else {
 
             let formatter = DateFormatter(template: "ddMMyyyyHm", calendar: dateProvider.calendar)
             let start = formatter.string(from: event.start)
-            let end = formatter.string(from: showTime ? event.end : meta.fixedEnd)
+            let end = formatter.string(from: showTime ? event.end : range.fixedEnd)
 
             duration = "\(start)\n\(end)"
         }
@@ -138,7 +138,7 @@ class EventViewModel {
             clock = .empty()
         }
 
-        progress = total <= 0 || event.isAllDay || !meta.isSingleDay || !meta.endsToday
+        progress = total <= 0 || event.isAllDay || !range.isSingleDay || !range.endsToday
             ? .just(nil)
             : clock.map {
 
@@ -160,8 +160,8 @@ class EventViewModel {
         if isDeclined {
             isFaded = .just(true)
         } else if type.isReminder {
-            isFaded = .just(isTodaySelected && !meta.startsToday)
-        } else if event.isAllDay || !meta.endsToday {
+            isFaded = .just(isTodaySelected && !range.startsToday)
+        } else if event.isAllDay || !range.endsToday {
             isFaded = .just(false)
         } else {
             isFaded = isPast

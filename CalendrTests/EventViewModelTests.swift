@@ -18,6 +18,10 @@ class EventViewModelTests: XCTestCase {
     let workspace = MockWorkspaceServiceProvider()
     let popoverSettings = MockPopoverSettings()
 
+    override func setUp() {
+        dateProvider.m_calendar.locale = Locale(identifier: "en_US")
+    }
+
     func testBasicInfo() {
 
         let viewModel = mock(
@@ -146,7 +150,7 @@ class EventViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.subtitle, "")
     }
 
-    func testDuration_isAllDay() {
+    func testDuration_isAllDay_isSingleDay_shouldNotShowDuration() {
 
         let viewModel = mock(
             event: .make(
@@ -159,6 +163,19 @@ class EventViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.duration, "")
     }
 
+    func testDuration_isAllDay_isMultiDay_shouldShowDuration() {
+
+        let viewModel = mock(
+            event: .make(
+                start: .make(year: 2021, month: 1, day: 1),
+                end: .make(year: 2021, month: 1, day: 2, at: .end),
+                isAllDay: true
+            )
+        )
+
+        XCTAssertEqual(viewModel.duration, "January 1 - 2")
+    }
+
     func testDuration_isSameDay() {
 
         let viewModel = mock(
@@ -168,7 +185,7 @@ class EventViewModelTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(viewModel.duration, "3:00-4:00 PM")
+        XCTAssertEqual(viewModel.duration, "3:00 - 4:00 PM")
     }
 
     func testDuration_endsMidnight() {
@@ -185,6 +202,8 @@ class EventViewModelTests: XCTestCase {
 
     func testDuration_isMultiDay_isSameMonth_withTime() {
 
+        dateProvider.m_calendar = .gregorian.with(timeZone: .utc)
+
         let viewModel = mock(
             event: .make(
                 start: .make(year: 2021, month: 1, day: 1),
@@ -196,6 +215,8 @@ class EventViewModelTests: XCTestCase {
     }
 
     func testDuration_isMultiDay_isDifferentMonth_withTime() {
+
+        dateProvider.m_calendar = .iso8601
 
         let viewModel = mock(
             event: .make(
@@ -209,8 +230,6 @@ class EventViewModelTests: XCTestCase {
 
     func testDuration_isMultiDay_isSameMonth_endsStartOfNextDay() {
 
-        dateProvider.m_calendar.locale = Locale(identifier: "en_US")
-
         let viewModel = mock(
             event: .make(
                 start: .make(year: 2021, month: 1, day: 1),
@@ -222,8 +241,6 @@ class EventViewModelTests: XCTestCase {
     }
 
     func testDuration_isMultiDay_isDifferentMonth_endsStartOfNextDay() {
-
-        dateProvider.m_calendar.locale = Locale(identifier: "en_US")
 
         let viewModel = mock(
             event: .make(

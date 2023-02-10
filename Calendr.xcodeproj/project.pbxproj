@@ -121,7 +121,7 @@
 		34CC382D25B636A6006CBD99 /* Checkbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34CC382C25B636A6006CBD99 /* Checkbox.swift */; };
 		34D19FC0262299D300B2732C /* NSEdgeInsets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D19FBF262299D300B2732C /* NSEdgeInsets.swift */; };
 		34D19FC62622A02C00B2732C /* EventDetailsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D19FC52622A02C00B2732C /* EventDetailsViewModelTests.swift */; };
-		34D19FCC2622B9CD00B2732C /* EventMeta.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D19FCB2622B9CC00B2732C /* EventMeta.swift */; };
+		34D19FCC2622B9CD00B2732C /* DateRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D19FCB2622B9CC00B2732C /* DateRange.swift */; };
 		34D25E4A292F9E2100557E70 /* ImageButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D25E49292F9E2100557E70 /* ImageButton.swift */; };
 		34D3655829402D5700849457 /* NSColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D3655729402D5700849457 /* NSColor.swift */; };
 		34D55FE325F06669007F5C81 /* Sequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D55FE225F06669007F5C81 /* Sequence.swift */; };
@@ -281,7 +281,7 @@
 		34CC382C25B636A6006CBD99 /* Checkbox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checkbox.swift; sourceTree = "<group>"; };
 		34D19FBF262299D300B2732C /* NSEdgeInsets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSEdgeInsets.swift; sourceTree = "<group>"; };
 		34D19FC52622A02C00B2732C /* EventDetailsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailsViewModelTests.swift; sourceTree = "<group>"; };
-		34D19FCB2622B9CC00B2732C /* EventMeta.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventMeta.swift; sourceTree = "<group>"; };
+		34D19FCB2622B9CC00B2732C /* DateRange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateRange.swift; sourceTree = "<group>"; };
 		34D25E49292F9E2100557E70 /* ImageButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageButton.swift; sourceTree = "<group>"; };
 		34D3655729402D5700849457 /* NSColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSColor.swift; sourceTree = "<group>"; };
 		34D55FE225F06669007F5C81 /* Sequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sequence.swift; sourceTree = "<group>"; };
@@ -556,11 +556,11 @@
 			isa = PBXGroup;
 			children = (
 				3470214F259E163000827AE7 /* CalendarModel.swift */,
+				34D19FCB2622B9CC00B2732C /* DateRange.swift */,
+				3468E652284BD44600B21EC8 /* EventBarStyle.swift */,
 				3468E650284BD3D600B21EC8 /* EventLink.swift */,
-				34D19FCB2622B9CC00B2732C /* EventMeta.swift */,
 				347D0FF125954920002451EC /* EventModel.swift */,
 				348E701E25C43C5200B3B160 /* WeekDay.swift */,
-				3468E652284BD44600B21EC8 /* EventBarStyle.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -868,7 +868,7 @@
 				3449402E25C348B20020E664 /* GeneralSettingsViewController.swift in Sources */,
 				349355A625BCA8D400957945 /* EventListView.swift in Sources */,
 				341B2B4825D0C9A600336342 /* NSView.swift in Sources */,
-				34D19FCC2622B9CD00B2732C /* EventMeta.swift in Sources */,
+				34D19FCC2622B9CD00B2732C /* DateRange.swift in Sources */,
 				34424150267EA65200142028 /* ReminderOptions.swift in Sources */,
 				345FBD99293EA476005DD6DF /* Keyboard.swift in Sources */,
 				34926A712931B18C0090C8FC /* NSControl.swift in Sources */,
@@ -1163,7 +1163,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.8.3;
+				MARKETING_VERSION = 1.8.4;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Config/Calendr-Bridging-Header.h";
@@ -1189,7 +1189,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.8.3;
+				MARKETING_VERSION = 1.8.4;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Config/Calendr-Bridging-Header.h";

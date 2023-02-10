@@ -57,7 +57,7 @@ extension EventType {
 
 extension EventModel {
 
-    func meta(using dateProvider: DateProviding) -> EventMeta { .init(event: self, dateProvider: dateProvider) }
+    func range(using dateProvider: DateProviding) -> DateRange { .init(start: start, end: end, dateProvider: dateProvider) }
 
     var status: EventStatus { if case .event(let status) = type { return status } else { return .unknown } }
 }

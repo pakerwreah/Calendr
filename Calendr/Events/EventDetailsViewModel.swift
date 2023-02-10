@@ -70,18 +70,18 @@ class EventDetailsViewModel {
 
         if event.isAllDay {
             formatter.timeStyle = .none
-            duration = formatter.string(from: event.start, to: event.start)
+            duration = formatter.string(from: event.start, to: event.end)
         } else {
             formatter.timeStyle = .short
 
-            let meta = EventMeta(event: event, dateProvider: dateProvider)
+            let range = event.range(using: dateProvider)
 
             let end: Date
 
             if type.isReminder {
                 end = event.start
             }
-            else if meta.isSingleDay && meta.endsMidnight {
+            else if range.isSingleDay && range.endsMidnight {
                 end = dateProvider.calendar.startOfDay(for: event.start)
             }
             else {

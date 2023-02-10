@@ -239,6 +239,13 @@ extension EKEvent {
     var status: EKParticipantStatus {
         attendees?.first(where: \.isCurrentUser).map(\.participantStatus) ?? .unknown
     }
+
+    // Fix events that should be all-day but are not correctly reported as such (ex. Google's "Out of office")
+    var shouldBeAllDay: Bool {
+        guard !isAllDay else { return true }
+        let range = DateRange(start: startDate, end: endDate, dateProvider: DateProvider(calendar: .autoupdatingCurrent))
+        return !range.isSingleDay && range.startsMidnight && range.endsMidnight
+    }
 }
 
 private extension Participant {
@@ -311,7 +318,7 @@ private extension EventModel {
             location: event.location,
             notes: event.notes,
             url: event.url,
-            isAllDay: event.isAllDay,
+            isAllDay: event.shouldBeAllDay,
             type: .init(from: event),
             calendar: .init(from: event.calendar),
             participants: .init(from: event)

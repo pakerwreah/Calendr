@@ -78,7 +78,7 @@ class EventListViewModel {
             return Observable.merge(
                 events
                     .filter {
-                        !$0.isAllDay && !$0.type.isReminder && $0.meta(using: dateProvider).endsToday
+                        !$0.isAllDay && !$0.type.isReminder && $0.range(using: dateProvider).endsToday
                     }
                     .map {
                         Int(dateProvider.now.distance(to: $0.end).rounded(.up)) + 1
@@ -92,7 +92,7 @@ class EventListViewModel {
             .startWith(())
             .map {
                 events.filter {
-                    $0.isAllDay || $0.type.isReminder || !$0.meta(using: dateProvider).isPast
+                    $0.isAllDay || $0.type.isReminder || !$0.range(using: dateProvider).isPast
                 }
             }
             .map { ($0, date, isTodaySelected) }
