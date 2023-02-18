@@ -513,7 +513,7 @@ class MainViewController: NSViewController, NSPopoverDelegate {
         statusBarButton.rx.tap
             .withUnretained(self)
             .flatMapFirst { (self, _) in self.isShowingDetails.filter(!).take(1).void() }
-            .compactMap { [nextEventViewModel] in nextEventViewModel.makeDetails() }
+            .compactMap { [nextEventViewModel] in nextEventViewModel.makeDetailsViewModel() }
             .skipNil()
             .flatMapFirst { viewModel -> Observable<Void> in
                 let vc = EventDetailsViewController(viewModel: viewModel)
