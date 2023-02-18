@@ -133,102 +133,6 @@ class EventDetailsViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.duration, "Jan 1, 2021, 10:00 - 12:00 AM")
     }
 
-    func testReminder_rescheduleBy1Hour() {
-
-        let viewModel = mock(event: .make(type: .reminder))
-
-        dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 12)
-
-        var date: Date?
-        var callback = false
-
-        calendarService.spyRescheduleObservable
-            .bind { date = $0 }
-            .disposed(by: disposeBag)
-
-        viewModel.actionCallback
-            .bind { callback = true }
-            .disposed(by: disposeBag)
-
-        viewModel.reminderActionObserver.onNext(.remind(.init(hour: 1)))
-
-        XCTAssertEqual(date, .make(year: 2021, month: 1, day: 1, hour: 13))
-        XCTAssert(callback)
-    }
-
-    func testReminder_rescheduleTomorrow() {
-
-        let viewModel = mock(event: .make(type: .reminder))
-
-        dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 12)
-
-        var date: Date?
-        var callback = false
-
-        calendarService.spyRescheduleObservable
-            .bind { date = $0 }
-            .disposed(by: disposeBag)
-
-        viewModel.actionCallback
-            .bind { callback = true }
-            .disposed(by: disposeBag)
-
-        viewModel.reminderActionObserver.onNext(.remind(.init(day: 1)))
-
-        XCTAssertEqual(date, .make(year: 2021, month: 1, day: 2, hour: 12))
-        XCTAssert(callback)
-    }
-
-    func testReminder_markCompleted() {
-
-        let viewModel = mock(event: .make(type: .reminder))
-
-        var complete = false
-        var callback = false
-
-        calendarService.spyCompleteObservable
-            .bind { complete = true }
-            .disposed(by: disposeBag)
-
-        viewModel.actionCallback
-            .bind { callback = true }
-            .disposed(by: disposeBag)
-
-        viewModel.reminderActionObserver.onNext(.complete)
-
-        XCTAssert(complete)
-        XCTAssert(callback)
-    }
-
-    func testViewModel_isNotReminder_shouldNotCallServiceOrTriggerCallback() {
-
-        let viewModel = mock(event: .make(type: .birthday))
-
-        var reschedule = false
-        var complete = false
-        var callback = false
-
-        calendarService.spyRescheduleObservable
-            .void()
-            .bind { reschedule = true }
-            .disposed(by: disposeBag)
-
-        calendarService.spyCompleteObservable
-            .bind { complete = true }
-            .disposed(by: disposeBag)
-
-        viewModel.actionCallback
-            .bind { callback = true }
-            .disposed(by: disposeBag)
-
-        viewModel.reminderActionObserver.onNext(.remind(.init(day: 1)))
-        viewModel.reminderActionObserver.onNext(.complete)
-
-        XCTAssertFalse(reschedule)
-        XCTAssertFalse(complete)
-        XCTAssertFalse(callback)
-    }
-
     func testParticipants_shouldReturnCorrectOrder() {
 
         let viewModel = mock(
@@ -244,27 +148,6 @@ class EventDetailsViewModelTests: XCTestCase {
         )
 
         XCTAssertEqual(viewModel.participants.map(\.name), ["organizer", "me", "a", "b", "c"])
-    }
-
-    func testStatusChanged_shouldChangeStatus() {
-
-        let viewModel = mock(event: .make(type: .event(.pending)))
-
-        var status: EventStatus?
-        var callback = false
-
-        calendarService.spyChangeEventStatusObservable
-            .bind { status = $0 }
-            .disposed(by: disposeBag)
-
-        viewModel.actionCallback
-            .bind { callback = true }
-            .disposed(by: disposeBag)
-
-        viewModel.eventActionObserver.onNext(.accept)
-
-        XCTAssertEqual(status, .accepted)
-        XCTAssert(callback)
     }
 
     func mock(event: EventModel) -> EventDetailsViewModel {

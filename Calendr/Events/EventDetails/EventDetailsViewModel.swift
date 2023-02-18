@@ -21,19 +21,14 @@ class EventDetailsViewModel {
     let link: EventLink?
 
     let isInProgress: Observable<Bool>
-    let popoverSettings: PopoverSettings
-
-    private let eventActionObservable: Observable<EventOptions.Action>
-    let eventActionObserver: AnyObserver<EventOptions.Action>
-
-    private let reminderActionObservable: Observable<ReminderOptions.Action>
-    let reminderActionObserver: AnyObserver<ReminderOptions.Action>
-
-    let actionCallback: Observable<Void>
-
     let isShowingObserver: AnyObserver<Bool>
 
+    let popoverSettings: PopoverSettings
     let workspace: WorkspaceServiceProviding
+
+    private let event: EventModel
+    private let dateProvider: DateProviding
+    private let calendarService: CalendarServiceProviding
 
     init(
         event: EventModel,
@@ -44,6 +39,10 @@ class EventDetailsViewModel {
         isShowingObserver: AnyObserver<Bool>,
         isInProgress: Observable<Bool>
     ) {
+
+        self.event = event
+        self.dateProvider = dateProvider
+        self.calendarService = calendarService
 
         type = event.type
         status = event.status
@@ -90,34 +89,14 @@ class EventDetailsViewModel {
 
             duration = formatter.string(from: event.start, to: end)
         }
+    }
 
-        (eventActionObservable, eventActionObserver) = PublishSubject.pipe()
+    func makeContextMenuViewModel() -> (any ContextMenuViewModel)? {
 
-        let eventActionCallback = !type.isEvent ? .empty() : eventActionObservable
-            .flatMapFirst { action -> Observable<Void> in
-                switch action {
-                case .accept:
-                    return calendarService.changeEventStatus(id: event.id, date: event.start, to: .accepted)
-                case .maybe:
-                    return calendarService.changeEventStatus(id: event.id, date: event.start, to: .maybe)
-                case .decline:
-                    return calendarService.changeEventStatus(id: event.id, date: event.start, to: .declined)
-                }
-            }
-
-        (reminderActionObservable, reminderActionObserver) = PublishSubject.pipe()
-
-        let reminderActionCallback = !type.isReminder ? .empty() : reminderActionObservable
-            .flatMapFirst { action -> Observable<Void> in
-                switch action {
-                case .complete:
-                    return calendarService.completeReminder(id: event.id)
-                case .remind(let dateComponents):
-                    let date = dateProvider.calendar.date(byAdding: dateComponents, to: dateProvider.now)!
-                    return calendarService.rescheduleReminder(id: event.id, to: date)
-                }
-            }
-
-        actionCallback = .merge(eventActionCallback, reminderActionCallback)
+        ContextMenuFactory.makeViewModel(
+            event: event,
+            dateProvider: dateProvider,
+            calendarService: calendarService
+        )
     }
 }

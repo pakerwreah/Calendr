@@ -50,7 +50,15 @@ class EventView: NSView {
         setAccessibilityIdentifier(Accessibility.EventList.event)
     }
 
+    private func setUpContextMenu(_ viewModel: some ContextMenuViewModel) {
+        menu = ContextMenu(viewModel: viewModel)
+    }
+
     private func setData() {
+
+        if let contextMenuViewModel = viewModel.makeContextMenuViewModel() {
+            setUpContextMenu(contextMenuViewModel)
+        }
 
         switch viewModel.type {
 
@@ -208,7 +216,7 @@ class EventView: NSView {
             // do not delay other click events
             $0.delaysPrimaryMouseButtonEvents = false
         }
-        .map { [viewModel] in viewModel.makeDetails() }
+        .map { [viewModel] in viewModel.makeDetailsViewModel() }
         .withUnretained(self)
         .flatMapFirst { view, viewModel -> Observable<Void> in
             let vc = EventDetailsViewController(viewModel: viewModel)

@@ -174,8 +174,9 @@ class EventViewModel {
         backgroundColor = isInProgress.map { $0 ? progressBackgroundColor : .clear }
     }
 
-    func makeDetails() -> EventDetailsViewModel {
-        .init(
+    func makeDetailsViewModel() -> EventDetailsViewModel {
+
+        EventDetailsViewModel(
             event: event,
             dateProvider: dateProvider,
             calendarService: calendarService,
@@ -183,6 +184,15 @@ class EventViewModel {
             popoverSettings: popoverSettings,
             isShowingObserver: isShowingDetails,
             isInProgress: isInProgress
+        )
+    }
+
+    func makeContextMenuViewModel() -> (any ContextMenuViewModel)? {
+
+        ContextMenuFactory.makeViewModel(
+            event: event,
+            dateProvider: dateProvider,
+            calendarService: calendarService
         )
     }
 }

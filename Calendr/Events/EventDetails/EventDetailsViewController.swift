@@ -27,8 +27,6 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
 
     private let optionsLabel = Label()
     private let optionsButton = NSButton()
-    private lazy var eventOptions = EventOptions(current: viewModel.status)
-    private lazy var reminderOptions = ReminderOptions()
 
     private let viewModel: EventDetailsViewModel
     
@@ -345,35 +343,23 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         .bind { $0.material = $1 }
         .disposed(by: disposeBag)
 
-        switch viewModel.type {
-        case .event(let status) where status != .unknown:
-            setUpOptionsMenuBindings(options: eventOptions, observer: viewModel.eventActionObserver)
-
-        case .reminder:
-            setUpOptionsMenuBindings(options: reminderOptions, observer: viewModel.reminderActionObserver)
-
-        default:
-            break
+        if let contextMenuViewModel = viewModel.makeContextMenuViewModel() {
+            setUpOptionsMenu(contextMenuViewModel)
         }
     }
 
-    private func setUpOptionsMenuBindings<T: NSMenu & ObservableConvertibleType>(
-        options: T,
-        observer: AnyObserver<T.Element>
-    ) {
+    private func setUpOptionsMenu(_ viewModel: some ContextMenuViewModel) {
+
+        let menu = ContextMenu(viewModel: viewModel)
 
         optionsButton.rx.tap.bind { [optionsButton] in
-            options.popUp(
+            menu.popUp(
                 positioning: nil,
                 at: NSPoint(x: 0, y: optionsButton.bounds.height),
                 in: optionsButton
             )
         }
         .disposed(by: disposeBag)
-
-        options.asObservable()
-            .bind(to: observer)
-            .disposed(by: disposeBag)
 
         viewModel.actionCallback
             .observe(on: MainScheduler.instance)

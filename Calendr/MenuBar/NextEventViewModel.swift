@@ -178,7 +178,7 @@ class NextEventViewModel {
             .distinctUntilChanged()
     }
 
-    func makeDetails() -> EventDetailsViewModel? {
+    func makeDetailsViewModel() -> EventDetailsViewModel? {
         guard let event = try? event.value() else { return nil }
         return .init(
             event: event,
