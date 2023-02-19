@@ -72,9 +72,13 @@ class CalendarPickerViewController: NSViewController {
 
     private func setUpBindings() {
 
-        viewModel.calendars
+        Observable
+            .combineLatest(
+                viewModel.calendars,
+                viewModel.showNextEvent
+            )
             .observe(on: MainScheduler.instance)
-            .compactMap { [weak self] calendars -> [NSView]? in
+            .compactMap { [weak self] calendars, showNextEvent -> [NSView]? in
                 guard let self = self else { return nil }
 
                 return Dictionary(grouping: calendars, by: { $0.account })
@@ -82,7 +86,8 @@ class CalendarPickerViewController: NSViewController {
                     .flatMap { account, calendars in
                         self.makeCalendarSection(
                             title: account,
-                            calendars: calendars.sorted(by: \.title.localizedLowercase)
+                            calendars: calendars.sorted(by: \.title.localizedLowercase),
+                            showNextEvent: showNextEvent
                         )
                     }
             }
@@ -90,13 +95,21 @@ class CalendarPickerViewController: NSViewController {
             .disposed(by: disposeBag)
     }
     
-    private func makeCalendarSection(title: String, calendars: [CalendarModel]) -> [NSView] {
+    private func makeCalendarSection(title: String, calendars: [CalendarModel], showNextEvent: Bool) -> [NSView] {
 
         let label = Label(text: title, font: .systemFont(ofSize: 11, weight: .semibold))
         label.textColor = .secondaryLabelColor
 
         let stackView = NSStackView(
-            views: calendars.compactMap(makeCalendarItem)
+            views: calendars.compactMap {
+                NSStackView(
+                    views: [
+                        makeCalendarItemEnabled($0),
+                        showNextEvent ? makeCalendarItemNextEvent($0) : nil
+                    ]
+                    .compact()
+                )
+            }
         )
         .with(orientation: .vertical)
         .with(alignment: .left)
@@ -104,23 +117,62 @@ class CalendarPickerViewController: NSViewController {
         return [label, NSStackView(views: [.dummy, stackView])]
     }
 
-    private func makeCalendarItem(_ calendar: CalendarModel) -> NSView {
+    private func bindCalendarItem(
+        button: NSButton,
+        identifier: String,
+        selected: Observable<[String]>,
+        toggle: AnyObserver<String>
+    ) {
+        selected
+            .map { $0.contains(identifier) ? .on : .off }
+            .bind(to: button.rx.state)
+            .disposed(by: disposeBag)
+
+        button.rx.click
+            .bind { toggle.onNext(identifier) }
+            .disposed(by: disposeBag)
+    }
+
+    private func makeCalendarItemEnabled(_ calendar: CalendarModel) -> NSView {
 
         let checkbox = Checkbox(title: calendar.title)
         checkbox.setTitleColor(color: calendar.color)
 
-        viewModel.enabledCalendars
-            .map { $0.contains(calendar.identifier) ? .on : .off }
-            .bind(to: checkbox.rx.state)
-            .disposed(by: disposeBag)
-
-        checkbox.rx.tap
-            .bind { [viewModel] in
-                viewModel.toggleCalendar.onNext(calendar.identifier)
-            }
-            .disposed(by: disposeBag)
+        bindCalendarItem(
+            button: checkbox,
+            identifier: calendar.identifier,
+            selected: viewModel.enabledCalendars,
+            toggle: viewModel.toggleCalendar
+        )
 
         return checkbox
+    }
+
+    private func makeCalendarItemNextEvent(_ calendar: CalendarModel) -> NSView {
+
+        let selectedIcon = Icons.CalendarPicker.nextEventSelected.with(size: 11)
+        let unselectedIcon = Icons.CalendarPicker.nextEventUnselected.with(size: 11)
+        let button = ImageButton()
+        button.setButtonType(.toggle)
+
+        view.rx.updateLayer
+            .map { unselectedIcon.with(color: .secondaryLabelColor) }
+            .bind(to: button.rx.image)
+            .disposed(by: disposeBag)
+
+        view.rx.updateLayer
+            .map { selectedIcon.with(color: .textColor) }
+            .bind(to: button.rx.alternateImage)
+            .disposed(by: disposeBag)
+
+        bindCalendarItem(
+            button: button,
+            identifier: calendar.identifier,
+            selected: viewModel.nextEventCalendars,
+            toggle: viewModel.toggleNextEvent
+        )
+
+        return button
     }
 
     required init?(coder: NSCoder) {
