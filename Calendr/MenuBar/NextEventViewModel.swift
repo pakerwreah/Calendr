@@ -30,7 +30,7 @@ class NextEventViewModel {
 
     init(
         settings: NextEventSettings,
-        enabledCalendars: Observable<[String]>,
+        nextEventCalendars: Observable<[String]>,
         dateProvider: DateProviding,
         calendarService: CalendarServiceProviding,
         workspace: WorkspaceServiceProviding,
@@ -53,7 +53,7 @@ class NextEventViewModel {
         let eventsObservable = settings.showEventStatusItem
             .flatMapLatest { isEnabled -> Observable<[EventModel]> in
 
-                !isEnabled ? .just([]) : enabledCalendars
+                !isEnabled ? .just([]) : nextEventCalendars
                     .repeat(when: calendarService.changeObservable)
                     .flatMapLatest { calendars -> Observable<[EventModel]> in
                         let start = dateProvider.calendar.startOfDay(for: dateProvider.now)

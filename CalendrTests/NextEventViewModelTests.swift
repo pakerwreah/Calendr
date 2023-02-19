@@ -24,7 +24,7 @@ class NextEventViewModelTests: XCTestCase {
 
     lazy var viewModel = NextEventViewModel(
         settings: settings,
-        enabledCalendars: calendarsSubject,
+        nextEventCalendars: calendarsSubject,
         dateProvider: dateProvider,
         calendarService: calendarService,
         workspace: workspace,

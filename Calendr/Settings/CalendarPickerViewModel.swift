@@ -12,13 +12,17 @@ class CalendarPickerViewModel {
 
     // Observers
     let toggleCalendar: AnyObserver<String>
+    let toggleNextEvent: AnyObserver<String>
 
     // Observables
     let calendars: Observable<[CalendarModel]>
-    let enabledCalendars: Observable<[String]>
+    let showNextEvent: Observable<Bool>
+    private(set) lazy var enabledCalendars = selectedObservable(\.enabledCalendars)
+    private(set) lazy var nextEventCalendars = selectedObservable(\.nextEventCalendars)
 
     private let userDefaults: UserDefaults
     private let toggleCalendarSubject = PublishSubject<String>()
+    private let toggleNextEventSubject = PublishSubject<String>()
     private let disposeBag = DisposeBag()
 
     init(
@@ -31,17 +35,10 @@ class CalendarPickerViewModel {
             .distinctUntilChanged()
             .share(replay: 1)
 
-        self.toggleCalendar = toggleCalendarSubject.asObserver()
+        self.showNextEvent = userDefaults.rx.observe(\.showEventStatusItem)
 
-        self.enabledCalendars = Observable.combineLatest(
-            calendars, userDefaults.rx.observe(\.enabledCalendars)
-        )
-        .map { calendars, enabled in
-            let identifiers = calendars.map(\.identifier)
-            guard let enabled = enabled else { return identifiers }
-            return enabled.filter(identifiers.contains)
-        }
-        .share(replay: 1)
+        self.toggleCalendar = toggleCalendarSubject.asObserver()
+        self.toggleNextEvent = toggleNextEventSubject.asObserver()
 
         self.userDefaults = userDefaults
 
@@ -50,14 +47,42 @@ class CalendarPickerViewModel {
 
     private func setUpBindings() {
 
-        toggleCalendarSubject
-            .withLatestFrom(enabledCalendars) { ($0, $1) }
+        setUpBinding(
+            subject: toggleCalendarSubject,
+            selected: enabledCalendars,
+            binder: userDefaults.rx.enabledCalendars
+        )
+
+        setUpBinding(
+            subject: toggleNextEventSubject,
+            selected: nextEventCalendars,
+            binder: userDefaults.rx.nextEventCalendars
+        )
+    }
+
+    private func setUpBinding(
+        subject: PublishSubject<String>,
+        selected: Observable<[String]>,
+        binder: Binder<[String]?>
+    ) {
+        subject
+            .withLatestFrom(selected) { ($0, $1) }
             .map { toggled, identifiers in
                 identifiers.contains(toggled)
                     ? identifiers.filter { $0 != toggled }
                     : identifiers + [toggled]
             }
-            .bind(to: userDefaults.rx.enabledCalendars)
+            .bind(to: binder)
             .disposed(by: disposeBag)
+    }
+
+    private func selectedObservable(_ keyPath: KeyPath<UserDefaults, [String]?>) -> Observable<[String]> {
+
+        Observable.combineLatest(
+            userDefaults.rx.observe(keyPath),
+            calendars.map { $0.map(\.identifier) }
+        )
+        .map { $0?.filter($1.contains) ?? $1 }
+        .share(replay: 1)
     }
 }

@@ -9,6 +9,7 @@ import Foundation
 
 enum Prefs {
     static let enabledCalendars = "enabled_calendars"
+    static let nextEventCalendars = "next_event_calendars"
     static let statusItemIconEnabled = "status_item_icon_enabled"
     static let statusItemDateEnabled = "status_item_date_enabled"
     static let statusItemBackgroundEnabled = "status_item_background_enabled"
@@ -32,6 +33,11 @@ extension UserDefaults {
     @objc dynamic var enabledCalendars: [String]? {
         get { stringArray(forKey: Prefs.enabledCalendars) }
         set { set(newValue, forKey: Prefs.enabledCalendars) }
+    }
+
+    @objc dynamic var nextEventCalendars: [String]? {
+        get { stringArray(forKey: Prefs.nextEventCalendars) }
+        set { set(newValue, forKey: Prefs.nextEventCalendars) }
     }
 
     @objc dynamic var statusItemIconEnabled: Bool {

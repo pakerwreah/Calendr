@@ -105,6 +105,7 @@
 		34ABB9EC29A15A030021F3CF /* EventOptionsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34ABB9EB29A15A030021F3CF /* EventOptionsViewModelTests.swift */; };
 		34ABB9EE29A163890021F3CF /* ContextMenuFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34ABB9ED29A163890021F3CF /* ContextMenuFactory.swift */; };
 		34ABB9F029A166220021F3CF /* ContextMenuFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34ABB9EF29A166220021F3CF /* ContextMenuFactoryTests.swift */; };
+		34ABB9F229A2AFA30021F3CF /* CursorButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34ABB9F129A2AFA30021F3CF /* CursorButton.swift */; };
 		34AC60C626925FA5005312B6 /* PreviewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34AC60C526925FA5005312B6 /* PreviewExtensions.swift */; };
 		34B1C7C525EDA01F00E5CA80 /* EventIntervalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B1C7C425EDA01F00E5CA80 /* EventIntervalView.swift */; };
 		34B23E9C25C0C94000DADCD6 /* NSButton+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B23E9B25C0C94000DADCD6 /* NSButton+Rx.swift */; };
@@ -269,6 +270,7 @@
 		34ABB9EB29A15A030021F3CF /* EventOptionsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventOptionsViewModelTests.swift; sourceTree = "<group>"; };
 		34ABB9ED29A163890021F3CF /* ContextMenuFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextMenuFactory.swift; sourceTree = "<group>"; };
 		34ABB9EF29A166220021F3CF /* ContextMenuFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextMenuFactoryTests.swift; sourceTree = "<group>"; };
+		34ABB9F129A2AFA30021F3CF /* CursorButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CursorButton.swift; sourceTree = "<group>"; };
 		34AC60C526925FA5005312B6 /* PreviewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewExtensions.swift; sourceTree = "<group>"; };
 		34B1C7C425EDA01F00E5CA80 /* EventIntervalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventIntervalView.swift; sourceTree = "<group>"; };
 		34B23E9B25C0C94000DADCD6 /* NSButton+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSButton+Rx.swift"; sourceTree = "<group>"; };
@@ -509,6 +511,7 @@
 			isa = PBXGroup;
 			children = (
 				34CC382C25B636A6006CBD99 /* Checkbox.swift */,
+				34ABB9F129A2AFA30021F3CF /* CursorButton.swift */,
 				341B2B3D25D06A6F00336342 /* Dropdown.swift */,
 				34D25E49292F9E2100557E70 /* ImageButton.swift */,
 				34F128D025968044007DF31C /* Label.swift */,
@@ -873,6 +876,7 @@
 				34651F5A25E2F08500518C5A /* String.swift in Sources */,
 				34651F7425E3207200518C5A /* WorkspaceServiceProvider.swift in Sources */,
 				34286E4625D5CD9C0097EC5D /* WeekNumberCellView.swift in Sources */,
+				34ABB9F229A2AFA30021F3CF /* CursorButton.swift in Sources */,
 				341B2B3E25D06A6F00336342 /* Dropdown.swift in Sources */,
 				347D0F9825952F89002451EC /* AppDelegate.swift in Sources */,
 				3449403225C348C70020E664 /* CalendarPickerViewController.swift in Sources */,

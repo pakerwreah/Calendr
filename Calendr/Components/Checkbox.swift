@@ -7,9 +7,17 @@
 
 import Cocoa
 
-func Checkbox(title: String = "") -> NSButton {
-    let checkbox = NSButton(checkboxWithTitle: title, target: nil, action: nil)
-    checkbox.setContentHuggingPriority(.fittingSizeCompression, for: .horizontal)
-    checkbox.refusesFirstResponder = true
-    return checkbox
+class Checkbox: CursorButton {
+
+    init(title: String = "", cursor: NSCursor? = .pointingHand) {
+        super.init(cursor: cursor)
+
+        self.title = title
+        setButtonType(.switch)
+        setContentHuggingPriority(.fittingSizeCompression, for: .horizontal)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }

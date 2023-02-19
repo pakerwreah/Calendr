@@ -145,9 +145,16 @@ class MainViewController: NSViewController, NSPopoverDelegate {
 
         eventListView = EventListView(viewModel: eventListViewModel)
 
+        let nextEventCalendars = Observable
+            .combineLatest(
+                calendarPickerViewModel.enabledCalendars,
+                calendarPickerViewModel.nextEventCalendars
+            )
+            .map { $0.filter($1.contains) }
+
         nextEventViewModel = NextEventViewModel(
             settings: settingsViewModel,
-            enabledCalendars: calendarPickerViewModel.enabledCalendars,
+            nextEventCalendars: nextEventCalendars,
             dateProvider: dateProvider,
             calendarService: calendarService,
             workspace: workspace,

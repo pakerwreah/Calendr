@@ -24,6 +24,11 @@ enum Icons {
         static let unpinned = NSImage(systemName: "pin")
     }
 
+    enum CalendarPicker {
+        static let nextEventSelected = NSImage(systemName: "alarm")
+        static let nextEventUnselected = NSImage(systemName: "moon.zzz")
+    }
+
     enum Settings {
         static let general = NSImage(systemName: "gear")
         static let calendars = NSImage(systemName: "calendar.badge.plus")
