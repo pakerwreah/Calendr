@@ -15,6 +15,7 @@ class CalendarCellView: NSView {
     private let viewModel: Observable<CalendarCellViewModel>
     private let hoverObserver: AnyObserver<Date?>
     private let clickObserver: AnyObserver<Date>
+    private let doubleClickObserver: AnyObserver<Date>
     private let calendarScaling: Observable<Double>
 
     private let label = Label()
@@ -25,12 +26,14 @@ class CalendarCellView: NSView {
         viewModel: Observable<CalendarCellViewModel>,
         hoverObserver: AnyObserver<Date?>,
         clickObserver: AnyObserver<Date>,
+        doubleClickObserver: AnyObserver<Date>,
         calendarScaling: Observable<Double>
     ) {
 
         self.viewModel = viewModel
         self.hoverObserver = hoverObserver
         self.clickObserver = clickObserver
+        self.doubleClickObserver = doubleClickObserver
         self.calendarScaling = calendarScaling
 
         super.init(frame: .zero)
@@ -141,6 +144,11 @@ class CalendarCellView: NSView {
         rx.click
             .withLatestFrom(viewModel.map(\.date))
             .bind(to: clickObserver)
+            .disposed(by: disposeBag)
+
+        rx.doubleClick
+            .withLatestFrom(viewModel.map(\.date))
+            .bind(to: doubleClickObserver)
             .disposed(by: disposeBag)
 
         rx.mouseEntered

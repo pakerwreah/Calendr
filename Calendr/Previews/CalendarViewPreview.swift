@@ -37,7 +37,8 @@ struct CalendarViewPreview: PreviewProvider {
                 notificationCenter: notificationCenter
             ),
             hoverObserver: hovered.asObserver(),
-            clickObserver: selected.asObserver()
+            clickObserver: selected.asObserver(),
+            doubleClickObserver: .dummy()
         )
         .preview()
         .fixedSize()
