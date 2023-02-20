@@ -15,18 +15,21 @@ class CalendarView: NSView {
     private let viewModel: CalendarViewModel
     private let hoverObserver: AnyObserver<Date?>
     private let clickObserver: AnyObserver<Date>
+    private let doubleClickObserver: AnyObserver<Date>
 
     private let gridView = NSGridView(numberOfColumns: 8, rows: 7)
 
     init(
         viewModel: CalendarViewModel,
         hoverObserver: AnyObserver<Date?>,
-        clickObserver: AnyObserver<Date>
+        clickObserver: AnyObserver<Date>,
+        doubleClickObserver: AnyObserver<Date>
     ) {
 
         self.viewModel = viewModel
         self.hoverObserver = hoverObserver
         self.clickObserver = clickObserver
+        self.doubleClickObserver = doubleClickObserver
 
         super.init(frame: .zero)
 
@@ -145,6 +148,7 @@ class CalendarView: NSView {
                 viewModel: cellViewModel,
                 hoverObserver: hoverObserver,
                 clickObserver: clickObserver,
+                doubleClickObserver: doubleClickObserver,
                 calendarScaling: viewModel.calendarScaling
             )
             gridView.cell(atColumnIndex: 1 + day % 7, rowIndex: 1 + day / 7).contentView = cellView
