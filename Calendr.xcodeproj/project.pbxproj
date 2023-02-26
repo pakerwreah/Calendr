@@ -77,6 +77,8 @@
 		3487A43825E706F800FCC7D7 /* NextEventViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3487A43725E706F800FCC7D7 /* NextEventViewModel.swift */; };
 		3487A43C25E70F5B00FCC7D7 /* NextEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3487A43B25E70F5B00FCC7D7 /* NextEventView.swift */; };
 		348B8D0425B2925100E518FE /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348B8D0325B2925100E518FE /* SettingsViewModel.swift */; };
+		348D693D29ABDD91009F1882 /* CalendarScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348D693C29ABDD91009F1882 /* CalendarScript.swift */; };
+		348D694029ABF29C009F1882 /* AppleScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348D693F29ABF29C009F1882 /* AppleScript.swift */; };
 		348E701F25C43C5200B3B160 /* WeekDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348E701E25C43C5200B3B160 /* WeekDay.swift */; };
 		348E702D25C6161900B3B160 /* EventViewModelFadeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348E702C25C6161900B3B160 /* EventViewModelFadeTests.swift */; };
 		348E703725C6173400B3B160 /* EventViewModelProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348E703625C6173400B3B160 /* EventViewModelProgressTests.swift */; };
@@ -242,6 +244,8 @@
 		3487A43725E706F800FCC7D7 /* NextEventViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextEventViewModel.swift; sourceTree = "<group>"; };
 		3487A43B25E70F5B00FCC7D7 /* NextEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextEventView.swift; sourceTree = "<group>"; };
 		348B8D0325B2925100E518FE /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
+		348D693C29ABDD91009F1882 /* CalendarScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarScript.swift; sourceTree = "<group>"; };
+		348D693F29ABF29C009F1882 /* AppleScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleScript.swift; sourceTree = "<group>"; };
 		348E701E25C43C5200B3B160 /* WeekDay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekDay.swift; sourceTree = "<group>"; };
 		348E702C25C6161900B3B160 /* EventViewModelFadeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventViewModelFadeTests.swift; sourceTree = "<group>"; };
 		348E703625C6173400B3B160 /* EventViewModelProgressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventViewModelProgressTests.swift; sourceTree = "<group>"; };
@@ -449,6 +453,7 @@
 			isa = PBXGroup;
 			children = (
 				34273C2F25E1AE2800B35091 /* Assets */,
+				348D693E29ABDD99009F1882 /* Automation */,
 				347D0FDD259532E7002451EC /* Calendar */,
 				347D0FE22595384E002451EC /* Components */,
 				34273BDC25E19B1000B35091 /* Config */,
@@ -574,6 +579,15 @@
 				34651F7325E3207200518C5A /* WorkspaceServiceProvider.swift */,
 			);
 			path = Providers;
+			sourceTree = "<group>";
+		};
+		348D693E29ABDD99009F1882 /* Automation */ = {
+			isa = PBXGroup;
+			children = (
+				348D693F29ABF29C009F1882 /* AppleScript.swift */,
+				348D693C29ABDD91009F1882 /* CalendarScript.swift */,
+			);
+			path = Automation;
 			sourceTree = "<group>";
 		};
 		348E703A25C617DD00B3B160 /* Mocks */ = {
@@ -932,6 +946,7 @@
 				3487A43825E706F800FCC7D7 /* NextEventViewModel.swift in Sources */,
 				34A6434D25F42375000A0F08 /* EventViewPreview.swift in Sources */,
 				3453E6FD28386A84002DCC3C /* Bool.swift in Sources */,
+				348D693D29ABDD91009F1882 /* CalendarScript.swift in Sources */,
 				34C459BC25DF114300561C29 /* AboutViewController.swift in Sources */,
 				34ABB9E629A12B8A0021F3CF /* ReminderOptionsViewModel.swift in Sources */,
 				34305BCB25992A4E00AB381D /* Rx+Helpers.swift in Sources */,
@@ -961,6 +976,7 @@
 				3468E651284BD3D600B21EC8 /* EventLink.swift in Sources */,
 				3470214A259DFF3000827AE7 /* CalendarServiceProvider.swift in Sources */,
 				3408D13E25982DB400CF1425 /* DateSelector.swift in Sources */,
+				348D694029ABF29C009F1882 /* AppleScript.swift in Sources */,
 				349355B225BCB07B00957945 /* EventViewModel.swift in Sources */,
 				34B23E9C25C0C94000DADCD6 /* NSButton+Rx.swift in Sources */,
 				347D0FFE259566B5002451EC /* CalendarViewModel.swift in Sources */,

@@ -319,18 +319,18 @@ class MainViewController: NSViewController, NSPopoverDelegate {
         }
         .disposed(by: disposeBag)
 
+        let calendarScript = CalendarScript(workspace: workspace)
+
         dateDoubleClick
-            .observe(on: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
-            .bind { [weak self] date in
-                self?.openCalendar(at: date, mode: .day)
+            .bind { date in
+                calendarScript.openCalendar(at: date, mode: .day)
             }
             .disposed(by: disposeBag)
 
         calendarBtn.rx.tap
             .withLatestFrom(selectedDate)
-            .observe(on: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
-            .bind { [weak self] date in
-                self?.openCalendar(at: date, mode: .month)
+            .bind { date in
+                calendarScript.openCalendar(at: date, mode: .month)
             }
             .disposed(by: disposeBag)
 
@@ -661,55 +661,11 @@ class MainViewController: NSViewController, NSPopoverDelegate {
 
         return dateSelector
     }
-
-    // MARK: - Scripts
-
-    private enum CalendarViewMode: String {
-        case day
-        case month
-    }
-
-    private func openCalendar(at date: Date, mode: CalendarViewMode) {
-        do {
-            let dateString = DateFormatter().with(style: .full).string(from: date)
-            try runScript("""
-                tell application "Calendar"
-                switch view to \(mode) view
-                view calendar at date ("\(dateString)")
-                end tell
-            """)
-        } catch {
-            debugPrint("Open Calendar script failed, fallback to workspace method")
-            if let appUrl = workspace.urlForApplication(toOpen: URL(string: "webcal://")!) {
-                workspace.open(appUrl)
-            }
-        }
-    }
 }
 
 private enum Constants {
 
     enum MainStackView {
         static let margin: CGFloat = 8
-    }
-}
-
-// MARK: - Apple Script
-
-private enum ScriptError: Error {
-    case source
-    case compile
-    case execute
-}
-
-private func runScript(_ source: String) throws {
-    guard let script = NSAppleScript(source: source) else {
-        throw ScriptError.source
-    }
-    guard script.compileAndReturnError(nil) else {
-        throw ScriptError.compile
-    }
-    if script.executeAndReturnError(nil).description.isEmpty {
-        throw ScriptError.execute
     }
 }
