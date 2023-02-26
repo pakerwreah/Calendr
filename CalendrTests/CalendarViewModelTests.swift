@@ -39,9 +39,9 @@ class CalendarViewModelTests: XCTestCase {
     override func setUp() {
 
         calendarService.m_calendars = [
-            .init(identifier: "1", account: "A1", title: "Calendar 1", color: .white),
-            .init(identifier: "2", account: "A2", title: "Calendar 2", color: .black),
-            .init(identifier: "3", account: "A3", title: "Calendar 3", color: .clear)
+            .init(id: "1", account: "A1", title: "Calendar 1", color: .white),
+            .init(id: "2", account: "A2", title: "Calendar 2", color: .black),
+            .init(id: "3", account: "A3", title: "Calendar 3", color: .clear)
         ]
 
         calendarService.m_events = [

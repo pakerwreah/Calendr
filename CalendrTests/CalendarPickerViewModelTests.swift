@@ -26,9 +26,9 @@ class CalendarPickerViewModelTests: XCTestCase {
         userDefaults.removePersistentDomain(forName: className)
 
         calendarService.m_calendars = [
-            .init(identifier: "1", account: "A1", title: "Calendar 1", color: .white),
-            .init(identifier: "2", account: "A2", title: "Calendar 2", color: .black),
-            .init(identifier: "3", account: "A3", title: "Calendar 3", color: .clear)
+            .init(id: "1", account: "A1", title: "Calendar 1", color: .white),
+            .init(id: "2", account: "A2", title: "Calendar 2", color: .black),
+            .init(id: "3", account: "A3", title: "Calendar 3", color: .clear)
         ]
     }
 
@@ -37,7 +37,7 @@ class CalendarPickerViewModelTests: XCTestCase {
         var calendars: [String]?
 
         viewModel.calendars
-            .bind { calendars = $0.map(\.identifier) }
+            .bind { calendars = $0.map(\.id) }
             .disposed(by: disposeBag)
 
         calendarService.changeObserver.onNext(())
@@ -108,7 +108,7 @@ class CalendarPickerViewModelTests: XCTestCase {
 
         XCTAssertEqual(enabled, ["1", "2", "3"])
 
-        calendarService.m_calendars.append(.init(identifier: "4", account: "", title: "", color: .clear))
+        calendarService.m_calendars.append(.init(id: "4", account: "", title: "", color: .clear))
 
         calendarService.changeObserver.onNext(())
 
@@ -129,7 +129,7 @@ class CalendarPickerViewModelTests: XCTestCase {
 
         userDefaults.enabledCalendars = ["1", "2", "3"]
 
-        calendarService.m_calendars.append(.init(identifier: "4", account: "", title: "", color: .clear))
+        calendarService.m_calendars.append(.init(id: "4", account: "", title: "", color: .clear))
 
         calendarService.changeObserver.onNext(())
 

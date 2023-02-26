@@ -80,7 +80,7 @@ class CalendarPickerViewModel {
 
         Observable.combineLatest(
             userDefaults.rx.observe(keyPath),
-            calendars.map { $0.map(\.identifier) }
+            calendars.map { $0.map(\.id) }
         )
         .map { $0?.filter($1.contains) ?? $1 }
         .share(replay: 1)

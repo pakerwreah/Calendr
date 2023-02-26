@@ -8,7 +8,7 @@
 import Cocoa
 
 struct CalendarModel: Equatable {
-    let identifier: String
+    let id: String
     let account: String
     let title: String
     let color: NSColor

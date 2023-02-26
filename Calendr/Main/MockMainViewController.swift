@@ -24,7 +24,7 @@ class MockMainViewController: MainViewController {
             Prefs.showWeekNumbers: true,
             Prefs.showEventStatusItem: true,
             Prefs.transparencyLevel: 5,
-            Prefs.enabledCalendars: CalendarModel.all.map(\.identifier)
+            Prefs.enabledCalendars: CalendarModel.all.map(\.id)
         ])
 
         let notificationCenter = NotificationCenter()
@@ -61,12 +61,12 @@ private extension CalendarModel {
 
     private static var uuid: String { UUID().uuidString  }
 
-    static let gmail = make(identifier: uuid, account: "Google", title: "Gmail", color: .systemRed)
-    static let personal = make(identifier: uuid, account: "iCloud", title: "Personal", color: .systemYellow)
-    static let reminders = make(identifier: uuid, account: "iCloud", title: "Reminders", color: .systemOrange)
-    static let birthdays = make(identifier: uuid, account: "Other", title: "Birthdays", color: .systemGray)
-    static let meetings = make(identifier: uuid, account: "Work", title: "Meetings", color: .systemGreen)
-    static let tasks = make(identifier: uuid, account: "Work", title: "Tasks", color: .systemTeal)
+    static let gmail = make(id: uuid, account: "Google", title: "Gmail", color: .systemRed)
+    static let personal = make(id: uuid, account: "iCloud", title: "Personal", color: .systemYellow)
+    static let reminders = make(id: uuid, account: "iCloud", title: "Reminders", color: .systemOrange)
+    static let birthdays = make(id: uuid, account: "Other", title: "Birthdays", color: .systemGray)
+    static let meetings = make(id: uuid, account: "Work", title: "Meetings", color: .systemGreen)
+    static let tasks = make(id: uuid, account: "Work", title: "Tasks", color: .systemTeal)
 
     static let all: [Self] = [.gmail, .personal, .reminders, .birthdays, .meetings, .tasks]
 }

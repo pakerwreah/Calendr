@@ -12,14 +12,14 @@ import AppKit
 extension CalendarModel {
     
     static func make(
-        identifier: String = "",
+        id: String = "",
         account: String = "",
         title: String = "",
         color: NSColor = .clear
     ) -> CalendarModel {
 
         .init(
-            identifier: identifier,
+            id: id,
             account: account,
             title: title,
             color: color

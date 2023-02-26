@@ -140,7 +140,7 @@ class CalendarPickerViewController: NSViewController {
 
         bindCalendarItem(
             button: checkbox,
-            identifier: calendar.identifier,
+            identifier: calendar.id,
             selected: viewModel.enabledCalendars,
             toggle: viewModel.toggleCalendar
         )
@@ -167,7 +167,7 @@ class CalendarPickerViewController: NSViewController {
 
         bindCalendarItem(
             button: button,
-            identifier: calendar.identifier,
+            identifier: calendar.id,
             selected: viewModel.nextEventCalendars,
             toggle: viewModel.toggleNextEvent
         )

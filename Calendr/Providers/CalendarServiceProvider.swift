@@ -110,7 +110,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
         .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
     }
 
-    func fetchReminders(from start: Date, to end: Date, calendars: [EKCalendar]) -> Observable<[EventModel]> {
+    private func fetchReminders(from start: Date, to end: Date, calendars: [EKCalendar]) -> Observable<[EventModel]> {
 
         Observable.create { [store] observer in
 
@@ -282,7 +282,7 @@ private extension CalendarModel {
 
     init(from calendar: EKCalendar) {
         self.init(
-            identifier: calendar.calendarIdentifier,
+            id: calendar.calendarIdentifier,
             account: calendar.source.title,
             title: calendar.title,
             color: calendar.color
