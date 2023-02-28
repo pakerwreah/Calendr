@@ -321,7 +321,8 @@ private extension EventModel {
             isAllDay: event.shouldBeAllDay,
             type: .init(from: event),
             calendar: .init(from: event.calendar),
-            participants: .init(from: event)
+            participants: .init(from: event),
+            timeZone: event.timeZone
         )
     }
 
@@ -337,7 +338,8 @@ private extension EventModel {
             isAllDay: reminder.dueDateComponents!.hour == nil,
             type: .reminder,
             calendar: .init(from: reminder.calendar),
-            participants: []
+            participants: [],
+            timeZone: reminder.timeZone
         )
     }
 }

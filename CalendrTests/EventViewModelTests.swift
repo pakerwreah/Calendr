@@ -252,6 +252,33 @@ class EventViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.duration, "Jan 1 - Feb 2")
     }
 
+    func testDuration_isSameDay_withDifferentTimeZone() {
+
+        let viewModel = mock(
+            event: .make(
+                start: .make(year: 2021, month: 1, day: 1, hour: 15),
+                end: .make(year: 2021, month: 1, day: 1, hour: 16),
+                timeZone: .init(abbreviation: "GMT-3")
+            )
+        )
+
+        XCTAssertEqual(viewModel.duration, "12:00 - 1:00 PM (GMT-3)")
+    }
+
+    func testDuration_isSameDay_isMeeting_withDifferentTimeZone() {
+
+        let viewModel = mock(
+            event: .make(
+                start: .make(year: 2021, month: 1, day: 1, hour: 15),
+                end: .make(year: 2021, month: 1, day: 1, hour: 16),
+                participants: [.make()],
+                timeZone: .init(abbreviation: "GMT-3")
+            )
+        )
+
+        XCTAssertEqual(viewModel.duration, "3:00 - 4:00 PM")
+    }
+
     func testBarStyle() {
 
         XCTAssertEqual(mock(type: .birthday).barStyle, .filled)

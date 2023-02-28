@@ -138,11 +138,11 @@ class EventDetailsViewModelTests: XCTestCase {
         let viewModel = mock(
             event: .make(
                 participants: [
-                    .init(name: "c", status: .unknown, isOrganizer: false, isCurrentUser: false),
-                    .init(name: "b", status: .unknown, isOrganizer: false, isCurrentUser: false),
-                    .init(name: "me", status: .unknown, isOrganizer: false, isCurrentUser: true),
-                    .init(name: "organizer", status: .unknown, isOrganizer: true, isCurrentUser: false),
-                    .init(name: "a", status: .unknown, isOrganizer: false, isCurrentUser: false),
+                    .make(name: "c"),
+                    .make(name: "b"),
+                    .make(name: "me", isCurrentUser: true),
+                    .make(name: "organizer", isOrganizer: true),
+                    .make(name: "a"),
                 ]
             )
         )
