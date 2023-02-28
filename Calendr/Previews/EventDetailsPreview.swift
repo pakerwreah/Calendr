@@ -134,18 +134,18 @@ private extension Strings {
 private extension Array where Element == Participant {
 
     static let mock: Self = [
-        .init(name: "Liam", status: .declined, isOrganizer: false, isCurrentUser: false),
-        .init(name: "Olivia", status: .pending, isOrganizer: false, isCurrentUser: false),
-        .init(name: "Noah", status: .pending, isOrganizer: false, isCurrentUser: false),
-        .init(name: "Emma", status: .accepted, isOrganizer: true, isCurrentUser: false),
-        .init(name: "Carlos", status: .maybe, isOrganizer: false, isCurrentUser: true),
-        .init(name: "Charlotte", status: .accepted, isOrganizer: false, isCurrentUser: false),
-        .init(name: "Elijah", status: .accepted, isOrganizer: false, isCurrentUser: false),
-        .init(name: "Nelson", status: .declined, isOrganizer: false, isCurrentUser: false),
-        .init(name: "Brian", status: .accepted, isOrganizer: false, isCurrentUser: false),
-        .init(name: "Oliver", status: .accepted, isOrganizer: false, isCurrentUser: false),
-        .init(name: "Lucas", status: .accepted, isOrganizer: false, isCurrentUser: false),
-        .init(name: "Jean", status: .maybe, isOrganizer: false, isCurrentUser: false)
+        .make(name: "Liam", status: .declined),
+        .make(name: "Olivia", status: .pending),
+        .make(name: "Noah", status: .pending),
+        .make(name: "Emma", status: .accepted, isOrganizer: true),
+        .make(name: "Carlos", status: .maybe, isCurrentUser: true),
+        .make(name: "Charlotte", status: .accepted),
+        .make(name: "Elijah", status: .accepted),
+        .make(name: "Nelson", status: .declined),
+        .make(name: "Brian", status: .accepted),
+        .make(name: "Oliver", status: .accepted),
+        .make(name: "Lucas", status: .accepted),
+        .make(name: "Jean", status: .maybe)
     ]
 }
 

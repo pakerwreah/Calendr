@@ -22,7 +22,8 @@ extension EventModel {
         isAllDay: Bool = false,
         type: EventType = .event(.accepted),
         calendar: CalendarModel = .make(),
-        participants: [Participant] = []
+        participants: [Participant] = [],
+        timeZone: TimeZone? = nil
     ) -> EventModel {
 
         .init(
@@ -36,7 +37,26 @@ extension EventModel {
             isAllDay: isAllDay || type.isBirthday,
             type: type,
             calendar: calendar,
-            participants: participants
+            participants: participants,
+            timeZone: timeZone
+        )
+    }
+}
+
+extension Participant {
+
+    static func make(
+        name: String = "",
+        status: EventStatus = .unknown,
+        isOrganizer: Bool = false,
+        isCurrentUser: Bool = false
+    ) -> Participant {
+
+        .init(
+            name: name,
+            status: status,
+            isOrganizer: isOrganizer,
+            isCurrentUser: isCurrentUser
         )
     }
 }

@@ -19,6 +19,7 @@ struct EventModel: Equatable {
     let type: EventType
     let calendar: CalendarModel
     let participants: [Participant]
+    let timeZone: TimeZone?
 }
 
 enum EventStatus: Comparable {
@@ -60,6 +61,8 @@ extension EventModel {
     func range(using dateProvider: DateProviding) -> DateRange { .init(start: start, end: end, dateProvider: dateProvider) }
 
     var status: EventStatus { if case .event(let status) = type { return status } else { return .unknown } }
+
+    var isMeeting: Bool { !participants.isEmpty }
 }
 
 struct Participant: Hashable {

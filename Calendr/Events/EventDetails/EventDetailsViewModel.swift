@@ -87,7 +87,13 @@ class EventDetailsViewModel {
                 end = event.end
             }
 
-            duration = formatter.string(from: event.start, to: end)
+            duration = EventUtils.duration(
+                from: event.start,
+                to: end,
+                timeZone: event.timeZone,
+                formatter: formatter,
+                isMeeting: event.isMeeting
+            )
         }
     }
 
