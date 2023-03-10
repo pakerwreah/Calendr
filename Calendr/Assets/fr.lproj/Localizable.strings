@@ -7,6 +7,7 @@
 
 "quit" = "Quitter";
 "search" = "Rechercher";
+"new_version" = "Nouvelle version disponible: %@";
 
 "settings.title" = "Préférences";
 "settings.tab.general" = "Général";
