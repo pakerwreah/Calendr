@@ -322,7 +322,7 @@ private extension EventModel {
             type: .init(from: event),
             calendar: .init(from: event.calendar),
             participants: .init(from: event),
-            timeZone: event.timeZone
+            timeZone: event.calendar.isSubscribed ? nil : event.timeZone
         )
     }
 
@@ -339,7 +339,7 @@ private extension EventModel {
             type: .reminder,
             calendar: .init(from: reminder.calendar),
             participants: [],
-            timeZone: reminder.timeZone
+            timeZone: reminder.calendar.isSubscribed ? nil : reminder.timeZone
         )
     }
 }
