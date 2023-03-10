@@ -26,6 +26,7 @@ enum Prefs {
     static let transparencyLevel = "transparency_level"
     static let calendarScaling = "calendar_scaling"
     static let highlightedWeekdays = "highlighted_weekdays"
+    static let lastCheckedVersion = "last_checked_version"
 }
 
 extension UserDefaults {
