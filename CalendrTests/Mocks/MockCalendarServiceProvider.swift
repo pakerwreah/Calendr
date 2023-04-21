@@ -48,3 +48,13 @@ class MockCalendarServiceProvider: CalendarServiceProviding {
         return .just(())
     }
 }
+
+// MARK: - Helpers
+
+extension MockCalendarServiceProvider {
+
+    func changeEvents(_ events: [EventModel]) {
+        m_events = events
+        changeObserver.onNext(())
+    }
+}

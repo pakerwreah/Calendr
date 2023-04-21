@@ -93,17 +93,26 @@ class MainViewController: NSViewController, NSPopoverDelegate {
             notificationCenter: notificationCenter
         )
 
-        statusItemViewModel = StatusItemViewModel(
-            dateObservable: initialDate,
-            settings: settingsViewModel,
-            dateProvider: dateProvider,
-            screenProvider: screenProvider,
-            notificationCenter: notificationCenter
-        )
-
         calendarPickerViewModel = CalendarPickerViewModel(
             calendarService: calendarService,
             userDefaults: userDefaults
+        )
+
+        let nextEventCalendars = Observable
+            .combineLatest(
+                calendarPickerViewModel.enabledCalendars,
+                calendarPickerViewModel.nextEventCalendars
+            )
+            .map { $0.filter($1.contains) }
+
+        statusItemViewModel = StatusItemViewModel(
+            dateObservable: initialDate,
+            nextEventCalendars: nextEventCalendars,
+            settings: settingsViewModel,
+            dateProvider: dateProvider,
+            screenProvider: screenProvider,
+            calendarService: calendarService,
+            notificationCenter: notificationCenter
         )
 
         settingsViewController = SettingsViewController(
@@ -146,13 +155,6 @@ class MainViewController: NSViewController, NSPopoverDelegate {
         )
 
         eventListView = EventListView(viewModel: eventListViewModel)
-
-        let nextEventCalendars = Observable
-            .combineLatest(
-                calendarPickerViewModel.enabledCalendars,
-                calendarPickerViewModel.nextEventCalendars
-            )
-            .map { $0.filter($1.contains) }
 
         nextEventViewModel = NextEventViewModel(
             settings: settingsViewModel,

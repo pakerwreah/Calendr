@@ -15,11 +15,26 @@ class StatusItemViewModel {
 
     init(
         dateObservable: Observable<Date>,
+        nextEventCalendars: Observable<[String]>,
         settings: StatusItemSettings,
         dateProvider: DateProviding,
         screenProvider: ScreenProviding,
+        calendarService: CalendarServiceProviding,
         notificationCenter: NotificationCenter
     ) {
+
+        let hasBirthdaysObservable = Observable.combineLatest(
+            dateObservable,
+            nextEventCalendars
+        )
+        .repeat(when: calendarService.changeObservable)
+        .flatMapLatest { date, calendars in
+            let start = dateProvider.calendar.startOfDay(for: date)
+            let end = dateProvider.calendar.endOfDay(for: date)
+            return calendarService
+                .events(from: start, to: end, calendars: calendars)
+                .map { $0.contains(where: \.type.isBirthday) }
+        }
 
         let localeChangeObservable = notificationCenter.rx
             .notification(NSLocale.currentLocaleDidChangeNotification)
@@ -63,18 +78,31 @@ class StatusItemViewModel {
             showIcon,
             settings.showStatusItemDate,
             settings.showStatusItemBackground,
-            dateFormatterObservable
+            dateFormatterObservable,
+            hasBirthdaysObservable
         )
-        .map { date, showIcon, showDate, showBackground, dateFormatter in
+        .map { date, showIcon, showDate, showBackground, dateFormatter, hasBirthdays in
 
             let title = NSMutableAttributedString()
 
-            if showIcon {
+            if showIcon || hasBirthdays {
                 let attachment = NSTextAttachment()
-                attachment.image = Icons.MenuBar.icon.with(scale: .large)
+                let icon = hasBirthdays ? Icons.Event.birthday : Icons.MenuBar.icon
+                attachment.image = icon.with(scale: .large)
                 title.append(NSAttributedString(attachment: attachment))
+
+                let size: CGFloat
+                switch (showDate, hasBirthdays) {
+                case (true, true):
+                    size = 11
+                case (false, false):
+                    size = 13
+                default:
+                    size = 12
+                }
+
                 title.addAttributes(
-                    [.font: NSFont.systemFont(ofSize: showBackground ? 12 : 13)],
+                    [.font: NSFont.systemFont(ofSize: size)],
                     range: NSRange(location: 0, length: title.length)
                 )
             }
