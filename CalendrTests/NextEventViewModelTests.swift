@@ -569,11 +569,3 @@ class NextEventViewModelTests: XCTestCase {
         XCTAssertEqual(time, "30s ago")
     }
 }
-
-private extension MockCalendarServiceProvider {
-
-    func changeEvents(_ events: [EventModel]) {
-        m_events = events
-        changeObserver.onNext(())
-    }
-}

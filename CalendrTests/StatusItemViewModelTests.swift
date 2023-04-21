@@ -14,18 +14,22 @@ class StatusItemViewModelTests: XCTestCase {
     let disposeBag = DisposeBag()
 
     let dateSubject = PublishSubject<Date>()
+    let calendarsSubject = BehaviorSubject<[String]>(value: [])
 
     let dateProvider = MockDateProvider()
     let screenProvider = MockScreenProvider()
+    let calendarService = MockCalendarServiceProvider()
     let settings = MockStatusItemSettings()
 
     let notificationCenter = NotificationCenter()
 
     lazy var viewModel = StatusItemViewModel(
         dateObservable: dateSubject,
+        nextEventCalendars: calendarsSubject,
         settings: settings,
         dateProvider: dateProvider,
         screenProvider: screenProvider,
+        calendarService: calendarService,
         notificationCenter: notificationCenter
     )
 
@@ -88,6 +92,20 @@ class StatusItemViewModelTests: XCTestCase {
         XCTAssertEqual(lastAttributed?.containsAttachments, true)
     }
 
+    func testIconVisibility_withBirthday() {
+
+        calendarService.changeEvents([.make(type: .birthday)])
+
+        setUp(showIcon: true, showDate: true)
+        XCTAssertEqual(lastAttributed?.containsAttachments, true)
+
+        setUp(showIcon: false, showDate: true)
+        XCTAssertEqual(lastAttributed?.containsAttachments, true)
+
+        setUp(showIcon: false, showDate: false)
+        XCTAssertEqual(lastAttributed?.containsAttachments, true)
+    }
+
     func testIconVisibility_withNotchDetected() {
 
         settings.eventStatusItemDetectNotchObserver.onNext(true)
@@ -98,6 +116,22 @@ class StatusItemViewModelTests: XCTestCase {
 
         setUp(showIcon: false, showDate: true)
         XCTAssertEqual(lastAttributed?.containsAttachments, false)
+
+        setUp(showIcon: false, showDate: false)
+        XCTAssertEqual(lastAttributed?.containsAttachments, true)
+    }
+
+    func testIconVisibility_withNotchDetected_withBirthday() {
+
+        settings.eventStatusItemDetectNotchObserver.onNext(true)
+        screenProvider.screenObserver.onNext(MockScreen(hasNotch: true))
+        calendarService.changeEvents([.make(type: .birthday)])
+
+        setUp(showIcon: true, showDate: true)
+        XCTAssertEqual(lastAttributed?.containsAttachments, true)
+
+        setUp(showIcon: false, showDate: true)
+        XCTAssertEqual(lastAttributed?.containsAttachments, true)
 
         setUp(showIcon: false, showDate: false)
         XCTAssertEqual(lastAttributed?.containsAttachments, true)
