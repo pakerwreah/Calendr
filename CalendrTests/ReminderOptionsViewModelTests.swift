@@ -15,13 +15,16 @@ class ReminderOptionsViewModelTests: XCTestCase {
 
     let dateProvider = MockDateProvider()
     let calendarService = MockCalendarServiceProvider()
+    let workspace = MockWorkspaceServiceProvider()
 
-    func testOptions() {
+    func testOptions_withSourceList() {
 
-        let viewModel = mock(event: .make(type: .reminder))
+        let viewModel = mock(event: .make(type: .reminder), source: .list)
 
         XCTAssertEqual(viewModel.items, [
-            .action(.complete),
+            .action(.open),
+            .separator,
+            .action(.complete(.clear)),
             .separator,
             .action(.remind(.init(minute: 5))),
             .action(.remind(.init(minute: 15))),
@@ -29,6 +32,35 @@ class ReminderOptionsViewModelTests: XCTestCase {
             .action(.remind(.init(hour: 1))),
             .action(.remind(.init(day: 1)))
         ])
+    }
+
+    func testOptions_withSourceDetails() {
+
+        let viewModel = mock(event: .make(type: .reminder), source: .details)
+
+        XCTAssertEqual(viewModel.items, [
+            .action(.complete(.clear)),
+            .separator,
+            .action(.remind(.init(minute: 5))),
+            .action(.remind(.init(minute: 15))),
+            .action(.remind(.init(minute: 30))),
+            .action(.remind(.init(hour: 1))),
+            .action(.remind(.init(day: 1)))
+        ])
+    }
+
+    func testOptions_withOpenTriggered() {
+        let openExpectation = expectation(description: "Open")
+
+        let viewModel = mock(event: .make(id: "12345", type: .reminder), source: .list)
+
+        workspace.didOpen = { url in
+            XCTAssertEqual(url.absoluteString, "x-apple-reminderkit://remcdreminder/12345")
+            openExpectation.fulfill()
+        }
+
+        viewModel.triggerAction(.open)
+        waitForExpectations(timeout: 1)
     }
 
     func testReminder_rescheduleBy1Hour() {
@@ -92,18 +124,20 @@ class ReminderOptionsViewModelTests: XCTestCase {
             .bind { callback = true }
             .disposed(by: disposeBag)
 
-        viewModel.triggerAction(.complete)
+        viewModel.triggerAction(.complete(.clear))
 
         XCTAssert(complete)
         XCTAssert(callback)
     }
 
-    func mock(event: EventModel) -> ReminderOptionsViewModel {
+    func mock(event: EventModel, source: ContextMenuSource = .details) -> ReminderOptionsViewModel {
 
         ReminderOptionsViewModel(
             event: event,
             dateProvider: dateProvider,
-            calendarService: calendarService
+            calendarService: calendarService,
+            workspace: workspace,
+            source: source
         )
     }
 }
