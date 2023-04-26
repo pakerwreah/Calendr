@@ -70,9 +70,10 @@ class EventOptionsViewModel: ContextMenuViewModel {
 
         let date: String
         if event.hasRecurrenceRules {
-            let formatter = DateFormatter()
-            formatter.dateFormat = "yyyyMMdd'T'HHmmss'Z'"
-            formatter.timeZone = .init(secondsFromGMT: 0)
+            let formatter = DateFormatter(format: "yyyyMMdd'T'HHmmss'Z'", calendar: dateProvider.calendar)
+            if !event.isAllDay {
+                formatter.timeZone = .init(secondsFromGMT: 0)
+            }
             date = "/\(formatter.string(for: event.start)!)"
         } else {
             date =  ""
