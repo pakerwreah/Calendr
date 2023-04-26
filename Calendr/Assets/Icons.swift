@@ -45,7 +45,12 @@ enum Icons {
         static let link = NSImage(systemName: "link")
         static let video = NSImage(systemName: "video")
         static let video_fill = NSImage(systemName: "video.fill")
-        static let open = NSImage(systemName: "square.and.pencil")
+        static let open = NSImage(systemName: "square.and.arrow.up")
+    }
+
+    enum Reminder {
+        static let open = Event.open
+        static let complete = NSImage(systemName: "circle.inset.filled")
     }
 
     enum EventStatus {

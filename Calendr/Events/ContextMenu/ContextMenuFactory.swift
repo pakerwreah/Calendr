@@ -33,7 +33,13 @@ enum ContextMenuFactory {
             )
 
         case .reminder:
-            return ReminderOptionsViewModel(event: event, dateProvider: dateProvider, calendarService: calendarService)
+            return ReminderOptionsViewModel(
+                event: event,
+                dateProvider: dateProvider,
+                calendarService: calendarService,
+                workspace: workspace,
+                source: source
+            )
         }
     }
 }
