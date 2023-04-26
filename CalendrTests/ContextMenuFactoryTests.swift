@@ -17,9 +17,11 @@ class ContextMenuFactoryTests: XCTestCase {
 
     func testFactory_isEvent_withInvitationStatus_shouldMakeViewModel() throws {
 
-        for status in [.accepted, .maybe, .pending, .declined] as [EventStatus] {
-            let viewModel = try XCTUnwrap(make(event: .make(type: .event(status))))
-            XCTAssert(viewModel is EventOptionsViewModel)
+        for source in [.list, .details] as [ContextMenuSource] {
+            for status in [.accepted, .maybe, .pending, .declined] as [EventStatus] {
+                let viewModel = try XCTUnwrap(make(event: .make(type: .event(status)), source: source))
+                XCTAssert(viewModel is EventOptionsViewModel)
+            }
         }
     }
 
@@ -36,16 +38,24 @@ class ContextMenuFactoryTests: XCTestCase {
 
     func testFactory_isReminder_shouldMakeViewModel() throws {
 
-        let viewModel = try XCTUnwrap(make(event: .make(type: .reminder)))
-        XCTAssert(viewModel is ReminderOptionsViewModel)
+        for source in [.list, .details] as [ContextMenuSource] {
+            let viewModel = try XCTUnwrap(make(event: .make(type: .reminder), source: source))
+            XCTAssert(viewModel is ReminderOptionsViewModel)
+        }
     }
 
-    func testFactory_isBirthday_shouldNotMakeViewModel() {
+    func testFactory_isBirthday_withSourceList_shouldMakeViewModel() throws {
 
-        XCTAssertNil(make(event: .make(type: .birthday)))
+        let viewModel = try XCTUnwrap(make(event: .make(type: .birthday), source: .list))
+        XCTAssert(viewModel is EventOptionsViewModel)
     }
 
-    func make(event: EventModel, source: ContextMenuSource = .details) -> (any ContextMenuViewModel)? {
+    func testFactory_isBirthday_withSourceDetails_shouldNotMakeViewModel() {
+
+        XCTAssertNil(make(event: .make(type: .birthday), source: .details))
+    }
+
+    func make(event: EventModel, source: ContextMenuSource) -> (any ContextMenuViewModel)? {
 
         ContextMenuFactory.makeViewModel(
             event: event,
