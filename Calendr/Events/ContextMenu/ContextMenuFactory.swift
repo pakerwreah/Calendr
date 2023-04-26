@@ -23,7 +23,7 @@ enum ContextMenuFactory {
     ) -> (any ContextMenuViewModel)? {
 
         switch event.type {
-        case .event:
+        case .event, .birthday:
             return EventOptionsViewModel(
                 event: event,
                 dateProvider: dateProvider,
@@ -34,9 +34,6 @@ enum ContextMenuFactory {
 
         case .reminder:
             return ReminderOptionsViewModel(event: event, dateProvider: dateProvider, calendarService: calendarService)
-
-        default:
-            return nil
         }
     }
 }
