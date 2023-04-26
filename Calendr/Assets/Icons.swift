@@ -45,6 +45,7 @@ enum Icons {
         static let link = NSImage(systemName: "link")
         static let video = NSImage(systemName: "video")
         static let video_fill = NSImage(systemName: "video.fill")
+        static let open = NSImage(systemName: "square.and.pencil")
     }
 
     enum EventStatus {

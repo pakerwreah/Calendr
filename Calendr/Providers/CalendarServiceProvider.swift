@@ -192,7 +192,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
 
             let predicate = store.predicateForEvents(withStart: date, end: date + 1, calendars: nil)
 
-            guard let event = store.events(matching: predicate).first(where: { $0.eventIdentifier == id }) else {
+            guard let event = store.events(matching: predicate).first(where: { $0.calendarItemIdentifier == id }) else {
                 observer.onError(.unexpected("🔥 Event not found"))
                 return disposable
             }
@@ -311,7 +311,7 @@ private extension EventModel {
 
     init(from event: EKEvent) {
         self.init(
-            id: event.eventIdentifier,
+            id: event.calendarItemIdentifier,
             start: event.startDate,
             end: event.endDate,
             title: event.title,
@@ -322,7 +322,8 @@ private extension EventModel {
             type: .init(from: event),
             calendar: .init(from: event.calendar),
             participants: .init(from: event),
-            timeZone: event.calendar.isSubscribed ? nil : event.timeZone
+            timeZone: event.calendar.isSubscribed ? nil : event.timeZone,
+            hasRecurrenceRules: event.hasRecurrenceRules
         )
     }
 
@@ -339,7 +340,8 @@ private extension EventModel {
             type: .reminder,
             calendar: .init(from: reminder.calendar),
             participants: [],
-            timeZone: reminder.calendar.isSubscribed ? nil : reminder.timeZone
+            timeZone: reminder.calendar.isSubscribed ? nil : reminder.timeZone,
+            hasRecurrenceRules: reminder.hasRecurrenceRules
         )
     }
 }

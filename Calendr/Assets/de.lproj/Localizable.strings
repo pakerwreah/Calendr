@@ -58,6 +58,7 @@
 "event_status.declined" = "Abgelehnt";
 "event_status.pending" = "Ausstehend";
 
-"event_status.action.accept" = "Akzeptieren";
-"event_status.action.maybe" = "Vielleicht";
-"event_status.action.decline" = "Ablehnen";
+"event_action.open" = "Öffnen";
+"event_action.accept" = "Akzeptieren";
+"event_action.maybe" = "Vielleicht";
+"event_action.decline" = "Ablehnen";

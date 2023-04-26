@@ -58,6 +58,7 @@
 "event_status.declined" = "Rifiutato";
 "event_status.pending" = "In attesa";
 
-"event_status.action.accept" = "Accetta";
-"event_status.action.maybe" = "Forse";
-"event_status.action.decline" = "Rifiuta";
+"event_action.open" = "Aprire";
+"event_action.accept" = "Accetta";
+"event_action.maybe" = "Forse";
+"event_action.decline" = "Rifiuta";
