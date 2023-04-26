@@ -102,7 +102,9 @@ class EventDetailsViewModel {
         ContextMenuFactory.makeViewModel(
             event: event,
             dateProvider: dateProvider,
-            calendarService: calendarService
+            calendarService: calendarService,
+            workspace: workspace,
+            source: .details
         )
     }
 }

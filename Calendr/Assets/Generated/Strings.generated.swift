@@ -21,6 +21,16 @@ internal enum Strings {
   internal static let quit = Strings.tr("Localizable", "quit", fallback: "Quit")
   /// Search
   internal static let search = Strings.tr("Localizable", "search", fallback: "Search")
+  internal enum EventAction {
+    /// Accept
+    internal static let accept = Strings.tr("Localizable", "event_action.accept", fallback: "Accept")
+    /// Decline
+    internal static let decline = Strings.tr("Localizable", "event_action.decline", fallback: "Decline")
+    /// Maybe
+    internal static let maybe = Strings.tr("Localizable", "event_action.maybe", fallback: "Maybe")
+    /// Open
+    internal static let `open` = Strings.tr("Localizable", "event_action.open", fallback: "Open")
+  }
   internal enum EventDetails {
     internal enum Participant {
       /// me
@@ -40,14 +50,6 @@ internal enum Strings {
     internal static let maybe = Strings.tr("Localizable", "event_status.maybe", fallback: "Maybe")
     /// Pending
     internal static let pending = Strings.tr("Localizable", "event_status.pending", fallback: "Pending")
-    internal enum Action {
-      /// Accept
-      internal static let accept = Strings.tr("Localizable", "event_status.action.accept", fallback: "Accept")
-      /// Decline
-      internal static let decline = Strings.tr("Localizable", "event_status.action.decline", fallback: "Decline")
-      /// Maybe
-      internal static let maybe = Strings.tr("Localizable", "event_status.action.maybe", fallback: "Maybe")
-    }
   }
   internal enum Formatter {
     internal enum Date {

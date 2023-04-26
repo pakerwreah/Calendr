@@ -20,6 +20,7 @@ struct EventModel: Equatable {
     let calendar: CalendarModel
     let participants: [Participant]
     let timeZone: TimeZone?
+    let hasRecurrenceRules: Bool
 }
 
 enum EventStatus: Comparable {

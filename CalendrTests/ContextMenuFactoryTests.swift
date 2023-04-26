@@ -13,6 +13,7 @@ class ContextMenuFactoryTests: XCTestCase {
 
     let dateProvider = MockDateProvider()
     let calendarService = MockCalendarServiceProvider()
+    let workspace = MockWorkspaceServiceProvider()
 
     func testFactory_isEvent_withInvitationStatus_shouldMakeViewModel() throws {
 
@@ -22,9 +23,15 @@ class ContextMenuFactoryTests: XCTestCase {
         }
     }
 
-    func testFactory_isEvent_withoutInvitationStatus_shouldNotMakeViewModel() {
+    func testFactory_isEvent_withoutInvitationStatus_withSourceList_shouldMakeViewModel() throws {
 
-        XCTAssertNil(make(event: .make(type: .event(.unknown))))
+        let viewModel = try XCTUnwrap(make(event: .make(type: .event(.unknown)), source: .list))
+        XCTAssert(viewModel is EventOptionsViewModel)
+    }
+
+    func testFactory_isEvent_withoutInvitationStatus_withSourceDetails_shouldNotMakeViewModel() {
+
+        XCTAssertNil(make(event: .make(type: .event(.unknown)), source: .details))
     }
 
     func testFactory_isReminder_shouldMakeViewModel() throws {
@@ -38,12 +45,14 @@ class ContextMenuFactoryTests: XCTestCase {
         XCTAssertNil(make(event: .make(type: .birthday)))
     }
 
-    func make(event: EventModel) -> (any ContextMenuViewModel)? {
+    func make(event: EventModel, source: ContextMenuSource = .details) -> (any ContextMenuViewModel)? {
 
         ContextMenuFactory.makeViewModel(
             event: event,
             dateProvider: dateProvider,
-            calendarService: calendarService
+            calendarService: calendarService,
+            workspace: workspace,
+            source: source
         )
     }
 }

@@ -38,7 +38,8 @@ extension EventModel {
             type: type,
             calendar: calendar,
             participants: participants,
-            timeZone: timeZone
+            timeZone: timeZone,
+            hasRecurrenceRules: false
         )
     }
 }

@@ -7,17 +7,30 @@
 
 import Foundation
 
+enum ContextMenuSource {
+    case list
+    case details
+}
+
 enum ContextMenuFactory {
 
     static func makeViewModel(
         event: EventModel,
         dateProvider: DateProviding,
-        calendarService: CalendarServiceProviding
+        calendarService: CalendarServiceProviding,
+        workspace: WorkspaceServiceProviding,
+        source: ContextMenuSource
     ) -> (any ContextMenuViewModel)? {
 
         switch event.type {
-        case .event(let status) where status != .unknown:
-            return EventOptionsViewModel(event: event, calendarService: calendarService)
+        case .event:
+            return EventOptionsViewModel(
+                event: event,
+                dateProvider: dateProvider,
+                calendarService: calendarService,
+                workspace: workspace,
+                source: source
+            )
 
         case .reminder:
             return ReminderOptionsViewModel(event: event, dateProvider: dateProvider, calendarService: calendarService)

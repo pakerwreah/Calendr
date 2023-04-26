@@ -58,6 +58,7 @@
 "event_status.declined" = "Recusado";
 "event_status.pending" = "Pendente";
 
-"event_status.action.accept" = "Aceitar";
-"event_status.action.maybe" = "Talvez";
-"event_status.action.decline" = "Recusar";
+"event_action.open" = "Abrir";
+"event_action.accept" = "Aceitar";
+"event_action.maybe" = "Talvez";
+"event_action.decline" = "Recusar";

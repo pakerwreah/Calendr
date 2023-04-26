@@ -13,7 +13,9 @@ class EventOptionsViewModelTests: XCTestCase {
 
     let disposeBag = DisposeBag()
 
+    let dateProvider = MockDateProvider()
     let calendarService = MockCalendarServiceProvider()
+    let workspace = MockWorkspaceServiceProvider()
 
     func testOptions_withPendingInvitationStatus() {
 
@@ -60,11 +62,40 @@ class EventOptionsViewModelTests: XCTestCase {
         XCTAssert(callback)
     }
 
-    func mock(event: EventModel) -> EventOptionsViewModel {
+    func testOptions_fromList_withUnknownInvitationStatus() {
+
+        let viewModel = mock(event: .make(type: .event(.unknown)), source: .list)
+        XCTAssertEqual(viewModel.items, [.action(.open)])
+    }
+
+    func testOptions_fromList() {
+
+        let viewModel = mock(event: .make(type: .event(.pending)), source: .list)
+        XCTAssertEqual(viewModel.items, [.action(.open), .separator, .action(.accept), .action(.maybe), .action(.decline)])
+    }
+
+    func testOptions_fromList_withOpenTriggered() {
+        let openExpectation = expectation(description: "Open")
+
+        let viewModel = mock(event: .make(id: "12345", type: .event(.pending)), source: .list)
+
+        workspace.didOpen = { url in
+            XCTAssertEqual(url.absoluteString, "ical://ekevent/12345?method=show&options=more")
+            openExpectation.fulfill()
+        }
+
+        viewModel.triggerAction(.open)
+        waitForExpectations(timeout: 1)
+    }
+
+    func mock(event: EventModel, source: ContextMenuSource = .details) -> EventOptionsViewModel {
 
         EventOptionsViewModel(
             event: event,
-            calendarService: calendarService
-        )
+            dateProvider: dateProvider,
+            calendarService: calendarService,
+            workspace: workspace,
+            source: source
+        )!
     }
 }
