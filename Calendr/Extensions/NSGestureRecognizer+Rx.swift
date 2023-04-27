@@ -32,7 +32,7 @@ extension Reactive where Base: NSView {
 
     private func gesture<T: NSGestureRecognizer>(_ configure: @escaping (T) -> Void) -> Observable<Void> {
 
-        Observable.create { observer in
+        Observable.create { [weak base] observer in
 
             let target = GestureProxy(observer)
 
@@ -43,11 +43,11 @@ extension Reactive where Base: NSView {
 
             configure(click)
 
-            base.addGestureRecognizer(click)
+            base?.addGestureRecognizer(click)
 
             return Disposables.create {
                 _ = target // keep a strong reference
-                base.removeGestureRecognizer(click)
+                base?.removeGestureRecognizer(click)
             }
         }
         .share(replay: 1)
