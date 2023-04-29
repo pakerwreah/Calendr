@@ -1,0 +1,64 @@
+/* 
+  Localizable.strings
+  Calendr
+
+  Created by Paker on 20/02/2021.
+*/
+
+"quit" = "Quit";
+"search" = "Search";
+"new_version" = "New version available: %@";
+
+"settings.title" = "Preferences";
+"settings.tab.general" = "General";
+"settings.tab.calendars" = "Calendars";
+"settings.tab.about" = "About";
+
+"settings.menu_bar" = "Menu Bar";
+"settings.menu_bar.auto_launch" = "Launch at login";
+"settings.menu_bar.show_icon" = "Show icon";
+"settings.menu_bar.show_date" = "Show date";
+"settings.menu_bar.show_background" = "Show opaque background";
+"settings.menu_bar.date_format" = "Date format";
+"settings.menu_bar.date_format_custom" = "Custom";
+"settings.next_event" = "Next Event";
+"settings.menu_bar.show_next_event" = "Show next event";
+"settings.menu_bar.next_event_detect_notch" = "Shorten if 'notch' is present";
+
+"settings.calendar" = "Calendar";
+"settings.calendar.show_week_numbers" = "Show week numbers";
+"settings.calendar.preserve_selected_date" = "Preserve selected date on hide";
+"settings.calendar.show_declined_events" = "Show declined events";
+"settings.calendar.show_declined_events_tooltip" = "This only works if it is also enabled in the native Calendar app.";
+
+"settings.events" = "Events";
+"settings.events.finished" = "Finished";
+"settings.events.finished.fade" = "Fade";
+"settings.events.finished.hide" = "Hide";
+
+"settings.transparency" = "Transparency";
+
+"formatter.date.all_day" = "All day";
+"formatter.date.today" = "Today";
+"formatter.date.relative.in" = "in %@";
+"formatter.date.relative.ago" = "%@ ago";
+"formatter.date.relative.left" = "%@ left";
+
+"reminder.options.button" = "Options";
+"reminder.options.complete" = "Complete";
+"reminder.options.remind" = "Remind %@";
+
+"event_details.participant.organizer" = "organizer";
+"event_details.participant.me" = "me";
+
+"event_status.label" = "my status:";
+
+"event_status.accepted" = "Accepted";
+"event_status.maybe" = "Maybe";
+"event_status.declined" = "Declined";
+"event_status.pending" = "Pending";
+
+"event_action.open" = "Open";
+"event_action.accept" = "Accept";
+"event_action.maybe" = "Maybe";
+"event_action.decline" = "Decline";
