@@ -5,60 +5,60 @@
   Created by Paker on 20/02/2021.
 */
 
-"quit" = "Quit";
-"search" = "Search";
-"new_version" = "New version available: %@";
+"quit" = "退出";
+"search" = "搜索";
+"new_version" = "有新版本可用：%@";
 
-"settings.title" = "Preferences";
-"settings.tab.general" = "General";
-"settings.tab.calendars" = "Calendars";
-"settings.tab.about" = "About";
+"settings.title" = "设置";
+"settings.tab.general" = "通用";
+"settings.tab.calendars" = "日历";
+"settings.tab.about" = "关于";
 
-"settings.menu_bar" = "Menu Bar";
-"settings.menu_bar.auto_launch" = "Launch at login";
-"settings.menu_bar.show_icon" = "Show icon";
-"settings.menu_bar.show_date" = "Show date";
-"settings.menu_bar.show_background" = "Show opaque background";
-"settings.menu_bar.date_format" = "Date format";
-"settings.menu_bar.date_format_custom" = "Custom";
-"settings.next_event" = "Next Event";
-"settings.menu_bar.show_next_event" = "Show next event";
-"settings.menu_bar.next_event_detect_notch" = "Shorten if 'notch' is present";
+"settings.menu_bar" = "菜单栏";
+"settings.menu_bar.auto_launch" = "登录时打开";
+"settings.menu_bar.show_icon" = "显示图标";
+"settings.menu_bar.show_date" = "显示日期";
+"settings.menu_bar.show_background" = "启用不透明背景";
+"settings.menu_bar.date_format" = "日期格式";
+"settings.menu_bar.date_format_custom" = "自定义";
+"settings.next_event" = "下一个日程";
+"settings.menu_bar.show_next_event" = "显示下一个日程";
+"settings.menu_bar.next_event_detect_notch" = "为屏幕“刘海”缩短长度";
 
-"settings.calendar" = "Calendar";
-"settings.calendar.show_week_numbers" = "Show week numbers";
-"settings.calendar.preserve_selected_date" = "Preserve selected date on hide";
-"settings.calendar.show_declined_events" = "Show declined events";
-"settings.calendar.show_declined_events_tooltip" = "This only works if it is also enabled in the native Calendar app.";
+"settings.calendar" = "日历";
+"settings.calendar.show_week_numbers" = "显示周数";
+"settings.calendar.preserve_selected_date" = "隐藏时保留所选日期";
+"settings.calendar.show_declined_events" = "显示拒绝的日程";
+"settings.calendar.show_declined_events_tooltip" = "此功能需在原生日历应用中同样启用。";
 
-"settings.events" = "Events";
-"settings.events.finished" = "Finished";
-"settings.events.finished.fade" = "Fade";
-"settings.events.finished.hide" = "Hide";
+"settings.events" = "日程";
+"settings.events.finished" = "已完成";
+"settings.events.finished.fade" = "渐隐";
+"settings.events.finished.hide" = "隐藏";
 
-"settings.transparency" = "Transparency";
+"settings.transparency" = "透明度";
 
-"formatter.date.all_day" = "All day";
-"formatter.date.today" = "Today";
-"formatter.date.relative.in" = "in %@";
-"formatter.date.relative.ago" = "%@ ago";
-"formatter.date.relative.left" = "%@ left";
+"formatter.date.all_day" = "全天";
+"formatter.date.today" = "今日";
+"formatter.date.relative.in" = "在 %@ 内";
+"formatter.date.relative.ago" = "%@ 之前";
+"formatter.date.relative.left" = "还剩 %@";
 
-"reminder.options.button" = "Options";
-"reminder.options.complete" = "Complete";
-"reminder.options.remind" = "Remind %@";
+"reminder.options.button" = "选项";
+"reminder.options.complete" = "完成";
+"reminder.options.remind" = "%@提醒";
 
-"event_details.participant.organizer" = "organizer";
-"event_details.participant.me" = "me";
+"event_details.participant.organizer" = "发起人";
+"event_details.participant.me" = "我";
 
-"event_status.label" = "my status:";
+"event_status.label" = "我的状态：";
 
-"event_status.accepted" = "Accepted";
-"event_status.maybe" = "Maybe";
-"event_status.declined" = "Declined";
-"event_status.pending" = "Pending";
+"event_status.accepted" = "已接受";
+"event_status.maybe" = "也许";
+"event_status.declined" = "已拒绝";
+"event_status.pending" = "等待中";
 
-"event_action.open" = "Open";
-"event_action.accept" = "Accept";
-"event_action.maybe" = "Maybe";
-"event_action.decline" = "Decline";
+"event_action.open" = "打开";
+"event_action.accept" = "接受";
+"event_action.maybe" = "也许";
+"event_action.decline" = "拒绝";
