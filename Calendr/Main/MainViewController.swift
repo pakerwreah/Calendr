@@ -350,7 +350,7 @@ class MainViewController: NSViewController, NSPopoverDelegate {
 
         let settingsMenu = NSMenu()
 
-        settingsMenu.addItem(withTitle: Strings.Settings.title, action: #selector(openSettings), keyEquivalent: "")
+        settingsMenu.addItem(withTitle: Strings.Settings.title, action: #selector(openSettings), keyEquivalent: ",")
 
         settingsMenu.addItem(.separator())
 
@@ -570,6 +570,9 @@ class MainViewController: NSViewController, NSPopoverDelegate {
 
             case .command("f"):
                 self.showSearchInput()
+
+            case .command(","):
+                self.openSettings()
 
             case .escape where self.searchInput.hasFocus:
                 self.hideSearchInput()
