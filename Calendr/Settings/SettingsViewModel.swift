@@ -15,6 +15,11 @@ extension DateStyle {
     var isCustom: Bool { !Self.options.contains(self) }
 }
 
+struct DateStyleOption: Equatable {
+    let style: DateStyle
+    let title: String
+}
+
 typealias PopoverMaterial = NSVisualEffectView.Material
 
 extension PopoverMaterial {
@@ -90,7 +95,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
     let showStatusItemDate: Observable<Bool>
     let showStatusItemBackground: Observable<Bool>
     let statusItemDateStyle: Observable<DateStyle>
-    let dateStyleOptions: Observable<[String]>
+    let dateStyleOptions: Observable<[DateStyleOption]>
     let statusItemDateFormat: Observable<String>
     let dateFormatPlaceholder = "E d MMM YYYY"
     let isDateFormatInputVisible: Observable<Bool>
@@ -194,14 +199,16 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
         dateStyleOptions = calendarObservable
             .map { calendar in
                 let dateFormatter = DateFormatter(calendar: calendar)
-                var options: [String] = []
+                var options: [DateStyleOption] = []
 
-                for i: UInt in DateStyle.options.map(\.rawValue) {
-                    dateFormatter.dateStyle = .init(rawValue: i) ?? .none
-                    options.append(dateFormatter.string(from: dateProvider.now))
+                for option in DateStyle.options {
+                    dateFormatter.dateStyle = option
+                    let title = dateFormatter.string(from: dateProvider.now)
+                    guard !options.contains(where: { $0.title == title }) else { continue }
+                    options.append(.init(style: option, title: title))
                 }
 
-                options.append("\(Strings.Settings.MenuBar.dateFormatCustom)...")
+                options.append(.init(style: .none, title: "\(Strings.Settings.MenuBar.dateFormatCustom)..."))
 
                 return options
             }
