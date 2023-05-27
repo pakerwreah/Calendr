@@ -278,27 +278,25 @@ class GeneralSettingsViewController: NSViewController {
 
     private func setUpDateFormat() {
 
-        let dateFormatStyle = dateFormatDropdown.rx.controlProperty(
-            getter: { (dropdown: NSPopUpButton) -> DateStyle in
-                DateStyle(rawValue: UInt(dropdown.indexOfSelectedItem + 1)) ?? .none
-            },
-            setter: { (dropdown: NSPopUpButton, style: DateStyle) in
-                dropdown.selectItem(at: (style.isCustom ? dropdown.numberOfItems : Int(style.rawValue)) - 1)
-            }
+        let dateFormatControl = dateFormatDropdown.rx.controlProperty(
+            getter: \.indexOfSelectedItem,
+            setter: { $0.selectItem(at: $1) }
         )
 
-        dateFormatStyle
-            .skip(1)
-            .bind(to: viewModel.statusItemDateStyleObserver)
-            .disposed(by: disposeBag)
+        Observable.combineLatest(
+            viewModel.dateStyleOptions, dateFormatControl.skip(1)
+        )
+        .map { $0[$1].style }
+        .bind(to: viewModel.statusItemDateStyleObserver)
+        .disposed(by: disposeBag)
 
         Observable.combineLatest(
             viewModel.dateStyleOptions, viewModel.statusItemDateStyle
         )
-        .bind { [dateFormatDropdown] options, dateStyle in
-            dateFormatDropdown.removeAllItems()
-            dateFormatDropdown.addItems(withTitles: options)
-            dateFormatStyle.onNext(dateStyle)
+        .bind { [dropdown = dateFormatDropdown] options, dateStyle in
+            dropdown.removeAllItems()
+            dropdown.addItems(withTitles: options.map(\.title))
+            dropdown.selectItem(at: dateStyle.isCustom ? dropdown.numberOfItems - 1 : options.firstIndex(where: { $0.style == dateStyle }) ?? 0)
         }
         .disposed(by: disposeBag)
 
