@@ -300,9 +300,12 @@ private extension EventType {
 private extension Array where Element == Participant {
 
     init(from event: EKEvent) {
-        let attendees: [EKParticipant] = (event.attendees ?? []) + (event.organizer.map { [$0] } ?? [])
+        var participants = event.attendees ?? []
+        if let organizer = event.organizer, !participants.contains(where: { $0.url == organizer.url }) {
+            participants.append(organizer)
+        }
         self.init(
-            Set(attendees.map { .init(from: $0, isOrganizer: $0.url == event.organizer?.url) })
+            participants.map { .init(from: $0, isOrganizer: $0.url == event.organizer?.url) }
         )
     }
 }
