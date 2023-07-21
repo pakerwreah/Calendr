@@ -8,6 +8,23 @@
 import Cocoa
 import RxSwift
 
+enum NextEventType {
+    case event
+    case reminder
+}
+
+private extension NextEventType {
+
+    func matches(_ type: EventType) -> Bool {
+        switch (self, type) {
+        case (.event, .event), (.reminder, .reminder):
+            return true
+        default:
+            return false
+        }
+    }
+}
+
 class NextEventViewModel {
 
     let title: Observable<String>
@@ -29,6 +46,7 @@ class NextEventViewModel {
     private let workspace: WorkspaceServiceProviding
 
     init(
+        type: NextEventType,
         settings: NextEventSettings,
         nextEventCalendars: Observable<[String]>,
         dateProvider: DateProviding,
@@ -73,6 +91,8 @@ class NextEventViewModel {
                     .map {
                         events
                             .first(where: { event in
+                                type.matches(event.type)
+                                &&
                                 dateProvider.calendar.isDate(
                                     dateProvider.now, lessThan: event.end, granularity: .second
                                 )

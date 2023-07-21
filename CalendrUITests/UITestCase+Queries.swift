@@ -15,6 +15,7 @@ extension UITestCase {
     enum MenuBar {
         static var main: XCUIElement { app.statusItems[Accessibility.MenuBar.main].wait(.shortTimeout) }
         static var event: XCUIElement { app.statusItems[Accessibility.MenuBar.event] }
+        static var reminder: XCUIElement { app.statusItems[Accessibility.MenuBar.reminder] }
     }
 
     enum Main {
@@ -62,6 +63,10 @@ extension UITestCase {
         static var view: XCUIElement { app.otherElements[Accessibility.EventDetails.view] }
     }
 
+    enum ReminderDetails {
+        static var view: XCUIElement { app.otherElements[Accessibility.ReminderDetails.view] }
+    }
+
     enum CalendarPicker {
         static var view: XCUIElement { app.otherElements[Accessibility.CalendarPicker.view] }
     }
@@ -100,7 +105,7 @@ extension UITestCase {
 
 extension TimeInterval {
     static let shortTimeout: Self = 0.1
-    static let eventTimeout: Self = 1.5
+    static let longTimeout: Self = 0.5
 }
 
 extension XCUIElement {

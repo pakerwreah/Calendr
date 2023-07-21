@@ -24,6 +24,7 @@ enum Accessibility {
     enum MenuBar {
         static let main = "main_status_item"
         static let event = "event_status_item"
+        static let reminder = "reminder_status_item"
     }
 
     enum Calendar {
@@ -44,6 +45,10 @@ enum Accessibility {
 
     enum EventDetails {
         static let view = "event_details_view"
+    }
+
+    enum ReminderDetails {
+        static let view = "reminder_details_view"
     }
 
     enum CalendarPicker {

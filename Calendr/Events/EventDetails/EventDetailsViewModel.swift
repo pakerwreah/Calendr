@@ -30,6 +30,17 @@ class EventDetailsViewModel {
     private let dateProvider: DateProviding
     private let calendarService: CalendarServiceProviding
 
+    var accessibilityIdentifier: String? {
+        switch type {
+        case .event:
+            return Accessibility.EventDetails.view
+        case .reminder:
+            return Accessibility.ReminderDetails.view
+        case .birthday:
+            return nil
+        }
+    }
+
     init(
         event: EventModel,
         dateProvider: DateProviding,
