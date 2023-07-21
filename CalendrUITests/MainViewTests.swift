@@ -58,13 +58,24 @@ class MainViewTests: UITestCase {
 
     func testEventStatusItemClicked_shouldDisplayEventDetails() {
 
-        MenuBar.event.wait(.eventTimeout).click()
+        MenuBar.event.wait(.longTimeout).click()
 
         XCTAssertTrue(EventDetails.view.didAppear)
 
         EventDetails.view.outside.click()
 
         XCTAssertFalse(EventDetails.view.exists)
+    }
+
+    func testReminderStatusItemClicked_shouldDisplayReminderDetails() {
+
+        MenuBar.reminder.wait(.longTimeout).click()
+
+        XCTAssertTrue(ReminderDetails.view.didAppear)
+
+        ReminderDetails.view.outside.click()
+
+        XCTAssertFalse(ReminderDetails.view.exists)
     }
 
     func testRemindersButtonClicked_shouldOpenRemindersApp() {

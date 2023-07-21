@@ -16,8 +16,10 @@ class MainViewController: NSViewController, NSPopoverDelegate {
     // Views
     private let mainStatusItem: NSStatusItem
     private let eventStatusItem: NSStatusItem
+    private let reminderStatusItem: NSStatusItem
     private let mainStackView = NSStackView()
     private let nextEventView: NextEventView
+    private let nextReminderView: NextEventView
     private let calendarView: CalendarView
     private let eventListView: EventListView
     private let titleLabel = Label()
@@ -35,6 +37,7 @@ class MainViewController: NSViewController, NSPopoverDelegate {
     private let settingsViewModel: SettingsViewModel
     private let statusItemViewModel: StatusItemViewModel
     private let nextEventViewModel: NextEventViewModel
+    private let nextReminderViewModel: NextEventViewModel
     private let calendarPickerViewModel: CalendarPickerViewModel
     private let eventListViewModel: EventListViewModel
 
@@ -85,6 +88,9 @@ class MainViewController: NSViewController, NSPopoverDelegate {
 
         eventStatusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         eventStatusItem.autosaveName = "event_status_item"
+
+        reminderStatusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+        reminderStatusItem.autosaveName = "reminder_status_item"
 
         settingsViewModel = SettingsViewModel(
             autoLauncher: autoLauncher,
@@ -157,6 +163,19 @@ class MainViewController: NSViewController, NSPopoverDelegate {
         eventListView = EventListView(viewModel: eventListViewModel)
 
         nextEventViewModel = NextEventViewModel(
+            type: .event,
+            settings: settingsViewModel,
+            nextEventCalendars: nextEventCalendars,
+            dateProvider: dateProvider,
+            calendarService: calendarService,
+            workspace: workspace,
+            screenProvider: screenProvider,
+            isShowingDetails: isShowingDetails.asObserver(),
+            scheduler: MainScheduler.instance
+        )
+
+        nextReminderViewModel = NextEventViewModel(
+            type: .reminder,
             settings: settingsViewModel,
             nextEventCalendars: nextEventCalendars,
             dateProvider: dateProvider,
@@ -169,6 +188,8 @@ class MainViewController: NSViewController, NSPopoverDelegate {
 
         nextEventView = NextEventView(viewModel: nextEventViewModel)
 
+        nextReminderView = NextEventView(viewModel: nextReminderViewModel)
+
         super.init(nibName: nil, bundle: nil)
 
         setUpAccessibility()
@@ -179,7 +200,7 @@ class MainViewController: NSViewController, NSPopoverDelegate {
 
         setUpMainStatusItem()
 
-        setUpEventStatusItem()
+        setUpEventStatusItems()
 
         setUpKeyboard()
 
@@ -278,6 +299,7 @@ class MainViewController: NSViewController, NSPopoverDelegate {
 
         mainStatusItem.button?.setAccessibilityIdentifier(Accessibility.MenuBar.main)
         eventStatusItem.button?.setAccessibilityIdentifier(Accessibility.MenuBar.event)
+        reminderStatusItem.button?.setAccessibilityIdentifier(Accessibility.MenuBar.reminder)
 
         titleLabel.setAccessibilityIdentifier(Accessibility.Main.title)
         prevBtn.setAccessibilityIdentifier(Accessibility.Main.prevBtn)
@@ -506,33 +528,38 @@ class MainViewController: NSViewController, NSPopoverDelegate {
             .disposed(by: disposeBag)
     }
 
-    private func setUpEventStatusItem() {
+    private func setUpEventStatusItems() {
+        setUpEventStatusItem(item: eventStatusItem, view: nextEventView, viewModel: nextEventViewModel)
+        setUpEventStatusItem(item: reminderStatusItem, view: nextReminderView, viewModel: nextReminderViewModel)
+    }
+
+    private func setUpEventStatusItem(item: NSStatusItem, view: NextEventView, viewModel: NextEventViewModel) {
         guard
-            let statusBarButton = eventStatusItem.button,
+            let statusBarButton = item.button,
             let container = statusBarButton.superview?.superview
         else { return }
 
-        container.addSubview(nextEventView)
+        container.addSubview(view)
 
-        nextEventView.leading(equalTo: statusBarButton, constant: -5)
-        nextEventView.top(equalTo: statusBarButton)
-        nextEventView.bottom(equalTo: statusBarButton)
+        view.leading(equalTo: statusBarButton, constant: -5)
+        view.top(equalTo: statusBarButton)
+        view.bottom(equalTo: statusBarButton)
 
-        nextEventView.widthObservable
+        view.widthObservable
             .observe(on: MainScheduler.asyncInstance)
-            .bind(to: eventStatusItem.rx.length)
+            .bind(to: item.rx.length)
             .disposed(by: disposeBag)
 
         settingsViewModel.showEventStatusItem
             .distinctUntilChanged()
             .observe(on: MainScheduler.asyncInstance)
-            .bind(to: eventStatusItem.rx.isVisible)
+            .bind(to: item.rx.isVisible)
             .disposed(by: disposeBag)
 
         statusBarButton.rx.tap
             .withUnretained(self)
             .flatMapFirst { (self, _) in self.isShowingDetails.filter(!).take(1).void() }
-            .compactMap { [nextEventViewModel] in nextEventViewModel.makeDetailsViewModel() }
+            .compactMap { viewModel.makeDetailsViewModel() }
             .skipNil()
             .flatMapFirst { viewModel -> Observable<Void> in
                 let vc = EventDetailsViewController(viewModel: viewModel)

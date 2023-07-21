@@ -22,16 +22,21 @@ class NextEventViewModelTests: XCTestCase {
     let screenProvider = MockScreenProvider()
     let scheduler = HistoricalScheduler()
 
-    lazy var viewModel = NextEventViewModel(
-        settings: settings,
-        nextEventCalendars: calendarsSubject,
-        dateProvider: dateProvider,
-        calendarService: calendarService,
-        workspace: workspace,
-        screenProvider: screenProvider,
-        isShowingDetails: .dummy(),
-        scheduler: scheduler
-    )
+    lazy var viewModel = makeViewModel(type: .event)
+
+    func makeViewModel(type: NextEventType) -> NextEventViewModel {
+        .init(
+            type: type,
+            settings: settings,
+            nextEventCalendars: calendarsSubject,
+            dateProvider: dateProvider,
+            calendarService: calendarService,
+            workspace: workspace,
+            screenProvider: screenProvider,
+            isShowingDetails: .dummy(),
+            scheduler: scheduler
+        )
+    }
 
     var now: Date {
         dateProvider.now
@@ -177,9 +182,6 @@ class NextEventViewModelTests: XCTestCase {
         viewModel.barStyle
             .bind { style = $0 }
             .disposed(by: disposeBag)
-
-        calendarService.changeEvents([.make(start: now, type: .reminder)])
-        XCTAssertEqual(style, .filled)
 
         calendarService.changeEvents([.make(start: now, type: .event(.accepted))])
         XCTAssertEqual(style, .filled)
@@ -505,7 +507,11 @@ class NextEventViewModelTests: XCTestCase {
         XCTAssertEqual(time, "1h 39m left")
     }
 
+    // MARK: - Reminders
+
     func testNextEvent_isReminder() {
+
+        viewModel = makeViewModel(type: .reminder)
 
         var time: String?
 
@@ -526,6 +532,8 @@ class NextEventViewModelTests: XCTestCase {
     }
 
     func testNextEvent_isPast_isReminder() {
+
+        viewModel = makeViewModel(type: .reminder)
 
         var time: String?
 
@@ -550,6 +558,8 @@ class NextEventViewModelTests: XCTestCase {
     }
 
     func testNextEvent_becomesPast_isReminder() {
+
+        viewModel = makeViewModel(type: .reminder)
 
         var time: String?
 

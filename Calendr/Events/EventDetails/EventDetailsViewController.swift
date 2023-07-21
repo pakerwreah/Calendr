@@ -52,7 +52,7 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
 
         NSApp.addAccessibilityChild(view)
 
-        view.setAccessibilityIdentifier(Accessibility.EventDetails.view)
+        view.setAccessibilityIdentifier(viewModel.accessibilityIdentifier)
     }
 
     deinit {
@@ -413,13 +413,13 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         notification.popover.animates = animatesClose
 
         NSEvent.removeMonitor(mouseMovedEventMonitor!)
+
+        viewModel.isShowingObserver.onNext(false)
     }
 
     func popoverDidClose(_ notification: Notification) {
         // 🔨 Prevent retain cycle
         notification.popover.contentViewController = nil
-
-        viewModel.isShowingObserver.onNext(false)
     }
 
     private func makeLine() -> NSView {

@@ -175,13 +175,16 @@ class SettingsTests: UITestCase {
         let checkbox = Settings.General.view.checkBoxes
             .element(matching: .title("Show next event"))
 
-        XCTAssertTrue(MenuBar.event.waitForExistence(timeout: .eventTimeout))
+        XCTAssertTrue(MenuBar.event.waitForExistence(timeout: .longTimeout))
+        XCTAssertTrue(MenuBar.reminder.waitForExistence(timeout: .longTimeout))
 
         checkbox.click()
-        XCTAssertFalse(MenuBar.event.waitForExistence(timeout: .eventTimeout))
+        XCTAssertFalse(MenuBar.event.waitForExistence(timeout: .longTimeout))
+        XCTAssertFalse(MenuBar.reminder.waitForExistence(timeout: .longTimeout))
 
         checkbox.click()
-        XCTAssertTrue(MenuBar.event.waitForExistence(timeout: .eventTimeout))
+        XCTAssertTrue(MenuBar.event.waitForExistence(timeout: .longTimeout))
+        XCTAssertTrue(MenuBar.reminder.waitForExistence(timeout: .longTimeout))
     }
 
     func testSettingsGeneral_changeDateFormat() {
