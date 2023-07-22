@@ -150,8 +150,8 @@ class CalendarPickerViewController: NSViewController {
 
     private func makeCalendarItemNextEvent(_ calendar: CalendarModel) -> NSView {
 
-        let selectedIcon = Icons.CalendarPicker.nextEventSelected.with(size: 11)
-        let unselectedIcon = Icons.CalendarPicker.nextEventUnselected.with(size: 11)
+        let selectedIcon = Icons.CalendarPicker.nextEventSelected.with(pointSize: 11)
+        let unselectedIcon = Icons.CalendarPicker.nextEventUnselected.with(pointSize: 11)
         let button = ImageButton()
         button.setButtonType(.toggle)
 

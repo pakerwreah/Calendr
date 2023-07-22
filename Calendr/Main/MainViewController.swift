@@ -46,7 +46,7 @@ class MainViewController: NSViewController, NSPopoverDelegate {
     private var popoverDisposeBag = DisposeBag()
     private let dateClick = PublishSubject<Date>()
     private let dateDoubleClick = PublishSubject<Date>()
-    private let initialDate: BehaviorSubject<Date>
+    private let todayChanged = PublishSubject<Void>()
     private let selectedDate = PublishSubject<Date>()
     private let isShowingDetails = BehaviorSubject<Bool>(value: false)
     private let searchInputText = BehaviorSubject<String>(value: "")
@@ -79,8 +79,6 @@ class MainViewController: NSViewController, NSPopoverDelegate {
         self.screenProvider = screenProvider
         self.notificationCenter = notificationCenter
 
-        initialDate = BehaviorSubject(value: dateProvider.now)
-
         mainStatusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         mainStatusItem.autosaveName = "main_status_item"
         mainStatusItem.behavior = .terminationOnRemoval
@@ -112,7 +110,7 @@ class MainViewController: NSViewController, NSPopoverDelegate {
             .map { $0.filter($1.contains) }
 
         statusItemViewModel = StatusItemViewModel(
-            dateObservable: initialDate,
+            dateChanged: todayChanged,
             nextEventCalendars: nextEventCalendars,
             settings: settingsViewModel,
             dateProvider: dateProvider,
@@ -205,6 +203,8 @@ class MainViewController: NSViewController, NSPopoverDelegate {
         setUpKeyboard()
 
         calendarService.requestAccess()
+
+        todayChanged.onNext(())
     }
 
     required init?(coder: NSCoder) {
@@ -324,8 +324,7 @@ class MainViewController: NSViewController, NSPopoverDelegate {
             workspace.notificationCenter.rx.notification(NSWorkspace.didWakeNotification).void(),
             rx.viewDidDisappear.withLatestFrom(settingsViewModel.preserveSelectedDate).filter(!).void()
         )
-        .map { [dateProvider] in dateProvider.now }
-        .bind(to: initialDate)
+        .bind(to: todayChanged)
         .disposed(by: disposeBag)
 
         dateClick
@@ -519,10 +518,6 @@ class MainViewController: NSViewController, NSPopoverDelegate {
             }
             .disposed(by: disposeBag)
 
-        statusItemViewModel.text
-            .bind(to: statusBarButton.rx.attributedTitle)
-            .disposed(by: disposeBag)
-
         statusItemViewModel.image
             .bind(to: statusBarButton.rx.image)
             .disposed(by: disposeBag)
@@ -680,7 +675,7 @@ class MainViewController: NSViewController, NSPopoverDelegate {
 
         let dateSelector = DateSelector(
             calendar: dateProvider.calendar,
-            initial: initialDate,
+            initial: todayChanged.map { [dateProvider] in dateProvider.now },
             selected: selectedDate,
             reset: resetBtn.rx.tap.asObservable(),
             prevDay: keyLeft,

@@ -184,7 +184,7 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
             eventTypeIcon.contentTintColor = .systemRed
 
         case .reminder:
-            eventTypeIcon.image = Icons.Event.reminder.with(size: 12)
+            eventTypeIcon.image = Icons.Event.reminder.with(pointSize: 12)
             eventTypeIcon.contentTintColor = .headerTextColor
         }
 

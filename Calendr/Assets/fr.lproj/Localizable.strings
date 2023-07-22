@@ -18,6 +18,7 @@
 "settings.menu_bar.auto_launch" = "Démarrer à la connexion";
 "settings.menu_bar.show_icon" = "Afficher l'icône";
 "settings.menu_bar.show_date" = "Afficher la date";
+"settings.menu_bar.show_icon_date" = "Afficher la date dans l'icône";
 "settings.menu_bar.show_background" = "Afficher un fond opaque";
 "settings.menu_bar.date_format" = "Format de date";
 "settings.menu_bar.date_format_custom" = "Personnalisé";

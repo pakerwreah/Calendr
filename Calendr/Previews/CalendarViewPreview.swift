@@ -13,7 +13,7 @@ import RxSwift
 struct CalendarViewPreview: PreviewProvider {
 
     static let dateProvider = MockDateProvider()
-    static let calendarService = MockCalendarServiceProvider(dateProvider: dateProvider)
+    static let calendarService = MockCalendarServiceProvider(events: events, dateProvider: dateProvider)
     static let settings = MockCalendarSettings(
         calendarScaling: 1.3,
         highlightedWeekdays: [0, 1, 4, 6],
@@ -23,6 +23,11 @@ struct CalendarViewPreview: PreviewProvider {
 
     static let hovered = BehaviorSubject<Date?>(value: .random(from: dateProvider))
     static let selected = BehaviorSubject<Date>(value: .random(inMonth: dateProvider))
+
+    static let events: [EventModel] = (0..<30).map { _ in
+        let date: Date = .random(from: dateProvider)
+        return .make(start: date, end: date, calendar: .make(color: .random()))
+    }
 
     static var previews: some View {
         CalendarView(
@@ -42,20 +47,6 @@ struct CalendarViewPreview: PreviewProvider {
         )
         .preview()
         .fixedSize()
-    }
-}
-
-private extension MockCalendarServiceProvider {
-
-    init(dateProvider: DateProviding) {
-        self.init(
-            events: (0..<30).map { _ in
-                let date: Date = .random(from: dateProvider)
-                return .make(start: date, end: date, calendar: .make(color: .random()))
-            },
-            calendars: [],
-            dateProvider: dateProvider
-        )
     }
 }
 

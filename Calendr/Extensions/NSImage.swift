@@ -15,8 +15,8 @@ extension NSImage {
 
     func with(scale: NSImage.SymbolScale) -> NSImage { withSymbolConfiguration(.init(scale: scale))! }
 
-    func with(size: CGFloat, weight: NSFont.Weight = .medium) -> NSImage {
-        withSymbolConfiguration(.init(pointSize: size, weight: weight))!
+    func with(pointSize: CGFloat, weight: NSFont.Weight = .medium) -> NSImage {
+        withSymbolConfiguration(.init(pointSize: pointSize, weight: weight))!
     }
 
     func with(color: NSColor) -> NSImage {

@@ -13,7 +13,7 @@ class StatusItemViewModelTests: XCTestCase {
 
     let disposeBag = DisposeBag()
 
-    let dateSubject = PublishSubject<Date>()
+    let dateChanged = PublishSubject<Void>()
     let calendarsSubject = BehaviorSubject<[String]>(value: [])
 
     let dateProvider = MockDateProvider()
@@ -24,7 +24,7 @@ class StatusItemViewModelTests: XCTestCase {
     let notificationCenter = NotificationCenter()
 
     lazy var viewModel = StatusItemViewModel(
-        dateObservable: dateSubject,
+        dateChanged: dateChanged,
         nextEventCalendars: calendarsSubject,
         settings: settings,
         dateProvider: dateProvider,
@@ -33,77 +33,88 @@ class StatusItemViewModelTests: XCTestCase {
         notificationCenter: notificationCenter
     )
 
-    var lastAttributed: NSAttributedString?
-    var lastValue: String? { // remove attachments
-        lastAttributed?.string.replacingOccurrences(of: "[^ ?\\w,/-]", with: "", options: .regularExpression)
-    }
+    var iconsAndText: ([NSImage], String)?
+    var iconsCount: Int { iconsAndText?.0.count ?? 0 }
+    var lastText: String? { iconsAndText?.1 }
 
     override func setUp() {
 
-        viewModel.text
+        viewModel.iconsAndText
             .bind { [weak self] in
-                self?.lastAttributed = $0
+                self?.iconsAndText = $0
             }
             .disposed(by: disposeBag)
 
-        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+        changeDate(.make(year: 2021, month: 1, day: 1))
         settings.dateStyleObserver.onNext(.short)
     }
 
-    func setUp(showIcon: Bool, showDate: Bool) {
+    func changeDate(_ date: Date) {
+        dateProvider.now = date
+        dateChanged.onNext(())
+    }
+
+    func setUp(showIcon: Bool, showDate: Bool, showIconDate: Bool) {
         settings.toggleIcon.onNext(showIcon)
         settings.toggleDate.onNext(showDate)
+        settings.toggleIconDate.onNext(showIconDate)
     }
 
     func testText_withDateChange_shouldUpdateText() {
 
-        setUp(showIcon: false, showDate: true)
+        setUp(showIcon: false, showDate: true, showIconDate: false)
 
-        XCTAssertEqual(lastValue, "2021-01-01")
+        XCTAssertEqual(lastText, "2021-01-01")
 
-        dateSubject.onNext(.make(year: 2021, month: 1, day: 2))
-        XCTAssertEqual(lastValue, "2021-01-02")
+        changeDate(.make(year: 2021, month: 1, day: 2))
+        XCTAssertEqual(lastText, "2021-01-02")
 
-        dateSubject.onNext(.make(year: 2021, month: 2, day: 2))
-        XCTAssertEqual(lastValue, "2021-02-02")
+        changeDate(.make(year: 2021, month: 2, day: 2))
+        XCTAssertEqual(lastText, "2021-02-02")
     }
 
     func testText_withLocaleChange_shouldUpdateText() {
 
-        setUp(showIcon: false, showDate: true)
+        setUp(showIcon: false, showDate: true, showIconDate: false)
 
-        XCTAssertEqual(lastValue, "2021-01-01")
+        XCTAssertEqual(lastText, "2021-01-01")
 
         dateProvider.m_calendar.locale = Locale(identifier: "en")
         notificationCenter.post(name: NSLocale.currentLocaleDidChangeNotification, object: nil)
 
-        XCTAssertEqual(lastValue, "1/1/21")
+        XCTAssertEqual(lastText, "1/1/21")
     }
 
     func testIconVisibility() {
 
-        setUp(showIcon: true, showDate: true)
-        XCTAssertEqual(lastAttributed?.containsAttachments, true)
+        setUp(showIcon: true, showDate: true, showIconDate: false)
+        XCTAssertEqual(iconsCount, 1)
 
-        setUp(showIcon: false, showDate: true)
-        XCTAssertEqual(lastAttributed?.containsAttachments, false)
+        setUp(showIcon: false, showDate: true, showIconDate: false)
+        XCTAssertEqual(iconsCount, 0)
 
-        setUp(showIcon: false, showDate: false)
-        XCTAssertEqual(lastAttributed?.containsAttachments, true)
+        setUp(showIcon: false, showDate: true, showIconDate: true)
+        XCTAssertEqual(iconsCount, 0)
+
+        setUp(showIcon: false, showDate: false, showIconDate: false)
+        XCTAssertEqual(iconsCount, 1)
     }
 
     func testIconVisibility_withBirthday() {
 
         calendarService.changeEvents([.make(type: .birthday)])
 
-        setUp(showIcon: true, showDate: true)
-        XCTAssertEqual(lastAttributed?.containsAttachments, true)
+        setUp(showIcon: true, showDate: true, showIconDate: false)
+        XCTAssertEqual(iconsCount, 1)
 
-        setUp(showIcon: false, showDate: true)
-        XCTAssertEqual(lastAttributed?.containsAttachments, true)
+        setUp(showIcon: true, showDate: true, showIconDate: true)
+        XCTAssertEqual(iconsCount, 2)
 
-        setUp(showIcon: false, showDate: false)
-        XCTAssertEqual(lastAttributed?.containsAttachments, true)
+        setUp(showIcon: false, showDate: true, showIconDate: false)
+        XCTAssertEqual(iconsCount, 1)
+
+        setUp(showIcon: false, showDate: false, showIconDate: false)
+        XCTAssertEqual(iconsCount, 1)
     }
 
     func testIconVisibility_withNotchDetected() {
@@ -111,14 +122,20 @@ class StatusItemViewModelTests: XCTestCase {
         settings.eventStatusItemDetectNotchObserver.onNext(true)
         screenProvider.screenObserver.onNext(MockScreen(hasNotch: true))
 
-        setUp(showIcon: true, showDate: true)
-        XCTAssertEqual(lastAttributed?.containsAttachments, false)
+        setUp(showIcon: true, showDate: true, showIconDate: false)
+        XCTAssertEqual(iconsCount, 0)
 
-        setUp(showIcon: false, showDate: true)
-        XCTAssertEqual(lastAttributed?.containsAttachments, false)
+        setUp(showIcon: true, showDate: true, showIconDate: true)
+        XCTAssertEqual(iconsCount, 1)
 
-        setUp(showIcon: false, showDate: false)
-        XCTAssertEqual(lastAttributed?.containsAttachments, true)
+        setUp(showIcon: false, showDate: true, showIconDate: false)
+        XCTAssertEqual(iconsCount, 0)
+
+        setUp(showIcon: false, showDate: true, showIconDate: true)
+        XCTAssertEqual(iconsCount, 0)
+
+        setUp(showIcon: false, showDate: false, showIconDate: false)
+        XCTAssertEqual(iconsCount, 1)
     }
 
     func testIconVisibility_withNotchDetected_withBirthday() {
@@ -127,52 +144,58 @@ class StatusItemViewModelTests: XCTestCase {
         screenProvider.screenObserver.onNext(MockScreen(hasNotch: true))
         calendarService.changeEvents([.make(type: .birthday)])
 
-        setUp(showIcon: true, showDate: true)
-        XCTAssertEqual(lastAttributed?.containsAttachments, true)
+        setUp(showIcon: true, showDate: true, showIconDate: false)
+        XCTAssertEqual(iconsCount, 1)
 
-        setUp(showIcon: false, showDate: true)
-        XCTAssertEqual(lastAttributed?.containsAttachments, true)
+        setUp(showIcon: true, showDate: true, showIconDate: true)
+        XCTAssertEqual(iconsCount, 2)
 
-        setUp(showIcon: false, showDate: false)
-        XCTAssertEqual(lastAttributed?.containsAttachments, true)
+        setUp(showIcon: false, showDate: true, showIconDate: false)
+        XCTAssertEqual(iconsCount, 1)
+
+        setUp(showIcon: false, showDate: true, showIconDate: true)
+        XCTAssertEqual(iconsCount, 1)
+
+        setUp(showIcon: false, showDate: false, showIconDate: false)
+        XCTAssertEqual(iconsCount, 1)
     }
 
     func testDateVisibility() {
 
-        setUp(showIcon: false, showDate: true)
-        XCTAssertEqual(lastValue, "2021-01-01")
+        setUp(showIcon: false, showDate: true, showIconDate: false)
+        XCTAssertEqual(lastText, "2021-01-01")
 
-        setUp(showIcon: false, showDate: false)
-        XCTAssertEqual(lastValue, "")
+        setUp(showIcon: false, showDate: false, showIconDate: false)
+        XCTAssertEqual(lastText, "")
     }
 
     func testDateStyle() {
 
-        setUp(showIcon: false, showDate: true)
+        setUp(showIcon: false, showDate: true, showIconDate: false)
 
         dateProvider.m_calendar.locale = Locale(identifier: "en_US")
         notificationCenter.post(name: NSLocale.currentLocaleDidChangeNotification, object: nil)
 
         settings.dateStyleObserver.onNext(.short)
-        XCTAssertEqual(lastValue, "1/1/21")
+        XCTAssertEqual(lastText, "1/1/21")
 
         settings.dateStyleObserver.onNext(.medium)
-        XCTAssertEqual(lastValue, "Jan 1, 2021")
+        XCTAssertEqual(lastText, "Jan 1, 2021")
 
         settings.dateStyleObserver.onNext(.long)
-        XCTAssertEqual(lastValue, "January 1, 2021")
+        XCTAssertEqual(lastText, "January 1, 2021")
 
         settings.dateStyleObserver.onNext(.full)
-        XCTAssertEqual(lastValue, "Friday, January 1, 2021")
+        XCTAssertEqual(lastText, "Friday, January 1, 2021")
 
         settings.dateStyleObserver.onNext(.none)
-        XCTAssertEqual(lastValue, "???")
+        XCTAssertEqual(lastText, "???")
 
         settings.dateFormatObserver.onNext("E d MMM YY")
-        XCTAssertEqual(lastValue, "Fri 1 Jan 21")
+        XCTAssertEqual(lastText, "Fri 1 Jan 21")
 
         settings.dateStyleObserver.onNext(.short)
-        XCTAssertEqual(lastValue, "1/1/21")
+        XCTAssertEqual(lastText, "1/1/21")
     }
 
     func testBackground() {
@@ -183,15 +206,14 @@ class StatusItemViewModelTests: XCTestCase {
             .bind { image = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssert(lastAttributed?.length ?? 0 > 0)
-        XCTAssertNil(image)
-
-        settings.toggleBackground.onNext(true)
-        XCTAssertEqual(lastAttributed?.length, 0)
         XCTAssertNotNil(image)
 
+        image = nil
+        settings.toggleBackground.onNext(true)
+        XCTAssertNotNil(image)
+
+        image = nil
         settings.toggleBackground.onNext(false)
-        XCTAssert(lastAttributed?.length ?? 0 > 0)
-        XCTAssertNil(image)
+        XCTAssertNotNil(image)
     }
 }

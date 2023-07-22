@@ -39,6 +39,7 @@ extension PopoverMaterial {
 protocol StatusItemSettings {
     var showStatusItemIcon: Observable<Bool> { get }
     var showStatusItemDate: Observable<Bool> { get }
+    var showStatusItemIconDate: Observable<Bool> { get }
     var showStatusItemBackground: Observable<Bool> { get }
     var statusItemDateStyle: Observable<DateStyle> { get }
     var statusItemDateFormat: Observable<String> { get }
@@ -74,6 +75,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
     let toggleAutoLaunch: AnyObserver<Bool>
     let toggleStatusItemIcon: AnyObserver<Bool>
     let toggleStatusItemDate: AnyObserver<Bool>
+    let toggleStatusItemIconDate: AnyObserver<Bool>
     let toggleStatusItemBackground: AnyObserver<Bool>
     let statusItemDateStyleObserver: AnyObserver<DateStyle>
     let statusItemDateFormatObserver: AnyObserver<String>
@@ -93,6 +95,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
     let autoLaunch: Observable<Bool>
     let showStatusItemIcon: Observable<Bool>
     let showStatusItemDate: Observable<Bool>
+    let showStatusItemIconDate: Observable<Bool>
     let showStatusItemBackground: Observable<Bool>
     let statusItemDateStyle: Observable<DateStyle>
     let dateStyleOptions: Observable<[DateStyleOption]>
@@ -124,6 +127,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
         userDefaults.register(defaults: [
             Prefs.statusItemIconEnabled: true,
             Prefs.statusItemDateEnabled: true,
+            Prefs.statusItemIconDateEnabled: false,
             Prefs.statusItemBackgroundEnabled: false,
             Prefs.statusItemDateStyle: DateStyle.short.rawValue,
             Prefs.statusItemDateFormat: dateFormatPlaceholder,
@@ -145,6 +149,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
         toggleAutoLaunch = autoLauncher.rx.observer(for: \.isEnabled)
         toggleStatusItemIcon = userDefaults.rx.observer(for: \.statusItemIconEnabled)
         toggleStatusItemDate = userDefaults.rx.observer(for: \.statusItemDateEnabled)
+        toggleStatusItemIconDate = userDefaults.rx.observer(for: \.statusItemIconDateEnabled)
         toggleStatusItemBackground = userDefaults.rx.observer(for: \.statusItemBackgroundEnabled)
         statusItemDateStyleObserver = userDefaults.rx.observer(for: \.statusItemDateStyle).mapObserver(\.rawValue)
         statusItemDateFormatObserver = userDefaults.rx.observer(for: \.statusItemDateFormat)
@@ -177,6 +182,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
         showStatusItemDate = statusItemIconAndDate.map(\.1)
         /* ----------------------- */
 
+        showStatusItemIconDate = userDefaults.rx.observe(\.statusItemIconDateEnabled)
         showStatusItemBackground = userDefaults.rx.observe(\.statusItemBackgroundEnabled)
         statusItemDateStyle = userDefaults.rx.observe(\.statusItemDateStyle).map { DateStyle(rawValue: $0) ?? .none }
         statusItemDateFormat = userDefaults.rx.observe(\.statusItemDateFormat)
