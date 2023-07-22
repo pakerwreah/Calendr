@@ -18,6 +18,7 @@
 "settings.menu_bar.auto_launch" = "登录时打开";
 "settings.menu_bar.show_icon" = "显示图标";
 "settings.menu_bar.show_date" = "显示日期";
+"settings.menu_bar.show_icon_date" = "在图标中显示日期";
 "settings.menu_bar.show_background" = "启用不透明背景";
 "settings.menu_bar.date_format" = "日期格式";
 "settings.menu_bar.date_format_custom" = "自定义";

@@ -133,6 +133,8 @@ internal enum Strings {
       internal static let showDate = Strings.tr("Localizable", "settings.menu_bar.show_date", fallback: "Show date")
       /// Show icon
       internal static let showIcon = Strings.tr("Localizable", "settings.menu_bar.show_icon", fallback: "Show icon")
+      /// Show date in icon
+      internal static let showIconDate = Strings.tr("Localizable", "settings.menu_bar.show_icon_date", fallback: "Show date in icon")
       /// Show next event
       internal static let showNextEvent = Strings.tr("Localizable", "settings.menu_bar.show_next_event", fallback: "Show next event")
     }

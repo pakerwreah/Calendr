@@ -18,6 +18,7 @@ class GeneralSettingsViewController: NSViewController {
     private let autoLaunchCheckbox = Checkbox(title: Strings.Settings.MenuBar.autoLaunch)
     private let showMenuBarIconCheckbox = Checkbox(title: Strings.Settings.MenuBar.showIcon)
     private let showMenuBarDateCheckbox = Checkbox(title: Strings.Settings.MenuBar.showDate)
+    private let showMenuBarIconDateCheckbox = Checkbox(title: Strings.Settings.MenuBar.showIconDate)
     private let showMenuBarBackgroundCheckbox = Checkbox(title: Strings.Settings.MenuBar.showBackground)
     private let dateFormatDropdown = Dropdown()
     private let dateFormatTextField = NSTextField()
@@ -108,6 +109,7 @@ class GeneralSettingsViewController: NSViewController {
         return NSStackView(views: [
             autoLaunchCheckbox,
             NSStackView(views: [showMenuBarIconCheckbox, .spacer, showMenuBarDateCheckbox]),
+            showMenuBarIconDateCheckbox,
             showMenuBarBackgroundCheckbox,
             dateFormat
         ])
@@ -270,6 +272,12 @@ class GeneralSettingsViewController: NSViewController {
             control: showMenuBarDateCheckbox,
             observable: viewModel.showStatusItemDate,
             observer: viewModel.toggleStatusItemDate
+        )
+
+        bind(
+            control: showMenuBarIconDateCheckbox,
+            observable: viewModel.showStatusItemIconDate,
+            observer: viewModel.toggleStatusItemIconDate
         )
 
         bind(

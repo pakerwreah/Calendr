@@ -67,7 +67,7 @@ class EventView: NSView {
             icon.contentTintColor = .systemRed
 
         case .reminder:
-            icon.image = Icons.Event.reminder.with(scale: .small).with(size: 9)
+            icon.image = Icons.Event.reminder.with(scale: .small).with(pointSize: 9)
             icon.contentTintColor = .headerTextColor
 
         case .event(let status):

@@ -21,7 +21,7 @@ struct MockCalendarServiceProvider: CalendarServiceProviding {
 
     private var calendar: Calendar { dateProvider.calendar }
 
-    init(events: [EventModel], calendars: [CalendarModel], dateProvider: DateProviding) {
+    init(events: [EventModel] = [], calendars: [CalendarModel] = [], dateProvider: DateProviding = MockDateProvider()) {
 
         self.m_events = events
         self.m_calendars = calendars
@@ -29,8 +29,6 @@ struct MockCalendarServiceProvider: CalendarServiceProviding {
 
         (changeObservable, changeObserver) = PublishSubject.pipe()
     }
-
-    init() { self.init(events: [], calendars: [], dateProvider: MockDateProvider()) }
 
     func events(from start: Date, to end: Date, calendars: [String]) -> Observable<[EventModel]> {
         .just(
