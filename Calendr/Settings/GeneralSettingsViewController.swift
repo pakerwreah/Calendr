@@ -47,10 +47,6 @@ class GeneralSettingsViewController: NSViewController {
         self.viewModel = viewModel
 
         super.init(nibName: nil, bundle: nil)
-
-        setUpAccessibility()
-
-        setUpBindings()
     }
 
     private func setUpAccessibility() {
@@ -85,6 +81,15 @@ class GeneralSettingsViewController: NSViewController {
         if #unavailable(macOS 13.0) {
             autoLaunchCheckbox.isHidden = true
         }
+    }
+
+    override func viewDidLoad() {
+
+        super.viewDidLoad()
+
+        setUpAccessibility()
+
+        setUpBindings()
     }
 
     private lazy var menuBarContent: NSView = {
@@ -299,6 +304,16 @@ class GeneralSettingsViewController: NSViewController {
             dropdown.selectItem(at: dateStyle.isCustom ? dropdown.numberOfItems - 1 : options.firstIndex(where: { $0.style == dateStyle }) ?? 0)
         }
         .disposed(by: disposeBag)
+
+        viewModel.showStatusItemDate
+            .map(!)
+            .bind(to: dateFormatDropdown.superview!.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        viewModel.showStatusItemDate
+            .map(true)
+            .bind(to: view.rx.needsLayout)
+            .disposed(by: disposeBag)
 
         viewModel.isDateFormatInputVisible
             .map(!)
