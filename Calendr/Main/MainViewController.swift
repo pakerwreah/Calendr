@@ -484,7 +484,15 @@ class MainViewController: NSViewController, NSPopoverDelegate {
 
         guard let statusBarButton = mainStatusItem.button else { return }
 
-        statusBarButton.rx.tap
+        let menu = NSMenu()
+
+        menu.addItem(withTitle: Strings.Settings.title, action: #selector(openSettings), keyEquivalent: ",").target = self
+        menu.addItem(.separator())
+        menu.addItem(withTitle: Strings.quit, action: #selector(NSApp.terminate), keyEquivalent: "q")
+
+        mainStatusItem.menu = menu
+
+        statusBarButton.rx.click
             .enumerated()
             .flatMapFirst { [weak self] pass, _ -> Observable<Void> in
                 guard let self else { return .empty() }
@@ -501,8 +509,6 @@ class MainViewController: NSViewController, NSPopoverDelegate {
                 self?.popoverDisposeBag = DisposeBag()
             }
             .disposed(by: disposeBag)
-
-        statusBarButton.sendAction(on: .leftMouseDown)
 
         mainStackView.rx.observe(\.frame)
             .map(\.height)
