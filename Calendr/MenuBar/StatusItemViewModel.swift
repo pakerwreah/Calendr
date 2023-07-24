@@ -60,27 +60,9 @@ class StatusItemViewModel {
                 return formatter
             }
 
-        let shouldCompact = Observable
-            .combineLatest(settings.eventStatusItemDetectNotch, screenProvider.hasNotchObservable)
-            .map { $0 && $1 }
-            .distinctUntilChanged()
-
-        let showIcon = Observable
-            .combineLatest(
-                settings.showStatusItemIcon,
-                settings.showStatusItemIconDate,
-                settings.showStatusItemDate,
-                shouldCompact
-            )
-            .map { showIcon, showIconDate, showDate, shouldCompact -> Bool in
-                guard showDate else { return true }
-                return showIcon && (!shouldCompact || showIconDate)
-            }
-            .distinctUntilChanged()
-
         self.iconsAndText = Observable.combineLatest(
             dateObservable,
-            showIcon,
+            settings.showStatusItemIcon,
             settings.showStatusItemDate,
             settings.showStatusItemIconDate,
             settings.showStatusItemBackground,
@@ -97,7 +79,12 @@ class StatusItemViewModel {
                 icons.append(Icons.Event.birthday.with(pointSize: iconSize - 2))
             }
 
-            if showIcon && (showIconDate || !hasBirthdays) {
+            let isEmpty = !showIcon && !showDate && !hasBirthdays
+            let showIcon = showIcon || isEmpty // avoid nothingness
+            let isDefaultIcon = !showIconDate // not important, can be replaced
+            let skipIcon = isDefaultIcon && hasBirthdays // replace default icon with birthday
+
+            if showIcon && !skipIcon {
                 let headerHeight: CGFloat = 3.5
                 let borderWidth: CGFloat = 2
                 let radius: CGFloat = 2.5
