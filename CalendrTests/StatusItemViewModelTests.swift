@@ -87,14 +87,26 @@ class StatusItemViewModelTests: XCTestCase {
 
     func testIconVisibility() {
 
+        setUp(showIcon: true, showDate: true, showIconDate: true)
+        XCTAssertEqual(iconsCount, 1)
+
         setUp(showIcon: true, showDate: true, showIconDate: false)
         XCTAssertEqual(iconsCount, 1)
+
+        setUp(showIcon: true, showDate: false, showIconDate: true)
+        XCTAssertEqual(iconsCount, 1)
+
+        setUp(showIcon: true, showDate: false, showIconDate: false)
+        XCTAssertEqual(iconsCount, 1)
+
+        setUp(showIcon: false, showDate: true, showIconDate: true)
+        XCTAssertEqual(iconsCount, 0)
 
         setUp(showIcon: false, showDate: true, showIconDate: false)
         XCTAssertEqual(iconsCount, 0)
 
-        setUp(showIcon: false, showDate: true, showIconDate: true)
-        XCTAssertEqual(iconsCount, 0)
+        setUp(showIcon: false, showDate: false, showIconDate: true)
+        XCTAssertEqual(iconsCount, 1)
 
         setUp(showIcon: false, showDate: false, showIconDate: false)
         XCTAssertEqual(iconsCount, 1)
@@ -104,56 +116,25 @@ class StatusItemViewModelTests: XCTestCase {
 
         calendarService.changeEvents([.make(type: .birthday)])
 
-        setUp(showIcon: true, showDate: true, showIconDate: false)
-        XCTAssertEqual(iconsCount, 1)
-
         setUp(showIcon: true, showDate: true, showIconDate: true)
         XCTAssertEqual(iconsCount, 2)
 
-        setUp(showIcon: false, showDate: true, showIconDate: false)
-        XCTAssertEqual(iconsCount, 1)
-
-        setUp(showIcon: false, showDate: false, showIconDate: false)
-        XCTAssertEqual(iconsCount, 1)
-    }
-
-    func testIconVisibility_withNotchDetected() {
-
-        settings.eventStatusItemDetectNotchObserver.onNext(true)
-        screenProvider.screenObserver.onNext(MockScreen(hasNotch: true))
-
-        setUp(showIcon: true, showDate: true, showIconDate: false)
-        XCTAssertEqual(iconsCount, 0)
-
-        setUp(showIcon: true, showDate: true, showIconDate: true)
-        XCTAssertEqual(iconsCount, 1)
-
-        setUp(showIcon: false, showDate: true, showIconDate: false)
-        XCTAssertEqual(iconsCount, 0)
-
-        setUp(showIcon: false, showDate: true, showIconDate: true)
-        XCTAssertEqual(iconsCount, 0)
-
-        setUp(showIcon: false, showDate: false, showIconDate: false)
-        XCTAssertEqual(iconsCount, 1)
-    }
-
-    func testIconVisibility_withNotchDetected_withBirthday() {
-
-        settings.eventStatusItemDetectNotchObserver.onNext(true)
-        screenProvider.screenObserver.onNext(MockScreen(hasNotch: true))
-        calendarService.changeEvents([.make(type: .birthday)])
-
         setUp(showIcon: true, showDate: true, showIconDate: false)
         XCTAssertEqual(iconsCount, 1)
 
-        setUp(showIcon: true, showDate: true, showIconDate: true)
+        setUp(showIcon: true, showDate: false, showIconDate: true)
         XCTAssertEqual(iconsCount, 2)
 
-        setUp(showIcon: false, showDate: true, showIconDate: false)
+        setUp(showIcon: true, showDate: false, showIconDate: false)
         XCTAssertEqual(iconsCount, 1)
 
         setUp(showIcon: false, showDate: true, showIconDate: true)
+        XCTAssertEqual(iconsCount, 1)
+
+        setUp(showIcon: false, showDate: true, showIconDate: false)
+        XCTAssertEqual(iconsCount, 1)
+
+        setUp(showIcon: false, showDate: false, showIconDate: true)
         XCTAssertEqual(iconsCount, 1)
 
         setUp(showIcon: false, showDate: false, showIconDate: false)
