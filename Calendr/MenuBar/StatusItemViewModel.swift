@@ -133,16 +133,16 @@ class StatusItemViewModel {
             let (icons, text) = iconsAndText
 
             let title = NSAttributedString(string: text, attributes: [
-                .font: NSFont.systemFont(ofSize: 13, weight: showBackground ? .regular : .medium)
+                .font: NSFont.systemFont(ofSize: 12.5, weight: showBackground ? .regular : .medium)
             ])
 
             let radius: CGFloat = 3
             let border: CGFloat = 0.5
-            let padding: NSPoint = showDate ? .init(x: 4, y: 1) : .init(x: border, y: border)
+            let padding: NSPoint = showDate ? .init(x: 4, y: 1.5) : .init(x: border, y: border)
             let textSize = title.length > 0 ? title.size() : .zero
             let spacing: CGFloat = 4
             var iconsWidth = icons.map(\.size.width).reduce(0) { $0 + $1 + spacing }
-            let height = max(icons.map(\.size.height).reduce(0, max), textSize.height)
+            let height = max(icons.map(\.size.height).reduce(0, max), 15)
             if title.length == 0 {
                 iconsWidth -= spacing
             }
@@ -226,7 +226,7 @@ private func drawIconDate(rect: CGRect, iconSize: CGFloat, dateProvider: DatePro
     let paragraph = NSMutableParagraphStyle()
     paragraph.alignment = .center
     NSAttributedString(string: date, attributes: [
-        .baselineOffset: -(2.5 / 16) * iconSize,
+        .baselineOffset: -(3 / 16) * iconSize,
         .font: NSFont.systemFont(ofSize: (9 / 16) * iconSize),
         .foregroundColor: NSColor.red,
         .paragraphStyle: paragraph
