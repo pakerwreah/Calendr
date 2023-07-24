@@ -15,7 +15,8 @@ enum CalendarPickerConfiguration {
 
 class CalendarPickerViewController: NSViewController {
 
-    private let disposeBag = DisposeBag()
+    private let pickerDisposeBag = DisposeBag()
+    private var itemsDisposeBag: DisposeBag!
 
     private let viewModel: CalendarPickerViewModel
 
@@ -81,6 +82,8 @@ class CalendarPickerViewController: NSViewController {
             .compactMap { [weak self] calendars, showNextEvent -> [NSView]? in
                 guard let self = self else { return nil }
 
+                self.itemsDisposeBag = DisposeBag()
+
                 return Dictionary(grouping: calendars, by: { $0.account })
                     .sorted(by: \.key.localizedLowercase)
                     .flatMap { account, calendars in
@@ -92,7 +95,7 @@ class CalendarPickerViewController: NSViewController {
                     }
             }
             .bind(to: contentStackView.rx.arrangedSubviews)
-            .disposed(by: disposeBag)
+            .disposed(by: pickerDisposeBag)
     }
     
     private func makeCalendarSection(title: String, calendars: [CalendarModel], showNextEvent: Bool) -> [NSView] {
@@ -126,11 +129,11 @@ class CalendarPickerViewController: NSViewController {
         selected
             .map { $0.contains(identifier) ? .on : .off }
             .bind(to: button.rx.state)
-            .disposed(by: disposeBag)
+            .disposed(by: itemsDisposeBag)
 
         button.rx.click
             .bind { toggle.onNext(identifier) }
-            .disposed(by: disposeBag)
+            .disposed(by: itemsDisposeBag)
     }
 
     private func makeCalendarItemEnabled(_ calendar: CalendarModel) -> NSView {
@@ -156,14 +159,16 @@ class CalendarPickerViewController: NSViewController {
         button.setButtonType(.toggle)
 
         view.rx.updateLayer
+            .startWith(())
             .map { unselectedIcon.with(color: .secondaryLabelColor) }
             .bind(to: button.rx.image)
-            .disposed(by: disposeBag)
+            .disposed(by: itemsDisposeBag)
 
         view.rx.updateLayer
+            .startWith(())
             .map { selectedIcon.with(color: .textColor) }
             .bind(to: button.rx.alternateImage)
-            .disposed(by: disposeBag)
+            .disposed(by: itemsDisposeBag)
 
         bindCalendarItem(
             button: button,
