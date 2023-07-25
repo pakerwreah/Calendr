@@ -480,19 +480,30 @@ class MainViewController: NSViewController, NSPopoverDelegate {
         view.window?.setContentSize(contentSize)
     }
 
+    private let mainStatusItemLeftClick = PublishSubject<Void>()
+    private let mainStatusItemRightClick = PublishSubject<Void>()
+
+    @objc func mainStatusItemAction() {
+        guard let event = NSApp.currentEvent else { return }
+
+        // try to avoid weird "conflict with KVO" bug from RxSwift
+        DispatchQueue.main.async {
+            switch event.type {
+            case .leftMouseUp:
+                self.mainStatusItemLeftClick.onNext(())
+            case .rightMouseUp:
+                self.mainStatusItemRightClick.onNext(())
+            default:
+                break
+            }
+        }
+    }
+
     private func setUpMainStatusItem() {
 
         guard let statusBarButton = mainStatusItem.button else { return }
 
-        let menu = NSMenu()
-
-        menu.addItem(withTitle: Strings.Settings.title, action: #selector(openSettings), keyEquivalent: ",").target = self
-        menu.addItem(.separator())
-        menu.addItem(withTitle: Strings.quit, action: #selector(NSApp.terminate), keyEquivalent: "q")
-
-        mainStatusItem.menu = menu
-
-        statusBarButton.rx.click
+        mainStatusItemLeftClick
             .enumerated()
             .flatMapFirst { [weak self] pass, _ -> Observable<Void> in
                 guard let self else { return .empty() }
@@ -509,6 +520,21 @@ class MainViewController: NSViewController, NSPopoverDelegate {
                 self?.popoverDisposeBag = DisposeBag()
             }
             .disposed(by: disposeBag)
+
+        let menu = NSMenu()
+
+        menu.addItem(withTitle: Strings.Settings.title, action: #selector(openSettings), keyEquivalent: ",").target = self
+        menu.addItem(.separator())
+        menu.addItem(withTitle: Strings.quit, action: #selector(NSApp.terminate), keyEquivalent: "q")
+
+        mainStatusItemRightClick.bind {
+            menu.show(in: statusBarButton)
+        }
+        .disposed(by: disposeBag)
+
+        statusBarButton.sendAction(on: [.leftMouseUp, .rightMouseUp])
+        statusBarButton.target = self
+        statusBarButton.action = #selector(mainStatusItemAction)
 
         mainStackView.rx.observe(\.frame)
             .map(\.height)
@@ -529,6 +555,25 @@ class MainViewController: NSViewController, NSPopoverDelegate {
             .disposed(by: disposeBag)
     }
 
+    private let eventStatusItemLeftClick = PublishSubject<Void>()
+    private let eventStatusItemRightClick = PublishSubject<Void>()
+
+    @objc func eventStatusItemAction() {
+        guard let event = NSApp.currentEvent else { return }
+
+        // try to avoid weird "conflict with KVO" bug from RxSwift
+        DispatchQueue.main.async {
+            switch event.type {
+            case .leftMouseUp:
+                self.eventStatusItemLeftClick.onNext(())
+            case .rightMouseUp:
+                self.eventStatusItemRightClick.onNext(())
+            default:
+                break
+            }
+        }
+    }
+
     private func setUpEventStatusItems() {
         setUpEventStatusItem(item: eventStatusItem, view: nextEventView, viewModel: nextEventViewModel)
         setUpEventStatusItem(item: reminderStatusItem, view: nextReminderView, viewModel: nextReminderViewModel)
@@ -540,7 +585,7 @@ class MainViewController: NSViewController, NSPopoverDelegate {
             let container = statusBarButton.superview?.superview
         else { return }
 
-        container.addSubview(view)
+        container.addSubview(view, positioned: .below, relativeTo: statusBarButton)
 
         view.leading(equalTo: statusBarButton, constant: -5)
         view.top(equalTo: statusBarButton)
@@ -557,7 +602,7 @@ class MainViewController: NSViewController, NSPopoverDelegate {
             .bind(to: item.rx.isVisible)
             .disposed(by: disposeBag)
 
-        statusBarButton.rx.tap
+        eventStatusItemLeftClick
             .withUnretained(self)
             .flatMapFirst { (self, _) in self.isShowingDetails.filter(!).take(1).void() }
             .compactMap { viewModel.makeDetailsViewModel() }
@@ -574,7 +619,15 @@ class MainViewController: NSViewController, NSPopoverDelegate {
             .subscribe()
             .disposed(by: disposeBag)
 
-        statusBarButton.sendAction(on: .leftMouseDown)
+        statusBarButton.sendAction(on: [.leftMouseUp, .rightMouseUp])
+        statusBarButton.target = self
+        statusBarButton.action = #selector(eventStatusItemAction)
+
+        eventStatusItemRightClick
+            .withLatestFrom(viewModel.contextMenuViewModel)
+            .skipNil()
+            .bind { makeContextMenu($0).show(in: statusBarButton) }
+            .disposed(by: disposeBag)
     }
 
     private func setUpKeyboard() {
@@ -696,9 +749,20 @@ class MainViewController: NSViewController, NSPopoverDelegate {
     }
 }
 
+private func makeContextMenu(_ viewModel: some ContextMenuViewModel) -> NSMenu {
+    ContextMenu(viewModel: viewModel)
+}
+
 private enum Constants {
 
     enum MainStackView {
         static let margin: CGFloat = 8
+    }
+}
+
+
+private extension NSMenu {
+    func show(in view: NSView) {
+        popUp(positioning: nil, at: .init(x: 0, y: view.frame.height + 5), in: view)
     }
 }
