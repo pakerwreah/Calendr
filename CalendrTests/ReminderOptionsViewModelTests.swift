@@ -17,9 +17,9 @@ class ReminderOptionsViewModelTests: XCTestCase {
     let calendarService = MockCalendarServiceProvider()
     let workspace = MockWorkspaceServiceProvider()
 
-    func testOptions_withSourceList() {
+    func testOptions_canOpenTrue() {
 
-        let viewModel = mock(event: .make(type: .reminder), source: .list)
+        let viewModel = mock(event: .make(type: .reminder), canOpen: true)
 
         XCTAssertEqual(viewModel.items, [
             .action(.open),
@@ -34,9 +34,9 @@ class ReminderOptionsViewModelTests: XCTestCase {
         ])
     }
 
-    func testOptions_withSourceDetails() {
+    func testOptions_canOpenFalse() {
 
-        let viewModel = mock(event: .make(type: .reminder), source: .details)
+        let viewModel = mock(event: .make(type: .reminder), canOpen: false)
 
         XCTAssertEqual(viewModel.items, [
             .action(.complete(.clear)),
@@ -52,7 +52,7 @@ class ReminderOptionsViewModelTests: XCTestCase {
     func testOptions_withOpenTriggered() {
         let openExpectation = expectation(description: "Open")
 
-        let viewModel = mock(event: .make(id: "12345", type: .reminder), source: .list)
+        let viewModel = mock(event: .make(id: "12345", type: .reminder), canOpen: true)
 
         workspace.didOpen = { url in
             XCTAssertEqual(url.absoluteString, "x-apple-reminderkit://remcdreminder/12345")
@@ -130,14 +130,14 @@ class ReminderOptionsViewModelTests: XCTestCase {
         XCTAssert(callback)
     }
 
-    func mock(event: EventModel, source: ContextMenuSource = .details) -> ReminderOptionsViewModel {
+    func mock(event: EventModel, canOpen: Bool = false) -> ReminderOptionsViewModel {
 
         ReminderOptionsViewModel(
             event: event,
             dateProvider: dateProvider,
             calendarService: calendarService,
             workspace: workspace,
-            source: source
+            canOpen: canOpen
         )
     }
 }

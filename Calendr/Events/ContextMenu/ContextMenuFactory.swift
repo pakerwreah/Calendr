@@ -7,12 +7,6 @@
 
 import Foundation
 
-enum ContextMenuSource {
-    case list
-    case details
-    case menubar
-}
-
 enum ContextMenuFactory {
 
     static func makeViewModel(
@@ -20,7 +14,7 @@ enum ContextMenuFactory {
         dateProvider: DateProviding,
         calendarService: CalendarServiceProviding,
         workspace: WorkspaceServiceProviding,
-        source: ContextMenuSource
+        canOpen: Bool
     ) -> (any ContextMenuViewModel)? {
 
         switch event.type {
@@ -30,7 +24,7 @@ enum ContextMenuFactory {
                 dateProvider: dateProvider,
                 calendarService: calendarService,
                 workspace: workspace,
-                source: source
+                canOpen: canOpen
             )
 
         case .reminder:
@@ -39,7 +33,7 @@ enum ContextMenuFactory {
                 dateProvider: dateProvider,
                 calendarService: calendarService,
                 workspace: workspace,
-                source: source
+                canOpen: canOpen
             )
         }
     }
