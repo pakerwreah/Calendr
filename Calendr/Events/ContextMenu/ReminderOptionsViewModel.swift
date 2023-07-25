@@ -43,7 +43,7 @@ class ReminderOptionsViewModel: ContextMenuViewModel {
 
         (actionCallback, actionCallbackObserver) = PublishSubject.pipe()
 
-        if source ~= .list {
+        if source != .details {
             items.append(contentsOf: [.action(.open), .separator])
         }
 

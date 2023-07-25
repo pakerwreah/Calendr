@@ -44,7 +44,7 @@ class EventOptionsViewModel: ContextMenuViewModel {
 
         (actionCallback, actionCallbackObserver) = PublishSubject.pipe()
 
-        if source ~= .list {
+        if source != .details {
             items.append(.action(.open))
         }
 

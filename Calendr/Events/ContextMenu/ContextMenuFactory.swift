@@ -10,6 +10,7 @@ import Foundation
 enum ContextMenuSource {
     case list
     case details
+    case menubar
 }
 
 enum ContextMenuFactory {

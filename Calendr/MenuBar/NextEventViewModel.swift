@@ -34,6 +34,7 @@ class NextEventViewModel {
     let backgroundColor: Observable<NSColor>
     let hasEvent: Observable<Bool>
     let isInProgress: Observable<Bool>
+    let contextMenuViewModel: Observable<(any ContextMenuViewModel)?>
 
     private let disposeBag = DisposeBag()
     private let event = BehaviorSubject<EventModel?>(value: nil)
@@ -196,6 +197,17 @@ class NextEventViewModel {
         hasEvent = nextEventObservable
             .map(\.isNotNil)
             .distinctUntilChanged()
+
+        contextMenuViewModel = event.distinctUntilChanged().map {
+            guard let event = $0 else { return nil }
+            return ContextMenuFactory.makeViewModel(
+                event: event,
+                dateProvider: dateProvider,
+                calendarService: calendarService,
+                workspace: workspace,
+                source: .menubar
+            )
+        }
     }
 
     func makeDetailsViewModel() -> EventDetailsViewModel? {
