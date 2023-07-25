@@ -18,8 +18,8 @@ class GeneralSettingsViewController: NSViewController {
     private let autoLaunchCheckbox = Checkbox(title: Strings.Settings.MenuBar.autoLaunch)
     private let showMenuBarIconCheckbox = Checkbox(title: Strings.Settings.MenuBar.showIcon)
     private let showMenuBarDateCheckbox = Checkbox(title: Strings.Settings.MenuBar.showDate)
-    private let showMenuBarIconDateCheckbox = Checkbox(title: Strings.Settings.MenuBar.showIconDate)
     private let showMenuBarBackgroundCheckbox = Checkbox(title: Strings.Settings.MenuBar.showBackground)
+    private let iconStyleDropdown = Dropdown()
     private let dateFormatDropdown = Dropdown()
     private let dateFormatTextField = NSTextField()
 
@@ -57,6 +57,7 @@ class GeneralSettingsViewController: NSViewController {
         view.setAccessibilityElement(true)
         view.setAccessibilityIdentifier(Accessibility.Settings.General.view)
 
+        iconStyleDropdown.setAccessibilityIdentifier(Accessibility.Settings.General.iconStyleDropdown)
         dateFormatDropdown.setAccessibilityIdentifier(Accessibility.Settings.General.dateFormatDropdown)
         dateFormatTextField.setAccessibilityIdentifier(Accessibility.Settings.General.dateFormatInput)
     }
@@ -79,6 +80,8 @@ class GeneralSettingsViewController: NSViewController {
 
         stackView.edges(to: view, insets: .init(bottom: 1))
 
+        iconStyleDropdown.height(equalTo: showMenuBarIconCheckbox)
+
         if #unavailable(macOS 13.0) {
             autoLaunchCheckbox.isHidden = true
         }
@@ -99,8 +102,16 @@ class GeneralSettingsViewController: NSViewController {
         dateFormatTextField.refusesFirstResponder = true
         dateFormatTextField.focusRingType = .none
 
+        iconStyleDropdown.isBordered = false
+
+        let iconStyle = NSStackView(views: [
+            showMenuBarIconCheckbox,
+            iconStyleDropdown
+        ])
+        .with(insets: .init(right: 4))
+
         let dateFormat = NSStackView(views: [
-            Label(text: "\(Strings.Settings.MenuBar.dateFormat):"),
+            showMenuBarDateCheckbox,
             dateFormatDropdown,
             dateFormatTextField
         ])
@@ -108,10 +119,9 @@ class GeneralSettingsViewController: NSViewController {
 
         return NSStackView(views: [
             autoLaunchCheckbox,
-            NSStackView(views: [showMenuBarIconCheckbox, .spacer, showMenuBarDateCheckbox]),
-            showMenuBarIconDateCheckbox,
-            showMenuBarBackgroundCheckbox,
-            dateFormat
+            iconStyle,
+            dateFormat,
+            showMenuBarBackgroundCheckbox
         ])
         .with(spacing: Constants.contentSpacing)
         .with(orientation: .vertical)
@@ -275,18 +285,50 @@ class GeneralSettingsViewController: NSViewController {
         )
 
         bind(
-            control: showMenuBarIconDateCheckbox,
-            observable: viewModel.showStatusItemIconDate,
-            observer: viewModel.toggleStatusItemIconDate
-        )
-
-        bind(
             control: showMenuBarBackgroundCheckbox,
             observable: viewModel.showStatusItemBackground,
             observer: viewModel.toggleStatusItemBackground
         )
 
+        setUpIconStyle()
+
         setUpDateFormat()
+    }
+
+    private func setUpIconStyle() {
+
+        let iconStyleControl = iconStyleDropdown.rx.controlProperty(
+            getter: \.indexOfSelectedItem,
+            setter: { $0.selectItem(at: $1) }
+        )
+
+        Observable.combineLatest(
+            viewModel.iconStyleOptions, iconStyleControl.skip(1)
+        )
+        .map { $0[$1].style }
+        .bind(to: viewModel.statusItemIconStyleObserver)
+        .disposed(by: disposeBag)
+
+        Observable.combineLatest(
+            viewModel.iconStyleOptions, viewModel.statusItemIconStyle
+        )
+        .bind { [dropdown = iconStyleDropdown] options, iconStyle in
+            let menu = NSMenu()
+            for option in options {
+                let item = NSMenuItem()
+                item.title = " "
+                item.image = option.image
+                menu.addItem(item)
+            }
+            dropdown.menu = menu
+            dropdown.selectItem(at: options.firstIndex(where: { $0.style == iconStyle }) ?? 0)
+        }
+        .disposed(by: disposeBag)
+
+        viewModel.showStatusItemIcon
+            .map(!)
+            .bind(to: iconStyleDropdown.rx.isHidden)
+            .disposed(by: disposeBag)
     }
 
     private func setUpDateFormat() {
@@ -297,14 +339,14 @@ class GeneralSettingsViewController: NSViewController {
         )
 
         Observable.combineLatest(
-            viewModel.dateStyleOptions, dateFormatControl.skip(1)
+            viewModel.dateFormatOptions, dateFormatControl.skip(1)
         )
         .map { $0[$1].style }
         .bind(to: viewModel.statusItemDateStyleObserver)
         .disposed(by: disposeBag)
 
         Observable.combineLatest(
-            viewModel.dateStyleOptions, viewModel.statusItemDateStyle
+            viewModel.dateFormatOptions, viewModel.statusItemDateStyle
         )
         .bind { [dropdown = dateFormatDropdown] options, dateStyle in
             dropdown.removeAllItems()
@@ -315,7 +357,7 @@ class GeneralSettingsViewController: NSViewController {
 
         viewModel.showStatusItemDate
             .map(!)
-            .bind(to: dateFormatDropdown.superview!.rx.isHidden)
+            .bind(to: dateFormatDropdown.rx.isHidden)
             .disposed(by: disposeBag)
 
         viewModel.showStatusItemDate

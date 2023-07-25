@@ -20,7 +20,6 @@
 "settings.menu_bar.show_date" = "显示日期";
 "settings.menu_bar.show_icon_date" = "在图标中显示日期";
 "settings.menu_bar.show_background" = "启用不透明背景";
-"settings.menu_bar.date_format" = "日期格式";
 "settings.menu_bar.date_format_custom" = "自定义";
 "settings.next_event" = "下一个日程";
 "settings.menu_bar.show_next_event" = "显示下一个日程";

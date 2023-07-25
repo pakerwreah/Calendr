@@ -20,7 +20,6 @@
 "settings.menu_bar.show_date" = "Mostrar data";
 "settings.menu_bar.show_icon_date" = "Mostrar data no ícone";
 "settings.menu_bar.show_background" = "Mostrar fundo opaco";
-"settings.menu_bar.date_format" = "Formato de data";
 "settings.menu_bar.date_format_custom" = "Personalizado";
 "settings.next_event" = "Próximo Evento";
 "settings.menu_bar.show_next_event" = "Mostrar próximo evento";

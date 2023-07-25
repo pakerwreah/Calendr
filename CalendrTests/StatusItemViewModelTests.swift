@@ -46,7 +46,7 @@ class StatusItemViewModelTests: XCTestCase {
             .disposed(by: disposeBag)
 
         changeDate(.make(year: 2021, month: 1, day: 1))
-        settings.dateStyleObserver.onNext(.short)
+        settings.statusItemDateStyleObserver.onNext(.short)
     }
 
     func changeDate(_ date: Date) {
@@ -54,15 +54,15 @@ class StatusItemViewModelTests: XCTestCase {
         dateChanged.onNext(())
     }
 
-    func setUp(showIcon: Bool, showDate: Bool, showIconDate: Bool) {
+    func setUp(showIcon: Bool, showDate: Bool, iconStyle: StatusItemIconStyle) {
         settings.toggleIcon.onNext(showIcon)
         settings.toggleDate.onNext(showDate)
-        settings.toggleIconDate.onNext(showIconDate)
+        settings.statusItemIconStyleObserver.onNext(iconStyle)
     }
 
     func testText_withDateChange_shouldUpdateText() {
 
-        setUp(showIcon: false, showDate: true, showIconDate: false)
+        setUp(showIcon: false, showDate: true, iconStyle: .calendar)
 
         XCTAssertEqual(lastText, "2021-01-01")
 
@@ -75,7 +75,7 @@ class StatusItemViewModelTests: XCTestCase {
 
     func testText_withLocaleChange_shouldUpdateText() {
 
-        setUp(showIcon: false, showDate: true, showIconDate: false)
+        setUp(showIcon: false, showDate: true, iconStyle: .calendar)
 
         XCTAssertEqual(lastText, "2021-01-01")
 
@@ -87,28 +87,28 @@ class StatusItemViewModelTests: XCTestCase {
 
     func testIconVisibility() {
 
-        setUp(showIcon: true, showDate: true, showIconDate: true)
+        setUp(showIcon: true, showDate: true, iconStyle: .date)
         XCTAssertEqual(iconsCount, 1)
 
-        setUp(showIcon: true, showDate: true, showIconDate: false)
+        setUp(showIcon: true, showDate: true, iconStyle: .calendar)
         XCTAssertEqual(iconsCount, 1)
 
-        setUp(showIcon: true, showDate: false, showIconDate: true)
+        setUp(showIcon: true, showDate: false, iconStyle: .date)
         XCTAssertEqual(iconsCount, 1)
 
-        setUp(showIcon: true, showDate: false, showIconDate: false)
+        setUp(showIcon: true, showDate: false, iconStyle: .calendar)
         XCTAssertEqual(iconsCount, 1)
 
-        setUp(showIcon: false, showDate: true, showIconDate: true)
+        setUp(showIcon: false, showDate: true, iconStyle: .date)
         XCTAssertEqual(iconsCount, 0)
 
-        setUp(showIcon: false, showDate: true, showIconDate: false)
+        setUp(showIcon: false, showDate: true, iconStyle: .calendar)
         XCTAssertEqual(iconsCount, 0)
 
-        setUp(showIcon: false, showDate: false, showIconDate: true)
+        setUp(showIcon: false, showDate: false, iconStyle: .date)
         XCTAssertEqual(iconsCount, 1)
 
-        setUp(showIcon: false, showDate: false, showIconDate: false)
+        setUp(showIcon: false, showDate: false, iconStyle: .calendar)
         XCTAssertEqual(iconsCount, 1)
     }
 
@@ -116,66 +116,66 @@ class StatusItemViewModelTests: XCTestCase {
 
         calendarService.changeEvents([.make(type: .birthday)])
 
-        setUp(showIcon: true, showDate: true, showIconDate: true)
+        setUp(showIcon: true, showDate: true, iconStyle: .date)
         XCTAssertEqual(iconsCount, 2)
 
-        setUp(showIcon: true, showDate: true, showIconDate: false)
+        setUp(showIcon: true, showDate: true, iconStyle: .calendar)
         XCTAssertEqual(iconsCount, 1)
 
-        setUp(showIcon: true, showDate: false, showIconDate: true)
+        setUp(showIcon: true, showDate: false, iconStyle: .date)
         XCTAssertEqual(iconsCount, 2)
 
-        setUp(showIcon: true, showDate: false, showIconDate: false)
+        setUp(showIcon: true, showDate: false, iconStyle: .calendar)
         XCTAssertEqual(iconsCount, 1)
 
-        setUp(showIcon: false, showDate: true, showIconDate: true)
+        setUp(showIcon: false, showDate: true, iconStyle: .date)
         XCTAssertEqual(iconsCount, 1)
 
-        setUp(showIcon: false, showDate: true, showIconDate: false)
+        setUp(showIcon: false, showDate: true, iconStyle: .calendar)
         XCTAssertEqual(iconsCount, 1)
 
-        setUp(showIcon: false, showDate: false, showIconDate: true)
+        setUp(showIcon: false, showDate: false, iconStyle: .date)
         XCTAssertEqual(iconsCount, 1)
 
-        setUp(showIcon: false, showDate: false, showIconDate: false)
+        setUp(showIcon: false, showDate: false, iconStyle: .calendar)
         XCTAssertEqual(iconsCount, 1)
     }
 
     func testDateVisibility() {
 
-        setUp(showIcon: false, showDate: true, showIconDate: false)
+        setUp(showIcon: false, showDate: true, iconStyle: .calendar)
         XCTAssertEqual(lastText, "2021-01-01")
 
-        setUp(showIcon: false, showDate: false, showIconDate: false)
+        setUp(showIcon: false, showDate: false, iconStyle: .calendar)
         XCTAssertEqual(lastText, "")
     }
 
     func testDateStyle() {
 
-        setUp(showIcon: false, showDate: true, showIconDate: false)
+        setUp(showIcon: false, showDate: true, iconStyle: .calendar)
 
         dateProvider.m_calendar.locale = Locale(identifier: "en_US")
         notificationCenter.post(name: NSLocale.currentLocaleDidChangeNotification, object: nil)
 
-        settings.dateStyleObserver.onNext(.short)
+        settings.statusItemDateStyleObserver.onNext(.short)
         XCTAssertEqual(lastText, "1/1/21")
 
-        settings.dateStyleObserver.onNext(.medium)
+        settings.statusItemDateStyleObserver.onNext(.medium)
         XCTAssertEqual(lastText, "Jan 1, 2021")
 
-        settings.dateStyleObserver.onNext(.long)
+        settings.statusItemDateStyleObserver.onNext(.long)
         XCTAssertEqual(lastText, "January 1, 2021")
 
-        settings.dateStyleObserver.onNext(.full)
+        settings.statusItemDateStyleObserver.onNext(.full)
         XCTAssertEqual(lastText, "Friday, January 1, 2021")
 
-        settings.dateStyleObserver.onNext(.none)
+        settings.statusItemDateStyleObserver.onNext(.none)
         XCTAssertEqual(lastText, "???")
 
-        settings.dateFormatObserver.onNext("E d MMM YY")
+        settings.statusItemDateFormatObserver.onNext("E d MMM YY")
         XCTAssertEqual(lastText, "Fri 1 Jan 21")
 
-        settings.dateStyleObserver.onNext(.short)
+        settings.statusItemDateStyleObserver.onNext(.short)
         XCTAssertEqual(lastText, "1/1/21")
     }
 

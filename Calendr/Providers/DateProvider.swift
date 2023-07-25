@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import RxSwift
 
 protocol DateProviding: AnyObject {
     var calendar: Calendar { get }
@@ -19,17 +18,5 @@ class DateProvider: DateProviding {
 
     init(calendar: Calendar) {
         self.calendar = calendar
-    }
-}
-
-extension DateProviding {
-
-    func calendarObservable(using notificationCenter: NotificationCenter) -> Observable<Calendar> {
-
-        notificationCenter.rx
-            .notification(NSLocale.currentLocaleDidChangeNotification)
-            .void()
-            .startWith(())
-            .compactMap { [weak self] in self?.calendar }
     }
 }

@@ -61,6 +61,7 @@ enum Accessibility {
 
         enum General {
             static let view = "settings_general_view"
+            static let iconStyleDropdown = "settings_general_icon_style_dropdown"
             static let dateFormatDropdown = "settings_general_date_format_dropdown"
             static let dateFormatInput = "settings_general_date_format_input"
         }
