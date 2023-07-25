@@ -200,7 +200,7 @@ class EventViewModel {
             dateProvider: dateProvider,
             calendarService: calendarService,
             workspace: workspace,
-            source: .list
+            canOpen: true
         )
     }
 }

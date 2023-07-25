@@ -64,20 +64,20 @@ class EventOptionsViewModelTests: XCTestCase {
 
     func testOptions_fromList_withUnknownInvitationStatus() {
 
-        let viewModel = mock(event: .make(type: .event(.unknown)), source: .list)
+        let viewModel = mock(event: .make(type: .event(.unknown)), canOpen: true)
         XCTAssertEqual(viewModel.items, [.action(.open)])
     }
 
     func testOptions_fromList() {
 
-        let viewModel = mock(event: .make(type: .event(.pending)), source: .list)
+        let viewModel = mock(event: .make(type: .event(.pending)), canOpen: true)
         XCTAssertEqual(viewModel.items, [.action(.open), .separator, .action(.accept), .action(.maybe), .action(.decline)])
     }
 
     func testOptions_withOpenTriggered() {
         let openExpectation = expectation(description: "Open")
 
-        let viewModel = mock(event: .make(id: "12345", type: .event(.pending)), source: .list)
+        let viewModel = mock(event: .make(id: "12345", type: .event(.pending)), canOpen: true)
 
         workspace.didOpen = { url in
             XCTAssertEqual(url.absoluteString, "ical://ekevent/12345?method=show&options=more")
@@ -99,7 +99,7 @@ class EventOptionsViewModelTests: XCTestCase {
                 type: .event(.pending),
                 hasRecurrenceRules: true
             ),
-            source: .list
+            canOpen: true
         )
 
         dateProvider.m_calendar.timeZone = timeZone
@@ -125,7 +125,7 @@ class EventOptionsViewModelTests: XCTestCase {
                 type: .event(.pending),
                 hasRecurrenceRules: true
             ),
-            source: .list
+            canOpen: true
         )
 
         dateProvider.m_calendar.timeZone = timeZone
@@ -139,14 +139,14 @@ class EventOptionsViewModelTests: XCTestCase {
         waitForExpectations(timeout: 1)
     }
 
-    func mock(event: EventModel, source: ContextMenuSource = .details) -> EventOptionsViewModel {
+    func mock(event: EventModel, canOpen: Bool = false) -> EventOptionsViewModel {
 
         EventOptionsViewModel(
             event: event,
             dateProvider: dateProvider,
             calendarService: calendarService,
             workspace: workspace,
-            source: source
+            canOpen: canOpen
         )!
     }
 }

@@ -34,7 +34,7 @@ class ReminderOptionsViewModel: ContextMenuViewModel {
         dateProvider: DateProviding,
         calendarService: CalendarServiceProviding,
         workspace: WorkspaceServiceProviding,
-        source: ContextMenuSource
+        canOpen: Bool
     ) {
         self.event = event
         self.dateProvider = dateProvider
@@ -43,7 +43,7 @@ class ReminderOptionsViewModel: ContextMenuViewModel {
 
         (actionCallback, actionCallbackObserver) = PublishSubject.pipe()
 
-        if source != .details {
+        if canOpen {
             items.append(contentsOf: [.action(.open), .separator])
         }
 

@@ -205,7 +205,7 @@ class NextEventViewModel {
                 dateProvider: dateProvider,
                 calendarService: calendarService,
                 workspace: workspace,
-                source: .menubar
+                canOpen: true
             )
         }
     }

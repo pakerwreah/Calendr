@@ -35,7 +35,7 @@ class EventOptionsViewModel: ContextMenuViewModel {
         dateProvider: DateProviding,
         calendarService: CalendarServiceProviding,
         workspace: WorkspaceServiceProviding,
-        source: ContextMenuSource
+        canOpen: Bool
     ) {
         self.event = event
         self.dateProvider = dateProvider
@@ -44,7 +44,7 @@ class EventOptionsViewModel: ContextMenuViewModel {
 
         (actionCallback, actionCallbackObserver) = PublishSubject.pipe()
 
-        if source != .details {
+        if canOpen {
             items.append(.action(.open))
         }
 
