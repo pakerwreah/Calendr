@@ -67,7 +67,7 @@ class SettingsViewModelTests: XCTestCase {
         var showStatusItemIcon: Bool?
         var showStatusItemDate: Bool?
         var showStatusItemBackground: Bool?
-        var statusItemDateStyle: DateStyle?
+        var statusItemDateStyle: StatusItemDateStyle?
         var showEventStatusItem: Bool?
         var eventStatusItemCheckRange: Int?
         var eventStatusItemLength: Int?
@@ -179,13 +179,13 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(userDefaultsTransparency, 2)
     }
 
-    func testDateStyleOptions() {
+    func testDateFormatOptions() {
 
         dateProvider.m_calendar.locale = Locale(identifier: "en_US")
 
-        var options: [DateStyleOption]?
+        var options: [SettingsViewModel.DateFormatOption]?
 
-        viewModel.dateStyleOptions
+        viewModel.dateFormatOptions
             .bind { options = $0 }
             .disposed(by: disposeBag)
 
@@ -198,13 +198,13 @@ class SettingsViewModelTests: XCTestCase {
         ])
     }
 
-    func testDateStyleOptions_withLocaleChange() {
+    func testDateFormatOptions_withLocaleChange() {
 
         dateProvider.m_calendar.locale = Locale(identifier: "en_US")
 
-        var options: [DateStyleOption]?
+        var options: [SettingsViewModel.DateFormatOption]?
 
-        viewModel.dateStyleOptions
+        viewModel.dateFormatOptions
             .bind { options = $0 }
             .disposed(by: disposeBag)
 
@@ -222,7 +222,7 @@ class SettingsViewModelTests: XCTestCase {
         userDefaults.statusItemDateStyle = 1
         XCTAssertEqual(userDefaultsStatusItemDateStyle, 1)
 
-        var statusItemDateStyle: DateStyle?
+        var statusItemDateStyle: StatusItemDateStyle?
 
         viewModel.statusItemDateStyle
             .bind { statusItemDateStyle = $0 }

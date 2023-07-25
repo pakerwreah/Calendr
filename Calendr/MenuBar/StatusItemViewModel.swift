@@ -64,12 +64,12 @@ class StatusItemViewModel {
             dateObservable,
             settings.showStatusItemIcon,
             settings.showStatusItemDate,
-            settings.showStatusItemIconDate,
             settings.showStatusItemBackground,
+            settings.statusItemIconStyle,
             dateFormatterObservable,
             hasBirthdaysObservable
         )
-        .map { date, showIcon, showDate, showIconDate, showBackground, dateFormatter, hasBirthdays in
+        .map { date, showIcon, showDate, showBackground, iconStyle, dateFormatter, hasBirthdays in
 
             var icons: [NSImage] = []
 
@@ -81,33 +81,11 @@ class StatusItemViewModel {
 
             let isEmpty = !showIcon && !showDate && !hasBirthdays
             let showIcon = showIcon || isEmpty // avoid nothingness
-            let isDefaultIcon = !showIconDate // not important, can be replaced
+            let isDefaultIcon = iconStyle == .calendar // not important, can be replaced
             let skipIcon = isDefaultIcon && hasBirthdays // replace default icon with birthday
 
             if showIcon && !skipIcon {
-                let headerHeight: CGFloat = 3.5
-                let borderWidth: CGFloat = 2
-                let radius: CGFloat = 2.5
-                let ratio: CGFloat = 10 / 9
-                let rect = CGRect(x: 0, y: 0, width: iconSize * ratio, height: iconSize)
-
-                let icon = NSImage(size: rect.size, flipped: true) { _ in
-                    /// can be any opaque color, but red is good for debugging
-                    let color = NSColor.red
-                    color.setStroke()
-                    color.setFill()
-
-                    drawIconCalendarFrame(rect: rect, radius: radius, borderWidth: borderWidth, headerHeight: headerHeight)
-
-                    if showIconDate {
-                        drawIconDate(rect: rect, iconSize: iconSize, dateProvider: dateProvider)
-                    } else {
-                        drawIconDots(rect: rect, borderWidth: borderWidth, headerHeight: headerHeight)
-                    }
-
-                    return true
-                }
-                icons.append(icon)
+                icons.append(StatusItemIconFactory.icon(size: iconSize, style: iconStyle, dateProvider: dateProvider))
             }
 
             let title: String
@@ -159,6 +137,7 @@ class StatusItemViewModel {
                 }
                 return true
             }
+
             textImage.isTemplate = true
 
             guard showBackground else {
@@ -180,55 +159,4 @@ class StatusItemViewModel {
             return image
         }
     }
-}
-
-private func drawIconCalendarFrame(rect: CGRect, radius: CGFloat, borderWidth: CGFloat, headerHeight: CGFloat) {
-    let strokePath = NSBezierPath(roundedRect: rect, xRadius: radius, yRadius: radius)
-    strokePath.addClip()
-    strokePath.lineWidth = borderWidth
-    strokePath.stroke()
-
-    var fillRect = rect
-    fillRect.size.height = headerHeight
-    let fillPath = NSBezierPath(rect: fillRect)
-    fillPath.fill()
-}
-
-private func drawIconDots(rect: CGRect, borderWidth: CGFloat, headerHeight: CGFloat) {
-    let offsetX: CGFloat = rect.origin.x + borderWidth
-    let offsetY: CGFloat = rect.origin.y + headerHeight + 0.5
-    let insets: CGFloat = 0.09 * rect.width
-    let dotSize: CGFloat = 1.4
-    let rows: Int = 3
-    let cols: Int = 4
-    let availableWidth: CGFloat = rect.size.width - 2 * borderWidth - 2 * insets - CGFloat(cols) * dotSize
-    let availableHeight: CGFloat = rect.size.height - headerHeight - borderWidth - 2 * insets - CGFloat(rows) * dotSize
-    let spacingX: CGFloat = availableWidth / CGFloat(cols - 1)
-    let spacingY: CGFloat = availableHeight / CGFloat(rows - 1)
-    for i in 1...10 {
-        let row: Int = i % rows
-        let col: Int = i / rows
-        let dotPath = NSBezierPath(
-            ovalIn: .init(
-                x: offsetX + insets + CGFloat(col) * (dotSize + spacingX),
-                y: offsetY + insets + CGFloat(row) * (dotSize + spacingY),
-                width: dotSize,
-                height: dotSize
-            )
-        )
-        dotPath.fill()
-    }
-}
-
-private func drawIconDate(rect: CGRect, iconSize: CGFloat, dateProvider: DateProviding) {
-    let formatter = DateFormatter(format: "d", calendar: dateProvider.calendar)
-    let date = formatter.string(from: dateProvider.now)
-    let paragraph = NSMutableParagraphStyle()
-    paragraph.alignment = .center
-    NSAttributedString(string: date, attributes: [
-        .baselineOffset: -(3 / 16) * iconSize,
-        .font: NSFont.systemFont(ofSize: (9 / 16) * iconSize),
-        .foregroundColor: NSColor.red,
-        .paragraphStyle: paragraph
-    ]).draw(in: rect.offsetBy(dx: 0.25, dy: 0.5))
 }

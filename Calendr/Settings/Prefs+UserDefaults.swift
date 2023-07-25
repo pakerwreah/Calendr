@@ -12,7 +12,7 @@ enum Prefs {
     static let nextEventCalendars = "next_event_calendars"
     static let statusItemIconEnabled = "status_item_icon_enabled"
     static let statusItemDateEnabled = "status_item_date_enabled"
-    static let statusItemIconDateEnabled = "status_item_icon_date_enabled"
+    static let statusItemIconStyle = "status_item_icon_style"
     static let statusItemBackgroundEnabled = "status_item_background_enabled"
     static let statusItemDateStyle = "status_item_date_style"
     static let statusItemDateFormat = "status_item_date_format"
@@ -52,9 +52,9 @@ extension UserDefaults {
         set { set(newValue, forKey: Prefs.statusItemDateEnabled) }
     }
 
-    @objc dynamic var statusItemIconDateEnabled: Bool {
-        get { bool(forKey: Prefs.statusItemIconDateEnabled) }
-        set { set(newValue, forKey: Prefs.statusItemIconDateEnabled) }
+    @objc dynamic var statusItemIconStyle: String {
+        get { string(forKey: Prefs.statusItemIconStyle) ?? "" }
+        set { set(newValue, forKey: Prefs.statusItemIconStyle) }
     }
 
     @objc dynamic var statusItemBackgroundEnabled: Bool {

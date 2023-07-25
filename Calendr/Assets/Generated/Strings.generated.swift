@@ -121,8 +121,6 @@ internal enum Strings {
     internal enum MenuBar {
       /// Launch at login
       internal static let autoLaunch = Strings.tr("Localizable", "settings.menu_bar.auto_launch", fallback: "Launch at login")
-      /// Date format
-      internal static let dateFormat = Strings.tr("Localizable", "settings.menu_bar.date_format", fallback: "Date format")
       /// Custom
       internal static let dateFormatCustom = Strings.tr("Localizable", "settings.menu_bar.date_format_custom", fallback: "Custom")
       /// Shorten if 'notch' is present
