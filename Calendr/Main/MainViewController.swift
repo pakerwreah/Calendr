@@ -124,6 +124,10 @@ class MainViewController: NSViewController, NSPopoverDelegate {
             calendarsViewModel: calendarPickerViewModel,
             notificationCenter: notificationCenter
         )
+        /// Fix weird "conflict with KVO" issue on RxSwift if we present settings
+        /// view controller before calling `methodInvoked` at least once.
+        /// If we don't do this, the app crashes in `setUpPopover`.
+        settingsViewController.rx.viewDidLoad.subscribe().dispose()
 
         let (hoverObservable, hoverObserver) = PublishSubject<Date?>.pipe()
 
@@ -486,16 +490,13 @@ class MainViewController: NSViewController, NSPopoverDelegate {
     @objc func mainStatusItemAction() {
         guard let event = NSApp.currentEvent else { return }
 
-        // try to avoid weird "conflict with KVO" bug from RxSwift
-        DispatchQueue.main.async {
-            switch event.type {
-            case .leftMouseUp:
-                self.mainStatusItemLeftClick.onNext(())
-            case .rightMouseUp:
-                self.mainStatusItemRightClick.onNext(())
-            default:
-                break
-            }
+        switch event.type {
+        case .leftMouseUp:
+            self.mainStatusItemLeftClick.onNext(())
+        case .rightMouseUp:
+            self.mainStatusItemRightClick.onNext(())
+        default:
+            break
         }
     }
 
@@ -561,16 +562,13 @@ class MainViewController: NSViewController, NSPopoverDelegate {
     @objc func eventStatusItemAction() {
         guard let event = NSApp.currentEvent else { return }
 
-        // try to avoid weird "conflict with KVO" bug from RxSwift
-        DispatchQueue.main.async {
-            switch event.type {
-            case .leftMouseUp:
-                self.eventStatusItemLeftClick.onNext(())
-            case .rightMouseUp:
-                self.eventStatusItemRightClick.onNext(())
-            default:
-                break
-            }
+        switch event.type {
+        case .leftMouseUp:
+            self.eventStatusItemLeftClick.onNext(())
+        case .rightMouseUp:
+            self.eventStatusItemRightClick.onNext(())
+        default:
+            break
         }
     }
 
