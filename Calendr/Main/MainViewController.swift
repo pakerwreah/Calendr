@@ -46,7 +46,7 @@ class MainViewController: NSViewController, NSPopoverDelegate {
     private var popoverDisposeBag = DisposeBag()
     private let dateClick = PublishSubject<Date>()
     private let dateDoubleClick = PublishSubject<Date>()
-    private let todayChanged = PublishSubject<Void>()
+    private let refreshDate = PublishSubject<Void>()
     private let selectedDate = PublishSubject<Date>()
     private let isShowingDetails = BehaviorSubject<Bool>(value: false)
     private let searchInputText = BehaviorSubject<String>(value: "")
@@ -110,7 +110,7 @@ class MainViewController: NSViewController, NSPopoverDelegate {
             .map { $0.filter($1.contains) }
 
         statusItemViewModel = StatusItemViewModel(
-            dateChanged: todayChanged,
+            dateChanged: refreshDate,
             nextEventCalendars: nextEventCalendars,
             settings: settingsViewModel,
             dateProvider: dateProvider,
@@ -204,7 +204,7 @@ class MainViewController: NSViewController, NSPopoverDelegate {
 
         calendarService.requestAccess()
 
-        todayChanged.onNext(())
+        refreshDate.onNext(())
     }
 
     required init?(coder: NSCoder) {
@@ -324,7 +324,7 @@ class MainViewController: NSViewController, NSPopoverDelegate {
             workspace.notificationCenter.rx.notification(NSWorkspace.didWakeNotification).void(),
             rx.viewDidDisappear.withLatestFrom(settingsViewModel.preserveSelectedDate).filter(!).void()
         )
-        .bind(to: todayChanged)
+        .bind(to: refreshDate)
         .disposed(by: disposeBag)
 
         dateClick
@@ -734,7 +734,7 @@ class MainViewController: NSViewController, NSPopoverDelegate {
 
         let dateSelector = DateSelector(
             calendar: dateProvider.calendar,
-            initial: todayChanged.map { [dateProvider] in dateProvider.now },
+            initial: refreshDate.map { [dateProvider] in dateProvider.now },
             selected: selectedDate,
             reset: resetBtn.rx.tap.asObservable(),
             prevDay: keyLeft,

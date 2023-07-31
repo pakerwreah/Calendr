@@ -64,12 +64,11 @@ class StatusItemViewModel {
             dateObservable,
             settings.showStatusItemIcon,
             settings.showStatusItemDate,
-            settings.showStatusItemBackground,
             settings.statusItemIconStyle,
             dateFormatterObservable,
             hasBirthdaysObservable
         )
-        .map { date, showIcon, showDate, showBackground, iconStyle, dateFormatter, hasBirthdays in
+        .map { date, showIcon, showDate, iconStyle, dateFormatter, hasBirthdays in
 
             var icons: [NSImage] = []
 
