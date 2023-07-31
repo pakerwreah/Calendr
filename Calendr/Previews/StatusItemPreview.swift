@@ -30,7 +30,8 @@ struct StatusItemPreview: PreviewProvider {
             dateProvider: dateProvider,
             screenProvider: screenProvider,
             calendarService: calendarService,
-            notificationCenter: notificationCenter
+            notificationCenter: notificationCenter,
+            scheduler: MainScheduler.instance
         )
 
         var image: NSImage!
