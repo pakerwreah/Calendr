@@ -20,6 +20,7 @@ class StatusItemViewModelTests: XCTestCase {
     let screenProvider = MockScreenProvider()
     let calendarService = MockCalendarServiceProvider()
     let settings = MockStatusItemSettings()
+    let scheduler = HistoricalScheduler()
 
     let notificationCenter = NotificationCenter()
 
@@ -30,7 +31,8 @@ class StatusItemViewModelTests: XCTestCase {
         dateProvider: dateProvider,
         screenProvider: screenProvider,
         calendarService: calendarService,
-        notificationCenter: notificationCenter
+        notificationCenter: notificationCenter,
+        scheduler: scheduler
     )
 
     var iconsAndText: ([NSImage], String)?
@@ -179,6 +181,19 @@ class StatusItemViewModelTests: XCTestCase {
         XCTAssertEqual(lastText, "1/1/21")
     }
 
+    func testDateFormatWithTime() {
+
+        setUp(showIcon: false, showDate: true, iconStyle: .calendar)
+
+        settings.statusItemDateStyleObserver.onNext(.none)
+        settings.statusItemDateFormatObserver.onNext("HH:mm:ss")
+        XCTAssertEqual(lastText, "00:00:00")
+
+        dateProvider.add(1, .second)
+        scheduler.advance(.seconds(1))
+        XCTAssertEqual(lastText, "00:00:01")
+    }
+
     func testBackground() {
 
         var image: NSImage?
@@ -187,14 +202,17 @@ class StatusItemViewModelTests: XCTestCase {
             .bind { image = $0 }
             .disposed(by: disposeBag)
 
+        scheduler.advance(.nanoseconds(1))
         XCTAssertNotNil(image)
 
         image = nil
         settings.toggleBackground.onNext(true)
+        scheduler.advance(.nanoseconds(1))
         XCTAssertNotNil(image)
 
         image = nil
         settings.toggleBackground.onNext(false)
+        scheduler.advance(.nanoseconds(1))
         XCTAssertNotNil(image)
     }
 }

@@ -116,7 +116,8 @@ class MainViewController: NSViewController, NSPopoverDelegate {
             dateProvider: dateProvider,
             screenProvider: screenProvider,
             calendarService: calendarService,
-            notificationCenter: notificationCenter
+            notificationCenter: notificationCenter,
+            scheduler: MainScheduler.instance
         )
 
         settingsViewController = SettingsViewController(

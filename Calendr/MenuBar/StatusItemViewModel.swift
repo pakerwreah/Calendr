@@ -22,53 +22,70 @@ class StatusItemViewModel {
         dateProvider: DateProviding,
         screenProvider: ScreenProviding,
         calendarService: CalendarServiceProviding,
-        notificationCenter: NotificationCenter
+        notificationCenter: NotificationCenter,
+        scheduler: SchedulerType
     ) {
 
-        let dateObservable = dateChanged.map { dateProvider.now }
-
-        let hasBirthdaysObservable = Observable.combineLatest(
-            dateObservable,
-            nextEventCalendars
-        )
-        .repeat(when: calendarService.changeObservable)
-        .flatMapLatest { date, calendars in
-            let start = dateProvider.calendar.startOfDay(for: date)
-            let end = dateProvider.calendar.endOfDay(for: date)
-            return calendarService
-                .events(from: start, to: end, calendars: calendars)
-                .map { $0.contains(where: \.type.isBirthday) }
-        }
+        let hasBirthdaysObservable = nextEventCalendars
+            .repeat(when: dateChanged)
+            .repeat(when: calendarService.changeObservable)
+            .flatMapLatest { calendars in
+                let date = dateProvider.now
+                let start = dateProvider.calendar.startOfDay(for: date)
+                let end = dateProvider.calendar.endOfDay(for: date)
+                return calendarService
+                    .events(from: start, to: end, calendars: calendars)
+                    .map { $0.contains(where: \.type.isBirthday) }
+            }
 
         let localeChangeObservable = notificationCenter.rx
             .notification(NSLocale.currentLocaleDidChangeNotification)
             .void()
 
-        let dateFormatterObservable = Observable
-            .combineLatest(settings.statusItemDateStyle, settings.statusItemDateFormat)
+        let dateTextObservable = Observable
+            .combineLatest(
+                settings.showStatusItemDate,
+                settings.statusItemDateStyle,
+                settings.statusItemDateFormat
+            )
             .repeat(when: localeChangeObservable)
-            .map { style, format in
+            .flatMapLatest { showDate, style, format -> Observable<String> in
+
+                guard showDate else { return .just("") }
 
                 let formatter = DateFormatter(calendar: dateProvider.calendar)
 
+                let ticker: Observable<Void>
+
                 if style.isCustom {
                     formatter.dateFormat = format
+                    if dateFormatContainsTime(format) {
+                        ticker = Observable<Int>.interval(.seconds(1), scheduler: scheduler).void()
+                    } else {
+                        ticker = dateChanged
+                    }
                 } else {
                     formatter.dateStyle = style
+                    ticker = dateChanged
                 }
 
-                return formatter
+                return ticker.startWith(()).map {
+                    let text = formatter.string(from: dateProvider.now)
+                    return text.isEmpty ? "???" : text
+                }
             }
+            .distinctUntilChanged()
+            .share(replay: 1)
 
         self.iconsAndText = Observable.combineLatest(
-            dateObservable,
+            dateTextObservable,
             settings.showStatusItemIcon,
-            settings.showStatusItemDate,
             settings.statusItemIconStyle,
-            dateFormatterObservable,
             hasBirthdaysObservable
         )
-        .map { date, showIcon, showDate, iconStyle, dateFormatter, hasBirthdays in
+        .map { title, showIcon, iconStyle, hasBirthdays in
+
+            let showDate = !title.isEmpty
 
             var icons: [NSImage] = []
 
@@ -87,43 +104,49 @@ class StatusItemViewModel {
                 icons.append(StatusItemIconFactory.icon(size: iconSize, style: iconStyle, dateProvider: dateProvider))
             }
 
-            let title: String
-
-            if showDate {
-                let text = dateFormatter.string(from: date)
-                title = text.isEmpty ? "???" : text
-            } else {
-                title = ""
-            }
-
             return (icons, title)
         }
         .share(replay: 1)
 
+        var titleWidth: CGFloat = 0
+        var currDateFormat = ""
+
         self.image = Observable.combineLatest(
             iconsAndText,
-            settings.showStatusItemDate,
-            settings.showStatusItemBackground
+            settings.showStatusItemBackground,
+            settings.statusItemDateFormat
         )
-        .map { iconsAndText, showDate, showBackground in
+        .debounce(.nanoseconds(1), scheduler: scheduler)
+        .map { iconsAndText, showBackground, dateFormat in
 
             let (icons, text) = iconsAndText
 
-            let title = NSAttributedString(string: text, attributes: [
+            let title = text.isEmpty ? nil : NSAttributedString(string: text, attributes: [
                 .font: NSFont.systemFont(ofSize: 12.5, weight: showBackground ? .regular : .medium)
             ])
 
+            if let title {
+                if currDateFormat == dateFormat && dateFormatContainsTime(dateFormat) {
+                    titleWidth = max(titleWidth, title.size().width)
+                } else {
+                    titleWidth = title.size().width
+                }
+                currDateFormat = dateFormat
+            } else {
+                titleWidth = 0
+                currDateFormat = ""
+            }
+
             let radius: CGFloat = 3
             let border: CGFloat = 0.5
-            let padding: NSPoint = showDate ? .init(x: 4, y: 1.5) : .init(x: border, y: border)
-            let textSize = title.length > 0 ? title.size() : .zero
+            let padding: NSPoint = text.isEmpty ? .init(x: border, y: border) : .init(x: 4, y: 1.5)
             let spacing: CGFloat = 4
             var iconsWidth = icons.map(\.size.width).reduce(0) { $0 + $1 + spacing }
             let height = max(icons.map(\.size.height).reduce(0, max), 15)
-            if title.length == 0 {
+            if text.isEmpty {
                 iconsWidth -= spacing
             }
-            var size = CGSize(width: iconsWidth + textSize.width, height: height)
+            var size = CGSize(width: iconsWidth + titleWidth, height: height)
 
             let textImage = NSImage(size: size, flipped: false) {
                 var offsetX: CGFloat = 0
@@ -131,9 +154,7 @@ class StatusItemViewModel {
                     icon.draw(at: .init(x: offsetX, y: 0), from: $0, operation: .sourceOver, fraction: 1)
                     offsetX += icon.size.width + spacing
                 }
-                if title.length > 0 {
-                    title.draw(at: .init(x: offsetX, y: 0))
-                }
+                title?.draw(at: .init(x: offsetX, y: 0))
                 return true
             }
 
@@ -158,4 +179,8 @@ class StatusItemViewModel {
             return image
         }
     }
+}
+
+private func dateFormatContainsTime(_ format: String) -> Bool {
+    ["H", "h", "m", "s"].contains(where: { format.contains($0) })
 }
