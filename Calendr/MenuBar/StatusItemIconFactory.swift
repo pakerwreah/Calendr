@@ -106,13 +106,13 @@ enum StatusItemIconFactory {
 
         run {
             formatter.dateFormat = "E"
-            let date = formatter.string(from: dateProvider.now).uppercased()
+            let date = formatter.string(from: dateProvider.now).uppercased().trimmingCharacters(in: ["."])
             NSAttributedString(string: date, attributes: [
                 .font: NSFont.systemFont(ofSize: 7, weight: .bold),
                 .foregroundColor: NSColor.red,
                 .paragraphStyle: paragraph
             ])
-            .draw(in: rect.offsetBy(dx: 0, dy: -1))
+            .draw(in: rect.offsetBy(dx: 0, dy: -1).insetBy(dx: -0.5, dy: 0))
         }
 
         run {
