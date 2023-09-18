@@ -370,6 +370,16 @@ class MainViewController: NSViewController, NSPopoverDelegate {
         searchInputText
             .bind(to: searchInput.rx.stringValue)
             .disposed(by: disposeBag)
+
+        // 🔨 Dirty hack to force the window to update its position
+        //    when switching screens with pinned (sticky) calendar
+        screenProvider.screenObservable
+            .bind { [weak self] _ in
+                guard let self, let window = self.view.window else { return }
+                window.setContentSize(.zero)
+                window.setContentSize(self.contentSize)
+            }
+            .disposed(by: disposeBag)
     }
 
     private func setUpSettings() {
