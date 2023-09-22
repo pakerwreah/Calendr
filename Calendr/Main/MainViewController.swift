@@ -370,16 +370,6 @@ class MainViewController: NSViewController, NSPopoverDelegate {
         searchInputText
             .bind(to: searchInput.rx.stringValue)
             .disposed(by: disposeBag)
-
-        // 🔨 Dirty hack to force the window to update its position
-        //    when switching screens with pinned (sticky) calendar
-        screenProvider.screenObservable
-            .bind { [weak self] _ in
-                guard let self, let window = self.view.window else { return }
-                window.setContentSize(.zero)
-                window.setContentSize(self.contentSize)
-            }
-            .disposed(by: disposeBag)
     }
 
     private func setUpSettings() {
@@ -429,10 +419,11 @@ class MainViewController: NSViewController, NSPopoverDelegate {
         searchInput.isHidden = true
     }
 
-    private func setUpPopover(_ popover: NSPopover) {
+    private func setUpAndShow(_ popover: NSPopover, from button: NSStatusBarButton) {
 
         popover.contentViewController = self
         popover.delegate = self
+        popover.animates = false
 
         settingsViewController.rx.viewWillAppear
             .map(.applicationDefined)
@@ -452,6 +443,14 @@ class MainViewController: NSViewController, NSPopoverDelegate {
             .map { $0 == .on ? .applicationDefined : .transient }
             .bind(to: popover.rx.behavior)
             .disposed(by: popoverDisposeBag)
+
+        screenProvider.screenObservable
+            .withUnretained(popover) { p, _ in p }
+            .filter(\.animates.isFalse)
+            .bind {
+                $0.show(relativeTo: .zero, of: button, preferredEdge: .maxY)
+            }
+            .disposed(by: popoverDisposeBag)
     }
 
     private func setUpAutoClose() {
@@ -466,8 +465,6 @@ class MainViewController: NSViewController, NSPopoverDelegate {
     }
 
     func popoverWillShow(_ notification: Notification) {
-
-        notification.popover.animates = false
 
         setUpAutoClose()
     }
@@ -489,7 +486,7 @@ class MainViewController: NSViewController, NSPopoverDelegate {
     private func forceLayout() {
 
         let wctrl = NSWindowController(window: NSWindow(contentViewController: self))
-        wctrl.showWindow(nil)
+        wctrl.window?.orderFrontRegardless()
         wctrl.close()
 
         view.window?.setContentSize(contentSize)
@@ -523,8 +520,7 @@ class MainViewController: NSViewController, NSPopoverDelegate {
                 self.forceLayout()
 
                 let popover = NSPopover()
-                self.setUpPopover(popover)
-                popover.show(relativeTo: .zero, of: statusBarButton, preferredEdge: .maxY)
+                self.setUpAndShow(popover, from: statusBarButton)
 
                 return popover.rx.deallocated
             }
