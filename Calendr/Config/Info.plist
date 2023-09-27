@@ -28,11 +28,15 @@
 	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
 	<key>LSUIElement</key>
 	<true/>
-	<key>NSCalendarsUsageDescription</key>
-	<string>Calendr needs access to display events from your calendars.</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Calendr needs access to display events from your calendars.</string>
+	<key>NSCalendarsFullAccessUsageDescription</key>
+	<string>Calendr needs access to display events from your calendars.</string>
 	<key>NSRemindersUsageDescription</key>
+	<string>Calendr needs access to display your reminders.</string>
+	<key>NSRemindersFullAccessUsageDescription</key>
 	<string>Calendr needs access to display your reminders.</string>
 	<key>NSAppleEventsUsageDescription</key>
 	<string>Calendr needs access to open Calendar app at the selected date.</string>
