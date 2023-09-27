@@ -22,7 +22,7 @@ protocol CalendarServiceProviding {
 
 class CalendarServiceProvider: CalendarServiceProviding {
 
-    private let store = EKEventStore()
+    private let store = EventStore()
 
     private let disposeBag = DisposeBag()
 
@@ -234,6 +234,25 @@ class CalendarServiceProvider: CalendarServiceProviding {
     }
 }
 
+private class EventStore: EKEventStore {
+
+    override func requestAccess(to entityType: EKEntityType, completion: @escaping EKEventStoreRequestAccessCompletionHandler) {
+
+        guard #available(macOS 14.0, *) else {
+            return super.requestAccess(to: entityType, completion: completion)
+        }
+
+        switch entityType {
+        case .event:
+            requestFullAccessToEvents(completion: completion)
+        case .reminder:
+            requestFullAccessToReminders(completion: completion)
+        @unknown default:
+            completion(false, .unexpected("🔥 Unknown entity type: \(entityType)"))
+        }
+    }
+}
+
 extension EKEvent {
 
     var status: EKParticipantStatus {
@@ -379,16 +398,4 @@ private extension Date {
     var dateComponents: DateComponents {
         Calendar.autoupdatingCurrent.dateComponents(in: .autoupdatingCurrent, from: self)
     }
-}
-
-private struct UnexpectedError: LocalizedError {
-
-    let message: String
-
-    var errorDescription: String? { message }
-}
-
-private extension Error where Self == UnexpectedError {
-
-    static func unexpected(_ message: String) -> Self { .init(message: message) }
 }
