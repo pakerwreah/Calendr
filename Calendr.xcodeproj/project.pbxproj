@@ -890,7 +890,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [[ -z $CI ]]; then\n    if ! [ -x \"$(command -v swiftgen)\" ]; then\n        echo \"error: Please install SwiftGen\"\n        exit -1\n    fi\n    swiftgen --config \"Calendr/Config/swiftgen.yml\"\nfi\n";
+			shellScript = "if [[ -z $CI ]]; then\n    PATH=$PATH:/opt/homebrew/bin\n    if ! [ -x \"$(command -v swiftgen)\" ]; then\n        echo \"error: Please install SwiftGen\"\n        exit -1\n    fi\n    swiftgen --config \"Calendr/Config/swiftgen.yml\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
