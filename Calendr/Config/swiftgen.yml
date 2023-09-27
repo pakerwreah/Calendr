@@ -5,11 +5,3 @@ strings:
       output: ${PROJECT_DIR}/${TARGET_NAME}/Assets/Generated/Strings.generated.swift
       params:
         enumName: Strings
-
-fonts:
-  inputs: ${PROJECT_DIR}/${TARGET_NAME}/Assets
-  outputs:
-    - templateName: swift5
-      output: ${PROJECT_DIR}/${TARGET_NAME}/Assets/Generated/Fonts.generated.swift
-      params:
-        enumName: Fonts
