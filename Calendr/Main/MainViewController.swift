@@ -80,15 +80,15 @@ class MainViewController: NSViewController, NSPopoverDelegate {
         self.notificationCenter = notificationCenter
 
         mainStatusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        mainStatusItem.autosaveName = "main_status_item"
+        mainStatusItem.autosaveName = StatusItemName.main
         mainStatusItem.behavior = .terminationOnRemoval
         mainStatusItem.isVisible = true
 
         eventStatusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        eventStatusItem.autosaveName = "event_status_item"
+        eventStatusItem.autosaveName = StatusItemName.event
 
         reminderStatusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        reminderStatusItem.autosaveName = "reminder_status_item"
+        reminderStatusItem.autosaveName = StatusItemName.reminder
 
         settingsViewModel = SettingsViewModel(
             autoLauncher: autoLauncher,
@@ -167,6 +167,7 @@ class MainViewController: NSViewController, NSPopoverDelegate {
 
         nextEventViewModel = NextEventViewModel(
             type: .event,
+            userDefaults: userDefaults,
             settings: settingsViewModel,
             nextEventCalendars: nextEventCalendars,
             dateProvider: dateProvider,
@@ -179,6 +180,7 @@ class MainViewController: NSViewController, NSPopoverDelegate {
 
         nextReminderViewModel = NextEventViewModel(
             type: .reminder,
+            userDefaults: userDefaults,
             settings: settingsViewModel,
             nextEventCalendars: nextEventCalendars,
             dateProvider: dateProvider,
@@ -601,10 +603,23 @@ class MainViewController: NSViewController, NSPopoverDelegate {
             .bind(to: item.rx.length)
             .disposed(by: disposeBag)
 
-        settingsViewModel.showEventStatusItem
+        Observable
+            .combineLatest(
+                settingsViewModel.showEventStatusItem,
+                viewModel.hasEvent
+            )
+            .map { $0 && $1 }
             .distinctUntilChanged()
             .observe(on: MainScheduler.asyncInstance)
-            .bind(to: item.rx.isVisible)
+            .bind { showEvent in
+                if showEvent {
+                    viewModel.restoreStatusItemPreferredPosition()
+                    item.isVisible = true
+                } else if item.isVisible {
+                    viewModel.saveStatusItemPreferredPosition()
+                    item.isVisible = false
+                }
+            }
             .disposed(by: disposeBag)
 
         eventStatusItemLeftClick

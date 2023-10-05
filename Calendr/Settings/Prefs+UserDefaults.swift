@@ -28,6 +28,7 @@ enum Prefs {
     static let calendarScaling = "calendar_scaling"
     static let highlightedWeekdays = "highlighted_weekdays"
     static let lastCheckedVersion = "last_checked_version"
+    static let statusItemPreferredPosition = "NSStatusItem Preferred Position"
 }
 
 extension UserDefaults {
@@ -126,4 +127,10 @@ extension UserDefaults {
         get { array(forKey: Prefs.highlightedWeekdays) as! [Int]  }
         set { set(newValue, forKey: Prefs.highlightedWeekdays) }
     }
+}
+
+enum StatusItemName {
+    static let main = "main_status_item"
+    static let event = "event_status_item"
+    static let reminder = "reminder_status_item"
 }

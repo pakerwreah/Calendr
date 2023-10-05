@@ -15,6 +15,7 @@ class NextEventViewModelTests: XCTestCase {
 
     let calendarsSubject = BehaviorSubject<[String]>(value: [])
 
+    let userDefaults = UserDefaults(suiteName: className())!
     let settings = MockNextEventSettings()
     let dateProvider = MockDateProvider()
     let calendarService = MockCalendarServiceProvider()
@@ -27,6 +28,7 @@ class NextEventViewModelTests: XCTestCase {
     func makeViewModel(type: NextEventType) -> NextEventViewModel {
         .init(
             type: type,
+            userDefaults: userDefaults,
             settings: settings,
             nextEventCalendars: calendarsSubject,
             dateProvider: dateProvider,
@@ -43,7 +45,27 @@ class NextEventViewModelTests: XCTestCase {
     }
 
     override func setUp() {
+        userDefaults.setVolatileDomain([:], forName: UserDefaults.registrationDomain)
+        userDefaults.removePersistentDomain(forName: className)
+
         dateProvider.m_calendar.locale = Locale(identifier: "en_US")
+    }
+
+    func testSaveStatusItemPreferredPosition() {
+
+        let key = "\(Prefs.statusItemPreferredPosition) \(StatusItemName.event)"
+        userDefaults.set(123, forKey: key)
+        viewModel.saveStatusItemPreferredPosition()
+        XCTAssertEqual(userDefaults.integer(forKey: "saved \(key)"), 123)
+    }
+
+    func testRestoreStatusItemPreferredPosition() {
+
+        let key = "\(Prefs.statusItemPreferredPosition) \(StatusItemName.event)"
+        XCTAssertEqual(userDefaults.integer(forKey: key), 0)
+        userDefaults.set(123, forKey: "saved \(key)")
+        viewModel.restoreStatusItemPreferredPosition()
+        XCTAssertEqual(userDefaults.integer(forKey: key), 123)
     }
 
     func testNextEvent_noEvent() {
