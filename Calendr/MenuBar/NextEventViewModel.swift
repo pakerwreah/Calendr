@@ -41,6 +41,8 @@ class NextEventViewModel {
 
     private let isShowingDetails: AnyObserver<Bool>
 
+    private let type: NextEventType
+    private let userDefaults: UserDefaults
     private let dateProvider: DateProviding
     private let calendarService: CalendarServiceProviding
     private let popoverSettings: PopoverSettings
@@ -48,6 +50,7 @@ class NextEventViewModel {
 
     init(
         type: NextEventType,
+        userDefaults: UserDefaults,
         settings: NextEventSettings,
         nextEventCalendars: Observable<[String]>,
         dateProvider: DateProviding,
@@ -58,6 +61,8 @@ class NextEventViewModel {
         scheduler: SchedulerType
     ) {
 
+        self.type = type
+        self.userDefaults = userDefaults
         self.dateProvider = dateProvider
         self.calendarService = calendarService
         self.popoverSettings = settings
@@ -221,6 +226,27 @@ class NextEventViewModel {
             isShowingObserver: isShowingDetails,
             isInProgress: isInProgress
         )
+    }
+
+    private var preferredPositionKey: String {
+        let name: String
+        switch type {
+        case .event:
+            name = StatusItemName.event
+        case .reminder:
+            name = StatusItemName.reminder
+        }
+        return "\(Prefs.statusItemPreferredPosition) \(name)"
+    }
+
+    func saveStatusItemPreferredPosition() {
+        let position = userDefaults.integer(forKey: preferredPositionKey)
+        userDefaults.set(position, forKey: "saved \(preferredPositionKey)")
+    }
+
+    func restoreStatusItemPreferredPosition() {
+        let position = userDefaults.integer(forKey: "saved \(preferredPositionKey)")
+        userDefaults.set(position, forKey: preferredPositionKey)
     }
 }
 
