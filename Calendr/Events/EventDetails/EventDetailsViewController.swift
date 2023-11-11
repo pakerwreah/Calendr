@@ -364,7 +364,7 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         viewModel.actionCallback
             .observe(on: MainScheduler.instance)
             .subscribe(
-                onNext: { [weak self] in
+                onNext: { [weak self] _ in
                     self?.animatesClose = false
                     self?.view.window?.performClose(nil)
                 },

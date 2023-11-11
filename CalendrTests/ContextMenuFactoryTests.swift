@@ -15,54 +15,66 @@ class ContextMenuFactoryTests: XCTestCase {
     let calendarService = MockCalendarServiceProvider()
     let workspace = MockWorkspaceServiceProvider()
 
-    func testFactory_isEvent_withInvitationStatus_shouldMakeViewModel() throws {
+    func testFactory_isEvent_withInvitationStatus_fromAnySource_shouldMakeViewModel() throws {
 
-        for canOpen in [true, false] {
+        for source: ContextMenuSource in [.list, .menubar, .details] {
             for status in [.accepted, .maybe, .pending, .declined] as [EventStatus] {
-                let viewModel = try XCTUnwrap(make(event: .make(type: .event(status)), canOpen: canOpen))
+                let viewModel = try XCTUnwrap(make(event: .make(type: .event(status)), source: source))
                 XCTAssert(viewModel is EventOptionsViewModel)
             }
         }
     }
 
-    func testFactory_isEvent_withoutInvitationStatus_canOpenTrue_shouldMakeViewModel() throws {
+    func testFactory_isEvent_withoutInvitationStatus_fromList_shouldMakeViewModel() throws {
 
-        let viewModel = try XCTUnwrap(make(event: .make(type: .event(.unknown)), canOpen: true))
+        let viewModel = try XCTUnwrap(make(event: .make(type: .event(.unknown)), source: .list))
         XCTAssert(viewModel is EventOptionsViewModel)
     }
 
-    func testFactory_isEvent_withoutInvitationStatus_canOpenFalse_shouldNotMakeViewModel() {
+    func testFactory_isEvent_withoutInvitationStatus_fromMenuBar_shouldMakeViewModel() throws {
 
-        XCTAssertNil(make(event: .make(type: .event(.unknown)), canOpen: false))
+        let viewModel = try XCTUnwrap(make(event: .make(type: .event(.unknown)), source: .menubar))
+        XCTAssert(viewModel is EventOptionsViewModel)
     }
 
-    func testFactory_isReminder_shouldMakeViewModel() throws {
+    func testFactory_isEvent_withoutInvitationStatus_fromDetails_shouldNotMakeViewModel() {
 
-        for canOpen in [true, false] {
-            let viewModel = try XCTUnwrap(make(event: .make(type: .reminder), canOpen: canOpen))
+        XCTAssertNil(make(event: .make(type: .event(.unknown)), source: .details))
+    }
+
+    func testFactory_isReminder_fromAnySource_shouldMakeViewModel() throws {
+
+        for source: ContextMenuSource in [.list, .menubar, .details] {
+            let viewModel = try XCTUnwrap(make(event: .make(type: .reminder), source: source))
             XCTAssert(viewModel is ReminderOptionsViewModel)
         }
     }
 
-    func testFactory_isBirthday_canOpenTrue_shouldMakeViewModel() throws {
+    func testFactory_isBirthday_fromList_shouldMakeViewModel() throws {
 
-        let viewModel = try XCTUnwrap(make(event: .make(type: .birthday), canOpen: true))
+        let viewModel = try XCTUnwrap(make(event: .make(type: .birthday), source: .list))
         XCTAssert(viewModel is EventOptionsViewModel)
     }
 
-    func testFactory_isBirthday_canOpenFalse_shouldNotMakeViewModel() {
+    func testFactory_isBirthday_fromMenuBar_shouldMakeViewModel() throws {
 
-        XCTAssertNil(make(event: .make(type: .birthday), canOpen: false))
+        let viewModel = try XCTUnwrap(make(event: .make(type: .birthday), source: .menubar))
+        XCTAssert(viewModel is EventOptionsViewModel)
     }
 
-    func make(event: EventModel, canOpen: Bool = true) -> (any ContextMenuViewModel)? {
+    func testFactory_isBirthday_fromDetails_shouldNotMakeViewModel() {
+
+        XCTAssertNil(make(event: .make(type: .birthday), source: .details))
+    }
+
+    func make(event: EventModel, source: ContextMenuSource) -> (any ContextMenuViewModel)? {
 
         ContextMenuFactory.makeViewModel(
             event: event,
             dateProvider: dateProvider,
             calendarService: calendarService,
             workspace: workspace,
-            canOpen: canOpen
+            source: source
         )
     }
 }

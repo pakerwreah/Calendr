@@ -115,7 +115,7 @@ class EventDetailsViewModel {
             dateProvider: dateProvider,
             calendarService: calendarService,
             workspace: workspace,
-            canOpen: false
+            source: .details
         )
     }
 }
