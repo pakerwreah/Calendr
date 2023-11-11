@@ -25,6 +25,24 @@ private extension NextEventType {
     }
 }
 
+// prevent growing indefinitely
+private let MAX_SKIPPED = 10
+
+private struct Skipped: Equatable {
+    let id: String
+    let start: Date
+
+    init(_ event: EventModel) {
+        id = event.id
+        start = event.start
+    }
+}
+
+private struct NextEvent: Equatable {
+    let event: EventModel
+    let isInProgress: Bool
+}
+
 class NextEventViewModel {
 
     let title: Observable<String>
@@ -37,7 +55,9 @@ class NextEventViewModel {
     let contextMenuViewModel: Observable<(any ContextMenuViewModel)?>
 
     private let disposeBag = DisposeBag()
+    private var contextMenuDisposeBag = DisposeBag()
     private let event = BehaviorSubject<EventModel?>(value: nil)
+    private let skippedEvents = BehaviorSubject<[Skipped]>(value: [])
 
     private let isShowingDetails: AnyObserver<Bool>
 
@@ -69,12 +89,7 @@ class NextEventViewModel {
         self.workspace = workspace
         self.isShowingDetails = isShowingDetails
 
-        struct NextEvent: Equatable {
-            let event: EventModel
-            let isInProgress: Bool
-        }
-
-        let eventsObservable = settings.showEventStatusItem
+        let nextEvents = settings.showEventStatusItem
             .flatMapLatest { isEnabled -> Observable<[EventModel]> in
 
                 !isEnabled ? .just([]) : nextEventCalendars
@@ -84,7 +99,15 @@ class NextEventViewModel {
                         let end = dateProvider.calendar.date(byAdding: .hour, value: 48, to: start)!
                         return calendarService.events(from: start, to: end, calendars: calendars)
                     }
-                    .map { $0.filter { !$0.isAllDay && ![.pending, .declined].contains($0.status) } }
+            }
+
+        let eventsObservable = Observable.combineLatest(nextEvents, skippedEvents)
+            .map { events, skipped in
+                events.filter { event in
+                    !event.isAllDay &&
+                    ![.pending, .declined].contains(event.status) &&
+                    !skipped.contains(Skipped(event))
+                }
             }
 
         let nextEventObservable = Observable
@@ -210,9 +233,35 @@ class NextEventViewModel {
                 dateProvider: dateProvider,
                 calendarService: calendarService,
                 workspace: workspace,
-                canOpen: true
+                source: .menubar
             )
         }
+        .share(replay: 1)
+
+        contextMenuViewModel.bind { [weak self] viewModel in
+            guard let self else { return }
+            self.contextMenuDisposeBag = DisposeBag()
+
+            guard let viewModel else { return }
+            self.setUpContextMenuBindings(viewModel)
+        }
+        .disposed(by: disposeBag)
+    }
+
+    private func setUpContextMenuBindings(_ viewModel: some ContextMenuViewModel) {
+
+        viewModel.actionCallback
+            .filter { ($0 as? EventAction) ~= .skip }
+            .withLatestFrom(
+                Observable.combineLatest(event, skippedEvents)
+            )
+            .compactMap { event, skipped in
+                guard let event else { return nil }
+                let result = skipped + [Skipped(event)]
+                return result.suffix(MAX_SKIPPED)
+            }
+            .bind(to: skippedEvents)
+            .disposed(by: contextMenuDisposeBag)
     }
 
     func makeDetailsViewModel() -> EventDetailsViewModel? {

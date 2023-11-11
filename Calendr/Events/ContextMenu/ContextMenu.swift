@@ -8,7 +8,7 @@
 import AppKit
 import RxSwift
 
-protocol ContextMenuAction {
+protocol ContextMenuAction: Equatable {
     var icon: NSImage? { get }
     var title: String { get }
 }
@@ -17,21 +17,64 @@ extension ContextMenuAction {
     var icon: NSImage? { nil }
 }
 
-enum ContextMenuViewModelItem<Action: ContextMenuAction> {
+enum ContextMenuViewModelItem<Action: ContextMenuAction>: Equatable {
     case separator
     case action(Action)
 }
 
-extension ContextMenuViewModelItem: Equatable where Action: Equatable { }
-
-protocol ContextMenuViewModel {
+protocol ContextMenuViewModel<Action> {
     associatedtype Action: ContextMenuAction
     typealias ActionItem = ContextMenuViewModelItem<Action>
 
     var items: [ActionItem] { get }
-    var actionCallback: Observable<Void> { get }
+    var actionCallback: Observable<Action> { get }
 
     func triggerAction(_ action: Action)
+}
+
+class BaseContextMenuViewModel<Action: ContextMenuAction>: ContextMenuViewModel {
+
+    typealias ActionItem = ContextMenuViewModelItem<Action>
+
+    private(set) var items: [ActionItem] = []
+
+    private let actionCallbackObserver: AnyObserver<Action>
+    let actionCallback: Observable<Action>
+
+    private let disposeBag = DisposeBag()
+
+    init() {
+        (actionCallback, actionCallbackObserver) = PublishSubject.pipe()
+    }
+
+    func addSeparator() {
+        if !items.isEmpty {
+            items.append(.separator)
+        }
+    }
+
+    func addItem(_ action: Action) {
+        items.append(.action(action))
+    }
+
+    func addItems(_ actions: Action...) {
+        actions.forEach(addItem)
+    }
+
+    func triggerAction( _ action: Action) -> Observable<Void> {
+        fatalError("Not implemented")
+    }
+
+    func triggerAction(_ action: Action) {
+        let callback = actionCallbackObserver
+
+        triggerAction(action)
+            .subscribe(
+                onNext: { callback.onNext(action) },
+                onError: callback.onError
+            )
+            .disposed(by: disposeBag)
+    }
 }
 
 private class ContextMenuItem<Action: ContextMenuAction>: NSMenuItem {

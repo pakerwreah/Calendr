@@ -46,6 +46,7 @@ enum Icons {
         static let video = NSImage(systemName: "video")
         static let video_fill = NSImage(systemName: "video.fill")
         static let open = NSImage(systemName: "square.and.arrow.up")
+        static let skip = NSImage(systemName: "forward")
     }
 
     enum Reminder {

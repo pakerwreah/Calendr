@@ -19,65 +19,106 @@ class EventOptionsViewModelTests: XCTestCase {
 
     func testOptions_withPendingInvitationStatus() {
 
-        let viewModel = mock(event: .make(type: .event(.pending)))
-        XCTAssertEqual(viewModel.items, [.action(.accept), .action(.maybe), .action(.decline)])
+        let viewModel = mock(event: .make(type: .event(.pending)), source: .details)
+        XCTAssertEqual(viewModel.items, [
+            .action(.status(.accept)),
+            .action(.status(.maybe)),
+            .action(.status(.decline))
+        ])
     }
 
     func testOptions_withAcceptedInvitationStatus() {
 
-        let viewModel = mock(event: .make(type: .event(.accepted)))
-        XCTAssertEqual(viewModel.items, [.action(.maybe), .action(.decline)])
+        let viewModel = mock(event: .make(type: .event(.accepted)), source: .details)
+        XCTAssertEqual(viewModel.items, [
+            .action(.status(.maybe)),
+            .action(.status(.decline))
+        ])
     }
 
     func testOptions_withMaybeInvitationStatus() {
 
-        let viewModel = mock(event: .make(type: .event(.maybe)))
-        XCTAssertEqual(viewModel.items, [.action(.accept), .action(.decline)])
+        let viewModel = mock(event: .make(type: .event(.maybe)), source: .details)
+        XCTAssertEqual(viewModel.items, [
+            .action(.status(.accept)),
+            .action(.status(.decline))
+        ])
     }
 
     func testOptions_withDeclinedInvitationStatus() {
 
-        let viewModel = mock(event: .make(type: .event(.declined)))
-        XCTAssertEqual(viewModel.items, [.action(.accept), .action(.maybe)])
+        let viewModel = mock(event: .make(type: .event(.declined)), source: .details)
+        XCTAssertEqual(viewModel.items, [
+            .action(.status(.accept)),
+            .action(.status(.maybe))
+        ])
     }
 
     func testStatusChanged_shouldChangeStatus() {
 
-        let viewModel = mock(event: .make(type: .event(.pending)))
+        let viewModel = mock(event: .make(type: .event(.pending)), source: .details)
 
         var status: EventStatus?
-        var callback = false
+        var callback: EventAction?
 
         calendarService.spyChangeEventStatusObservable
             .bind { status = $0 }
             .disposed(by: disposeBag)
 
         viewModel.actionCallback
-            .bind { callback = true }
+            .bind { callback = $0 }
             .disposed(by: disposeBag)
 
-        viewModel.triggerAction(.accept)
+        let action: EventAction = .status(.accept)
+
+        viewModel.triggerAction(action)
 
         XCTAssertEqual(status, .accepted)
-        XCTAssert(callback)
+        XCTAssertEqual(callback, action)
     }
 
     func testOptions_fromList_withUnknownInvitationStatus() {
 
-        let viewModel = mock(event: .make(type: .event(.unknown)), canOpen: true)
+        let viewModel = mock(event: .make(type: .event(.unknown)), source: .list)
         XCTAssertEqual(viewModel.items, [.action(.open)])
     }
 
     func testOptions_fromList() {
 
-        let viewModel = mock(event: .make(type: .event(.pending)), canOpen: true)
-        XCTAssertEqual(viewModel.items, [.action(.open), .separator, .action(.accept), .action(.maybe), .action(.decline)])
+        let viewModel = mock(event: .make(type: .event(.pending)), source: .list)
+        XCTAssertEqual(viewModel.items, [
+            .action(.open),
+            .separator,
+            .action(.status(.accept)),
+            .action(.status(.maybe)),
+            .action(.status(.decline))
+        ])
+    }
+
+    func testOptions_fromMenuBar_withUnknownInvitationStatus() {
+
+        let viewModel = mock(event: .make(type: .event(.unknown)), source: .menubar)
+        XCTAssertEqual(viewModel.items, [.action(.open), .separator, .action(.skip)])
+    }
+
+    func testOptions_fromMenuBar() {
+
+        let viewModel = mock(event: .make(type: .event(.pending)), source: .menubar)
+        XCTAssertEqual(viewModel.items, [
+            .action(.open),
+            .separator,
+            .action(.skip),
+            .separator,
+            .action(.status(.accept)),
+            .action(.status(.maybe)),
+            .action(.status(.decline))
+        ])
     }
 
     func testOptions_withOpenTriggered() {
         let openExpectation = expectation(description: "Open")
 
-        let viewModel = mock(event: .make(id: "12345", type: .event(.pending)), canOpen: true)
+        let viewModel = mock(event: .make(id: "12345", type: .event(.pending)), source: .list)
 
         workspace.didOpen = { url in
             XCTAssertEqual(url.absoluteString, "ical://ekevent/12345?method=show&options=more")
@@ -99,7 +140,7 @@ class EventOptionsViewModelTests: XCTestCase {
                 type: .event(.pending),
                 hasRecurrenceRules: true
             ),
-            canOpen: true
+            source: .list
         )
 
         dateProvider.m_calendar.timeZone = timeZone
@@ -125,7 +166,7 @@ class EventOptionsViewModelTests: XCTestCase {
                 type: .event(.pending),
                 hasRecurrenceRules: true
             ),
-            canOpen: true
+            source: .list
         )
 
         dateProvider.m_calendar.timeZone = timeZone
@@ -139,14 +180,14 @@ class EventOptionsViewModelTests: XCTestCase {
         waitForExpectations(timeout: 1)
     }
 
-    func mock(event: EventModel, canOpen: Bool = false) -> EventOptionsViewModel {
+    func mock(event: EventModel, source: ContextMenuSource) -> some ContextMenuViewModel<EventAction> {
 
         EventOptionsViewModel(
             event: event,
             dateProvider: dateProvider,
             calendarService: calendarService,
             workspace: workspace,
-            canOpen: canOpen
+            source: source
         )!
     }
 }

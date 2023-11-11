@@ -14,51 +14,45 @@ enum ReminderAction: Equatable {
     case remind(DateComponents)
 }
 
-class ReminderOptionsViewModel: ContextMenuViewModel {
-    typealias Action = ReminderAction
-
-    private let actionCallbackObserver: AnyObserver<Void>
-    let actionCallback: Observable<Void>
-
-    private(set) var items: [ActionItem] = []
+class ReminderOptionsViewModel: BaseContextMenuViewModel<ReminderAction> {
 
     private let event: EventModel
     private let dateProvider: DateProviding
     private let calendarService: CalendarServiceProviding
     private let workspace: WorkspaceServiceProviding
 
-    private let disposeBag = DisposeBag()
-
     init(
         event: EventModel,
         dateProvider: DateProviding,
         calendarService: CalendarServiceProviding,
         workspace: WorkspaceServiceProviding,
-        canOpen: Bool
+        source: ContextMenuSource
     ) {
         self.event = event
         self.dateProvider = dateProvider
         self.calendarService = calendarService
         self.workspace = workspace
 
-        (actionCallback, actionCallbackObserver) = PublishSubject.pipe()
+        super.init()
 
-        if canOpen {
-            items.append(contentsOf: [.action(.open), .separator])
+        if [.list, .menubar].contains(source) {
+            addItem(.open)
         }
 
-        items.append(contentsOf: [
-            .action(.complete(event.calendar.color)),
-            .separator,
-            .action(.remind(.init(minute: 5))),
-            .action(.remind(.init(minute: 15))),
-            .action(.remind(.init(minute: 30))),
-            .action(.remind(.init(hour: 1))),
-            .action(.remind(.init(day: 1)))
-        ])
+        addSeparator()
+        addItem(.complete(event.calendar.color))
+        
+        addSeparator()
+        addItems(
+            .remind(.init(minute: 5)),
+            .remind(.init(minute: 15)),
+            .remind(.init(minute: 30)),
+            .remind(.init(hour: 1)),
+            .remind(.init(day: 1))
+        )
     }
 
-    private func triggerAction( _ action: Action) -> Observable<Void> {
+    override func triggerAction( _ action: Action) -> Observable<Void> {
 
         switch action {
         case .open:
@@ -72,16 +66,6 @@ class ReminderOptionsViewModel: ContextMenuViewModel {
             let date = dateProvider.calendar.date(byAdding: dateComponents, to: dateProvider.now)!
             return calendarService.rescheduleReminder(id: event.id, to: date)
         }
-    }
-
-    func triggerAction(_ action: Action) {
-
-        triggerAction(action)
-            .subscribe(
-                onNext: actionCallbackObserver.onNext,
-                onError: actionCallbackObserver.onError
-            )
-            .disposed(by: disposeBag)
     }
 }
 

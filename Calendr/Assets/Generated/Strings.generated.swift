@@ -30,6 +30,8 @@ internal enum Strings {
     internal static let maybe = Strings.tr("Localizable", "event_action.maybe", fallback: "Maybe")
     /// Open
     internal static let `open` = Strings.tr("Localizable", "event_action.open", fallback: "Open")
+    /// Skip
+    internal static let skip = Strings.tr("Localizable", "event_action.skip", fallback: "Skip")
   }
   internal enum EventDetails {
     internal enum Participant {

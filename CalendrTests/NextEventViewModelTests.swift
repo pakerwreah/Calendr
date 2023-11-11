@@ -600,4 +600,43 @@ class NextEventViewModelTests: XCTestCase {
 
         XCTAssertEqual(time, "30s ago")
     }
+
+    func testNextEvent_skipped() {
+        viewModel = makeViewModel(type: .event)
+
+        var contextMenu: (any ContextMenuViewModel<EventAction>)?
+
+        viewModel.contextMenuViewModel
+            .bind { contextMenu = $0 as? EventOptionsViewModel }
+            .disposed(by: disposeBag)
+
+        var title: String?
+
+        viewModel.title
+            .bind { title = $0 }
+            .disposed(by: disposeBag)
+
+        var hasEvent: Bool?
+
+        viewModel.hasEvent
+            .bind { hasEvent = $0 }
+            .disposed(by: disposeBag)
+
+        calendarService.changeEvents([
+            .make(start: now, end: now + 1, title: "Event 1", type: .event(.maybe)),
+            .make(start: now + 1, end: now + 2, title: "Event 2", type: .event(.accepted))
+        ])
+
+        XCTAssertEqual(title, "Event 1")
+        XCTAssertEqual(hasEvent, true)
+
+        contextMenu?.triggerAction(.skip)
+
+        XCTAssertEqual(title, "Event 2")
+        XCTAssertEqual(hasEvent, true)
+
+        contextMenu?.triggerAction(.skip)
+
+        XCTAssertEqual(hasEvent, false)
+    }
 }
