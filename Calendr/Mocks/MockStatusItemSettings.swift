@@ -25,7 +25,7 @@ class MockStatusItemSettings: StatusItemSettings {
         showBackground: Bool = false,
         iconStyle: StatusItemIconStyle = .calendar,
         dateStyle: StatusItemDateStyle = .none,
-        dateFormat: String = "E d MMM YYYY",
+        dateFormat: String = "E d MMM yyyy",
         detectNotch: Bool = false
     ) {
         showStatusItemIcon = .just(showIcon)

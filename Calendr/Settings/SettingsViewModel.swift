@@ -113,7 +113,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
     let iconStyleOptions: Observable<[IconStyleOption]>
     let dateFormatOptions: Observable<[DateFormatOption]>
     let statusItemDateFormat: Observable<String>
-    let dateFormatPlaceholder = "E d MMM YYYY"
+    let dateFormatPlaceholder = "E d MMM yyyy"
     let isDateFormatInputVisible: Observable<Bool>
     let showEventStatusItem: Observable<Bool>
     let eventStatusItemCheckRange: Observable<Int>
