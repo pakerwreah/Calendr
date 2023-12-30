@@ -23,7 +23,7 @@ struct StatusItemPreview: PreviewProvider {
     ]
 
     static var previews: some View {
-        let viewModel =  StatusItemViewModel(
+        let viewModel = StatusItemViewModel(
             dateChanged: .just(()),
             nextEventCalendars: .just([]),
             settings: settings,
@@ -34,16 +34,16 @@ struct StatusItemPreview: PreviewProvider {
             scheduler: MainScheduler.instance
         )
 
-        var image: NSImage!
-        _ = viewModel.image.bind { image = $0 }
-
-        let button = NSButton(image: image, target: nil, action: nil)
+        let button = NSButton()
         button.contentTintColor = .white
         button.isBordered = false
 
+        _ = viewModel.image.bind(to: button.rx.image)
+
         return button
             .preview()
-            .fixedSize()
+            .fixedSize(horizontal: false, vertical: true)
+            .frame(width: 150)
             .padding(5)
     }
 }
