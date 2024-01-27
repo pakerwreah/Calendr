@@ -7,6 +7,7 @@
 
 import Cocoa
 import RxSwift
+import KeyboardShortcuts
 
 class GeneralSettingsViewController: NSViewController {
 
@@ -22,6 +23,7 @@ class GeneralSettingsViewController: NSViewController {
     private let iconStyleDropdown = Dropdown()
     private let dateFormatDropdown = Dropdown()
     private let dateFormatTextField = NSTextField()
+    private let shortcutRecorder = KeyboardShortcuts.RecorderCocoa(for: .showMainPopover)
 
     // Next Event
     private let showNextEventCheckbox = Checkbox(title: Strings.Settings.MenuBar.showNextEvent)
@@ -117,11 +119,14 @@ class GeneralSettingsViewController: NSViewController {
         ])
         .with(orientation: .vertical)
 
+        shortcutRecorder.setContentHuggingPriority(.fittingSizeCompression, for: .horizontal)
+
         return NSStackView(views: [
             autoLaunchCheckbox,
             iconStyle,
             dateFormat,
-            showMenuBarBackgroundCheckbox
+            showMenuBarBackgroundCheckbox,
+            shortcutRecorder
         ])
         .with(spacing: Constants.contentSpacing)
         .with(orientation: .vertical)

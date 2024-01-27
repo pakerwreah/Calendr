@@ -7,6 +7,7 @@
 
 import Cocoa
 import RxSwift
+import KeyboardShortcuts
 
 class MainViewController: NSViewController, NSPopoverDelegate {
 
@@ -657,6 +658,16 @@ class MainViewController: NSViewController, NSPopoverDelegate {
             }
 
             return .none
+        }
+
+        // Global shortcut
+        KeyboardShortcuts.onKeyUp(for: .showMainPopover) { [weak self] in
+            guard let self else { return }
+            if let window = self.view.window {
+                window.performClose(nil)
+                return
+            }
+            self.mainStatusItemClickHandler.leftClick.onNext(())
         }
     }
 
