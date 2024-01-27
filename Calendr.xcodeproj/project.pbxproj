@@ -137,6 +137,7 @@
 		34D55FE325F06669007F5C81 /* Sequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D55FE225F06669007F5C81 /* Sequence.swift */; };
 		34E004A725B61D5200241419 /* StatusItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E004A625B61D5200241419 /* StatusItemViewModel.swift */; };
 		34E1902325B76CFE00E9491B /* CalendarPickerViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E1902225B76CFE00E9491B /* CalendarPickerViewModelTests.swift */; };
+		34E259832B659B5600074D3A /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 34E259822B659B5600074D3A /* KeyboardShortcuts */; };
 		34E60D6126A0D6D6004DA082 /* NSAccessibilityProtocol+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E60D6026A0D6D6004DA082 /* NSAccessibilityProtocol+Rx.swift */; };
 		34E60D6326A0EA32004DA082 /* NSAccessibilityProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E60D6226A0EA32004DA082 /* NSAccessibilityProtocol.swift */; };
 		34EDE71B2AC46515007C5854 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34EDE71A2AC46515007C5854 /* Error.swift */; };
@@ -342,6 +343,7 @@
 			files = (
 				3418208426755CC80075B3DC /* RxCocoa in Frameworks */,
 				3418207E26755CC80075B3DC /* RxSwift in Frameworks */,
+				34E259832B659B5600074D3A /* KeyboardShortcuts in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -766,6 +768,7 @@
 			packageProductDependencies = (
 				3418207D26755CC80075B3DC /* RxSwift */,
 				3418208326755CC80075B3DC /* RxCocoa */,
+				34E259822B659B5600074D3A /* KeyboardShortcuts */,
 			);
 			productName = Calendr;
 			productReference = 347D0F9425952F89002451EC /* Calendr.app */;
@@ -833,6 +836,7 @@
 			mainGroup = 347D0F8B25952F89002451EC;
 			packageReferences = (
 				3418207C26755CC80075B3DC /* XCRemoteSwiftPackageReference "RxSwift" */,
+				34E259812B659B5600074D3A /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
 			);
 			productRefGroup = 347D0F9525952F89002451EC /* Products */;
 			projectDirPath = "";
@@ -1263,7 +1267,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.10.7;
+				MARKETING_VERSION = 1.10.8;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Config/Calendr-Bridging-Header.h";
@@ -1289,7 +1293,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.10.7;
+				MARKETING_VERSION = 1.10.8;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Config/Calendr-Bridging-Header.h";
@@ -1387,6 +1391,14 @@
 				minimumVersion = 6.6.0;
 			};
 		};
+		34E259812B659B5600074D3A /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sindresorhus/KeyboardShortcuts";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.17.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1404,6 +1416,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3418207C26755CC80075B3DC /* XCRemoteSwiftPackageReference "RxSwift" */;
 			productName = RxCocoa;
+		};
+		34E259822B659B5600074D3A /* KeyboardShortcuts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 34E259812B659B5600074D3A /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */;
+			productName = KeyboardShortcuts;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

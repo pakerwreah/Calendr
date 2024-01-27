@@ -6,6 +6,7 @@
 //
 
 import AppKit
+import KeyboardShortcuts
 
 class Keyboard {
 
@@ -54,4 +55,8 @@ class Keyboard {
             eventMonitor = handler.flatMap { NSEvent.addLocalMonitorForEvents(matching: .keyDown, handler: $0) }
         }
     }
+}
+
+extension KeyboardShortcuts.Name {
+    static let showMainPopover = Self("showMainPopover")
 }
