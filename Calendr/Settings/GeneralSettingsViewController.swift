@@ -28,7 +28,7 @@ class GeneralSettingsViewController: NSViewController {
     // Next Event
     private let showNextEventCheckbox = Checkbox(title: Strings.Settings.MenuBar.showNextEvent)
     private let nextEventRangeStepper = NSStepper()
-    private let nextEventLengthSlider = NSSlider.make(minValue: 10, maxValue: 30)
+    private let nextEventLengthSlider = NSSlider.make(minValue: 10, maxValue: 50, numberOfTickMarks: 12)
     private let nextEventDetectNotchCheckbox = Checkbox(title: Strings.Settings.MenuBar.nextEventDetectNotch)
 
     // Calendar
@@ -43,7 +43,7 @@ class GeneralSettingsViewController: NSViewController {
     private let hidePastEventsRadio = Radio(title: Strings.Settings.Events.Finished.hide)
 
     // Transparency
-    private let transparencySlider = NSSlider.make(minValue: 0, maxValue: 5)
+    private let transparencySlider = NSSlider.make(minValue: 0, maxValue: 5, numberOfTickMarks: 6)
 
     init(viewModel: SettingsViewModel) {
 
@@ -530,7 +530,7 @@ class GeneralSettingsViewController: NSViewController {
 
 private extension NSSlider {
 
-    static func make(minValue: Double, maxValue: Double, numberOfTickMarks: Int = 6) -> NSSlider {
+    static func make(minValue: Double, maxValue: Double, numberOfTickMarks: Int) -> NSSlider {
         let slider = NSSlider(value: 0, minValue: minValue, maxValue: maxValue, target: nil, action: nil)
         slider.allowsTickMarkValuesOnly = true
         slider.numberOfTickMarks = numberOfTickMarks
