@@ -6,11 +6,17 @@
 //
 
 import Foundation
+import RxSwift
 
 enum ContextMenuSource {
     case list
     case details
     case menubar
+}
+
+enum ContextCallbackAction: Equatable {
+    case event(EventAction)
+    case reminder(ReminderAction)
 }
 
 enum ContextMenuFactory {
@@ -20,7 +26,8 @@ enum ContextMenuFactory {
         dateProvider: DateProviding,
         calendarService: CalendarServiceProviding,
         workspace: WorkspaceServiceProviding,
-        source: ContextMenuSource
+        source: ContextMenuSource,
+        callback: AnyObserver<ContextCallbackAction>
     ) -> (any ContextMenuViewModel)? {
 
         switch event.type {
@@ -30,7 +37,8 @@ enum ContextMenuFactory {
                 dateProvider: dateProvider,
                 calendarService: calendarService,
                 workspace: workspace,
-                source: source
+                source: source,
+                callback: callback.mapObserver { .event($0) }
             )
 
         case .reminder:
@@ -39,7 +47,8 @@ enum ContextMenuFactory {
                 dateProvider: dateProvider,
                 calendarService: calendarService,
                 workspace: workspace,
-                source: source
+                source: source,
+                callback: callback.mapObserver { .reminder($0) }
             )
         }
     }

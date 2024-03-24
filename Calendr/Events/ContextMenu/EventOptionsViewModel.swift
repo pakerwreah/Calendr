@@ -32,14 +32,15 @@ class EventOptionsViewModel: BaseContextMenuViewModel<EventAction> {
         dateProvider: DateProviding,
         calendarService: CalendarServiceProviding,
         workspace: WorkspaceServiceProviding,
-        source: ContextMenuSource
+        source: ContextMenuSource,
+        callback: AnyObserver<EventAction>
     ) {
         self.event = event
         self.dateProvider = dateProvider
         self.calendarService = calendarService
         self.workspace = workspace
 
-        super.init()
+        super.init(callback: callback)
 
         if [.list, .menubar].contains(source) {
             addItem(.open)
@@ -82,8 +83,8 @@ class EventOptionsViewModel: BaseContextMenuViewModel<EventAction> {
         workspace.open(URL(string: "ical://ekevent\(date)/\(event.id)?method=show&options=more")!)
     }
 
-    override func triggerAction( _ action: Action) -> Observable<Void> {
-        
+    override func onAction(_ action: Action) -> Observable<Void> {
+
         switch action {
         case .open:
             openEvent()

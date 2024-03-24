@@ -26,14 +26,15 @@ class ReminderOptionsViewModel: BaseContextMenuViewModel<ReminderAction> {
         dateProvider: DateProviding,
         calendarService: CalendarServiceProviding,
         workspace: WorkspaceServiceProviding,
-        source: ContextMenuSource
+        source: ContextMenuSource,
+        callback: AnyObserver<ReminderAction>
     ) {
         self.event = event
         self.dateProvider = dateProvider
         self.calendarService = calendarService
         self.workspace = workspace
 
-        super.init()
+        super.init(callback: callback)
 
         if [.list, .menubar].contains(source) {
             addItem(.open)
@@ -52,7 +53,7 @@ class ReminderOptionsViewModel: BaseContextMenuViewModel<ReminderAction> {
         )
     }
 
-    override func triggerAction( _ action: Action) -> Observable<Void> {
+    override func onAction( _ action: Action) -> Observable<Void> {
 
         switch action {
         case .open:

@@ -27,6 +27,7 @@ struct EventDetailsPreview: PreviewProvider {
                     title: "Test with a very long event name and some more extra text",
                     location: "Brasil",
                     notes: Strings.longText,
+                    url: .init(string: "https://zoom.us/j/9999999999"),
                     type: .event(.accepted),
                     participants: .mock
                 ),
@@ -35,7 +36,9 @@ struct EventDetailsPreview: PreviewProvider {
                 workspace: workspace,
                 popoverSettings: popoverSettings,
                 isShowingObserver: .dummy(),
-                isInProgress: .just(false)
+                isInProgress: .just(false),
+                source: .menubar,
+                callback: .dummy()
             )
         )
         vc.view.width(equalTo: 300)
@@ -61,7 +64,9 @@ struct EventDetailsPreview: PreviewProvider {
                 workspace: workspace,
                 popoverSettings: popoverSettings,
                 isShowingObserver: .dummy(),
-                isInProgress: .just(false)
+                isInProgress: .just(false),
+                source: .menubar,
+                callback: .dummy()
             )
         )
         vc.view.width(equalTo: 300)
@@ -83,7 +88,9 @@ struct EventDetailsPreview: PreviewProvider {
                 workspace: workspace,
                 popoverSettings: popoverSettings,
                 isShowingObserver: .dummy(),
-                isInProgress: .just(false)
+                isInProgress: .just(false),
+                source: .menubar,
+                callback: .dummy()
             )
         )
         vc.view.width(equalTo: 250)
@@ -104,7 +111,9 @@ struct EventDetailsPreview: PreviewProvider {
                 workspace: workspace,
                 popoverSettings: popoverSettings,
                 isShowingObserver: .dummy(),
-                isInProgress: .just(false)
+                isInProgress: .just(false),
+                source: .menubar,
+                callback: .dummy()
             )
         )
         vc.view.width(equalTo: 250)

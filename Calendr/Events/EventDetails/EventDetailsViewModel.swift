@@ -8,6 +8,11 @@
 import Foundation
 import RxSwift
 
+enum EventDetailsSource {
+    case list
+    case menubar
+}
+
 class EventDetailsViewModel {
 
     let type: EventType
@@ -19,16 +24,23 @@ class EventDetailsViewModel {
     let notes: String
     let participants: [Participant]
     let link: EventLink?
+    let popoverSettings: PopoverSettings
+    let showSkip: Bool
 
     let isInProgress: Observable<Bool>
-    let isShowingObserver: AnyObserver<Bool>
+    let close: Observable<Void>
 
-    let popoverSettings: PopoverSettings
-    let workspace: WorkspaceServiceProviding
+    let linkTapped: AnyObserver<Void>
+    let skipTapped: AnyObserver<Void>
+    let isShowingObserver: AnyObserver<Bool>
 
     private let event: EventModel
     private let dateProvider: DateProviding
     private let calendarService: CalendarServiceProviding
+    private let workspace: WorkspaceServiceProviding
+
+    private let callback: AnyObserver<ContextCallbackAction>
+    private let action = PublishSubject<ContextCallbackAction>()
 
     var accessibilityIdentifier: String? {
         switch type {
@@ -48,12 +60,17 @@ class EventDetailsViewModel {
         workspace: WorkspaceServiceProviding,
         popoverSettings: PopoverSettings,
         isShowingObserver: AnyObserver<Bool>,
-        isInProgress: Observable<Bool>
+        isInProgress: Observable<Bool>,
+        source: EventDetailsSource,
+        callback: AnyObserver<ContextCallbackAction>
     ) {
-
         self.event = event
         self.dateProvider = dateProvider
         self.calendarService = calendarService
+        self.popoverSettings = popoverSettings
+        self.isShowingObserver = isShowingObserver
+        self.isInProgress = isInProgress
+        self.workspace = workspace
 
         type = event.type
         status = event.status
@@ -67,12 +84,15 @@ class EventDetailsViewModel {
             ($1.isOrganizer, $1.isCurrentUser, $1.status, $1.name)
         }
 
-        self.popoverSettings = popoverSettings
-        self.isShowingObserver = isShowingObserver
-        self.isInProgress = isInProgress
-        self.workspace = workspace
-
         link = event.detectLink(using: workspace)
+
+        linkTapped = .init { [link] _ in
+            if let link {
+                workspace.open(link.url)
+            }
+        }
+
+        showSkip = !type.isReminder && source ~= .menubar
 
         let formatter = DateIntervalFormatter()
         formatter.dateStyle = .medium
@@ -106,6 +126,19 @@ class EventDetailsViewModel {
                 isMeeting: event.isMeeting
             )
         }
+
+        let closeSubject = PublishSubject<Void>()
+
+        close = closeSubject.asObservable()
+
+        self.callback = callback.mapObserver {
+            closeSubject.onNext(())
+            return $0
+        }
+
+        skipTapped = self.callback.mapObserver { _ in
+            return .event(.skip)
+        }
     }
 
     func makeContextMenuViewModel() -> (any ContextMenuViewModel)? {
@@ -115,7 +148,8 @@ class EventDetailsViewModel {
             dateProvider: dateProvider,
             calendarService: calendarService,
             workspace: workspace,
-            source: .details
+            source: .details,
+            callback: callback.asObserver()
         )
     }
 }

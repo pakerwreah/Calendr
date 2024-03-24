@@ -189,7 +189,9 @@ class EventViewModel {
             workspace: workspace,
             popoverSettings: popoverSettings,
             isShowingObserver: isShowingDetails,
-            isInProgress: isInProgress
+            isInProgress: isInProgress,
+            source: .list,
+            callback: .dummy()
         )
     }
 
@@ -200,7 +202,8 @@ class EventViewModel {
             dateProvider: dateProvider,
             calendarService: calendarService,
             workspace: workspace,
-            source: .list
+            source: .list,
+            callback: .dummy()
         )
     }
 }

@@ -600,7 +600,6 @@ class MainViewController: NSViewController, NSPopoverDelegate {
             .withUnretained(self)
             .flatMapFirst { (self, _) in self.isShowingDetails.filter(!).take(1).void() }
             .compactMap { viewModel.makeDetailsViewModel() }
-            .skipNil()
             .flatMapFirst { viewModel -> Observable<Void> in
                 let vc = EventDetailsViewController(viewModel: viewModel)
                 let popover = NSPopover()
@@ -614,8 +613,7 @@ class MainViewController: NSViewController, NSPopoverDelegate {
             .disposed(by: disposeBag)
 
         clickHandler.rightClick
-            .withLatestFrom(viewModel.contextMenuViewModel)
-            .skipNil()
+            .compactMap { viewModel.makeContextMenuViewModel() }
             .bind { makeContextMenu($0).show(in: statusBarButton) }
             .disposed(by: disposeBag)
 

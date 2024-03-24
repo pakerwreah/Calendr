@@ -27,7 +27,6 @@ protocol ContextMenuViewModel<Action> {
     typealias ActionItem = ContextMenuViewModelItem<Action>
 
     var items: [ActionItem] { get }
-    var actionCallback: Observable<Action> { get }
 
     func triggerAction(_ action: Action)
 }
@@ -38,13 +37,12 @@ class BaseContextMenuViewModel<Action: ContextMenuAction>: ContextMenuViewModel 
 
     private(set) var items: [ActionItem] = []
 
-    private let actionCallbackObserver: AnyObserver<Action>
-    let actionCallback: Observable<Action>
+    private let callback: AnyObserver<Action>
 
     private let disposeBag = DisposeBag()
 
-    init() {
-        (actionCallback, actionCallbackObserver) = PublishSubject.pipe()
+    init(callback: AnyObserver<Action>) {
+        self.callback = callback
     }
 
     func addSeparator() {
@@ -61,14 +59,14 @@ class BaseContextMenuViewModel<Action: ContextMenuAction>: ContextMenuViewModel 
         actions.forEach(addItem)
     }
 
-    func triggerAction( _ action: Action) -> Observable<Void> {
+    func onAction(_ action: Action) -> Observable<Void> {
         fatalError("Not implemented")
     }
 
     func triggerAction(_ action: Action) {
-        let callback = actionCallbackObserver
+        let callback = self.callback
 
-        triggerAction(action)
+        onAction(action)
             .subscribe(
                 onNext: { callback.onNext(action) },
                 onError: callback.onError

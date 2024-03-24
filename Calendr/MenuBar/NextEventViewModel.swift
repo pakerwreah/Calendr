@@ -52,12 +52,11 @@ class NextEventViewModel {
     let backgroundColor: Observable<NSColor>
     let hasEvent: Observable<Bool>
     let isInProgress: Observable<Bool>
-    let contextMenuViewModel: Observable<(any ContextMenuViewModel)?>
 
     private let disposeBag = DisposeBag()
-    private var contextMenuDisposeBag = DisposeBag()
     private let event = BehaviorSubject<EventModel?>(value: nil)
     private let skippedEvents = BehaviorSubject<[Skipped]>(value: [])
+    private let actionCallback = PublishSubject<ContextCallbackAction>()
 
     private let isShowingDetails: AnyObserver<Bool>
 
@@ -226,32 +225,8 @@ class NextEventViewModel {
             .map(\.isNotNil)
             .distinctUntilChanged()
 
-        contextMenuViewModel = event.distinctUntilChanged().map {
-            guard let event = $0 else { return nil }
-            return ContextMenuFactory.makeViewModel(
-                event: event,
-                dateProvider: dateProvider,
-                calendarService: calendarService,
-                workspace: workspace,
-                source: .menubar
-            )
-        }
-        .share(replay: 1)
-
-        contextMenuViewModel.bind { [weak self] viewModel in
-            guard let self else { return }
-            self.contextMenuDisposeBag = DisposeBag()
-
-            guard let viewModel else { return }
-            self.setUpContextMenuBindings(viewModel)
-        }
-        .disposed(by: disposeBag)
-    }
-
-    private func setUpContextMenuBindings(_ viewModel: some ContextMenuViewModel) {
-
-        viewModel.actionCallback
-            .filter { ($0 as? EventAction) ~= .skip }
+        actionCallback
+            .matching(.event(.skip))
             .withLatestFrom(
                 Observable.combineLatest(event, skippedEvents)
             )
@@ -261,7 +236,19 @@ class NextEventViewModel {
                 return result.suffix(MAX_SKIPPED)
             }
             .bind(to: skippedEvents)
-            .disposed(by: contextMenuDisposeBag)
+            .disposed(by: disposeBag)
+    }
+
+    func makeContextMenuViewModel() -> (any ContextMenuViewModel)? {
+        guard let event = try? event.value() else { return nil }
+        return ContextMenuFactory.makeViewModel(
+            event: event,
+            dateProvider: dateProvider,
+            calendarService: calendarService,
+            workspace: workspace,
+            source: .menubar,
+            callback: actionCallback.asObserver()
+        )
     }
 
     func makeDetailsViewModel() -> EventDetailsViewModel? {
@@ -273,7 +260,9 @@ class NextEventViewModel {
             workspace: workspace,
             popoverSettings: popoverSettings,
             isShowingObserver: isShowingDetails,
-            isInProgress: isInProgress
+            isInProgress: isInProgress,
+            source: .menubar,
+            callback: actionCallback.asObserver()
         )
     }
 

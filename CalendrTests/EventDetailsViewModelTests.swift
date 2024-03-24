@@ -150,7 +150,101 @@ class EventDetailsViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.participants.map(\.name), ["organizer", "me", "a", "b", "c"])
     }
 
-    func mock(event: EventModel) -> EventDetailsViewModel {
+    func testSkip_withSouceList_shouldNotShowSkip() {
+        
+        let viewModel = mock(
+            event: .make(type: .event(.unknown)),
+            source: .list
+        )
+        
+        XCTAssertFalse(viewModel.showSkip)
+    }
+
+    func testSkip_withSouceMenubar_shouldShowSkip() {
+        
+        let viewModel = mock(
+            event: .make(type: .event(.unknown)),
+            source: .menubar
+        )
+        
+        XCTAssertTrue(viewModel.showSkip)
+    }
+
+    func testSkip_withSouceMenubar_isBirthday_shouldShowSkip() {
+        
+        let viewModel = mock(
+            event: .make(type: .birthday),
+            source: .menubar
+        )
+        
+        XCTAssertTrue(viewModel.showSkip)
+    }
+
+    func testSkip_withSouceMenubar_isReminder_shouldNotShowSkip() {
+        
+        let viewModel = mock(
+            event: .make(type: .reminder),
+            source: .list
+        )
+        
+        XCTAssertFalse(viewModel.showSkip)
+    }
+
+    func testSkip_shouldTriggerClose() {
+
+        var action: ContextCallbackAction?
+
+        let viewModel = mock(
+            event: .make(type: .event(.unknown)),
+            source: .menubar
+        ) {
+            action = $0
+        }
+
+        XCTAssert(viewModel.showSkip)
+
+        let expectation = expectation(description: "Close")
+
+        viewModel.close
+            .subscribe(onNext: expectation.fulfill)
+            .disposed(by: disposeBag)
+
+        viewModel.skipTapped.onNext(())
+
+        waitForExpectations(timeout: 1)
+
+        XCTAssertEqual(action, .event(.skip))
+    }
+
+    func testStatusChange_shouldTriggerClose() {
+
+        var action: ContextCallbackAction?
+
+        let viewModel = mock(
+            event: .make(type: .event(.pending)),
+            source: .menubar
+        ) {
+            action = $0
+        }
+
+        let expectation = expectation(description: "Close")
+
+        viewModel.close
+            .subscribe(onNext: expectation.fulfill)
+            .disposed(by: disposeBag)
+
+        let contextMenu = viewModel.makeContextMenuViewModel() as? EventOptionsViewModel
+
+        XCTAssertNotNil(contextMenu)
+
+        contextMenu?.triggerAction(.status(.accept))
+
+        waitForExpectations(timeout: 1)
+
+        XCTAssertEqual(action, .event(.status(.accept)))
+    }
+
+    func mock(event: EventModel, source: EventDetailsSource = .list, callback: @escaping (ContextCallbackAction?) -> Void = { _ in }) -> EventDetailsViewModel {
 
         EventDetailsViewModel(
             event: event,
@@ -159,7 +253,9 @@ class EventDetailsViewModelTests: XCTestCase {
             workspace: workspace,
             popoverSettings: popoverSettings,
             isShowingObserver: .dummy(),
-            isInProgress: .just(false)
+            isInProgress: .just(false),
+            source: source,
+            callback: .init { callback($0.element) }
         )
     }
 }

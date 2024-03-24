@@ -56,17 +56,15 @@ class EventOptionsViewModelTests: XCTestCase {
 
     func testStatusChanged_shouldChangeStatus() {
 
-        let viewModel = mock(event: .make(type: .event(.pending)), source: .details)
-
         var status: EventStatus?
         var callback: EventAction?
 
+        let viewModel = mock(event: .make(type: .event(.pending)), source: .details) {
+            callback = $0
+        }
+
         calendarService.spyChangeEventStatusObservable
             .bind { status = $0 }
-            .disposed(by: disposeBag)
-
-        viewModel.actionCallback
-            .bind { callback = $0 }
             .disposed(by: disposeBag)
 
         let action: EventAction = .status(.accept)
@@ -180,14 +178,19 @@ class EventOptionsViewModelTests: XCTestCase {
         waitForExpectations(timeout: 1)
     }
 
-    func mock(event: EventModel, source: ContextMenuSource) -> some ContextMenuViewModel<EventAction> {
+    func mock(
+        event: EventModel,
+        source: ContextMenuSource,
+        callback: @escaping (EventAction?) -> Void = { _ in }
+    ) -> some ContextMenuViewModel<EventAction> {
 
         EventOptionsViewModel(
             event: event,
             dateProvider: dateProvider,
             calendarService: calendarService,
             workspace: workspace,
-            source: source
+            source: source,
+            callback: .init { callback($0.element) }
         )!
     }
 }

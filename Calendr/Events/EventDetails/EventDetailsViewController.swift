@@ -17,6 +17,7 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
     private let contentStackView = NSStackView(.vertical)
     private let participantsStackView = NSStackView(.vertical)
     private let detailsStackView = NSStackView(.vertical)
+    private let footerStackView = NSStackView(.horizontal)
     private let linkBtn = ImageButton()
 
     private let titleLabel = Label()
@@ -25,8 +26,12 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
     private let durationLabel = Label()
     private let notesTextView = NSTextView()
 
+    private let skipButton = NSButton()
+
     private let optionsLabel = Label()
     private let optionsButton = NSButton()
+
+    private var hasFooter = false
 
     private let viewModel: EventDetailsViewModel
     
@@ -81,6 +86,7 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         scrollView.contentView.heightAnchor.constraint(lessThanOrEqualToConstant: 0.8 * NSScreen.main!.visibleFrame.height).activate()
 
         contentStackView.addArrangedSubview(scrollView)
+        contentStackView.spacing = 16
         contentStackView.setHuggingPriority(.required, for: .vertical)
 
         detailsStackView.setHuggingPriority(.required, for: .vertical)
@@ -90,13 +96,172 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         contentStackView.edges(to: view, constant: 12)
 
         setUpIcon()
-        setUpLinkButton()
-        setUpLabels()
+        setUpLink()
+        setUpSkip()
         setUpOptions()
+        setUpLabels()
 
         addInformation()
         addParticipants()
         addNotes()
+        addFooter()
+    }
+
+    private func setUpIcon() {
+
+        switch viewModel.type {
+        case .event:
+            eventTypeIcon.isHidden = true
+            return
+
+        case .birthday:
+            eventTypeIcon.image = Icons.Event.birthday
+            eventTypeIcon.contentTintColor = .systemRed
+
+        case .reminder:
+            eventTypeIcon.image = Icons.Event.reminder.with(pointSize: 12)
+            eventTypeIcon.contentTintColor = .headerTextColor
+        }
+
+        eventTypeIcon.setContentCompressionResistancePriority(.required, for: .horizontal)
+    }
+
+    private func setUpLink() {
+
+        guard let link = viewModel.link else {
+            linkBtn.isHidden = true
+            return
+        }
+
+        viewModel.isInProgress
+            .observe(on: MainScheduler.instance)
+            .bind { [linkBtn] isInProgress in
+                if link.isMeeting {
+                    linkBtn.image = isInProgress ? Icons.Event.video_fill : Icons.Event.video
+                } else {
+                    linkBtn.image = Icons.Event.link
+                }
+                linkBtn.contentTintColor = isInProgress ? .controlAccentColor : .secondaryLabelColor
+            }
+            .disposed(by: disposeBag)
+
+        linkBtn.rx.tap
+            .bind(to: viewModel.linkTapped)
+            .disposed(by: disposeBag)
+    }
+
+    private func setUpSkip() {
+        guard viewModel.showSkip else { return }
+
+        addSkipButton()
+
+        skipButton.rx.tap
+            .bind(to: viewModel.skipTapped)
+            .disposed(by: disposeBag)
+    }
+
+    private func setUpOptions() {
+
+        guard let contextMenuViewModel = viewModel.makeContextMenuViewModel() else { return }
+
+        switch viewModel.type {
+
+        case .event(.accepted):
+            addEventStatusButton(icon: Icons.EventStatus.accepted, color: .systemGreen, title: Strings.EventStatus.accepted)
+
+        case .event(.maybe):
+            addEventStatusButton(icon: Icons.EventStatus.maybe, color: .systemOrange, title: Strings.EventStatus.maybe)
+
+        case .event(.pending):
+            addEventStatusButton(icon: Icons.EventStatus.pending, color: .systemGray, title: Strings.EventStatus.pending)
+
+        case .event(.declined):
+            addEventStatusButton(icon: Icons.EventStatus.declined, color: .systemRed, title: Strings.EventStatus.declined)
+
+        case .reminder:
+            addReminderOptionsButton()
+
+        default:
+            return assertionFailure("That's weird, we should not have a view model in this case.")
+        }
+
+        createOptionsMenu(contextMenuViewModel)
+    }
+
+    private func createOptionsMenu(_ viewModel: some ContextMenuViewModel) {
+
+        let menu = ContextMenu(viewModel: viewModel)
+
+        optionsButton.rx.tap.bind { [optionsButton] in
+            menu.popUp(
+                positioning: nil,
+                at: NSPoint(x: 0, y: optionsButton.bounds.height),
+                in: optionsButton
+            )
+        }
+        .disposed(by: disposeBag)
+    }
+
+    private func setButtonStyle(_ button: NSButton) {
+        button.bezelStyle = .accessoryBar
+        button.contentTintColor = .labelColor
+        button.refusesFirstResponder = true
+        button.setContentCompressionResistancePriority(.required, for: .vertical)
+    }
+
+    private func addSkipButton() {
+        hasFooter = true
+
+        skipButton.title = Strings.EventAction.skip
+        skipButton.image = Icons.Event.skip.with(scale: .small)
+        skipButton.imagePosition = .imageTrailing
+
+        setButtonStyle(skipButton)
+
+        footerStackView.addArrangedSubview(skipButton)
+        footerStackView.addArrangedSubview(.spacer)
+    }
+
+    private func addReminderOptionsButton() {
+        hasFooter = true
+
+        optionsButton.title = Strings.Reminder.Options.button
+        optionsButton.image = Icons.EventDetails.optionsArrow.with(scale: .small)
+        optionsButton.imagePosition = .imageTrailing
+
+        setButtonStyle(optionsButton)
+
+        footerStackView.addArrangedSubview(.spacer)
+        footerStackView.addArrangedSubview(optionsButton)
+    }
+
+    private func addEventStatusButton(icon: NSImage, color: NSColor, title: String) {
+        hasFooter = true
+
+        optionsLabel.stringValue = Strings.EventStatus.label
+        optionsLabel.textColor = .secondaryLabelColor
+        optionsLabel.setContentHuggingPriority(.required, for: .vertical)
+
+        optionsButton.image = icon.with(color: color)
+        optionsButton.title = title
+        optionsButton.imagePosition = .imageLeading
+
+        setButtonStyle(optionsButton)
+
+        optionsButton.showsBorderOnlyWhileMouseInside = true
+
+        footerStackView.addArrangedSubview(.spacer)
+        footerStackView.addArrangedSubview(optionsLabel)
+        footerStackView.addArrangedSubview(optionsButton)
+    }
+
+    private func addFooter() {
+        guard hasFooter else { return }
+
+        footerStackView.alignment = .centerY
+        footerStackView.setHuggingPriority(.defaultHigh, for: .vertical)
+
+        contentStackView.addArrangedSubview(footerStackView)
     }
 
     private func setUpLabels() {
@@ -120,98 +285,6 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         notesTextView.drawsBackground = false
         notesTextView.isAutomaticLinkDetectionEnabled = true
         notesTextView.textContainer?.lineFragmentPadding = .zero
-    }
-
-    private func setUpOptions() {
-
-        switch viewModel.type {
-
-        case .event(.accepted):
-            addEventStatusButton(icon: Icons.EventStatus.accepted, color: .systemGreen, title: Strings.EventStatus.accepted)
-
-        case .event(.maybe):
-            addEventStatusButton(icon: Icons.EventStatus.maybe, color: .systemOrange, title: Strings.EventStatus.maybe)
-
-        case .event(.pending):
-            addEventStatusButton(icon: Icons.EventStatus.pending, color: .systemGray, title: Strings.EventStatus.pending)
-
-        case .event(.declined):
-            addEventStatusButton(icon: Icons.EventStatus.declined, color: .systemRed, title: Strings.EventStatus.declined)
-
-        case .reminder:
-            optionsButton.title = Strings.Reminder.Options.button
-            optionsButton.image = Icons.EventDetails.optionsArrow.with(scale: .small)
-            optionsButton.bezelStyle = .texturedRounded
-            optionsButton.imagePosition = .imageTrailing
-            addOptionsButton()
-
-        default:
-            break
-        }
-    }
-
-    private func addEventStatusButton(icon: NSImage, color: NSColor, title: String) {
-
-        optionsLabel.stringValue = Strings.EventStatus.label
-        optionsLabel.textColor = .secondaryLabelColor
-        optionsButton.image = icon.with(color: color)
-        optionsButton.title = title
-        optionsButton.imagePosition = .imageLeading
-        addOptionsButton()
-    }
-
-    private func addOptionsButton() {
-
-        optionsButton.bezelStyle = .texturedRounded
-        optionsButton.setTitleColor(color: .labelColor)
-        optionsButton.refusesFirstResponder = true
-        optionsButton.setContentCompressionResistancePriority(.required, for: .vertical)
-        let optionsStackView = NSStackView(views: [.spacer, optionsLabel, optionsButton]).with(alignment: .centerY)
-        optionsStackView.setHuggingPriority(.defaultHigh, for: .vertical)
-        optionsStackView.edgeInsets.top = 4
-        contentStackView.addArrangedSubview(optionsStackView)
-    }
-
-    private func setUpIcon() {
-
-        switch viewModel.type {
-        case .event:
-            eventTypeIcon.isHidden = true
-            return
-
-        case .birthday:
-            eventTypeIcon.image = Icons.Event.birthday
-            eventTypeIcon.contentTintColor = .systemRed
-
-        case .reminder:
-            eventTypeIcon.image = Icons.Event.reminder.with(pointSize: 12)
-            eventTypeIcon.contentTintColor = .headerTextColor
-        }
-
-        eventTypeIcon.setContentCompressionResistancePriority(.required, for: .horizontal)
-    }
-
-    private func setUpLinkButton() {
-
-        guard let link = viewModel.link else {
-            linkBtn.isHidden = true
-            return
-        }
-
-        viewModel.isInProgress
-            .bind { [linkBtn] isInProgress in
-                if link.isMeeting {
-                    linkBtn.image = isInProgress ? Icons.Event.video_fill : Icons.Event.video
-                } else {
-                    linkBtn.image = Icons.Event.link
-                }
-                linkBtn.contentTintColor = isInProgress ? .controlAccentColor : .secondaryLabelColor
-            }
-            .disposed(by: disposeBag)
-
-        linkBtn.rx.tap
-            .bind { [viewModel] in viewModel.workspace.open(link.url) }
-            .disposed(by: disposeBag)
     }
 
     private func addInformation() {
@@ -343,28 +416,10 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
         .bind { $0.material = $1 }
         .disposed(by: disposeBag)
 
-        if let contextMenuViewModel = viewModel.makeContextMenuViewModel() {
-            setUpOptionsMenu(contextMenuViewModel)
-        }
-    }
-
-    private func setUpOptionsMenu(_ viewModel: some ContextMenuViewModel) {
-
-        let menu = ContextMenu(viewModel: viewModel)
-
-        optionsButton.rx.tap.bind { [optionsButton] in
-            menu.popUp(
-                positioning: nil,
-                at: NSPoint(x: 0, y: optionsButton.bounds.height),
-                in: optionsButton
-            )
-        }
-        .disposed(by: disposeBag)
-
-        viewModel.actionCallback
+        viewModel.close
             .observe(on: MainScheduler.instance)
             .subscribe(
-                onNext: { [weak self] _ in
+                onNext: { [weak self] in
                     self?.animatesClose = false
                     self?.view.window?.performClose(nil)
                 },

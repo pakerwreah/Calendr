@@ -74,7 +74,8 @@ class ContextMenuFactoryTests: XCTestCase {
             dateProvider: dateProvider,
             calendarService: calendarService,
             workspace: workspace,
-            source: source
+            source: source,
+            callback: .dummy()
         )
     }
 }

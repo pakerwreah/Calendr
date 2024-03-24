@@ -601,14 +601,8 @@ class NextEventViewModelTests: XCTestCase {
         XCTAssertEqual(time, "30s ago")
     }
 
-    func testNextEvent_skipped() {
+    func testNextEvent_skipped_fromContextMenu() {
         viewModel = makeViewModel(type: .event)
-
-        var contextMenu: (any ContextMenuViewModel<EventAction>)?
-
-        viewModel.contextMenuViewModel
-            .bind { contextMenu = $0 as? EventOptionsViewModel }
-            .disposed(by: disposeBag)
 
         var title: String?
 
@@ -627,6 +621,9 @@ class NextEventViewModelTests: XCTestCase {
             .make(start: now + 1, end: now + 2, title: "Event 2", type: .event(.accepted))
         ])
 
+        let contextMenu = viewModel.makeContextMenuViewModel() as? EventOptionsViewModel
+        XCTAssertNotNil(contextMenu)
+
         XCTAssertEqual(title, "Event 1")
         XCTAssertEqual(hasEvent, true)
 
@@ -636,6 +633,42 @@ class NextEventViewModelTests: XCTestCase {
         XCTAssertEqual(hasEvent, true)
 
         contextMenu?.triggerAction(.skip)
+
+        XCTAssertEqual(hasEvent, false)
+    }
+
+    func testNextEvent_skipped_fromEventDetails() {
+        viewModel = makeViewModel(type: .event)
+
+        var title: String?
+
+        viewModel.title
+            .bind { title = $0 }
+            .disposed(by: disposeBag)
+
+        var hasEvent: Bool?
+
+        viewModel.hasEvent
+            .bind { hasEvent = $0 }
+            .disposed(by: disposeBag)
+
+        calendarService.changeEvents([
+            .make(start: now, end: now + 1, title: "Event 1", type: .event(.maybe)),
+            .make(start: now + 1, end: now + 2, title: "Event 2", type: .event(.accepted))
+        ])
+
+        let viewModel = viewModel.makeDetailsViewModel()
+        XCTAssertNotNil(viewModel)
+
+        XCTAssertEqual(title, "Event 1")
+        XCTAssertEqual(hasEvent, true)
+
+        viewModel?.skipTapped.onNext(())
+
+        XCTAssertEqual(title, "Event 2")
+        XCTAssertEqual(hasEvent, true)
+
+        viewModel?.skipTapped.onNext(())
 
         XCTAssertEqual(hasEvent, false)
     }

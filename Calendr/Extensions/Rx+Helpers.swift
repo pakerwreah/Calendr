@@ -60,11 +60,7 @@ extension Optional {
     var isNotNil: Bool { self != nil }
 }
 
-#if DEBUG
-
 extension AnyObserver {
 
     static func dummy() -> Self { .init { _ in } }
 }
-
-#endif
