@@ -321,6 +321,7 @@
 		34F128E02597B9C9007DF31C /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		34F128F12597C340007DF31C /* WeekDayCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekDayCellView.swift; sourceTree = "<group>"; };
 		34F201322693F562006CE2FF /* MockEventListSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockEventListSettings.swift; sourceTree = "<group>"; };
+		34F2F7342BB711F300666507 /* sk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sk; path = sk.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34F4C47A2A6C54A900397C80 /* StatusItemPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemPreview.swift; sourceTree = "<group>"; };
 		34F4C47C2A6C56AA00397C80 /* MockScreenProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockScreenProvider.swift; sourceTree = "<group>"; };
 		34F4C47E2A6C57B300397C80 /* MockStatusItemSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockStatusItemSettings.swift; sourceTree = "<group>"; };
@@ -834,6 +835,7 @@
 				it,
 				"zh-Hans",
 				cs,
+				sk,
 			);
 			mainGroup = 347D0F8B25952F89002451EC;
 			packageReferences = (
@@ -1087,6 +1089,7 @@
 				34938CCB2978833800CED771 /* it */,
 				C492E3CD29FD64BA007C7DF3 /* zh-Hans */,
 				27F573032B9F4B3B000DA607 /* cs */,
+				34F2F7342BB711F300666507 /* sk */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

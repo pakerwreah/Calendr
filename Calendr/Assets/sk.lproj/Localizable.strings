@@ -1,0 +1,65 @@
+/* 
+  Localizable.strings
+  Calendr
+
+  Created by Tomáš Švec on 28/03/2024.
+*/
+
+"quit" = "Ukončiť";
+"search" = "Hľadať";
+"new_version" = "Nová verzia dostupná: %@";
+
+"settings.title" = "Nastavenia";
+"settings.tab.general" = "Všeobecné";
+"settings.tab.calendars" = "Kalendáre";
+"settings.tab.about" = "O aplikácii";
+
+"settings.menu_bar" = "Lišta";
+"settings.menu_bar.auto_launch" = "Spustiť pri štarte";
+"settings.menu_bar.show_icon" = "Zobraziť ikonu";
+"settings.menu_bar.show_date" = "Zobraziť dátum";
+"settings.menu_bar.show_icon_date" = "Zobraziť dátum v ikone";
+"settings.menu_bar.show_background" = "Zobraziť nepriehľadné pozadie";
+"settings.menu_bar.date_format_custom" = "Vlastný";
+"settings.next_event" = "Ďalšia udalosť";
+"settings.menu_bar.show_next_event" = "Zobraziť ďalšiu udalosť";
+"settings.menu_bar.next_event_detect_notch" = "Skrátiť, ak je prítomný 'výrez'";
+
+"settings.calendar" = "Kalendár";
+"settings.calendar.show_week_numbers" = "Zobraziť čísla týždňov";
+"settings.calendar.preserve_selected_date" = "Zachovať vybraný dátum pri skrytí";
+"settings.calendar.show_declined_events" = "Zobraziť odmietnuté udalosti";
+"settings.calendar.show_declined_events_tooltip" = "Funguje, len ak je to povolené aj v natívnej aplikácii Kalendár.";
+
+"settings.events" = "Udalosti";
+"settings.events.finished" = "Ukončené";
+"settings.events.finished.fade" = "Vyblednúť";
+"settings.events.finished.hide" = "Skryť";
+
+"settings.transparency" = "Priehľadnosť";
+
+"formatter.date.all_day" = "Celý deň";
+"formatter.date.today" = "Dnes";
+"formatter.date.relative.in" = "za %@";
+"formatter.date.relative.ago" = "pred %@";
+"formatter.date.relative.left" = "zostáva %@";
+
+"reminder.options.button" = "Možnosti";
+"reminder.options.complete" = "Dokončiť";
+"reminder.options.remind" = "Pripomenúť %@";
+
+"event_details.participant.organizer" = "organizátor";
+"event_details.participant.me" = "ja";
+
+"event_status.label" = "môj stav:";
+
+"event_status.accepted" = "Prijaté";
+"event_status.maybe" = "Možno";
+"event_status.declined" = "Odmietnuté";
+"event_status.pending" = "Čakajúce";
+
+"event_action.open" = "Otvoriť";
+"event_action.skip" = "Preskočiť";
+"event_action.accept" = "Prijať";
+"event_action.maybe" = "Možno";
+"event_action.decline" = "Odmietnuť";
