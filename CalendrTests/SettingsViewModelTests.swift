@@ -34,6 +34,7 @@ class SettingsViewModelTests: XCTestCase {
     var userDefaultsEventStatusItemLength: Int? { userDefaults.object(forKey: Prefs.eventStatusItemLength) as! Int? }
     var userDefaultsEventStatusItemDetectNotch: Bool? { userDefaults.object(forKey: Prefs.eventStatusItemDetectNotch) as! Bool? }
     var userDefaultsCalendarScaling: Double? { userDefaults.object(forKey: Prefs.calendarScaling) as! Double? }
+    var userDefaultsFirstWeekday: Int? { userDefaults.object(forKey: Prefs.firstWeekday) as! Int? }
     var userDefaultsHighlightedWeekdays: [Int]? { userDefaults.object(forKey: Prefs.highlightedWeekdays) as! [Int]? }
     var userDefaultsShowWeekNumbers: Bool? { userDefaults.object(forKey: Prefs.showWeekNumbers) as! Bool? }
     var userDefaultsShowDeclinedEvents: Bool? { userDefaults.object(forKey: Prefs.showDeclinedEvents) as! Bool? }
@@ -57,12 +58,15 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertNil(userDefaultsEventStatusItemLength)
         XCTAssertNil(userDefaultsEventStatusItemDetectNotch)
         XCTAssertNil(userDefaultsCalendarScaling)
+        XCTAssertNil(userDefaultsFirstWeekday)
         XCTAssertNil(userDefaultsHighlightedWeekdays)
         XCTAssertNil(userDefaultsShowWeekNumbers)
         XCTAssertNil(userDefaultsShowDeclinedEvents)
         XCTAssertNil(userDefaultsPreserveSelectedDate)
         XCTAssertNil(userDefaultsShowPastEvents)
         XCTAssertNil(userDefaultsTransparency)
+
+        dateProvider.m_calendar.firstWeekday = 3
 
         var showStatusItemIcon: Bool?
         var showStatusItemDate: Bool?
@@ -73,6 +77,7 @@ class SettingsViewModelTests: XCTestCase {
         var eventStatusItemLength: Int?
         var eventStatusItemDetectNotch: Bool?
         var calendarScaling: Double?
+        var firstWeekday: Int?
         var highlightedWeekdays: [Int]?
         var showWeekNumbers: Bool?
         var showDeclinedEvents: Bool?
@@ -117,6 +122,10 @@ class SettingsViewModelTests: XCTestCase {
             .bind { calendarScaling = $0 }
             .disposed(by: disposeBag)
 
+        viewModel.firstWeekday
+            .bind { firstWeekday = $0 }
+            .disposed(by: disposeBag)
+
         viewModel.highlightedWeekdays
             .bind { highlightedWeekdays = $0 }
             .disposed(by: disposeBag)
@@ -154,6 +163,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(eventStatusItemLength, 18)
         XCTAssertEqual(eventStatusItemDetectNotch, false)
         XCTAssertEqual(calendarScaling, 1)
+        XCTAssertEqual(firstWeekday, 3)
         XCTAssertEqual(highlightedWeekdays, [0, 6])
         XCTAssertEqual(showWeekNumbers, false)
         XCTAssertEqual(showDeclinedEvents, false)
@@ -171,6 +181,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(userDefaultsEventStatusItemLength, 18)
         XCTAssertEqual(userDefaultsEventStatusItemDetectNotch, false)
         XCTAssertEqual(userDefaultsCalendarScaling, 1)
+        XCTAssertEqual(userDefaultsFirstWeekday, 3)
         XCTAssertEqual(userDefaultsHighlightedWeekdays, [0, 6])
         XCTAssertEqual(userDefaultsShowWeekNumbers, false)
         XCTAssertEqual(userDefaultsShowDeclinedEvents, false)
@@ -381,6 +392,37 @@ class SettingsViewModelTests: XCTestCase {
 
         XCTAssertEqual(calendarScaling, 1.1)
         XCTAssertEqual(userDefaultsCalendarScaling, 1.1)
+    }
+
+    func testChangeFirstWeekday() {
+
+        userDefaults.firstWeekday = 1
+
+        var firstWeekday: Int?
+
+        viewModel.firstWeekday
+            .bind { firstWeekday = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(firstWeekday, 1)
+        XCTAssertEqual(userDefaultsFirstWeekday, 1)
+
+        viewModel.firstWeekdayNextObserver.onNext(())
+
+        XCTAssertEqual(firstWeekday, 2)
+        XCTAssertEqual(userDefaultsFirstWeekday, 2)
+
+        userDefaults.firstWeekday = 7
+
+        viewModel.firstWeekdayNextObserver.onNext(())
+
+        XCTAssertEqual(firstWeekday, 1)
+        XCTAssertEqual(userDefaultsFirstWeekday, 1)
+
+        viewModel.firstWeekdayPrevObserver.onNext(())
+
+        XCTAssertEqual(firstWeekday, 7)
+        XCTAssertEqual(userDefaultsFirstWeekday, 7)
     }
 
     func testChangeHighlightedWeekdays() {

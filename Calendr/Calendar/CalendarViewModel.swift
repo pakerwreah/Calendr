@@ -50,11 +50,12 @@ class CalendarViewModel {
         .distinctUntilChanged()
         .share(replay: 1)
 
-        weekDays = settings.highlightedWeekdays
+        weekDays = Observable
+            .combineLatest(settings.highlightedWeekdays, settings.firstWeekday)
             .repeat(when: localeChangeObservable)
-            .map { highlightedWeekdays in
+            .map { highlightedWeekdays, firstWeekday in
                 let calendar = dateProvider.calendar
-                return (calendar.firstWeekday ..< calendar.firstWeekday + 7)
+                return (firstWeekday ..< firstWeekday + 7)
                     .map {
                         let weekDay = ($0 - 1) % 7
                         return WeekDay(
@@ -75,16 +76,16 @@ class CalendarViewModel {
             .share(replay: 1)
 
         // Create cells for current month
-        let dateCellsObservable = dateRangeObservable
-            .repeat(when: localeChangeObservable)
-            .map { month -> [CalendarCellViewModel] in
+        let dateCellsObservable = Observable
+            .combineLatest(dateRangeObservable, settings.firstWeekday)
+            .map { month, firstWeekday -> [CalendarCellViewModel] in
 
                 let calendar = dateProvider.calendar
                 let monthStartWeekDay = calendar.component(.weekday, from: month.start)
 
                 let start = calendar.date(
                     byAdding: .day,
-                    value: { $0 <= 0 ? $0 : $0 - 7 }(calendar.firstWeekday - monthStartWeekDay),
+                    value: { $0 <= 0 ? $0 : $0 - 7 }(firstWeekday - monthStartWeekDay),
                     to: month.start
                 )!
 

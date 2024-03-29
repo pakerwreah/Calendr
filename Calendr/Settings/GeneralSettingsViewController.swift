@@ -33,6 +33,8 @@ class GeneralSettingsViewController: NSViewController {
 
     // Calendar
     private let calendarScalingSlider = NSSlider.make(minValue: 1, maxValue: 1.2, numberOfTickMarks: 5)
+    private let firstWeekdayPrev = ImageButton(image: Icons.Settings.prev)
+    private let firstWeekdayNext = ImageButton(image: Icons.Settings.next)
     private let highlightedWeekdaysButtons = NSStackView()
     private let showWeekNumbersCheckbox = Checkbox(title: Strings.Settings.Calendar.showWeekNumbers)
     private let showDeclinedEventsCheckbox = Checkbox(title: Strings.Settings.Calendar.showDeclinedEvents)
@@ -105,6 +107,7 @@ class GeneralSettingsViewController: NSViewController {
         dateFormatTextField.focusRingType = .none
 
         iconStyleDropdown.isBordered = false
+        iconStyleDropdown.setContentHuggingPriority(.required, for: .horizontal)
 
         let iconStyle = NSStackView(views: [
             showMenuBarIconCheckbox,
@@ -202,26 +205,20 @@ class GeneralSettingsViewController: NSViewController {
         return button
     }()
 
-    private lazy var highlightWeekdaysContent: NSView = {
-
-        let buttons = highlightedWeekdaysButtons
-        let container = NSView()
-        container.addSubview(buttons)
-        buttons.top(equalTo: container)
-        buttons.bottom(equalTo: container)
-        buttons.center(in: container, orientation: .horizontal)
-        return container
-    }()
-
     private lazy var calendarContent: NSView = {
-        NSStackView(views: [
+        
+        firstWeekdayPrev.setContentHuggingPriority(.fittingSizeCompression, for: .horizontal)
+        firstWeekdayNext.setContentHuggingPriority(.fittingSizeCompression, for: .horizontal)
+        
+        return NSStackView(views: [
             NSStackView(views: [
                 NSImageView(image: Icons.Settings.zoomOut),
                 calendarScalingSlider,
                 NSImageView(image: Icons.Settings.zoomIn)
             ]),
             .dummy,
-            highlightWeekdaysContent,
+            NSStackView(views: [firstWeekdayPrev, highlightedWeekdaysButtons, firstWeekdayNext])
+                .with(distribution: .fillProportionally),
             .dummy,
             showWeekNumbersCheckbox,
             NSStackView(views: [showDeclinedEventsCheckbox, showDeclinedEventsTooltip]),
@@ -433,6 +430,7 @@ class GeneralSettingsViewController: NSViewController {
             .bind(to: viewModel.calendarScalingObserver)
             .disposed(by: disposeBag)
 
+        setUpfirstWeekday()
         setUpHighlightedWeekdays()
 
         bind(
@@ -454,9 +452,21 @@ class GeneralSettingsViewController: NSViewController {
         )
     }
 
+    private func setUpfirstWeekday() {
+
+        firstWeekdayPrev.rx.tap
+            .bind(to: viewModel.firstWeekdayPrevObserver)
+            .disposed(by: disposeBag)
+
+        firstWeekdayNext.rx.tap
+            .bind(to: viewModel.firstWeekdayNextObserver)
+            .disposed(by: disposeBag)
+    }
+
     private func makeWeekDayButton(weekDay: WeekDay) -> NSButton {
 
-        let button = NSButton(title: weekDay.title, target: nil, action: nil)
+        let button = CursorButton(cursor: .pointingHand)
+        button.title = weekDay.title
         button.font = .monospacedSystemFont(ofSize: 11, weight: .semibold)
         button.refusesFirstResponder = true
         button.bezelStyle = .recessed

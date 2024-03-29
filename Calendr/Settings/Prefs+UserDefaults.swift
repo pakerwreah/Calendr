@@ -26,9 +26,13 @@ enum Prefs {
     static let showPastEvents = "show_past_events"
     static let transparencyLevel = "transparency_level"
     static let calendarScaling = "calendar_scaling"
+    static let firstWeekday = "first_weekday"
     static let highlightedWeekdays = "highlighted_weekdays"
     static let lastCheckedVersion = "last_checked_version"
-    static let statusItemPreferredPosition = "NSStatusItem Preferred Position"
+
+    enum System {
+        static let statusItemPreferredPosition = "NSStatusItem Preferred Position"
+    }
 }
 
 extension UserDefaults {
@@ -121,6 +125,11 @@ extension UserDefaults {
     @objc dynamic var calendarScaling: Double {
         get { double(forKey: Prefs.calendarScaling) }
         set { set(newValue, forKey: Prefs.calendarScaling) }
+    }
+
+    @objc dynamic var firstWeekday: Int {
+        get { integer(forKey: Prefs.firstWeekday) }
+        set { set(newValue, forKey: Prefs.firstWeekday) }
     }
 
     @objc dynamic var highlightedWeekdays: [Int] {

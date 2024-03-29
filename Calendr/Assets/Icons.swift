@@ -37,6 +37,8 @@ enum Icons {
         static let ruler = NSImage(systemName: "ruler")
         static let zoomIn = NSImage(systemName: "plus.magnifyingglass")
         static let zoomOut = NSImage(systemName: "minus.magnifyingglass")
+        static let prev = Calendar.prev
+        static let next = Calendar.next
     }
 
     enum Event {

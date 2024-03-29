@@ -16,6 +16,7 @@ struct CalendarViewPreview: PreviewProvider {
     static let calendarService = MockCalendarServiceProvider(events: events, dateProvider: dateProvider)
     static let settings = MockCalendarSettings(
         calendarScaling: 1.3,
+        firstWeekday: 1,
         highlightedWeekdays: [0, 1, 4, 6],
         showWeekNumbers: true
     )

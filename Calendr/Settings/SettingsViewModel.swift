@@ -49,6 +49,7 @@ protocol StatusItemSettings {
 
 protocol CalendarSettings {
     var calendarScaling: Observable<Double> { get }
+    var firstWeekday: Observable<Int> { get }
     var highlightedWeekdays: Observable<[Int]> { get }
     var showWeekNumbers: Observable<Bool> { get }
     var showDeclinedEvents: Observable<Bool> { get }
@@ -96,6 +97,8 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
     let eventStatusItemLengthObserver: AnyObserver<Int>
     let toggleEventStatusItemDetectNotch: AnyObserver<Bool>
     let calendarScalingObserver: AnyObserver<Double>
+    let firstWeekdayPrevObserver: AnyObserver<Void>
+    let firstWeekdayNextObserver: AnyObserver<Void>
     let toggleHighlightedWeekday: AnyObserver<Int>
     let toggleWeekNumbers: AnyObserver<Bool>
     let toggleDeclinedEvents: AnyObserver<Bool>
@@ -121,6 +124,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
     let eventStatusItemLength: Observable<Int>
     let eventStatusItemDetectNotch: Observable<Bool>
     let calendarScaling: Observable<Double>
+    let firstWeekday: Observable<Int>
     let highlightedWeekdays: Observable<[Int]>
     let highlightedWeekdaysOptions: Observable<[WeekDay]>
     let showWeekNumbers: Observable<Bool>
@@ -149,6 +153,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
             Prefs.eventStatusItemLength: 18,
             Prefs.eventStatusItemDetectNotch: false,
             Prefs.calendarScaling: 1,
+            Prefs.firstWeekday: dateProvider.calendar.firstWeekday,
             Prefs.highlightedWeekdays: [0, 6],
             Prefs.showWeekNumbers: false,
             Prefs.showDeclinedEvents: false,
@@ -171,6 +176,8 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
         eventStatusItemLengthObserver = userDefaults.rx.observer(for: \.eventStatusItemLength)
         toggleEventStatusItemDetectNotch = userDefaults.rx.observer(for: \.eventStatusItemDetectNotch)
         calendarScalingObserver = userDefaults.rx.observer(for: \.calendarScaling)
+        firstWeekdayPrevObserver = userDefaults.rx.observer(for: \.firstWeekday).mapObserver { (1...7).circular(before: userDefaults.firstWeekday) }
+        firstWeekdayNextObserver = userDefaults.rx.observer(for: \.firstWeekday).mapObserver { (1...7).circular(after: userDefaults.firstWeekday) }
         toggleHighlightedWeekday = userDefaults.rx.toggleObserver(for: \.highlightedWeekdays)
         toggleWeekNumbers = userDefaults.rx.observer(for: \.showWeekNumbers)
         toggleDeclinedEvents = userDefaults.rx.observer(for: \.showDeclinedEvents)
@@ -204,12 +211,19 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
         eventStatusItemLength = userDefaults.rx.observe(\.eventStatusItemLength)
         eventStatusItemDetectNotch = userDefaults.rx.observe(\.eventStatusItemDetectNotch)
         calendarScaling = userDefaults.rx.observe(\.calendarScaling)
+        firstWeekday = userDefaults.rx.observe(\.firstWeekday)
         highlightedWeekdays = userDefaults.rx.observe(\.highlightedWeekdays)
         showWeekNumbers = userDefaults.rx.observe(\.showWeekNumbers)
         showDeclinedEvents = userDefaults.rx.observe(\.showDeclinedEvents)
         preserveSelectedDate = userDefaults.rx.observe(\.preserveSelectedDate)
         showPastEvents = userDefaults.rx.observe(\.showPastEvents)
         popoverTransparency = userDefaults.rx.observe(\.transparencyLevel)
+
+        let localeChangeObservable = notificationCenter.rx
+            .notification(NSLocale.currentLocaleDidChangeNotification)
+            .void()
+            .startWith(())
+            .share(replay: 1)
 
         let calendarChangeObservable = Observable
             .merge(
@@ -267,11 +281,12 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
             }
             .share(replay: 1)
 
-        highlightedWeekdaysOptions = highlightedWeekdays
-            .repeat(when: calendarChangeObservable)
-            .map { highlightedWeekdays in
+        highlightedWeekdaysOptions = Observable
+            .combineLatest(highlightedWeekdays, firstWeekday)
+            .repeat(when: localeChangeObservable)
+            .map { highlightedWeekdays, firstWeekday in
                 let calendar = dateProvider.calendar
-                return (calendar.firstWeekday ..< calendar.firstWeekday + 7)
+                return (firstWeekday ..< firstWeekday + 7)
                     .map {
                         let weekDay = ($0 - 1) % 7
                         return WeekDay(

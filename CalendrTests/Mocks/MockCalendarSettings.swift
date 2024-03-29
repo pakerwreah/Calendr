@@ -10,6 +10,9 @@ import RxSwift
 
 class MockCalendarSettings: CalendarSettings {
 
+    let firstWeekday: Observable<Int>
+    let firstWeekdayObserver: AnyObserver<Int>
+
     let highlightedWeekdays: Observable<[Int]>
     let highlightedWeekdaysObserver: AnyObserver<[Int]>
 
@@ -24,6 +27,7 @@ class MockCalendarSettings: CalendarSettings {
     let calendarScaling: Observable<Double>
 
     init() {
+        (firstWeekday, firstWeekdayObserver) = BehaviorSubject.pipe(value: 1)
         (highlightedWeekdays, highlightedWeekdaysObserver) = BehaviorSubject.pipe(value: [0, 6])
         (showWeekNumbers, toggleWeekNumbers) = BehaviorSubject.pipe(value: false)
         (showDeclinedEvents, toggleDeclinedEvents) = BehaviorSubject.pipe(value: false)

@@ -145,6 +145,7 @@
 		34F128E12597B9C9007DF31C /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F128E02597B9C9007DF31C /* MainViewController.swift */; };
 		34F128F22597C340007DF31C /* WeekDayCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F128F12597C340007DF31C /* WeekDayCellView.swift */; };
 		34F201332693F562006CE2FF /* MockEventListSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F201322693F562006CE2FF /* MockEventListSettings.swift */; };
+		34F2F7362BB739A500666507 /* Range.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F2F7352BB739A500666507 /* Range.swift */; };
 		34F4C47B2A6C54A900397C80 /* StatusItemPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F4C47A2A6C54A900397C80 /* StatusItemPreview.swift */; };
 		34F4C47D2A6C56AA00397C80 /* MockScreenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F4C47C2A6C56AA00397C80 /* MockScreenProvider.swift */; };
 		34F4C47F2A6C57B300397C80 /* MockStatusItemSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F4C47E2A6C57B300397C80 /* MockStatusItemSettings.swift */; };
@@ -322,6 +323,7 @@
 		34F128F12597C340007DF31C /* WeekDayCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekDayCellView.swift; sourceTree = "<group>"; };
 		34F201322693F562006CE2FF /* MockEventListSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockEventListSettings.swift; sourceTree = "<group>"; };
 		34F2F7342BB711F300666507 /* sk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sk; path = sk.lproj/Localizable.strings; sourceTree = "<group>"; };
+		34F2F7352BB739A500666507 /* Range.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Range.swift; sourceTree = "<group>"; };
 		34F4C47A2A6C54A900397C80 /* StatusItemPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemPreview.swift; sourceTree = "<group>"; };
 		34F4C47C2A6C56AA00397C80 /* MockScreenProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockScreenProvider.swift; sourceTree = "<group>"; };
 		34F4C47E2A6C57B300397C80 /* MockStatusItemSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockStatusItemSettings.swift; sourceTree = "<group>"; };
@@ -581,6 +583,7 @@
 				34305BCA25992A4E00AB381D /* Rx+Helpers.swift */,
 				34D55FE225F06669007F5C81 /* Sequence.swift */,
 				34651F5925E2F08500518C5A /* String.swift */,
+				34F2F7352BB739A500666507 /* Range.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -989,6 +992,7 @@
 				3453E6FD28386A84002DCC3C /* Bool.swift in Sources */,
 				348D693D29ABDD91009F1882 /* CalendarScript.swift in Sources */,
 				34C459BC25DF114300561C29 /* AboutViewController.swift in Sources */,
+				34F2F7362BB739A500666507 /* Range.swift in Sources */,
 				34ABB9E629A12B8A0021F3CF /* ReminderOptionsViewModel.swift in Sources */,
 				34305BCB25992A4E00AB381D /* Rx+Helpers.swift in Sources */,
 				347D0FE7259544B4002451EC /* NSView+Layout.swift in Sources */,

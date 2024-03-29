@@ -152,7 +152,7 @@ class CalendarViewModelTests: XCTestCase {
 
     func testDateSpan_firstWeekDayMonday() throws {
 
-        dateProvider.m_calendar.firstWeekday = 2
+        settings.firstWeekdayObserver.onNext(2)
 
         notificationCenter.post(name: NSLocale.currentLocaleDidChangeNotification, object: nil)
 
@@ -167,7 +167,7 @@ class CalendarViewModelTests: XCTestCase {
 
     func testDateSpan_firstWeekDayGreaterThanMonthStart() throws {
 
-        dateProvider.m_calendar.firstWeekday = 2
+        settings.firstWeekdayObserver.onNext(2)
 
         notificationCenter.post(name: NSLocale.currentLocaleDidChangeNotification, object: nil)
 
@@ -195,7 +195,7 @@ class CalendarViewModelTests: XCTestCase {
 
     func testWeekDays_firstWeekDayMonday() {
 
-        dateProvider.m_calendar.firstWeekday = 2
+        settings.firstWeekdayObserver.onNext(2)
 
         notificationCenter.post(name: NSLocale.currentLocaleDidChangeNotification, object: nil)
 
@@ -259,9 +259,10 @@ class CalendarViewModelTests: XCTestCase {
         XCTAssertEqual(weekNumbers, Array(6...11))
     }
 
-    func testWeekNumbers_iso8601Calendar_firstWeekDaySunday() {
+    func testWeekNumbers_iso8601Calendar_firstWeekDayMonday() {
 
         dateProvider.m_calendar = .iso8601
+        settings.firstWeekdayObserver.onNext(Calendar.iso8601.firstWeekday)
 
         var weekNumbers: [Int]?
 
