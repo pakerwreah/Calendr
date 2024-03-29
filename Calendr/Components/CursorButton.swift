@@ -12,7 +12,7 @@ class CursorButton: NSButton {
     private var trackingArea: NSTrackingArea?
     private let cursor: NSCursor?
 
-    init(cursor: NSCursor? = .pointingHand) {
+    init(cursor: NSCursor?) {
         self.cursor = cursor
         super.init(frame: .zero)
         refusesFirstResponder = true
@@ -49,7 +49,7 @@ class CursorButton: NSButton {
 
     override func mouseMoved(with event: NSEvent) {
         super.mouseMoved(with: event)
-        cursorUpdate(with: event)
+        cursor?.set()
     }
 
     override func mouseExited(with event: NSEvent) {
