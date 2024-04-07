@@ -143,6 +143,19 @@ class StatusItemViewModelTests: XCTestCase {
         XCTAssertEqual(iconsCount, 1)
     }
 
+    func testBirthdayIconVisibility_withShowNextEventDisabled() {
+
+        calendarService.changeEvents([.make(type: .birthday)])
+
+        setUp(showIcon: true, showDate: true, iconStyle: .date)
+        XCTAssertEqual(iconsCount, 2)
+
+        settings.showEventStatusItemObserver.onNext(false)
+
+        setUp(showIcon: true, showDate: true, iconStyle: .date)
+        XCTAssertEqual(iconsCount, 1)
+    }
+
     func testDateVisibility() {
 
         setUp(showIcon: false, showDate: true, iconStyle: .calendar)

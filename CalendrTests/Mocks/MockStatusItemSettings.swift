@@ -16,7 +16,7 @@ class MockStatusItemSettings: StatusItemSettings {
     let statusItemIconStyleObserver: AnyObserver<StatusItemIconStyle>
     let statusItemDateStyleObserver: AnyObserver<StatusItemDateStyle>
     let statusItemDateFormatObserver: AnyObserver<String>
-    let eventStatusItemDetectNotchObserver: AnyObserver<Bool>
+    let showEventStatusItemObserver: AnyObserver<Bool>
 
     let showStatusItemIcon: Observable<Bool>
     let showStatusItemDate: Observable<Bool>
@@ -24,7 +24,7 @@ class MockStatusItemSettings: StatusItemSettings {
     let statusItemIconStyle: Observable<StatusItemIconStyle>
     let statusItemDateStyle: Observable<StatusItemDateStyle>
     let statusItemDateFormat: Observable<String>
-    let eventStatusItemDetectNotch: Observable<Bool>
+    let showEventStatusItem: Observable<Bool>
 
     init() {
         (showStatusItemIcon, toggleIcon) = BehaviorSubject.pipe(value: true)
@@ -33,6 +33,6 @@ class MockStatusItemSettings: StatusItemSettings {
         (statusItemIconStyle, statusItemIconStyleObserver) = BehaviorSubject.pipe(value: .calendar)
         (statusItemDateStyle, statusItemDateStyleObserver) = BehaviorSubject.pipe(value: .short)
         (statusItemDateFormat, statusItemDateFormatObserver) = BehaviorSubject.pipe(value: "")
-        (eventStatusItemDetectNotch, eventStatusItemDetectNotchObserver) = BehaviorSubject.pipe(value: true)
+        (showEventStatusItem, showEventStatusItemObserver) = BehaviorSubject.pipe(value: true)
     }
 }

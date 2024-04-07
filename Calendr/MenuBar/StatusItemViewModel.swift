@@ -26,10 +26,13 @@ class StatusItemViewModel {
         scheduler: SchedulerType
     ) {
 
-        let hasBirthdaysObservable = nextEventCalendars
+        let hasBirthdaysObservable = Observable
+            .combineLatest(nextEventCalendars, settings.showEventStatusItem)
             .repeat(when: dateChanged)
             .repeat(when: calendarService.changeObservable)
-            .flatMapLatest { calendars in
+            .flatMapLatest { calendars, showNextEvent -> Observable<Bool> in
+                guard showNextEvent else { return .just(false) }
+
                 let date = dateProvider.now
                 let start = dateProvider.calendar.startOfDay(for: date)
                 let end = dateProvider.calendar.endOfDay(for: date)

@@ -17,7 +17,7 @@ class MockStatusItemSettings: StatusItemSettings {
     let statusItemIconStyle: Observable<StatusItemIconStyle>
     let statusItemDateStyle: Observable<StatusItemDateStyle>
     let statusItemDateFormat: Observable<String>
-    let eventStatusItemDetectNotch: Observable<Bool>
+    let showEventStatusItem: Observable<Bool>
 
     init(
         showIcon: Bool = true,
@@ -26,7 +26,7 @@ class MockStatusItemSettings: StatusItemSettings {
         iconStyle: StatusItemIconStyle = .calendar,
         dateStyle: StatusItemDateStyle = .none,
         dateFormat: String = "E d MMM yyyy",
-        detectNotch: Bool = false
+        showNextEvent: Bool = true
     ) {
         showStatusItemIcon = .just(showIcon)
         showStatusItemDate = .just(showDate)
@@ -34,7 +34,7 @@ class MockStatusItemSettings: StatusItemSettings {
         statusItemIconStyle = .just(iconStyle)
         statusItemDateStyle = .just(dateStyle)
         statusItemDateFormat = .just(dateFormat)
-        eventStatusItemDetectNotch = .just(detectNotch)
+        showEventStatusItem = .just(showNextEvent)
     }
 }
 

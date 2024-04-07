@@ -15,7 +15,9 @@ struct StatusItemPreview: PreviewProvider {
     static let dateProvider = MockDateProvider()
     static let calendarService = MockCalendarServiceProvider(events: events, dateProvider: dateProvider)
     static let screenProvider = MockScreenProvider(screen: MockScreen(hasNotch: true))
-    static let settings = MockStatusItemSettings(showIcon: true, showDate: true, iconStyle: .calendar, detectNotch: true)
+    static let settings = MockStatusItemSettings(
+        showIcon: true, showDate: true, showBackground: true, iconStyle: .dayOfWeek, showNextEvent: true
+    )
     static let notificationCenter = NotificationCenter()
 
     static let events: [EventModel] = [

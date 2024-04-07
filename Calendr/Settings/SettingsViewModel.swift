@@ -44,7 +44,7 @@ protocol StatusItemSettings {
     var statusItemIconStyle: Observable<StatusItemIconStyle> { get }
     var statusItemDateStyle: Observable<StatusItemDateStyle> { get }
     var statusItemDateFormat: Observable<String> { get }
-    var eventStatusItemDetectNotch: Observable<Bool> { get }
+    var showEventStatusItem: Observable<Bool> { get }
 }
 
 protocol CalendarSettings {
