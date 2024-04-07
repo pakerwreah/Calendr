@@ -10,14 +10,12 @@
 import Foundation
 import RxSwift
 
-struct MockEventListSettings: EventListSettings {
+class MockEventListSettings: MockPopoverSettings, EventListSettings {
 
     let showPastEvents: Observable<Bool>
-    let popoverMaterial: Observable<PopoverMaterial>
 
     init(showPastEvents: Bool = true, popoverMaterial: PopoverMaterial = .popover) {
         self.showPastEvents = .just(showPastEvents)
-        self.popoverMaterial = .just(popoverMaterial)
     }
 }
 

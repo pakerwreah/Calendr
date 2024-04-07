@@ -9,7 +9,7 @@
 
 import RxSwift
 
-struct MockCalendarSettings: CalendarSettings {
+class MockCalendarSettings: CalendarSettings {
 
     let calendarScaling: Observable<Double>
     let firstWeekday: Observable<Int>

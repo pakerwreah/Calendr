@@ -85,7 +85,7 @@ private extension EventModel {
 
 private extension MockCalendarServiceProvider {
 
-    init(dateProvider: DateProviding) {
+    convenience init(dateProvider: DateProviding) {
         self.init(
             events: [
                 eventsIn(year: 2021, month: 1, day: 1) { time in

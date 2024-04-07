@@ -9,7 +9,7 @@
 
 import RxSwift
 
-struct MockPopoverSettings: PopoverSettings {
+class MockPopoverSettings: PopoverSettings {
 
     let popoverMaterial: Observable<PopoverMaterial>
 

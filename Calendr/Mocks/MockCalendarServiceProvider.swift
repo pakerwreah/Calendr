@@ -10,7 +10,7 @@
 import Foundation
 import RxSwift
 
-struct MockCalendarServiceProvider: CalendarServiceProviding {
+class MockCalendarServiceProvider: CalendarServiceProviding {
 
     let m_events: [EventModel]
     let m_calendars: [CalendarModel]
