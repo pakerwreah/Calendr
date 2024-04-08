@@ -205,6 +205,14 @@ class StatusItemViewModelTests: XCTestCase {
         dateProvider.add(1, .second)
         scheduler.advance(.seconds(1))
         XCTAssertEqual(lastText, "00:00:01")
+
+        dateProvider.add(13, .hour)
+        dateProvider.add(15, .minute)
+        scheduler.advance(.seconds(1))
+        XCTAssertEqual(lastText, "13:15:01")
+
+        settings.statusItemDateFormatObserver.onNext("hh:mm a")
+        XCTAssertEqual(lastText, "01:15 PM")
     }
 
     func testBackground() {
