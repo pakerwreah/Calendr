@@ -512,14 +512,13 @@ class MainViewController: NSViewController, NSPopoverDelegate {
         let clickHandler = mainStatusItemClickHandler
 
         clickHandler.leftClick
-            .enumerated()
-            .flatMapFirst { [weak self] pass, _ -> Observable<Void> in
+            .flatMapFirst { [weak self] _ -> Observable<Void> in
                 guard let self else { return .empty() }
 
-                self.forceLayout()
+                forceLayout()
 
                 let popover = NSPopover()
-                self.setUpAndShow(popover, from: statusBarButton)
+                setUpAndShow(popover, from: statusBarButton)
 
                 return popover.rx.deallocated
             }
@@ -626,13 +625,13 @@ class MainViewController: NSViewController, NSPopoverDelegate {
         keyboard.handler = { [weak self] event -> NSEvent? in
             guard
                 let self,
-                (try? self.isShowingDetails.value()) == false,
+                (try? isShowingDetails.value()) == false,
                 let key = Keyboard.Key.from(event)
             else { return event }
 
-            if let vc = self.presentedViewControllers?.last {
+            if let vc = presentedViewControllers?.last {
                 guard key ~= .escape else { return event }
-                self.dismiss(vc)
+                dismiss(vc)
                 return .none
             }
 
@@ -641,16 +640,16 @@ class MainViewController: NSViewController, NSPopoverDelegate {
                 NSApp.terminate(nil)
 
             case .command("f"):
-                self.showSearchInput()
+                showSearchInput()
 
             case .command(","):
-                self.openSettings()
+                openSettings()
 
-            case .escape where self.searchInput.hasFocus:
-                self.hideSearchInput()
+            case .escape where searchInput.hasFocus:
+                hideSearchInput()
 
-            case .arrow(let arrow) where !self.searchInput.hasFocus:
-                self.arrowSubject.onNext(arrow)
+            case .arrow(let arrow) where !searchInput.hasFocus:
+                arrowSubject.onNext(arrow)
 
             default:
                 return event
@@ -662,11 +661,11 @@ class MainViewController: NSViewController, NSPopoverDelegate {
         // Global shortcut
         KeyboardShortcuts.onKeyUp(for: .showMainPopover) { [weak self] in
             guard let self else { return }
-            if let window = self.view.window {
+            if let window = view.window {
                 window.performClose(nil)
                 return
             }
-            self.mainStatusItemClickHandler.leftClick.onNext(())
+            mainStatusItemClickHandler.leftClick.onNext(())
         }
     }
 

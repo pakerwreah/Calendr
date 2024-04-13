@@ -80,9 +80,9 @@ class CalendarPickerViewController: NSViewController {
             )
             .observe(on: MainScheduler.instance)
             .compactMap { [weak self] calendars, showNextEvent -> [NSView]? in
-                guard let self = self else { return nil }
+                guard let self else { return nil }
 
-                self.itemsDisposeBag = DisposeBag()
+                itemsDisposeBag = DisposeBag()
 
                 return Dictionary(grouping: calendars, by: { $0.account })
                     .sorted(by: \.key.localizedLowercase)

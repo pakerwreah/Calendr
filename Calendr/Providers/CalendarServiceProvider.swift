@@ -74,7 +74,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
         Observable.create { [weak self] observer in
 
             if let self {
-                observer.onNext(self.storeCalendars().map(CalendarModel.init(from:)))
+                observer.onNext(storeCalendars().map(CalendarModel.init(from:)))
             }
             observer.onCompleted()
 
