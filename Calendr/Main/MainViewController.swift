@@ -479,9 +479,17 @@ class MainViewController: NSViewController, NSPopoverDelegate {
         NSEvent.removeMonitor(mouseMovedEventMonitor!)
     }
 
+    override func viewDidLayout() {
+        super.viewDidLayout()
+
+        guard let window = view.window, window.isVisible else { return }
+
+        window.setContentSize(contentSize)
+    }
+
     private var contentSize: CGSize {
         var size = view.frame.size
-        size.height = mainStackView.frame.height + 2 * Constants.MainStackView.margin
+        size.height = ceil(mainStackView.frame.height + 2 * Constants.MainStackView.margin)
         return size
     }
 
@@ -534,16 +542,9 @@ class MainViewController: NSViewController, NSPopoverDelegate {
         statusBarButton.setUpClickHandler(clickHandler)
 
         mainStackView.rx.observe(\.frame)
-            .map(\.height)
-            .distinctUntilChanged()
             .bind { [weak self] _ in
-                guard let self, let window = self.view.window, window.isVisible else { return }
-
-                NSAnimationContext.runAnimationGroup { context in
-                    context.duration = 0.1
-                    context.allowsImplicitAnimation = true
-                    window.setContentSize(self.contentSize)
-                }
+                guard let self, let window = view.window, window.isVisible else { return }
+                view.frame.size = contentSize
             }
             .disposed(by: disposeBag)
 
