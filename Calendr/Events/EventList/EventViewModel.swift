@@ -75,7 +75,8 @@ class EventViewModel {
         } else if range.isSingleDay {
 
             let formatter = DateIntervalFormatter()
-            formatter.dateTemplate = "jm"
+            formatter.dateStyle = .none
+            formatter.timeStyle = .short
             formatter.calendar = dateProvider.calendar
 
             let end: Date

@@ -24,4 +24,12 @@ class DateIntervalFormatter: Foundation.DateIntervalFormatter {
             .replacingOccurrences(of: "\u{202F}", with: " ") // narrow no-break space
             .replacingOccurrences(of: "\u{2013}", with: "-") // en dash
     }
+
+    override var dateTemplate: String! {
+        didSet {
+            // https://forums.developer.apple.com/forums/thread/740201
+            // it doesn't respect the locale's 12/24h preference
+            assert(!dateTemplate.contains("j"), "don't use it! 🐛")
+        }
+    }
 }
