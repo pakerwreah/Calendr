@@ -9,7 +9,7 @@ import Cocoa
 import RxSwift
 import KeyboardShortcuts
 
-class MainViewController: NSViewController, NSPopoverDelegate {
+class MainViewController: NSViewController {
 
     // ViewControllers
     private let settingsViewController: SettingsViewController
@@ -60,7 +60,7 @@ class MainViewController: NSViewController, NSPopoverDelegate {
     private let dateProvider: DateProviding
     private let screenProvider: ScreenProviding
     private let notificationCenter: NotificationCenter
-    private var mouseMovedEventMonitor: Any?
+    private var heightConstraint: NSLayoutConstraint?
 
     // MARK: - Initalization
 
@@ -250,13 +250,15 @@ class MainViewController: NSViewController, NSPopoverDelegate {
         mainStackView.leading(equalTo: view, constant: Constants.MainStackView.margin)
         mainStackView.trailing(equalTo: view, constant: Constants.MainStackView.margin)
 
-        let heightConstraint = mainStackView
+        heightConstraint = view.height(equalTo: 0).activate()
+
+        let maxHeightConstraint = mainStackView
             .heightAnchor.constraint(lessThanOrEqualToConstant: 0)
             .activate()
 
         screenProvider.screenObservable
             .map { 0.9 * $0.visibleFrame.height }
-            .bind(to: heightConstraint.rx.constant)
+            .bind(to: maxHeightConstraint.rx.constant)
             .disposed(by: disposeBag)
 
         let popoverView = view.rx.observe(\.superview)
@@ -379,7 +381,7 @@ class MainViewController: NSViewController, NSPopoverDelegate {
 
         let settingsMenu = NSMenu()
 
-        settingsMenu.addItem(withTitle: Strings.Settings.title, action: #selector(openSettings), keyEquivalent: ",")
+        settingsMenu.addItem(withTitle: Strings.Settings.title, action: #selector(openSettings), keyEquivalent: ",").target = self
 
         settingsMenu.addItem(.separator())
 
@@ -393,7 +395,7 @@ class MainViewController: NSViewController, NSPopoverDelegate {
         pickerSubmenuItem.view = pickerViewController.view.forAutoLayout()
         addChild(pickerViewController)
 
-        settingsMenu.addItem(withTitle: Strings.search, action: #selector(showSearchInput), keyEquivalent: "f")
+        settingsMenu.addItem(withTitle: Strings.search, action: #selector(showSearchInput), keyEquivalent: "f").target = self
 
         settingsMenu.addItem(.separator())
 
@@ -407,6 +409,7 @@ class MainViewController: NSViewController, NSPopoverDelegate {
 
     @objc private func openSettings() {
 
+        settingsViewController.viewWillAppear()
         presentAsModalWindow(settingsViewController)
     }
 
@@ -422,11 +425,9 @@ class MainViewController: NSViewController, NSPopoverDelegate {
         searchInput.isHidden = true
     }
 
-    private func setUpAndShow(_ popover: NSPopover, from button: NSStatusBarButton) {
+    private func setUpAndShow(_ popover: Popover, from button: NSStatusBarButton) {
 
         popover.contentViewController = self
-        popover.delegate = self
-        popover.animates = false
 
         settingsViewController.rx.viewWillAppear
             .map(.applicationDefined)
@@ -447,60 +448,19 @@ class MainViewController: NSViewController, NSPopoverDelegate {
             .bind(to: popover.rx.behavior)
             .disposed(by: popoverDisposeBag)
 
-        screenProvider.screenObservable
-            .withUnretained(popover) { p, _ in p }
-            .filter(\.animates.isFalse)
-            .bind {
-                $0.show(relativeTo: .zero, of: button, preferredEdge: .maxY)
-            }
-            .disposed(by: popoverDisposeBag)
-    }
-
-    private func setUpAutoClose() {
-
-        mouseMovedEventMonitor = NSEvent.addLocalMonitorForEvents(matching: .mouseMoved) { [view] event in
-
-            if !NSMouseInRect(NSEvent.mouseLocation, NSScreen.main!.frame, false) {
-                view.window?.performClose(nil)
-            }
-            return event
-        }
-    }
-
-    func popoverWillShow(_ notification: Notification) {
-
-        setUpAutoClose()
-    }
-
-    func popoverWillClose(_ notification: Notification) {
-
-        notification.popover.animates = true
-
-        NSEvent.removeMonitor(mouseMovedEventMonitor!)
+        popover.show(from: button)
     }
 
     override func viewDidLayout() {
         super.viewDidLayout()
 
-        guard let window = view.window, window.isVisible else { return }
-
-        window.setContentSize(contentSize)
+        heightConstraint?.constant = contentSize.height
     }
 
     private var contentSize: CGSize {
         var size = view.frame.size
         size.height = ceil(mainStackView.frame.height + 2 * Constants.MainStackView.margin)
         return size
-    }
-
-    // 🔨 Dirty hack to force a layout pass before showing the popover
-    private func forceLayout() {
-
-        let wctrl = NSWindowController(window: NSWindow(contentViewController: self))
-        wctrl.window?.orderFrontRegardless()
-        wctrl.close()
-
-        view.window?.setContentSize(contentSize)
     }
 
     private let mainStatusItemClickHandler = StatusItemClickHandler()
@@ -515,9 +475,7 @@ class MainViewController: NSViewController, NSPopoverDelegate {
             .flatMapFirst { [weak self] _ -> Observable<Void> in
                 guard let self else { return .empty() }
 
-                forceLayout()
-
-                let popover = NSPopover()
+                let popover = Popover()
                 setUpAndShow(popover, from: statusBarButton)
 
                 return popover.rx.deallocated
@@ -539,13 +497,6 @@ class MainViewController: NSViewController, NSPopoverDelegate {
         .disposed(by: disposeBag)
 
         statusBarButton.setUpClickHandler(clickHandler)
-
-        mainStackView.rx.observe(\.frame)
-            .bind { [weak self] _ in
-                guard let self, let window = view.window, window.isVisible else { return }
-                view.frame.size = contentSize
-            }
-            .disposed(by: disposeBag)
 
         statusItemViewModel.image
             .bind(to: statusBarButton.rx.image)
@@ -597,16 +548,14 @@ class MainViewController: NSViewController, NSPopoverDelegate {
             .disposed(by: disposeBag)
 
         clickHandler.leftClick
-            .withUnretained(self)
-            .flatMapFirst { (self, _) in self.isShowingDetails.filter(!).take(1).void() }
-            .compactMap { viewModel.makeDetailsViewModel() }
-            .flatMapFirst { viewModel -> Observable<Void> in
-                let vc = EventDetailsViewController(viewModel: viewModel)
-                let popover = NSPopover()
+            .flatMapFirst { _ -> Observable<Void> in
+                guard let vm = viewModel.makeDetailsViewModel() else { return .just(()) }
+                let vc = EventDetailsViewController(viewModel: vm)
+                let popover = Popover()
                 popover.behavior = .transient
                 popover.contentViewController = vc
                 popover.delegate = vc
-                popover.show(relativeTo: .zero, of: statusBarButton, preferredEdge: .maxY)
+                popover.show(from: statusBarButton)
                 return popover.rx.deallocated
             }
             .subscribe()

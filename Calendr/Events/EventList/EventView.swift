@@ -216,28 +216,26 @@ class EventView: NSView {
             // do not delay other click events
             $0.delaysPrimaryMouseButtonEvents = false
         }
-        .map { [viewModel] in viewModel.makeDetailsViewModel() }
         .withUnretained(self)
-        .flatMapFirst { view, viewModel -> Observable<Void> in
-            let vc = EventDetailsViewController(viewModel: viewModel)
-            let popover = NSPopover()
+        .flatMapFirst { [viewModel] view, _ -> Observable<Void> in
+            let vc = EventDetailsViewController(viewModel: viewModel.makeDetailsViewModel())
+            let popover = Popover()
             popover.behavior = .transient
             popover.contentViewController = vc
             popover.delegate = vc
-            popover.show(relativeTo: .zero, of: view, preferredEdge: .minX)
+            popover.push(from: view)
             return popover.rx.deallocated
         }
-        .bind { [weak self] in
-            // 🔨 Allow clicking outside to dismiss the main view after dismissing the event details
-            if NSApp.keyWindow == nil {
-                self?.window?.makeKey()
-            }
-        }
+        .subscribe()
         .disposed(by: disposeBag)
 
         rx.observe(\.frame)
             .bind { [weak self] _ in self?.updateLayer() }
             .disposed(by: disposeBag)
+    }
+
+    override func acceptsFirstMouse(for event: NSEvent?) -> Bool {
+        return true
     }
 
     override func updateLayer() {

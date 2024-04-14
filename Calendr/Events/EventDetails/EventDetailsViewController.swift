@@ -8,7 +8,7 @@
 import Cocoa
 import RxSwift
 
-class EventDetailsViewController: NSViewController, NSPopoverDelegate {
+class EventDetailsViewController: NSViewController, PopoverDelegate {
 
     private let disposeBag = DisposeBag()
 
@@ -35,9 +35,6 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
 
     private let viewModel: EventDetailsViewModel
     
-    private var animatesClose = true
-    private var mouseMovedEventMonitor: Any?
-
     private lazy var notesHeightConstraint = notesTextView.height(equalTo: 0)
 
     init(viewModel: EventDetailsViewModel) {
@@ -420,7 +417,6 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
             .observe(on: MainScheduler.instance)
             .subscribe(
                 onNext: { [weak self] in
-                    self?.animatesClose = false
                     self?.view.window?.performClose(nil)
                 },
                 onError: { error in
@@ -430,51 +426,14 @@ class EventDetailsViewController: NSViewController, NSPopoverDelegate {
             .disposed(by: disposeBag)
     }
 
-    private func setUpAutoClose() {
-
-        mouseMovedEventMonitor = NSEvent.addLocalMonitorForEvents(matching: .mouseMoved) { [weak self] event in
-
-            if !NSMouseInRect(NSEvent.mouseLocation, NSScreen.main!.frame, false) {
-                let parentViewController = self?.view.window?.parent?.contentViewController
-                self?.animatesClose = !(parentViewController is MainViewController)
-                self?.view.window?.performClose(nil)
-            }
-            return event
-        }
-    }
-
-    func popoverWillShow(_ notification: Notification) {
-
-        notification.popover.animates = false
-
-        setUpAutoClose()
-    }
-
-    func popoverDidShow(_ notification: Notification) {
-        // 🔨 Allow dismiss with the escape key
-        view.window?.makeKey()
-        view.window?.makeFirstResponder(self)
-
-        // 🔨 Fix cursor not changing when hovering text
-        NSApp.activate(ignoringOtherApps: true)
+    func popoverDidShow() {
 
         viewModel.isShowingObserver.onNext(true)
     }
 
-    func popoverWillClose(_ notification: Notification) {
-        // 🔨 Prevent retain cycle
-        view.window?.makeFirstResponder(nil)
-
-        notification.popover.animates = animatesClose
-
-        NSEvent.removeMonitor(mouseMovedEventMonitor!)
+    func popoverDidClose() {
 
         viewModel.isShowingObserver.onNext(false)
-    }
-
-    func popoverDidClose(_ notification: Notification) {
-        // 🔨 Prevent retain cycle
-        notification.popover.contentViewController = nil
     }
 
     private func makeLine() -> NSView {

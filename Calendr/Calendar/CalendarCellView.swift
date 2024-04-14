@@ -162,6 +162,10 @@ class CalendarCellView: NSView {
         borderLayer.frame = bounds
     }
 
+    override func acceptsFirstMouse(for event: NSEvent?) -> Bool {
+        return true
+    }
+
     // Prevent propagating event to superview
     override func mouseExited(with event: NSEvent) { }
 
@@ -172,7 +176,13 @@ class CalendarCellView: NSView {
             removeTrackingArea(trackingArea)
         }
 
-        addTrackingRect(bounds, owner: self, userData: nil, assumeInside: false)
+        let trackingArea = NSTrackingArea(
+            rect: bounds,
+            options: [.mouseEnteredAndExited, .activeInKeyWindow],
+            owner: self
+        )
+
+        addTrackingArea(trackingArea)
     }
 
     required init?(coder: NSCoder) {
