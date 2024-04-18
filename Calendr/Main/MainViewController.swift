@@ -571,17 +571,12 @@ class MainViewController: NSViewController {
 
     private func setUpKeyboard() {
 
-        keyboard.handler = { [weak self] event -> NSEvent? in
+        keyboard.listen(in: self) { [weak self] event -> NSEvent? in
             guard
                 let self,
-                (try? isShowingDetails.value()) == false,
                 let key = Keyboard.Key.from(event)
-            else { return event }
-
-            if let vc = presentedViewControllers?.last {
-                guard key ~= .escape else { return event }
-                dismiss(vc)
-                return .none
+            else {
+                return event
             }
 
             switch key {

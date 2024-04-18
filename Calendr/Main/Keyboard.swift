@@ -47,12 +47,13 @@ class Keyboard {
 
     deinit { removeMonitor() }
 
-    var handler: ((NSEvent) -> NSEvent?)? {
-        willSet {
-            removeMonitor()
-        }
-        didSet {
-            eventMonitor = handler.flatMap { NSEvent.addLocalMonitorForEvents(matching: .keyDown, handler: $0) }
+    func listen(in vc: NSViewController, handler: @escaping (NSEvent) -> NSEvent?) {
+        removeMonitor()
+        eventMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak vc] event in
+            if vc?.view.window == event.window {
+                return handler(event)
+            }
+            return event
         }
     }
 }

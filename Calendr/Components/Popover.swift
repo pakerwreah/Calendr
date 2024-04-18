@@ -148,12 +148,8 @@ private class PopoverWindow: NSWindow {
         return true
     }
 
-    override func keyDown(with event: NSEvent) {
-        if Keyboard.Key.from(event) == .escape {
-            performClose(nil)
-        } else {
-            super.keyDown(with: event)
-        }
+    override func cancelOperation(_ sender: Any?) {
+        performClose(nil)
     }
 
     override func performClose(_ sender: Any?) {
