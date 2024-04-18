@@ -89,7 +89,7 @@ class Popover: NSObject, PopoverWindowDelegate {
             return
         }
 
-        guard popovers.contains(where: \.isMouseInside) else {
+        guard NSApp.isActive else {
             return closeAll()
         }
 
