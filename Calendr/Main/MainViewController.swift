@@ -571,13 +571,8 @@ class MainViewController: NSViewController {
 
     private func setUpKeyboard() {
 
-        keyboard.listen(in: self) { [weak self] event -> NSEvent? in
-            guard
-                let self,
-                let key = Keyboard.Key.from(event)
-            else {
-                return event
-            }
+        keyboard.listen(in: self) { [weak self] event, key -> NSEvent? in
+            guard let self else { return event }
 
             switch key {
             case .command("q"):
