@@ -12,6 +12,7 @@ class SettingsViewController: NSTabViewController {
 
     private let notificationCenter: NotificationCenter
     private let disposeBag = DisposeBag()
+    private let keyboard = Keyboard()
 
     init(
         settingsViewModel: SettingsViewModel,
@@ -47,6 +48,8 @@ class SettingsViewController: NSTabViewController {
         setUpAccessibility()
 
         setUpBindings()
+
+        setUpKeyboard()
     }
 
     deinit {
@@ -132,6 +135,22 @@ class SettingsViewController: NSTabViewController {
             .map(sizeWithPadding)
             .bind(to: rx.preferredContentSize)
             .disposed(by: disposeBag)
+        }
+    }
+
+    private func setUpKeyboard() {
+
+        keyboard.listen(in: self) { [weak self] event, key -> NSEvent? in
+            guard let self else { return event }
+
+            switch key {
+            case .escape:
+                view.window?.performClose(nil)
+            default:
+                return event
+            }
+
+            return .none
         }
     }
 
