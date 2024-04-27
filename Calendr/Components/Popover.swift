@@ -18,12 +18,17 @@ var popovers: [Popover] = []
 
 class Popover: NSObject, PopoverWindowDelegate {
 
+    enum Behavior {
+        case transient
+        case permanent
+    }
+
     private var window: PopoverWindow?
     private var isClosing = false
 
     var contentViewController: NSViewController?
     var delegate: PopoverDelegate?
-    var behavior: NSPopover.Behavior = .transient
+    var behavior: Behavior = .transient
 
     func show(from view: NSView) {
         present(from: view, edge: .maxY, spacing: 0, single: true)

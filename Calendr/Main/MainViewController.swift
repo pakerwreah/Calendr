@@ -430,7 +430,7 @@ class MainViewController: NSViewController {
         popover.contentViewController = self
 
         settingsViewController.rx.viewWillAppear
-            .map(.applicationDefined)
+            .map(.permanent)
             .bind(to: popover.rx.behavior)
             .disposed(by: popoverDisposeBag)
 
@@ -444,7 +444,7 @@ class MainViewController: NSViewController {
             .disposed(by: popoverDisposeBag)
 
         pinBtn.rx.state
-            .map { $0 == .on ? .applicationDefined : .transient }
+            .map { $0 == .on ? .permanent : .transient }
             .bind(to: popover.rx.behavior)
             .disposed(by: popoverDisposeBag)
 
