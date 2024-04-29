@@ -224,7 +224,10 @@ class EventView: NSView {
             popover.contentViewController = vc
             popover.delegate = vc
             popover.push(from: view)
+
             return popover.rx.deallocated
+                // prevent reopening immediately after dismiss
+                .delay(.milliseconds(300), scheduler: MainScheduler.instance)
         }
         .subscribe()
         .disposed(by: disposeBag)

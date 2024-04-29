@@ -478,7 +478,11 @@ class MainViewController: NSViewController {
                 let popover = Popover()
                 setUpAndShow(popover, from: statusBarButton)
 
-                return popover.rx.deallocated
+                let close = clickHandler.leftClick.bind { [view] in
+                    view.window?.performClose(nil)
+                }
+
+                return popover.rx.deallocated.do(onNext: { close.dispose() })
             }
             .bind { [weak self] in
                 self?.popoverDisposeBag = DisposeBag()
@@ -556,7 +560,12 @@ class MainViewController: NSViewController {
                 popover.contentViewController = vc
                 popover.delegate = vc
                 popover.show(from: statusBarButton)
-                return popover.rx.deallocated
+
+                let close = clickHandler.leftClick.bind {
+                    vc.view.window?.performClose(nil)
+                }
+
+                return popover.rx.deallocated.do(onNext: { close.dispose() })
             }
             .subscribe()
             .disposed(by: disposeBag)
