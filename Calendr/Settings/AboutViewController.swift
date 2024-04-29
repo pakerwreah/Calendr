@@ -150,6 +150,10 @@ class AboutViewController: NSViewController, UNUserNotificationCenterDelegate {
         }
     }
 
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.banner, .sound])
+    }
+
     @objc private func openReleasePage() {
         NSWorkspace.shared.open(URL(string: "https://github.com/pakerwreah/Calendr/releases/latest")!)
     }
