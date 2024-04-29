@@ -64,7 +64,7 @@ class Popover: NSObject, PopoverWindowDelegate {
         window.isOpaque = false
         window.backgroundColor = .clear
         window.styleMask = .borderless
-        window.level = .floating
+        window.level = .popUpMenu
         window.isReleasedWhenClosed = false
         window._delegate = self
         window.move(to: view, edge: edge, spacing: spacing)
@@ -217,9 +217,9 @@ private class PopoverWindow: NSWindow {
         case .maxX:
             position = NSPoint(x: min(limit.maxX, viewFrame.maxX + spacing), y: centerY)
         case .minY:
-            position = NSPoint(x: centerX, y: min(limit.maxY, viewFrame.maxY + spacing))
+            position = NSPoint(x: centerX, y: max(limit.minY, min(limit.maxY, viewFrame.maxY + spacing)))
         case .maxY:
-            position = NSPoint(x: centerX, y: max(limit.minY, viewFrame.minY - frame.height - spacing))
+            position = NSPoint(x: centerX, y: min(limit.maxY, max(limit.minY, viewFrame.minY - frame.height - spacing)))
         default:
             break
         }
