@@ -549,7 +549,7 @@ class MainViewController: NSViewController {
 
         clickHandler.leftClick
             .flatMapFirst { _ -> Observable<Void> in
-                guard let vm = viewModel.makeDetailsViewModel() else { return .just(()) }
+                guard let vm = viewModel.makeDetailsViewModel() else { return .void() }
                 let vc = EventDetailsViewController(viewModel: vm)
                 let popover = Popover()
                 popover.behavior = .transient

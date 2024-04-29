@@ -93,7 +93,7 @@ class EventOptionsViewModel: BaseContextMenuViewModel<EventAction> {
         case .status(let action):
             return changeEventStatus(to: action.status)
         }
-        return .just(())
+        return .void()
     }
 
     private func changeEventStatus(to status: EventStatus) -> Observable<Void> {

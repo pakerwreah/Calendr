@@ -26,7 +26,7 @@ struct StatusItemPreview: PreviewProvider {
 
     static var previews: some View {
         let viewModel = StatusItemViewModel(
-            dateChanged: .just(()),
+            dateChanged: .void(),
             nextEventCalendars: .just([]),
             settings: settings,
             dateProvider: dateProvider,

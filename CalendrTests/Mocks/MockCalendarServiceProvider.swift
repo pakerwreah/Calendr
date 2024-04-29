@@ -35,17 +35,17 @@ class MockCalendarServiceProvider: CalendarServiceProviding {
 
     func completeReminder(id: String) -> Observable<Void> {
         spyCompleteObserver.onNext(())
-        return .just(())
+        return .void()
     }
 
     func rescheduleReminder(id: String, to date: Date) -> Observable<Void> {
         spyRescheduleObserver.onNext(date)
-        return .just(())
+        return .void()
     }
 
     func changeEventStatus(id: String, date: Date, to status: EventStatus) -> Observable<Void> {
         spyChangeEventStatusObserver.onNext(status)
-        return .just(())
+        return .void()
     }
 }
 
