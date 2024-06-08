@@ -23,6 +23,7 @@
 "settings.menu_bar.date_format_custom" = "自定义";
 "settings.next_event" = "下一个日程";
 "settings.menu_bar.show_next_event" = "显示下一个日程";
+"settings.menu_bar.font_size" = "字体大小";
 "settings.menu_bar.next_event_detect_notch" = "为屏幕“刘海”缩短长度";
 
 "settings.calendar" = "日历";

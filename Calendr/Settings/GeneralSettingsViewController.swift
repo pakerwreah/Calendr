@@ -30,6 +30,7 @@ class GeneralSettingsViewController: NSViewController {
     private let nextEventRangeStepper = NSStepper()
     private let nextEventLengthSlider = NSSlider.make(minValue: 10, maxValue: 50, numberOfTickMarks: 12)
     private let nextEventDetectNotchCheckbox = Checkbox(title: Strings.Settings.MenuBar.nextEventDetectNotch)
+    private let nextEventFontSizeStepper = NSStepper()
 
     // Calendar
     private let calendarScalingSlider = NSSlider.make(minValue: 1, maxValue: 1.2, numberOfTickMarks: 5)
@@ -137,6 +138,8 @@ class GeneralSettingsViewController: NSViewController {
 
     private lazy var nextEventContent: NSView = {
 
+        // Next event length
+
         let nextEventLengthView = NSStackView(views: [
             NSImageView(image: Icons.Settings.ruler.with(scale: .large)),
             nextEventLengthSlider
@@ -144,35 +147,70 @@ class GeneralSettingsViewController: NSViewController {
 
         nextEventDetectNotchCheckbox.font = .systemFont(ofSize: 11, weight: .light)
 
+        // Next event range
+
         nextEventRangeStepper.minValue = 1
         nextEventRangeStepper.maxValue = 24
         nextEventRangeStepper.valueWraps = false
         nextEventRangeStepper.refusesFirstResponder = true
         nextEventRangeStepper.focusRingType = .none
 
-        let stepperLabel = Label(font: showNextEventCheckbox.font)
+        let rangeStepperLabel = Label(font: .systemFont(ofSize: 13))
 
-        let stepperProperty = nextEventRangeStepper.rx.controlProperty(
+        let rangeStepperProperty = nextEventRangeStepper.rx.controlProperty(
             getter: \.integerValue,
-            setter: { $0.integerValue = $1}
+            setter: { $0.integerValue = $1 }
         )
 
         viewModel.eventStatusItemCheckRange
-            .bind(to: stepperProperty)
+            .bind(to: rangeStepperProperty)
             .disposed(by: disposeBag)
 
-        stepperProperty
+        rangeStepperProperty
             .bind(to: viewModel.eventStatusItemCheckRangeObserver)
             .disposed(by: disposeBag)
 
         viewModel.eventStatusItemCheckRangeLabel
-            .bind(to: stepperLabel.rx.text)
+            .bind(to: rangeStepperLabel.rx.text)
             .disposed(by: disposeBag)
 
+        // Next event font size
+
+        let fontSizeLabel = Label(text: Strings.Settings.MenuBar.fontSize, font: .systemFont(ofSize: 13))
+        let fontSizeStepperLabel = Label(font: .systemFont(ofSize: 13))
+
+        nextEventFontSizeStepper.minValue = 10
+        nextEventFontSizeStepper.maxValue = 13
+        nextEventFontSizeStepper.increment = 0.5
+        nextEventFontSizeStepper.valueWraps = false
+        nextEventFontSizeStepper.refusesFirstResponder = true
+        nextEventFontSizeStepper.focusRingType = .none
+
+        let fontSizeStepperProperty = nextEventFontSizeStepper.rx.controlProperty(
+            getter: \.floatValue,
+            setter: { $0.floatValue = $1 }
+        )
+
+        viewModel.eventStatusItemFontSize
+            .bind(to: fontSizeStepperProperty)
+            .disposed(by: disposeBag)
+
+        fontSizeStepperProperty
+            .bind(to: viewModel.eventStatusItemFontSizeObserver)
+            .disposed(by: disposeBag)
+
+        viewModel.eventStatusItemFontSize
+            .map { .init(format: "%.1f", $0) }
+            .bind(to: fontSizeStepperLabel.rx.text)
+            .disposed(by: disposeBag)
+
+        // Next event stack view
+
         return NSStackView(views: [
-            NSStackView(views: [showNextEventCheckbox, .spacer, stepperLabel, nextEventRangeStepper]),
+            NSStackView(views: [showNextEventCheckbox, .spacer, rangeStepperLabel, nextEventRangeStepper]),
+            NSStackView(views: [fontSizeLabel, .spacer, fontSizeStepperLabel, nextEventFontSizeStepper]),
             nextEventLengthView,
-            nextEventDetectNotchCheckbox
+            nextEventDetectNotchCheckbox,
         ])
         .with(orientation: .vertical)
     }()
@@ -201,15 +239,15 @@ class GeneralSettingsViewController: NSViewController {
                 popover.show(relativeTo: .zero, of: button, preferredEdge: .maxX)
             }
             .disposed(by: disposeBag)
-        
+
         return button
     }()
 
     private lazy var calendarContent: NSView = {
-        
+
         firstWeekdayPrev.setContentHuggingPriority(.fittingSizeCompression, for: .horizontal)
         firstWeekdayNext.setContentHuggingPriority(.fittingSizeCompression, for: .horizontal)
-        
+
         return NSStackView(views: [
             NSStackView(views: [
                 NSImageView(image: Icons.Settings.zoomOut),
@@ -227,10 +265,10 @@ class GeneralSettingsViewController: NSViewController {
         .with(orientation: .vertical)
     }()
 
+    let finishedLabel = Label(text: "\(Strings.Settings.Events.finished):", font: .systemFont(ofSize: 13))
+
     private lazy var eventsContent: NSView = {
-        NSStackView(views: [
-            Label(text: "\(Strings.Settings.Events.finished):"), .spacer, fadePastEventsRadio, hidePastEventsRadio
-        ])
+        NSStackView(views: [finishedLabel, .spacer, fadePastEventsRadio, hidePastEventsRadio])
     }()
 
     private func makeSection(title: String, content: NSView) -> NSView {
@@ -353,7 +391,7 @@ class GeneralSettingsViewController: NSViewController {
         .bind { [dropdown = dateFormatDropdown] options, dateStyle in
             dropdown.removeAllItems()
             dropdown.addItems(withTitles: options.map(\.title))
-            dropdown.selectItem(at: dateStyle.isCustom ? dropdown.numberOfItems - 1 : options.firstIndex(where: { $0.style == dateStyle }) ?? 0)
+            dropdown.selectItem(at: dateStyle.isCustom ? dropdown.numberOfItems - 1: options.firstIndex(where: { $0.style == dateStyle }) ?? 0)
         }
         .disposed(by: disposeBag)
 
@@ -407,10 +445,10 @@ class GeneralSettingsViewController: NSViewController {
             .disposed(by: disposeBag)
 
         nextEventLengthSlider.rx.value
-                    .skip(1)
-                    .map(Int.init)
-                    .bind(to: viewModel.eventStatusItemLengthObserver)
-                    .disposed(by: disposeBag)
+            .skip(1)
+            .map(Int.init)
+            .bind(to: viewModel.eventStatusItemLengthObserver)
+            .disposed(by: disposeBag)
 
         bind(
             control: nextEventDetectNotchCheckbox,

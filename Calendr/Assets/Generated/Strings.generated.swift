@@ -125,6 +125,8 @@ internal enum Strings {
       internal static let autoLaunch = Strings.tr("Localizable", "settings.menu_bar.auto_launch", fallback: "Launch at login")
       /// Custom
       internal static let dateFormatCustom = Strings.tr("Localizable", "settings.menu_bar.date_format_custom", fallback: "Custom")
+      /// Font size
+      internal static let fontSize = Strings.tr("Localizable", "settings.menu_bar.font_size", fallback: "Font size")
       /// Shorten if 'notch' is present
       internal static let nextEventDetectNotch = Strings.tr("Localizable", "settings.menu_bar.next_event_detect_notch", fallback: "Shorten if 'notch' is present")
       /// Show opaque background

@@ -23,6 +23,7 @@
 "settings.menu_bar.date_format_custom" = "Vlastní";
 "settings.next_event" = "Další událost";
 "settings.menu_bar.show_next_event" = "Zobrazit další událost";
+"settings.menu_bar.font_size" = "Velikost písma";
 "settings.menu_bar.next_event_detect_notch" = "Zkrátit, pokud je 'výřez' přítomen";
 
 "settings.calendar" = "Kalendář";

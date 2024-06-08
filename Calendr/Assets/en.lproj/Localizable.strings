@@ -23,6 +23,7 @@
 "settings.menu_bar.date_format_custom" = "Custom";
 "settings.next_event" = "Next Event";
 "settings.menu_bar.show_next_event" = "Show next event";
+"settings.menu_bar.font_size" = "Font size";
 "settings.menu_bar.next_event_detect_notch" = "Shorten if 'notch' is present";
 
 "settings.calendar" = "Calendar";

@@ -47,6 +47,7 @@ class NextEventViewModel {
 
     let title: Observable<String>
     let time: Observable<String>
+    let fontSize: Observable<Float>
     let barStyle: Observable<EventBarStyle>
     let barColor: Observable<NSColor>
     let backgroundColor: Observable<NSColor>
@@ -87,6 +88,7 @@ class NextEventViewModel {
         self.popoverSettings = settings
         self.workspace = workspace
         self.isShowingDetails = isShowingDetails
+        self.fontSize = settings.eventStatusItemFontSize
 
         let nextEvents = settings.showEventStatusItem
             .flatMapLatest { isEnabled -> Observable<[EventModel]> in

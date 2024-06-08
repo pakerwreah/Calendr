@@ -17,6 +17,7 @@ enum Prefs {
     static let statusItemDateStyle = "status_item_date_style"
     static let statusItemDateFormat = "status_item_date_format"
     static let showEventStatusItem = "show_event_status_item"
+    static let eventStatusItemFontSize = "event_status_item_font_size"
     static let eventStatusItemCheckRange = "event_status_item_check_range"
     static let eventStatusItemLength = "event_status_item_length"
     static let eventStatusItemDetectNotch = "event_status_item_detect_notch"
@@ -80,6 +81,11 @@ extension UserDefaults {
     @objc dynamic var showEventStatusItem: Bool {
         get { bool(forKey: Prefs.showEventStatusItem) }
         set { set(newValue, forKey: Prefs.showEventStatusItem) }
+    }
+
+    @objc dynamic var eventStatusItemFontSize: Float {
+        get { float(forKey: Prefs.eventStatusItemFontSize) }
+        set { set(newValue, forKey: Prefs.eventStatusItemFontSize) }
     }
 
     @objc dynamic var eventStatusItemCheckRange: Int {

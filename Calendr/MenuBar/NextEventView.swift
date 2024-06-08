@@ -54,13 +54,12 @@ class NextEventView: NSView {
         colorBar.width(equalTo: 3)
         colorBar.height(equalTo: nextEventView, constant: -4)
 
-        nextEventTitle.center(in: nextEventView, orientation: .vertical, constant: 0.5)
+        nextEventTitle.center(in: nextEventView, orientation: .vertical)
         nextEventTitle.textColor = .headerTextColor
         nextEventTitle.lineBreakMode = .byTruncatingTail
 
         nextEventTime.center(in: nextEventTitle, orientation: .vertical)
         nextEventTime.textColor = .headerTextColor
-        nextEventTime.font = .systemFont(ofSize: 11)
         nextEventTime.setContentCompressionResistancePriority(.required, for: .horizontal)
 
         forAutoLayout()
@@ -71,6 +70,18 @@ class NextEventView: NSView {
     }
 
     private func setUpBindings() {
+
+        let fontSizeObservable = viewModel.fontSize
+            .map { NSFont.systemFont(ofSize: CGFloat($0)) }
+            .share(replay: 1)
+
+        fontSizeObservable
+            .bind(to: nextEventTitle.rx.font)
+            .disposed(by: disposeBag)
+
+        fontSizeObservable
+            .bind(to: nextEventTime.rx.font)
+            .disposed(by: disposeBag)
 
         Observable.combineLatest(
             viewModel.barStyle,

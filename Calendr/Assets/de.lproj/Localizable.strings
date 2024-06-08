@@ -23,6 +23,7 @@
 "settings.menu_bar.date_format_custom" = "Benutzerdefiniert";
 "settings.next_event" = "Nächsten Termin";
 "settings.menu_bar.show_next_event" = "Zeige nächsten Termin";
+"settings.menu_bar.font_size" = "Schriftgröße";
 "settings.menu_bar.next_event_detect_notch" = "Kürzen, wenn 'notch' vorhanden ist";
 
 "settings.calendar" = "Kalender";

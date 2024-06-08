@@ -30,6 +30,7 @@ class SettingsViewModelTests: XCTestCase {
     var userDefaultsStatusItemBackgroundEnabled: Bool? { userDefaults.object(forKey: Prefs.statusItemBackgroundEnabled) as! Bool? }
     var userDefaultsStatusItemDateStyle: Int? { userDefaults.object(forKey: Prefs.statusItemDateStyle) as! Int? }
     var userDefaultsShowEventStatusItem: Bool? { userDefaults.object(forKey: Prefs.showEventStatusItem) as! Bool? }
+    var userDefaultsEventStatusItemFontSize: Float? { userDefaults.object(forKey: Prefs.eventStatusItemFontSize) as! Float? }
     var userDefaultsEventStatusItemCheckRange: Int? { userDefaults.object(forKey: Prefs.eventStatusItemCheckRange) as! Int? }
     var userDefaultsEventStatusItemLength: Int? { userDefaults.object(forKey: Prefs.eventStatusItemLength) as! Int? }
     var userDefaultsEventStatusItemDetectNotch: Bool? { userDefaults.object(forKey: Prefs.eventStatusItemDetectNotch) as! Bool? }
@@ -57,6 +58,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertNil(userDefaultsEventStatusItemCheckRange)
         XCTAssertNil(userDefaultsEventStatusItemLength)
         XCTAssertNil(userDefaultsEventStatusItemDetectNotch)
+        XCTAssertNil(userDefaultsEventStatusItemFontSize)
         XCTAssertNil(userDefaultsCalendarScaling)
         XCTAssertNil(userDefaultsFirstWeekday)
         XCTAssertNil(userDefaultsHighlightedWeekdays)
@@ -73,6 +75,7 @@ class SettingsViewModelTests: XCTestCase {
         var showStatusItemBackground: Bool?
         var statusItemDateStyle: StatusItemDateStyle?
         var showEventStatusItem: Bool?
+        var eventStatusItemFontSize: Float?
         var eventStatusItemCheckRange: Int?
         var eventStatusItemLength: Int?
         var eventStatusItemDetectNotch: Bool?
@@ -104,6 +107,10 @@ class SettingsViewModelTests: XCTestCase {
 
         viewModel.showEventStatusItem
             .bind { showEventStatusItem = $0 }
+            .disposed(by: disposeBag)
+
+        viewModel.eventStatusItemFontSize
+            .bind { eventStatusItemFontSize = $0 }
             .disposed(by: disposeBag)
 
         viewModel.eventStatusItemCheckRange
@@ -159,6 +166,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(showStatusItemBackground, false)
         XCTAssertEqual(statusItemDateStyle, .short)
         XCTAssertEqual(showEventStatusItem, false)
+        XCTAssertEqual(eventStatusItemFontSize, 12)
         XCTAssertEqual(eventStatusItemCheckRange, 6)
         XCTAssertEqual(eventStatusItemLength, 18)
         XCTAssertEqual(eventStatusItemDetectNotch, false)
@@ -177,6 +185,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(userDefaultsStatusItemBackgroundEnabled, false)
         XCTAssertEqual(userDefaultsStatusItemDateStyle, 1)
         XCTAssertEqual(userDefaultsShowEventStatusItem, false)
+        XCTAssertEqual(userDefaultsEventStatusItemFontSize, 12)
         XCTAssertEqual(userDefaultsEventStatusItemCheckRange, 6)
         XCTAssertEqual(userDefaultsEventStatusItemLength, 18)
         XCTAssertEqual(userDefaultsEventStatusItemDetectNotch, false)
@@ -311,6 +320,25 @@ class SettingsViewModelTests: XCTestCase {
 
         XCTAssertEqual(showEventStatusItem, true)
         XCTAssertEqual(userDefaultsShowEventStatusItem, true)
+    }
+
+    func testChangeEventStatusItemFontSize() {
+
+        userDefaults.eventStatusItemFontSize = 12
+
+        var eventStatusItemFontSize: Float?
+
+        viewModel.eventStatusItemFontSize
+            .bind { eventStatusItemFontSize = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(eventStatusItemFontSize, 12)
+        XCTAssertEqual(userDefaultsEventStatusItemFontSize, 12)
+
+        viewModel.eventStatusItemFontSizeObserver.onNext(13)
+
+        XCTAssertEqual(eventStatusItemFontSize, 13)
+        XCTAssertEqual(userDefaultsEventStatusItemFontSize, 13)
     }
 
     func testChangeEventStatusItemLength() {
