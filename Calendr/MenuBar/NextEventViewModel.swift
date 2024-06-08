@@ -118,6 +118,7 @@ class NextEventViewModel {
                     .startWith(())
                     .map {
                         events
+                            .sorted(by: \.start)
                             .first(where: { event in
                                 type.matches(event.type)
                                 &&

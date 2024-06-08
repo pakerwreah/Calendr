@@ -529,8 +529,6 @@ class NextEventViewModelTests: XCTestCase {
         XCTAssertEqual(time, "1h 39m left")
     }
 
-    // MARK: - Reminders
-
     func testNextEvent_isReminder() {
 
         viewModel = makeViewModel(type: .reminder)
@@ -601,7 +599,26 @@ class NextEventViewModelTests: XCTestCase {
         XCTAssertEqual(time, "30s ago")
     }
 
+    func testNextEvent_isSortedByDate_isReminder() {
+
+        viewModel = makeViewModel(type: .reminder)
+
+        var title: String?
+
+        viewModel.title
+            .bind { title = $0 }
+            .disposed(by: disposeBag)
+
+        calendarService.changeEvents([
+            .make(start: now + 1, title: "Reminder 2", type: .reminder),
+            .make(start: now, title: "Reminder 1", type: .reminder)
+        ])
+
+        XCTAssertEqual(title, "Reminder 1")
+    }
+
     func testNextEvent_skipped_fromContextMenu() {
+
         viewModel = makeViewModel(type: .event)
 
         var title: String?
@@ -638,6 +655,7 @@ class NextEventViewModelTests: XCTestCase {
     }
 
     func testNextEvent_skipped_fromEventDetails() {
+
         viewModel = makeViewModel(type: .event)
 
         var title: String?
