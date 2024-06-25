@@ -27,7 +27,7 @@ class Popover: NSObject, PopoverWindowDelegate {
     private var isClosing = false
 
     var contentViewController: NSViewController?
-    var delegate: PopoverDelegate?
+    weak var delegate: PopoverDelegate?
     var behavior: Behavior = .transient
 
     func show(from view: NSView) {
