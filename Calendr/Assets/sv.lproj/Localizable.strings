@@ -1,0 +1,66 @@
+/* 
+  Localizable.strings
+  Calendr
+
+  Created by git-ansik on 20/02/2021.
+*/
+
+"quit" = "Avsluta";
+"search" = "Sök";
+"new_version" = "Ny version tillgänglig på: %@";
+
+"settings.title" = "Inställningar";
+"settings.tab.general" = "Allmänt";
+"settings.tab.calendars" = "Kalendrar";
+"settings.tab.about" = "Om";
+
+"settings.menu_bar" = "Menyrad";
+"settings.menu_bar.auto_launch" = "Öppna vid inloggning";
+"settings.menu_bar.show_icon" = "Visa ikon";
+"settings.menu_bar.show_date" = "Visa datum";
+"settings.menu_bar.show_icon_date" = "Visa datum i ikon";
+"settings.menu_bar.show_background" = "Show ogenomskinlig bakgrund";
+"settings.menu_bar.date_format_custom" = "Anpassad";
+"settings.next_event" = "Nästa händelse";
+"settings.menu_bar.show_next_event" = "Visa nästa händelse";
+"settings.menu_bar.font_size" = "Teckenstorlek";
+"settings.menu_bar.next_event_detect_notch" = "Korta om 'notch' finns";
+
+"settings.calendar" = "Kalender";
+"settings.calendar.show_week_numbers" = "Visa veckonummer";
+"settings.calendar.preserve_selected_date" = "Bevara valt datum när gömd";
+"settings.calendar.show_declined_events" = "Visa avböjda händelser";
+"settings.calendar.show_declined_events_tooltip" = "Detta fungerar bara om det också är aktiverat i den inbyggda kalenderappen.";
+
+"settings.events" = "Händelser";
+"settings.events.finished" = "Avslutad";
+"settings.events.finished.fade" = "Tona";
+"settings.events.finished.hide" = "Dölj";
+
+"settings.transparency" = "Transparens";
+
+"formatter.date.all_day" = "Heldag";
+"formatter.date.today" = "Idag";
+"formatter.date.relative.in" = "om %@";
+"formatter.date.relative.ago" = "%@ sedan";
+"formatter.date.relative.left" = "%@ kvar";
+
+"reminder.options.button" = "Alternativ";
+"reminder.options.complete" = "Klar";
+"reminder.options.remind" = "Påminn %@";
+
+"event_details.participant.organizer" = "arrangören";
+"event_details.participant.me" = "jag";
+
+"event_status.label" = "min status:";
+
+"event_status.accepted" = "Godkänd";
+"event_status.maybe" = "Kanske";
+"event_status.declined" = "Avböjd";
+"event_status.pending" = "Väntande";
+
+"event_action.open" = "Öppna";
+"event_action.skip" = "Skippa";
+"event_action.accept" = "Tacka ja";
+"event_action.maybe" = "Kanske";
+"event_action.decline" = "Avböj";
