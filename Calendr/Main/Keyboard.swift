@@ -55,8 +55,8 @@ private extension Keyboard.Key {
 
         switch event.keyCode {
         case 36: key = .enter
+        case 51: key = .backspace
         case 53: key = .escape
-        case 117: key = .backspace
         case 123: key = .arrow(.left)
         case 124: key = .arrow(.right)
         case 125: key = .arrow(.down)
