@@ -7,11 +7,10 @@
 
 import Cocoa
 import RxSwift
-import KeyboardShortcuts
 
-class GeneralSettingsViewController: NSViewController {
+class GeneralSettingsViewController: NSViewController, SettingsUI {
 
-    private let disposeBag = DisposeBag()
+    let disposeBag = DisposeBag()
 
     private let viewModel: SettingsViewModel
 
@@ -23,7 +22,6 @@ class GeneralSettingsViewController: NSViewController {
     private let iconStyleDropdown = Dropdown()
     private let dateFormatDropdown = Dropdown()
     private let dateFormatTextField = NSTextField()
-    private let shortcutRecorder = KeyboardShortcuts.RecorderCocoa(for: .showMainPopover)
 
     // Next Event
     private let showNextEventCheckbox = Checkbox(title: Strings.Settings.MenuBar.showNextEvent)
@@ -123,16 +121,12 @@ class GeneralSettingsViewController: NSViewController {
         ])
         .with(orientation: .vertical)
 
-        shortcutRecorder.setContentHuggingPriority(.fittingSizeCompression, for: .horizontal)
-
         return NSStackView(views: [
             autoLaunchCheckbox,
             iconStyle,
             dateFormat,
-            showMenuBarBackgroundCheckbox,
-            shortcutRecorder
+            showMenuBarBackgroundCheckbox
         ])
-        .with(spacing: Constants.contentSpacing)
         .with(orientation: .vertical)
     }()
 
@@ -270,31 +264,6 @@ class GeneralSettingsViewController: NSViewController {
     private lazy var eventsContent: NSView = {
         NSStackView(views: [finishedLabel, .spacer, fadePastEventsRadio, hidePastEventsRadio])
     }()
-
-    private func makeSection(title: String, content: NSView) -> NSView {
-
-        let label = Label(text: title, font: .systemFont(ofSize: 13, weight: .semibold))
-
-        let divider: NSView = .spacer(height: 1)
-        divider.wantsLayer = true
-
-        divider.rx.updateLayer
-            .map { NSColor.tertiaryLabelColor.effectiveCGColor }
-            .bind(to: divider.layer!.rx.backgroundColor)
-            .disposed(by: disposeBag)
-
-        let stackView = NSStackView(views: [
-            label,
-            divider,
-            NSStackView(views: [.dummy, content, .dummy])
-        ])
-        .with(orientation: .vertical)
-        .with(alignment: .left)
-        .with(spacing: 6)
-        .with(spacing: 12, after: divider)
-
-        return stackView
-    }
 
     private func setUpBindings() {
         setUpMenuBar()
@@ -586,9 +555,4 @@ private extension NSSlider {
         slider.refusesFirstResponder = true
         return slider
     }
-}
-
-private enum Constants {
-
-    static let contentSpacing: CGFloat = 16
 }

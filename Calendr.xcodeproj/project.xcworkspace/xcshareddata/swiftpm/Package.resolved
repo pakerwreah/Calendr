@@ -1,4 +1,5 @@
 {
+  "originHash" : "7977df563fd34a0f681f62cd21147d02105dfc02903205b35488d05c20b8a357",
   "pins" : [
     {
       "identity" : "keyboardshortcuts",
@@ -14,10 +15,10 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ReactiveX/RxSwift",
       "state" : {
-        "revision" : "9dcaa4b333db437b0fbfaf453fad29069044a8b4",
-        "version" : "6.6.0"
+        "revision" : "b06a8c8596e4c3e8e7788e08e720e3248563ce6a",
+        "version" : "6.7.1"
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

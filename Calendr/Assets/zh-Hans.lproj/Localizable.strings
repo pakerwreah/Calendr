@@ -12,6 +12,7 @@
 "settings.title" = "设置";
 "settings.tab.general" = "通用";
 "settings.tab.calendars" = "日历";
+"settings.tab.keyboard" = "快捷方式";
 "settings.tab.about" = "关于";
 
 "settings.menu_bar" = "菜单栏";
@@ -38,6 +39,24 @@
 "settings.events.finished.hide" = "隐藏";
 
 "settings.transparency" = "透明度";
+
+"settings.keyboard.local_shortcuts.title" = "本地快捷键";
+"settings.keyboard.local_shortcuts.prev_date" = "前一天";
+"settings.keyboard.local_shortcuts.next_date" = "后一天";
+"settings.keyboard.local_shortcuts.prev_week" = "前一周";
+"settings.keyboard.local_shortcuts.next_week" = "后一周";
+"settings.keyboard.local_shortcuts.prev_month" = "前一个月";
+"settings.keyboard.local_shortcuts.next_month" = "后一个月";
+"settings.keyboard.local_shortcuts.curr_date" = "当前日期";
+"settings.keyboard.local_shortcuts.open_date" = "打开选定日期";
+"settings.keyboard.local_shortcuts.pin_calendar" = "固定日历";
+
+"settings.keyboard.global_shortcuts.title" = "全局快捷键";
+"settings.keyboard.global_shortcuts.open_calendar" = "打开日历";
+"settings.keyboard.global_shortcuts.open_next_event" = "打开下一个事件";
+"settings.keyboard.global_shortcuts.open_next_event_options" = "下一个事件选项";
+"settings.keyboard.global_shortcuts.open_next_reminder" = "打开下一个提醒";
+"settings.keyboard.global_shortcuts.open_next_reminder_options" = "下一个提醒选项";
 
 "formatter.date.all_day" = "全天";
 "formatter.date.today" = "今日";

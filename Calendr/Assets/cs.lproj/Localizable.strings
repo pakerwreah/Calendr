@@ -12,6 +12,7 @@
 "settings.title" = "Předvolby";
 "settings.tab.general" = "Obecné";
 "settings.tab.calendars" = "Kalendáře";
+"settings.tab.keyboard" = "Zkratky";
 "settings.tab.about" = "O aplikaci";
 
 "settings.menu_bar" = "Řádek nabídek";
@@ -38,6 +39,24 @@
 "settings.events.finished.hide" = "Skrýt";
 
 "settings.transparency" = "Průhlednost";
+
+"settings.keyboard.local_shortcuts.title" = "Místní zkratky";
+"settings.keyboard.local_shortcuts.prev_date" = "Předchozí datum";
+"settings.keyboard.local_shortcuts.next_date" = "Následující datum";
+"settings.keyboard.local_shortcuts.prev_week" = "Předchozí týden";
+"settings.keyboard.local_shortcuts.next_week" = "Následující týden";
+"settings.keyboard.local_shortcuts.prev_month" = "Předchozí měsíc";
+"settings.keyboard.local_shortcuts.next_month" = "Následující měsíc";
+"settings.keyboard.local_shortcuts.curr_date" = "Aktuální datum";
+"settings.keyboard.local_shortcuts.open_date" = "Otevřít vybrané datum";
+"settings.keyboard.local_shortcuts.pin_calendar" = "Připnout kalendář";
+
+"settings.keyboard.global_shortcuts.title" = "Globální zkratky";
+"settings.keyboard.global_shortcuts.open_calendar" = "Otevřít kalendář";
+"settings.keyboard.global_shortcuts.open_next_event" = "Otevřít další událost";
+"settings.keyboard.global_shortcuts.open_next_event_options" = "Možnosti další události";
+"settings.keyboard.global_shortcuts.open_next_reminder" = "Otevřít další připomínku";
+"settings.keyboard.global_shortcuts.open_next_reminder_options" = "Možnosti další připomínky";
 
 "formatter.date.all_day" = "Celý den";
 "formatter.date.today" = "Dnes";

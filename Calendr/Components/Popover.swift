@@ -45,7 +45,7 @@ class Popover: NSObject, PopoverWindowDelegate {
         }
 
         if single {
-            closeAll()
+            Popover.closeAll()
         }
 
         guard let contentViewController else { return }
@@ -82,7 +82,7 @@ class Popover: NSObject, PopoverWindowDelegate {
         return NSMouseInRect(NSEvent.mouseLocation, window.frame, false)
     }
 
-    private func closeAll() {
+    static func closeAll() {
         for popover in popovers {
             popover.window?.performClose(nil)
         }
@@ -95,7 +95,7 @@ class Popover: NSObject, PopoverWindowDelegate {
         }
 
         guard NSApp.isActive else {
-            return closeAll()
+            return Popover.closeAll()
         }
 
         guard !isMouseInside else {

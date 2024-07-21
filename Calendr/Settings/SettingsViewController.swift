@@ -32,6 +32,7 @@ class SettingsViewController: NSTabViewController {
         let calendars = NSTabViewItem(
             viewController: CalendarPickerViewController(viewModel: calendarsViewModel, configuration: .settings)
         )
+        let keyboard = NSTabViewItem(viewController: KeyboardViewController())
         let about = NSTabViewItem(viewController: AboutViewController())
 
         general.label = Strings.Settings.Tab.general
@@ -40,10 +41,13 @@ class SettingsViewController: NSTabViewController {
         calendars.label = Strings.Settings.Tab.calendars
         calendars.image = Icons.Settings.calendars
 
+        keyboard.label = Strings.Settings.Tab.keyboard
+        keyboard.image = Icons.Settings.keyboard
+
         about.label = Strings.Settings.Tab.about
         about.image = Icons.Settings.about
 
-        tabViewItems = [general, calendars, about]
+        tabViewItems = [general, calendars, keyboard, about]
 
         setUpAccessibility()
 
@@ -169,7 +173,7 @@ private func sizeWithPadding(_ size: NSSize) -> NSSize {
 private enum Constants {
 
     static let padding: CGFloat = 24
-    static let minWidth: CGFloat = 180
+    static let minWidth: CGFloat = 250
 }
 
 // MARK: - Accessibility

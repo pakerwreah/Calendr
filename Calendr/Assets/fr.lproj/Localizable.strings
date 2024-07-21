@@ -12,6 +12,7 @@
 "settings.title" = "Préférences";
 "settings.tab.general" = "Général";
 "settings.tab.calendars" = "Calendriers";
+"settings.tab.keyboard" = "Raccourcis";
 "settings.tab.about" = "À propos";
 
 "settings.menu_bar" = "Barre de Menus";
@@ -38,6 +39,24 @@
 "settings.events.finished.hide" = "Masquer";
 
 "settings.transparency" = "Transparence";
+
+"settings.keyboard.local_shortcuts.title" = "Raccourcis locaux";
+"settings.keyboard.local_shortcuts.prev_date" = "Date précédente";
+"settings.keyboard.local_shortcuts.next_date" = "Date suivante";
+"settings.keyboard.local_shortcuts.prev_week" = "Semaine précédente";
+"settings.keyboard.local_shortcuts.next_week" = "Semaine prochaine";
+"settings.keyboard.local_shortcuts.prev_month" = "Mois précédent";
+"settings.keyboard.local_shortcuts.next_month" = "Mois prochain";
+"settings.keyboard.local_shortcuts.curr_date" = "Date actuelle";
+"settings.keyboard.local_shortcuts.open_date" = "Ouvrir la date sélectionnée";
+"settings.keyboard.local_shortcuts.pin_calendar" = "Épingler le calendrier";
+
+"settings.keyboard.global_shortcuts.title" = "Raccourcis globaux";
+"settings.keyboard.global_shortcuts.open_calendar" = "Ouvrir le calendrier";
+"settings.keyboard.global_shortcuts.open_next_event" = "Ouvrir le prochain événement";
+"settings.keyboard.global_shortcuts.open_next_event_options" = "Options du prochain événement";
+"settings.keyboard.global_shortcuts.open_next_reminder" = "Ouvrir le prochain rappel";
+"settings.keyboard.global_shortcuts.open_next_reminder_options" = "Options du prochain rappel";
 
 "formatter.date.all_day" = "Toute la journée";
 "formatter.date.today" = "Aujourd'hui";

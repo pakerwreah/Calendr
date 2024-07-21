@@ -6,11 +6,10 @@
 //
 
 import AppKit
-import KeyboardShortcuts
 
 class Keyboard {
 
-    enum Key: Equatable {
+    indirect enum Key: Equatable {
 
         enum Arrow {
             case left
@@ -18,24 +17,13 @@ class Keyboard {
             case down
             case up
         }
+        case enter
         case escape
+        case backspace
         case arrow(Arrow)
-        case command(Character)
-
-        static func from(_ event: NSEvent) -> Self? {
-            switch event.keyCode {
-            case 53: return .escape
-            case 123: return .arrow(.left)
-            case 124: return .arrow(.right)
-            case 125: return .arrow(.down)
-            case 126: return .arrow(.up)
-            default:
-                if event.modifierFlags.contains(.command), let char = event.characters?.first {
-                    return .command(char)
-                }
-            }
-            return nil
-        }
+        case char(Character)
+        case command(Key)
+        case option(Key)
     }
 
     private var eventMonitor: Any?
@@ -58,6 +46,40 @@ class Keyboard {
     }
 }
 
-extension KeyboardShortcuts.Name {
-    static let showMainPopover = Self("showMainPopover")
+private extension Keyboard.Key {
+
+    static func from(_ event: NSEvent) -> Self? {
+
+        var key: Self?
+
+        switch event.keyCode {
+        case 36: key = .enter
+        case 51: key = .backspace
+        case 53: key = .escape
+        case 123: key = .arrow(.left)
+        case 124: key = .arrow(.right)
+        case 125: key = .arrow(.down)
+        case 126: key = .arrow(.up)
+        default:
+            if let char = event.charactersIgnoringModifiers?.lowercased().first {
+                key = .char(char)
+            }
+        }
+
+        guard var key else {
+            return nil
+        }
+
+        let mods = event.modifierFlags
+
+        if mods.contains(.option) {
+            key = .option(key)
+        }
+
+        if mods.contains(.command) {
+            key = .command(key)
+        }
+
+        return key
+    }
 }
