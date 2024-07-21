@@ -122,8 +122,16 @@ internal enum Strings {
     }
     internal enum Keyboard {
       internal enum GlobalShortcuts {
-        /// Show calendar
-        internal static let showCalendar = Strings.tr("Localizable", "settings.keyboard.global_shortcuts.show_calendar", fallback: "Show calendar")
+        /// Open calendar
+        internal static let openCalendar = Strings.tr("Localizable", "settings.keyboard.global_shortcuts.open_calendar", fallback: "Open calendar")
+        /// Open next event
+        internal static let openNextEvent = Strings.tr("Localizable", "settings.keyboard.global_shortcuts.open_next_event", fallback: "Open next event")
+        /// Next event options
+        internal static let openNextEventOptions = Strings.tr("Localizable", "settings.keyboard.global_shortcuts.open_next_event_options", fallback: "Next event options")
+        /// Open next reminder
+        internal static let openNextReminder = Strings.tr("Localizable", "settings.keyboard.global_shortcuts.open_next_reminder", fallback: "Open next reminder")
+        /// Next reminder options
+        internal static let openNextReminderOptions = Strings.tr("Localizable", "settings.keyboard.global_shortcuts.open_next_reminder_options", fallback: "Next reminder options")
         /// Global shortcuts
         internal static let title = Strings.tr("Localizable", "settings.keyboard.global_shortcuts.title", fallback: "Global shortcuts")
       }

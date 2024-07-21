@@ -63,7 +63,11 @@ class KeyboardViewController: NSViewController, SettingsUI {
     private lazy var globalContent: NSView = {
 
         return NSStackView(views: [
-            makeGlobalShortcut(text: GlobalShortcuts.showCalendar, for: .showMainPopover)
+            makeGlobalShortcut(text: GlobalShortcuts.openCalendar, for: .showMainPopover),
+            makeGlobalShortcut(text: GlobalShortcuts.openNextEvent, for: .showNextEventPopover),
+            makeGlobalShortcut(text: GlobalShortcuts.openNextEventOptions, for: .showNextEventOptions),
+            makeGlobalShortcut(text: GlobalShortcuts.openNextReminder, for: .showNextReminderPopover),
+            makeGlobalShortcut(text: GlobalShortcuts.openNextReminderOptions, for: .showNextReminderOptions)
         ])
         .with(orientation: .vertical)
     }()
@@ -89,7 +93,7 @@ class KeyboardViewController: NSViewController, SettingsUI {
 
     private func makeRecorder(for name: KeyboardShortcuts.Name) -> NSView {
 
-        let shortcutRecorder = KeyboardShortcuts.RecorderCocoa(for: .showMainPopover)
+        let shortcutRecorder = KeyboardShortcuts.RecorderCocoa(for: name)
 
         shortcutRecorder.setContentHuggingPriority(.required, for: .horizontal)
 
@@ -103,4 +107,12 @@ private extension Strings.Settings.Keyboard.LocalShortcuts {
     static let showDeclinedEvents = Strings.Settings.Calendar.showDeclinedEvents
     static let settings = Strings.Settings.title
     static let quit = Strings.quit
+}
+
+extension KeyboardShortcuts.Name {
+    static let showMainPopover = Self("showMainPopover")
+    static let showNextEventPopover = Self("showNextEventPopover")
+    static let showNextEventOptions = Self("showNextEventOptions")
+    static let showNextReminderPopover = Self("showNextReminderPopover")
+    static let showNextReminderOptions = Self("showNextReminderOptions")
 }

@@ -573,14 +573,24 @@ class MainViewController: NSViewController {
             .disposed(by: disposeBag)
 
         clickHandler.rightClick
-            .compactMap { viewModel.makeContextMenuViewModel() }
-            .bind { makeContextMenu($0).show(in: statusBarButton) }
+            .flatMapFirst { _ -> Observable<Void> in
+                guard let vm = viewModel.makeContextMenuViewModel() else { return .void() }
+                let menu = makeContextMenu(vm)
+                menu.show(in: statusBarButton)
+                return menu.rx.deallocated
+            }
+            .subscribe()
             .disposed(by: disposeBag)
 
         statusBarButton.setUpClickHandler(clickHandler)
     }
 
     private func setUpKeyboard() {
+        setUpLocalShortcuts()
+        setUpGlobalShortcuts()
+    }
+
+    private func setUpLocalShortcuts() {
 
         keyboard.listen(in: self) { [weak self] event, key -> NSEvent? in
             guard let self else { return event }
@@ -604,7 +614,7 @@ class MainViewController: NSViewController {
             case _ where searchInput.hasFocus:
                 return event
 
-            // following cases: search input is not focused
+            // ↓ Search input not focused ↓ //
 
             case .option(.char("w")):
                 userDefaults.showWeekNumbers.toggle()
@@ -624,15 +634,43 @@ class MainViewController: NSViewController {
 
             return .none
         }
+    }
 
-        // Global shortcut
+    private func closeModals() {
+        NSMenu.closeAll()
+        Popover.closeAll()
+    }
+
+    private func setUpGlobalShortcuts() {
+
         KeyboardShortcuts.onKeyUp(for: .showMainPopover) { [weak self] in
             guard let self else { return }
-            if let window = view.window {
-                window.performClose(nil)
-                return
-            }
+            closeModals()
             mainStatusItemClickHandler.leftClick.onNext(())
+        }
+
+        KeyboardShortcuts.onKeyUp(for: .showNextEventPopover) { [weak self] in
+            guard let self else { return }
+            closeModals()
+            eventStatusItemClickHandler.leftClick.onNext(())
+        }
+
+        KeyboardShortcuts.onKeyUp(for: .showNextEventOptions) { [weak self] in
+            guard let self else { return }
+            closeModals()
+            eventStatusItemClickHandler.rightClick.onNext(())
+        }
+
+        KeyboardShortcuts.onKeyUp(for: .showNextReminderPopover) { [weak self] in
+            guard let self else { return }
+            closeModals()
+            reminderStatusItemClickHandler.leftClick.onNext(())
+        }
+
+        KeyboardShortcuts.onKeyUp(for: .showNextReminderOptions) { [weak self] in
+            guard let self else { return }
+            closeModals()
+            reminderStatusItemClickHandler.rightClick.onNext(())
         }
     }
 
@@ -732,10 +770,13 @@ private enum Constants {
     }
 }
 
-
 private extension NSMenu {
+    
     func show(in view: NSView) {
-        popUp(positioning: nil, at: .init(x: 0, y: view.frame.height + 5), in: view)
+        DispatchQueue.main.async {
+            // this is a blocking operation
+            self.popUp(positioning: nil, at: .init(x: 0, y: view.frame.height + 5), in: view)
+        }
     }
 }
 

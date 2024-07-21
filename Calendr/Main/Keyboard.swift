@@ -6,7 +6,6 @@
 //
 
 import AppKit
-import KeyboardShortcuts
 
 class Keyboard {
 
@@ -83,8 +82,4 @@ private extension Keyboard.Key {
 
         return key
     }
-}
-
-extension KeyboardShortcuts.Name {
-    static let showMainPopover = Self("showMainPopover")
 }

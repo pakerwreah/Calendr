@@ -52,7 +52,11 @@
 "settings.keyboard.local_shortcuts.pin_calendar" = "Fijar calendario";
 
 "settings.keyboard.global_shortcuts.title" = "Atajos globales";
-"settings.keyboard.global_shortcuts.show_calendar" = "Mostrar calendario";
+"settings.keyboard.global_shortcuts.open_calendar" = "Abrir calendario";
+"settings.keyboard.global_shortcuts.open_next_event" = "Abrir próximo evento";
+"settings.keyboard.global_shortcuts.open_next_event_options" = "Opciones del próximo evento";
+"settings.keyboard.global_shortcuts.open_next_reminder" = "Abrir próximo recordatorio";
+"settings.keyboard.global_shortcuts.open_next_reminder_options" = "Opciones del próximo recordatorio";
 
 "formatter.date.all_day" = "Todo el día";
 "formatter.date.today" = "Hoy";

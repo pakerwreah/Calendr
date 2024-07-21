@@ -12,6 +12,7 @@
 "settings.title" = "Nastavenia";
 "settings.tab.general" = "Všeobecné";
 "settings.tab.calendars" = "Kalendáre";
+"settings.tab.keyboard" = "Skratky";
 "settings.tab.about" = "O aplikácii";
 
 "settings.menu_bar" = "Lišta";
@@ -38,6 +39,24 @@
 "settings.events.finished.hide" = "Skryť";
 
 "settings.transparency" = "Priehľadnosť";
+
+"settings.keyboard.local_shortcuts.title" = "Lokálne skratky";
+"settings.keyboard.local_shortcuts.prev_date" = "Predchádzajúci dátum";
+"settings.keyboard.local_shortcuts.next_date" = "Nasledujúci dátum";
+"settings.keyboard.local_shortcuts.prev_week" = "Predchádzajúci týždeň";
+"settings.keyboard.local_shortcuts.next_week" = "Nasledujúci týždeň";
+"settings.keyboard.local_shortcuts.prev_month" = "Predchádzajúci mesiac";
+"settings.keyboard.local_shortcuts.next_month" = "Nasledujúci mesiac";
+"settings.keyboard.local_shortcuts.curr_date" = "Aktuálny dátum";
+"settings.keyboard.local_shortcuts.open_date" = "Otvoriť vybraný dátum";
+"settings.keyboard.local_shortcuts.pin_calendar" = "Pripnúť kalendár";
+
+"settings.keyboard.global_shortcuts.title" = "Globálne skratky";
+"settings.keyboard.global_shortcuts.open_calendar" = "Otvoriť kalendár";
+"settings.keyboard.global_shortcuts.open_next_event" = "Otvoriť ďalšiu udalosť";
+"settings.keyboard.global_shortcuts.open_next_event_options" = "Možnosti ďalšej udalosti";
+"settings.keyboard.global_shortcuts.open_next_reminder" = "Otvoriť ďalšiu pripomienku";
+"settings.keyboard.global_shortcuts.open_next_reminder_options" = "Možnosti ďalšej pripomienky";
 
 "formatter.date.all_day" = "Celý deň";
 "formatter.date.today" = "Dnes";

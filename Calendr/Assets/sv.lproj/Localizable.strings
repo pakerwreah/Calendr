@@ -12,6 +12,7 @@
 "settings.title" = "Inställningar";
 "settings.tab.general" = "Allmänt";
 "settings.tab.calendars" = "Kalendrar";
+"settings.tab.keyboard" = "Genvägar";
 "settings.tab.about" = "Om";
 
 "settings.menu_bar" = "Menyrad";
@@ -38,6 +39,24 @@
 "settings.events.finished.hide" = "Dölj";
 
 "settings.transparency" = "Transparens";
+
+"settings.keyboard.local_shortcuts.title" = "Lokala genvägar";
+"settings.keyboard.local_shortcuts.prev_date" = "Föregående datum";
+"settings.keyboard.local_shortcuts.next_date" = "Nästa datum";
+"settings.keyboard.local_shortcuts.prev_week" = "Föregående vecka";
+"settings.keyboard.local_shortcuts.next_week" = "Nästa vecka";
+"settings.keyboard.local_shortcuts.prev_month" = "Föregående månad";
+"settings.keyboard.local_shortcuts.next_month" = "Nästa månad";
+"settings.keyboard.local_shortcuts.curr_date" = "Aktuellt datum";
+"settings.keyboard.local_shortcuts.open_date" = "Öppna valt datum";
+"settings.keyboard.local_shortcuts.pin_calendar" = "Fäst kalender";
+
+"settings.keyboard.global_shortcuts.title" = "Globala genvägar";
+"settings.keyboard.global_shortcuts.open_calendar" = "Öppna kalender";
+"settings.keyboard.global_shortcuts.open_next_event" = "Öppna nästa händelse";
+"settings.keyboard.global_shortcuts.open_next_event_options" = "Nästa händelsealternativ";
+"settings.keyboard.global_shortcuts.open_next_reminder" = "Öppna nästa påminnelse";
+"settings.keyboard.global_shortcuts.open_next_reminder_options" = "Nästa påminnelsealternativ";
 
 "formatter.date.all_day" = "Heldag";
 "formatter.date.today" = "Idag";
