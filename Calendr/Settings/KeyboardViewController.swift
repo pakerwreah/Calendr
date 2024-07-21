@@ -43,6 +43,8 @@ class KeyboardViewController: NSViewController, SettingsUI {
             makeLocalShortcut(text: LocalShortcuts.nextMonth, keys: "⌘ →", "⌘ ↓"),
             makeLocalShortcut(text: LocalShortcuts.currDate, keys: "⌫"),
             makeLocalShortcut(text: LocalShortcuts.openDate, keys: "↵"),
+            makeLocalShortcut(text: LocalShortcuts.showWeekNumbers, keys: "⌥ W"),
+            makeLocalShortcut(text: LocalShortcuts.showDeclinedEvents, keys: "⌥ D"),
             makeLocalShortcut(text: LocalShortcuts.pinCalendar, keys: "⌘ P"),
             makeLocalShortcut(text: LocalShortcuts.settings, keys: "⌘ ,"),
             makeLocalShortcut(text: LocalShortcuts.quit, keys: "⌘ Q"),
@@ -97,6 +99,8 @@ class KeyboardViewController: NSViewController, SettingsUI {
 
 private extension Strings.Settings.Keyboard.LocalShortcuts {
 
+    static let showWeekNumbers = Strings.Settings.Calendar.showWeekNumbers
+    static let showDeclinedEvents = Strings.Settings.Calendar.showDeclinedEvents
     static let settings = Strings.Settings.title
     static let quit = Strings.quit
 }

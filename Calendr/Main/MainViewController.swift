@@ -59,6 +59,7 @@ class MainViewController: NSViewController {
     private let calendarService: CalendarServiceProviding
     private let dateProvider: DateProviding
     private let screenProvider: ScreenProviding
+    private let userDefaults: UserDefaults
     private let notificationCenter: NotificationCenter
     private var heightConstraint: NSLayoutConstraint?
 
@@ -78,6 +79,7 @@ class MainViewController: NSViewController {
         self.calendarService = calendarService
         self.dateProvider = dateProvider
         self.screenProvider = screenProvider
+        self.userDefaults = userDefaults
         self.notificationCenter = notificationCenter
 
         mainStatusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
@@ -603,6 +605,12 @@ class MainViewController: NSViewController {
                 return event
 
             // following cases: search input is not focused
+
+            case .option(.char("w")):
+                userDefaults.showWeekNumbers.toggle()
+
+            case .option(.char("d")):
+                userDefaults.showDeclinedEvents.toggle()
 
             case .arrow, .command(.arrow), .backspace:
                 navigationSubject.onNext(key)

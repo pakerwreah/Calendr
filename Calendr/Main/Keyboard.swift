@@ -24,28 +24,7 @@ class Keyboard {
         case arrow(Arrow)
         case char(Character)
         case command(Key)
-
-        static func from(_ event: NSEvent, _ checkModifiers: Bool = true) -> Self? {
-
-            if checkModifiers, event.modifierFlags.contains(.command), let key = Key.from(event, false) {
-                return .command(key)
-            }
-
-            switch event.keyCode {
-            case 36: return .enter
-            case 53: return .escape
-            case 117: return .backspace
-            case 123: return .arrow(.left)
-            case 124: return .arrow(.right)
-            case 125: return .arrow(.down)
-            case 126: return .arrow(.up)
-            default:
-                if let char = event.characters?.first {
-                    return .char(char)
-                }
-            }
-            return nil
-        }
+        case option(Key)
     }
 
     private var eventMonitor: Any?
@@ -65,6 +44,44 @@ class Keyboard {
             }
             return event
         }
+    }
+}
+
+private extension Keyboard.Key {
+
+    static func from(_ event: NSEvent) -> Self? {
+
+        var key: Self?
+
+        switch event.keyCode {
+        case 36: key = .enter
+        case 53: key = .escape
+        case 117: key = .backspace
+        case 123: key = .arrow(.left)
+        case 124: key = .arrow(.right)
+        case 125: key = .arrow(.down)
+        case 126: key = .arrow(.up)
+        default:
+            if let char = event.charactersIgnoringModifiers?.lowercased().first {
+                key = .char(char)
+            }
+        }
+
+        guard var key else {
+            return nil
+        }
+
+        let mods = event.modifierFlags
+
+        if mods.contains(.option) {
+            key = .option(key)
+        }
+
+        if mods.contains(.command) {
+            key = .command(key)
+        }
+
+        return key
     }
 }
 
