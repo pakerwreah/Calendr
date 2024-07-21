@@ -10,7 +10,7 @@ import KeyboardShortcuts
 
 class Keyboard {
 
-    enum Key: Equatable {
+    indirect enum Key: Equatable {
 
         enum Arrow {
             case left
@@ -18,20 +18,30 @@ class Keyboard {
             case down
             case up
         }
+        case enter
         case escape
+        case backspace
         case arrow(Arrow)
-        case command(Character)
+        case char(Character)
+        case command(Key)
 
-        static func from(_ event: NSEvent) -> Self? {
+        static func from(_ event: NSEvent, _ checkModifiers: Bool = true) -> Self? {
+
+            if checkModifiers, event.modifierFlags.contains(.command), let key = Key.from(event, false) {
+                return .command(key)
+            }
+
             switch event.keyCode {
+            case 36: return .enter
             case 53: return .escape
+            case 117: return .backspace
             case 123: return .arrow(.left)
             case 124: return .arrow(.right)
             case 125: return .arrow(.down)
             case 126: return .arrow(.up)
             default:
-                if event.modifierFlags.contains(.command), let char = event.characters?.first {
-                    return .command(char)
+                if let char = event.characters?.first {
+                    return .char(char)
                 }
             }
             return nil

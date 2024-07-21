@@ -23,8 +23,8 @@ extension ObservableType {
         map { value -> Element? in value }
     }
 
-    func matching(_ value: Element) -> Observable<Element> where Element: Equatable {
-        filter { value ~= $0 }
+    func matching(_ values: Element...) -> Observable<Element> where Element: Equatable {
+        filter { values.contains($0) }
     }
 
     func skipNil<T>() -> Observable<T> where Element == T? {
@@ -48,6 +48,8 @@ extension BehaviorSubject {
     static func pipe(value: Element) -> (output: Observable<Element>, input: AnyObserver<Element>) {
         { ($0.asObservable(), $0.asObserver()) }(Self.init(value: value))
     }
+
+    var value: Element { try! value() }
 }
 
 extension Bool {

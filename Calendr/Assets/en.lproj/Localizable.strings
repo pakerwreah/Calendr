@@ -12,6 +12,7 @@
 "settings.title" = "Preferences";
 "settings.tab.general" = "General";
 "settings.tab.calendars" = "Calendars";
+"settings.tab.keyboard" = "Shortcuts";
 "settings.tab.about" = "About";
 
 "settings.menu_bar" = "Menu Bar";
@@ -38,6 +39,20 @@
 "settings.events.finished.hide" = "Hide";
 
 "settings.transparency" = "Transparency";
+
+"settings.keyboard.local_shortcuts.title" = "Local shortcuts";
+"settings.keyboard.local_shortcuts.prev_date" = "Previous date";
+"settings.keyboard.local_shortcuts.next_date" = "Next date";
+"settings.keyboard.local_shortcuts.prev_week" = "Previous week";
+"settings.keyboard.local_shortcuts.next_week" = "Next week";
+"settings.keyboard.local_shortcuts.prev_month" = "Previous month";
+"settings.keyboard.local_shortcuts.next_month" = "Next month";
+"settings.keyboard.local_shortcuts.curr_date" = "Current date";
+"settings.keyboard.local_shortcuts.open_date" = "Open selected date";
+"settings.keyboard.local_shortcuts.pin_calendar" = "Pin calendar";
+
+"settings.keyboard.global_shortcuts.title" = "Global shortcuts";
+"settings.keyboard.global_shortcuts.show_calendar" = "Show calendar";
 
 "formatter.date.all_day" = "All day";
 "formatter.date.today" = "Today";

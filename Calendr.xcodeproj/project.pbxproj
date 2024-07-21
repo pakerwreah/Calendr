@@ -139,6 +139,8 @@
 		34D25E4A292F9E2100557E70 /* ImageButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D25E49292F9E2100557E70 /* ImageButton.swift */; };
 		34D3655829402D5700849457 /* NSColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D3655729402D5700849457 /* NSColor.swift */; };
 		34D55FE325F06669007F5C81 /* Sequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D55FE225F06669007F5C81 /* Sequence.swift */; };
+		34D88DC82C4C66F80047D636 /* KeyboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D88DC72C4C66F80047D636 /* KeyboardViewController.swift */; };
+		34D88DCA2C4C687B0047D636 /* SettingsUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D88DC92C4C687B0047D636 /* SettingsUI.swift */; };
 		34E004A725B61D5200241419 /* StatusItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E004A625B61D5200241419 /* StatusItemViewModel.swift */; };
 		34E1902325B76CFE00E9491B /* CalendarPickerViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E1902225B76CFE00E9491B /* CalendarPickerViewModelTests.swift */; };
 		34E259832B659B5600074D3A /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 34E259822B659B5600074D3A /* KeyboardShortcuts */; };
@@ -321,6 +323,8 @@
 		34D3655729402D5700849457 /* NSColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSColor.swift; sourceTree = "<group>"; };
 		34D55FE225F06669007F5C81 /* Sequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sequence.swift; sourceTree = "<group>"; };
 		34D88DC62C4C3D1A0047D636 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
+		34D88DC72C4C66F80047D636 /* KeyboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardViewController.swift; sourceTree = "<group>"; };
+		34D88DC92C4C687B0047D636 /* SettingsUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsUI.swift; sourceTree = "<group>"; };
 		34E004A625B61D5200241419 /* StatusItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemViewModel.swift; sourceTree = "<group>"; };
 		34E1902225B76CFE00E9491B /* CalendarPickerViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPickerViewModelTests.swift; sourceTree = "<group>"; };
 		34E60D6026A0D6D6004DA082 /* NSAccessibilityProtocol+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAccessibilityProtocol+Rx.swift"; sourceTree = "<group>"; };
@@ -741,9 +745,11 @@
 				3449403125C348C70020E664 /* CalendarPickerViewController.swift */,
 				34B5A09C25B118EC00F7F7ED /* CalendarPickerViewModel.swift */,
 				3449402D25C348B20020E664 /* GeneralSettingsViewController.swift */,
+				34D88DC72C4C66F80047D636 /* KeyboardViewController.swift */,
 				34934CD528E69520009635D4 /* Prefs+UserDefaults.swift */,
 				34B5A09225B0CE6F00F7F7ED /* SettingsViewController.swift */,
 				348B8D0325B2925100E518FE /* SettingsViewModel.swift */,
+				34D88DC92C4C687B0047D636 /* SettingsUI.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -1036,8 +1042,10 @@
 				34D3655829402D5700849457 /* NSColor.swift in Sources */,
 				34A591E42C175BBD00DE419D /* AppEditShortcuts.swift in Sources */,
 				3453E6FF28393943002DCC3C /* ContextMenu.swift in Sources */,
+				34D88DCA2C4C687B0047D636 /* SettingsUI.swift in Sources */,
 				34924CEE259FD064009C3450 /* DateFormatter.swift in Sources */,
 				3468E651284BD3D600B21EC8 /* EventLink.swift in Sources */,
+				34D88DC82C4C66F80047D636 /* KeyboardViewController.swift in Sources */,
 				34A591E62C175C0F00DE419D /* AppResignFocus.swift in Sources */,
 				3470214A259DFF3000827AE7 /* CalendarServiceProvider.swift in Sources */,
 				3408D13E25982DB400CF1425 /* DateSelector.swift in Sources */,
@@ -1296,7 +1304,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.11.3;
+				MARKETING_VERSION = 1.11.4;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Config/Calendr-Bridging-Header.h";
@@ -1322,7 +1330,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.11.3;
+				MARKETING_VERSION = 1.11.4;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Config/Calendr-Bridging-Header.h";

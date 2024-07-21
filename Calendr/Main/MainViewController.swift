@@ -48,10 +48,10 @@ class MainViewController: NSViewController {
     private let dateClick = PublishSubject<Date>()
     private let dateDoubleClick = PublishSubject<Date>()
     private let refreshDate = PublishSubject<Void>()
-    private let selectedDate = PublishSubject<Date>()
+    private let selectedDate = BehaviorSubject<Date>(value: .now)
     private let isShowingDetails = BehaviorSubject<Bool>(value: false)
     private let searchInputText = BehaviorSubject<String>(value: "")
-    private let arrowSubject = PublishSubject<Keyboard.Key.Arrow>()
+    private let navigationSubject = PublishSubject<Keyboard.Key>()
 
     // Properties
     private let keyboard = Keyboard()
@@ -584,20 +584,31 @@ class MainViewController: NSViewController {
             guard let self else { return event }
 
             switch key {
-            case .command("q"):
+            case .command(.char("q")):
                 NSApp.terminate(nil)
 
-            case .command("f"):
-                showSearchInput()
-
-            case .command(","):
+            case .command(.char(",")):
                 openSettings()
+
+            case .command(.char("p")):
+                pinBtn.performClick(nil)
+
+            case .command(.char("f")):
+                showSearchInput()
 
             case .escape where searchInput.hasFocus:
                 hideSearchInput()
 
-            case .arrow(let arrow) where !searchInput.hasFocus:
-                arrowSubject.onNext(arrow)
+            case _ where searchInput.hasFocus:
+                return event
+
+            // following cases: search input is not focused
+
+            case .arrow, .command(.arrow), .backspace:
+                navigationSubject.onNext(key)
+
+            case .enter:
+                dateDoubleClick.onNext(selectedDate.value)
 
             default:
                 return event
@@ -675,22 +686,27 @@ class MainViewController: NSViewController {
 
     private func makeDateSelector() -> DateSelector {
 
-        let keyLeft = arrowSubject.matching(.left).void()
-        let keyRight = arrowSubject.matching(.right).void()
-        let keyDown = arrowSubject.matching(.down).void()
-        let keyUp = arrowSubject.matching(.up).void()
+        let backspace = navigationSubject.matching(.backspace).void()
+
+        let keyLeft = navigationSubject.matching(.arrow(.left)).void()
+        let keyRight = navigationSubject.matching(.arrow(.right)).void()
+        let keyDown = navigationSubject.matching(.arrow(.down)).void()
+        let keyUp = navigationSubject.matching(.arrow(.up)).void()
+
+        let cmdUpLeft = navigationSubject.matching(.command(.arrow(.up)), .command(.arrow(.left))).void()
+        let cmdDownRight = navigationSubject.matching(.command(.arrow(.down)), .command(.arrow(.right))).void()
 
         let dateSelector = DateSelector(
             calendar: dateProvider.calendar,
             initial: refreshDate.map { [dateProvider] in dateProvider.now },
             selected: selectedDate,
-            reset: resetBtn.rx.tap.asObservable(),
+            reset: .merge(resetBtn.rx.tap.asObservable(), backspace),
             prevDay: keyLeft,
             nextDay: keyRight,
             prevWeek: keyUp,
             nextWeek: keyDown,
-            prevMonth: prevBtn.rx.tap.asObservable(),
-            nextMonth: nextBtn.rx.tap.asObservable()
+            prevMonth: .merge(prevBtn.rx.tap.asObservable(), cmdUpLeft),
+            nextMonth: .merge(nextBtn.rx.tap.asObservable(), cmdDownRight)
         )
 
         return dateSelector

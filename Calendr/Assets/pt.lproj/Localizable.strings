@@ -12,6 +12,7 @@
 "settings.title" = "Preferências";
 "settings.tab.general" = "Geral";
 "settings.tab.calendars" = "Calendários";
+"settings.tab.keyboard" = "Atalhos";
 "settings.tab.about" = "Sobre";
 
 "settings.menu_bar" = "Barra de Menus";
@@ -38,6 +39,20 @@
 "settings.events.finished.hide" = "Ocultar";
 
 "settings.transparency" = "Transparência";
+
+"settings.keyboard.local_shortcuts.title" = "Atalhos locais";
+"settings.keyboard.local_shortcuts.prev_date" = "Data anterior";
+"settings.keyboard.local_shortcuts.next_date" = "Próxima data";
+"settings.keyboard.local_shortcuts.prev_week" = "Semana anterior";
+"settings.keyboard.local_shortcuts.next_week" = "Próxima semana";
+"settings.keyboard.local_shortcuts.prev_month" = "Mês anterior";
+"settings.keyboard.local_shortcuts.next_month" = "Próximo mês";
+"settings.keyboard.local_shortcuts.curr_date" = "Data atual";
+"settings.keyboard.local_shortcuts.open_date" = "Abrir data selecionada";
+"settings.keyboard.local_shortcuts.pin_calendar" = "Fixar calendário";
+
+"settings.keyboard.global_shortcuts.title" = "Atalhos globais";
+"settings.keyboard.global_shortcuts.show_calendar" = "Mostrar calendário";
 
 "formatter.date.all_day" = "Dia inteiro";
 "formatter.date.today" = "Hoje";

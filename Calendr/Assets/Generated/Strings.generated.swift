@@ -120,6 +120,36 @@ internal enum Strings {
         internal static let hide = Strings.tr("Localizable", "settings.events.finished.hide", fallback: "Hide")
       }
     }
+    internal enum Keyboard {
+      internal enum GlobalShortcuts {
+        /// Show calendar
+        internal static let showCalendar = Strings.tr("Localizable", "settings.keyboard.global_shortcuts.show_calendar", fallback: "Show calendar")
+        /// Global shortcuts
+        internal static let title = Strings.tr("Localizable", "settings.keyboard.global_shortcuts.title", fallback: "Global shortcuts")
+      }
+      internal enum LocalShortcuts {
+        /// Current date
+        internal static let currDate = Strings.tr("Localizable", "settings.keyboard.local_shortcuts.curr_date", fallback: "Current date")
+        /// Next date
+        internal static let nextDate = Strings.tr("Localizable", "settings.keyboard.local_shortcuts.next_date", fallback: "Next date")
+        /// Next month
+        internal static let nextMonth = Strings.tr("Localizable", "settings.keyboard.local_shortcuts.next_month", fallback: "Next month")
+        /// Next week
+        internal static let nextWeek = Strings.tr("Localizable", "settings.keyboard.local_shortcuts.next_week", fallback: "Next week")
+        /// Open selected date
+        internal static let openDate = Strings.tr("Localizable", "settings.keyboard.local_shortcuts.open_date", fallback: "Open selected date")
+        /// Pin calendar
+        internal static let pinCalendar = Strings.tr("Localizable", "settings.keyboard.local_shortcuts.pin_calendar", fallback: "Pin calendar")
+        /// Previous date
+        internal static let prevDate = Strings.tr("Localizable", "settings.keyboard.local_shortcuts.prev_date", fallback: "Previous date")
+        /// Previous month
+        internal static let prevMonth = Strings.tr("Localizable", "settings.keyboard.local_shortcuts.prev_month", fallback: "Previous month")
+        /// Previous week
+        internal static let prevWeek = Strings.tr("Localizable", "settings.keyboard.local_shortcuts.prev_week", fallback: "Previous week")
+        /// Local shortcuts
+        internal static let title = Strings.tr("Localizable", "settings.keyboard.local_shortcuts.title", fallback: "Local shortcuts")
+      }
+    }
     internal enum MenuBar {
       /// Launch at login
       internal static let autoLaunch = Strings.tr("Localizable", "settings.menu_bar.auto_launch", fallback: "Launch at login")
@@ -147,6 +177,8 @@ internal enum Strings {
       internal static let calendars = Strings.tr("Localizable", "settings.tab.calendars", fallback: "Calendars")
       /// General
       internal static let general = Strings.tr("Localizable", "settings.tab.general", fallback: "General")
+      /// Shortcuts
+      internal static let keyboard = Strings.tr("Localizable", "settings.tab.keyboard", fallback: "Shortcuts")
     }
   }
 }
