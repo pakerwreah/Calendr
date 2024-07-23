@@ -81,11 +81,35 @@ class EventOptionsViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.items, [.action(.open)])
     }
 
+    func testOptions_fromList_withUnknownInvitationStatus_withLink() {
+
+        let viewModel = mock(event: .make(url: EventLink.zoomLink.url, type: .event(.unknown)), source: .list)
+        XCTAssertEqual(viewModel.items, [
+            .action(.open),
+            .separator,
+            .action(.link(.zoomLink, isInProgress: false))
+        ])
+    }
+
     func testOptions_fromList() {
 
         let viewModel = mock(event: .make(type: .event(.pending)), source: .list)
         XCTAssertEqual(viewModel.items, [
             .action(.open),
+            .separator,
+            .action(.status(.accept)),
+            .action(.status(.maybe)),
+            .action(.status(.decline))
+        ])
+    }
+
+    func testOptions_fromList_withLink() {
+
+        let viewModel = mock(event: .make(url: EventLink.zoomLink.url, type: .event(.pending)), source: .list)
+        XCTAssertEqual(viewModel.items, [
+            .action(.open),
+            .separator,
+            .action(.link(.zoomLink, isInProgress: false)),
             .separator,
             .action(.status(.accept)),
             .action(.status(.maybe)),
@@ -99,11 +123,39 @@ class EventOptionsViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.items, [.action(.open), .separator, .action(.skip)])
     }
 
+    func testOptions_fromMenuBar_withUnknownInvitationStatus_withLink() {
+
+        let viewModel = mock(event: .make(url: EventLink.zoomLink.url, type: .event(.unknown)), source: .menubar)
+        XCTAssertEqual(viewModel.items, [
+            .action(.open),
+            .separator,
+            .action(.link(.zoomLink, isInProgress: false)),
+            .separator,
+            .action(.skip)
+        ])
+    }
+
     func testOptions_fromMenuBar() {
 
         let viewModel = mock(event: .make(type: .event(.pending)), source: .menubar)
         XCTAssertEqual(viewModel.items, [
             .action(.open),
+            .separator,
+            .action(.skip),
+            .separator,
+            .action(.status(.accept)),
+            .action(.status(.maybe)),
+            .action(.status(.decline))
+        ])
+    }
+
+    func testOptions_fromMenuBar_withLink() {
+
+        let viewModel = mock(event: .make(url: EventLink.zoomLink.url, type: .event(.pending)), source: .menubar)
+        XCTAssertEqual(viewModel.items, [
+            .action(.open),
+            .separator,
+            .action(.link(.zoomLink, isInProgress: false)),
             .separator,
             .action(.skip),
             .separator,
@@ -178,6 +230,28 @@ class EventOptionsViewModelTests: XCTestCase {
         waitForExpectations(timeout: 1)
     }
 
+    func testEventLinkAction_isMeeting() {
+        XCTAssertEqual(EventAction.link(.zoomLink, isInProgress: false).title, Strings.EventAction.join)
+        
+        XCTAssertEqual(EventAction.link(.zoomLink, isInProgress: false).icon, Icons.Event.video)
+        
+        XCTAssertEqual(
+            EventAction.link(.zoomLink, isInProgress: true).icon?.tiffRepresentation,
+            Icons.Event.video_fill.with(color: .controlAccentColor).tiffRepresentation
+        )
+    }
+
+    func testEventLinkAction_isGenericLink() {
+        XCTAssertEqual(EventAction.link(.genericLink, isInProgress: false).title, "google.com")
+        
+        XCTAssertEqual(EventAction.link(.genericLink, isInProgress: false).icon, Icons.Event.link)
+        
+        XCTAssertEqual(
+            EventAction.link(.genericLink, isInProgress: true).icon?.tiffRepresentation,
+            Icons.Event.link.with(color: .controlAccentColor).tiffRepresentation
+        )
+    }
+
     func mock(
         event: EventModel,
         source: ContextMenuSource,
@@ -193,4 +267,10 @@ class EventOptionsViewModelTests: XCTestCase {
             callback: .init { callback($0.element) }
         )!
     }
+}
+
+private extension EventLink {
+
+    static let zoomLink: Self = .init(url: URL(string: "https://zoom.us/j/9999999999")!, isMeeting: true)
+    static let genericLink: Self = .init(url: URL(string: "https://google.com/something")!, isMeeting: false)
 }

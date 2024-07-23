@@ -61,6 +61,8 @@ extension EventModel {
 
     func range(using dateProvider: DateProviding) -> DateRange { .init(start: start, end: end, dateProvider: dateProvider) }
 
+    func isInProgress(using dateProvider: DateProviding) -> Bool { dateProvider.calendar.isDate(dateProvider.now, in: (start, end), granularity: .second) }
+
     var status: EventStatus { if case .event(let status) = type { return status } else { return .unknown } }
 
     var isMeeting: Bool { !participants.isEmpty }

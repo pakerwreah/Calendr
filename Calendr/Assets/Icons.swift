@@ -9,10 +9,6 @@ import AppKit
 
 enum Icons {
 
-    enum MenuBar {
-        static let icon = NSImage(systemName: "calendar")
-    }
-
     enum Calendar {
         static let prev = NSImage(systemName: "chevron.backward")
         static let reset = NSImage(systemName: "circle")
@@ -48,12 +44,10 @@ enum Icons {
         static let link = NSImage(systemName: "link")
         static let video = NSImage(systemName: "video")
         static let video_fill = NSImage(systemName: "video.fill")
-        static let open = NSImage(systemName: "square.and.arrow.up")
         static let skip = NSImage(systemName: "forward")
     }
 
     enum Reminder {
-        static let open = Event.open
         static let complete = NSImage(systemName: "circle.inset.filled")
     }
 

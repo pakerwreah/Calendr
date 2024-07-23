@@ -79,6 +79,7 @@
 "event_status.pending" = "En attente";
 
 "event_action.open" = "Ouvrir";
+"event_action.join" = "Rejoindre";
 "event_action.skip" = "Sauter";
 "event_action.accept" = "Accepter";
 "event_action.maybe" = "Peut-être";

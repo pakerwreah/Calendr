@@ -9,7 +9,7 @@ import Foundation
 
 extension Calendar {
 
-    func isDate(_ date: Date, in range: (start: Date, end: Date)) -> Bool {
+    func isDay(_ date: Date, inDays range: (start: Date, end: Date)) -> Bool {
 
         let (start, end) = range
 
@@ -29,19 +29,29 @@ extension Calendar {
         return gte && lte
     }
 
-    func isDate(_ date: Date, lessThan other: Date, granularity: Component = .day) -> Bool {
+    func isDate(_ date: Date, in range: (start: Date, end: Date), granularity: Component) -> Bool {
+        // date >= start
+        let gte = isDate(date, greaterThanOrEqualTo: range.start, granularity: granularity)
+        
+        // date < end
+        let lt = isDate(date, lessThan: range.end, granularity: granularity)
+
+        return gte && lt
+    }
+
+    func isDate(_ date: Date, lessThan other: Date, granularity: Component) -> Bool {
         compare(date, to: other, toGranularity: granularity) == .orderedAscending
     }
 
-    func isDate(_ date: Date, lessThanOrEqualTo other: Date, granularity: Component = .day) -> Bool {
+    func isDate(_ date: Date, lessThanOrEqualTo other: Date, granularity: Component) -> Bool {
         compare(date, to: other, toGranularity: granularity) != .orderedDescending
     }
 
-    func isDate(_ date: Date, greaterThan other: Date, granularity: Component = .day) -> Bool {
+    func isDate(_ date: Date, greaterThan other: Date, granularity: Component) -> Bool {
         compare(date, to: other, toGranularity: granularity) == .orderedDescending
     }
 
-    func isDate(_ date: Date, greaterThanOrEqualTo other: Date, granularity: Component = .day) -> Bool {
+    func isDate(_ date: Date, greaterThanOrEqualTo other: Date, granularity: Component) -> Bool {
         compare(date, to: other, toGranularity: granularity) != .orderedAscending
     }
 

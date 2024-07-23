@@ -79,6 +79,7 @@
 "event_status.pending" = "Čakajúce";
 
 "event_action.open" = "Otvoriť";
+"event_action.join" = "Pripojiť sa";
 "event_action.skip" = "Preskočiť";
 "event_action.accept" = "Prijať";
 "event_action.maybe" = "Možno";

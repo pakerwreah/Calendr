@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct EventLink {
+struct EventLink: Equatable {
     let url: URL
     let isMeeting: Bool
 }
