@@ -79,6 +79,7 @@
 "event_status.pending" = "Väntande";
 
 "event_action.open" = "Öppna";
+"event_action.join" = "Gå med";
 "event_action.skip" = "Skippa";
 "event_action.accept" = "Tacka ja";
 "event_action.maybe" = "Kanske";

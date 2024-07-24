@@ -10,6 +10,7 @@ import RxSwift
 
 enum EventAction: Equatable {
     case open
+    case link(EventLink, isInProgress: Bool)
     case skip
     case status(EventStatusAction)
 }
@@ -44,6 +45,11 @@ class EventOptionsViewModel: BaseContextMenuViewModel<EventAction> {
 
         if [.list, .menubar].contains(source) {
             addItem(.open)
+
+            if let link = event.detectLink(using: workspace) {
+                addSeparator()
+                addItem(.link(link, isInProgress: event.isInProgress(using: dateProvider)))
+            }
         }
 
         if source ~= .menubar {
@@ -88,6 +94,8 @@ class EventOptionsViewModel: BaseContextMenuViewModel<EventAction> {
         switch action {
         case .open:
             openEvent()
+        case .link(let link, _):
+            workspace.open(link.url)
         case .skip:
             break
         case .status(let action):
@@ -120,7 +128,16 @@ extension EventAction: ContextMenuAction {
     var icon: NSImage? {
         switch self {
         case .open:
-            return Icons.Event.open
+            return Icons.Calendar.calendar
+        
+        case .link(let link, let isInProgress):
+            let icon = if link.isMeeting {
+                isInProgress ? Icons.Event.video_fill : Icons.Event.video
+            } else {
+                Icons.Event.link
+            }
+            return isInProgress ? icon.with(color: .controlAccentColor) : icon
+
         case .skip:
             return Icons.Event.skip
         case .status(.accept):
@@ -136,6 +153,8 @@ extension EventAction: ContextMenuAction {
         switch self {
         case .open:
             return Strings.EventAction.open
+        case .link(let link, _):
+            return link.isMeeting ? Strings.EventAction.join : link.url.domain ?? "???"
         case .skip:
             return Strings.EventAction.skip
         case .status(.accept):
@@ -144,6 +163,16 @@ extension EventAction: ContextMenuAction {
             return Strings.EventAction.maybe
         case .status(.decline):
             return Strings.EventAction.decline
+        }
+    }
+}
+
+private extension URL {
+    var domain: String? {
+        if #available(macOS 13.0, *) {
+            host()
+        } else {
+            host
         }
     }
 }

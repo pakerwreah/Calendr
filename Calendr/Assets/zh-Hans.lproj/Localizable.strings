@@ -79,6 +79,7 @@
 "event_status.pending" = "等待中";
 
 "event_action.open" = "打开";
+"event_action.join" = "加入";
 "event_action.skip" = "跳过";
 "event_action.accept" = "接受";
 "event_action.maybe" = "也许";

@@ -174,7 +174,7 @@ class CalendarViewModel {
                 vm.with(
                     isToday: dateProvider.calendar.isDate(vm.date, inSameDayAs: today),
                     events: events?.filter { event in
-                        dateProvider.calendar.isDate(vm.date, in: (event.start, event.end))
+                        dateProvider.calendar.isDay(vm.date, inDays: (event.start, event.end))
                     },
                     calendar: dateProvider.calendar
                 )

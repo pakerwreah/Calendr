@@ -84,7 +84,7 @@ extension ReminderAction: ContextMenuAction {
     var icon: NSImage? {
         switch self {
         case .open:
-            return Icons.Reminder.open
+            return Icons.Calendar.reminders
         case .complete(let color):
             return Icons.Reminder.complete.with(color: color)
         case .remind:

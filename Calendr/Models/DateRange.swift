@@ -11,17 +11,22 @@ class DateRange {
 
     let start: Date
     let end: Date
-    let dateProvider: DateProviding
+
+    private let dateProvider: DateProviding
+    private var calendar: Calendar { dateProvider.calendar }
+    private var now: Date { dateProvider.now }
 
     // fix range ending at 00:00 of the next day
-    lazy var fixedEnd = end == start ? end : dateProvider.calendar.date(byAdding: .second, value: -1, to: end)!
-    lazy var startsToday = dateProvider.calendar.isDate(start, inSameDayAs: dateProvider.now)
-    lazy var endsToday = dateProvider.calendar.isDate(fixedEnd, inSameDayAs: dateProvider.now)
-    lazy var isSingleDay = dateProvider.calendar.isDate(start, inSameDayAs: fixedEnd)
-    lazy var isSameMonth = dateProvider.calendar.isDate(start, equalTo: fixedEnd, toGranularity: .month)
-    lazy var startsMidnight = dateProvider.calendar.date(start, matchesComponents: .midnightStart)
-    lazy var endsMidnight = [.midnightStart, .midnightEnd].contains { dateProvider.calendar.date(end, matchesComponents: $0) }
-    lazy var isPast = dateProvider.calendar.isDate(end, lessThan: dateProvider.now, granularity: .second)
+    lazy var fixedEnd = end == start ? end : calendar.date(byAdding: .second, value: -1, to: end)!
+    lazy var isSingleDay = calendar.isDate(start, inSameDayAs: fixedEnd)
+    lazy var isSameMonth = calendar.isDate(start, equalTo: fixedEnd, toGranularity: .month)
+    lazy var startsMidnight = calendar.date(start, matchesComponents: .midnightStart)
+    lazy var endsMidnight = [.midnightStart, .midnightEnd].contains { calendar.date(end, matchesComponents: $0) }
+
+    // relative to now
+    var startsToday: Bool { calendar.isDate(start, inSameDayAs: now) }
+    var endsToday: Bool { calendar.isDate(fixedEnd, inSameDayAs: now) }
+    var isPast: Bool { calendar.isDate(end, lessThan: now, granularity: .second) }
 
     init(start: Date, end: Date, dateProvider: DateProviding) {
         self.start = start
