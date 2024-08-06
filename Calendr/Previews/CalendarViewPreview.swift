@@ -20,8 +20,6 @@ struct CalendarViewPreview: PreviewProvider {
         highlightedWeekdays: [0, 1, 4, 6],
         showWeekNumbers: true
     )
-    static let notificationCenter = NotificationCenter()
-
     static let hovered = BehaviorSubject<Date?>(value: .random(from: dateProvider))
     static let selected = BehaviorSubject<Date>(value: .random(inMonth: dateProvider))
 
@@ -39,8 +37,7 @@ struct CalendarViewPreview: PreviewProvider {
                 enabledCalendars: .empty(),
                 calendarService: calendarService,
                 dateProvider: dateProvider,
-                settings: settings,
-                notificationCenter: notificationCenter
+                settings: settings
             ),
             hoverObserver: hovered.asObserver(),
             clickObserver: selected.asObserver(),

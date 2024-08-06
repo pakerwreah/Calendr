@@ -21,7 +21,6 @@ class CalendarViewModelTests: XCTestCase {
     let calendarService = MockCalendarServiceProvider()
     let settings = MockCalendarSettings()
     let dateProvider = MockDateProvider()
-    let notificationCenter = NotificationCenter()
 
     lazy var viewModel = CalendarViewModel(
         searchObservable: searchSubject,
@@ -30,8 +29,7 @@ class CalendarViewModelTests: XCTestCase {
         enabledCalendars: calendarsSubject,
         calendarService: calendarService,
         dateProvider: dateProvider,
-        settings: settings,
-        notificationCenter: notificationCenter
+        settings: settings
     )
 
     var lastValue: [CalendarCellViewModel]?
@@ -117,7 +115,7 @@ class CalendarViewModelTests: XCTestCase {
         .disposed(by: disposeBag)
 
         dateProvider.m_calendar.locale = Locale(identifier: "fr")
-        notificationCenter.post(name: NSLocale.currentLocaleDidChangeNotification, object: nil)
+        dateProvider.notifyCalendarUpdated()
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
         dateSubject.onNext(.make(year: 2021, month: 1, day: 2))
@@ -152,9 +150,8 @@ class CalendarViewModelTests: XCTestCase {
 
     func testDateSpan_firstWeekDayMonday() throws {
 
-        settings.firstWeekdayObserver.onNext(2)
-
-        notificationCenter.post(name: NSLocale.currentLocaleDidChangeNotification, object: nil)
+        dateProvider.m_calendar.firstWeekday = 2
+        dateProvider.notifyCalendarUpdated()
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
 
@@ -167,9 +164,8 @@ class CalendarViewModelTests: XCTestCase {
 
     func testDateSpan_firstWeekDayGreaterThanMonthStart() throws {
 
-        settings.firstWeekdayObserver.onNext(2)
-
-        notificationCenter.post(name: NSLocale.currentLocaleDidChangeNotification, object: nil)
+        dateProvider.m_calendar.firstWeekday = 2
+        dateProvider.notifyCalendarUpdated()
 
         dateSubject.onNext(.make(year: 2021, month: 8, day: 1))
 
@@ -195,9 +191,8 @@ class CalendarViewModelTests: XCTestCase {
 
     func testWeekDays_firstWeekDayMonday() {
 
-        settings.firstWeekdayObserver.onNext(2)
-
-        notificationCenter.post(name: NSLocale.currentLocaleDidChangeNotification, object: nil)
+        dateProvider.m_calendar.firstWeekday = 2
+        dateProvider.notifyCalendarUpdated()
 
         var weekDays: [WeekDay]?
 
@@ -262,7 +257,7 @@ class CalendarViewModelTests: XCTestCase {
     func testWeekNumbers_iso8601Calendar_firstWeekDayMonday() {
 
         dateProvider.m_calendar = .iso8601
-        settings.firstWeekdayObserver.onNext(Calendar.iso8601.firstWeekday)
+        dateProvider.notifyCalendarUpdated()
 
         var weekNumbers: [Int]?
 
