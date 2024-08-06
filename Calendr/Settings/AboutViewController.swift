@@ -81,6 +81,9 @@ class AboutViewController: NSViewController, UNUserNotificationCenterDelegate {
     }
 
     private func setUpReleaseCheck() {
+
+        guard !BuildConfig.isUITesting else { return }
+
         UNUserNotificationCenter.current().delegate = self
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { (granted, error) in
             guard granted else { return }
