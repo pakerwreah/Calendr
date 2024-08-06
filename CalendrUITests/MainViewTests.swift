@@ -122,6 +122,8 @@ class MainViewTests: UITestCase {
 
         CalendarPicker.view.outside.click()
 
+        usleep(300_000)
+
         XCTAssertFalse(CalendarPicker.view.exists)
     }
 

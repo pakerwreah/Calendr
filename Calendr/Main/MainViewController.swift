@@ -48,7 +48,7 @@ class MainViewController: NSViewController {
     private let dateClick = PublishSubject<Date>()
     private let dateDoubleClick = PublishSubject<Date>()
     private let refreshDate = PublishSubject<Void>()
-    private let selectedDate = BehaviorSubject<Date>(value: .now)
+    private let selectedDate: BehaviorSubject<Date>
     private let isShowingDetails = BehaviorSubject<Bool>(value: false)
     private let searchInputText = BehaviorSubject<String>(value: "")
     private let navigationSubject = PublishSubject<Keyboard.Key>()
@@ -78,6 +78,7 @@ class MainViewController: NSViewController {
         self.workspace = workspace
         self.calendarService = calendarService
         self.dateProvider = dateProvider
+        self.selectedDate = .init(value: dateProvider.now)
         self.screenProvider = screenProvider
         self.userDefaults = userDefaults
         self.notificationCenter = notificationCenter
@@ -309,9 +310,21 @@ class MainViewController: NSViewController {
 
         view.setAccessibilityIdentifier(Accessibility.Main.view)
 
-        mainStatusItem.button?.setAccessibilityIdentifier(Accessibility.MenuBar.main)
-        eventStatusItem.button?.setAccessibilityIdentifier(Accessibility.MenuBar.event)
-        reminderStatusItem.button?.setAccessibilityIdentifier(Accessibility.MenuBar.reminder)
+        statusItemViewModel.iconsAndText
+            .map { birthday, calendar, text in
+                [
+                    Accessibility.MenuBar.Main.item,
+                    birthday != nil ? Accessibility.MenuBar.Main.Icon.birthday : nil,
+                    calendar != nil ? Accessibility.MenuBar.Main.Icon.calendar : nil,
+                    text
+                ]
+                .compact()
+            }
+            .bind(to: mainStatusItem.button!.rx.accessibilityIdentifiers)
+            .disposed(by: disposeBag)
+
+        eventStatusItem.button?.setAccessibilityIdentifier(Accessibility.MenuBar.Event.item)
+        reminderStatusItem.button?.setAccessibilityIdentifier(Accessibility.MenuBar.Reminder.item)
 
         titleLabel.setAccessibilityIdentifier(Accessibility.Main.title)
         prevBtn.setAccessibilityIdentifier(Accessibility.Main.prevBtn)

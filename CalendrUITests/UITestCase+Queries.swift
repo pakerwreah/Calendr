@@ -13,9 +13,9 @@ extension UITestCase {
     var app: XCUIApplication { Self.app }
 
     enum MenuBar {
-        static var main: XCUIElement { app.statusItems[Accessibility.MenuBar.main].wait(.shortTimeout) }
-        static var event: XCUIElement { app.statusItems[Accessibility.MenuBar.event] }
-        static var reminder: XCUIElement { app.statusItems[Accessibility.MenuBar.reminder] }
+        static var main: XCUIElement { app.statusItems[Accessibility.MenuBar.Main.item].wait(.shortTimeout) }
+        static var event: XCUIElement { app.statusItems[Accessibility.MenuBar.Event.item] }
+        static var reminder: XCUIElement { app.statusItems[Accessibility.MenuBar.Reminder.item] }
     }
 
     enum Main {
@@ -81,6 +81,7 @@ extension UITestCase {
 
             static var general: XCUIElement { window.toolbars.buttons.element(matching: predicate(for: "General")) }
             static var calendars: XCUIElement { window.toolbars.buttons.element(matching: predicate(for: "Calendars")) }
+            static var keyboard: XCUIElement { window.toolbars.buttons.element(matching: predicate(for: "Shortcuts")) }
             static var about: XCUIElement { window.toolbars.buttons.element(matching: predicate(for: "About")) }
         }
 
@@ -92,6 +93,10 @@ extension UITestCase {
 
         enum Calendars {
             static var view: XCUIElement { Settings.view.otherElements[Accessibility.Settings.Calendars.view] }
+        }
+
+        enum Keyboard {
+            static var view: XCUIElement { Settings.view.otherElements[Accessibility.Settings.Keyboard.view] }
         }
 
         enum About {
@@ -110,10 +115,19 @@ extension TimeInterval {
 
 extension XCUIElement {
 
-    var didAppear: Bool { waitForExistence(timeout: 1) && !frame.isEmpty }
+    var didAppear: Bool { waitForExistence(timeout: .shortTimeout) && !frame.isEmpty }
 
-    var text: String { value as! String }
-    var isChecked: Bool { value as! Bool }
+    var text: String? { value as? String }
+
+    func value<T>(file: StaticString = #filePath, line: UInt = #line) -> T? {
+        guard let value = wait(.shortTimeout, file: file, line: line).value as? T else {
+            XCTFail("Value missing from '\(self)' element", file: file, line: line)
+            return nil
+        }
+        return value
+    }
+
+    var identifiers: [String] { identifier.components(separatedBy: Accessibility.Identifier.separator) }
 
     var outside: XCUICoordinate { coordinate(withNormalizedOffset: .zero).withOffset(.init(dx: -500, dy: 500)) }
 
@@ -123,7 +137,7 @@ extension XCUIElement {
 
         guard let current = value as? String else { return }
 
-        typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: current.count)+text)
+        typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: current.count) + text)
     }
 
     func wait(_ timeout: TimeInterval, file: StaticString = #filePath, line: UInt = #line) -> Self {
@@ -159,7 +173,7 @@ private extension NSPredicate {
 
             guard let item = item as? XCUIElementAttributes else { return false }
 
-            return item.identifier.components(separatedBy: ",").contains(identifier)
+            return item.identifier.components(separatedBy: Accessibility.Identifier.separator).contains(identifier)
         }
     }
 }

@@ -35,9 +35,8 @@ class StatusItemViewModelTests: XCTestCase {
         scheduler: scheduler
     )
 
-    var iconsAndText: ([NSImage], String)?
-    var iconsCount: Int { iconsAndText?.0.count ?? 0 }
-    var lastText: String? { iconsAndText?.1 }
+    var iconsAndText: StatusItemViewModel.IconsAndText?
+    var lastText: String? { iconsAndText?.text }
 
     override func setUp() {
 
@@ -90,28 +89,40 @@ class StatusItemViewModelTests: XCTestCase {
     func testIconVisibility() {
 
         setUp(showIcon: true, showDate: true, iconStyle: .date)
-        XCTAssertEqual(iconsCount, 1)
+        XCTAssertEqual(iconsAndText?.calendar?.style, .date)
 
         setUp(showIcon: true, showDate: true, iconStyle: .calendar)
-        XCTAssertEqual(iconsCount, 1)
+        XCTAssertEqual(iconsAndText?.calendar?.style, .calendar)
+
+        setUp(showIcon: true, showDate: true, iconStyle: .dayOfWeek)
+        XCTAssertEqual(iconsAndText?.calendar?.style, .dayOfWeek)
 
         setUp(showIcon: true, showDate: false, iconStyle: .date)
-        XCTAssertEqual(iconsCount, 1)
+        XCTAssertEqual(iconsAndText?.calendar?.style, .date)
 
         setUp(showIcon: true, showDate: false, iconStyle: .calendar)
-        XCTAssertEqual(iconsCount, 1)
+        XCTAssertEqual(iconsAndText?.calendar?.style, .calendar)
+
+        setUp(showIcon: true, showDate: false, iconStyle: .dayOfWeek)
+        XCTAssertEqual(iconsAndText?.calendar?.style, .dayOfWeek)
 
         setUp(showIcon: false, showDate: true, iconStyle: .date)
-        XCTAssertEqual(iconsCount, 0)
+        XCTAssertNil(iconsAndText?.calendar)
 
         setUp(showIcon: false, showDate: true, iconStyle: .calendar)
-        XCTAssertEqual(iconsCount, 0)
+        XCTAssertNil(iconsAndText?.calendar)
+
+        setUp(showIcon: false, showDate: true, iconStyle: .dayOfWeek)
+        XCTAssertNil(iconsAndText?.calendar)
 
         setUp(showIcon: false, showDate: false, iconStyle: .date)
-        XCTAssertEqual(iconsCount, 1)
+        XCTAssertEqual(iconsAndText?.calendar?.style, .date)
 
         setUp(showIcon: false, showDate: false, iconStyle: .calendar)
-        XCTAssertEqual(iconsCount, 1)
+        XCTAssertEqual(iconsAndText?.calendar?.style, .calendar)
+
+        setUp(showIcon: false, showDate: false, iconStyle: .dayOfWeek)
+        XCTAssertEqual(iconsAndText?.calendar?.style, .dayOfWeek)
     }
 
     func testIconVisibility_withBirthday() {
@@ -119,28 +130,36 @@ class StatusItemViewModelTests: XCTestCase {
         calendarService.changeEvents([.make(type: .birthday)])
 
         setUp(showIcon: true, showDate: true, iconStyle: .date)
-        XCTAssertEqual(iconsCount, 2)
+        XCTAssertNotNil(iconsAndText?.birthday)
+        XCTAssertNotNil(iconsAndText?.calendar)
 
         setUp(showIcon: true, showDate: true, iconStyle: .calendar)
-        XCTAssertEqual(iconsCount, 1)
+        XCTAssertNotNil(iconsAndText?.birthday)
+        XCTAssertNil(iconsAndText?.calendar)
 
         setUp(showIcon: true, showDate: false, iconStyle: .date)
-        XCTAssertEqual(iconsCount, 2)
+        XCTAssertNotNil(iconsAndText?.birthday)
+        XCTAssertNotNil(iconsAndText?.calendar)
 
         setUp(showIcon: true, showDate: false, iconStyle: .calendar)
-        XCTAssertEqual(iconsCount, 1)
+        XCTAssertNotNil(iconsAndText?.birthday)
+        XCTAssertNil(iconsAndText?.calendar)
 
         setUp(showIcon: false, showDate: true, iconStyle: .date)
-        XCTAssertEqual(iconsCount, 1)
+        XCTAssertNotNil(iconsAndText?.birthday)
+        XCTAssertNil(iconsAndText?.calendar)
 
         setUp(showIcon: false, showDate: true, iconStyle: .calendar)
-        XCTAssertEqual(iconsCount, 1)
+        XCTAssertNotNil(iconsAndText?.birthday)
+        XCTAssertNil(iconsAndText?.calendar)
 
         setUp(showIcon: false, showDate: false, iconStyle: .date)
-        XCTAssertEqual(iconsCount, 1)
+        XCTAssertNotNil(iconsAndText?.birthday)
+        XCTAssertNil(iconsAndText?.calendar)
 
         setUp(showIcon: false, showDate: false, iconStyle: .calendar)
-        XCTAssertEqual(iconsCount, 1)
+        XCTAssertNotNil(iconsAndText?.birthday)
+        XCTAssertNil(iconsAndText?.calendar)
     }
 
     func testBirthdayIconVisibility_withShowNextEventDisabled() {
@@ -148,12 +167,14 @@ class StatusItemViewModelTests: XCTestCase {
         calendarService.changeEvents([.make(type: .birthday)])
 
         setUp(showIcon: true, showDate: true, iconStyle: .date)
-        XCTAssertEqual(iconsCount, 2)
+        XCTAssertNotNil(iconsAndText?.birthday)
+        XCTAssertNotNil(iconsAndText?.calendar)
 
         settings.showEventStatusItemObserver.onNext(false)
 
         setUp(showIcon: true, showDate: true, iconStyle: .date)
-        XCTAssertEqual(iconsCount, 1)
+        XCTAssertNil(iconsAndText?.birthday)
+        XCTAssertNotNil(iconsAndText?.calendar)
     }
 
     func testDateVisibility() {

@@ -9,6 +9,10 @@ import Foundation
 
 enum Accessibility {
 
+    enum Identifier {
+        static let separator = "||"
+    }
+
     enum Main {
         static let view = "main_view"
         static let title = "main_title"
@@ -22,9 +26,23 @@ enum Accessibility {
     }
 
     enum MenuBar {
-        static let main = "main_status_item"
-        static let event = "event_status_item"
-        static let reminder = "reminder_status_item"
+
+        enum Main {
+            static let item = "main_status_item"
+
+            enum Icon {
+                static let birthday = "main_status_item_with_birthday_icon"
+                static let calendar = "main_status_item_with_calendar_icon"
+            }
+        }
+
+        enum Event {
+            static let item = "event_status_item"
+        }
+
+        enum Reminder {
+            static let item = "reminder_status_item"
+        }
     }
 
     enum Calendar {
@@ -68,6 +86,10 @@ enum Accessibility {
 
         enum Calendars {
             static let view = "settings_calendars_view"
+        }
+
+        enum Keyboard {
+            static let view = "settings_keyboard_view"
         }
 
         enum About {

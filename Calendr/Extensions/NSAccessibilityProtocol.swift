@@ -11,7 +11,7 @@ extension NSAccessibilityProtocol {
 
     func setAccessibilityIdentifiers(_ accessibilityIdentifiers: [String]) {
 
-        setAccessibilityIdentifier(accessibilityIdentifiers.joined(separator: ","))
+        setAccessibilityIdentifier(accessibilityIdentifiers.joined(separator: Accessibility.Identifier.separator))
     }
 
     func addAccessibilityChild(_ accessibilityChild: NSObject) {

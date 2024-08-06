@@ -18,7 +18,7 @@ class MockDateProvider: DateProviding {
     var now: Date { start.advanced(by: initial.distance(to: Date())) }
 
     init(
-        calendar: Calendar = .gregorian.with(locale: .init(identifier: "en_GB")),
+        calendar: Calendar = .gregorian.with(locale: .init(identifier: "en_GB")).with(firstWeekday: 1),
         start: Date = .make(year: 2021, month: 1, day: 1)
     ) {
         self.calendar = calendar

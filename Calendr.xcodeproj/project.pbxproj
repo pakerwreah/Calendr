@@ -36,6 +36,8 @@
 		3430675E25F6BC15000D4003 /* HistoricalSchedulerTimeConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3430675D25F6BC15000D4003 /* HistoricalSchedulerTimeConverter.swift */; };
 		3430676325F6C130000D4003 /* TrackedHistoricalScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3430676225F6C130000D4003 /* TrackedHistoricalScheduler.swift */; };
 		3430ED03259634E00045DA53 /* NSStackView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3430ED02259634E00045DA53 /* NSStackView+Rx.swift */; };
+		3438AEEE2C6192A9002BE3E1 /* XCTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3438AEED2C6192A9002BE3E1 /* XCTest.swift */; };
+		3438AEEF2C6192A9002BE3E1 /* XCTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3438AEED2C6192A9002BE3E1 /* XCTest.swift */; };
 		34427692269B5760004CFE1C /* MockMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34427691269B5760004CFE1C /* MockMainViewController.swift */; };
 		3442769A269B5CA4004CFE1C /* UITestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34427699269B5CA4004CFE1C /* UITestCase.swift */; };
 		3449402E25C348B20020E664 /* GeneralSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3449402D25C348B20020E664 /* GeneralSettingsViewController.swift */; };
@@ -206,6 +208,7 @@
 		3430675D25F6BC15000D4003 /* HistoricalSchedulerTimeConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoricalSchedulerTimeConverter.swift; sourceTree = "<group>"; };
 		3430676225F6C130000D4003 /* TrackedHistoricalScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackedHistoricalScheduler.swift; sourceTree = "<group>"; };
 		3430ED02259634E00045DA53 /* NSStackView+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSStackView+Rx.swift"; sourceTree = "<group>"; };
+		3438AEED2C6192A9002BE3E1 /* XCTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCTest.swift; sourceTree = "<group>"; };
 		343B74C826D168A80081A440 /* UnitTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = UnitTests.xctestplan; path = CalendrTests/UnitTests.xctestplan; sourceTree = SOURCE_ROOT; };
 		343B74C926D169E80081A440 /* UITests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = UITests.xctestplan; sourceTree = "<group>"; };
 		34427691269B5760004CFE1C /* MockMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockMainViewController.swift; sourceTree = "<group>"; };
@@ -590,6 +593,7 @@
 				34D19FBF262299D300B2732C /* NSEdgeInsets.swift */,
 				34B2C59D279FFF0600B52BF3 /* NSGestureRecognizer+Rx.swift */,
 				34091736267E81870023B76D /* NSImage.swift */,
+				345A34962C4DADD000AF0002 /* NSMenu.swift */,
 				34934CD728E71B0F009635D4 /* NSObject+Rx.swift */,
 				34A4C3E825963FB200D0F949 /* NSStackView.swift */,
 				3430ED02259634E00045DA53 /* NSStackView+Rx.swift */,
@@ -598,11 +602,11 @@
 				347D0FE6259544B4002451EC /* NSView+Layout.swift */,
 				3477F3E325FD5285008EA888 /* NSView+Rx.swift */,
 				3477F3E725FD52AA008EA888 /* NSViewController+Rx.swift */,
+				34F2F7352BB739A500666507 /* Range.swift */,
 				34305BCA25992A4E00AB381D /* Rx+Helpers.swift */,
 				34D55FE225F06669007F5C81 /* Sequence.swift */,
 				34651F5925E2F08500518C5A /* String.swift */,
-				34F2F7352BB739A500666507 /* Range.swift */,
-				345A34962C4DADD000AF0002 /* NSMenu.swift */,
+				3438AEED2C6192A9002BE3E1 /* XCTest.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -938,6 +942,7 @@
 				3492C45E269F7966009CFAD2 /* UITestCase+Queries.swift in Sources */,
 				3492C464269FD64D009CFAD2 /* Accessibility.swift in Sources */,
 				3492C45C269F77E0009CFAD2 /* CalendarViewTests.swift in Sources */,
+				3438AEEF2C6192A9002BE3E1 /* XCTest.swift in Sources */,
 				3442769A269B5CA4004CFE1C /* UITestCase.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1081,6 +1086,7 @@
 				34C2CF9125C2070400FC2CFF /* EventViewModelTests.swift in Sources */,
 				3477F3DA25FD44C1008EA888 /* MockEventListSettings.swift in Sources */,
 				346E70CB2802289F00A785FF /* MockScreenProvider.swift in Sources */,
+				3438AEEE2C6192A9002BE3E1 /* XCTest.swift in Sources */,
 				34C72F7E25E844E500FD20FA /* NextEventViewModelTests.swift in Sources */,
 				348E703725C6173400B3B160 /* EventViewModelProgressTests.swift in Sources */,
 				3477F3D425FAF079008EA888 /* MockCalendarServiceProvider.swift in Sources */,

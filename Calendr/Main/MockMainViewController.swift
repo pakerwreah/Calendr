@@ -20,6 +20,7 @@ class MockMainViewController: MainViewController {
         userDefaults.removePersistentDomain(forName: Self.className())
 
         userDefaults.setValuesForKeys([
+            Prefs.firstWeekday: dateProvider.calendar.firstWeekday,
             Prefs.statusItemDateStyle: DateFormatter.Style.full.rawValue,
             Prefs.showWeekNumbers: true,
             Prefs.showEventStatusItem: true,

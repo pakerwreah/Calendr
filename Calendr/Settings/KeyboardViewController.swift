@@ -16,6 +16,20 @@ class KeyboardViewController: NSViewController, SettingsUI {
     typealias LocalShortcuts = Strings.Settings.Keyboard.LocalShortcuts
     typealias GlobalShortcuts = Strings.Settings.Keyboard.GlobalShortcuts
 
+    init() {
+        super.init(nibName: nil, bundle: nil)
+        
+        setUpAccessibility()
+    }
+
+    private func setUpAccessibility() {
+
+        guard BuildConfig.isUITesting else { return }
+
+        view.setAccessibilityElement(true)
+        view.setAccessibilityIdentifier(Accessibility.Settings.Keyboard.view)
+    }
+
     override func loadView() {
 
         view = NSView()
@@ -98,6 +112,10 @@ class KeyboardViewController: NSViewController, SettingsUI {
         shortcutRecorder.setContentHuggingPriority(.required, for: .horizontal)
 
         return shortcutRecorder
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }
 

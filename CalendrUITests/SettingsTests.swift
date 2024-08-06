@@ -16,7 +16,7 @@ class SettingsTests: UITestCase {
 
         XCTAssert(Settings.view.didAppear)
 
-        XCTAssertEqual(Settings.tabs.map(\.title), ["General", "Calendars", "About"])
+        XCTAssertEqual(Settings.tabs.map(\.title), ["General", "Calendars", "Shortcuts", "About"])
         XCTAssertTrue(Settings.General.view.didAppear)
 
         XCTAssertFalse(Settings.Calendars.view.didAppear)
@@ -30,6 +30,10 @@ class SettingsTests: UITestCase {
         XCTAssertFalse(Settings.General.view.didAppear)
         Settings.Tab.general.click()
         XCTAssertTrue(Settings.General.view.didAppear)
+
+        XCTAssertFalse(Settings.Keyboard.view.didAppear)
+        Settings.Tab.keyboard.click()
+        XCTAssertTrue(Settings.Keyboard.view.didAppear)
     }
 
     func testSettingsAbout_withQuitClicked_shouldCloseApp() {
@@ -84,13 +88,14 @@ class SettingsTests: UITestCase {
             .element(matching: .title("Show icon"))
 
         showIcon.click()
-        XCTAssertFalse(showIcon.isChecked)
-        XCTAssertEqual(MenuBar.main.title, "Friday, 1 January 2021")
+        XCTAssertEqual(showIcon.value(), false)
+        XCTAssertNotIn(MenuBar.main.identifiers, Accessibility.MenuBar.Main.Icon.calendar)
+        XCTAssertIn(MenuBar.main.identifiers, "Friday 1 January 2021")
 
         showIcon.click()
-        XCTAssertTrue(showIcon.isChecked)
-        XCTAssertNotEqual(MenuBar.main.title, "Friday, 1 January 2021")
-        XCTAssertTrue(MenuBar.main.title.hasSuffix("Friday, 1 January 2021"))
+        XCTAssertEqual(showIcon.value(), true)
+        XCTAssertIn(MenuBar.main.identifiers, Accessibility.MenuBar.Main.Icon.calendar)
+        XCTAssertIn(MenuBar.main.identifiers, "Friday 1 January 2021")
     }
 
     func testSettingsGeneral_toggleShowDate() {
@@ -104,12 +109,14 @@ class SettingsTests: UITestCase {
             .element(matching: .title("Show date"))
 
         showDate.click()
-        XCTAssertFalse(showDate.isChecked)
-        XCTAssertFalse(MenuBar.main.title.hasSuffix("Friday, 1 January 2021"))
+        XCTAssertEqual(showDate.value(), false)
+        XCTAssertIn(MenuBar.main.identifiers, Accessibility.MenuBar.Main.Icon.calendar)
+        XCTAssertNotIn(MenuBar.main.identifiers, "Friday 1 January 2021")
 
         showDate.click()
-        XCTAssertTrue(showDate.isChecked)
-        XCTAssertTrue(MenuBar.main.title.hasSuffix("Friday, 1 January 2021"))
+        XCTAssertEqual(showDate.value(), true)
+        XCTAssertIn(MenuBar.main.identifiers, Accessibility.MenuBar.Main.Icon.calendar)
+        XCTAssertIn(MenuBar.main.identifiers, "Friday 1 January 2021")
     }
 
     func testSettingsGeneral_toggleShowDateOffWithShowIconOff() {
@@ -126,14 +133,16 @@ class SettingsTests: UITestCase {
             .element(matching: .title("Show date"))
 
         showIcon.click()
-        XCTAssertFalse(showIcon.isChecked)
-        XCTAssertTrue(showDate.isChecked)
-        XCTAssertEqual(MenuBar.main.title, "Friday, 1 January 2021")
+        XCTAssertEqual(showIcon.value(), false)
+        XCTAssertEqual(showDate.value(), true)
+        XCTAssertNotIn(MenuBar.main.identifiers, Accessibility.MenuBar.Main.Icon.calendar)
+        XCTAssertIn(MenuBar.main.identifiers, "Friday 1 January 2021")
 
         showDate.click()
-        XCTAssertTrue(showIcon.isChecked)
-        XCTAssertFalse(showDate.isChecked)
-        XCTAssertFalse(MenuBar.main.title.hasSuffix("Friday, 1 January 2021"))
+        XCTAssertEqual(showIcon.value(), true)
+        XCTAssertEqual(showDate.value(), false)
+        XCTAssertIn(MenuBar.main.identifiers, Accessibility.MenuBar.Main.Icon.calendar)
+        XCTAssertNotIn(MenuBar.main.identifiers, "Friday 1 January 2021")
     }
 
     func testSettingsGeneral_toggleShowIconOffWithShowDateOff() {
@@ -150,19 +159,22 @@ class SettingsTests: UITestCase {
             .element(matching: .title("Show date"))
 
         showDate.click()
-        XCTAssertTrue(showIcon.isChecked)
-        XCTAssertFalse(showDate.isChecked)
-        XCTAssertFalse(MenuBar.main.title.hasSuffix("Friday, 1 January 2021"))
+        XCTAssertEqual(showIcon.value(), true)
+        XCTAssertEqual(showDate.value(), false)
+        XCTAssertIn(MenuBar.main.identifiers, Accessibility.MenuBar.Main.Icon.calendar)
+        XCTAssertNotIn(MenuBar.main.identifiers, "Friday 1 January 2021")
 
         showIcon.click()
-        XCTAssertTrue(showIcon.isChecked)
-        XCTAssertFalse(showDate.isChecked)
-        XCTAssertFalse(MenuBar.main.title.hasSuffix("Friday, 1 January 2021"))
+        XCTAssertEqual(showIcon.value(), true)
+        XCTAssertEqual(showDate.value(), false)
+        XCTAssertIn(MenuBar.main.identifiers, Accessibility.MenuBar.Main.Icon.calendar)
+        XCTAssertNotIn(MenuBar.main.identifiers, "Friday 1 January 2021")
 
         showDate.click()
-        XCTAssertFalse(showIcon.isChecked)
-        XCTAssertTrue(showDate.isChecked)
-        XCTAssertEqual(MenuBar.main.title, "Friday, 1 January 2021")
+        XCTAssertEqual(showIcon.value(), false)
+        XCTAssertEqual(showDate.value(), true)
+        XCTAssertNotIn(MenuBar.main.identifiers, Accessibility.MenuBar.Main.Icon.calendar)
+        XCTAssertIn(MenuBar.main.identifiers, "Friday 1 January 2021")
     }
 
     func testSettingsGeneral_toggleShowNextEvent() {
@@ -197,26 +209,26 @@ class SettingsTests: UITestCase {
         let dropdown = Settings.General.dateFormatDropdown
         let input = Settings.General.dateFormatInput
 
-        XCTAssertEqual(dropdown.text, "Friday, 1 January 2021")
-        XCTAssertTrue(MenuBar.main.title.hasSuffix("Friday, 1 January 2021"))
+        XCTAssertEqual(dropdown.value(), "Friday 1 January 2021")
+        XCTAssertIn(MenuBar.main.identifiers, "Friday 1 January 2021")
 
         dropdown.click()
         dropdown.menuItems.element(boundBy: 0).click()
 
-        XCTAssertEqual(dropdown.text, "01/01/2021")
-        XCTAssertTrue(MenuBar.main.title.hasSuffix("01/01/2021"))
+        XCTAssertEqual(dropdown.value(), "01/01/2021")
+        XCTAssertIn(MenuBar.main.identifiers, "01/01/2021")
 
         dropdown.click()
         dropdown.menuItems.allElementsBoundByIndex.last?.click()
 
-        XCTAssertEqual(dropdown.text, "Custom...")
-        XCTAssertTrue(MenuBar.main.title.hasSuffix("Fri 1 Jan 2020"))
+        XCTAssertEqual(dropdown.value(), "Custom...")
+        XCTAssertIn(MenuBar.main.identifiers, "Fri 1 Jan 2021")
 
         input.typeKey(.delete, modifierFlags: [])
-        XCTAssertTrue(MenuBar.main.title.hasSuffix("???"))
+        XCTAssertIn(MenuBar.main.identifiers, "???")
 
         input.typeText("E")
-        XCTAssertTrue(MenuBar.main.title.hasSuffix("Fri"))
+        XCTAssertIn(MenuBar.main.identifiers, "Fri")
     }
 
     func testSettingsGeneral_toggleShowWeekNumbers() throws {
@@ -248,16 +260,16 @@ class SettingsTests: UITestCase {
         let checkbox = Settings.General.view.checkBoxes
             .element(matching: .title("Show declined events"))
 
-        XCTAssertFalse(checkbox.isChecked)
+        XCTAssertEqual(checkbox.value(), false)
 
         let initial = Calendar.events.count
 
         checkbox.click()
-        XCTAssertTrue(checkbox.isChecked)
+        XCTAssertEqual(checkbox.value(), true)
         XCTAssertEqual(Calendar.events.count, initial + 1)
 
         checkbox.click()
-        XCTAssertFalse(checkbox.isChecked)
+        XCTAssertEqual(checkbox.value(), false)
         XCTAssertEqual(Calendar.events.count, initial)
     }
 
@@ -266,12 +278,12 @@ class SettingsTests: UITestCase {
         MenuBar.main.click()
 
         Calendar.dates[6].click()
-        XCTAssertEqual(Calendar.selected.text, "2")
+        XCTAssertEqual(Calendar.selected.value(), "2")
 
         Main.view.outside.click()
         MenuBar.main.click()
 
-        XCTAssertEqual(Calendar.selected.text, "1")
+        XCTAssertEqual(Calendar.selected.value(), "1")
 
         Main.openSettings()
         XCTAssert(Settings.view.didAppear)
@@ -284,11 +296,11 @@ class SettingsTests: UITestCase {
         Settings.window.buttons[XCUIIdentifierCloseWindow].click()
 
         Calendar.dates[6].click()
-        XCTAssertEqual(Calendar.selected.text, "2")
+        XCTAssertEqual(Calendar.selected.value(), "2")
 
         Main.view.outside.click()
         MenuBar.main.click()
 
-        XCTAssertEqual(Calendar.selected.text, "2")
+        XCTAssertEqual(Calendar.selected.value(), "2")
     }
 }

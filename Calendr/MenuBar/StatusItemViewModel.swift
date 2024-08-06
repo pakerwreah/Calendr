@@ -10,8 +10,19 @@ import RxSwift
 
 class StatusItemViewModel {
 
+    struct BirthdayIcon {
+        let size: CGFloat
+    }
+
+    struct CalendarIcon {
+        let size: CGFloat
+        let style: StatusItemIconStyle
+    }
+
+    typealias IconsAndText = (birthday: BirthdayIcon?, calendar: CalendarIcon?, text: String)
+
     // only for unit tests
-    let iconsAndText: Observable<([NSImage], String)>
+    let iconsAndText: Observable<IconsAndText>
 
     let image: Observable<NSImage>
 
@@ -88,14 +99,15 @@ class StatusItemViewModel {
         )
         .map { title, showIcon, iconStyle, hasBirthdays in
 
-            let showDate = !title.isEmpty
+            var birthdayIcon: BirthdayIcon?
+            var calendarIcon: CalendarIcon?
 
-            var icons: [NSImage] = []
+            let showDate = !title.isEmpty
 
             let iconSize: CGFloat = showDate ? 15 : 16
 
             if hasBirthdays {
-                icons.append(Icons.Event.birthday.with(pointSize: iconSize - 2))
+                birthdayIcon = .init(size: iconSize - 2)
             }
 
             let isEmpty = !showIcon && !showDate && !hasBirthdays
@@ -104,10 +116,10 @@ class StatusItemViewModel {
             let skipIcon = isDefaultIcon && hasBirthdays // replace default icon with birthday
 
             if showIcon && !skipIcon {
-                icons.append(StatusItemIconFactory.icon(size: iconSize, style: iconStyle, dateProvider: dateProvider))
+                calendarIcon = .init(size: iconSize, style: iconStyle)
             }
 
-            return (icons, title)
+            return (birthdayIcon, calendarIcon, title)
         }
         .share(replay: 1)
 
@@ -122,7 +134,17 @@ class StatusItemViewModel {
         .debounce(.nanoseconds(1), scheduler: scheduler)
         .map { iconsAndText, showBackground, dateFormat in
 
-            let (icons, text) = iconsAndText
+            let (birthdayIcon, calendarIcon, text) = iconsAndText
+
+            var icons: [NSImage] = []
+
+            if let icon = birthdayIcon {
+                icons.append(Icons.Event.birthday.with(pointSize: icon.size))
+            }
+
+            if let icon = calendarIcon {
+                icons.append(StatusItemIconFactory.icon(size: icon.size, style: icon.style, dateProvider: dateProvider))
+            }
 
             let title = text.isEmpty ? nil : NSAttributedString(string: text, attributes: [
                 .font: NSFont.systemFont(ofSize: 12.5, weight: showBackground ? .regular : .medium)
