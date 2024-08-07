@@ -22,6 +22,8 @@ protocol CalendarServiceProviding {
 
 class CalendarServiceProvider: CalendarServiceProviding {
 
+    private let dateProvider: DateProviding
+
     private let store = EventStore()
 
     private let disposeBag = DisposeBag()
@@ -30,7 +32,9 @@ class CalendarServiceProvider: CalendarServiceProviding {
 
     let changeObservable: Observable<Void>
 
-    init(notificationCenter: NotificationCenter) {
+    init(dateProvider: DateProviding, notificationCenter: NotificationCenter) {
+
+        self.dateProvider = dateProvider
 
         (changeObservable, changeObserver) = PublishSubject<Void>.pipe()
 
@@ -96,11 +100,11 @@ class CalendarServiceProvider: CalendarServiceProviding {
 
     private func fetchEvents(from start: Date, to end: Date, calendars: [EKCalendar]) -> Observable<[EventModel]> {
 
-        Observable.create { [store] observer in
+        Observable.create { [store, dateProvider] observer in
 
             let predicate = store.predicateForEvents(withStart: start, end: end, calendars: calendars)
 
-            let events = store.events(matching: predicate).map(EventModel.init(from:))
+            let events = store.events(matching: predicate).map { EventModel(from: $0, dateProvider: dateProvider) }
 
             observer.onNext(events)
             observer.onCompleted()
@@ -112,14 +116,14 @@ class CalendarServiceProvider: CalendarServiceProviding {
 
     private func fetchReminders(from start: Date, to end: Date, calendars: [EKCalendar]) -> Observable<[EventModel]> {
 
-        Observable.create { [store] observer in
+        Observable.create { [store, dateProvider] observer in
 
             let predicate = store.predicateForIncompleteReminders(
                 withDueDateStarting: start, ending: end, calendars: calendars
             )
 
             store.fetchReminders(matching: predicate) {
-                observer.onNext($0?.map(EventModel.init(from:)) ?? [])
+                observer.onNext($0?.compactMap { EventModel(from: $0, dateProvider: dateProvider) } ?? [])
                 observer.onCompleted()
             }
 
@@ -156,7 +160,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
 
     func rescheduleReminder(id: String, to date: Date) -> Observable<Void> {
 
-        Observable.create { [store] observer in
+        Observable.create { [store, dateProvider] observer in
 
             let disposable = Disposables.create()
 
@@ -168,7 +172,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
             }
 
             do {
-                reminder.dueDateComponents = date.dateComponents
+                reminder.dueDateComponents = date.dateComponents(dateProvider)
                 reminder.alarms?.forEach(reminder.removeAlarm)
                 reminder.addAlarm(EKAlarm(absoluteDate: date))
                 try store.save(reminder, commit: true)
@@ -260,9 +264,9 @@ extension EKEvent {
     }
 
     // Fix events that should be all-day but are not correctly reported as such (ex. Google's "Out of office")
-    var shouldBeAllDay: Bool {
+    func shouldBeAllDay(_ dateProvider: DateProviding) -> Bool {
         guard !isAllDay else { return true }
-        let range = DateRange(start: startDate, end: endDate, dateProvider: DateProvider(calendar: .autoupdatingCurrent))
+        let range = DateRange(start: startDate, end: endDate, dateProvider: dateProvider)
         return !range.isSingleDay && range.startsMidnight && range.endsMidnight
     }
 }
@@ -331,7 +335,7 @@ private extension Array where Element == Participant {
 
 private extension EventModel {
 
-    init(from event: EKEvent) {
+    init(from event: EKEvent, dateProvider: DateProviding) {
         self.init(
             id: event.calendarItemIdentifier,
             start: event.startDate,
@@ -340,7 +344,7 @@ private extension EventModel {
             location: event.location,
             notes: event.notes,
             url: event.url,
-            isAllDay: event.shouldBeAllDay,
+            isAllDay: event.shouldBeAllDay(dateProvider),
             type: .init(from: event),
             calendar: .init(from: event.calendar),
             participants: .init(from: event),
@@ -349,11 +353,16 @@ private extension EventModel {
         )
     }
 
-    init(from reminder: EKReminder) {
+    init?(from reminder: EKReminder, dateProvider: DateProviding) {
+        guard 
+            let dueDateComponents = reminder.dueDateComponents,
+            let date = dateProvider.calendar.date(from: dueDateComponents)
+        else { return nil }
+        
         self.init(
             id: reminder.calendarItemIdentifier,
-            start: reminder.dueDateComponents!.date,
-            end: reminder.dueDateComponents!.endOfDay,
+            start: date,
+            end: dateProvider.calendar.endOfDay(for: date),
             title: reminder.title,
             location: reminder.location, // doesn't work
             notes: reminder.notes,
@@ -382,20 +391,9 @@ extension EKEntityType: CustomStringConvertible {
     }
 }
 
-private extension DateComponents {
-
-    var date: Date {
-        Calendar.autoupdatingCurrent.date(from: self)!
-    }
-
-    var endOfDay: Date {
-        Calendar.autoupdatingCurrent.endOfDay(for: date)
-    }
-}
-
 private extension Date {
 
-    var dateComponents: DateComponents {
-        Calendar.autoupdatingCurrent.dateComponents(in: .autoupdatingCurrent, from: self)
+    func dateComponents(_ dateProvider: DateProviding) -> DateComponents {
+        dateProvider.calendar.dateComponents(in: dateProvider.calendar.timeZone, from: self)
     }
 }

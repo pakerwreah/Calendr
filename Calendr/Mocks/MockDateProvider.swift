@@ -8,9 +8,10 @@
 #if DEBUG
 
 import Foundation
+import RxSwift
 
 class MockDateProvider: DateProviding {
-
+    let calendarUpdated: Observable<Calendar> = .empty()
     let calendar: Calendar
     let initial = Date()
     let start: Date

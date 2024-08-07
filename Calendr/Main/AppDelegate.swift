@@ -22,14 +22,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         #endif
 
+        let userDefaults = UserDefaults.standard
+        let notificationCenter = NotificationCenter.default
+        let workspace = NSWorkspace.shared
+
+        let dateProvider = DateProvider(notificationCenter: notificationCenter, userDefaults: userDefaults)
+
         viewController = MainViewController(
             autoLauncher: .default,
-            workspace: NSWorkspace.shared,
-            calendarService: CalendarServiceProvider(notificationCenter: .default),
-            dateProvider: DateProvider(calendar: .autoupdatingCurrent),
-            screenProvider: ScreenProvider(notificationCenter: .default),
-            userDefaults: .standard,
-            notificationCenter: .default
+            workspace: workspace,
+            calendarService: CalendarServiceProvider(dateProvider: dateProvider, notificationCenter: notificationCenter),
+            dateProvider: dateProvider,
+            screenProvider: ScreenProvider(notificationCenter: notificationCenter),
+            userDefaults: userDefaults,
+            notificationCenter: notificationCenter
         )
 
         setUpEditShortcuts()
