@@ -139,7 +139,7 @@ extension UserDefaults {
     }
 
     @objc dynamic var highlightedWeekdays: [Int] {
-        get { array(forKey: Prefs.highlightedWeekdays) as! [Int]  }
+        get { array(forKey: Prefs.highlightedWeekdays) as? [Int] ?? []  }
         set { set(newValue, forKey: Prefs.highlightedWeekdays) }
     }
 }

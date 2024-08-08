@@ -143,29 +143,6 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
         userDefaults: UserDefaults,
         notificationCenter: NotificationCenter
     ) {
-
-        userDefaults.register(defaults: [
-            Prefs.statusItemIconEnabled: true,
-            Prefs.statusItemDateEnabled: true,
-            Prefs.statusItemBackgroundEnabled: false,
-            Prefs.statusItemIconStyle: StatusItemIconStyle.calendar.rawValue,
-            Prefs.statusItemDateStyle: StatusItemDateStyle.short.rawValue,
-            Prefs.statusItemDateFormat: dateFormatPlaceholder,
-            Prefs.showEventStatusItem: false,
-            Prefs.eventStatusItemFontSize: 12,
-            Prefs.eventStatusItemCheckRange: 6,
-            Prefs.eventStatusItemLength: 18,
-            Prefs.eventStatusItemDetectNotch: false,
-            Prefs.calendarScaling: 1,
-            Prefs.firstWeekday: dateProvider.calendar.firstWeekday,
-            Prefs.highlightedWeekdays: [0, 6],
-            Prefs.showWeekNumbers: false,
-            Prefs.showDeclinedEvents: false,
-            Prefs.preserveSelectedDate: false,
-            Prefs.showPastEvents: true,
-            Prefs.transparencyLevel: 2
-        ])
-
         // MARK: - Observers
 
         toggleAutoLaunch = autoLauncher.rx.observer(for: \.isEnabled)

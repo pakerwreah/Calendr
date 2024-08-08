@@ -30,8 +30,8 @@ class SettingsViewModelTests: XCTestCase {
     var userDefaultsStatusItemBackgroundEnabled: Bool? { userDefaults.object(forKey: Prefs.statusItemBackgroundEnabled) as! Bool? }
     var userDefaultsStatusItemDateStyle: Int? { userDefaults.object(forKey: Prefs.statusItemDateStyle) as! Int? }
     var userDefaultsShowEventStatusItem: Bool? { userDefaults.object(forKey: Prefs.showEventStatusItem) as! Bool? }
-    var userDefaultsEventStatusItemFontSize: Float? { userDefaults.object(forKey: Prefs.eventStatusItemFontSize) as! Float? }
     var userDefaultsEventStatusItemCheckRange: Int? { userDefaults.object(forKey: Prefs.eventStatusItemCheckRange) as! Int? }
+    var userDefaultsEventStatusItemFontSize: Float? { userDefaults.object(forKey: Prefs.eventStatusItemFontSize) as! Float? }
     var userDefaultsEventStatusItemLength: Int? { userDefaults.object(forKey: Prefs.eventStatusItemLength) as! Int? }
     var userDefaultsEventStatusItemDetectNotch: Bool? { userDefaults.object(forKey: Prefs.eventStatusItemDetectNotch) as! Bool? }
     var userDefaultsCalendarScaling: Double? { userDefaults.object(forKey: Prefs.calendarScaling) as! Double? }
@@ -46,9 +46,6 @@ class SettingsViewModelTests: XCTestCase {
     override func setUp() {
         userDefaults.setVolatileDomain([:], forName: UserDefaults.registrationDomain)
         userDefaults.removePersistentDomain(forName: className)
-    }
-
-    func testDefaultSettings() {
 
         XCTAssertNil(userDefaultsStatusItemIconEnabled)
         XCTAssertNil(userDefaultsStatusItemDateEnabled)
@@ -56,9 +53,9 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertNil(userDefaultsStatusItemDateStyle)
         XCTAssertNil(userDefaultsShowEventStatusItem)
         XCTAssertNil(userDefaultsEventStatusItemCheckRange)
+        XCTAssertNil(userDefaultsEventStatusItemFontSize)
         XCTAssertNil(userDefaultsEventStatusItemLength)
         XCTAssertNil(userDefaultsEventStatusItemDetectNotch)
-        XCTAssertNil(userDefaultsEventStatusItemFontSize)
         XCTAssertNil(userDefaultsCalendarScaling)
         XCTAssertNil(userDefaultsFirstWeekday)
         XCTAssertNil(userDefaultsHighlightedWeekdays)
@@ -68,7 +65,10 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertNil(userDefaultsShowPastEvents)
         XCTAssertNil(userDefaultsTransparency)
 
-        dateProvider.m_calendar.firstWeekday = 3
+        registerDefaultPrefs(in: userDefaults, calendar: .gregorian.with(firstWeekday: 3))
+    }
+
+    func testDefaultSettings() {
 
         var showStatusItemIcon: Bool?
         var showStatusItemDate: Bool?
