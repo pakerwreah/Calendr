@@ -19,6 +19,8 @@ class MockMainViewController: MainViewController {
         userDefaults.setVolatileDomain([:], forName: UserDefaults.registrationDomain)
         userDefaults.removePersistentDomain(forName: Self.className())
 
+        registerDefaultPrefs(in: userDefaults)
+
         userDefaults.setValuesForKeys([
             Prefs.firstWeekday: dateProvider.calendar.firstWeekday,
             Prefs.statusItemDateStyle: DateFormatter.Style.full.rawValue,
