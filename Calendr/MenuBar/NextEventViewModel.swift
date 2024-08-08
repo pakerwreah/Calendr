@@ -277,7 +277,7 @@ class NextEventViewModel {
         case .reminder:
             name = StatusItemName.reminder
         }
-        return "\(Prefs.System.statusItemPreferredPosition) \(name)"
+        return "\(Prefs.statusItemPreferredPosition) \(name)"
     }
 
     func saveStatusItemPreferredPosition() {

@@ -154,6 +154,7 @@
 		34F128E12597B9C9007DF31C /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F128E02597B9C9007DF31C /* MainViewController.swift */; };
 		34F128F22597C340007DF31C /* WeekDayCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F128F12597C340007DF31C /* WeekDayCellView.swift */; };
 		34F201332693F562006CE2FF /* MockEventListSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F201322693F562006CE2FF /* MockEventListSettings.swift */; };
+		34F24D242C64F335001F99A9 /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F24D232C64F335001F99A9 /* AppConstants.swift */; };
 		34F2F7362BB739A500666507 /* Range.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F2F7352BB739A500666507 /* Range.swift */; };
 		34F4C47B2A6C54A900397C80 /* StatusItemPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F4C47A2A6C54A900397C80 /* StatusItemPreview.swift */; };
 		34F4C47D2A6C56AA00397C80 /* MockScreenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F4C47C2A6C56AA00397C80 /* MockScreenProvider.swift */; };
@@ -340,6 +341,7 @@
 		34F128E02597B9C9007DF31C /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		34F128F12597C340007DF31C /* WeekDayCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekDayCellView.swift; sourceTree = "<group>"; };
 		34F201322693F562006CE2FF /* MockEventListSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockEventListSettings.swift; sourceTree = "<group>"; };
+		34F24D232C64F335001F99A9 /* AppConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
 		34F2F7342BB711F300666507 /* sk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sk; path = sk.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34F2F7352BB739A500666507 /* Range.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Range.swift; sourceTree = "<group>"; };
 		34F4C47A2A6C54A900397C80 /* StatusItemPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemPreview.swift; sourceTree = "<group>"; };
@@ -439,6 +441,7 @@
 			isa = PBXGroup;
 			children = (
 				3492C45F269FCF5B009CFAD2 /* Accessibility.swift */,
+				34F24D232C64F335001F99A9 /* AppConstants.swift */,
 				3409173A267E90210023B76D /* Icons.swift */,
 				347D0F9925952F8A002451EC /* Images.xcassets */,
 				3492C461269FCFB7009CFAD2 /* Generated */,
@@ -1029,6 +1032,7 @@
 				34B1C7C525EDA01F00E5CA80 /* EventIntervalView.swift in Sources */,
 				3408F17625FAAA4B00C1EAD4 /* EventDetailsViewController.swift in Sources */,
 				3470654B292EFCF90079C68A /* NSTextView.swift in Sources */,
+				34F24D242C64F335001F99A9 /* AppConstants.swift in Sources */,
 				341692C225F1AA570019E8A8 /* WallTimeScheduler.swift in Sources */,
 				34B5A09725B0F8A500F7F7ED /* NSButton.swift in Sources */,
 				34CC382D25B636A6006CBD99 /* Checkbox.swift in Sources */,

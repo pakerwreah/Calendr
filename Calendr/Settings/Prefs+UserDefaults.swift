@@ -8,35 +8,77 @@
 import Foundation
 
 enum Prefs {
+    // Menu Bar
     static let enabledCalendars = "enabled_calendars"
     static let nextEventCalendars = "next_event_calendars"
     static let statusItemIconEnabled = "status_item_icon_enabled"
-    static let statusItemDateEnabled = "status_item_date_enabled"
     static let statusItemIconStyle = "status_item_icon_style"
-    static let statusItemBackgroundEnabled = "status_item_background_enabled"
+    static let statusItemDateEnabled = "status_item_date_enabled"
     static let statusItemDateStyle = "status_item_date_style"
     static let statusItemDateFormat = "status_item_date_format"
+    static let statusItemBackgroundEnabled = "status_item_background_enabled"
+
+    // Next Event
     static let showEventStatusItem = "show_event_status_item"
     static let eventStatusItemFontSize = "event_status_item_font_size"
     static let eventStatusItemCheckRange = "event_status_item_check_range"
     static let eventStatusItemLength = "event_status_item_length"
     static let eventStatusItemDetectNotch = "event_status_item_detect_notch"
-    static let showWeekNumbers = "show_week_numbers"
-    static let preserveSelectedDate = "preserve_selected_date"
-    static let showDeclinedEvents = "show_declined_events"
-    static let showPastEvents = "show_past_events"
-    static let transparencyLevel = "transparency_level"
+
+    // Calendar
     static let calendarScaling = "calendar_scaling"
     static let firstWeekday = "first_weekday"
     static let highlightedWeekdays = "highlighted_weekdays"
+    static let showWeekNumbers = "show_week_numbers"
+    static let showDeclinedEvents = "show_declined_events"
+    static let preserveSelectedDate = "preserve_selected_date"
+
+    // Events
+    static let showPastEvents = "show_past_events"
+    static let transparencyLevel = "transparency_level"
+
+    // Misc
     static let lastCheckedVersion = "last_checked_version"
 
-    enum System {
-        static let statusItemPreferredPosition = "NSStatusItem Preferred Position"
-    }
+    // System
+    static let statusItemPreferredPosition = "NSStatusItem Preferred Position"
+}
+
+func registerDefaultPrefs(in userDefaults: UserDefaults, calendar: Calendar = .current) {
+
+    userDefaults.register(defaults: [
+        // Menu Bar
+        Prefs.statusItemIconEnabled: true,
+        Prefs.statusItemIconStyle: StatusItemIconStyle.calendar.rawValue,
+        Prefs.statusItemDateEnabled: true,
+        Prefs.statusItemDateStyle: StatusItemDateStyle.short.rawValue,
+        Prefs.statusItemDateFormat: AppConstants.defaultCustomDateFormat,
+        Prefs.statusItemBackgroundEnabled: false,
+
+        // Next Event
+        Prefs.showEventStatusItem: false,
+        Prefs.eventStatusItemFontSize: 12,
+        Prefs.eventStatusItemCheckRange: 6,
+        Prefs.eventStatusItemLength: 18,
+        Prefs.eventStatusItemDetectNotch: false,
+
+        // Calendar
+        Prefs.calendarScaling: 1,
+        Prefs.firstWeekday: calendar.firstWeekday,
+        Prefs.highlightedWeekdays: [0, 6],
+        Prefs.showWeekNumbers: false,
+        Prefs.showDeclinedEvents: false,
+        Prefs.preserveSelectedDate: false,
+
+        // Events
+        Prefs.showPastEvents: true,
+        Prefs.transparencyLevel: 2
+    ])
 }
 
 extension UserDefaults {
+
+    // Menu Bar
 
     @objc dynamic var enabledCalendars: [String]? {
         get { stringArray(forKey: Prefs.enabledCalendars) }
@@ -53,14 +95,24 @@ extension UserDefaults {
         set { set(newValue, forKey: Prefs.statusItemIconEnabled) }
     }
 
+    @objc dynamic var statusItemIconStyle: String {
+        get { string(forKey: Prefs.statusItemIconStyle) ?? "" }
+        set { set(newValue, forKey: Prefs.statusItemIconStyle) }
+    }
+
     @objc dynamic var statusItemDateEnabled: Bool {
         get { bool(forKey: Prefs.statusItemDateEnabled) }
         set { set(newValue, forKey: Prefs.statusItemDateEnabled) }
     }
 
-    @objc dynamic var statusItemIconStyle: String {
-        get { string(forKey: Prefs.statusItemIconStyle) ?? "" }
-        set { set(newValue, forKey: Prefs.statusItemIconStyle) }
+    @objc dynamic var statusItemDateStyle: UInt {
+        get { UInt(integer(forKey: Prefs.statusItemDateStyle)) }
+        set { set(newValue, forKey: Prefs.statusItemDateStyle) }
+    }
+
+    @objc dynamic var statusItemDateFormat: String {
+        get { string(forKey: Prefs.statusItemDateFormat) ?? "" }
+        set { set(newValue, forKey: Prefs.statusItemDateFormat) }
     }
 
     @objc dynamic var statusItemBackgroundEnabled: Bool {
@@ -68,15 +120,7 @@ extension UserDefaults {
         set { set(newValue, forKey: Prefs.statusItemBackgroundEnabled) }
     }
 
-    @objc dynamic var statusItemDateStyle: UInt {
-        get { UInt(integer(forKey: Prefs.statusItemDateStyle)) }
-        set { set(newValue, forKey: Prefs.statusItemDateStyle) }
-    }
-    
-    @objc dynamic var statusItemDateFormat: String {
-        get { string(forKey: Prefs.statusItemDateFormat) ?? "" }
-        set { set(newValue, forKey: Prefs.statusItemDateFormat) }
-    }
+    // Next Event
 
     @objc dynamic var showEventStatusItem: Bool {
         get { bool(forKey: Prefs.showEventStatusItem) }
@@ -103,30 +147,7 @@ extension UserDefaults {
         set { set(newValue, forKey: Prefs.eventStatusItemDetectNotch) }
     }
 
-    @objc dynamic var showWeekNumbers: Bool {
-        get { bool(forKey: Prefs.showWeekNumbers) }
-        set { set(newValue, forKey: Prefs.showWeekNumbers) }
-    }
-
-    @objc dynamic var preserveSelectedDate: Bool {
-        get { bool(forKey: Prefs.preserveSelectedDate) }
-        set { set(newValue, forKey: Prefs.preserveSelectedDate) }
-    }
-
-    @objc dynamic var showDeclinedEvents: Bool {
-        get { bool(forKey: Prefs.showDeclinedEvents) }
-        set { set(newValue, forKey: Prefs.showDeclinedEvents) }
-    }
-
-    @objc dynamic var showPastEvents: Bool {
-        get { bool(forKey: Prefs.showPastEvents) }
-        set { set(newValue, forKey: Prefs.showPastEvents) }
-    }
-
-    @objc dynamic var transparencyLevel: Int {
-        get { integer(forKey: Prefs.transparencyLevel) }
-        set { set(newValue, forKey: Prefs.transparencyLevel) }
-    }
+    // Calendar
 
     @objc dynamic var calendarScaling: Double {
         get { double(forKey: Prefs.calendarScaling) }
@@ -142,10 +163,31 @@ extension UserDefaults {
         get { array(forKey: Prefs.highlightedWeekdays) as? [Int] ?? []  }
         set { set(newValue, forKey: Prefs.highlightedWeekdays) }
     }
-}
 
-enum StatusItemName {
-    static let main = "main_status_item"
-    static let event = "event_status_item"
-    static let reminder = "reminder_status_item"
+    @objc dynamic var showWeekNumbers: Bool {
+        get { bool(forKey: Prefs.showWeekNumbers) }
+        set { set(newValue, forKey: Prefs.showWeekNumbers) }
+    }
+
+    @objc dynamic var showDeclinedEvents: Bool {
+        get { bool(forKey: Prefs.showDeclinedEvents) }
+        set { set(newValue, forKey: Prefs.showDeclinedEvents) }
+    }
+
+    @objc dynamic var preserveSelectedDate: Bool {
+        get { bool(forKey: Prefs.preserveSelectedDate) }
+        set { set(newValue, forKey: Prefs.preserveSelectedDate) }
+    }
+
+    // Events
+
+    @objc dynamic var showPastEvents: Bool {
+        get { bool(forKey: Prefs.showPastEvents) }
+        set { set(newValue, forKey: Prefs.showPastEvents) }
+    }
+
+    @objc dynamic var transparencyLevel: Int {
+        get { integer(forKey: Prefs.transparencyLevel) }
+        set { set(newValue, forKey: Prefs.transparencyLevel) }
+    }
 }

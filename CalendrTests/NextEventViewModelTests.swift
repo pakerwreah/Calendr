@@ -53,7 +53,7 @@ class NextEventViewModelTests: XCTestCase {
 
     func testSaveStatusItemPreferredPosition() {
 
-        let key = "\(Prefs.System.statusItemPreferredPosition) \(StatusItemName.event)"
+        let key = "\(Prefs.statusItemPreferredPosition) \(StatusItemName.event)"
         userDefaults.set(123, forKey: key)
         viewModel.saveStatusItemPreferredPosition()
         XCTAssertEqual(userDefaults.integer(forKey: "saved \(key)"), 123)
@@ -61,7 +61,7 @@ class NextEventViewModelTests: XCTestCase {
 
     func testRestoreStatusItemPreferredPosition() {
 
-        let key = "\(Prefs.System.statusItemPreferredPosition) \(StatusItemName.event)"
+        let key = "\(Prefs.statusItemPreferredPosition) \(StatusItemName.event)"
         XCTAssertEqual(userDefaults.integer(forKey: key), 0)
         userDefaults.set(123, forKey: "saved \(key)")
         viewModel.restoreStatusItemPreferredPosition()

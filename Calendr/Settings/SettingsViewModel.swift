@@ -118,7 +118,6 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
     let iconStyleOptions: Observable<[IconStyleOption]>
     let dateFormatOptions: Observable<[DateFormatOption]>
     let statusItemDateFormat: Observable<String>
-    let dateFormatPlaceholder = "E d MMM yyyy"
     let isDateFormatInputVisible: Observable<Bool>
     let showEventStatusItem: Observable<Bool>
     let eventStatusItemFontSize: Observable<Float>
@@ -136,6 +135,8 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
     let showPastEvents: Observable<Bool>
     let popoverTransparency: Observable<Int>
     let popoverMaterial: Observable<PopoverMaterial>
+
+    let dateFormatPlaceholder = AppConstants.defaultCustomDateFormat
 
     init(
         autoLauncher: AutoLauncher,
