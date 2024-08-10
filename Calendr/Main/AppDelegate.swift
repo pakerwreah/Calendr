@@ -6,6 +6,7 @@
 //
 
 import Cocoa
+import Sentry
 
 class AppDelegate: NSObject, NSApplicationDelegate {
 
@@ -19,6 +20,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         guard !BuildConfig.isUITesting else {
             viewController = MockMainViewController()
             return
+        }
+        #else
+        if let dsn = Environment.SENTRY_DSN {
+            SentrySDK.start { options in
+                options.dsn = dsn
+            }
         }
         #endif
 

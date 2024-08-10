@@ -2,6 +2,6 @@ strings:
   inputs: ${PROJECT_DIR}/${TARGET_NAME}/Assets/en.lproj
   outputs:
     - templateName: structured-swift5
-      output: ${PROJECT_DIR}/${TARGET_NAME}/Assets/Generated/Strings.generated.swift
+      output: ${PROJECT_DIR}/${TARGET_NAME}/Assets/Strings.generated.swift
       params:
         enumName: Strings
