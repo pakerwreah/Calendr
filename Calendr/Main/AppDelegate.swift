@@ -22,10 +22,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             return
         }
         #else
+        var transaction: Span?
+        defer { transaction?.finish() }
+
         if let dsn = Environment.SENTRY_DSN {
             SentrySDK.start { options in
                 options.dsn = dsn
             }
+            transaction = SentrySDK.startTransaction(transactionContext: .init(name: "app", operation: "launch", sampled: .yes))
         }
         #endif
 
