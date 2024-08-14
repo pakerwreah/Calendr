@@ -45,7 +45,7 @@
 		344A59DB29AEBBBF004F0452 /* EventUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 344A59DA29AEBBBF004F0452 /* EventUtils.swift */; };
 		3453E6FD28386A84002DCC3C /* Bool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3453E6FC28386A84002DCC3C /* Bool.swift */; };
 		3453E6FF28393943002DCC3C /* ContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3453E6FE28393943002DCC3C /* ContextMenu.swift */; };
-		345A34972C4DADD000AF0002 /* NSMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345A34962C4DADD000AF0002 /* NSMenu.swift */; };
+		345A34972C4DADD000AF0002 /* TrackedMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345A34962C4DADD000AF0002 /* TrackedMenu.swift */; };
 		345DD97326920D1B00294D90 /* CalendarViewPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345DD97226920D1B00294D90 /* CalendarViewPreview.swift */; };
 		345FBD99293EA476005DD6DF /* Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345FBD98293EA476005DD6DF /* Keyboard.swift */; };
 		34651F1525E1BB8400518C5A /* Strings.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34651F1425E1BB8400518C5A /* Strings.generated.swift */; };
@@ -224,7 +224,7 @@
 		344A59DA29AEBBBF004F0452 /* EventUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventUtils.swift; sourceTree = "<group>"; };
 		3453E6FC28386A84002DCC3C /* Bool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bool.swift; sourceTree = "<group>"; };
 		3453E6FE28393943002DCC3C /* ContextMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextMenu.swift; sourceTree = "<group>"; };
-		345A34962C4DADD000AF0002 /* NSMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSMenu.swift; sourceTree = "<group>"; };
+		345A34962C4DADD000AF0002 /* TrackedMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackedMenu.swift; sourceTree = "<group>"; };
 		345DD97226920D1B00294D90 /* CalendarViewPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewPreview.swift; sourceTree = "<group>"; };
 		345FBD98293EA476005DD6DF /* Keyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keyboard.swift; sourceTree = "<group>"; };
 		34651EFB25E1B26800518C5A /* swiftgen.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = swiftgen.yml; sourceTree = "<group>"; };
@@ -581,8 +581,9 @@
 				341B2B3D25D06A6F00336342 /* Dropdown.swift */,
 				34D25E49292F9E2100557E70 /* ImageButton.swift */,
 				34F128D025968044007DF31C /* Label.swift */,
-				348E704A25C61B8D00B3B160 /* Radio.swift */,
 				347FF78E2BCB6A5500E5B63B /* Popover.swift */,
+				348E704A25C61B8D00B3B160 /* Radio.swift */,
+				345A34962C4DADD000AF0002 /* TrackedMenu.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -604,7 +605,6 @@
 				34D19FBF262299D300B2732C /* NSEdgeInsets.swift */,
 				34B2C59D279FFF0600B52BF3 /* NSGestureRecognizer+Rx.swift */,
 				34091736267E81870023B76D /* NSImage.swift */,
-				345A34962C4DADD000AF0002 /* NSMenu.swift */,
 				34934CD728E71B0F009635D4 /* NSObject+Rx.swift */,
 				34A4C3E825963FB200D0F949 /* NSStackView.swift */,
 				3430ED02259634E00045DA53 /* NSStackView+Rx.swift */,
@@ -977,7 +977,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				345A34972C4DADD000AF0002 /* NSMenu.swift in Sources */,
+				345A34972C4DADD000AF0002 /* TrackedMenu.swift in Sources */,
 				347D0FDF259533C3002451EC /* CalendarView.swift in Sources */,
 				3421DA1F2693F12400056837 /* CalendarModel+Factory.swift in Sources */,
 				34B5A09D25B118EC00F7F7ED /* CalendarPickerViewModel.swift in Sources */,
