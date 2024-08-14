@@ -112,6 +112,7 @@ class MainViewController: NSViewController {
                 calendarPickerViewModel.nextEventCalendars
             )
             .map { $0.filter($1.contains) }
+            .share(replay: 1)
 
         statusItemViewModel = StatusItemViewModel(
             dateChanged: refreshDate,
