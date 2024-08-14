@@ -55,3 +55,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         setUpResignFocus()
     }
 }
+
+func blocking<T>(operation: () -> T) -> T {
+    SentrySDK.pauseAppHangTracking()
+    defer { SentrySDK.resumeAppHangTracking() }
+    return operation()
+}
