@@ -48,7 +48,9 @@ class CalendarServiceProvider: CalendarServiceProviding {
     func requestAccess() {
         requestAccess(for: .event) {
             self.requestAccess(for: .reminder) {
-                self.changeObserver.onNext(())
+                DispatchQueue.main.async {
+                    self.changeObserver.onNext(())
+                }
             }
         }
     }
