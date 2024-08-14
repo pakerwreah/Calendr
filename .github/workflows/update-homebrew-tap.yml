@@ -18,6 +18,7 @@ jobs:
         with:
           repository: pakerwreah/homebrew-calendr
           path: homebrew-calendr
+          token: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
 
       - name: Calculate sha256 checksum
         id: checksum
