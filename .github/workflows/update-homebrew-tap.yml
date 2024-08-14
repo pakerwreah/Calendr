@@ -1,0 +1,50 @@
+name: Update Homebrew Cask
+
+on:
+  release:
+    types: [published]
+
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "The version of the app to update"
+        required: true
+
+jobs:
+  update-cask:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Set Release Version from Input
+        if: github.event_name == 'workflow_dispatch'
+        run: echo "RELEASE_VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
+
+      - name: Set Release Version from Event
+        if: github.event_name == 'release'
+        run: echo "RELEASE_VERSION=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          repository: pakerwreah/homebrew-calendr
+          path: homebrew-calendr
+          token: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
+
+      - name: Calculate sha256 checksum
+        id: checksum
+        run: |
+          curl -L -o Calendr.zip https://github.com/${{ github.repository }}/releases/download/${{ env.RELEASE_VERSION }}/Calendr.zip
+          echo "::set-output name=sha256::$(sha256sum Calendr.zip | awk '{ print $1 }')"
+
+      - name: Update Homebrew Cask
+        working-directory: homebrew-calendr
+        run: |
+          sed -i "s|version \".*\"|version \"${{ env.RELEASE_VERSION }}\"|" calendr.rb
+          sed -i "s|sha256 \".*\"|sha256 \"${{ steps.checksum.outputs.sha256 }}\"|" calendr.rb
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
+          git add calendr.rb
+          git commit -m "Update Calendr to version ${{ env.RELEASE_VERSION }}"
+          git push
