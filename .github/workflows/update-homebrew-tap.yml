@@ -39,7 +39,7 @@ jobs:
           echo "::set-output name=sha256::$(sha256sum Calendr.zip | awk '{ print $1 }')"
 
       - name: Update Homebrew Cask
-        working-directory: homebrew-calendr
+        working-directory: homebrew-calendr/Casks
         run: |
           sed -i "s|version \".*\"|version \"${{ env.RELEASE_VERSION }}\"|" calendr.rb
           sed -i "s|sha256 \".*\"|sha256 \"${{ steps.checksum.outputs.sha256 }}\"|" calendr.rb
