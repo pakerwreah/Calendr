@@ -28,6 +28,7 @@ jobs:
         run: |
           sed -i "s|version \".*\"|version \"${{ github.event.release.tag_name }}\"|" calendr.rb
           sed -i "s|sha256 \".*\"|sha256 \"${{ steps.checksum.outputs.sha256 }}\"|" calendr.rb
+          git config user.name "${{ github.actor }}"
           git add calendr.rb
           git commit -m "Update Calendr to version ${{ github.event.release.tag_name }}"
           git push
