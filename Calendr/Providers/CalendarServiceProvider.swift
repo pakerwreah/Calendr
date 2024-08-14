@@ -102,7 +102,9 @@ class CalendarServiceProvider: CalendarServiceProviding {
 
     private func fetchEvents(from start: Date, to end: Date, calendars: [EKCalendar]) -> Observable<[EventModel]> {
 
-        Observable.create { [store, dateProvider] observer in
+        guard store.hasAccess(to: .event) else { return .just([]) }
+
+        return Observable.create { [store, dateProvider] observer in
 
             let predicate = store.predicateForEvents(withStart: start, end: end, calendars: calendars)
 
@@ -118,7 +120,9 @@ class CalendarServiceProvider: CalendarServiceProviding {
 
     private func fetchReminders(from start: Date, to end: Date, calendars: [EKCalendar]) -> Observable<[EventModel]> {
 
-        Observable.create { [store, dateProvider] observer in
+        guard store.hasAccess(to: .reminder) else { return .just([]) }
+
+        return Observable.create { [store, dateProvider] observer in
 
             let predicate = store.predicateForIncompleteReminders(
                 withDueDateStarting: start, ending: end, calendars: calendars
@@ -252,6 +256,15 @@ private class EventStore: EKEventStore {
             requestFullAccessToReminders(completion: completion)
         @unknown default:
             completion(false, .unexpected("🔥 Unknown entity type: \(entityType)"))
+        }
+    }
+
+    func hasAccess(to entityType: EKEntityType) -> Bool {
+        let status = EventStore.authorizationStatus(for: entityType)
+        if #available(macOS 14.0, *) {
+            return status == .fullAccess
+        } else {
+            return status == .authorized
         }
     }
 }
