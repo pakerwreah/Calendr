@@ -1,0 +1,33 @@
+name: Update Homebrew Cask
+
+on:
+  push: # remove me
+  workflow_dispatch:  # manual
+  release:
+    types: [published]
+
+jobs:
+  update-cask:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          repository: pakerwreah/homebrew-calendr
+          path: homebrew-calendr
+
+      - name: Calculate sha256 checksum
+        id: checksum
+        run: |
+          curl -L -o Calendr.zip https://github.com/${{ github.repository }}/releases/download/${{ github.event.release.tag_name }}/Calendr.zip
+          echo "::set-output name=sha256::$(sha256sum Calendr.zip | awk '{ print $1 }')"
+
+      - name: Update Homebrew Cask
+        working-directory: homebrew-calendr
+        run: |
+          sed -i "s|version \".*\"|version \"${{ github.event.release.tag_name }}\"|" calendr.rb
+          sed -i "s|sha256 \".*\"|sha256 \"${{ steps.checksum.outputs.sha256 }}\"|" calendr.rb
+          git add calendr.rb
+          git commit -m "Update Calendr to version ${{ github.event.release.tag_name }}"
+          git push
