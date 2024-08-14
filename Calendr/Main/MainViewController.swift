@@ -394,7 +394,7 @@ class MainViewController: NSViewController {
 
     private func setUpSettings() {
 
-        let settingsMenu = NSMenu()
+        let settingsMenu = TrackedMenu()
 
         settingsMenu.addItem(withTitle: Strings.Settings.title, action: #selector(openSettings), keyEquivalent: ",").target = self
 
@@ -504,7 +504,7 @@ class MainViewController: NSViewController {
             }
             .disposed(by: disposeBag)
 
-        let menu = NSMenu()
+        let menu = TrackedMenu()
 
         menu.addItem(withTitle: Strings.Settings.title, action: #selector(openSettings), keyEquivalent: ",").target = self
         menu.addItem(.separator())
@@ -649,41 +649,43 @@ class MainViewController: NSViewController {
         }
     }
 
-    private func closeModals() {
-        NSMenu.closeAll()
+    private func closeModals(completion: @escaping () -> Void) {
         Popover.closeAll()
+        TrackedMenu.closeAll {
+            completion()
+        }
     }
 
     private func setUpGlobalShortcuts() {
 
         KeyboardShortcuts.onKeyUp(for: .showMainPopover) { [weak self] in
-            guard let self else { return }
-            closeModals()
-            mainStatusItemClickHandler.leftClick.onNext(())
+            self?.closeModals {
+                self?.mainStatusItemClickHandler.leftClick.onNext(())
+            }
         }
 
         KeyboardShortcuts.onKeyUp(for: .showNextEventPopover) { [weak self] in
-            guard let self else { return }
-            closeModals()
-            eventStatusItemClickHandler.leftClick.onNext(())
+            self?.closeModals {
+                self?.eventStatusItemClickHandler.leftClick.onNext(())
+            }
         }
 
         KeyboardShortcuts.onKeyUp(for: .showNextEventOptions) { [weak self] in
-            guard let self else { return }
-            closeModals()
-            eventStatusItemClickHandler.rightClick.onNext(())
+            self?.closeModals {
+                self?.eventStatusItemClickHandler.rightClick.onNext(())
+            }
         }
 
         KeyboardShortcuts.onKeyUp(for: .showNextReminderPopover) { [weak self] in
-            guard let self else { return }
-            closeModals()
-            reminderStatusItemClickHandler.leftClick.onNext(())
+            self?.closeModals {
+                self?.reminderStatusItemClickHandler.leftClick.onNext(())
+            }
         }
 
         KeyboardShortcuts.onKeyUp(for: .showNextReminderOptions) { [weak self] in
-            guard let self else { return }
-            closeModals()
-            reminderStatusItemClickHandler.rightClick.onNext(())
+            self?.closeModals {
+                self?.reminderStatusItemClickHandler.rightClick.onNext(())
+            }
         }
     }
 

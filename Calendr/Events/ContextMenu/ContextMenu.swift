@@ -97,11 +97,11 @@ private class ContextMenuItem<Action: ContextMenuAction>: NSMenuItem {
     }
 }
 
-class ContextMenu<ViewModel: ContextMenuViewModel>: NSMenu {
+class ContextMenu<ViewModel: ContextMenuViewModel>: TrackedMenu {
 
     init(viewModel: ViewModel) {
 
-        super.init(title: "")
+        super.init()
 
         for item in viewModel.items {
             switch item {
