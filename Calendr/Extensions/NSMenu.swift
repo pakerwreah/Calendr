@@ -14,7 +14,9 @@ class NSMenu: AppKit.NSMenu {
     @discardableResult
     override func popUp(positioning item: NSMenuItem?, at location: NSPoint, in view: NSView?) -> Bool {
         activeMenus.append(self)
-        let result = super.popUp(positioning: item, at: location, in: view)
+        let result = blocking {
+            super.popUp(positioning: item, at: location, in: view)
+        }
         activeMenus.removeAll { $0 == self }
         return result
     }
