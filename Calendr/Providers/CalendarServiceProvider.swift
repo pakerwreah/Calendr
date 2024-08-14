@@ -140,8 +140,6 @@ class CalendarServiceProvider: CalendarServiceProviding {
 
             let disposable = Disposables.create()
 
-            defer { observer.onCompleted() }
-
             guard let reminder = store.calendarItem(withIdentifier: id) as? EKReminder else {
                 observer.onError(.unexpected("🔥 Not a reminder"))
                 return disposable
@@ -151,6 +149,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
                 reminder.isCompleted = true
                 try store.save(reminder, commit: true)
                 observer.onNext(())
+                observer.onCompleted()
             } catch {
                 observer.onError(error)
             }
@@ -166,8 +165,6 @@ class CalendarServiceProvider: CalendarServiceProviding {
 
             let disposable = Disposables.create()
 
-            defer { observer.onCompleted() }
-
             guard let reminder = store.calendarItem(withIdentifier: id) as? EKReminder else {
                 observer.onError(.unexpected("🔥 Not a reminder"))
                 return disposable
@@ -179,6 +176,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
                 reminder.addAlarm(EKAlarm(absoluteDate: date))
                 try store.save(reminder, commit: true)
                 observer.onNext(())
+                observer.onCompleted()
             } catch {
                 observer.onError(error)
             }
@@ -193,8 +191,6 @@ class CalendarServiceProvider: CalendarServiceProviding {
         Observable.create { [store] observer in
 
             let disposable = Disposables.create()
-
-            defer { observer.onCompleted() }
 
             let predicate = store.predicateForEvents(withStart: date, end: date + 1, calendars: nil)
 
@@ -230,6 +226,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
                 }
 
                 observer.onNext(())
+                observer.onCompleted()
             } catch {
                 observer.onError(error)
             }
