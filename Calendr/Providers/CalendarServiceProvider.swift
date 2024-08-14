@@ -71,17 +71,21 @@ class CalendarServiceProvider: CalendarServiceProviding {
         }
     }
 
-    private func storeCalendars() -> [EKCalendar] {
-        store.calendars(for: .event) + store.calendars(for: .reminder)
-    }
+    private func storeCalendars(with ids: [String]? = nil) -> Observable<[EKCalendar]> {
 
-    func calendars() -> Observable<[CalendarModel]> {
+        Observable.create { [store] observer in
 
-        Observable.create { [weak self] observer in
+            var calendars: [EKCalendar] = []
 
-            if let self {
-                observer.onNext(storeCalendars().map(CalendarModel.init(from:)))
+            for type in [.event, .reminder] as [EKEntityType] where store.hasAccess(to: type) {
+                calendars.append(contentsOf: store.calendars(for: type))
             }
+
+            if let ids {
+                calendars = calendars.filter { ids.contains($0.calendarIdentifier) }
+            }
+
+            observer.onNext(calendars)
             observer.onCompleted()
 
             return Disposables.create()
@@ -89,15 +93,23 @@ class CalendarServiceProvider: CalendarServiceProviding {
         .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
     }
 
-    func events(from start: Date, to end: Date, calendars: [String]) -> Observable<[EventModel]> {
+    func calendars() -> Observable<[CalendarModel]> {
 
-        let calendars = storeCalendars().filter { calendars.contains($0.calendarIdentifier) }
+        storeCalendars().map { $0.map(CalendarModel.init(from:)) }
+    }
 
-        return Observable.zip(
-            fetchEvents(from: start, to: end, calendars: calendars),
-            fetchReminders(from: start, to: end, calendars: calendars)
-        )
-        .map(+)
+    func events(from start: Date, to end: Date, calendars ids: [String]) -> Observable<[EventModel]> {
+
+        storeCalendars(with: ids)
+            .flatMap { [weak self] calendars -> Observable<[EventModel]> in
+                guard let self, !calendars.isEmpty else { return .just([]) }
+
+                return Observable.zip(
+                    fetchEvents(from: start, to: end, calendars: calendars),
+                    fetchReminders(from: start, to: end, calendars: calendars)
+                )
+                .map(+)
+            }
     }
 
     private func fetchEvents(from start: Date, to end: Date, calendars: [EKCalendar]) -> Observable<[EventModel]> {
