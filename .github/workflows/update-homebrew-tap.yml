@@ -36,7 +36,7 @@ jobs:
         id: checksum
         run: |
           curl -L -o Calendr.zip https://github.com/${{ github.repository }}/releases/download/${{ env.RELEASE_VERSION }}/Calendr.zip
-          echo "::set-output name=sha256::$(sha256sum Calendr.zip | awk '{ print $1 }')"
+          echo "sha256=$(sha256sum Calendr.zip | awk '{ print $1 }')" >> $GITHUB_OUTPUT
 
       - name: Update Homebrew Cask
         working-directory: homebrew-calendr/Casks
