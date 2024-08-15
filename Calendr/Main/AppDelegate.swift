@@ -6,7 +6,6 @@
 //
 
 import Cocoa
-import Sentry
 
 class AppDelegate: NSObject, NSApplicationDelegate {
 
@@ -22,15 +21,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             return
         }
         #else
-        var transaction: Span?
-        defer { transaction?.finish() }
-
-        if let dsn = Environment.SENTRY_DSN {
-            SentrySDK.start { options in
-                options.dsn = dsn
-            }
-            transaction = SentrySDK.startTransaction(transactionContext: .init(name: "app", operation: "launch", sampled: .yes))
-        }
+        let appLaunch = startSentry()
+        defer { appLaunch?.finish() }
         #endif
 
         let userDefaults = UserDefaults.standard
@@ -54,10 +46,4 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         setUpEditShortcuts()
         setUpResignFocus()
     }
-}
-
-func blocking<T>(operation: () -> T) -> T {
-    SentrySDK.pauseAppHangTracking()
-    defer { SentrySDK.resumeAppHangTracking() }
-    return operation()
 }
