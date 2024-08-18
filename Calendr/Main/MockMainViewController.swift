@@ -8,6 +8,7 @@
 #if DEBUG
 
 import AppKit.NSWorkspace
+import UserNotifications
 
 class MockMainViewController: MainViewController {
 
@@ -31,13 +32,15 @@ class MockMainViewController: MainViewController {
         ])
 
         let notificationCenter = NotificationCenter()
+        let notificationProvider = UNUserNotificationCenter.current()
 
         super.init(
             autoLauncher: AutoLauncher(),
             workspace: NSWorkspace.shared,
             calendarService: MockCalendarServiceProvider(dateProvider: dateProvider),
             dateProvider: dateProvider,
-            screenProvider: ScreenProvider(notificationCenter: notificationCenter),
+            screenProvider: ScreenProvider(notificationCenter: notificationCenter), 
+            notificationProvider: notificationProvider,
             userDefaults: userDefaults,
             notificationCenter: notificationCenter
         )

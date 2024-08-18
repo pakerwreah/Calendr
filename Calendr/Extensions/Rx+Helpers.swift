@@ -38,8 +38,8 @@ extension ObservableType {
 
 extension PublishSubject {
 
-    static func pipe() -> (output: Observable<Element>, input: AnyObserver<Element>) {
-        { ($0.asObservable(), $0.asObserver()) }(Self.init())
+    static func pipe(scheduler: ImmediateSchedulerType = CurrentThreadScheduler.instance) -> (output: Observable<Element>, input: AnyObserver<Element>) {
+        { ($0.asObservable().observe(on: scheduler), $0.asObserver()) }(Self.init())
     }
 }
 

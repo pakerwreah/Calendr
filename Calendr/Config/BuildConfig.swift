@@ -16,8 +16,10 @@ enum BuildConfig {
     static let isTesting = NSClassFromString("XCTestCase") != nil
 
     #if DEBUG
+    static let isDebug = true
     static let isUITesting = CommandLine.arguments.contains("-uitest")
     #else
+    static let isDebug = false
     static let isUITesting = false
     #endif
 }

@@ -6,6 +6,7 @@
 //
 
 import Cocoa
+import UserNotifications
 
 class AppDelegate: NSObject, NSApplicationDelegate {
 
@@ -28,6 +29,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let userDefaults = UserDefaults.standard
         let notificationCenter = NotificationCenter.default
         let workspace = NSWorkspace.shared
+        let notificationProvider = UNUserNotificationCenter.current()
 
         registerDefaultPrefs(in: userDefaults)
 
@@ -38,7 +40,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             workspace: workspace,
             calendarService: CalendarServiceProvider(dateProvider: dateProvider, notificationCenter: notificationCenter),
             dateProvider: dateProvider,
-            screenProvider: ScreenProvider(notificationCenter: notificationCenter),
+            screenProvider: ScreenProvider(notificationCenter: notificationCenter), 
+            notificationProvider: notificationProvider,
             userDefaults: userDefaults,
             notificationCenter: notificationCenter
         )

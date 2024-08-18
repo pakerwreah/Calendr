@@ -59,6 +59,7 @@ class MainViewController: NSViewController {
     private let calendarService: CalendarServiceProviding
     private let dateProvider: DateProviding
     private let screenProvider: ScreenProviding
+    private let autoUpdater: AutoUpdater
     private let userDefaults: UserDefaults
     private let notificationCenter: NotificationCenter
     private var heightConstraint: NSLayoutConstraint?
@@ -71,6 +72,7 @@ class MainViewController: NSViewController {
         calendarService: CalendarServiceProviding,
         dateProvider: DateProviding,
         screenProvider: ScreenProviding,
+        notificationProvider: LocalNotificationProviding,
         userDefaults: UserDefaults,
         notificationCenter: NotificationCenter
     ) {
@@ -125,10 +127,16 @@ class MainViewController: NSViewController {
             scheduler: MainScheduler.instance
         )
 
+        autoUpdater = AutoUpdater(
+            userDefaults: userDefaults,
+            notificationProvider: notificationProvider
+        )
+
         settingsViewController = SettingsViewController(
             settingsViewModel: settingsViewModel,
             calendarsViewModel: calendarPickerViewModel,
-            notificationCenter: notificationCenter
+            notificationCenter: notificationCenter,
+            autoUpdater: autoUpdater
         )
         /// Fix weird "conflict with KVO" issue on RxSwift if we present settings
         /// view controller before calling `methodInvoked` at least once.
@@ -216,6 +224,10 @@ class MainViewController: NSViewController {
         calendarService.requestAccess()
 
         refreshDate.onNext(())
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(5)) { [autoUpdater] in
+            autoUpdater.start()
+        }
     }
 
     required init?(coder: NSCoder) {
@@ -390,6 +402,11 @@ class MainViewController: NSViewController {
         searchInputText
             .bind(to: searchInput.rx.stringValue)
             .disposed(by: disposeBag)
+
+        autoUpdater.notificationTap.bind { [weak self] in
+            self?.openSettingsTab(.about)
+        }
+        .disposed(by: disposeBag)
     }
 
     private func setUpSettings() {
@@ -423,9 +440,14 @@ class MainViewController: NSViewController {
     }
 
     @objc private func openSettings() {
+        openSettingsTab(.general)
+    }
+
+    private func openSettingsTab(_ tab: SettingsTab) {
 
         settingsViewController.viewWillAppear()
         presentAsModalWindow(settingsViewController)
+        settingsViewController.selectedTabViewItemIndex = tab.rawValue
     }
 
     @objc private func showSearchInput() {

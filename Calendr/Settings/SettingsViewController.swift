@@ -8,6 +8,13 @@
 import Cocoa
 import RxSwift
 
+enum SettingsTab: Int {
+    case general
+    case calendars
+    case keyboard
+    case about
+}
+
 class SettingsViewController: NSTabViewController {
 
     private let notificationCenter: NotificationCenter
@@ -17,7 +24,8 @@ class SettingsViewController: NSTabViewController {
     init(
         settingsViewModel: SettingsViewModel,
         calendarsViewModel: CalendarPickerViewModel,
-        notificationCenter: NotificationCenter
+        notificationCenter: NotificationCenter,
+        autoUpdater: AutoUpdater
     ) {
 
         self.notificationCenter = notificationCenter
@@ -33,7 +41,7 @@ class SettingsViewController: NSTabViewController {
             viewController: CalendarPickerViewController(viewModel: calendarsViewModel, configuration: .settings)
         )
         let keyboard = NSTabViewItem(viewController: KeyboardViewController())
-        let about = NSTabViewItem(viewController: AboutViewController())
+        let about = NSTabViewItem(viewController: AboutViewController(autoUpdater: autoUpdater))
 
         general.label = Strings.Settings.Tab.general
         general.image = Icons.Settings.general

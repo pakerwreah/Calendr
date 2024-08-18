@@ -190,4 +190,11 @@ extension UserDefaults {
         get { integer(forKey: Prefs.transparencyLevel) }
         set { set(newValue, forKey: Prefs.transparencyLevel) }
     }
+
+    // Misc
+
+    @objc dynamic var lastCheckedVersion: String? {
+        get { string(forKey: Prefs.lastCheckedVersion) }
+        set { set(newValue, forKey: Prefs.lastCheckedVersion) }
+    }
 }

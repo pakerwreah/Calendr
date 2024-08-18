@@ -154,6 +154,9 @@
 		34E259832B659B5600074D3A /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 34E259822B659B5600074D3A /* KeyboardShortcuts */; };
 		34E60D6126A0D6D6004DA082 /* NSAccessibilityProtocol+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E60D6026A0D6D6004DA082 /* NSAccessibilityProtocol+Rx.swift */; };
 		34E60D6326A0EA32004DA082 /* NSAccessibilityProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E60D6226A0EA32004DA082 /* NSAccessibilityProtocol.swift */; };
+		34E855682C70E92500757B58 /* AutoUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E855672C70E92500757B58 /* AutoUpdater.swift */; };
+		34E8556A2C7115A100757B58 /* LocalNotificationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E855692C7115A100757B58 /* LocalNotificationProvider.swift */; };
+		34E8556D2C711D1A00757B58 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 34E8556C2C711D1A00757B58 /* ZIPFoundation */; };
 		34EDE71B2AC46515007C5854 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34EDE71A2AC46515007C5854 /* Error.swift */; };
 		34F128D125968044007DF31C /* Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F128D025968044007DF31C /* Label.swift */; };
 		34F128E12597B9C9007DF31C /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F128E02597B9C9007DF31C /* MainViewController.swift */; };
@@ -345,6 +348,8 @@
 		34E60D6026A0D6D6004DA082 /* NSAccessibilityProtocol+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAccessibilityProtocol+Rx.swift"; sourceTree = "<group>"; };
 		34E60D6226A0EA32004DA082 /* NSAccessibilityProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSAccessibilityProtocol.swift; sourceTree = "<group>"; };
 		34E66E2627C41B5C00A7A77A /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		34E855672C70E92500757B58 /* AutoUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoUpdater.swift; sourceTree = "<group>"; };
+		34E855692C7115A100757B58 /* LocalNotificationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationProvider.swift; sourceTree = "<group>"; };
 		34EDE71A2AC46515007C5854 /* Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
 		34F128D025968044007DF31C /* Label.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Label.swift; sourceTree = "<group>"; };
 		34F128E02597B9C9007DF31C /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -378,6 +383,7 @@
 				3418207E26755CC80075B3DC /* RxSwift in Frameworks */,
 				34E259832B659B5600074D3A /* KeyboardShortcuts in Frameworks */,
 				3477E70C2C67A6A9008D3844 /* Sentry in Frameworks */,
+				34E8556D2C711D1A00757B58 /* ZIPFoundation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -645,6 +651,7 @@
 			children = (
 				34702149259DFF3000827AE7 /* CalendarServiceProvider.swift */,
 				34FD09D825AE269600AAAAE2 /* DateProvider.swift */,
+				34E855692C7115A100757B58 /* LocalNotificationProvider.swift */,
 				346E70C82802278E00A785FF /* ScreenProvider.swift */,
 				34651F7325E3207200518C5A /* WorkspaceServiceProvider.swift */,
 			);
@@ -766,14 +773,15 @@
 			children = (
 				34C459BB25DF114300561C29 /* AboutViewController.swift */,
 				346CB087295E209600E018EF /* AutoLauncher.swift */,
+				34E855672C70E92500757B58 /* AutoUpdater.swift */,
 				3449403125C348C70020E664 /* CalendarPickerViewController.swift */,
 				34B5A09C25B118EC00F7F7ED /* CalendarPickerViewModel.swift */,
 				3449402D25C348B20020E664 /* GeneralSettingsViewController.swift */,
 				34D88DC72C4C66F80047D636 /* KeyboardViewController.swift */,
 				34934CD528E69520009635D4 /* Prefs+UserDefaults.swift */,
+				34D88DC92C4C687B0047D636 /* SettingsUI.swift */,
 				34B5A09225B0CE6F00F7F7ED /* SettingsViewController.swift */,
 				348B8D0325B2925100E518FE /* SettingsViewModel.swift */,
-				34D88DC92C4C687B0047D636 /* SettingsUI.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -819,6 +827,7 @@
 				3418208326755CC80075B3DC /* RxCocoa */,
 				34E259822B659B5600074D3A /* KeyboardShortcuts */,
 				3477E70B2C67A6A9008D3844 /* Sentry */,
+				34E8556C2C711D1A00757B58 /* ZIPFoundation */,
 			);
 			productName = Calendr;
 			productReference = 347D0F9425952F89002451EC /* Calendr.app */;
@@ -891,6 +900,7 @@
 				3418207C26755CC80075B3DC /* XCRemoteSwiftPackageReference "RxSwift" */,
 				34E259812B659B5600074D3A /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
 				3477E70A2C67A6A9008D3844 /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
+				34E8556B2C711D1A00757B58 /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
 			);
 			productRefGroup = 347D0F9525952F89002451EC /* Products */;
 			projectDirPath = "";
@@ -1019,6 +1029,7 @@
 				349355AA25BCA8DF00957945 /* EventView.swift in Sources */,
 				3409173B267E90210023B76D /* Icons.swift in Sources */,
 				3421DA182693EEBD00056837 /* MockDateProvider.swift in Sources */,
+				34E855682C70E92500757B58 /* AutoUpdater.swift in Sources */,
 				348E701F25C43C5200B3B160 /* WeekDay.swift in Sources */,
 				34091737267E81870023B76D /* NSImage.swift in Sources */,
 				34ABB9EE29A163890021F3CF /* ContextMenuFactory.swift in Sources */,
@@ -1087,6 +1098,7 @@
 				34F201332693F562006CE2FF /* MockEventListSettings.swift in Sources */,
 				3477E7102C67C15A008D3844 /* Environment.swift in Sources */,
 				34C4599C25DEFFDA00561C29 /* BuildConfig.m in Sources */,
+				34E8556A2C7115A100757B58 /* LocalNotificationProvider.swift in Sources */,
 				347FF78F2BCB6A5500E5B63B /* Popover.swift in Sources */,
 				34651F1525E1BB8400518C5A /* Strings.generated.swift in Sources */,
 				34651F5425E22A3900518C5A /* DateIntervalFormatter.swift in Sources */,
@@ -1352,7 +1364,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 32973VC289;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1361,7 +1373,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.12.1;
+				MARKETING_VERSION = 1.12.2;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Config/Calendr-Bridging-Header.h";
@@ -1380,7 +1392,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 32973VC289;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1389,7 +1401,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.12.1;
+				MARKETING_VERSION = 1.12.2;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Config/Calendr-Bridging-Header.h";
@@ -1511,6 +1523,14 @@
 				minimumVersion = 1.17.0;
 			};
 		};
+		34E8556B2C711D1A00757B58 /* XCRemoteSwiftPackageReference "ZIPFoundation" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/weichsel/ZIPFoundation";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.19;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1538,6 +1558,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 34E259812B659B5600074D3A /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */;
 			productName = KeyboardShortcuts;
+		};
+		34E8556C2C711D1A00757B58 /* ZIPFoundation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 34E8556B2C711D1A00757B58 /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
+			productName = ZIPFoundation;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
