@@ -73,8 +73,10 @@ class MainViewController: NSViewController {
         dateProvider: DateProviding,
         screenProvider: ScreenProviding,
         notificationProvider: LocalNotificationProviding,
+        networkProvider: NetworkServiceProviding,
         userDefaults: UserDefaults,
-        notificationCenter: NotificationCenter
+        notificationCenter: NotificationCenter,
+        fileManager: FileManager
     ) {
 
         self.workspace = workspace
@@ -129,7 +131,9 @@ class MainViewController: NSViewController {
 
         autoUpdater = AutoUpdater(
             userDefaults: userDefaults,
-            notificationProvider: notificationProvider
+            notificationProvider: notificationProvider,
+            networkProvider: networkProvider,
+            fileManager: fileManager
         )
 
         settingsViewController = SettingsViewController(
@@ -403,8 +407,17 @@ class MainViewController: NSViewController {
             .bind(to: searchInput.rx.stringValue)
             .disposed(by: disposeBag)
 
-        autoUpdater.notificationTap.bind { [weak self] in
-            self?.openSettingsTab(.about)
+        autoUpdater.notificationTap.bind { [weak self] action in
+            guard let self else { return }
+
+            switch action {
+            case .default:
+                openSettingsTab(.about)
+            
+            case .install:
+                autoUpdater.downloadAndInstall()
+            }
+
         }
         .disposed(by: disposeBag)
     }

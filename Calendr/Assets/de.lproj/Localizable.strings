@@ -7,7 +7,8 @@
 
 "quit" = "Programm beenden";
 "search" = "Suchen";
-"new_version" = "Neue Version verfügbar: %@";
+
+"auto_update.new_version" = "Neue Version verfügbar: %@";
 
 "settings.title" = "Einstellungen";
 "settings.tab.general" = "Allgemein";

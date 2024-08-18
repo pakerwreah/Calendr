@@ -95,12 +95,12 @@ class AboutViewController: NSViewController {
                 newVersionButton.isEnabled = false
                 newVersionButton.title = Strings.AutoUpdate.fetchingReleases
 
-            case .downloading(let release):
+            case .downloading(let version):
                 newVersionButton.isEnabled = false
-                newVersionButton.title = Strings.AutoUpdate.downloading(release.name)
+                newVersionButton.title = Strings.AutoUpdate.downloading(version)
 
-            case .newVersion(let release):
-                newVersionButton.title = Strings.newVersion(release.name)
+            case .newVersion(let version):
+                newVersionButton.title = Strings.AutoUpdate.newVersion(version)
                 newVersionButton.action = #selector(installUpdates)
                 newVersionButton.isEnabled = true
             }
@@ -113,22 +113,10 @@ class AboutViewController: NSViewController {
     }
 
     @objc private func installUpdates() {
-        Task {
-            await autoUpdater.downloadAndInstall()
-        }
+        autoUpdater.downloadAndInstall()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-}
-
-// TODO: Localization
-extension Strings {
-
-    enum AutoUpdate {
-        static let checkForUpdates = "Check for updates"
-        static let fetchingReleases = "Fetching releases..."
-        static func downloading(_ version: String) -> String { "Downloading \(version)..." }
     }
 }

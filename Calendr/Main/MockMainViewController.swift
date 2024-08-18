@@ -32,7 +32,7 @@ class MockMainViewController: MainViewController {
         ])
 
         let notificationCenter = NotificationCenter()
-        let notificationProvider = UNUserNotificationCenter.current()
+        let fileManager = FileManager.default
 
         super.init(
             autoLauncher: AutoLauncher(),
@@ -40,9 +40,11 @@ class MockMainViewController: MainViewController {
             calendarService: MockCalendarServiceProvider(dateProvider: dateProvider),
             dateProvider: dateProvider,
             screenProvider: ScreenProvider(notificationCenter: notificationCenter), 
-            notificationProvider: notificationProvider,
+            notificationProvider: MockLocalNotificationProvider(),
+            networkProvider: MockNetworkServiceProvider(),
             userDefaults: userDefaults,
-            notificationCenter: notificationCenter
+            notificationCenter: notificationCenter, 
+            fileManager: fileManager
         )
     }
 

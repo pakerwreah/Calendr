@@ -7,7 +7,8 @@
 
 "quit" = "Esci";
 "search" = "Cerca";
-"new_version" = "Nuova versione disponibile: %@";
+
+"auto_update.new_version" = "Nuova versione disponibile: %@";
 
 "settings.title" = "Preferenze";
 "settings.tab.general" = "Generali";

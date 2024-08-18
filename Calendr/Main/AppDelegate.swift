@@ -6,7 +6,6 @@
 //
 
 import Cocoa
-import UserNotifications
 
 class AppDelegate: NSObject, NSApplicationDelegate {
 
@@ -29,11 +28,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let userDefaults = UserDefaults.standard
         let notificationCenter = NotificationCenter.default
         let workspace = NSWorkspace.shared
-        let notificationProvider = UNUserNotificationCenter.current()
+        let fileManager = FileManager.default
 
         registerDefaultPrefs(in: userDefaults)
 
         let dateProvider = DateProvider(notificationCenter: notificationCenter, userDefaults: userDefaults)
+        let notificationProvider = LocalNotificationProvider()
 
         viewController = MainViewController(
             autoLauncher: .default,
@@ -42,11 +42,24 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             dateProvider: dateProvider,
             screenProvider: ScreenProvider(notificationCenter: notificationCenter), 
             notificationProvider: notificationProvider,
+            networkProvider: NetworkServiceProvider(),
             userDefaults: userDefaults,
-            notificationCenter: notificationCenter
+            notificationCenter: notificationCenter,
+            fileManager: fileManager
         )
 
         setUpEditShortcuts()
         setUpResignFocus()
+
+        sendUpdatedNotification(with: notificationProvider)
+    }
+
+    private func sendUpdatedNotification(with provider: LocalNotificationProviding) {
+        guard CommandLine.arguments.contains("-updated") else { return }
+        Task {
+            await provider.send(id: .uuid, .message(
+                Strings.AutoUpdate.updatedTo("v\(BuildConfig.appVersion) 🎉"))
+            )
+        }
     }
 }

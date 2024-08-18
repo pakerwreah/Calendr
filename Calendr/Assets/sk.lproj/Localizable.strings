@@ -7,7 +7,8 @@
 
 "quit" = "Ukončiť";
 "search" = "Hľadať";
-"new_version" = "Nová verzia dostupná: %@";
+
+"auto_update.new_version" = "Nová verzia dostupná: %@";
 
 "settings.title" = "Nastavenia";
 "settings.tab.general" = "Všeobecné";

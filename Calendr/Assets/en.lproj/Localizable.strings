@@ -7,7 +7,13 @@
 
 "quit" = "Quit";
 "search" = "Search";
-"new_version" = "New version available: %@";
+
+"auto_update.check_for_updates" = "Check for updates";
+"auto_update.fetching_releases" = "Fetching releases";
+"auto_update.new_version" = "New version available: %@";
+"auto_update.updated_to" = "Updated to version: %@";
+"auto_update.downloading" = "Downloading version %@";
+"auto_update.install" = "Install";
 
 "settings.title" = "Preferences";
 "settings.tab.general" = "General";

@@ -7,7 +7,8 @@
 
 "quit" = "Avsluta";
 "search" = "Sök";
-"new_version" = "Ny version tillgänglig på: %@";
+
+"auto_update.new_version" = "Ny version tillgänglig på: %@";
 
 "settings.title" = "Inställningar";
 "settings.tab.general" = "Allmänt";

@@ -32,6 +32,9 @@
 		3421DA202693F12400056837 /* EventModel+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3421DA1C2693F12400056837 /* EventModel+Factory.swift */; };
 		3421DA212693F12400056837 /* Calendar+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3421DA1D2693F12400056837 /* Calendar+Factory.swift */; };
 		34286E4625D5CD9C0097EC5D /* WeekNumberCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34286E4525D5CD9C0097EC5D /* WeekNumberCellView.swift */; };
+		34299F712C72289400A0269B /* NetworkServiceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34299F702C72289400A0269B /* NetworkServiceProvider.swift */; };
+		34299F732C724FA000A0269B /* MockNetworkServiceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34299F722C724FA000A0269B /* MockNetworkServiceProvider.swift */; };
+		34299F752C72507100A0269B /* MockLocalNotificationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34299F742C72507100A0269B /* MockLocalNotificationProvider.swift */; };
 		34305BCB25992A4E00AB381D /* Rx+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34305BCA25992A4E00AB381D /* Rx+Helpers.swift */; };
 		3430675E25F6BC15000D4003 /* HistoricalSchedulerTimeConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3430675D25F6BC15000D4003 /* HistoricalSchedulerTimeConverter.swift */; };
 		3430676325F6C130000D4003 /* TrackedHistoricalScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3430676225F6C130000D4003 /* TrackedHistoricalScheduler.swift */; };
@@ -213,6 +216,9 @@
 		3421DA1C2693F12400056837 /* EventModel+Factory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "EventModel+Factory.swift"; sourceTree = "<group>"; };
 		3421DA1D2693F12400056837 /* Calendar+Factory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Calendar+Factory.swift"; sourceTree = "<group>"; };
 		34286E4525D5CD9C0097EC5D /* WeekNumberCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekNumberCellView.swift; sourceTree = "<group>"; };
+		34299F702C72289400A0269B /* NetworkServiceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServiceProvider.swift; sourceTree = "<group>"; };
+		34299F722C724FA000A0269B /* MockNetworkServiceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNetworkServiceProvider.swift; sourceTree = "<group>"; };
+		34299F742C72507100A0269B /* MockLocalNotificationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockLocalNotificationProvider.swift; sourceTree = "<group>"; };
 		34305BCA25992A4E00AB381D /* Rx+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Rx+Helpers.swift"; sourceTree = "<group>"; };
 		3430675D25F6BC15000D4003 /* HistoricalSchedulerTimeConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoricalSchedulerTimeConverter.swift; sourceTree = "<group>"; };
 		3430676225F6C130000D4003 /* TrackedHistoricalScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackedHistoricalScheduler.swift; sourceTree = "<group>"; };
@@ -406,10 +412,12 @@
 				3421DA152693EDEB00056837 /* MockCalendarSettings.swift */,
 				3421DA172693EEBD00056837 /* MockDateProvider.swift */,
 				34F201322693F562006CE2FF /* MockEventListSettings.swift */,
+				34299F742C72507100A0269B /* MockLocalNotificationProvider.swift */,
+				34299F722C724FA000A0269B /* MockNetworkServiceProvider.swift */,
+				346C5A4B2BC2D87F0007106C /* MockNextEventSettings.swift */,
 				3421DA112693E70E00056837 /* MockPopoverSettings.swift */,
 				34F4C47C2A6C56AA00397C80 /* MockScreenProvider.swift */,
 				34F4C47E2A6C57B300397C80 /* MockStatusItemSettings.swift */,
-				346C5A4B2BC2D87F0007106C /* MockNextEventSettings.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -654,6 +662,7 @@
 				34E855692C7115A100757B58 /* LocalNotificationProvider.swift */,
 				346E70C82802278E00A785FF /* ScreenProvider.swift */,
 				34651F7325E3207200518C5A /* WorkspaceServiceProvider.swift */,
+				34299F702C72289400A0269B /* NetworkServiceProvider.swift */,
 			);
 			path = Providers;
 			sourceTree = "<group>";
@@ -1022,6 +1031,7 @@
 				34EDE71B2AC46515007C5854 /* Error.swift in Sources */,
 				345DD97326920D1B00294D90 /* CalendarViewPreview.swift in Sources */,
 				3492C460269FCF5B009CFAD2 /* Accessibility.swift in Sources */,
+				34299F712C72289400A0269B /* NetworkServiceProvider.swift in Sources */,
 				346C5A4C2BC2D87F0007106C /* MockNextEventSettings.swift in Sources */,
 				348E704B25C61B8D00B3B160 /* Radio.swift in Sources */,
 				347D0FF825954975002451EC /* CalendarCellViewModel.swift in Sources */,
@@ -1033,6 +1043,7 @@
 				348E701F25C43C5200B3B160 /* WeekDay.swift in Sources */,
 				34091737267E81870023B76D /* NSImage.swift in Sources */,
 				34ABB9EE29A163890021F3CF /* ContextMenuFactory.swift in Sources */,
+				34299F732C724FA000A0269B /* MockNetworkServiceProvider.swift in Sources */,
 				3468E653284BD44600B21EC8 /* EventBarStyle.swift in Sources */,
 				34F128E12597B9C9007DF31C /* MainViewController.swift in Sources */,
 				34934CD828E71B0F009635D4 /* NSObject+Rx.swift in Sources */,
@@ -1060,6 +1071,7 @@
 				34F128D125968044007DF31C /* Label.swift in Sources */,
 				346E70C92802278E00A785FF /* ScreenProvider.swift in Sources */,
 				34F128F22597C340007DF31C /* WeekDayCellView.swift in Sources */,
+				34299F752C72507100A0269B /* MockLocalNotificationProvider.swift in Sources */,
 				34C72F9C25E9847300FD20FA /* EventListViewModel.swift in Sources */,
 				3421DA142693E75A00056837 /* MockCalendarServiceProvider.swift in Sources */,
 				3421DA202693F12400056837 /* EventModel+Factory.swift in Sources */,
