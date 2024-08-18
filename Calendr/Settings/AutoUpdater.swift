@@ -191,14 +191,16 @@ class AutoUpdater: AutoUpdating {
 
         defer { try? fileManager.removeItem(at: archiveURL) }
 
+        try await savePanel(for: appUrl)
+
         try await replaceApp(url: appUrl, archive: archiveURL)
 
         try relaunchApp(url: appUrl)
     }
 
-    private func replaceApp(url appUrl: URL, archive archiveURL: URL) async throws {
+    private func savePanel(for appUrl: URL) async throws {
 
-        let url: URL? = try await withCheckedThrowingContinuation { continuation in
+        let selectedURL = try await withCheckedThrowingContinuation { continuation in
             DispatchQueue.main.async {
                 NSApp.modalWindow?.close()
                 let dialog = NSSavePanel()
@@ -209,14 +211,19 @@ class AutoUpdater: AutoUpdating {
                 dialog.title = "Please don't change anything"
                 dialog.message = "Confirm the app location so we have permission to replace it"
                 dialog.begin { result in
-                    continuation.resume(returning: dialog.url)
+                    continuation.resume(returning: result == .cancel ? nil : dialog.url)
                 }
             }
         }
-
-        guard url == appUrl else {
-            throw UnexpectedError(message: "Failed to install app")
+        guard let selectedURL else {
+            throw UnexpectedError(message: "User canceled the save panel")
         }
+        guard selectedURL == appUrl else {
+            throw UnexpectedError(message: "User selected different app url: \(selectedURL)")
+        }
+    }
+
+    private func replaceApp(url appUrl: URL, archive archiveURL: URL) async throws {
 
         try fileManager.trashItem(at: appUrl, resultingItemURL: nil)
 
