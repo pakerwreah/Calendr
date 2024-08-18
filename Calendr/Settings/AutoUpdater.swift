@@ -9,6 +9,7 @@ import AppKit
 import UserNotifications
 import RxSwift
 import ZIPFoundation
+import Sentry
 
 protocol AutoUpdating {
     func start()
@@ -175,6 +176,17 @@ class AutoUpdater: AutoUpdating {
         }
     }
 
+    /// bundleURL might return weird stuff if you restore the app from the trash 🔮
+    private func getAppUrl() -> URL {
+        do {
+            let applications = try fileManager.url(for: .applicationDirectory, in: .localDomainMask, appropriateFor: nil, create: false)
+            return applications.appendingPathComponent("Calendr.app", conformingTo: .directory)
+        } catch {
+            SentrySDK.capture(error: error)
+            return Bundle.main.bundleURL
+        }
+    }
+
     private func downloadAndInstall() async throws {
         guard
             let release = newRelease,
@@ -185,7 +197,7 @@ class AutoUpdater: AutoUpdating {
 
         newVersionAvailableObserver.onNext(.downloading(release.name))
 
-        let appUrl = Bundle.main.bundleURL
+        let appUrl = getAppUrl()
 
         let archiveURL = try await networkProvider.download(from: url)
 
