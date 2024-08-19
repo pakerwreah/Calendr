@@ -13,13 +13,13 @@ import RxSwift
 
 class MockLocalNotificationProvider: LocalNotificationProviding {
 
-    var notificationTap: Observable<Identifier> = .empty()
+    var notificationTap: Observable<NotificationResponse> = .empty()
 
     func requestAuthorization() async -> Bool {
         return true
     }
 
-    func register(category: UNNotificationCategory) async { }
+    func register(_ categories: UNNotificationCategory...) async { }
 
     func send(id: String, _ content: UNNotificationContent) async -> Bool {
         return true

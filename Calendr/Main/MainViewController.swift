@@ -411,15 +411,22 @@ class MainViewController: NSViewController {
             guard let self else { return }
 
             switch action {
-            case .default:
+            case .newVersion(.default):
                 openSettingsTab(.about)
             
-            case .install:
+            case .newVersion(.install):
                 autoUpdater.downloadAndInstall()
+
+            case .updated:
+                openReleasePage()
             }
 
         }
         .disposed(by: disposeBag)
+    }
+
+    private func openReleasePage() {
+        workspace.open(URL(string: "https://github.com/pakerwreah/Calendr/releases/latest")!)
     }
 
     private func setUpSettings() {

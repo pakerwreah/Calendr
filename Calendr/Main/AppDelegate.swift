@@ -50,16 +50,5 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         setUpEditShortcuts()
         setUpResignFocus()
-
-        sendUpdatedNotification(with: notificationProvider)
-    }
-
-    private func sendUpdatedNotification(with provider: LocalNotificationProviding) {
-        guard CommandLine.arguments.contains("-updated") else { return }
-        Task {
-            await provider.send(id: .uuid, .message(
-                Strings.AutoUpdate.updatedTo("v\(BuildConfig.appVersion) 🎉"))
-            )
-        }
     }
 }

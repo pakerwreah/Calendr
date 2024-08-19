@@ -13,7 +13,6 @@ class AboutViewController: NSViewController {
     private let quitButton: NSButton
     private let linkView: NSTextView
     private let newVersionButton: NSButton
-    private let appVersion = "v\(BuildConfig.appVersion)"
     private let autoUpdater: AutoUpdater
 
     private let disposeBag = DisposeBag()
@@ -53,7 +52,7 @@ class AboutViewController: NSViewController {
         view = NSStackView(views: [
             Label(text: "Calendr", font: .systemFont(ofSize: 16, weight: .semibold), align: .center),
             .spacer(height: 0),
-            Label(text: appVersion, font: .systemFont(ofSize: 13), align: .center),
+            Label(text: BuildConfig.appVersion, font: .systemFont(ofSize: 13), align: .center),
             Label(text: "\(BuildConfig.date) - \(BuildConfig.time)", color: .secondaryLabelColor, align: .center),
             .spacer(height: 4),
             Label(text: #"¯\_(ツ)_/¯"#, font: .systemFont(ofSize: 16), align: .center),

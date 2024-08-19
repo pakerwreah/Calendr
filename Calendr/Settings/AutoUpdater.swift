@@ -26,23 +26,45 @@ class AutoUpdater: AutoUpdating {
         case downloading(String)
     }
 
-    enum NotificationAction: String {
-        case `default`
-        case install
+    enum NotificationAction {
 
-        static func from(rawValue: String) -> Self {
-            return .init(rawValue: rawValue) ?? .default
+        enum NewVersion: String {
+            case `default`
+            case install
+        }
+
+        enum Updated: String {
+            case `default`
+        }
+
+        case newVersion(NewVersion)
+        case updated(Updated)
+
+        fileprivate static func from(_ response: NotificationResponse) -> NotificationAction {
+
+            switch response.category {
+            case .newVersion:
+                return NotificationAction.newVersion(
+                    response.actionId.flatMap(NotificationAction.NewVersion.init(rawValue:)) ?? .default
+                )
+
+            case .updated:
+                return NotificationAction.updated(
+                    response.actionId.flatMap(NotificationAction.Updated.init(rawValue:)) ?? .default
+                )
+            }
         }
     }
 
-    private enum NotificationCategory {
+    private let newVersionCategory = UNNotificationCategory(
+        categoryId: NotificationCategory.newVersion.rawValue,
+        actionId: NotificationAction.NewVersion.install.rawValue,
+        title: Strings.AutoUpdate.install
+    )
 
-        static let update = UNNotificationCategory(
-            categoryId: "update",
-            actionId: NotificationAction.install.rawValue,
-            title: Strings.AutoUpdate.install
-        )
-    }
+    private let updatedCategory = UNNotificationCategory(
+        categoryId: NotificationCategory.updated.rawValue
+    )
 
     private struct Release: Decodable {
         struct Asset: Decodable {
@@ -129,8 +151,26 @@ class AutoUpdater: AutoUpdating {
 
     private func setUpNotifications() {
         Task {
-            await notificationProvider.register(category: NotificationCategory.update)
+            await notificationProvider.register(newVersionCategory, updatedCategory)
+
+            await sendUpdatedNotification()
         }
+    }
+
+    private func sendUpdatedNotification() async  {
+
+        guard let updated = userDefaults.updatedVersion else { return }
+
+        userDefaults.updatedVersion = nil
+
+        guard updated == BuildConfig.appVersion else { return }
+
+        let content = UNMutableNotificationContent()
+        content.title = Strings.AutoUpdate.updatedTo("\(BuildConfig.appVersion) 🎉")
+        content.sound = .default
+        content.categoryIdentifier = updatedCategory.identifier
+
+        await notificationProvider.send(id: .uuid, content)
     }
 
     private func checkRelease(_ notify: Bool) async throws {
@@ -143,7 +183,7 @@ class AutoUpdater: AutoUpdating {
         let data = try await networkProvider.data(from: URL(string: url)!)
         let release = try JSONDecoder().decode(Release.self, from: data)
 
-        guard release.name != "v\(BuildConfig.appVersion)" else {
+        guard release.name != BuildConfig.appVersion else {
             newVersionAvailableObserver.onNext(.initial)
             userDefaults.lastCheckedVersion = release.name
             return
@@ -169,7 +209,7 @@ class AutoUpdater: AutoUpdating {
         let content = UNMutableNotificationContent()
         content.title = Strings.AutoUpdate.newVersion(version)
         content.sound = .default
-        content.categoryIdentifier = NotificationCategory.update.identifier
+        content.categoryIdentifier = newVersionCategory.identifier
 
         if await notificationProvider.send(id: .uuid, content) {
             userDefaults.lastCheckedVersion = version
@@ -206,6 +246,8 @@ class AutoUpdater: AutoUpdating {
         try await savePanel(for: appUrl)
 
         try await replaceApp(url: appUrl, archive: archiveURL)
+
+        userDefaults.updatedVersion = release.name
 
         try relaunchApp(url: appUrl)
     }
@@ -255,7 +297,7 @@ class AutoUpdater: AutoUpdating {
 
         let task = Process()
         task.launchPath = "/usr/bin/open"
-        task.arguments = [url.path, "--args", "-updated"]
+        task.arguments = [url.path]
         try task.run()
 
         DispatchQueue.main.async {

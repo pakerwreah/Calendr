@@ -39,6 +39,7 @@ enum Prefs {
 
     // Misc
     static let lastCheckedVersion = "last_checked_version"
+    static let updatedVersion = "updated_version"
 
     // System
     static let statusItemPreferredPosition = "NSStatusItem Preferred Position"
@@ -196,5 +197,10 @@ extension UserDefaults {
     @objc dynamic var lastCheckedVersion: String? {
         get { string(forKey: Prefs.lastCheckedVersion) }
         set { set(newValue, forKey: Prefs.lastCheckedVersion) }
+    }
+
+    @objc dynamic var updatedVersion: String? {
+        get { string(forKey: Prefs.updatedVersion) }
+        set { set(newValue, forKey: Prefs.updatedVersion) }
     }
 }

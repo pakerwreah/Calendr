@@ -8,16 +8,25 @@
 import UserNotifications
 import RxSwift
 
+enum NotificationCategory: String {
+    case newVersion
+    case updated
+}
+
+struct NotificationResponse {
+    let category: NotificationCategory
+    let actionId: String?
+}
+
 protocol LocalNotificationProviding {
 
-    typealias Identifier = String
-
-    var notificationTap: Observable<Identifier> { get }
+    var notificationTap: Observable<NotificationResponse> { get }
 
     func requestAuthorization() async -> Bool
 
-    func register(category: UNNotificationCategory) async
+    func register(_ categories: UNNotificationCategory...) async
 
+    @discardableResult
     func send(id: String, _ content: UNNotificationContent) async -> Bool
 }
 
@@ -25,8 +34,8 @@ class LocalNotificationProvider: NSObject, LocalNotificationProviding, UNUserNot
 
     private let notificationCenter = UNUserNotificationCenter.current()
 
-    private let notificationTapObserver: AnyObserver<Identifier>
-    let notificationTap: Observable<Identifier>
+    private let notificationTapObserver: AnyObserver<NotificationResponse>
+    let notificationTap: Observable<NotificationResponse>
 
     override init() {
         
@@ -46,9 +55,9 @@ class LocalNotificationProvider: NSObject, LocalNotificationProviding, UNUserNot
         }
     }
 
-    func register(category: UNNotificationCategory) async {
+    func register(_ categories: UNNotificationCategory...) async {
         var categories = await notificationCenter.notificationCategories()
-        categories.insert(category)
+        categories.forEach { categories.insert($0) }
         notificationCenter.setNotificationCategories(categories)
     }
 
@@ -77,24 +86,25 @@ class LocalNotificationProvider: NSObject, LocalNotificationProviding, UNUserNot
     }
 
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
-        notificationTapObserver.onNext(response.actionIdentifier)
+        guard
+            response.actionIdentifier != UNNotificationDismissActionIdentifier,
+            let category = NotificationCategory(rawValue: response.notification.request.content.categoryIdentifier)
+        else { return }
+        
+        let actionId = response.actionIdentifier != UNNotificationDefaultActionIdentifier ? response.actionIdentifier : nil
+
+        notificationTapObserver.onNext(.init(category: category, actionId: actionId))
     }
 }
 
 extension UNNotificationCategory {
 
+    convenience init(categoryId: String) {
+        self.init(identifier: categoryId, actions: [], intentIdentifiers: [])
+    }
+
     convenience init(categoryId: String, actionId: String, title: String) {
         let install = UNNotificationAction(identifier: actionId, title: title, options: .foreground)
         self.init(identifier: categoryId, actions: [install], intentIdentifiers: [])
-    }
-}
-
-extension UNNotificationContent {
-    
-    static func message(_ text: String) -> UNNotificationContent {
-        let content = UNMutableNotificationContent()
-        content.title = text
-        content.sound = .default
-        return content
     }
 }
