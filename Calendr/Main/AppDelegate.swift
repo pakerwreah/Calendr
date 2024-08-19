@@ -28,19 +28,24 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let userDefaults = UserDefaults.standard
         let notificationCenter = NotificationCenter.default
         let workspace = NSWorkspace.shared
+        let fileManager = FileManager.default
 
         registerDefaultPrefs(in: userDefaults)
 
         let dateProvider = DateProvider(notificationCenter: notificationCenter, userDefaults: userDefaults)
+        let notificationProvider = LocalNotificationProvider()
 
         viewController = MainViewController(
             autoLauncher: .default,
             workspace: workspace,
             calendarService: CalendarServiceProvider(dateProvider: dateProvider, notificationCenter: notificationCenter),
             dateProvider: dateProvider,
-            screenProvider: ScreenProvider(notificationCenter: notificationCenter),
+            screenProvider: ScreenProvider(notificationCenter: notificationCenter), 
+            notificationProvider: notificationProvider,
+            networkProvider: NetworkServiceProvider(),
             userDefaults: userDefaults,
-            notificationCenter: notificationCenter
+            notificationCenter: notificationCenter,
+            fileManager: fileManager
         )
 
         setUpEditShortcuts()

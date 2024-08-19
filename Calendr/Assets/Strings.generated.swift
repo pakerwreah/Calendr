@@ -10,10 +10,6 @@ import Foundation
 // swiftlint:disable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:disable nesting type_body_length type_name vertical_whitespace_opening_braces
 internal enum Strings {
-  /// New version available: %@
-  internal static func newVersion(_ p1: Any) -> String {
-    return Strings.tr("Localizable", "new_version", String(describing: p1), fallback: "New version available: %@")
-  }
   /// Localizable.strings
   ///   Calendr
   /// 
@@ -21,6 +17,26 @@ internal enum Strings {
   internal static let quit = Strings.tr("Localizable", "quit", fallback: "Quit")
   /// Search
   internal static let search = Strings.tr("Localizable", "search", fallback: "Search")
+  internal enum AutoUpdate {
+    /// Check for updates
+    internal static let checkForUpdates = Strings.tr("Localizable", "auto_update.check_for_updates", fallback: "Check for updates")
+    /// Downloading version %@
+    internal static func downloading(_ p1: Any) -> String {
+      return Strings.tr("Localizable", "auto_update.downloading", String(describing: p1), fallback: "Downloading version %@")
+    }
+    /// Fetching releases
+    internal static let fetchingReleases = Strings.tr("Localizable", "auto_update.fetching_releases", fallback: "Fetching releases")
+    /// Install
+    internal static let install = Strings.tr("Localizable", "auto_update.install", fallback: "Install")
+    /// New version available: %@
+    internal static func newVersion(_ p1: Any) -> String {
+      return Strings.tr("Localizable", "auto_update.new_version", String(describing: p1), fallback: "New version available: %@")
+    }
+    /// Updated to version: %@
+    internal static func updatedTo(_ p1: Any) -> String {
+      return Strings.tr("Localizable", "auto_update.updated_to", String(describing: p1), fallback: "Updated to version: %@")
+    }
+  }
   internal enum EventAction {
     /// Accept
     internal static let accept = Strings.tr("Localizable", "event_action.accept", fallback: "Accept")

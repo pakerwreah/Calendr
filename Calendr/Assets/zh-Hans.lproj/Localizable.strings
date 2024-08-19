@@ -7,7 +7,8 @@
 
 "quit" = "退出";
 "search" = "搜索";
-"new_version" = "有新版本可用：%@";
+
+"auto_update.new_version" = "有新版本可用：%@";
 
 "settings.title" = "设置";
 "settings.tab.general" = "通用";

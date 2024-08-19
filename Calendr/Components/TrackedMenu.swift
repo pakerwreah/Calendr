@@ -35,13 +35,6 @@ class TrackedMenu: NSMenu, NSMenuDelegate {
         activeMenus.removeAll { $0 == self }
     }
 
-    @discardableResult
-    override func popUp(positioning item: NSMenuItem?, at location: NSPoint, in view: NSView?) -> Bool {
-        blocking {
-            super.popUp(positioning: item, at: location, in: view)
-        }
-    }
-
     static func closeAll(completion: (() -> Void)?) {
         guard !activeMenus.isEmpty else {
             completion?()

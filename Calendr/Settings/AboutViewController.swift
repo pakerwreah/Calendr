@@ -6,16 +6,20 @@
 //
 
 import Cocoa
-import UserNotifications
+import RxSwift
 
-class AboutViewController: NSViewController, UNUserNotificationCenterDelegate {
+class AboutViewController: NSViewController {
 
     private let quitButton: NSButton
     private let linkView: NSTextView
     private let newVersionButton: NSButton
-    private let appVersion = "v\(BuildConfig.appVersion)"
+    private let autoUpdater: AutoUpdater
 
-    init() {
+    private let disposeBag = DisposeBag()
+
+    init(autoUpdater: AutoUpdater) {
+        self.autoUpdater = autoUpdater
+
         quitButton = NSButton(title: Strings.quit, target: NSApp, action: #selector(NSApp.terminate))
         quitButton.refusesFirstResponder = true
 
@@ -34,37 +38,33 @@ class AboutViewController: NSViewController, UNUserNotificationCenterDelegate {
         super.init(nibName: nil, bundle: nil)
 
         newVersionButton.target = self
-        newVersionButton.action = #selector(openReleasePage)
+        newVersionButton.title = Strings.AutoUpdate.checkForUpdates
+        newVersionButton.action = #selector(checkForUpdates)
         newVersionButton.refusesFirstResponder = true
         newVersionButton.bezelStyle = .roundRect
 
         setUpAccessibility()
-        setUpReleaseCheck()
+        setUpBindings()
     }
 
     override func loadView() {
 
-        if let version = UserDefaults.standard.string(forKey: Prefs.lastCheckedVersion), version != appVersion {
-            showNewVersionButton(Strings.newVersion(version))
-        } else {
-            newVersionButton.isHidden = true
-        }
-
         view = NSStackView(views: [
             Label(text: "Calendr", font: .systemFont(ofSize: 16, weight: .semibold), align: .center),
             .spacer(height: 0),
-            Label(text: appVersion, font: .systemFont(ofSize: 13), align: .center),
+            Label(text: BuildConfig.appVersion, font: .systemFont(ofSize: 13), align: .center),
             Label(text: "\(BuildConfig.date) - \(BuildConfig.time)", color: .secondaryLabelColor, align: .center),
             .spacer(height: 4),
             Label(text: #"¯\_(ツ)_/¯"#, font: .systemFont(ofSize: 16), align: .center),
             .spacer(height: 4),
             Label(text: "© 2020 - \(BuildConfig.date.suffix(4)) Carlos Enumo", align: .center),
             linkView,
+            .spacer(height: 2),
             newVersionButton,
-            .spacer(height: 4),
+            .spacer(height: 8),
             quitButton
         ])
-        .with(insets: .init(bottom: 1))
+        .with(insets: .init(bottom: 8))
         .with(orientation: .vertical)
     }
 
@@ -80,89 +80,39 @@ class AboutViewController: NSViewController, UNUserNotificationCenterDelegate {
         quitButton.setAccessibilityIdentifier(Accessibility.Settings.About.quitBtn)
     }
 
-    private func setUpReleaseCheck() {
+    private func setUpBindings() {
 
-        guard !BuildConfig.isUITesting else { return }
+        autoUpdater.newVersionAvailable.bind { [weak self] status in
+            guard let self else { return }
+            switch status {
+            case .initial:
+                newVersionButton.title = Strings.AutoUpdate.checkForUpdates
+                newVersionButton.action = #selector(checkForUpdates)
+                newVersionButton.isEnabled = true
 
-        UNUserNotificationCenter.current().delegate = self
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { (granted, error) in
-            guard granted else { return }
-            self.checkRelease()
-            DispatchQueue.main.async {
-                Timer.scheduledTimer(
-                    withTimeInterval: 60 * 60,
-                    repeats: true
-                ) { _ in
-                    DispatchQueue.global().async {
-                        self.checkRelease()
-                    }
-                }
+            case .fetching:
+                newVersionButton.isEnabled = false
+                newVersionButton.title = Strings.AutoUpdate.fetchingReleases
+
+            case .downloading(let version):
+                newVersionButton.isEnabled = false
+                newVersionButton.title = Strings.AutoUpdate.downloading(version)
+
+            case .newVersion(let version):
+                newVersionButton.title = Strings.AutoUpdate.newVersion(version)
+                newVersionButton.action = #selector(installUpdates)
+                newVersionButton.isEnabled = true
             }
         }
+        .disposed(by: disposeBag)
     }
 
-    private func showNewVersionButton(_ title: String) {
-        newVersionButton.title = title
-        newVersionButton.isHidden = false
+    @objc private func checkForUpdates() {
+        autoUpdater.checkRelease(notify: false)
     }
 
-    private func checkRelease() {
-        do {
-            let url = "https://api.github.com/repos/pakerwreah/Calendr/releases/latest"
-            let data = try Data(contentsOf: URL(string: url)!)
-            guard
-                let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
-                let version = json["name"] as? String
-            else { return }
-
-            guard version != appVersion else {
-                DispatchQueue.main.async {
-                    self.newVersionButton.isHidden = true
-                }
-                UserDefaults.standard.set(version, forKey: Prefs.lastCheckedVersion)
-                return
-            }
-
-            guard version != UserDefaults.standard.string(forKey: Prefs.lastCheckedVersion) else { return }
-
-            let message = Strings.newVersion(version)
-
-            DispatchQueue.main.async {
-                self.showNewVersionButton(message)
-            }
-
-            let content = UNMutableNotificationContent()
-            content.title = message
-            content.sound = .default
-
-            UNUserNotificationCenter.current().add(
-                UNNotificationRequest(
-                    identifier: UUID().uuidString,
-                    content: content,
-                    trigger: nil
-                )
-            ) { error in
-                if let error {
-                    print(error.localizedDescription)
-                    return
-                }
-                UserDefaults.standard.set(version, forKey: Prefs.lastCheckedVersion)
-            }
-        } catch {
-            print(error.localizedDescription)
-        }
-    }
-
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        completionHandler([.banner, .sound])
-    }
-
-    @objc private func openReleasePage() {
-        NSWorkspace.shared.open(URL(string: "https://github.com/pakerwreah/Calendr/releases/latest")!)
-    }
-
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
-        openReleasePage()
+    @objc private func installUpdates() {
+        autoUpdater.downloadAndInstall()
     }
 
     required init?(coder: NSCoder) {
