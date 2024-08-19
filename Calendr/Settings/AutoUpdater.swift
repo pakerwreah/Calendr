@@ -150,14 +150,13 @@ class AutoUpdater: AutoUpdating {
     }
 
     private func setUpNotifications() {
-        Task {
-            await notificationProvider.register(newVersionCategory, updatedCategory)
-
-            await sendUpdatedNotification()
-        }
+        
+        notificationProvider.register(newVersionCategory, updatedCategory)
+        
+        sendUpdatedNotification()
     }
 
-    private func sendUpdatedNotification() async  {
+    private func sendUpdatedNotification()  {
 
         guard let updated = userDefaults.updatedVersion else { return }
 
@@ -170,7 +169,7 @@ class AutoUpdater: AutoUpdating {
         content.sound = .default
         content.categoryIdentifier = updatedCategory.identifier
 
-        await notificationProvider.send(id: .uuid, content)
+        notificationProvider.send(id: .uuid, content)
     }
 
     private func checkRelease(_ notify: Bool) async throws {

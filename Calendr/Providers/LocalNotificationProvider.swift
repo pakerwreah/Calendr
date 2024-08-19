@@ -24,10 +24,19 @@ protocol LocalNotificationProviding {
 
     func requestAuthorization() async -> Bool
 
-    func register(_ categories: UNNotificationCategory...) async
+    func register(_ categories: UNNotificationCategory...)
 
     @discardableResult
     func send(id: String, _ content: UNNotificationContent) async -> Bool
+}
+
+extension LocalNotificationProviding {
+    
+    func send(id: String, _ content: UNNotificationContent) {
+        Task {
+            await send(id: id, content)
+        }
+    }
 }
 
 class LocalNotificationProvider: NSObject, LocalNotificationProviding, UNUserNotificationCenterDelegate {
@@ -37,8 +46,10 @@ class LocalNotificationProvider: NSObject, LocalNotificationProviding, UNUserNot
     private let notificationTapObserver: AnyObserver<NotificationResponse>
     let notificationTap: Observable<NotificationResponse>
 
+    private var categories = Set<UNNotificationCategory>()
+
     override init() {
-        
+
         (notificationTap, notificationTapObserver) = PublishSubject.pipe(scheduler: MainScheduler.instance)
 
         super.init()
@@ -55,10 +66,12 @@ class LocalNotificationProvider: NSObject, LocalNotificationProviding, UNUserNot
         }
     }
 
-    func register(_ categories: UNNotificationCategory...) async {
-        var categories = await notificationCenter.notificationCategories()
-        categories.forEach { categories.insert($0) }
-        notificationCenter.setNotificationCategories(categories)
+    func register(_ categories: UNNotificationCategory...) {
+
+        for category in categories {
+            self.categories.insert(category)
+        }
+        notificationCenter.setNotificationCategories(self.categories)
     }
 
     func send(id: String, _ content: UNNotificationContent) async -> Bool {
@@ -90,7 +103,7 @@ class LocalNotificationProvider: NSObject, LocalNotificationProviding, UNUserNot
             response.actionIdentifier != UNNotificationDismissActionIdentifier,
             let category = NotificationCategory(rawValue: response.notification.request.content.categoryIdentifier)
         else { return }
-        
+
         let actionId = response.actionIdentifier != UNNotificationDefaultActionIdentifier ? response.actionIdentifier : nil
 
         notificationTapObserver.onNext(.init(category: category, actionId: actionId))

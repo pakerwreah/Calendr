@@ -19,7 +19,7 @@ class MockLocalNotificationProvider: LocalNotificationProviding {
         return true
     }
 
-    func register(_ categories: UNNotificationCategory...) async { }
+    func register(_ categories: UNNotificationCategory...) { }
 
     func send(id: String, _ content: UNNotificationContent) async -> Bool {
         return true
