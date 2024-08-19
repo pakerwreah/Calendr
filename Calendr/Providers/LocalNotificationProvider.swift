@@ -113,11 +113,11 @@ class LocalNotificationProvider: NSObject, LocalNotificationProviding, UNUserNot
 extension UNNotificationCategory {
 
     convenience init(categoryId: String) {
-        self.init(identifier: categoryId, actions: [], intentIdentifiers: [])
+        self.init(identifier: categoryId, actions: [], intentIdentifiers: [], options: .hiddenPreviewsShowTitle)
     }
 
     convenience init(categoryId: String, actionId: String, title: String) {
         let install = UNNotificationAction(identifier: actionId, title: title, options: .foreground)
-        self.init(identifier: categoryId, actions: [install], intentIdentifiers: [])
+        self.init(identifier: categoryId, actions: [install], intentIdentifiers: [], options: .hiddenPreviewsShowTitle)
     }
 }
