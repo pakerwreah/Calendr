@@ -136,7 +136,11 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
     let popoverTransparency: Observable<Int>
     let popoverMaterial: Observable<PopoverMaterial>
 
+    let isPresented = BehaviorSubject(value: false)
+
     let dateFormatPlaceholder = AppConstants.defaultCustomDateFormat
+
+    private let autoLauncher: AutoLauncher
 
     init(
         autoLauncher: AutoLauncher,
@@ -144,6 +148,8 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
         userDefaults: UserDefaults,
         notificationCenter: NotificationCenter
     ) {
+        self.autoLauncher = autoLauncher
+
         // MARK: - Observers
 
         toggleAutoLaunch = autoLauncher.rx.observer(for: \.isEnabled)
@@ -283,5 +289,9 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
             .share(replay: 1)
 
         popoverMaterial = popoverTransparency.map(PopoverMaterial.init(transparency:))
+    }
+
+    func windowDidBecomeKey() {
+        autoLauncher.syncStatus()
     }
 }

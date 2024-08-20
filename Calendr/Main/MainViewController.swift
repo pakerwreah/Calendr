@@ -480,12 +480,14 @@ class MainViewController: NSViewController {
 
         popover.contentViewController = self
 
-        settingsViewController.rx.viewWillAppear
+        settingsViewModel.isPresented
+            .matching(true)
             .map(.permanent)
             .bind(to: popover.rx.behavior)
             .disposed(by: popoverDisposeBag)
 
-        settingsViewController.rx.viewDidDisappear
+        settingsViewModel.isPresented
+            .matching(false)
             .withLatestFrom(pinBtn.rx.state)
             .matching(.off)
             .void()

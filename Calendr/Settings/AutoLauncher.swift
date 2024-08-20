@@ -6,24 +6,21 @@
 //
 
 import AppKit
-import RxSwift
 import ServiceManagement
 
 class AutoLauncher: NSObject {
     @objc dynamic var isEnabled: Bool = false
+    func syncStatus() { }
 }
 
 @available(macOS 13.0, *)
 private class AppAutoLauncher: AutoLauncher {
 
     @objc dynamic override var isEnabled: Bool {
-        get {
-            SMAppService.mainApp.status ~= .enabled
-        }
-        set {
-            guard newValue != isEnabled else { return }
+        didSet {
+            guard oldValue != isEnabled else { return }
             do {
-                if newValue {
+                if isEnabled {
                     try SMAppService.mainApp.register()
                 } else {
                     try SMAppService.mainApp.unregister()
@@ -31,23 +28,12 @@ private class AppAutoLauncher: AutoLauncher {
             } catch {
                 print(error)
             }
+            syncStatus()
         }
     }
 
-    private let disposeBag = DisposeBag()
-
-    override init() {
-        super.init()
-        setUpBindings()
-    }
-
-    private func setUpBindings() {
-
-        NSApp.rx.observe(\.keyWindow)
-            .filter { $0?.contentViewController is SettingsViewController }
-            .compactMap { [weak self] _ in self?.isEnabled }
-            .bind(to: rx.isEnabled)
-            .disposed(by: disposeBag)
+    override func syncStatus() {
+        isEnabled = SMAppService.mainApp.status == .enabled
     }
 }
 

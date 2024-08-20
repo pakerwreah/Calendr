@@ -15,8 +15,9 @@ enum SettingsTab: Int {
     case about
 }
 
-class SettingsViewController: NSTabViewController {
+class SettingsViewController: NSTabViewController, NSWindowDelegate {
 
+    private let settingsViewModel: SettingsViewModel
     private let notificationCenter: NotificationCenter
     private let disposeBag = DisposeBag()
     private let keyboard = Keyboard()
@@ -27,7 +28,7 @@ class SettingsViewController: NSTabViewController {
         notificationCenter: NotificationCenter,
         autoUpdater: AutoUpdater
     ) {
-
+        self.settingsViewModel = settingsViewModel
         self.notificationCenter = notificationCenter
 
         super.init(nibName: nil, bundle: nil)
@@ -83,13 +84,23 @@ class SettingsViewController: NSTabViewController {
         contentView.edges(to: view, constant: Constants.padding)
     }
 
+    override func viewWillAppear() {
+
+        super.viewWillAppear()
+
+        settingsViewModel.isPresented.onNext(true)
+    }
+
     override func viewDidAppear() {
 
         super.viewDidAppear()
 
+        guard let window = view.window else { return }
+
         setUpAccessibilityWindow()
 
-        view.window?.styleMask.remove(.resizable)
+        window.styleMask.remove(.resizable)
+        window.delegate = self
 
         NSApp.activate(ignoringOtherApps: true)
     }
@@ -99,6 +110,13 @@ class SettingsViewController: NSTabViewController {
         super.viewDidDisappear()
 
         tearDownAccessibilityWindow()
+
+        settingsViewModel.isPresented.onNext(false)
+    }
+
+    func windowDidBecomeKey(_ notification: Notification) {
+
+        settingsViewModel.windowDidBecomeKey()
     }
 
     override func tabView(_ tabView: NSTabView, willSelect tabViewItem: NSTabViewItem?) {
@@ -131,15 +149,6 @@ class SettingsViewController: NSTabViewController {
     }
 
     private func setUpBindings() {
-        /**
-         * Fix `Collision between RxCocoa interception mechanism and KVO`
-         * which crashes the app if we call bind on `methodInvoked` after `rx.observe`
-         *
-         * To reproduce:
-         *  1. open this view controller via the menu bar context menu
-         *  2. click the menu bar to open the calendar popover
-         */
-        rx.viewDidLoad.subscribe().dispose()
 
         for (i, vc) in tabViewItems.compactMap(\.viewController).enumerated() {
 
