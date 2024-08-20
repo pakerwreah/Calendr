@@ -131,6 +131,15 @@ class SettingsViewController: NSTabViewController {
     }
 
     private func setUpBindings() {
+        /**
+         * Fix `Collision between RxCocoa interception mechanism and KVO`
+         * which crashes the app if we call bind on `methodInvoked` after `rx.observe`
+         *
+         * To reproduce:
+         *  1. open this view controller via the menu bar context menu
+         *  2. click the menu bar to open the calendar popover
+         */
+        rx.viewDidLoad.subscribe().dispose()
 
         for (i, vc) in tabViewItems.compactMap(\.viewController).enumerated() {
 

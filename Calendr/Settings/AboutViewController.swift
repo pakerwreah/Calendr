@@ -38,8 +38,6 @@ class AboutViewController: NSViewController {
         super.init(nibName: nil, bundle: nil)
 
         newVersionButton.target = self
-        newVersionButton.title = Strings.AutoUpdate.checkForUpdates
-        newVersionButton.action = #selector(checkForUpdates)
         newVersionButton.refusesFirstResponder = true
         newVersionButton.bezelStyle = .roundRect
 

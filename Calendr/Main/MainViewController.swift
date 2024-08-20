@@ -12,7 +12,12 @@ import KeyboardShortcuts
 class MainViewController: NSViewController {
 
     // ViewControllers
-    private let settingsViewController: SettingsViewController
+    private lazy var settingsViewController = SettingsViewController(
+        settingsViewModel: settingsViewModel,
+        calendarsViewModel: calendarPickerViewModel,
+        notificationCenter: notificationCenter,
+        autoUpdater: autoUpdater
+    )
 
     // Views
     private let mainStatusItem: NSStatusItem
@@ -135,17 +140,6 @@ class MainViewController: NSViewController {
             networkProvider: networkProvider,
             fileManager: fileManager
         )
-
-        settingsViewController = SettingsViewController(
-            settingsViewModel: settingsViewModel,
-            calendarsViewModel: calendarPickerViewModel,
-            notificationCenter: notificationCenter,
-            autoUpdater: autoUpdater
-        )
-        /// Fix weird "conflict with KVO" issue on RxSwift if we present settings
-        /// view controller before calling `methodInvoked` at least once.
-        /// If we don't do this, the app crashes in `setUpPopover`.
-        settingsViewController.rx.viewDidLoad.subscribe().dispose()
 
         let (hoverObservable, hoverObserver) = PublishSubject<Date?>.pipe()
 

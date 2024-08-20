@@ -45,8 +45,8 @@ extension PublishSubject {
 
 extension BehaviorSubject {
 
-    static func pipe(value: Element) -> (output: Observable<Element>, input: AnyObserver<Element>) {
-        { ($0.asObservable(), $0.asObserver()) }(Self.init(value: value))
+    static func pipe(value: Element, scheduler: ImmediateSchedulerType = CurrentThreadScheduler.instance) -> (output: Observable<Element>, input: AnyObserver<Element>) {
+        { ($0.asObservable().observe(on: scheduler), $0.asObserver()) }(Self.init(value: value))
     }
 
     var value: Element { try! value() }
