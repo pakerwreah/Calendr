@@ -28,7 +28,7 @@ class EventDetailsViewModel {
     let showSkip: Bool
 
     let isInProgress: Observable<Bool>
-    let close: Observable<Void>
+    let close: Completable
 
     let linkTapped: AnyObserver<Void>
     let skipTapped: AnyObserver<Void>
@@ -127,12 +127,12 @@ class EventDetailsViewModel {
             )
         }
 
-        let closeSubject = PublishSubject<Void>()
+        let closeSubject = PublishSubject<Never>()
 
-        close = closeSubject.asObservable()
+        close = closeSubject.asCompletable()
 
         self.callback = callback.mapObserver {
-            closeSubject.onNext(())
+            closeSubject.onCompleted()
             return $0
         }
 
@@ -149,7 +149,7 @@ class EventDetailsViewModel {
             calendarService: calendarService,
             workspace: workspace,
             source: .details,
-            callback: callback.asObserver()
+            callback: callback
         )
     }
 }

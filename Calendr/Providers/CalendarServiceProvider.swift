@@ -13,11 +13,11 @@ protocol CalendarServiceProviding {
     var changeObservable: Observable<Void> { get }
 
     func requestAccess()
-    func calendars() -> Observable<[CalendarModel]>
-    func events(from start: Date, to end: Date, calendars: [String]) -> Observable<[EventModel]>
-    func completeReminder(id: String) -> Observable<Void>
-    func rescheduleReminder(id: String, to: Date) -> Observable<Void>
-    func changeEventStatus(id: String, date: Date, to: EventStatus) -> Observable<Void>
+    func calendars() -> Single<[CalendarModel]>
+    func events(from start: Date, to end: Date, calendars: [String]) -> Single<[EventModel]>
+    func completeReminder(id: String) -> Completable
+    func rescheduleReminder(id: String, to: Date) -> Completable
+    func changeEventStatus(id: String, date: Date, to: EventStatus) -> Completable
 }
 
 class CalendarServiceProvider: CalendarServiceProviding {
@@ -31,7 +31,6 @@ class CalendarServiceProvider: CalendarServiceProviding {
     private let disposeBag = DisposeBag()
 
     private let changeObserver: AnyObserver<Void>
-
     let changeObservable: Observable<Void>
 
     private var isListening = false
@@ -79,9 +78,9 @@ class CalendarServiceProvider: CalendarServiceProviding {
         }
     }
 
-    private func storeCalendars(with ids: [String]? = nil) -> Observable<[EKCalendar]> {
+    private func storeCalendars(with ids: [String]? = nil) -> Single<[EKCalendar]> {
 
-        Observable.create { [store] observer in
+        Single.create { [store] observer in
 
             var calendars: [EKCalendar] = []
 
@@ -93,26 +92,25 @@ class CalendarServiceProvider: CalendarServiceProviding {
                 calendars = calendars.filter { ids.contains($0.calendarIdentifier) }
             }
 
-            observer.onNext(calendars)
-            observer.onCompleted()
+            observer(.success(calendars))
 
             return Disposables.create()
         }
         .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
     }
 
-    func calendars() -> Observable<[CalendarModel]> {
+    func calendars() -> Single<[CalendarModel]> {
 
         storeCalendars().map { $0.map(CalendarModel.init(from:)) }
     }
 
-    func events(from start: Date, to end: Date, calendars ids: [String]) -> Observable<[EventModel]> {
+    func events(from start: Date, to end: Date, calendars ids: [String]) -> Single<[EventModel]> {
 
         storeCalendars(with: ids)
-            .flatMap { [weak self] calendars -> Observable<[EventModel]> in
-                guard let self, !calendars.isEmpty else { return .just([]) }
+            .flatMap { [weak self] calendars -> Single<[EventModel]> in
+                guard let self, !calendars.isEmpty else { return Single.just([]) }
 
-                return Observable.zip(
+                return Single.zip(
                     fetchEvents(from: start, to: end, calendars: calendars),
                     fetchReminders(from: start, to: end, calendars: calendars)
                 )
@@ -120,37 +118,35 @@ class CalendarServiceProvider: CalendarServiceProviding {
             }
     }
 
-    private func fetchEvents(from start: Date, to end: Date, calendars: [EKCalendar]) -> Observable<[EventModel]> {
+    private func fetchEvents(from start: Date, to end: Date, calendars: [EKCalendar]) -> Single<[EventModel]> {
 
         guard store.hasAccess(to: .event) else { return .just([]) }
 
-        return Observable.create { [store, dateProvider] observer in
+        return Single.create { [store, dateProvider] observer in
 
             let predicate = store.predicateForEvents(withStart: start, end: end, calendars: calendars)
 
             let events = store.events(matching: predicate).map { EventModel(from: $0, dateProvider: dateProvider) }
 
-            observer.onNext(events)
-            observer.onCompleted()
+            observer(.success(events))
 
             return Disposables.create()
         }
         .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
     }
 
-    private func fetchReminders(from start: Date, to end: Date, calendars: [EKCalendar]) -> Observable<[EventModel]> {
+    private func fetchReminders(from start: Date, to end: Date, calendars: [EKCalendar]) -> Single<[EventModel]> {
 
         guard store.hasAccess(to: .reminder) else { return .just([]) }
 
-        return Observable.create { [store, dateProvider] observer in
+        return Single.create { [store, dateProvider] observer in
 
             let predicate = store.predicateForIncompleteReminders(
                 withDueDateStarting: start, ending: end, calendars: calendars
             )
 
             store.fetchReminders(matching: predicate) {
-                observer.onNext($0?.compactMap { EventModel(from: $0, dateProvider: dateProvider) } ?? [])
-                observer.onCompleted()
+                observer(.success($0?.compactMap { EventModel(from: $0, dateProvider: dateProvider) } ?? []))
             }
 
             return Disposables.create()
@@ -158,24 +154,23 @@ class CalendarServiceProvider: CalendarServiceProviding {
         .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
     }
 
-    func completeReminder(id: String) -> Observable<Void> {
+    func completeReminder(id: String) -> Completable {
 
-        Observable.create { [store] observer in
+        Completable.create { [store] observer in
 
             let disposable = Disposables.create()
 
             guard let reminder = store.calendarItem(withIdentifier: id) as? EKReminder else {
-                observer.onError(.unexpected("🔥 Not a reminder"))
+                observer(.error(.unexpected("🔥 Not a reminder")))
                 return disposable
             }
 
             do {
                 reminder.isCompleted = true
                 try store.save(reminder, commit: true)
-                observer.onNext(())
-                observer.onCompleted()
+                observer(.completed)
             } catch {
-                observer.onError(error)
+                observer(.error(error))
             }
 
             return disposable
@@ -183,14 +178,14 @@ class CalendarServiceProvider: CalendarServiceProviding {
         .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
     }
 
-    func rescheduleReminder(id: String, to date: Date) -> Observable<Void> {
+    func rescheduleReminder(id: String, to date: Date) -> Completable {
 
-        Observable.create { [store, dateProvider] observer in
+        Completable.create { [store, dateProvider] observer in
 
             let disposable = Disposables.create()
 
             guard let reminder = store.calendarItem(withIdentifier: id) as? EKReminder else {
-                observer.onError(.unexpected("🔥 Not a reminder"))
+                observer(.error(.unexpected("🔥 Not a reminder")))
                 return disposable
             }
 
@@ -199,10 +194,9 @@ class CalendarServiceProvider: CalendarServiceProviding {
                 reminder.alarms?.forEach(reminder.removeAlarm)
                 reminder.addAlarm(EKAlarm(absoluteDate: date))
                 try store.save(reminder, commit: true)
-                observer.onNext(())
-                observer.onCompleted()
+                observer(.completed)
             } catch {
-                observer.onError(error)
+                observer(.error(error))
             }
 
             return disposable
@@ -210,23 +204,23 @@ class CalendarServiceProvider: CalendarServiceProviding {
         .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
     }
 
-    func changeEventStatus(id: String, date: Date, to status: EventStatus) -> Observable<Void> {
+    func changeEventStatus(id: String, date: Date, to status: EventStatus) -> Completable {
 
-        Observable.create { [store] observer in
+        Completable.create { [store] observer in
 
             let disposable = Disposables.create()
 
             let predicate = store.predicateForEvents(withStart: date, end: date + 1, calendars: nil)
 
             guard let event = store.events(matching: predicate).first(where: { $0.calendarItemIdentifier == id }) else {
-                observer.onError(.unexpected("🔥 Event not found"))
+                observer(.error(.unexpected("🔥 Event not found")))
                 return disposable
             }
 
             guard
                 let user = event.attendees?.first(where: \.isCurrentUser)
             else {
-                observer.onError(.unexpected("🔥 User not found"))
+                observer(.error(.unexpected("🔥 User not found")))
                 return disposable
             }
 
@@ -249,10 +243,9 @@ class CalendarServiceProvider: CalendarServiceProviding {
                     try store.save(event, span: .thisEvent)
                 }
 
-                observer.onNext(())
-                observer.onCompleted()
+                observer(.completed)
             } catch {
-                observer.onError(error)
+                observer(.error(error))
             }
 
             return disposable

@@ -30,7 +30,7 @@ class MockCalendarServiceProvider: CalendarServiceProviding {
         (changeObservable, changeObserver) = PublishSubject.pipe()
     }
 
-    func events(from start: Date, to end: Date, calendars: [String]) -> Observable<[EventModel]> {
+    func events(from start: Date, to end: Date, calendars: [String]) -> Single<[EventModel]> {
         .just(
             m_events
                 .filter { $0.calendar.id.isEmpty || calendars.contains($0.calendar.id) }
@@ -38,13 +38,13 @@ class MockCalendarServiceProvider: CalendarServiceProviding {
         )
     }
 
-    func calendars() -> Observable<[CalendarModel]> { .just(m_calendars) }
+    func calendars() -> Single<[CalendarModel]> { .just(m_calendars) }
 
-    func completeReminder(id: String) -> Observable<Void> { .void() }
+    func completeReminder(id: String) -> Completable { .empty() }
 
-    func rescheduleReminder(id: String, to: Date) -> Observable<Void> { .void() }
+    func rescheduleReminder(id: String, to: Date) -> Completable { .empty() }
 
-    func changeEventStatus(id: String, date: Date, to: EventStatus) -> Observable<Void> { .void() }
+    func changeEventStatus(id: String, date: Date, to: EventStatus) -> Completable { .empty() }
 
     func requestAccess() { changeObserver.onNext(()) }
 }

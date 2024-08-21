@@ -7,9 +7,12 @@
 
 import RxSwift
 
-extension ObservableType {
+extension ObservableConvertibleType {
 
     static func void() -> Observable<Void> { .just(()) }
+}
+
+extension ObservableType {
 
     func void() -> Observable<Void> {
         map { _ in () }

@@ -660,9 +660,9 @@
 				34702149259DFF3000827AE7 /* CalendarServiceProvider.swift */,
 				34FD09D825AE269600AAAAE2 /* DateProvider.swift */,
 				34E855692C7115A100757B58 /* LocalNotificationProvider.swift */,
+				34299F702C72289400A0269B /* NetworkServiceProvider.swift */,
 				346E70C82802278E00A785FF /* ScreenProvider.swift */,
 				34651F7325E3207200518C5A /* WorkspaceServiceProvider.swift */,
-				34299F702C72289400A0269B /* NetworkServiceProvider.swift */,
 			);
 			path = Providers;
 			sourceTree = "<group>";

@@ -41,7 +41,7 @@ class StatusItemViewModel {
             .combineLatest(nextEventCalendars, settings.showEventStatusItem)
             .repeat(when: dateChanged)
             .repeat(when: calendarService.changeObservable)
-            .flatMapLatest { calendars, showNextEvent -> Observable<Bool> in
+            .flatMapLatest { calendars, showNextEvent -> Single<Bool> in
                 guard showNextEvent else { return .just(false) }
 
                 let date = dateProvider.now

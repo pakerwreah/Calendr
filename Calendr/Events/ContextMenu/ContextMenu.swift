@@ -59,7 +59,7 @@ class BaseContextMenuViewModel<Action: ContextMenuAction>: ContextMenuViewModel 
         actions.forEach(addItem)
     }
 
-    func onAction(_ action: Action) -> Observable<Void> {
+    func onAction(_ action: Action) -> Completable {
         fatalError("Not implemented")
     }
 
@@ -68,7 +68,7 @@ class BaseContextMenuViewModel<Action: ContextMenuAction>: ContextMenuViewModel 
 
         onAction(action)
             .subscribe(
-                onNext: { callback.onNext(action) },
+                onCompleted: { callback.onNext(action) },
                 onError: callback.onError
             )
             .disposed(by: disposeBag)
