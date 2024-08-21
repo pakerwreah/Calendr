@@ -127,6 +127,33 @@ class MainViewTests: UITestCase {
         XCTAssertFalse(CalendarPicker.view.exists)
     }
 
+    func testSettingsMenu_withCalendarPickerChanged_shouldShowEventsFromSelectedCalendars() {
+
+        MenuBar.main.click()
+        Main.settingsBtn.click()
+        Main.settingsBtn.menuItem("Calendars").hover()
+
+        XCTAssertTrue(CalendarPicker.view.didAppear)
+
+        CalendarPicker.view.hover()
+
+        let checkbox = CalendarPicker.view.checkBoxes
+            .element(matching: .title("Meetings"))
+
+        let initial = Calendar.events.count
+
+        XCTAssert(initial > 0)
+
+        checkbox.coordinate(withNormalizedOffset: CGVector(dx: 0.1, dy: 0.5)).click()
+
+        XCTAssertEqual(Calendar.events.count, initial - 1)
+
+        // click label
+        checkbox.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).click()
+
+        XCTAssertEqual(Calendar.events.count, initial)
+    }
+
     func testSettingsMenu_withPreferencesMenuItemClicked_shouldOpenSettings() {
 
         MenuBar.main.click()
