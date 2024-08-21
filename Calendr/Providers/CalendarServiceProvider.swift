@@ -24,6 +24,8 @@ class CalendarServiceProvider: CalendarServiceProviding {
 
     private let dateProvider: DateProviding
 
+    private let notificationCenter: NotificationCenter
+
     private let store = EventStore()
 
     private let disposeBag = DisposeBag()
@@ -32,42 +34,48 @@ class CalendarServiceProvider: CalendarServiceProviding {
 
     let changeObservable: Observable<Void>
 
+    private var isListening = false
+
     init(dateProvider: DateProviding, notificationCenter: NotificationCenter) {
 
         self.dateProvider = dateProvider
+        self.notificationCenter = notificationCenter
 
-        (changeObservable, changeObserver) = PublishSubject<Void>.pipe()
+        (changeObservable, changeObserver) = PublishSubject.pipe(scheduler: MainScheduler.instance)
+    }
+
+    private func listenToStoreChanges() {
+
+        guard !isListening else { return }
 
         notificationCenter.rx
             .notification(.EKEventStoreChanged, object: store)
             .void()
+            .startWith(())
             .bind(to: changeObserver)
             .disposed(by: disposeBag)
     }
 
     func requestAccess() {
-        requestAccess(for: .event) {
-            self.requestAccess(for: .reminder) {
-                DispatchQueue.main.async {
-                    self.changeObserver.onNext(())
-                }
-            }
+        Task {
+            await requestAccess(to: .event)
+            await requestAccess(to: .reminder)
+
+            listenToStoreChanges()
         }
     }
 
-    private func requestAccess(for type: EKEntityType, completion: (() -> Void)? = nil) {
+    private func requestAccess(to type: EKEntityType) async {
+        do {
+            let granted = try await store.requestAccess(to: type)
 
-        store.requestAccess(to: type) { granted, error in
-
-            if let error = error {
-                print(error.localizedDescription)
-            } else if granted {
+            if granted {
                 print("Access granted for \(type)!")
             } else {
                 print("Access denied for \(type)!")
             }
-
-            completion?()
+        } catch {
+            print(error.localizedDescription)
         }
     }
 
@@ -255,19 +263,19 @@ class CalendarServiceProvider: CalendarServiceProviding {
 
 private class EventStore: EKEventStore {
 
-    override func requestAccess(to entityType: EKEntityType, completion: @escaping EKEventStoreRequestAccessCompletionHandler) {
+    override func requestAccess(to entityType: EKEntityType) async throws -> Bool {
 
         guard #available(macOS 14.0, *) else {
-            return super.requestAccess(to: entityType, completion: completion)
+            return try await super.requestAccess(to: entityType)
         }
 
         switch entityType {
         case .event:
-            requestFullAccessToEvents(completion: completion)
+            return try await requestFullAccessToEvents()
         case .reminder:
-            requestFullAccessToReminders(completion: completion)
+            return try await requestFullAccessToReminders()
         @unknown default:
-            completion(false, .unexpected("🔥 Unknown entity type: \(entityType)"))
+            throw .unexpected("🔥 Unknown entity type: \(entityType)")
         }
     }
 
