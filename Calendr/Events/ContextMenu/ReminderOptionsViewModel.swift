@@ -53,12 +53,12 @@ class ReminderOptionsViewModel: BaseContextMenuViewModel<ReminderAction> {
         )
     }
 
-    override func onAction( _ action: Action) -> Observable<Void> {
+    override func onAction( _ action: Action) -> Completable {
 
         switch action {
         case .open:
             workspace.open(URL(string: "x-apple-reminderkit://remcdreminder/\(event.id)")!)
-            return .void()
+            return .empty()
 
         case .complete:
             return calendarService.completeReminder(id: event.id)

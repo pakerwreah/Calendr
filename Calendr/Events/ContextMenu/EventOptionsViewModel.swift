@@ -89,7 +89,7 @@ class EventOptionsViewModel: BaseContextMenuViewModel<EventAction> {
         workspace.open(URL(string: "ical://ekevent\(date)/\(event.id)?method=show&options=more")!)
     }
 
-    override func onAction(_ action: Action) -> Observable<Void> {
+    override func onAction(_ action: Action) -> Completable {
 
         switch action {
         case .open:
@@ -101,10 +101,10 @@ class EventOptionsViewModel: BaseContextMenuViewModel<EventAction> {
         case .status(let action):
             return changeEventStatus(to: action.status)
         }
-        return .void()
+        return .empty()
     }
 
-    private func changeEventStatus(to status: EventStatus) -> Observable<Void> {
+    private func changeEventStatus(to status: EventStatus) -> Completable {
         calendarService.changeEventStatus(id: event.id, date: event.start, to: status)
     }
 }

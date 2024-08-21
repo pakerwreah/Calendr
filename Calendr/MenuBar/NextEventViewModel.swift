@@ -95,7 +95,7 @@ class NextEventViewModel {
 
                 !isEnabled ? .just([]) : nextEventCalendars
                     .repeat(when: calendarService.changeObservable)
-                    .flatMapLatest { calendars -> Observable<[EventModel]> in
+                    .flatMapLatest { calendars -> Single<[EventModel]> in
                         let start = dateProvider.calendar.startOfDay(for: dateProvider.now)
                         let end = dateProvider.calendar.date(byAdding: .hour, value: 48, to: start)!
                         return calendarService.events(from: start, to: end, calendars: calendars)

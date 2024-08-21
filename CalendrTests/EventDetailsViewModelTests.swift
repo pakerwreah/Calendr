@@ -206,7 +206,7 @@ class EventDetailsViewModelTests: XCTestCase {
         let expectation = expectation(description: "Close")
 
         viewModel.close
-            .subscribe(onNext: expectation.fulfill)
+            .subscribe(onCompleted: expectation.fulfill)
             .disposed(by: disposeBag)
 
         viewModel.skipTapped.onNext(())
@@ -230,7 +230,7 @@ class EventDetailsViewModelTests: XCTestCase {
         let expectation = expectation(description: "Close")
 
         viewModel.close
-            .subscribe(onNext: expectation.fulfill)
+            .subscribe(onCompleted: expectation.fulfill)
             .disposed(by: disposeBag)
 
         let contextMenu = viewModel.makeContextMenuViewModel() as? EventOptionsViewModel

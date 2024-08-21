@@ -26,26 +26,26 @@ class MockCalendarServiceProvider: CalendarServiceProviding {
 
     func requestAccess() { didRequestAccess?() }
 
-    func calendars() -> Observable<[CalendarModel]> { .just(m_calendars) }
+    func calendars() -> Single<[CalendarModel]> { .just(m_calendars) }
 
-    func events(from start: Date, to end: Date, calendars: [String]) -> Observable<[EventModel]> {
+    func events(from start: Date, to end: Date, calendars: [String]) -> Single<[EventModel]> {
         spyEventsObserver.onNext((start: start, end: end, calendars: calendars))
         return .just(m_events)
     }
 
-    func completeReminder(id: String) -> Observable<Void> {
+    func completeReminder(id: String) -> Completable {
         spyCompleteObserver.onNext(())
-        return .void()
+        return .empty()
     }
 
-    func rescheduleReminder(id: String, to date: Date) -> Observable<Void> {
+    func rescheduleReminder(id: String, to date: Date) -> Completable {
         spyRescheduleObserver.onNext(date)
-        return .void()
+        return .empty()
     }
 
-    func changeEventStatus(id: String, date: Date, to status: EventStatus) -> Observable<Void> {
+    func changeEventStatus(id: String, date: Date, to status: EventStatus) -> Completable {
         spyChangeEventStatusObserver.onNext(status)
-        return .void()
+        return .empty()
     }
 }
 

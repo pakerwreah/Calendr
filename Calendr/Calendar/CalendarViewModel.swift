@@ -118,7 +118,7 @@ class CalendarViewModel {
             enabledCalendars.startWith([])
         )
         .repeat(when: calendarService.changeObservable)
-        .flatMapLatest { cellViewModels, calendars -> Observable<[EventModel]> in
+        .flatMapLatest { cellViewModels, calendars -> Single<[EventModel]> in
 
             calendarService.events(
                 from: dateProvider.calendar.startOfDay(for: cellViewModels.first!.date),

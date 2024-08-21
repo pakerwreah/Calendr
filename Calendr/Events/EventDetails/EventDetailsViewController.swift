@@ -416,7 +416,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate {
         viewModel.close
             .observe(on: MainScheduler.instance)
             .subscribe(
-                onNext: { [weak self] in
+                onCompleted: { [weak self] in
                     self?.view.window?.performClose(nil)
                 },
                 onError: { error in
