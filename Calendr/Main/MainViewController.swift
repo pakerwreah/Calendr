@@ -827,8 +827,12 @@ private extension NSMenu {
     
     func show(in view: NSView) {
         DispatchQueue.main.async {
+            guard let screen = view.window?.screen else { return }
+
+            let offsetY = !screen.hasNotch ? view.frame.height + 7 : 0
+
             // this is a blocking operation
-            self.popUp(positioning: nil, at: .init(x: 0, y: view.frame.height + 5), in: view)
+            self.popUp(positioning: nil, at: .init(x: 0, y: offsetY), in: view)
         }
     }
 }
