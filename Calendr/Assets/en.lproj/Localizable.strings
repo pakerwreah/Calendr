@@ -8,6 +8,11 @@
 "quit" = "Quit";
 "search" = "Search";
 
+"access_required.calendars" = "Calendar pending 'Full access' authorization";
+"access_required.reminders" = "Reminders pending authorization";
+"access_required.open_settings" = "Open Settings";
+"access_required.cancel" = "Cancel";
+
 "auto_update.check_for_updates" = "Check for updates";
 "auto_update.fetching_releases" = "Fetching releases";
 "auto_update.new_version" = "New version available: %@";

@@ -219,8 +219,6 @@ class MainViewController: NSViewController {
 
         setUpKeyboard()
 
-        calendarService.requestAccess()
-
         refreshDate.onNext(())
 
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(5)) { [autoUpdater] in

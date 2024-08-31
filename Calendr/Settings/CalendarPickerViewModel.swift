@@ -31,6 +31,7 @@ class CalendarPickerViewModel {
     ) {
 
         self.calendars = calendarService.changeObservable
+            .startWith(())
             .flatMapLatest(calendarService.calendars)
             .distinctUntilChanged()
             .share(replay: 1)

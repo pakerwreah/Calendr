@@ -7,12 +7,12 @@
 
 import RxSwift
 import EventKit
+import Sentry
 
 protocol CalendarServiceProviding {
 
     var changeObservable: Observable<Void> { get }
 
-    func requestAccess()
     func calendars() -> Single<[CalendarModel]>
     func events(from start: Date, to end: Date, calendars: [String]) -> Single<[EventModel]>
     func completeReminder(id: String) -> Completable
@@ -23,7 +23,8 @@ protocol CalendarServiceProviding {
 class CalendarServiceProvider: CalendarServiceProviding {
 
     private let dateProvider: DateProviding
-
+    private let workspace: WorkspaceServiceProviding
+    private let userDefaults: UserDefaults
     private let notificationCenter: NotificationCenter
 
     private let store = EventStore()
@@ -33,38 +34,78 @@ class CalendarServiceProvider: CalendarServiceProviding {
     private let changeObserver: AnyObserver<Void>
     let changeObservable: Observable<Void>
 
-    private var isListening = false
-
-    init(dateProvider: DateProviding, notificationCenter: NotificationCenter) {
-
+    init(
+        dateProvider: DateProviding,
+        workspace: WorkspaceServiceProviding,
+        userDefaults: UserDefaults,
+        notificationCenter: NotificationCenter
+    ) {
         self.dateProvider = dateProvider
+        self.workspace = workspace
+        self.userDefaults = userDefaults
         self.notificationCenter = notificationCenter
 
         (changeObservable, changeObserver) = PublishSubject.pipe(scheduler: MainScheduler.instance)
+
+        requestAccess()
     }
 
     private func listenToStoreChanges() {
 
-        guard !isListening else { return }
-
         notificationCenter.rx
             .notification(.EKEventStoreChanged, object: store)
             .void()
-            .startWith(())
             .bind(to: changeObserver)
             .disposed(by: disposeBag)
     }
 
-    func requestAccess() {
-        Task {
-            await requestAccess(to: .event)
-            await requestAccess(to: .reminder)
+    @discardableResult
+    private func openPrivacySettings(for entity: PrivacyEntity) -> Bool {
 
+        guard !userDefaults.permissionSuppressed.contains(entity.rawValue) else {
+            return false
+        }
+
+        let alert = NSAlert()
+        alert.alertStyle = .critical
+        alert.messageText = Strings.AccessRequired.message(for: entity)
+        alert.addButton(withTitle: Strings.AccessRequired.openSettings)
+        alert.addButton(withTitle: Strings.AccessRequired.cancel)
+        alert.showsSuppressionButton = true
+        let result = alert.runModal()
+
+        if result == .alertFirstButtonReturn {
+            return workspace.open(.privacySettings(for: entity))
+        }
+
+        if alert.suppressionButton?.state == .on {
+            userDefaults.permissionSuppressed.append(entity.rawValue)
+        }
+
+        return false
+    }
+
+    private func requestAccess() {
+        Task {
             listenToStoreChanges()
+
+            let events = await requestAccess(to: .event)
+            let reminders = await requestAccess(to: .reminder)
+
+            DispatchQueue.main.async {
+                if !events {
+                    if self.openPrivacySettings(for: .calendars) {
+                        return
+                    }
+                }
+                if !reminders {
+                    self.openPrivacySettings(for: .reminders)
+                }
+            }
         }
     }
 
-    private func requestAccess(to type: EKEntityType) async {
+    private func requestAccess(to type: EKEntityType) async -> Bool {
         do {
             let granted = try await store.requestAccess(to: type)
 
@@ -73,8 +114,12 @@ class CalendarServiceProvider: CalendarServiceProviding {
             } else {
                 print("Access denied for \(type)!")
             }
+
+            return granted
         } catch {
             print(error.localizedDescription)
+            SentrySDK.capture(error: error)
+            return false
         }
     }
 
@@ -278,6 +323,30 @@ private class EventStore: EKEventStore {
             return status == .fullAccess
         } else {
             return status == .authorized
+        }
+    }
+}
+
+private enum PrivacyEntity: String {
+    case calendars
+    case reminders
+}
+
+private extension URL {
+
+    static func privacySettings(for entity: PrivacyEntity) -> URL {
+        URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_\(entity.rawValue.ucfirst)")!
+    }
+}
+
+private extension Strings.AccessRequired {
+
+    static func message(for entity: PrivacyEntity) -> String {
+        switch entity {
+        case .calendars:
+            return Strings.AccessRequired.calendars
+        case .reminders:
+            return Strings.AccessRequired.reminders
         }
     }
 }

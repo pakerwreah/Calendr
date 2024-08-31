@@ -17,6 +17,16 @@ internal enum Strings {
   internal static let quit = Strings.tr("Localizable", "quit", fallback: "Quit")
   /// Search
   internal static let search = Strings.tr("Localizable", "search", fallback: "Search")
+  internal enum AccessRequired {
+    /// Calendar pending 'Full access' authorization
+    internal static let calendars = Strings.tr("Localizable", "access_required.calendars", fallback: "Calendar pending 'Full access' authorization")
+    /// Cancel
+    internal static let cancel = Strings.tr("Localizable", "access_required.cancel", fallback: "Cancel")
+    /// Open Settings
+    internal static let openSettings = Strings.tr("Localizable", "access_required.open_settings", fallback: "Open Settings")
+    /// Reminders pending authorization
+    internal static let reminders = Strings.tr("Localizable", "access_required.reminders", fallback: "Reminders pending authorization")
+  }
   internal enum AutoUpdate {
     /// Check for updates
     internal static let checkForUpdates = Strings.tr("Localizable", "auto_update.check_for_updates", fallback: "Check for updates")
