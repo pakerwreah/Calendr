@@ -38,7 +38,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         viewController = MainViewController(
             autoLauncher: .default,
             workspace: workspace,
-            calendarService: CalendarServiceProvider(dateProvider: dateProvider, notificationCenter: notificationCenter),
+            calendarService: CalendarServiceProvider(
+                dateProvider: dateProvider,
+                workspace: workspace,
+                userDefaults: userDefaults,
+                notificationCenter: notificationCenter
+            ),
             dateProvider: dateProvider,
             screenProvider: ScreenProvider(notificationCenter: notificationCenter), 
             notificationProvider: notificationProvider,

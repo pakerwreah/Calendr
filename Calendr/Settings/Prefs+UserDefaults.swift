@@ -40,6 +40,7 @@ enum Prefs {
     // Misc
     static let lastCheckedVersion = "last_checked_version"
     static let updatedVersion = "updated_version"
+    static let permissionSuppressed = "permission_suppressed"
 
     // System
     static let statusItemPreferredPosition = "NSStatusItem Preferred Position"
@@ -202,5 +203,10 @@ extension UserDefaults {
     @objc dynamic var updatedVersion: String? {
         get { string(forKey: Prefs.updatedVersion) }
         set { set(newValue, forKey: Prefs.updatedVersion) }
+    }
+
+    @objc dynamic var permissionSuppressed: [String] {
+        get { array(forKey: Prefs.permissionSuppressed) as? [String] ?? [] }
+        set { set(newValue, forKey: Prefs.permissionSuppressed) }
     }
 }
