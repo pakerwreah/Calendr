@@ -31,7 +31,7 @@ extension EventModel {
     }
 }
 
-private func detectLinks(_ texts: [String?]) -> [URL] {
+func detectLinks(_ texts: [String?]) -> [URL] {
 
     let detector = try! NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
 
