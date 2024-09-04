@@ -19,6 +19,7 @@ class EventView: NSView {
     private let icon = NSImageView()
     private let title = Label()
     private let subtitle = Label()
+    private let subtitleLink = Label()
     private let duration = Label()
     private let progress = NSView()
     private let linkBtn = ImageButton()
@@ -94,10 +95,17 @@ class EventView: NSView {
         subtitle.stringValue = viewModel.subtitle
         subtitle.isHidden = subtitle.isEmpty
 
+        if let link = viewModel.subtitleLink {
+            subtitleLink.stringValue = link
+        } else {
+            subtitleLink.isHidden = true
+        }
+
         duration.stringValue = viewModel.duration
         duration.isHidden = duration.isEmpty
 
         linkBtn.isHidden = viewModel.link == nil
+        linkBtn.toolTip = viewModel.link?.url.absoluteString
     }
 
     private func configureLayout() {
@@ -124,8 +132,13 @@ class EventView: NSView {
         duration.font = .systemFont(ofSize: 11)
 
         subtitle.lineBreakMode = .byTruncatingTail
+        subtitle.maximumNumberOfLines = 2
         subtitle.textColor = .secondaryLabelColor
-        subtitle.font = .systemFont(ofSize: 11)
+        subtitle.font = .systemFont(ofSize: 10)
+
+        subtitleLink.lineBreakMode = .byTruncatingTail
+        subtitleLink.textColor = .secondaryLabelColor
+        subtitleLink.font = .systemFont(ofSize: 11)
 
         colorBar.wantsLayer = true
         colorBar.layer?.cornerRadius = 2
@@ -135,13 +148,13 @@ class EventView: NSView {
 
         let titleStackView = NSStackView(views: [icon, title]).with(spacing: 4).with(alignment: .firstBaseline)
 
-        let subtitleStackView = NSStackView(views: [subtitle, linkBtn]).with(spacing: 0)
+        let linkStackView = NSStackView(views: [subtitleLink, linkBtn]).with(spacing: 0)
 
-        subtitleStackView.rx.isContentHidden
-            .bind(to: subtitleStackView.rx.isHidden)
+        linkStackView.rx.isContentHidden
+            .bind(to: linkStackView.rx.isHidden)
             .disposed(by: disposeBag)
 
-        let eventStackView = NSStackView(views: [titleStackView, subtitleStackView, duration])
+        let eventStackView = NSStackView(views: [titleStackView, subtitle, linkStackView, duration])
             .with(orientation: .vertical)
             .with(spacing: 2)
             .with(insets: .init(vertical: 1))

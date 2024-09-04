@@ -29,3 +29,10 @@ extension Sequence {
         sorted { $0[keyPath: keyPath] < $1[keyPath: keyPath] }
     }
 }
+
+extension LazySequenceProtocol {
+
+    func compact<T>() -> LazyMapSequence<LazyFilterSequence<LazyMapSequence<Elements, T?>>, T> where Element == T? {
+        compactMap { $0 }
+    }
+}

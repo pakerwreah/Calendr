@@ -12,6 +12,7 @@ class EventViewModel {
 
     let title: String
     let subtitle: String
+    let subtitleLink: String?
     let duration: String
     let color: NSColor
     let barStyle: EventBarStyle
@@ -58,12 +59,20 @@ class EventViewModel {
         barStyle = event.status ~= .maybe ? .bordered : .filled
         link = event.detectLink(using: workspace)
 
-        subtitle = [event.location, link?.url.absoluteString, event.notes]
-            .lazy
-            .compactMap { $0?.replacingOccurrences(of: "https://", with: "").trimmed }
-            .first(where: \.isEmpty.isFalse)?
-            .prefix(while: \.isNewline.isFalse)
-            .trimmed ?? ""
+        var subtitleText = event.location?.trimmed ?? ""
+        let linkText = link?.url.domain
+        let notes = event.notes?.trimmed ?? ""
+
+        if let linkText, subtitleText.contains(linkText) {
+            subtitleText = ""
+        }
+
+        if linkText == nil, subtitleText.isEmpty, !notes.hasPrefix(event.title) {
+            subtitleText = notes
+        }
+
+        subtitle = subtitleText
+        subtitleLink = linkText
 
         let range = event.range(using: dateProvider)
         let showTime = !(range.startsMidnight && range.endsMidnight)

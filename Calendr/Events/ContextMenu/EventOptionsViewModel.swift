@@ -166,13 +166,3 @@ extension EventAction: ContextMenuAction {
         }
     }
 }
-
-private extension URL {
-    var domain: String? {
-        if #available(macOS 13.0, *) {
-            host()
-        } else {
-            host
-        }
-    }
-}

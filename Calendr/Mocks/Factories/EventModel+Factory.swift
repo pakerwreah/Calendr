@@ -15,7 +15,7 @@ extension EventModel {
         id: String = "",
         start: Date = Date(),
         end: Date = Date(),
-        title: String = "",
+        title: String = "Title",
         location: String? = nil,
         notes: String? = nil,
         url: URL? = nil,
