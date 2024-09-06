@@ -457,8 +457,10 @@ class MainViewController: NSViewController {
 
     private func openSettingsTab(_ tab: SettingsTab) {
 
-        settingsViewController.viewWillAppear()
-        presentAsModalWindow(settingsViewController)
+        if !settingsViewModel.isPresented.value {
+            settingsViewController.viewWillAppear()
+            presentAsModalWindow(settingsViewController)
+        }
         settingsViewController.selectedTabViewItemIndex = tab.rawValue
     }
 
