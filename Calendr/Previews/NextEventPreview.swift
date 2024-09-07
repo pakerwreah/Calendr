@@ -14,6 +14,7 @@ struct NextEventPreview: PreviewProvider {
 
     static let dateProvider = MockDateProvider()
     static let calendarService = MockCalendarServiceProvider(events: events, dateProvider: dateProvider)
+    static let geocoder = MockGeocodeServiceProvider()
     static let screenProvider = MockScreenProvider(screen: MockScreen(hasNotch: true))
     static let settings = MockNextEventSettings(showItem: true, fontSize: 13, length: 30, detectNotch: false)
     static let notificationCenter = NotificationCenter()
@@ -38,6 +39,7 @@ struct NextEventPreview: PreviewProvider {
                 nextEventCalendars: .just([]),
                 dateProvider: dateProvider,
                 calendarService: calendarService,
+                geocoder: geocoder,
                 workspace: workspace,
                 screenProvider: screenProvider,
                 isShowingDetails: .dummy(),

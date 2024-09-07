@@ -15,6 +15,7 @@ class EventViewModelFadeTests: XCTestCase {
 
     let dateProvider = MockDateProvider()
     let calendarService = MockCalendarServiceProvider()
+    let geocoder = MockGeocodeServiceProvider()
     let workspace = MockWorkspaceServiceProvider()
     let popoverSettings = MockPopoverSettings()
 
@@ -233,6 +234,7 @@ class EventViewModelFadeTests: XCTestCase {
             event: .make(start: start, end: end, isAllDay: isAllDay, type: type),
             dateProvider: dateProvider,
             calendarService: calendarService,
+            geocoder: geocoder,
             workspace: workspace,
             popoverSettings: popoverSettings,
             isShowingDetails: .dummy(),

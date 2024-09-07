@@ -14,6 +14,7 @@ struct EventDetailsPreview: PreviewProvider {
 
     static let dateProvider = MockDateProvider()
     static let calendarService = MockCalendarServiceProvider()
+    static let geocoder = MockGeocodeServiceProvider()
     static let workspace = NSWorkspace.shared
     static let popoverSettings = MockPopoverSettings()
     static var vcs: [NSViewController] = []
@@ -33,6 +34,7 @@ struct EventDetailsPreview: PreviewProvider {
                 ),
                 dateProvider: dateProvider,
                 calendarService: calendarService,
+                geocoder: geocoder,
                 workspace: workspace,
                 popoverSettings: popoverSettings,
                 isShowingObserver: .dummy(),
@@ -61,6 +63,7 @@ struct EventDetailsPreview: PreviewProvider {
                 ),
                 dateProvider: dateProvider,
                 calendarService: calendarService,
+                geocoder: geocoder,
                 workspace: workspace,
                 popoverSettings: popoverSettings,
                 isShowingObserver: .dummy(),
@@ -85,6 +88,7 @@ struct EventDetailsPreview: PreviewProvider {
                 ),
                 dateProvider: dateProvider,
                 calendarService: calendarService,
+                geocoder: geocoder,
                 workspace: workspace,
                 popoverSettings: popoverSettings,
                 isShowingObserver: .dummy(),
@@ -108,6 +112,7 @@ struct EventDetailsPreview: PreviewProvider {
                 ),
                 dateProvider: dateProvider,
                 calendarService: calendarService,
+                geocoder: geocoder,
                 workspace: workspace,
                 popoverSettings: popoverSettings,
                 isShowingObserver: .dummy(),

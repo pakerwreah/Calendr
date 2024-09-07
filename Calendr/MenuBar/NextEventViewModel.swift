@@ -63,9 +63,10 @@ class NextEventViewModel {
 
     private let type: NextEventType
     private let userDefaults: UserDefaults
+    private let popoverSettings: PopoverSettings
     private let dateProvider: DateProviding
     private let calendarService: CalendarServiceProviding
-    private let popoverSettings: PopoverSettings
+    private let geocoder: GeocodeServiceProviding
     private let workspace: WorkspaceServiceProviding
 
     init(
@@ -75,6 +76,7 @@ class NextEventViewModel {
         nextEventCalendars: Observable<[String]>,
         dateProvider: DateProviding,
         calendarService: CalendarServiceProviding,
+        geocoder: GeocodeServiceProviding,
         workspace: WorkspaceServiceProviding,
         screenProvider: ScreenProviding,
         isShowingDetails: AnyObserver<Bool>,
@@ -85,6 +87,7 @@ class NextEventViewModel {
         self.userDefaults = userDefaults
         self.dateProvider = dateProvider
         self.calendarService = calendarService
+        self.geocoder = geocoder
         self.popoverSettings = settings
         self.workspace = workspace
         self.isShowingDetails = isShowingDetails
@@ -260,6 +263,7 @@ class NextEventViewModel {
             event: event,
             dateProvider: dateProvider,
             calendarService: calendarService,
+            geocoder: geocoder,
             workspace: workspace,
             popoverSettings: popoverSettings,
             isShowingObserver: isShowingDetails,

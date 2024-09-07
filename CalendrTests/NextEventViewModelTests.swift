@@ -19,6 +19,7 @@ class NextEventViewModelTests: XCTestCase {
     let settings = MockNextEventSettings()
     let dateProvider = MockDateProvider()
     let calendarService = MockCalendarServiceProvider()
+    let geocoder = MockGeocodeServiceProvider()
     let workspace = MockWorkspaceServiceProvider()
     let screenProvider = MockScreenProvider()
     let scheduler = HistoricalScheduler()
@@ -33,6 +34,7 @@ class NextEventViewModelTests: XCTestCase {
             nextEventCalendars: calendarsSubject,
             dateProvider: dateProvider,
             calendarService: calendarService,
+            geocoder: geocoder,
             workspace: workspace,
             screenProvider: screenProvider,
             isShowingDetails: .dummy(),

@@ -38,6 +38,7 @@ class MockMainViewController: MainViewController {
             autoLauncher: AutoLauncher(),
             workspace: NSWorkspace.shared,
             calendarService: MockCalendarServiceProvider(dateProvider: dateProvider),
+            geocoder: MockGeocodeServiceProvider(),
             dateProvider: dateProvider,
             screenProvider: ScreenProvider(notificationCenter: notificationCenter), 
             notificationProvider: MockLocalNotificationProvider(),

@@ -6,9 +6,10 @@
 //
 
 import Cocoa
+import MapKit
 import RxSwift
 
-class EventDetailsViewController: NSViewController, PopoverDelegate {
+class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDelegate {
 
     private let disposeBag = DisposeBag()
 
@@ -304,6 +305,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate {
             locationLabel.stringValue = viewModel.location
             detailsStackView.addArrangedSubview(makeLine())
             detailsStackView.addArrangedSubview(locationLabel)
+            addLocationMap()
         }
 
         if !viewModel.duration.isEmpty {
@@ -311,6 +313,50 @@ class EventDetailsViewController: NSViewController, PopoverDelegate {
             detailsStackView.addArrangedSubview(makeLine())
             detailsStackView.addArrangedSubview(durationLabel)
         }
+    }
+
+    func mapView(_ mapView: MKMapView, viewFor annotation: any MKAnnotation) -> MKAnnotationView? {
+        let pin = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: nil)
+        pin.animatesWhenAdded = true
+        return pin
+    }
+
+    private enum Map {
+        static let height: CGFloat = 150
+        static let distance: CLLocationDistance = 1000
+        
+        static func region(for center: CLLocationCoordinate2D) -> MKCoordinateRegion {
+            .init(center: center, latitudinalMeters: distance, longitudinalMeters: distance)
+        }
+    }
+
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        guard let annotation = view.annotation else { return }
+        mapView.deselectAnnotation(annotation, animated: false)
+        mapView.region = Map.region(for: annotation.coordinate)
+    }
+
+    private func addLocationMap() {
+        
+        let mapIndex = detailsStackView.arrangedSubviews.count
+
+        viewModel.coordinates
+            .observe(on: MainScheduler.instance)
+            .subscribe(onSuccess: { [weak self] coordinates in
+                guard let self, let coordinates else { return }
+
+                let mapView = MKMapView()
+                mapView.delegate = self
+                mapView.height(equalTo: Map.height)
+                mapView.region = Map.region(for: coordinates)
+
+                let annotation = MKPointAnnotation()
+                annotation.coordinate = coordinates
+                mapView.addAnnotation(annotation)
+
+                self.detailsStackView.insertArrangedSubview(mapView, at: mapIndex)
+            })
+            .disposed(by: disposeBag)
     }
 
     private func addNotes() {

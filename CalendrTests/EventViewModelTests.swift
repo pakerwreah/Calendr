@@ -15,6 +15,7 @@ class EventViewModelTests: XCTestCase {
 
     let dateProvider = MockDateProvider()
     let calendarService = MockCalendarServiceProvider()
+    let geocoder = MockGeocodeServiceProvider()
     let workspace = MockWorkspaceServiceProvider()
     let popoverSettings = MockPopoverSettings()
 
@@ -326,6 +327,7 @@ class EventViewModelTests: XCTestCase {
             event: event,
             dateProvider: dateProvider,
             calendarService: calendarService,
+            geocoder: geocoder,
             workspace: workspace,
             popoverSettings: popoverSettings,
             isShowingDetails: .dummy(),
