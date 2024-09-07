@@ -22,6 +22,7 @@ class EventListViewModel {
     private let isShowingDetails: BehaviorSubject<Bool>
     private let dateProvider: DateProviding
     private let calendarService: CalendarServiceProviding
+    private let geocoder: GeocodeServiceProviding
     private let workspace: WorkspaceServiceProviding
     private let settings: EventListSettings
     private let scheduler: SchedulerType
@@ -35,6 +36,7 @@ class EventListViewModel {
         isShowingDetails: BehaviorSubject<Bool>,
         dateProvider: DateProviding,
         calendarService: CalendarServiceProviding,
+        geocoder: GeocodeServiceProviding,
         workspace: WorkspaceServiceProviding,
         settings: EventListSettings,
         scheduler: SchedulerType
@@ -42,6 +44,7 @@ class EventListViewModel {
         self.isShowingDetails = isShowingDetails
         self.dateProvider = dateProvider
         self.calendarService = calendarService
+        self.geocoder = geocoder
         self.workspace = workspace
         self.settings = settings
         self.scheduler = scheduler
@@ -120,6 +123,7 @@ class EventListViewModel {
             event: event,
             dateProvider: dateProvider,
             calendarService: calendarService,
+            geocoder: geocoder,
             workspace: workspace,
             popoverSettings: settings,
             isShowingDetails: isShowingDetails.asObserver(),

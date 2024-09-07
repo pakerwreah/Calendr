@@ -30,6 +30,7 @@ class EventViewModel {
     private let event: EventModel
     private let dateProvider: DateProviding
     private let calendarService: CalendarServiceProviding
+    private let geocoder: GeocodeServiceProviding
     private let popoverSettings: PopoverSettings
 
     let workspace: WorkspaceServiceProviding
@@ -38,6 +39,7 @@ class EventViewModel {
         event: EventModel,
         dateProvider: DateProviding,
         calendarService: CalendarServiceProviding,
+        geocoder: GeocodeServiceProviding,
         workspace: WorkspaceServiceProviding,
         popoverSettings: PopoverSettings,
         isShowingDetails: AnyObserver<Bool>,
@@ -50,6 +52,7 @@ class EventViewModel {
         self.dateProvider = dateProvider
         self.calendarService = calendarService
         self.workspace = workspace
+        self.geocoder = geocoder
         self.isShowingDetails = isShowingDetails
 
         title = event.title
@@ -196,6 +199,7 @@ class EventViewModel {
             event: event,
             dateProvider: dateProvider,
             calendarService: calendarService,
+            geocoder: geocoder,
             workspace: workspace,
             popoverSettings: popoverSettings,
             isShowingObserver: isShowingDetails,

@@ -44,6 +44,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 userDefaults: userDefaults,
                 notificationCenter: notificationCenter
             ),
+            geocoder: GeocodeServiceProvider(),
             dateProvider: dateProvider,
             screenProvider: ScreenProvider(notificationCenter: notificationCenter), 
             notificationProvider: notificationProvider,

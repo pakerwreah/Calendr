@@ -49,6 +49,10 @@
 		3453E6FD28386A84002DCC3C /* Bool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3453E6FC28386A84002DCC3C /* Bool.swift */; };
 		3453E6FF28393943002DCC3C /* ContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3453E6FE28393943002DCC3C /* ContextMenu.swift */; };
 		345A34972C4DADD000AF0002 /* TrackedMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345A34962C4DADD000AF0002 /* TrackedMenu.swift */; };
+		345CC3682C8CC93C00B0DD1A /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345CC3672C8CC93B00B0DD1A /* Cache.swift */; };
+		345CC36A2C8CCB1C00B0DD1A /* CacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345CC3692C8CCB1C00B0DD1A /* CacheTests.swift */; };
+		345CC36C2C8CCE5400B0DD1A /* GeocodeServiceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345CC36B2C8CCE5400B0DD1A /* GeocodeServiceProvider.swift */; };
+		345CC36E2C8CE13100B0DD1A /* MockGeocodeServiceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345CC36D2C8CE13100B0DD1A /* MockGeocodeServiceProvider.swift */; };
 		345DD97326920D1B00294D90 /* CalendarViewPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345DD97226920D1B00294D90 /* CalendarViewPreview.swift */; };
 		345FBD99293EA476005DD6DF /* Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345FBD98293EA476005DD6DF /* Keyboard.swift */; };
 		34651F1525E1BB8400518C5A /* Strings.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34651F1425E1BB8400518C5A /* Strings.generated.swift */; };
@@ -237,6 +241,10 @@
 		3453E6FC28386A84002DCC3C /* Bool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bool.swift; sourceTree = "<group>"; };
 		3453E6FE28393943002DCC3C /* ContextMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextMenu.swift; sourceTree = "<group>"; };
 		345A34962C4DADD000AF0002 /* TrackedMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackedMenu.swift; sourceTree = "<group>"; };
+		345CC3672C8CC93B00B0DD1A /* Cache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
+		345CC3692C8CCB1C00B0DD1A /* CacheTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheTests.swift; sourceTree = "<group>"; };
+		345CC36B2C8CCE5400B0DD1A /* GeocodeServiceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeocodeServiceProvider.swift; sourceTree = "<group>"; };
+		345CC36D2C8CE13100B0DD1A /* MockGeocodeServiceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockGeocodeServiceProvider.swift; sourceTree = "<group>"; };
 		345DD97226920D1B00294D90 /* CalendarViewPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewPreview.swift; sourceTree = "<group>"; };
 		345FBD98293EA476005DD6DF /* Keyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keyboard.swift; sourceTree = "<group>"; };
 		34651EFB25E1B26800518C5A /* swiftgen.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = swiftgen.yml; sourceTree = "<group>"; };
@@ -420,6 +428,7 @@
 				3421DA112693E70E00056837 /* MockPopoverSettings.swift */,
 				34F4C47C2A6C56AA00397C80 /* MockScreenProvider.swift */,
 				34F4C47E2A6C57B300397C80 /* MockStatusItemSettings.swift */,
+				345CC36D2C8CE13100B0DD1A /* MockGeocodeServiceProvider.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -557,6 +566,7 @@
 			isa = PBXGroup;
 			children = (
 				347D0FAA25952F8A002451EC /* Info.plist */,
+				345CC3692C8CCB1C00B0DD1A /* CacheTests.swift */,
 				34924CD5259FB814009C3450 /* CalendarExtensionTests.swift */,
 				34E1902225B76CFE00E9491B /* CalendarPickerViewModelTests.swift */,
 				347E6D3D25AA2811009A6716 /* CalendarViewModelTests.swift */,
@@ -662,6 +672,7 @@
 			children = (
 				34702149259DFF3000827AE7 /* CalendarServiceProvider.swift */,
 				34FD09D825AE269600AAAAE2 /* DateProvider.swift */,
+				345CC36B2C8CCE5400B0DD1A /* GeocodeServiceProvider.swift */,
 				34E855692C7115A100757B58 /* LocalNotificationProvider.swift */,
 				34299F702C72289400A0269B /* NetworkServiceProvider.swift */,
 				346E70C82802278E00A785FF /* ScreenProvider.swift */,
@@ -755,6 +766,7 @@
 		34C1D41F2C6E631700295E5E /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				345CC3672C8CC93B00B0DD1A /* Cache.swift */,
 				34C1D4202C6E632F00295E5E /* Sentry.swift */,
 				3438AEED2C6192A9002BE3E1 /* XCTest.swift */,
 			);
@@ -1024,6 +1036,7 @@
 				34286E4625D5CD9C0097EC5D /* WeekNumberCellView.swift in Sources */,
 				34ABB9F229A2AFA30021F3CF /* CursorButton.swift in Sources */,
 				341B2B3E25D06A6F00336342 /* Dropdown.swift in Sources */,
+				345CC36E2C8CE13100B0DD1A /* MockGeocodeServiceProvider.swift in Sources */,
 				347D0F9825952F89002451EC /* AppDelegate.swift in Sources */,
 				3449403225C348C70020E664 /* CalendarPickerViewController.swift in Sources */,
 				3421DA122693E70E00056837 /* MockPopoverSettings.swift in Sources */,
@@ -1110,12 +1123,14 @@
 				34C1D4212C6E632F00295E5E /* Sentry.swift in Sources */,
 				34E004A725B61D5200241419 /* StatusItemViewModel.swift in Sources */,
 				34D19FC0262299D300B2732C /* NSEdgeInsets.swift in Sources */,
+				345CC3682C8CC93C00B0DD1A /* Cache.swift in Sources */,
 				34702168259E761100827AE7 /* Calendar.swift in Sources */,
 				34F201332693F562006CE2FF /* MockEventListSettings.swift in Sources */,
 				3477E7102C67C15A008D3844 /* Environment.swift in Sources */,
 				34C4599C25DEFFDA00561C29 /* BuildConfig.m in Sources */,
 				34E8556A2C7115A100757B58 /* LocalNotificationProvider.swift in Sources */,
 				348393042C885CC00052C70A /* URL.swift in Sources */,
+				345CC36C2C8CCE5400B0DD1A /* GeocodeServiceProvider.swift in Sources */,
 				347FF78F2BCB6A5500E5B63B /* Popover.swift in Sources */,
 				34651F1525E1BB8400518C5A /* Strings.generated.swift in Sources */,
 				34651F5425E22A3900518C5A /* DateIntervalFormatter.swift in Sources */,
@@ -1158,6 +1173,7 @@
 				34C72F8C25E88DA100FD20FA /* MockCalendarSettings.swift in Sources */,
 				34C72F8825E88C0300FD20FA /* MockPopoverSettings.swift in Sources */,
 				34C2CF9125C2070400FC2CFF /* EventViewModelTests.swift in Sources */,
+				345CC36A2C8CCB1C00B0DD1A /* CacheTests.swift in Sources */,
 				3477F3DA25FD44C1008EA888 /* MockEventListSettings.swift in Sources */,
 				346E70CB2802289F00A785FF /* MockScreenProvider.swift in Sources */,
 				3438AEEE2C6192A9002BE3E1 /* XCTest.swift in Sources */,

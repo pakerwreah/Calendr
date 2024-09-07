@@ -27,6 +27,7 @@ class EventDetailsViewModel {
     let popoverSettings: PopoverSettings
     let showSkip: Bool
 
+    let coordinates: Single<Coordinates?>
     let isInProgress: Observable<Bool>
     let close: Completable
 
@@ -57,6 +58,7 @@ class EventDetailsViewModel {
         event: EventModel,
         dateProvider: DateProviding,
         calendarService: CalendarServiceProviding,
+        geocoder: GeocodeServiceProviding,
         workspace: WorkspaceServiceProviding,
         popoverSettings: PopoverSettings,
         isShowingObserver: AnyObserver<Bool>,
@@ -139,6 +141,16 @@ class EventDetailsViewModel {
         skipTapped = self.callback.mapObserver { _ in
             return .event(.skip)
         }
+
+        coordinates = Single.create { observer in
+            Task {
+                observer(.success(await geocoder.geocodeAddressString(event.location ?? "")))
+            }
+            return Disposables.create()
+        }
+        .asObservable()
+        .share(replay: 1, scope: .forever)
+        .asSingle()
     }
 
     func makeContextMenuViewModel() -> (any ContextMenuViewModel)? {
