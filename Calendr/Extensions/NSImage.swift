@@ -9,8 +9,17 @@ import AppKit
 
 extension NSImage {
 
-    convenience init(systemName: String) {
-        self.init(systemSymbolName: systemName, accessibilityDescription: nil)!
+    convenience init?(systemSymbolName: String) {
+        self.init(systemSymbolName: systemSymbolName, accessibilityDescription: nil)
+    }
+
+    convenience init(systemName: StaticString) {
+        self.init(systemSymbolName: systemName.description)!
+    }
+
+    static func preferringMulticolor(systemName: String) -> NSImage? {
+        let image = NSImage(systemSymbolName: systemName + ".fill") ?? NSImage(systemSymbolName: systemName)
+        return image?.withSymbolConfiguration(.preferringMulticolor()) ?? image
     }
 
     func with(scale: NSImage.SymbolScale) -> NSImage { withSymbolConfiguration(.init(scale: scale))! }

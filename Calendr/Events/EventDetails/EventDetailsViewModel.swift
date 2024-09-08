@@ -27,7 +27,8 @@ class EventDetailsViewModel {
     let popoverSettings: PopoverSettings
     let showSkip: Bool
 
-    let coordinates: Single<Coordinates?>
+    let coordinates: Maybe<Coordinates>
+    let weather: Maybe<(Weather, isAllDay: Bool)>
     let isInProgress: Observable<Bool>
     let close: Completable
 
@@ -59,6 +60,7 @@ class EventDetailsViewModel {
         dateProvider: DateProviding,
         calendarService: CalendarServiceProviding,
         geocoder: GeocodeServiceProviding,
+        weatherService: WeatherServiceProviding,
         workspace: WorkspaceServiceProviding,
         popoverSettings: PopoverSettings,
         isShowingObserver: AnyObserver<Bool>,
@@ -142,15 +144,35 @@ class EventDetailsViewModel {
             return .event(.skip)
         }
 
-        coordinates = Single.create { observer in
+        coordinates = Maybe.create { observer in
             Task {
-                observer(.success(await geocoder.geocodeAddressString(event.location ?? "")))
+                guard let coordinates = await geocoder.geocodeAddressString(event.location ?? "") else {
+                    observer(.completed)
+                    return
+                }
+                observer(.success(coordinates))
             }
             return Disposables.create()
         }
         .asObservable()
         .share(replay: 1, scope: .forever)
-        .asSingle()
+        .asMaybe()
+
+        weather = coordinates.flatMap { coordinates in
+            Maybe.create { observer in
+                Task {
+                    guard let weather = await weatherService.weather(for: coordinates, on: event.start) else {
+                        observer(.completed)
+                        return
+                    }
+                    observer(.success((weather, event.isAllDay)))
+                }
+                return Disposables.create()
+            }
+        }
+        .asObservable()
+        .share(replay: 1, scope: .forever)
+        .asMaybe()
     }
 
     func makeContextMenuViewModel() -> (any ContextMenuViewModel)? {

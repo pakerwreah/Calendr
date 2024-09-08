@@ -20,6 +20,7 @@ class NextEventViewModelTests: XCTestCase {
     let dateProvider = MockDateProvider()
     let calendarService = MockCalendarServiceProvider()
     let geocoder = MockGeocodeServiceProvider()
+    let weatherService = MockWeatherServiceProvider()
     let workspace = MockWorkspaceServiceProvider()
     let screenProvider = MockScreenProvider()
     let scheduler = HistoricalScheduler()
@@ -35,6 +36,7 @@ class NextEventViewModelTests: XCTestCase {
             dateProvider: dateProvider,
             calendarService: calendarService,
             geocoder: geocoder,
+            weatherService: weatherService,
             workspace: workspace,
             screenProvider: screenProvider,
             isShowingDetails: .dummy(),

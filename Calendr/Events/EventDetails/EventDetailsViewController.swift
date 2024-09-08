@@ -7,6 +7,7 @@
 
 import Cocoa
 import MapKit
+import WeatherKit
 import RxSwift
 
 class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDelegate {
@@ -69,6 +70,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         view = NSView()
 
         view.widthAnchor.constraint(lessThanOrEqualToConstant: 400).activate()
+        view.widthAnchor.constraint(greaterThanOrEqualToConstant: 200).activate()
         view.widthAnchor.constraint(greaterThanOrEqualTo: view.heightAnchor, multiplier: 0.5).activate().priority = .dragThatCanResizeWindow
 
         scrollView.hasVerticalScroller = true
@@ -304,8 +306,18 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         if !viewModel.location.isEmpty {
             locationLabel.stringValue = viewModel.location
             detailsStackView.addArrangedSubview(makeLine())
-            detailsStackView.addArrangedSubview(locationLabel)
-            addLocationMap()
+            
+            let weatherContainer = NSView().with(size: CGSize(width: 34, height: 26))
+
+            let locationStack = NSStackView(.horizontal).with(alignment: .centerY)
+            locationStack.addArrangedSubview(locationLabel)
+            locationStack.addArrangedSubview(weatherContainer)
+
+            detailsStackView.addArrangedSubview(locationStack)
+            
+            let mapIndex = detailsStackView.arrangedSubviews.count
+            addLocationMap(at: mapIndex)
+            addLocationWeather(in: weatherContainer)
         }
 
         if !viewModel.duration.isEmpty {
@@ -325,25 +337,23 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         static let height: CGFloat = 150
         static let distance: CLLocationDistance = 1000
         
-        static func region(for center: CLLocationCoordinate2D) -> MKCoordinateRegion {
-            .init(center: center, latitudinalMeters: distance, longitudinalMeters: distance)
+        static func region(for center: Coordinates) -> MKCoordinateRegion {
+            .init(center: .init(center), latitudinalMeters: distance, longitudinalMeters: distance)
         }
     }
 
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         guard let annotation = view.annotation else { return }
         mapView.deselectAnnotation(annotation, animated: false)
-        mapView.region = Map.region(for: annotation.coordinate)
+        mapView.region = Map.region(for: .init(annotation.coordinate))
     }
 
-    private func addLocationMap() {
-        
-        let mapIndex = detailsStackView.arrangedSubviews.count
+    private func addLocationMap(at index: Int) {
 
         viewModel.coordinates
             .observe(on: MainScheduler.instance)
             .subscribe(onSuccess: { [weak self] coordinates in
-                guard let self, let coordinates else { return }
+                guard let self else { return }
 
                 let mapView = MKMapView()
                 mapView.delegate = self
@@ -351,10 +361,39 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
                 mapView.region = Map.region(for: coordinates)
 
                 let annotation = MKPointAnnotation()
-                annotation.coordinate = coordinates
+                annotation.coordinate = .init(coordinates)
                 mapView.addAnnotation(annotation)
 
-                self.detailsStackView.insertArrangedSubview(mapView, at: mapIndex)
+                detailsStackView.insertArrangedSubview(mapView, at: index)
+            })
+            .disposed(by: disposeBag)
+
+    }
+
+    private func addLocationWeather(in weatherContainer: NSView) {
+
+        viewModel.weather
+            .observe(on: MainScheduler.instance)
+            .subscribe(onSuccess: { [weak weatherContainer] weather, isAllDay in
+                guard let weatherContainer, let firstHour = weather.hours.first else { return }
+
+                let temperatures = isAllDay ? [weather.day.lowTemperature, weather.day.highTemperature] : [firstHour.temperature]
+                let symbolName = isAllDay ? weather.day.symbolName : firstHour.symbolName
+
+                guard let icon = NSImage.preferringMulticolor(systemName: symbolName) else { return }
+
+                let temps = temperatures.map {
+                    $0.formatted(
+                        .measurement(usage: .weather, hidesScaleName: true, numberFormatStyle: .number.precision(.fractionLength(0)))
+                    )
+                }
+
+                let weatherStack = NSStackView(.vertical).with(spacing: 6)
+                weatherStack.addArrangedSubview(NSImageView(image: icon))
+                weatherStack.addArrangedSubview(Label(text: temps.joined(separator: " "), font: .systemFont(ofSize: temps.count > 1 ? 10 : 12), align: .center))
+
+                weatherContainer.addSubview(weatherStack)
+                weatherStack.center(in: weatherContainer)
             })
             .disposed(by: disposeBag)
     }

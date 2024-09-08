@@ -67,6 +67,7 @@ class NextEventViewModel {
     private let dateProvider: DateProviding
     private let calendarService: CalendarServiceProviding
     private let geocoder: GeocodeServiceProviding
+    private let weatherService: WeatherServiceProviding
     private let workspace: WorkspaceServiceProviding
 
     init(
@@ -77,6 +78,7 @@ class NextEventViewModel {
         dateProvider: DateProviding,
         calendarService: CalendarServiceProviding,
         geocoder: GeocodeServiceProviding,
+        weatherService: WeatherServiceProviding,
         workspace: WorkspaceServiceProviding,
         screenProvider: ScreenProviding,
         isShowingDetails: AnyObserver<Bool>,
@@ -88,6 +90,7 @@ class NextEventViewModel {
         self.dateProvider = dateProvider
         self.calendarService = calendarService
         self.geocoder = geocoder
+        self.weatherService = weatherService
         self.popoverSettings = settings
         self.workspace = workspace
         self.isShowingDetails = isShowingDetails
@@ -264,6 +267,7 @@ class NextEventViewModel {
             dateProvider: dateProvider,
             calendarService: calendarService,
             geocoder: geocoder,
+            weatherService: weatherService,
             workspace: workspace,
             popoverSettings: popoverSettings,
             isShowingObserver: isShowingDetails,

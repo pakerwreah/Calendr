@@ -15,6 +15,7 @@ struct EventViewPreview: PreviewProvider {
     static let dateProvider = MockDateProvider()
     static let calendarService = MockCalendarServiceProvider()
     static let geocoder = MockGeocodeServiceProvider()
+    static let weatherService = MockWeatherServiceProvider()
     static let workspace = NSWorkspace.shared
     static let popoverSettings = MockPopoverSettings()
 
@@ -33,6 +34,7 @@ struct EventViewPreview: PreviewProvider {
                 dateProvider: dateProvider,
                 calendarService: calendarService,
                 geocoder: geocoder,
+                weatherService: weatherService,
                 workspace: workspace,
                 popoverSettings: popoverSettings,
                 isShowingDetails: .dummy(),
