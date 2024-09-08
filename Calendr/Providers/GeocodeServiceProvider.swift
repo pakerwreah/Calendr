@@ -7,7 +7,24 @@
 
 import CoreLocation
 
-typealias Coordinates = CLLocationCoordinate2D
+struct Coordinates: Hashable {
+    let latitude: CLLocationDegrees
+    let longitude: CLLocationDegrees
+}
+
+extension Coordinates {
+
+    init(_ location: CLLocationCoordinate2D) {
+        self.init(latitude: location.latitude, longitude: location.longitude)
+    }
+}
+
+extension CLLocationCoordinate2D {
+
+    init(_ location: Coordinates) {
+        self.init(latitude: location.latitude, longitude: location.longitude)
+    }
+}
 
 protocol GeocodeServiceProviding {
     func geocodeAddressString(_ address: String) async -> Coordinates?
@@ -28,12 +45,15 @@ where LocationCache.Key == String, LocationCache.Value == Coordinates? {
         guard !address.isEmpty else { return nil }
         
         if let location = cache.get(address) {
-            print("Cache hit for \"\(address)\"")
+            print("Cache hit for address: \"\(address)\"")
             return location
         }
 
         do {
-            let coordinates = try await geocoder.geocodeAddressString(address).first?.location?.coordinate
+            guard let location = try await geocoder.geocodeAddressString(address).first?.location?.coordinate else {
+                throw CLError(.geocodeFoundNoResult)
+            }
+            let coordinates = Coordinates(location)
             cache.set(address, coordinates)
             return coordinates
         } catch {
