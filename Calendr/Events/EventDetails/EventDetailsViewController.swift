@@ -70,7 +70,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         view = NSView()
 
         view.widthAnchor.constraint(lessThanOrEqualToConstant: 400).activate()
-        view.widthAnchor.constraint(greaterThanOrEqualToConstant: 200).activate()
+        view.widthAnchor.constraint(greaterThanOrEqualToConstant: 250).activate()
         view.widthAnchor.constraint(greaterThanOrEqualTo: view.heightAnchor, multiplier: 0.5).activate().priority = .dragThatCanResizeWindow
 
         scrollView.hasVerticalScroller = true
@@ -327,12 +327,6 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         }
     }
 
-    func mapView(_ mapView: MKMapView, viewFor annotation: any MKAnnotation) -> MKAnnotationView? {
-        let pin = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: nil)
-        pin.animatesWhenAdded = true
-        return pin
-    }
-
     private enum Map {
         static let height: CGFloat = 150
         static let distance: CLLocationDistance = 1000
@@ -342,10 +336,30 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         }
     }
 
+    func mapView(_ mapView: MKMapView, viewFor annotation: any MKAnnotation) -> MKAnnotationView? {
+        let pin = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: nil)
+        pin.animatesWhenAdded = true
+        return pin
+    }
+
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         guard let annotation = view.annotation else { return }
         mapView.deselectAnnotation(annotation, animated: false)
-        mapView.region = Map.region(for: .init(annotation.coordinate))
+        mapView.setCenter(annotation.coordinate, animated: true)
+    }
+
+    private var isMapVisible = false
+
+    func mapViewDidFinishRenderingMap(_ mapView: MKMapView, fullyRendered: Bool) {
+        guard !isMapVisible else { return }
+        isMapVisible = true
+
+        mapView.animator().alphaValue = 1
+        mapView.isScrollEnabled = true
+
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = mapView.region.center
+        mapView.addAnnotation(annotation)
     }
 
     private func addLocationMap(at index: Int) {
@@ -359,15 +373,12 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
                 mapView.delegate = self
                 mapView.height(equalTo: Map.height)
                 mapView.region = Map.region(for: coordinates)
-
-                let annotation = MKPointAnnotation()
-                annotation.coordinate = .init(coordinates)
-                mapView.addAnnotation(annotation)
+                mapView.alphaValue = 0.01
+                mapView.isScrollEnabled = false
 
                 detailsStackView.insertArrangedSubview(mapView, at: index)
             })
             .disposed(by: disposeBag)
-
     }
 
     private func addLocationWeather(in weatherContainer: NSView) {

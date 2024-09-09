@@ -34,8 +34,20 @@ class Popover: NSObject, PopoverWindowDelegate {
         present(from: view, edge: .maxY, spacing: 0, single: true)
     }
 
+    func show(from view: NSView, after delay: DispatchTimeInterval) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+            self.show(from: view)
+        }
+    }
+
     func push(from view: NSView) {
         present(from: view, edge: .minX, spacing: 8, single: false)
+    }
+
+    func push(from view: NSView, after delay: DispatchTimeInterval) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+            self.push(from: view)
+        }
     }
 
     func present(from view: NSView, edge: NSRectEdge, spacing: CGFloat, single: Bool) {
