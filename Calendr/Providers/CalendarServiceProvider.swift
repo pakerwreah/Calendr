@@ -171,7 +171,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
 
             let predicate = store.predicateForEvents(withStart: start, end: end, calendars: calendars)
 
-            let events = store.events(matching: predicate).map { EventModel(from: $0, dateProvider: dateProvider) }
+            let events = store.events(matching: predicate).compactMap { EventModel(from: $0, dateProvider: dateProvider) }
 
             observer(.success(events))
 
@@ -429,7 +429,8 @@ private extension Array where Element == Participant {
 
 private extension EventModel {
 
-    init(from event: EKEvent, dateProvider: DateProviding) {
+    init?(from event: EKEvent, dateProvider: DateProviding) {
+        guard let calendar = event.calendar else { return nil }
         self.init(
             id: event.calendarItemIdentifier,
             start: event.startDate,
@@ -440,15 +441,16 @@ private extension EventModel {
             url: event.url,
             isAllDay: event.shouldBeAllDay(dateProvider),
             type: .init(from: event),
-            calendar: .init(from: event.calendar),
+            calendar: .init(from: calendar),
             participants: .init(from: event),
-            timeZone: event.calendar.isSubscribed || event.calendar.isDelegate ? nil : event.timeZone,
+            timeZone: calendar.isSubscribed || calendar.isDelegate ? nil : event.timeZone,
             hasRecurrenceRules: event.hasRecurrenceRules
         )
     }
 
     init?(from reminder: EKReminder, dateProvider: DateProviding) {
         guard 
+            let calendar = reminder.calendar,
             let dueDateComponents = reminder.dueDateComponents,
             let date = dateProvider.calendar.date(from: dueDateComponents)
         else { return nil }
@@ -461,11 +463,11 @@ private extension EventModel {
             location: reminder.location, // doesn't work
             notes: reminder.notes,
             url: reminder.url, // doesn't work
-            isAllDay: reminder.dueDateComponents!.hour == nil,
+            isAllDay: dueDateComponents.hour == nil,
             type: .reminder,
-            calendar: .init(from: reminder.calendar),
+            calendar: .init(from: calendar),
             participants: [],
-            timeZone: reminder.calendar.isSubscribed || reminder.calendar.isDelegate ? nil : reminder.timeZone,
+            timeZone: calendar.isSubscribed || calendar.isDelegate ? nil : reminder.timeZone,
             hasRecurrenceRules: reminder.hasRecurrenceRules
         )
     }
