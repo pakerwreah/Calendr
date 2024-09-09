@@ -442,7 +442,7 @@ private extension EventModel {
             type: .init(from: event),
             calendar: .init(from: event.calendar),
             participants: .init(from: event),
-            timeZone: event.calendar.isSubscribed ? nil : event.timeZone,
+            timeZone: event.calendar.isSubscribed || event.calendar.isDelegate ? nil : event.timeZone,
             hasRecurrenceRules: event.hasRecurrenceRules
         )
     }
@@ -465,9 +465,20 @@ private extension EventModel {
             type: .reminder,
             calendar: .init(from: reminder.calendar),
             participants: [],
-            timeZone: reminder.calendar.isSubscribed ? nil : reminder.timeZone,
+            timeZone: reminder.calendar.isSubscribed || reminder.calendar.isDelegate ? nil : reminder.timeZone,
             hasRecurrenceRules: reminder.hasRecurrenceRules
         )
+    }
+}
+
+private extension EKCalendar {
+
+    var isDelegate: Bool {
+        if #available(macOS 13.0, *) {
+            return source.isDelegate
+        } else {
+            return false
+        }
     }
 }
 
