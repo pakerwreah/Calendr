@@ -26,6 +26,7 @@ class EventDetailsViewModel {
     let link: EventLink?
     let popoverSettings: PopoverSettings
     let showSkip: Bool
+    let optimisticLoadTime: DispatchTimeInterval
 
     let coordinates: Maybe<Coordinates>
     let weather: Maybe<(Weather, isAllDay: Bool)>
@@ -43,6 +44,8 @@ class EventDetailsViewModel {
 
     private let callback: AnyObserver<ContextCallbackAction>
     private let action = PublishSubject<ContextCallbackAction>()
+
+    private let disposeBag = DisposeBag()
 
     var accessibilityIdentifier: String? {
         switch type {
@@ -158,6 +161,9 @@ class EventDetailsViewModel {
         .share(replay: 1, scope: .forever)
         .asMaybe()
 
+        // trigger early fetch and keep value
+        coordinates.subscribe().disposed(by: disposeBag)
+
         weather = coordinates.flatMap { coordinates in
             Maybe.create { observer in
                 Task {
@@ -173,6 +179,11 @@ class EventDetailsViewModel {
         .asObservable()
         .share(replay: 1, scope: .forever)
         .asMaybe()
+
+        // trigger early fetch and keep value
+        weather.subscribe().disposed(by: disposeBag)
+
+        optimisticLoadTime = .milliseconds(event.location.isNilOrEmpty ? 0 : 50)
     }
 
     func makeContextMenuViewModel() -> (any ContextMenuViewModel)? {

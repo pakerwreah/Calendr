@@ -232,12 +232,13 @@ class EventView: NSView {
         }
         .withUnretained(self)
         .flatMapFirst { [viewModel] view, _ -> Observable<Void> in
-            let vc = EventDetailsViewController(viewModel: viewModel.makeDetailsViewModel())
+            let vm = viewModel.makeDetailsViewModel()
+            let vc = EventDetailsViewController(viewModel: vm)
             let popover = Popover()
             popover.behavior = .transient
             popover.contentViewController = vc
             popover.delegate = vc
-            popover.push(from: view)
+            popover.push(from: view, after: vm.optimisticLoadTime)
 
             return popover.rx.deallocated
                 // prevent reopening immediately after dismiss

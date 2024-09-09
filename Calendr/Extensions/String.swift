@@ -47,3 +47,8 @@ extension StringProtocol {
         replacingCharacters(in: ...startIndex, with: prefix(1).uppercased())
     }
 }
+
+extension Optional where Wrapped: StringProtocol {
+    
+    var isNilOrEmpty: Bool { self == nil || self!.isEmpty }
+}
