@@ -333,6 +333,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
     }
 
     private enum Map {
+        static let corner: CGFloat = 6
         static let height: CGFloat = 150
         static let distance: CLLocationDistance = 1000
         
@@ -377,6 +378,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
                 let mapView = MKMapView()
                 mapView.delegate = self
                 mapView.height(equalTo: Map.height)
+                mapView.layer?.cornerRadius = Map.corner
                 mapView.region = Map.region(for: coordinates)
                 mapView.alphaValue = 0.01
                 mapView.isScrollEnabled = false
