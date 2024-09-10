@@ -50,7 +50,11 @@ where LocationCache.Key == String, LocationCache.Value == Coordinates? {
         }
 
         do {
-            guard let location = try await geocoder.geocodeAddressString(address).first?.location?.coordinate else {
+            let sanitized = address.replacingOccurrences(of: ["(", ")"], with: " ")
+
+            let placemarks = try await geocoder.geocodeAddressString(sanitized)
+
+            guard let location = placemarks.first?.location?.coordinate else {
                 throw CLError(.geocodeFoundNoResult)
             }
             let coordinates = Coordinates(location)
