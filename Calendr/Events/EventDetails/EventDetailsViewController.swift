@@ -384,7 +384,24 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
                 mapView.isScrollEnabled = false
 
                 detailsStackView.insertArrangedSubview(mapView, at: index)
+
+                addMapButton(in: mapView, for: coordinates)
             })
+            .disposed(by: disposeBag)
+    }
+
+    func addMapButton(in mapView: MKMapView, for coordinates: Coordinates) {
+
+        let mapButton = ImageButton(image: Icons.EventDetails.map)
+        mapView.addSubview(mapButton)
+        
+        mapButton.size(equalTo: 26)
+        mapButton.bottom(equalTo: mapView, constant: 2)
+        mapButton.trailing(equalTo: mapView, constant: 2)
+
+        mapButton.rx.tap
+            .map(coordinates)
+            .bind(to: viewModel.openMaps)
             .disposed(by: disposeBag)
     }
 

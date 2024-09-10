@@ -35,6 +35,7 @@ class EventDetailsViewModel {
 
     let linkTapped: AnyObserver<Void>
     let skipTapped: AnyObserver<Void>
+    let openMaps: AnyObserver<Coordinates>
     let isShowingObserver: AnyObserver<Bool>
 
     private let event: EventModel
@@ -96,6 +97,22 @@ class EventDetailsViewModel {
         linkTapped = .init { [link] _ in
             if let link {
                 workspace.open(link.url)
+            }
+        }
+
+        openMaps = .init {
+            guard
+                let c = $0.element,
+                var url = URLComponents(string: "maps://")
+            else { return }
+
+            url.queryItems = [
+                URLQueryItem(name: "ll", value: "\(c.latitude),\(c.longitude)"),
+                URLQueryItem(name: "q", value: event.title),
+            ]
+            
+            if let url = url.url {
+                workspace.open(url)
             }
         }
 
