@@ -77,6 +77,8 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         scrollView.scrollerStyle = .overlay
         scrollView.drawsBackground = false
         scrollView.documentView = detailsStackView.forAutoLayout()
+        detailsStackView.edgeInsets = .init(horizontal: 12)
+        detailsStackView.setHuggingPriority(.required, for: .horizontal)
 
         scrollView.contentView.edges(to: scrollView)
         scrollView.contentView.top(equalTo: detailsStackView)
@@ -93,7 +95,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
 
         view.addSubview(contentStackView)
 
-        contentStackView.edges(to: view, constant: 12)
+        contentStackView.edges(to: view, insets: .init(vertical: 12))
 
         setUpIcon()
         setUpLink()
@@ -307,7 +309,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
             locationLabel.stringValue = viewModel.location
             detailsStackView.addArrangedSubview(makeLine())
             
-            let weatherContainer = NSView().with(size: CGSize(width: 34, height: 26))
+            let weatherContainer = NSView().with(size: CGSize(width: 30, height: 26))
 
             let locationStack = NSStackView(.horizontal).with(alignment: .centerY)
             locationStack.addArrangedSubview(locationLabel)
