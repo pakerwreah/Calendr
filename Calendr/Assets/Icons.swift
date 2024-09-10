@@ -60,5 +60,6 @@ enum Icons {
 
     enum EventDetails {
         static let optionsArrow = NSImage(systemName: "chevron.down")
+        static let map = NSImage(systemName: "map.fill")
     }
 }

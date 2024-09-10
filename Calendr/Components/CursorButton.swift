@@ -53,6 +53,7 @@ class CursorButton: NSButton {
     }
 
     override func mouseExited(with event: NSEvent) {
+        NSCursor.arrow.set()
         super.mouseExited(with: event)
         super.cursorUpdate(with: event)
     }
