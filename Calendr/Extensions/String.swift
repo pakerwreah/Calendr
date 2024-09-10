@@ -15,10 +15,15 @@ extension StringProtocol {
         trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
+    func replacingOccurrences(of set: CharacterSet, with replacement: any StringProtocol) -> String {
+
+        String(components(separatedBy: set).joined(separator: replacement))
+    }
+
     func html(font: NSFont, color: NSColor) -> NSAttributedString? {
 
         guard
-            let data = replacingOccurrences(of: "\n", with: "<br>").data(using: .unicode),
+            let data = replacingOccurrences(of: .newlines, with: "<br>").data(using: .unicode),
             let attribStr = NSMutableAttributedString(html: data, documentAttributes: nil)
         else { return nil }
 

@@ -62,7 +62,7 @@ class EventViewModel {
         barStyle = event.status ~= .maybe ? .bordered : .filled
         link = event.detectLink(using: workspace)
 
-        var subtitleText = event.location?.trimmed ?? ""
+        var subtitleText = event.location?.trimmed.replacingOccurrences(of: .newlines, with: " ") ?? ""
         let linkText = link?.url.domain
         let notes = event.notes?.trimmed ?? ""
 

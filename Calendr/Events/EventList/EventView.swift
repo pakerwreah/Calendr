@@ -131,8 +131,9 @@ class EventView: NSView {
         duration.textColor = .secondaryLabelColor
         duration.font = .systemFont(ofSize: 11)
 
-        subtitle.lineBreakMode = .byTruncatingTail
+        subtitle.lineBreakMode = .byWordWrapping
         subtitle.maximumNumberOfLines = 2
+        subtitle.cell?.truncatesLastVisibleLine = true
         subtitle.textColor = .secondaryLabelColor
         subtitle.font = .systemFont(ofSize: 10)
 
