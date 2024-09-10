@@ -272,6 +272,8 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
             label.textColor = .labelColor
             label.lineBreakMode = .byWordWrapping
             label.isSelectable = true
+            label.setContentHuggingPriority(.required, for: .vertical)
+            label.setContentCompressionResistancePriority(.required, for: .vertical)
         }
 
         titleLabel.forceVibrancy = false
@@ -312,6 +314,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
             let weatherContainer = NSView().with(size: CGSize(width: 30, height: 26))
 
             let locationStack = NSStackView(.horizontal).with(alignment: .centerY)
+            locationStack.setHuggingPriority(.defaultHigh, for: .vertical)
             locationStack.addArrangedSubview(locationLabel)
             locationStack.addArrangedSubview(weatherContainer)
 
