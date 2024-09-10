@@ -476,7 +476,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         button.title = weekDay.title
         button.font = .monospacedSystemFont(ofSize: 11, weight: .semibold)
         button.refusesFirstResponder = true
-        button.bezelStyle = .recessed
+        button.bezelStyle = .accessoryBar
         button.setButtonType(.pushOnPushOff)
 
         bind(

@@ -14,7 +14,7 @@ class ImageButton: CursorButton {
         self.image = image
 
         isBordered = false
-        bezelStyle = .roundRect
+        bezelStyle = .accessoryBarAction
         showsBorderOnlyWhileMouseInside = true // this actually controls highlight ¯\_(ツ)_/¯
         setContentCompressionResistancePriority(.required, for: .horizontal)
     }

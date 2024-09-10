@@ -39,7 +39,7 @@ class AboutViewController: NSViewController {
 
         newVersionButton.target = self
         newVersionButton.refusesFirstResponder = true
-        newVersionButton.bezelStyle = .roundRect
+        newVersionButton.bezelStyle = .accessoryBarAction
 
         setUpAccessibility()
         setUpBindings()
