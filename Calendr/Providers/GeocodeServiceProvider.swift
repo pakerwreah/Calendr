@@ -6,6 +6,7 @@
 //
 
 import CoreLocation
+import MapKit
 
 struct Coordinates: Hashable {
     let latitude: CLLocationDegrees
@@ -43,34 +44,65 @@ where LocationCache.Key == String, LocationCache.Value == Coordinates? {
     func geocodeAddressString(_ address: String) async -> Coordinates? {
 
         guard !address.isEmpty else { return nil }
-        
+
         if let location = cache.get(address) {
             print("Cache hit for address: \"\(address)\"")
             return location
         }
 
+        let sanitized = address.replacingOccurrences(of: ["(", ")"], with: " ")
+
         do {
-            let sanitized = address.replacingOccurrences(of: ["(", ")"], with: " ")
+            let geocoderLocation = try await geocoderLocation(for: sanitized)
+            let searchLocation = try await searchLocation(for: sanitized, in: geocoderLocation)
 
-            let placemarks = try await geocoder.geocodeAddressString(sanitized)
-
-            guard let location = placemarks.first?.location?.coordinate else {
-                throw CLError(.geocodeFoundNoResult)
+            guard let location = searchLocation ?? geocoderLocation else {
+                cache.set(address, nil)
+                return nil
             }
+
             let coordinates = Coordinates(location)
             cache.set(address, coordinates)
             return coordinates
         } catch {
-            guard let error = error as? CLError else {
-                print(error.localizedDescription)
-                return nil
-            }
-            guard error.code == .geocodeFoundNoResult else {
-                print("Geocode failed with code", error.errorCode)
-                return nil
+            print(error.localizedDescription)
+            return nil
+        }
+    }
+
+    private func geocoderLocation(for address: String) async throws -> CLLocationCoordinate2D? {
+        do {
+            let placemarks = try await geocoder.geocodeAddressString(address)
+            return placemarks.first?.location?.coordinate
+        } catch {
+            guard let error = error as? CLError, error.code == .geocodeFoundNoResult else {
+                throw error
             }
             print("Geocode found no result for \"\(address)\"")
-            cache.set(address, nil)
+            return nil
+        }
+    }
+
+    private func searchLocation(for address: String, in geocoderLocation: CLLocationCoordinate2D?) async throws -> CLLocationCoordinate2D? {
+        let searchDistance: CLLocationDistance = 10000
+        let searchRequest = MKLocalSearch.Request()
+        searchRequest.naturalLanguageQuery = address
+
+        if let geocoderLocation {
+            searchRequest.region = MKCoordinateRegion(
+                center: geocoderLocation,
+                latitudinalMeters: searchDistance,
+                longitudinalMeters: searchDistance
+            )
+        }
+        do {
+            let results = try await MKLocalSearch(request: searchRequest).start()
+            return results.mapItems.first?.placemark.coordinate
+        } catch {
+            guard let error = error as? MKError, error.code == .placemarkNotFound else {
+                throw error
+            }
+            print("Placemark not found for \"\(address)\"")
             return nil
         }
     }
