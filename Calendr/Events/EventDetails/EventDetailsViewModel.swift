@@ -166,11 +166,19 @@ class EventDetailsViewModel {
 
         coordinates = Maybe.create { observer in
             Task {
-                guard let coordinates = await geocoder.geocodeAddressString(event.location ?? "") else {
+                guard let address = event.location, !address.isEmpty else {
                     observer(.completed)
                     return
                 }
-                observer(.success(coordinates))
+                if let coordinates = event.coordinates {
+                    observer(.success(coordinates))
+                }
+                else if let coordinates = await geocoder.geocodeAddressString(address) {
+                    observer(.success(coordinates))
+                }
+                else {
+                    observer(.completed)
+                }
             }
             return Disposables.create()
         }

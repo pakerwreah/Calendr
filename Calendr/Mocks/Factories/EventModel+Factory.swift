@@ -33,6 +33,7 @@ extension EventModel {
             end: type.isReminder ? Calendar.gregorian.endOfDay(for: start) : end,
             title: title,
             location: location,
+            coordinates: nil,
             notes: notes,
             url: url,
             isAllDay: isAllDay || type.isBirthday,
