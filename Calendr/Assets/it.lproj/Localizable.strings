@@ -35,6 +35,7 @@
 "settings.calendar.show_declined_events_tooltip" = "Questo funziona solo se attivato nell'app di sistema Calendar.";
 
 "settings.events" = "Eventi";
+"settings.events.show_map" = "Mostra mappa e meteo";
 "settings.events.finished" = "Finiti";
 "settings.events.finished.fade" = "Dissolvi";
 "settings.events.finished.hide" = "Nascondi";

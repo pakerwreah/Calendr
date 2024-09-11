@@ -35,6 +35,7 @@
 "settings.calendar.show_declined_events_tooltip" = "Isso só funciona se também estiver ativado no aplicativo Calendário nativo.";
 
 "settings.events" = "Eventos";
+"settings.events.show_map" = "Mostrar mapa e clima";
 "settings.events.finished" = "Terminados";
 "settings.events.finished.fade" = "Sombrear";
 "settings.events.finished.hide" = "Ocultar";

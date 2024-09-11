@@ -18,7 +18,7 @@ class EventViewModelFadeTests: XCTestCase {
     let geocoder = MockGeocodeServiceProvider()
     let weatherService = MockWeatherServiceProvider()
     let workspace = MockWorkspaceServiceProvider()
-    let popoverSettings = MockPopoverSettings()
+    let settings = MockEventDetailsSettings()
 
     func testFade_isAllDay_shouldNotFade() {
 
@@ -238,7 +238,7 @@ class EventViewModelFadeTests: XCTestCase {
             geocoder: geocoder,
             weatherService: weatherService,
             workspace: workspace,
-            popoverSettings: popoverSettings,
+            settings: settings,
             isShowingDetails: .dummy(),
             isTodaySelected: isTodaySelected,
             scheduler: MainScheduler.instance

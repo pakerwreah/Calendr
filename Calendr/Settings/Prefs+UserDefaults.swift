@@ -33,11 +33,14 @@ enum Prefs {
     static let showDeclinedEvents = "show_declined_events"
     static let preserveSelectedDate = "preserve_selected_date"
 
+    // Event Details
+    static let showMap = "show_map"
+
     // Events
     static let showPastEvents = "show_past_events"
-    static let transparencyLevel = "transparency_level"
 
     // Misc
+    static let transparencyLevel = "transparency_level"
     static let lastCheckedVersion = "last_checked_version"
     static let updatedVersion = "updated_version"
     static let permissionSuppressed = "permission_suppressed"
@@ -72,8 +75,13 @@ func registerDefaultPrefs(in userDefaults: UserDefaults, calendar: Calendar = .c
         Prefs.showDeclinedEvents: false,
         Prefs.preserveSelectedDate: false,
 
+        // Event Details
+        Prefs.showMap: true,
+
         // Events
         Prefs.showPastEvents: true,
+
+        // Misc
         Prefs.transparencyLevel: 2
     ])
 }
@@ -181,6 +189,13 @@ extension UserDefaults {
         set { set(newValue, forKey: Prefs.preserveSelectedDate) }
     }
 
+    // Event Details
+
+    @objc dynamic var showMap: Bool {
+        get { bool(forKey: Prefs.showMap) }
+        set { set(newValue, forKey: Prefs.showMap) }
+    }
+
     // Events
 
     @objc dynamic var showPastEvents: Bool {
@@ -188,12 +203,12 @@ extension UserDefaults {
         set { set(newValue, forKey: Prefs.showPastEvents) }
     }
 
+    // Misc
+
     @objc dynamic var transparencyLevel: Int {
         get { integer(forKey: Prefs.transparencyLevel) }
         set { set(newValue, forKey: Prefs.transparencyLevel) }
     }
-
-    // Misc
 
     @objc dynamic var lastCheckedVersion: String? {
         get { string(forKey: Prefs.lastCheckedVersion) }

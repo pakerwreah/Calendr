@@ -56,15 +56,16 @@ protocol CalendarSettings {
     var preserveSelectedDate: Observable<Bool> { get }
 }
 
-protocol PopoverSettings {
+protocol EventDetailsSettings {
+    var showMap: Observable<Bool> { get }
     var popoverMaterial: Observable<PopoverMaterial> { get }
 }
 
-protocol EventListSettings: PopoverSettings {
+protocol EventListSettings: EventDetailsSettings {
     var showPastEvents: Observable<Bool> { get }
 }
 
-protocol NextEventSettings: PopoverSettings {
+protocol NextEventSettings: EventDetailsSettings {
     var showEventStatusItem: Observable<Bool> { get }
     var eventStatusItemFontSize: Observable<Float> { get }
     var eventStatusItemCheckRange: Observable<Int> { get }
@@ -105,6 +106,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
     let toggleWeekNumbers: AnyObserver<Bool>
     let toggleDeclinedEvents: AnyObserver<Bool>
     let togglePreserveSelectedDate: AnyObserver<Bool>
+    let toggleMap: AnyObserver<Bool>
     let togglePastEvents: AnyObserver<Bool>
     let transparencyObserver: AnyObserver<Int>
 
@@ -132,6 +134,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
     let showWeekNumbers: Observable<Bool>
     let showDeclinedEvents: Observable<Bool>
     let preserveSelectedDate: Observable<Bool>
+    let showMap: Observable<Bool>
     let showPastEvents: Observable<Bool>
     let popoverTransparency: Observable<Int>
     let popoverMaterial: Observable<PopoverMaterial>
@@ -171,6 +174,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
         toggleWeekNumbers = userDefaults.rx.observer(for: \.showWeekNumbers)
         toggleDeclinedEvents = userDefaults.rx.observer(for: \.showDeclinedEvents)
         togglePreserveSelectedDate = userDefaults.rx.observer(for: \.preserveSelectedDate)
+        toggleMap = userDefaults.rx.observer(for: \.showMap)
         togglePastEvents = userDefaults.rx.observer(for: \.showPastEvents)
         transparencyObserver = userDefaults.rx.observer(for: \.transparencyLevel)
 
@@ -206,6 +210,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
         showWeekNumbers = userDefaults.rx.observe(\.showWeekNumbers)
         showDeclinedEvents = userDefaults.rx.observe(\.showDeclinedEvents)
         preserveSelectedDate = userDefaults.rx.observe(\.preserveSelectedDate)
+        showMap = userDefaults.rx.observe(\.showMap)
         showPastEvents = userDefaults.rx.observe(\.showPastEvents)
         popoverTransparency = userDefaults.rx.observe(\.transparencyLevel)
 

@@ -129,7 +129,7 @@ class EventListViewModel {
             geocoder: geocoder,
             weatherService: weatherService,
             workspace: workspace,
-            popoverSettings: settings,
+            settings: settings,
             isShowingDetails: isShowingDetails.asObserver(),
             isTodaySelected: isTodaySelected,
             scheduler: scheduler

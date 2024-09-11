@@ -141,6 +141,8 @@ internal enum Strings {
     internal enum Events {
       /// Finished
       internal static let finished = Strings.tr("Localizable", "settings.events.finished", fallback: "Finished")
+      /// Show map and weather
+      internal static let showMap = Strings.tr("Localizable", "settings.events.show_map", fallback: "Show map and weather")
       internal enum Finished {
         /// Fade
         internal static let fade = Strings.tr("Localizable", "settings.events.finished.fade", fallback: "Fade")

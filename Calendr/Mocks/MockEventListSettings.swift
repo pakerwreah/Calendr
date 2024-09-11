@@ -10,7 +10,7 @@
 import Foundation
 import RxSwift
 
-class MockEventListSettings: MockPopoverSettings, EventListSettings {
+class MockEventListSettings: MockEventDetailsSettings, EventListSettings {
 
     let showPastEvents: Observable<Bool>
 

@@ -310,19 +310,23 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         if !viewModel.location.isEmpty {
             locationLabel.stringValue = viewModel.location
             detailsStackView.addArrangedSubview(makeLine())
-            
-            let weatherContainer = NSView().with(size: CGSize(width: 30, height: 26))
 
-            let locationStack = NSStackView(.horizontal).with(alignment: .centerY)
-            locationStack.setHuggingPriority(.defaultHigh, for: .vertical)
-            locationStack.addArrangedSubview(locationLabel)
-            locationStack.addArrangedSubview(weatherContainer)
+            if viewModel.canShowMap.value {
+                let weatherContainer = NSView().with(size: CGSize(width: 30, height: 26))
 
-            detailsStackView.addArrangedSubview(locationStack)
-            
-            let mapIndex = detailsStackView.arrangedSubviews.count
-            addLocationMap(at: mapIndex)
-            addLocationWeather(in: weatherContainer)
+                let locationStack = NSStackView(.horizontal).with(alignment: .centerY)
+                locationStack.setHuggingPriority(.defaultHigh, for: .vertical)
+                locationStack.addArrangedSubview(locationLabel)
+                locationStack.addArrangedSubview(weatherContainer)
+
+                detailsStackView.addArrangedSubview(locationStack)
+
+                let mapIndex = detailsStackView.arrangedSubviews.count
+                addLocationMap(at: mapIndex)
+                addLocationWeather(in: weatherContainer)
+            } else {
+                detailsStackView.addArrangedSubview(locationLabel)
+            }
         }
 
         if !viewModel.duration.isEmpty {
@@ -528,7 +532,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
             .take(1)
 
         Observable.combineLatest(
-            popoverView, viewModel.popoverSettings.popoverMaterial
+            popoverView, viewModel.settings.popoverMaterial
         )
         .bind { $0.material = $1 }
         .disposed(by: disposeBag)

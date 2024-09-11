@@ -63,7 +63,7 @@ class NextEventViewModel {
 
     private let type: NextEventType
     private let userDefaults: UserDefaults
-    private let popoverSettings: PopoverSettings
+    private let settings: EventDetailsSettings
     private let dateProvider: DateProviding
     private let calendarService: CalendarServiceProviding
     private let geocoder: GeocodeServiceProviding
@@ -91,7 +91,7 @@ class NextEventViewModel {
         self.calendarService = calendarService
         self.geocoder = geocoder
         self.weatherService = weatherService
-        self.popoverSettings = settings
+        self.settings = settings
         self.workspace = workspace
         self.isShowingDetails = isShowingDetails
         self.fontSize = settings.eventStatusItemFontSize
@@ -269,7 +269,7 @@ class NextEventViewModel {
             geocoder: geocoder,
             weatherService: weatherService,
             workspace: workspace,
-            popoverSettings: popoverSettings,
+            settings: settings,
             isShowingObserver: isShowingDetails,
             isInProgress: isInProgress,
             source: .menubar,

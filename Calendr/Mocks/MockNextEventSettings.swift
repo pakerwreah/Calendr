@@ -9,7 +9,7 @@
 
 import RxSwift
 
-class MockNextEventSettings: MockPopoverSettings, NextEventSettings {
+class MockNextEventSettings: MockEventDetailsSettings, NextEventSettings {
 
     let showEventStatusItem: Observable<Bool>
     let eventStatusItemFontSize: Observable<Float>

@@ -16,7 +16,7 @@ class EventViewModelLinkTests: XCTestCase {
     let geocoder = MockGeocodeServiceProvider()
     let weatherService = MockWeatherServiceProvider()
     let workspace = MockWorkspaceServiceProvider()
-    let popoverSettings = MockPopoverSettings()
+    let settings = MockEventDetailsSettings()
 
     func testLink_withRegularLocation_withoutURL_shouldNotShowLinkButton() {
 
@@ -174,7 +174,7 @@ class EventViewModelLinkTests: XCTestCase {
             geocoder: geocoder,
             weatherService: weatherService,
             workspace: workspace,
-            popoverSettings: popoverSettings,
+            settings: settings,
             isShowingDetails: .dummy(),
             isTodaySelected: true,
             scheduler: MainScheduler.instance

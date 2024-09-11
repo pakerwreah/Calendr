@@ -18,7 +18,7 @@ class EventViewModelTests: XCTestCase {
     let geocoder = MockGeocodeServiceProvider()
     let weatherService = MockWeatherServiceProvider()
     let workspace = MockWorkspaceServiceProvider()
-    let popoverSettings = MockPopoverSettings()
+    let settings = MockEventDetailsSettings()
 
     override func setUp() {
         dateProvider.m_calendar.locale = Locale(identifier: "en_US")
@@ -331,7 +331,7 @@ class EventViewModelTests: XCTestCase {
             geocoder: geocoder,
             weatherService: weatherService,
             workspace: workspace,
-            popoverSettings: popoverSettings,
+            settings: settings,
             isShowingDetails: .dummy(),
             isTodaySelected: true,
             scheduler: MainScheduler.instance
