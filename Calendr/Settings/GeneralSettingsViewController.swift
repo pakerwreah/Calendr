@@ -40,6 +40,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     private let preserveSelectedDateCheckbox = Checkbox(title: Strings.Settings.Calendar.preserveSelectedDate)
 
     // Events
+    private let showMapCheckbox = Checkbox(title: Strings.Settings.Events.showMap)
     private let fadePastEventsRadio = Radio(title: Strings.Settings.Events.Finished.fade)
     private let hidePastEventsRadio = Radio(title: Strings.Settings.Events.Finished.hide)
 
@@ -262,7 +263,11 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     let finishedLabel = Label(text: "\(Strings.Settings.Events.finished):", font: .systemFont(ofSize: 13))
 
     private lazy var eventsContent: NSView = {
-        NSStackView(views: [finishedLabel, .spacer, fadePastEventsRadio, hidePastEventsRadio])
+        NSStackView(views: [
+            showMapCheckbox,
+            .spacer,
+            NSStackView(views: [finishedLabel, .spacer, fadePastEventsRadio, hidePastEventsRadio])
+        ]).with(orientation: .vertical)
     }()
 
     private func setUpBindings() {
@@ -500,6 +505,12 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     }
 
     private func setUpEvents() {
+
+        bind(
+            control: showMapCheckbox,
+            observable: viewModel.showMap,
+            observer: viewModel.toggleMap
+        )
 
         bind(
             control: fadePastEventsRadio,

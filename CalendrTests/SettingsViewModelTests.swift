@@ -40,6 +40,7 @@ class SettingsViewModelTests: XCTestCase {
     var userDefaultsShowWeekNumbers: Bool? { userDefaults.object(forKey: Prefs.showWeekNumbers) as! Bool? }
     var userDefaultsShowDeclinedEvents: Bool? { userDefaults.object(forKey: Prefs.showDeclinedEvents) as! Bool? }
     var userDefaultsPreserveSelectedDate: Bool? { userDefaults.object(forKey: Prefs.preserveSelectedDate) as! Bool? }
+    var userDefaultsShowMap: Bool? { userDefaults.object(forKey: Prefs.showMap) as! Bool? }
     var userDefaultsShowPastEvents: Bool? { userDefaults.object(forKey: Prefs.showPastEvents) as! Bool? }
     var userDefaultsTransparency: Int? { userDefaults.object(forKey: Prefs.transparencyLevel) as! Int? }
 
@@ -62,6 +63,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertNil(userDefaultsShowWeekNumbers)
         XCTAssertNil(userDefaultsShowDeclinedEvents)
         XCTAssertNil(userDefaultsPreserveSelectedDate)
+        XCTAssertNil(userDefaultsShowMap)
         XCTAssertNil(userDefaultsShowPastEvents)
         XCTAssertNil(userDefaultsTransparency)
 
@@ -85,6 +87,7 @@ class SettingsViewModelTests: XCTestCase {
         var showWeekNumbers: Bool?
         var showDeclinedEvents: Bool?
         var preserveSelectedDate: Bool?
+        var showMap: Bool?
         var showPastEvents: Bool?
         var popoverTransparency: Int?
         var popoverMaterial: PopoverMaterial?
@@ -149,6 +152,10 @@ class SettingsViewModelTests: XCTestCase {
             .bind { preserveSelectedDate = $0 }
             .disposed(by: disposeBag)
 
+        viewModel.showMap
+            .bind { showMap = $0 }
+            .disposed(by: disposeBag)
+
         viewModel.showPastEvents
             .bind { showPastEvents = $0 }
             .disposed(by: disposeBag)
@@ -176,6 +183,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(showWeekNumbers, false)
         XCTAssertEqual(showDeclinedEvents, false)
         XCTAssertEqual(preserveSelectedDate, false)
+        XCTAssertEqual(showMap, true)
         XCTAssertEqual(showPastEvents, true)
         XCTAssertEqual(popoverTransparency, 2)
         XCTAssertEqual(popoverMaterial, .headerView)
@@ -195,6 +203,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(userDefaultsShowWeekNumbers, false)
         XCTAssertEqual(userDefaultsShowDeclinedEvents, false)
         XCTAssertEqual(userDefaultsPreserveSelectedDate, false)
+        XCTAssertEqual(userDefaultsShowMap, true)
         XCTAssertEqual(userDefaultsShowPastEvents, true)
         XCTAssertEqual(userDefaultsTransparency, 2)
     }
@@ -552,6 +561,30 @@ class SettingsViewModelTests: XCTestCase {
 
         XCTAssertEqual(preserveSelectedDate, true)
         XCTAssertEqual(userDefaultsPreserveSelectedDate, true)
+    }
+
+    func testToggleShowMap() {
+
+        userDefaults.showMap = false
+
+        var showMap: Bool?
+
+        viewModel.showMap
+            .bind { showMap = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(showMap, false)
+        XCTAssertEqual(userDefaultsShowMap, false)
+
+        viewModel.toggleMap.onNext(true)
+
+        XCTAssertEqual(showMap, true)
+        XCTAssertEqual(userDefaultsShowMap, true)
+
+        viewModel.toggleMap.onNext(false)
+
+        XCTAssertEqual(showMap, false)
+        XCTAssertEqual(userDefaultsShowMap, false)
     }
 
     func testToggleShowPastEvents() {

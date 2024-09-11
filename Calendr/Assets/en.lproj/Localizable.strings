@@ -45,6 +45,7 @@
 "settings.calendar.show_declined_events_tooltip" = "This only works if it is also enabled in the native Calendar app.";
 
 "settings.events" = "Events";
+"settings.events.show_map" = "Show map and weather";
 "settings.events.finished" = "Finished";
 "settings.events.finished.fade" = "Fade";
 "settings.events.finished.hide" = "Hide";

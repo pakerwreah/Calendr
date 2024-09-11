@@ -17,7 +17,7 @@ struct EventDetailsPreview: PreviewProvider {
     static let geocoder = MockGeocodeServiceProvider()
     static let weatherService = MockWeatherServiceProvider()
     static let workspace = NSWorkspace.shared
-    static let popoverSettings = MockPopoverSettings()
+    static let settings = MockEventDetailsSettings()
     static var vcs: [NSViewController] = []
 
     static func makeMeeting() -> some View {
@@ -38,7 +38,7 @@ struct EventDetailsPreview: PreviewProvider {
                 geocoder: geocoder,
                 weatherService: weatherService,
                 workspace: workspace,
-                popoverSettings: popoverSettings,
+                settings: settings,
                 isShowingObserver: .dummy(),
                 isInProgress: .just(false),
                 source: .menubar,
@@ -68,7 +68,7 @@ struct EventDetailsPreview: PreviewProvider {
                 geocoder: geocoder,
                 weatherService: weatherService,
                 workspace: workspace,
-                popoverSettings: popoverSettings,
+                settings: settings,
                 isShowingObserver: .dummy(),
                 isInProgress: .just(false),
                 source: .menubar,
@@ -94,7 +94,7 @@ struct EventDetailsPreview: PreviewProvider {
                 geocoder: geocoder,
                 weatherService: weatherService,
                 workspace: workspace,
-                popoverSettings: popoverSettings,
+                settings: settings,
                 isShowingObserver: .dummy(),
                 isInProgress: .just(false),
                 source: .menubar,
@@ -119,7 +119,7 @@ struct EventDetailsPreview: PreviewProvider {
                 geocoder: geocoder,
                 weatherService: weatherService,
                 workspace: workspace,
-                popoverSettings: popoverSettings,
+                settings: settings,
                 isShowingObserver: .dummy(),
                 isInProgress: .just(false),
                 source: .menubar,

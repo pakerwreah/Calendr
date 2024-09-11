@@ -8,7 +8,7 @@
 import RxSwift
 @testable import Calendr
 
-class MockEventListSettings: MockPopoverSettings, EventListSettings {
+class MockEventListSettings: MockEventDetailsSettings, EventListSettings {
 
     let togglePastEvents: AnyObserver<Bool>
     let showPastEvents: Observable<Bool>
