@@ -43,12 +43,12 @@ where LocationCache.Key == String, LocationCache.Value == Coordinates? {
 
     func geocodeAddressString(_ address: String) async -> Coordinates? {
 
-        guard !address.isEmpty else { return nil }
-
         if let location = cache.get(address) {
             print("Cache hit for address: \"\(address)\"")
             return location
         }
+
+        print("Geocoding \"\(address)\"")
 
         let sanitized = address.replacingOccurrences(of: ["(", ")"], with: " ")
 

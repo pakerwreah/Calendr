@@ -437,6 +437,7 @@ private extension EventModel {
             end: event.endDate,
             title: event.title,
             location: event.location,
+            coordinates: (event.structuredLocation?.geoLocation?.coordinate).map(Coordinates.init),
             notes: event.notes,
             url: event.url,
             isAllDay: event.shouldBeAllDay(dateProvider),
@@ -461,6 +462,7 @@ private extension EventModel {
             end: dateProvider.calendar.endOfDay(for: date),
             title: reminder.title,
             location: reminder.location, // doesn't work
+            coordinates: nil,
             notes: reminder.notes,
             url: reminder.url, // doesn't work
             isAllDay: dueDateComponents.hour == nil,

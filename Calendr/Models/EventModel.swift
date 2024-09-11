@@ -13,6 +13,7 @@ struct EventModel: Equatable {
     let end: Date
     let title: String
     let location: String?
+    let coordinates: Coordinates?
     let notes: String?
     let url: URL?
     let isAllDay: Bool
