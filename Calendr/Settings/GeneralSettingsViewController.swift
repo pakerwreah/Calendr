@@ -31,7 +31,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     private let nextEventFontSizeStepper = NSStepper()
 
     // Calendar
-    private let calendarScalingSlider = NSSlider.make(minValue: 1, maxValue: 1.2, numberOfTickMarks: 5)
+    private let calendarScalingSlider = NSSlider.make(minValue: 1, maxValue: 1.4, numberOfTickMarks: 9)
     private let firstWeekdayPrev = ImageButton(image: Icons.Settings.prev)
     private let firstWeekdayNext = ImageButton(image: Icons.Settings.next)
     private let highlightedWeekdaysButtons = NSStackView()
