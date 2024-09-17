@@ -261,6 +261,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         guard hasFooter else { return }
 
         footerStackView.alignment = .centerY
+        footerStackView.edgeInsets = .init(horizontal: 12)
         footerStackView.setHuggingPriority(.defaultHigh, for: .vertical)
 
         contentStackView.addArrangedSubview(footerStackView)
