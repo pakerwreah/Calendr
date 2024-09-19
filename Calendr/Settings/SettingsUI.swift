@@ -18,7 +18,7 @@ extension SettingsUI {
     
     func makeSection(title: String, content: NSView) -> NSView {
 
-        let label = Label(text: title, font: .systemFont(ofSize: 13, weight: .semibold))
+        let label = Label(text: title, font: .systemFont(ofSize: 16, weight: .semibold))
 
         let divider: NSView = .spacer(height: 1)
         divider.wantsLayer = true
@@ -31,12 +31,13 @@ extension SettingsUI {
         let stackView = NSStackView(views: [
             label,
             divider,
-            NSStackView(views: [.dummy, content, .dummy])
+            content
         ])
         .with(orientation: .vertical)
-        .with(alignment: .left)
         .with(spacing: 6)
         .with(spacing: 12, after: divider)
+
+        stackView.setHuggingPriority(.required, for: .horizontal)
 
         return stackView
     }

@@ -237,4 +237,9 @@ extension NSLayoutConstraint {
         isActive = true
         return self
     }
+
+    func with(priority: NSLayoutConstraint.Priority) -> Self {
+        self.priority = priority
+        return self
+    }
 }

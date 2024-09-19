@@ -154,7 +154,8 @@ class SettingsViewController: NSTabViewController, NSWindowDelegate {
 
             Observable.merge(
                 notificationCenter.rx.notification(NSLocale.currentLocaleDidChangeNotification).void(),
-                vc.rx.viewDidLayout
+                vc.rx.viewDidLayout,
+                Scaling.observable.void()
             )
             .withLatestFrom(rx.observe(\.selectedTabViewItemIndex))
             .matching(i)

@@ -68,7 +68,7 @@ class CalendarPickerViewController: NSViewController {
             scrollView.contentView.heightAnchor.constraint(lessThanOrEqualToConstant: 600).activate()
         }
 
-        contentStackView.alignment = .left
+        contentStackView.spacing = 16
     }
 
     private func setUpBindings() {
@@ -86,7 +86,7 @@ class CalendarPickerViewController: NSViewController {
 
                 return Dictionary(grouping: calendars, by: { $0.account })
                     .sorted(by: \.key.localizedLowercase)
-                    .flatMap { account, calendars in
+                    .map { account, calendars in
                         self.makeCalendarSection(
                             title: account,
                             calendars: calendars.sorted(by: \.title.localizedLowercase),
@@ -98,26 +98,29 @@ class CalendarPickerViewController: NSViewController {
             .disposed(by: pickerDisposeBag)
     }
     
-    private func makeCalendarSection(title: String, calendars: [CalendarModel], showNextEvent: Bool) -> [NSView] {
+    private func makeCalendarSection(title: String, calendars: [CalendarModel], showNextEvent: Bool) -> NSView {
 
         let label = Label(text: title, font: .systemFont(ofSize: 11, weight: .semibold))
         label.textColor = .secondaryLabelColor
 
         let stackView = NSStackView(
-            views: calendars.compactMap {
-                NSStackView(
-                    views: [
-                        makeCalendarItemEnabled($0),
-                        showNextEvent ? makeCalendarItemNextEvent($0) : nil
-                    ]
-                    .compact()
-                )
-            }
-        )
-        .with(orientation: .vertical)
-        .with(alignment: .left)
+            views: [
+                [label],
+                calendars.compactMap {
+                    NSStackView(
+                        views: [
+                            .dummy,
+                            makeCalendarItemEnabled($0),
+                            showNextEvent ? makeCalendarItemNextEvent($0) : nil
+                        ]
+                            .compact()
+                    )
+                    .with(alignment: .centerY)
+                }
+            ].flatten()
+        ).with(orientation: .vertical)
 
-        return [label, NSStackView(views: [.dummy, stackView])]
+        return stackView
     }
 
     private func bindCalendarItem(
@@ -139,7 +142,11 @@ class CalendarPickerViewController: NSViewController {
     private func makeCalendarItemEnabled(_ calendar: CalendarModel) -> NSView {
 
         let checkbox = Checkbox(title: calendar.title)
-        checkbox.setTitleColor(color: calendar.color)
+
+        Scaling.observable.bind {
+            checkbox.setTitleColor(color: calendar.color, font: .systemFont(ofSize: 13 * $0))
+        }
+        .disposed(by: itemsDisposeBag)
 
         bindCalendarItem(
             button: checkbox,

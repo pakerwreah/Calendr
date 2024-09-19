@@ -80,9 +80,12 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         .with(spacing: Constants.contentSpacing)
         .with(orientation: .vertical)
 
+        stackView.setHuggingPriority(.defaultHigh, for: .horizontal)
+        stackView.setHuggingPriority(.required, for: .vertical)
+
         view.addSubview(stackView)
 
-        stackView.edges(to: view, insets: .init(bottom: 1))
+        stackView.edges(to: view)
 
         iconStyleDropdown.height(equalTo: showMenuBarIconCheckbox)
 
@@ -265,7 +268,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     private lazy var eventsContent: NSView = {
         NSStackView(views: [
             showMapCheckbox,
-            .spacer,
+            .dummy,
             NSStackView(views: [finishedLabel, .spacer, fadePastEventsRadio, hidePastEventsRadio])
         ]).with(orientation: .vertical)
     }()
