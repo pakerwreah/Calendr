@@ -7,7 +7,7 @@
 
 import Foundation
 
-class DateIntervalFormatter: Foundation.DateIntervalFormatter {
+class DateIntervalFormatter: Foundation.DateIntervalFormatter, @unchecked Sendable {
 
     override var calendar: Calendar! {
         didSet {

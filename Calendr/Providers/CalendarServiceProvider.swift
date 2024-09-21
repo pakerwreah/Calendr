@@ -486,7 +486,7 @@ private extension EKCalendar {
     }
 }
 
-extension EKEntityType: CustomStringConvertible {
+extension EKEntityType: @retroactive CustomStringConvertible {
 
     public var description: String {
         switch self {
