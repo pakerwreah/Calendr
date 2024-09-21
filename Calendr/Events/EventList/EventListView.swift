@@ -43,7 +43,7 @@ class EventListView: NSView {
 
         addSubview(contentStackView)
 
-        contentStackView.edges(to: self)
+        contentStackView.edges(equalTo: self)
     }
 
     private func setUpBindings() {

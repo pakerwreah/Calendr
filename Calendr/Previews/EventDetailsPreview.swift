@@ -46,7 +46,7 @@ struct EventDetailsPreview: PreviewProvider {
             )
         )
         vc.view.width(equalTo: 300)
-        vc.view.heightAnchor.constraint(lessThanOrEqualToConstant: 500).activate()
+        vc.view.height(lessThanOrEqualTo: 500)
         vcs.append(vc)
 
         return vc.view.preview().fixedSize()
@@ -76,7 +76,7 @@ struct EventDetailsPreview: PreviewProvider {
             )
         )
         vc.view.width(equalTo: 300)
-        vc.view.heightAnchor.constraint(lessThanOrEqualToConstant: 500).activate()
+        vc.view.height(lessThanOrEqualTo: 500)
         vcs.append(vc)
 
         return vc.view.preview().fixedSize()

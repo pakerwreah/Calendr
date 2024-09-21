@@ -8,10 +8,21 @@
 "quit" = "Ukončiť";
 "search" = "Hľadať";
 
+"access_required.calendars" = "Kalendár potrebuje povoliť 'Plný prístup'";
+"access_required.reminders" = "Pripomienky potrebujú povoliť prístup";
+"access_required.open_settings" = "Otvoriť nastavenia";
+"access_required.cancel" = "Zrušiť";
+
+"auto_update.check_for_updates" = "Skontrolovať aktualizácie";
+"auto_update.fetching_releases" = "Kontrola verzií";
 "auto_update.new_version" = "Nová verzia dostupná: %@";
+"auto_update.updated_to" = "Aktualizované na verziu %@";
+"auto_update.downloading" = "Sťahovanie verzie %@";
+"auto_update.install" = "Inštalovať";
 
 "settings.title" = "Nastavenia";
 "settings.tab.general" = "Všeobecné";
+"settings.tab.appearance" = "Vzhľad";
 "settings.tab.calendars" = "Kalendáre";
 "settings.tab.keyboard" = "Skratky";
 "settings.tab.about" = "O aplikácii";
@@ -23,10 +34,11 @@
 "settings.menu_bar.show_icon_date" = "Zobraziť dátum v ikone";
 "settings.menu_bar.show_background" = "Zobraziť nepriehľadné pozadie";
 "settings.menu_bar.date_format_custom" = "Vlastný";
+
 "settings.next_event" = "Ďalšia udalosť";
-"settings.menu_bar.show_next_event" = "Zobraziť ďalšiu udalosť";
-"settings.menu_bar.font_size" = "Veľkosť písma";
-"settings.menu_bar.next_event_detect_notch" = "Skrátiť, ak je prítomný 'výrez'";
+"settings.next_event.show_next_event" = "Zobraziť ďalšiu udalosť";
+"settings.next_event.font_size" = "Veľkosť písma";
+"settings.next_event.detect_notch" = "Skrátiť, ak je prítomný 'výrez'";
 
 "settings.calendar" = "Kalendár";
 "settings.calendar.show_week_numbers" = "Zobraziť čísla týždňov";
@@ -35,11 +47,13 @@
 "settings.calendar.show_declined_events_tooltip" = "Funguje, len ak je to povolené aj v natívnej aplikácii Kalendár.";
 
 "settings.events" = "Udalosti";
+"settings.events.show_map" = "Zobraziť mapu a počasie";
 "settings.events.finished" = "Ukončené";
 "settings.events.finished.fade" = "Vyblednúť";
 "settings.events.finished.hide" = "Skryť";
 
-"settings.transparency" = "Priehľadnosť";
+"settings.appearance.transparency" = "Priehľadnosť";
+"settings.appearance.accessibility" = "Prístupnosť";
 
 "settings.keyboard.local_shortcuts.title" = "Lokálne skratky";
 "settings.keyboard.local_shortcuts.prev_date" = "Predchádzajúci dátum";

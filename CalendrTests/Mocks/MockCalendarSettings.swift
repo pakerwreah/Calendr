@@ -25,6 +25,7 @@ class MockCalendarSettings: CalendarSettings {
     let preserveSelectedDate: Observable<Bool>
 
     let calendarScaling: Observable<Double>
+    let textScaling: Observable<Double>
 
     init() {
         (firstWeekday, firstWeekdayObserver) = BehaviorSubject.pipe(value: 1)
@@ -33,5 +34,6 @@ class MockCalendarSettings: CalendarSettings {
         (showDeclinedEvents, toggleDeclinedEvents) = BehaviorSubject.pipe(value: false)
         preserveSelectedDate = .just(false)
         calendarScaling = .just(1)
+        textScaling = .just(1)
     }
 }

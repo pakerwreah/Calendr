@@ -42,9 +42,9 @@ internal enum Strings {
     internal static func newVersion(_ p1: Any) -> String {
       return Strings.tr("Localizable", "auto_update.new_version", String(describing: p1), fallback: "New version available: %@")
     }
-    /// Updated to version: %@
+    /// Updated to version %@
     internal static func updatedTo(_ p1: Any) -> String {
-      return Strings.tr("Localizable", "auto_update.updated_to", String(describing: p1), fallback: "Updated to version: %@")
+      return Strings.tr("Localizable", "auto_update.updated_to", String(describing: p1), fallback: "Updated to version %@")
     }
   }
   internal enum EventAction {
@@ -126,8 +126,12 @@ internal enum Strings {
     internal static let nextEvent = Strings.tr("Localizable", "settings.next_event", fallback: "Next Event")
     /// Preferences
     internal static let title = Strings.tr("Localizable", "settings.title", fallback: "Preferences")
-    /// Transparency
-    internal static let transparency = Strings.tr("Localizable", "settings.transparency", fallback: "Transparency")
+    internal enum Appearance {
+      /// Accessibility
+      internal static let accessibility = Strings.tr("Localizable", "settings.appearance.accessibility", fallback: "Accessibility")
+      /// Transparency
+      internal static let transparency = Strings.tr("Localizable", "settings.appearance.transparency", fallback: "Transparency")
+    }
     internal enum Calendar {
       /// Preserve selected date on hide
       internal static let preserveSelectedDate = Strings.tr("Localizable", "settings.calendar.preserve_selected_date", fallback: "Preserve selected date on hide")
@@ -193,10 +197,6 @@ internal enum Strings {
       internal static let autoLaunch = Strings.tr("Localizable", "settings.menu_bar.auto_launch", fallback: "Launch at login")
       /// Custom
       internal static let dateFormatCustom = Strings.tr("Localizable", "settings.menu_bar.date_format_custom", fallback: "Custom")
-      /// Font size
-      internal static let fontSize = Strings.tr("Localizable", "settings.menu_bar.font_size", fallback: "Font size")
-      /// Shorten if 'notch' is present
-      internal static let nextEventDetectNotch = Strings.tr("Localizable", "settings.menu_bar.next_event_detect_notch", fallback: "Shorten if 'notch' is present")
       /// Show opaque background
       internal static let showBackground = Strings.tr("Localizable", "settings.menu_bar.show_background", fallback: "Show opaque background")
       /// Show date
@@ -205,12 +205,20 @@ internal enum Strings {
       internal static let showIcon = Strings.tr("Localizable", "settings.menu_bar.show_icon", fallback: "Show icon")
       /// Show date in icon
       internal static let showIconDate = Strings.tr("Localizable", "settings.menu_bar.show_icon_date", fallback: "Show date in icon")
+    }
+    internal enum NextEvent {
+      /// Font size
+      internal static let fontSize = Strings.tr("Localizable", "settings.next_event.font_size", fallback: "Font size")
+      /// Shorten if 'notch' is present
+      internal static let nextEventDetectNotch = Strings.tr("Localizable", "settings.next_event.next_event_detect_notch", fallback: "Shorten if 'notch' is present")
       /// Show next event
-      internal static let showNextEvent = Strings.tr("Localizable", "settings.menu_bar.show_next_event", fallback: "Show next event")
+      internal static let showNextEvent = Strings.tr("Localizable", "settings.next_event.show_next_event", fallback: "Show next event")
     }
     internal enum Tab {
       /// About
       internal static let about = Strings.tr("Localizable", "settings.tab.about", fallback: "About")
+      /// Appearance
+      internal static let appearance = Strings.tr("Localizable", "settings.tab.appearance", fallback: "Appearance")
       /// Calendars
       internal static let calendars = Strings.tr("Localizable", "settings.tab.calendars", fallback: "Calendars")
       /// General

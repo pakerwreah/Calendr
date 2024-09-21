@@ -8,10 +8,21 @@
 "quit" = "Quitter";
 "search" = "Rechercher";
 
+"access_required.calendars" = "Calendrier en attente d'autorisation 'Accès complet'";
+"access_required.reminders" = "Rappels en attente d'autorisation";
+"access_required.open_settings" = "Ouvrir les paramètres";
+"access_required.cancel" = "Annuler";
+
+"auto_update.check_for_updates" = "Vérifier les mises à jour";
+"auto_update.fetching_releases" = "Récupération des versions";
 "auto_update.new_version" = "Nouvelle version disponible: %@";
+"auto_update.updated_to" = "Mise à jour vers la version %@";
+"auto_update.downloading" = "Téléchargement de la version %@";
+"auto_update.install" = "Installer";
 
 "settings.title" = "Préférences";
 "settings.tab.general" = "Général";
+"settings.tab.appearance" = "Apparence";
 "settings.tab.calendars" = "Calendriers";
 "settings.tab.keyboard" = "Raccourcis";
 "settings.tab.about" = "À propos";
@@ -23,6 +34,7 @@
 "settings.menu_bar.show_icon_date" = "Afficher la date dans l'icône";
 "settings.menu_bar.show_background" = "Afficher un fond opaque";
 "settings.menu_bar.date_format_custom" = "Personnalisé";
+
 "settings.next_event" = "Prochain événement";
 "settings.menu_bar.show_next_event" = "Afficher prochain événement";
 "settings.menu_bar.font_size" = "Taille de police";
@@ -40,7 +52,8 @@
 "settings.events.finished.fade" = "Atténuer";
 "settings.events.finished.hide" = "Masquer";
 
-"settings.transparency" = "Transparence";
+"settings.appearance.transparency" = "Transparence";
+"settings.appearance.accessibility" = "Accessibilité";
 
 "settings.keyboard.local_shortcuts.title" = "Raccourcis locaux";
 "settings.keyboard.local_shortcuts.prev_date" = "Date précédente";

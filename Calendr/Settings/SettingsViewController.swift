@@ -22,6 +22,8 @@ class SettingsViewController: NSTabViewController, NSWindowDelegate {
     private let disposeBag = DisposeBag()
     private let keyboard = Keyboard()
 
+    private lazy var minWidth = calculateMinimumWidth(for: tabViewItems.map(\.label))
+
     init(
         settingsViewModel: SettingsViewModel,
         calendarsViewModel: CalendarPickerViewModel,
@@ -38,6 +40,7 @@ class SettingsViewController: NSTabViewController, NSWindowDelegate {
         tabStyle = .toolbar
 
         let general = NSTabViewItem(viewController: GeneralSettingsViewController(viewModel: settingsViewModel))
+        let appearance = NSTabViewItem(viewController: AppearanceViewController(viewModel: settingsViewModel))
         let calendars = NSTabViewItem(
             viewController: CalendarPickerViewController(viewModel: calendarsViewModel, configuration: .settings)
         )
@@ -46,6 +49,9 @@ class SettingsViewController: NSTabViewController, NSWindowDelegate {
 
         general.label = Strings.Settings.Tab.general
         general.image = Icons.Settings.general
+
+        appearance.label = Strings.Settings.Tab.appearance
+        appearance.image = Icons.Settings.appearance
 
         calendars.label = Strings.Settings.Tab.calendars
         calendars.image = Icons.Settings.calendars
@@ -56,7 +62,7 @@ class SettingsViewController: NSTabViewController, NSWindowDelegate {
         about.label = Strings.Settings.Tab.about
         about.image = Icons.Settings.about
 
-        tabViewItems = [general, calendars, keyboard, about]
+        tabViewItems = [general, appearance, calendars, keyboard, about]
 
         setUpAccessibility()
 
@@ -67,6 +73,17 @@ class SettingsViewController: NSTabViewController, NSWindowDelegate {
 
     deinit {
         tearDownAccessibility()
+    }
+
+    func calculateMinimumWidth(for tabTitles: [String], font: NSFont = NSFont.systemFont(ofSize: NSFont.systemFontSize)) -> CGFloat {
+        var totalWidth: CGFloat = 0
+
+        for title in tabTitles {
+            let titleSize = (title as NSString).size(withAttributes: [.font: font])
+            totalWidth += titleSize.width + 4
+        }
+
+        return totalWidth
     }
 
     override func loadView() {
@@ -81,7 +98,7 @@ class SettingsViewController: NSTabViewController, NSWindowDelegate {
 
         view.addSubview(contentView)
 
-        contentView.edges(to: view, constant: Constants.padding)
+        contentView.edges(equalTo: view, margin: Constants.padding)
     }
 
     override func viewWillAppear() {
@@ -136,7 +153,7 @@ class SettingsViewController: NSTabViewController, NSWindowDelegate {
 
         DispatchQueue.main.async {
 
-            self.preferredContentSize = sizeWithPadding(itemView.fittingSize)
+            self.preferredContentSize = sizeWithPadding(itemView.fittingSize, minWidth: self.minWidth)
 
             NSAnimationContext.runAnimationGroup({ context in
                 context.duration = 0.1
@@ -150,11 +167,14 @@ class SettingsViewController: NSTabViewController, NSWindowDelegate {
 
     private func setUpBindings() {
 
+        let minWidth = self.minWidth
+
         for (i, vc) in tabViewItems.compactMap(\.viewController).enumerated() {
 
             Observable.merge(
                 notificationCenter.rx.notification(NSLocale.currentLocaleDidChangeNotification).void(),
-                vc.rx.viewDidLayout
+                vc.rx.viewDidLayout,
+                Scaling.observable.void()
             )
             .withLatestFrom(rx.observe(\.selectedTabViewItemIndex))
             .matching(i)
@@ -162,7 +182,7 @@ class SettingsViewController: NSTabViewController, NSWindowDelegate {
             .map { vc.view.fittingSize }
             .distinctUntilChanged()
             .skip(i > 0 ? 1 : 0)
-            .map(sizeWithPadding)
+            .map { sizeWithPadding($0, minWidth: minWidth) }
             .bind(to: rx.preferredContentSize)
             .disposed(by: disposeBag)
         }
@@ -189,9 +209,9 @@ class SettingsViewController: NSTabViewController, NSWindowDelegate {
     }
 }
 
-private func sizeWithPadding(_ size: NSSize) -> NSSize {
+private func sizeWithPadding(_ size: NSSize, minWidth: CGFloat) -> NSSize {
     NSSize(
-        width: max(size.width, Constants.minWidth) + 2 * Constants.padding,
+        width: max(size.width, minWidth) + 2 * Constants.padding,
         height: size.height + 2 * Constants.padding
     )
 }
@@ -199,7 +219,6 @@ private func sizeWithPadding(_ size: NSSize) -> NSSize {
 private enum Constants {
 
     static let padding: CGFloat = 24
-    static let minWidth: CGFloat = 250
 }
 
 // MARK: - Accessibility

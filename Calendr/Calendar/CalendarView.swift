@@ -58,7 +58,7 @@ class CalendarView: NSView {
 
         addSubview(gridView)
 
-        gridView.edges(to: self)
+        gridView.edges(equalTo: self)
     }
 
     private func setUpBindings() {
@@ -149,7 +149,8 @@ class CalendarView: NSView {
                 hoverObserver: hoverObserver,
                 clickObserver: clickObserver,
                 doubleClickObserver: doubleClickObserver,
-                calendarScaling: viewModel.calendarScaling
+                calendarScaling: viewModel.calendarScaling,
+                textScaling: viewModel.textScaling
             )
             gridView.cell(atColumnIndex: 1 + day % 7, rowIndex: 1 + day / 7).contentView = cellView
         }

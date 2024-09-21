@@ -69,9 +69,9 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
 
         view = NSView()
 
-        view.widthAnchor.constraint(lessThanOrEqualToConstant: 400).activate()
-        view.widthAnchor.constraint(greaterThanOrEqualToConstant: 250).activate()
-        view.widthAnchor.constraint(greaterThanOrEqualTo: view.heightAnchor, multiplier: 0.5).activate().priority = .dragThatCanResizeWindow
+        view.width(lessThanOrEqualTo: 400 * Scaling.current)
+        view.width(greaterThanOrEqualTo: 250 * Scaling.current)
+        view.width(greaterThanOrEqualTo: view.heightAnchor, multiplier: 0.5, priority: .dragThatCanResizeWindow)
 
         scrollView.hasVerticalScroller = true
         scrollView.scrollerStyle = .overlay
@@ -80,12 +80,12 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         detailsStackView.edgeInsets = .init(horizontal: 12)
         detailsStackView.setHuggingPriority(.required, for: .horizontal)
 
-        scrollView.contentView.edges(to: scrollView)
+        scrollView.contentView.edges(equalTo: scrollView)
         scrollView.contentView.top(equalTo: detailsStackView)
         scrollView.contentView.leading(equalTo: detailsStackView)
         scrollView.contentView.trailing(equalTo: detailsStackView)
-        scrollView.contentView.height(equalTo: detailsStackView).priority = .dragThatCanResizeWindow
-        scrollView.contentView.heightAnchor.constraint(lessThanOrEqualToConstant: 0.8 * NSScreen.main!.visibleFrame.height).activate()
+        scrollView.contentView.height(equalTo: detailsStackView, priority: .dragThatCanResizeWindow)
+        scrollView.contentView.height(lessThanOrEqualTo: 0.8 * NSScreen.main!.visibleFrame.height)
 
         contentStackView.addArrangedSubview(scrollView)
         contentStackView.spacing = 16
@@ -95,7 +95,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
 
         view.addSubview(contentStackView)
 
-        contentStackView.edges(to: view, insets: .init(vertical: 12))
+        contentStackView.edges(equalTo: view, margins: .init(vertical: 12))
 
         setUpIcon()
         setUpLink()
@@ -243,6 +243,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         optionsLabel.stringValue = Strings.EventStatus.label
         optionsLabel.textColor = .secondaryLabelColor
         optionsLabel.setContentHuggingPriority(.required, for: .vertical)
+        optionsLabel.setContentCompressionResistancePriority(.required, for: .vertical)
 
         optionsButton.image = icon.with(color: color)
         optionsButton.title = title
@@ -401,8 +402,8 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         mapView.addSubview(mapButton)
         
         mapButton.size(equalTo: 26)
-        mapButton.bottom(equalTo: mapView, constant: 2)
-        mapButton.trailing(equalTo: mapView, constant: 2)
+        mapButton.bottom(equalTo: mapView, constant: -2)
+        mapButton.trailing(equalTo: mapView, constant: -2)
 
         mapButton.rx.tap
             .map(coordinates)
@@ -443,10 +444,10 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         guard !viewModel.notes.isEmpty else { return }
         let notes = viewModel.notes
 
-        if ["<", ">"].allSatisfy(notes.contains), let html = notes.html(font: .default, color: .labelColor) {
+        if ["<", ">"].allSatisfy(notes.contains), let html = notes.html(font: .scaled(.default), color: .labelColor) {
             notesTextView.textStorage?.setAttributedString(html)
         } else {
-            notesTextView.font = .default
+            notesTextView.font = .scaled(.default)
             notesTextView.string = notes
         }
         notesTextView.checkTextInDocument(nil)
@@ -516,9 +517,9 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         scrollView.scrollerStyle = .legacy
         scrollView.drawsBackground = false
         scrollView.documentView = participantsStackView.forAutoLayout()
-        scrollView.contentView.edges(to: scrollView)
+        scrollView.contentView.edges(equalTo: scrollView)
         scrollView.contentView.width(equalTo: participantsStackView, constant: 20)
-        scrollView.contentView.height(equalTo: participantsStackView).priority = .defaultHigh
+        scrollView.contentView.height(equalTo: participantsStackView, priority: .defaultHigh)
         scrollView.contentView.heightAnchor.constraint(lessThanOrEqualToConstant: 222).activate()
 
         participantsStackView.setHuggingPriority(.required, for: .vertical)
@@ -585,4 +586,8 @@ private extension NSFont {
     static let `default` = systemFont(ofSize: 13)
     static let header = systemFont(ofSize: 16)
     static let small = systemFont(ofSize: 12)
+
+    static func scaled(_ font: NSFont) -> NSFont {
+        font.withSize(font.pointSize * Scaling.current)
+    }
 }

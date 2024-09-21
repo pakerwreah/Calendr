@@ -8,10 +8,21 @@
 "quit" = "Programm beenden";
 "search" = "Suchen";
 
+"access_required.calendars" = "Kalender wartet auf Autorisierung für 'Vollzugriff'";
+"access_required.reminders" = "Erinnerungen warten auf Autorisierung";
+"access_required.open_settings" = "Einstellungen öffnen";
+"access_required.cancel" = "Abbrechen";
+
+"auto_update.check_for_updates" = "Nach Updates suchen";
+"auto_update.fetching_releases" = "Releases abrufen";
 "auto_update.new_version" = "Neue Version verfügbar: %@";
+"auto_update.updated_to" = "Aktualisiert auf Version %@";
+"auto_update.downloading" = "Version %@ herunterladen";
+"auto_update.install" = "Installieren";
 
 "settings.title" = "Einstellungen";
 "settings.tab.general" = "Allgemein";
+"settings.tab.appearance" = "Darstellung";
 "settings.tab.calendars" = "Kalender";
 "settings.tab.keyboard" = "Verknüpfungen";
 "settings.tab.about" = "Über";
@@ -23,10 +34,11 @@
 "settings.menu_bar.show_icon_date" = "Datum im Icon anzeigen";
 "settings.menu_bar.show_background" = "Opaken Hintergrund anzeigen";
 "settings.menu_bar.date_format_custom" = "Benutzerdefiniert";
+
 "settings.next_event" = "Nächsten Termin";
-"settings.menu_bar.show_next_event" = "Zeige nächsten Termin";
-"settings.menu_bar.font_size" = "Schriftgröße";
-"settings.menu_bar.next_event_detect_notch" = "Kürzen, wenn 'notch' vorhanden ist";
+"settings.next_event.show_next_event" = "Zeige nächsten Termin";
+"settings.next_event.font_size" = "Schriftgröße";
+"settings.next_event.detect_notch" = "Kürzen, wenn 'notch' vorhanden ist";
 
 "settings.calendar" = "Kalender";
 "settings.calendar.show_week_numbers" = "Zeige Kalenderwochen";
@@ -40,7 +52,8 @@
 "settings.events.finished.fade" = "Verblassen";
 "settings.events.finished.hide" = "Verstecken";
 
-"settings.transparency" = "Transparent";
+"settings.appearance.transparency" = "Transparent";
+"settings.appearance.accessibility" = "Zugänglichkeit";
 
 "settings.keyboard.local_shortcuts.title" = "Lokale Tastenkombinationen";
 "settings.keyboard.local_shortcuts.prev_date" = "Vorheriges Datum";

@@ -8,10 +8,21 @@
 "quit" = "Esci";
 "search" = "Cerca";
 
+"access_required.calendars" = "Calendario in attesa di autorizzazione 'Accesso completo'";
+"access_required.reminders" = "Promemoria in attesa di autorizzazione";
+"access_required.open_settings" = "Apri Preferenze";
+"access_required.cancel" = "Annulla";
+
+"auto_update.check_for_updates" = "Verifica aggiornamenti";
+"auto_update.fetching_releases" = "Ottieni versioni";
 "auto_update.new_version" = "Nuova versione disponibile: %@";
+"auto_update.updated_to" = "Aggiornato alla versione %@";
+"auto_update.downloading" = "Scaricamento della versione %@";
+"auto_update.install" = "Installa";
 
 "settings.title" = "Preferenze";
 "settings.tab.general" = "Generali";
+"settings.tab.appearance" = "Aspetto";
 "settings.tab.calendars" = "Calendari";
 "settings.tab.keyboard" = "Scorciatoie";
 "settings.tab.about" = "Informazioni";
@@ -23,16 +34,17 @@
 "settings.menu_bar.show_icon_date" = "Mostra la data nell'icona";
 "settings.menu_bar.show_background" = "Mostra sfondo opaco";
 "settings.menu_bar.date_format_custom" = "Personalizzato";
+
 "settings.next_event" = "Prossimo evento";
-"settings.menu_bar.show_next_event" = "Mostra il prossimo evento";
-"settings.menu_bar.font_size" = "Dimensione del font";
-"settings.menu_bar.next_event_detect_notch" = "Più corto se c'è il 'notch'";
+"settings.next_event.show_next_event" = "Mostra il prossimo evento";
+"settings.next_event.font_size" = "Dimensione del font";
+"settings.next_event.detect_notch" = "Più corto se c'è il 'notch'";
 
 "settings.calendar" = "Calendario";
 "settings.calendar.show_week_numbers" = "Mostra i numeri delle settimane";
-"settings.calendar.preserve_selected_date" = "Mantieni le date selezionate quando nascondi";
+"settings.calendar.preserve_selected_date" = "Conserva la data selezionata quando la nascondi";
 "settings.calendar.show_declined_events" = "Mostra eventi rifiutati";
-"settings.calendar.show_declined_events_tooltip" = "Questo funziona solo se attivato nell'app di sistema Calendar.";
+"settings.calendar.show_declined_events_tooltip" = "Funziona solo se è abilitato anche nell'app Calendario nativa.";
 
 "settings.events" = "Eventi";
 "settings.events.show_map" = "Mostra mappa e meteo";
@@ -40,7 +52,8 @@
 "settings.events.finished.fade" = "Dissolvi";
 "settings.events.finished.hide" = "Nascondi";
 
-"settings.transparency" = "Transparenza";
+"settings.appearance.transparency" = "Trasparenza";
+"settings.appearance.accessibility" = "Accessibilità";
 
 "settings.keyboard.local_shortcuts.title" = "Scorciatoie locali";
 "settings.keyboard.local_shortcuts.prev_date" = "Data precedente";

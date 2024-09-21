@@ -66,7 +66,7 @@ class NextEventView: NSView {
 
         addSubview(nextEventView)
 
-        nextEventView.edges(to: self)
+        nextEventView.edges(equalTo: self)
     }
 
     private func setUpBindings() {

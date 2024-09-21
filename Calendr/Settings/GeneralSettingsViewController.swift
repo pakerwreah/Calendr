@@ -10,7 +10,7 @@ import RxSwift
 
 class GeneralSettingsViewController: NSViewController, SettingsUI {
 
-    let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     private let viewModel: SettingsViewModel
 
@@ -24,14 +24,14 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     private let dateFormatTextField = NSTextField()
 
     // Next Event
-    private let showNextEventCheckbox = Checkbox(title: Strings.Settings.MenuBar.showNextEvent)
+    private let showNextEventCheckbox = Checkbox(title: Strings.Settings.NextEvent.showNextEvent)
     private let nextEventRangeStepper = NSStepper()
-    private let nextEventLengthSlider = NSSlider.make(minValue: 10, maxValue: 50, numberOfTickMarks: 12)
-    private let nextEventDetectNotchCheckbox = Checkbox(title: Strings.Settings.MenuBar.nextEventDetectNotch)
+    private let nextEventLengthSlider = Slider.make(minValue: 10, maxValue: 50, numberOfTickMarks: 12)
+    private let nextEventDetectNotchCheckbox = Checkbox(title: Strings.Settings.NextEvent.nextEventDetectNotch)
     private let nextEventFontSizeStepper = NSStepper()
 
     // Calendar
-    private let calendarScalingSlider = NSSlider.make(minValue: 1, maxValue: 1.4, numberOfTickMarks: 9)
+    private let calendarScalingSlider = Slider.make(minValue: 1, maxValue: 1.6, numberOfTickMarks: 13)
     private let firstWeekdayPrev = ImageButton(image: Icons.Settings.prev)
     private let firstWeekdayNext = ImageButton(image: Icons.Settings.next)
     private let highlightedWeekdaysButtons = NSStackView()
@@ -43,9 +43,6 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     private let showMapCheckbox = Checkbox(title: Strings.Settings.Events.showMap)
     private let fadePastEventsRadio = Radio(title: Strings.Settings.Events.Finished.fade)
     private let hidePastEventsRadio = Radio(title: Strings.Settings.Events.Finished.hide)
-
-    // Transparency
-    private let transparencySlider = NSSlider.make(minValue: 0, maxValue: 5, numberOfTickMarks: 6)
 
     init(viewModel: SettingsViewModel) {
 
@@ -70,21 +67,28 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
 
         view = NSView()
 
-        let stackView = NSStackView(views: [
-            makeSection(title: Strings.Settings.menuBar, content: menuBarContent),
-            makeSection(title: Strings.Settings.nextEvent, content: nextEventContent),
-            makeSection(title: Strings.Settings.calendar, content: calendarContent),
-            makeSection(title: Strings.Settings.events, content: eventsContent),
-            makeSection(title: Strings.Settings.transparency, content: transparencySlider),
-        ])
+        let stackView = NSStackView(
+            views: Sections.create([
+                makeSection(title: Strings.Settings.menuBar, content: menuBarContent),
+                makeSection(title: Strings.Settings.nextEvent, content: nextEventContent),
+                makeSection(title: Strings.Settings.calendar, content: calendarContent),
+                makeSection(title: Strings.Settings.events, content: eventsContent),
+            ])
+            .disposed(by: disposeBag)
+        )
         .with(spacing: Constants.contentSpacing)
         .with(orientation: .vertical)
 
+        stackView.setHuggingPriority(.defaultHigh, for: .horizontal)
+        stackView.setHuggingPriority(.required, for: .vertical)
+
         view.addSubview(stackView)
 
-        stackView.edges(to: view, insets: .init(bottom: 1))
+        stackView.edges(equalTo: view)
 
         iconStyleDropdown.height(equalTo: showMenuBarIconCheckbox)
+
+        dateFormatDropdown.width(lessThanOrEqualTo: view, multiplier: 0.5, priority: .fittingSizeCompression)
 
         if #unavailable(macOS 13.0) {
             autoLaunchCheckbox.isHidden = true
@@ -115,12 +119,16 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         ])
         .with(insets: .init(right: 4))
 
-        let dateFormat = NSStackView(views: [
-            showMenuBarDateCheckbox,
-            dateFormatDropdown,
-            dateFormatTextField
-        ])
-        .with(orientation: .vertical)
+        let dateFormat = NSStackView(
+            views: [
+                showMenuBarDateCheckbox,
+                NSStackView(views: [
+                    dateFormatDropdown,
+                    dateFormatTextField
+                ])
+                .with(orientation: .vertical),
+            ])
+            .with(alignment: .top)
 
         return NSStackView(views: [
             autoLaunchCheckbox,
@@ -171,7 +179,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
 
         // Next event font size
 
-        let fontSizeLabel = Label(text: Strings.Settings.MenuBar.fontSize, font: .systemFont(ofSize: 13))
+        let fontSizeLabel = Label(text: Strings.Settings.NextEvent.fontSize, font: .systemFont(ofSize: 13))
         let fontSizeStepperLabel = Label(font: .systemFont(ofSize: 13))
 
         nextEventFontSizeStepper.minValue = 10
@@ -219,7 +227,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         label.preferredMaxLayoutWidth = 190
         label.lineBreakMode = NSLineBreakMode.byWordWrapping
         view.addSubview(label)
-        label.edges(to: view, constant: 8)
+        label.edges(equalTo: view, margin: 8)
 
         let button = ImageButton(image: Icons.Settings.tooltip, cursor: nil)
 
@@ -265,7 +273,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     private lazy var eventsContent: NSView = {
         NSStackView(views: [
             showMapCheckbox,
-            .spacer,
+            .dummy,
             NSStackView(views: [finishedLabel, .spacer, fadePastEventsRadio, hidePastEventsRadio])
         ]).with(orientation: .vertical)
     }()
@@ -275,7 +283,6 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         setUpNextEvent()
         setUpCalendar()
         setUpEvents()
-        setUpTransparency()
     }
 
     private func setUpMenuBar() {
@@ -285,24 +292,28 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             observable: viewModel.autoLaunch,
             observer: viewModel.toggleAutoLaunch
         )
+        .disposed(by: disposeBag)
 
         bind(
             control: showMenuBarIconCheckbox,
             observable: viewModel.showStatusItemIcon,
             observer: viewModel.toggleStatusItemIcon
         )
+        .disposed(by: disposeBag)
 
         bind(
             control: showMenuBarDateCheckbox,
             observable: viewModel.showStatusItemDate,
             observer: viewModel.toggleStatusItemDate
         )
+        .disposed(by: disposeBag)
 
         bind(
             control: showMenuBarBackgroundCheckbox,
             observable: viewModel.showStatusItemBackground,
             observer: viewModel.toggleStatusItemBackground
         )
+        .disposed(by: disposeBag)
 
         setUpIconStyle()
 
@@ -370,13 +381,11 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         .disposed(by: disposeBag)
 
         viewModel.showStatusItemDate
-            .map(!)
-            .bind(to: dateFormatDropdown.rx.isHidden)
+            .bind(to: dateFormatDropdown.rx.isEnabled)
             .disposed(by: disposeBag)
 
         viewModel.showStatusItemDate
-            .map(true)
-            .bind(to: view.rx.needsLayout)
+            .bind(to: dateFormatTextField.rx.isEnabled)
             .disposed(by: disposeBag)
 
         viewModel.isDateFormatInputVisible
@@ -413,6 +422,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             observable: viewModel.showEventStatusItem,
             observer: viewModel.toggleEventStatusItem
         )
+        .disposed(by: disposeBag)
 
         viewModel.eventStatusItemLength
             .bind(to: nextEventLengthSlider.rx.integerValue)
@@ -429,6 +439,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             observable: viewModel.eventStatusItemDetectNotch,
             observer: viewModel.toggleEventStatusItemDetectNotch
         )
+        .disposed(by: disposeBag)
     }
 
     private func setUpCalendar() {
@@ -450,18 +461,21 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             observable: viewModel.showWeekNumbers,
             observer: viewModel.toggleWeekNumbers
         )
+        .disposed(by: disposeBag)
 
         bind(
             control: showDeclinedEventsCheckbox,
             observable: viewModel.showDeclinedEvents,
             observer: viewModel.toggleDeclinedEvents
         )
+        .disposed(by: disposeBag)
 
         bind(
             control: preserveSelectedDateCheckbox,
             observable: viewModel.preserveSelectedDate,
             observer: viewModel.togglePreserveSelectedDate
         )
+        .disposed(by: disposeBag)
     }
 
     private func setUpfirstWeekday() {
@@ -475,7 +489,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             .disposed(by: disposeBag)
     }
 
-    private func makeWeekDayButton(weekDay: WeekDay) -> NSButton {
+    private func makeWeekDayButton(weekDay: WeekDay) -> DisposableWrapper<NSButton> {
 
         let button = CursorButton(cursor: .pointingHand)
         button.title = weekDay.title
@@ -484,21 +498,26 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         button.bezelStyle = .accessoryBar
         button.setButtonType(.pushOnPushOff)
 
-        bind(
+        let disposable = bind(
             control: button,
             observable: viewModel.highlightedWeekdays.map { $0.contains(weekDay.index) },
             observer: viewModel.toggleHighlightedWeekday.mapObserver { _ in weekDay.index }
         )
 
-        return button
+        return .init(value: button, disposable: disposable)
     }
 
     private func setUpHighlightedWeekdays() {
 
+        var weekDaysDisposeBag: DisposeBag!
+
         viewModel.highlightedWeekdaysOptions
             .distinctUntilChanged { $0.map(\.title) }
             .map { [weak self] in
-                $0.compactMap { self?.makeWeekDayButton(weekDay: $0) }
+                weekDaysDisposeBag = DisposeBag()
+                return $0.compactMap {
+                    self?.makeWeekDayButton(weekDay: $0).disposed(by: weekDaysDisposeBag)
+                }
             }
             .bind(to: highlightedWeekdaysButtons.rx.arrangedSubviews)
             .disposed(by: disposeBag)
@@ -511,59 +530,24 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             observable: viewModel.showMap,
             observer: viewModel.toggleMap
         )
+        .disposed(by: disposeBag)
 
         bind(
             control: fadePastEventsRadio,
             observable: viewModel.showPastEvents,
             observer: viewModel.togglePastEvents
         )
+        .disposed(by: disposeBag)
 
         bind(
             control: hidePastEventsRadio,
             observable: viewModel.showPastEvents.map(!),
             observer: viewModel.togglePastEvents.mapObserver(!)
         )
-
-        viewModel.popoverTransparency
-            .bind(to: transparencySlider.rx.integerValue)
-            .disposed(by: disposeBag)
-    }
-
-    private func setUpTransparency() {
-
-        transparencySlider.rx.value
-            .skip(1)
-            .map(Int.init)
-            .bind(to: viewModel.transparencyObserver)
-            .disposed(by: disposeBag)
-    }
-
-    private func bind(control: NSButton, observable: Observable<Bool>, observer: AnyObserver<Bool>) {
-        observable
-            .map { $0 ? .on : .off }
-            .bind(to: control.rx.state)
-            .disposed(by: disposeBag)
-
-        control.rx.state
-            .skip(1)
-            .map { $0 == .on }
-            .bind(to: observer)
-            .disposed(by: disposeBag)
+        .disposed(by: disposeBag)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-}
-
-private extension NSSlider {
-
-    static func make(minValue: Double, maxValue: Double, numberOfTickMarks: Int) -> NSSlider {
-        let slider = NSSlider(value: 0, minValue: minValue, maxValue: maxValue, target: nil, action: nil)
-        slider.allowsTickMarkValuesOnly = true
-        slider.numberOfTickMarks = numberOfTickMarks
-        slider.controlSize = .small
-        slider.refusesFirstResponder = true
-        return slider
     }
 }

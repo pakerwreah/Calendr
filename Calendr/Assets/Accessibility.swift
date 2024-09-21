@@ -84,6 +84,10 @@ enum Accessibility {
             static let dateFormatInput = "settings_general_date_format_input"
         }
 
+        enum Appearance {
+            static let view = "settings_appearance_view"
+        }
+
         enum Calendars {
             static let view = "settings_calendars_view"
         }

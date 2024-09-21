@@ -162,7 +162,7 @@ class EventView: NSView {
 
         let contentStackView = NSStackView(views: [colorBar, eventStackView])
         addSubview(contentStackView)
-        contentStackView.edges(to: self)
+        contentStackView.edges(equalTo: self)
 
         addSubview(progress, positioned: .below, relativeTo: nil)
 
@@ -181,12 +181,13 @@ class EventView: NSView {
             .disposed(by: disposeBag)
 
         if let link = viewModel.link {
-            (
+            Observable.combineLatest(
                 link.isMeeting
                     ? viewModel.isInProgress.map { $0 ? Icons.Event.video_fill : Icons.Event.video }
-                    : .just(Icons.Event.link)
+                    : .just(Icons.Event.link),
+                Scaling.observable
             )
-            .map { $0.with(scale: .small) }
+            .map { $0.with(pointSize: 10 * $1) }
             .bind(to: linkBtn.rx.image)
             .disposed(by: disposeBag)
 

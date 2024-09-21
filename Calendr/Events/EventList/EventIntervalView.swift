@@ -29,7 +29,7 @@ class EventIntervalView: NSView {
 
         addSubview(stack)
 
-        stack.edges(to: self)
+        stack.edges(equalTo: self)
     }
 
     required init?(coder: NSCoder) {

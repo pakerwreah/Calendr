@@ -49,7 +49,7 @@ class WeekNumberCellView: NSView {
         addSubview(label)
 
         label.textColor = .secondaryLabelColor
-        label.center(in: self, constant: CGPoint(x: -2, y: 0))
+        label.center(in: self, offset: CGPoint(x: -2, y: 0))
     }
 
     required init?(coder: NSCoder) {
