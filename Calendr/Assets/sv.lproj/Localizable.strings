@@ -23,10 +23,11 @@
 "settings.menu_bar.show_icon_date" = "Visa datum i ikon";
 "settings.menu_bar.show_background" = "Show ogenomskinlig bakgrund";
 "settings.menu_bar.date_format_custom" = "Anpassad";
+
 "settings.next_event" = "Nästa händelse";
-"settings.menu_bar.show_next_event" = "Visa nästa händelse";
-"settings.menu_bar.font_size" = "Teckenstorlek";
-"settings.menu_bar.next_event_detect_notch" = "Korta om 'notch' finns";
+"settings.next_event.show_next_event" = "Visa nästa händelse";
+"settings.next_event.font_size" = "Teckenstorlek";
+"settings.next_event.detect_notch" = "Korta om 'notch' finns";
 
 "settings.calendar" = "Kalender";
 "settings.calendar.show_week_numbers" = "Visa veckonummer";

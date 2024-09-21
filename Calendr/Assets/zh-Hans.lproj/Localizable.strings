@@ -23,10 +23,11 @@
 "settings.menu_bar.show_icon_date" = "在图标中显示日期";
 "settings.menu_bar.show_background" = "启用不透明背景";
 "settings.menu_bar.date_format_custom" = "自定义";
+
 "settings.next_event" = "下一个日程";
-"settings.menu_bar.show_next_event" = "显示下一个日程";
-"settings.menu_bar.font_size" = "字体大小";
-"settings.menu_bar.next_event_detect_notch" = "为屏幕“刘海”缩短长度";
+"settings.next_event.show_next_event" = "显示下一个日程";
+"settings.next_event.font_size" = "字体大小";
+"settings.next_event.detect_notch" = "为屏幕“刘海”缩短长度";
 
 "settings.calendar" = "日历";
 "settings.calendar.show_week_numbers" = "显示周数";

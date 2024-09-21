@@ -42,9 +42,9 @@ internal enum Strings {
     internal static func newVersion(_ p1: Any) -> String {
       return Strings.tr("Localizable", "auto_update.new_version", String(describing: p1), fallback: "New version available: %@")
     }
-    /// Updated to version: %@
+    /// Updated to version %@
     internal static func updatedTo(_ p1: Any) -> String {
-      return Strings.tr("Localizable", "auto_update.updated_to", String(describing: p1), fallback: "Updated to version: %@")
+      return Strings.tr("Localizable", "auto_update.updated_to", String(describing: p1), fallback: "Updated to version %@")
     }
   }
   internal enum EventAction {
@@ -197,10 +197,6 @@ internal enum Strings {
       internal static let autoLaunch = Strings.tr("Localizable", "settings.menu_bar.auto_launch", fallback: "Launch at login")
       /// Custom
       internal static let dateFormatCustom = Strings.tr("Localizable", "settings.menu_bar.date_format_custom", fallback: "Custom")
-      /// Font size
-      internal static let fontSize = Strings.tr("Localizable", "settings.menu_bar.font_size", fallback: "Font size")
-      /// Shorten if 'notch' is present
-      internal static let nextEventDetectNotch = Strings.tr("Localizable", "settings.menu_bar.next_event_detect_notch", fallback: "Shorten if 'notch' is present")
       /// Show opaque background
       internal static let showBackground = Strings.tr("Localizable", "settings.menu_bar.show_background", fallback: "Show opaque background")
       /// Show date
@@ -209,8 +205,14 @@ internal enum Strings {
       internal static let showIcon = Strings.tr("Localizable", "settings.menu_bar.show_icon", fallback: "Show icon")
       /// Show date in icon
       internal static let showIconDate = Strings.tr("Localizable", "settings.menu_bar.show_icon_date", fallback: "Show date in icon")
+    }
+    internal enum NextEvent {
+      /// Font size
+      internal static let fontSize = Strings.tr("Localizable", "settings.next_event.font_size", fallback: "Font size")
+      /// Shorten if 'notch' is present
+      internal static let nextEventDetectNotch = Strings.tr("Localizable", "settings.next_event.next_event_detect_notch", fallback: "Shorten if 'notch' is present")
       /// Show next event
-      internal static let showNextEvent = Strings.tr("Localizable", "settings.menu_bar.show_next_event", fallback: "Show next event")
+      internal static let showNextEvent = Strings.tr("Localizable", "settings.next_event.show_next_event", fallback: "Show next event")
     }
     internal enum Tab {
       /// About

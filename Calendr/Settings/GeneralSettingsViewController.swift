@@ -24,10 +24,10 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     private let dateFormatTextField = NSTextField()
 
     // Next Event
-    private let showNextEventCheckbox = Checkbox(title: Strings.Settings.MenuBar.showNextEvent)
+    private let showNextEventCheckbox = Checkbox(title: Strings.Settings.NextEvent.showNextEvent)
     private let nextEventRangeStepper = NSStepper()
     private let nextEventLengthSlider = Slider.make(minValue: 10, maxValue: 50, numberOfTickMarks: 12)
-    private let nextEventDetectNotchCheckbox = Checkbox(title: Strings.Settings.MenuBar.nextEventDetectNotch)
+    private let nextEventDetectNotchCheckbox = Checkbox(title: Strings.Settings.NextEvent.nextEventDetectNotch)
     private let nextEventFontSizeStepper = NSStepper()
 
     // Calendar
@@ -179,7 +179,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
 
         // Next event font size
 
-        let fontSizeLabel = Label(text: Strings.Settings.MenuBar.fontSize, font: .systemFont(ofSize: 13))
+        let fontSizeLabel = Label(text: Strings.Settings.NextEvent.fontSize, font: .systemFont(ofSize: 13))
         let fontSizeStepperLabel = Label(font: .systemFont(ofSize: 13))
 
         nextEventFontSizeStepper.minValue = 10

@@ -16,7 +16,7 @@
 "auto_update.check_for_updates" = "Check for updates";
 "auto_update.fetching_releases" = "Fetching releases";
 "auto_update.new_version" = "New version available: %@";
-"auto_update.updated_to" = "Updated to version: %@";
+"auto_update.updated_to" = "Updated to version %@";
 "auto_update.downloading" = "Downloading version %@";
 "auto_update.install" = "Install";
 
@@ -34,10 +34,11 @@
 "settings.menu_bar.show_icon_date" = "Show date in icon";
 "settings.menu_bar.show_background" = "Show opaque background";
 "settings.menu_bar.date_format_custom" = "Custom";
+
 "settings.next_event" = "Next Event";
-"settings.menu_bar.show_next_event" = "Show next event";
-"settings.menu_bar.font_size" = "Font size";
-"settings.menu_bar.next_event_detect_notch" = "Shorten if 'notch' is present";
+"settings.next_event.show_next_event" = "Show next event";
+"settings.next_event.font_size" = "Font size";
+"settings.next_event.next_event_detect_notch" = "Shorten if 'notch' is present";
 
 "settings.calendar" = "Calendar";
 "settings.calendar.show_week_numbers" = "Show week numbers";
