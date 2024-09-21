@@ -537,8 +537,8 @@ class MainViewController: NSViewController {
                 let popover = Popover()
                 setUpAndShow(popover, from: statusBarButton)
 
-                let close = clickHandler.leftClick.bind { [view] in
-                    view.window?.performClose(nil)
+                let close = clickHandler.leftClick.bind {
+                    Popover.closeAll()
                 }
 
                 return popover.rx.deallocated.do(onNext: { close.dispose() })
