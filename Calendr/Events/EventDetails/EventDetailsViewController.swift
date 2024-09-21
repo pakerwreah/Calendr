@@ -69,8 +69,8 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
 
         view = NSView()
 
-        view.width(lessThanOrEqualTo: 400)
-        view.width(greaterThanOrEqualTo: 250)
+        view.width(lessThanOrEqualTo: 400 * Scaling.current)
+        view.width(greaterThanOrEqualTo: 250 * Scaling.current)
         view.width(greaterThanOrEqualTo: view.heightAnchor, multiplier: 0.5, priority: .dragThatCanResizeWindow)
 
         scrollView.hasVerticalScroller = true
@@ -243,6 +243,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         optionsLabel.stringValue = Strings.EventStatus.label
         optionsLabel.textColor = .secondaryLabelColor
         optionsLabel.setContentHuggingPriority(.required, for: .vertical)
+        optionsLabel.setContentCompressionResistancePriority(.required, for: .vertical)
 
         optionsButton.image = icon.with(color: color)
         optionsButton.title = title
@@ -443,10 +444,10 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         guard !viewModel.notes.isEmpty else { return }
         let notes = viewModel.notes
 
-        if ["<", ">"].allSatisfy(notes.contains), let html = notes.html(font: .default, color: .labelColor) {
+        if ["<", ">"].allSatisfy(notes.contains), let html = notes.html(font: .scaled(.default), color: .labelColor) {
             notesTextView.textStorage?.setAttributedString(html)
         } else {
-            notesTextView.font = .default
+            notesTextView.font = .scaled(.default)
             notesTextView.string = notes
         }
         notesTextView.checkTextInDocument(nil)
@@ -585,4 +586,8 @@ private extension NSFont {
     static let `default` = systemFont(ofSize: 13)
     static let header = systemFont(ofSize: 16)
     static let small = systemFont(ofSize: 12)
+
+    static func scaled(_ font: NSFont) -> NSFont {
+        font.withSize(font.pointSize * Scaling.current)
+    }
 }

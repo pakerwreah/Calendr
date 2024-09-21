@@ -39,8 +39,11 @@ enum Prefs {
     // Events
     static let showPastEvents = "show_past_events"
 
-    // Misc
+    // Appearance
     static let transparencyLevel = "transparency_level"
+    static let textScaling = "text_scaling"
+
+    // Misc
     static let lastCheckedVersion = "last_checked_version"
     static let updatedVersion = "updated_version"
     static let permissionSuppressed = "permission_suppressed"
@@ -81,8 +84,9 @@ func registerDefaultPrefs(in userDefaults: UserDefaults, calendar: Calendar = .c
         // Events
         Prefs.showPastEvents: true,
 
-        // Misc
-        Prefs.transparencyLevel: 2
+        // Appearance
+        Prefs.transparencyLevel: 2,
+        Prefs.textScaling: 1,
     ])
 }
 
@@ -203,12 +207,19 @@ extension UserDefaults {
         set { set(newValue, forKey: Prefs.showPastEvents) }
     }
 
-    // Misc
+    // Appearance
 
     @objc dynamic var transparencyLevel: Int {
         get { integer(forKey: Prefs.transparencyLevel) }
         set { set(newValue, forKey: Prefs.transparencyLevel) }
     }
+
+    @objc dynamic var textScaling: Double {
+        get { double(forKey: Prefs.textScaling) }
+        set { set(newValue, forKey: Prefs.textScaling) }
+    }
+
+    // Misc
 
     @objc dynamic var lastCheckedVersion: String? {
         get { string(forKey: Prefs.lastCheckedVersion) }

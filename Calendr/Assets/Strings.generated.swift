@@ -126,8 +126,12 @@ internal enum Strings {
     internal static let nextEvent = Strings.tr("Localizable", "settings.next_event", fallback: "Next Event")
     /// Preferences
     internal static let title = Strings.tr("Localizable", "settings.title", fallback: "Preferences")
-    /// Transparency
-    internal static let transparency = Strings.tr("Localizable", "settings.transparency", fallback: "Transparency")
+    internal enum Appearance {
+      /// Accessibility
+      internal static let accessibility = Strings.tr("Localizable", "settings.appearance.accessibility", fallback: "Accessibility")
+      /// Transparency
+      internal static let transparency = Strings.tr("Localizable", "settings.appearance.transparency", fallback: "Transparency")
+    }
     internal enum Calendar {
       /// Preserve selected date on hide
       internal static let preserveSelectedDate = Strings.tr("Localizable", "settings.calendar.preserve_selected_date", fallback: "Preserve selected date on hide")
@@ -211,6 +215,8 @@ internal enum Strings {
     internal enum Tab {
       /// About
       internal static let about = Strings.tr("Localizable", "settings.tab.about", fallback: "About")
+      /// Appearance
+      internal static let appearance = Strings.tr("Localizable", "settings.tab.appearance", fallback: "Appearance")
       /// Calendars
       internal static let calendars = Strings.tr("Localizable", "settings.tab.calendars", fallback: "Calendars")
       /// General

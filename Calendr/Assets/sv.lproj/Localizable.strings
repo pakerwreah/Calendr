@@ -39,7 +39,7 @@
 "settings.events.finished.fade" = "Tona";
 "settings.events.finished.hide" = "Dölj";
 
-"settings.transparency" = "Transparens";
+"settings.appearance.transparency" = "Transparens";
 
 "settings.keyboard.local_shortcuts.title" = "Lokala genvägar";
 "settings.keyboard.local_shortcuts.prev_date" = "Föregående datum";

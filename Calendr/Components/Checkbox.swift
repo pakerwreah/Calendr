@@ -10,11 +10,14 @@ import RxSwift
 
 class Checkbox: CursorButton {
 
-    private var baseFont = BehaviorSubject<NSFont?>(value: .systemFont(ofSize: NSFont.systemFontSize))
+    private var baseFont = BehaviorSubject<NSFont>(value: .systemFont(ofSize: NSFont.systemFontSize))
 
     override var font: NSFont? {
         get { super.font }
-        set { baseFont.onNext(newValue) }
+        set {
+            guard let newValue else { return }
+            baseFont.onNext(newValue)
+        }
     }
 
     private let disposeBag = DisposeBag()
@@ -38,9 +41,8 @@ class Checkbox: CursorButton {
 
         Observable
             .combineLatest(baseFont, Scaling.observable)
-            .compactMap { font, scaling in
-                guard let font else { return nil }
-                return font.withSize(font.pointSize * scaling)
+            .map { font, scaling in
+                font.withSize(font.pointSize * scaling)
             }
             .observe(on: MainScheduler.instance)
             .bind {

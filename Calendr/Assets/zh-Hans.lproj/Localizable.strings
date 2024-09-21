@@ -39,7 +39,7 @@
 "settings.events.finished.fade" = "渐隐";
 "settings.events.finished.hide" = "隐藏";
 
-"settings.transparency" = "透明度";
+"settings.appearance.transparency" = "透明度";
 
 "settings.keyboard.local_shortcuts.title" = "本地快捷键";
 "settings.keyboard.local_shortcuts.prev_date" = "前一天";

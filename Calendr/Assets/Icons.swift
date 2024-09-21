@@ -29,11 +29,16 @@ enum Icons {
         static let general = NSImage(systemName: "gear")
         static let calendars = NSImage(systemName: "calendar.badge.plus")
         static let keyboard = NSImage(systemName: "keyboard")
+        static let appearance = NSImage(systemName: "paintbrush")
         static let about = NSImage(systemName: "book")
         static let tooltip = NSImage(systemName: "info.circle")
         static let ruler = NSImage(systemName: "ruler")
         static let zoomIn = NSImage(systemName: "plus.magnifyingglass")
         static let zoomOut = NSImage(systemName: "minus.magnifyingglass")
+        static let transparencyLow = NSImage(systemName: "cube.transparent")
+        static let transparencyHigh = NSImage(systemName: "cube.transparent.fill")
+        static let textSmall = NSImage(systemName: "textformat.size.smaller")
+        static let textLarge = NSImage(systemName: "textformat.size.larger")
         static let prev = Calendar.prev
         static let next = Calendar.next
     }

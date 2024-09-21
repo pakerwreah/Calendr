@@ -162,6 +162,8 @@
 		34E004A725B61D5200241419 /* StatusItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E004A625B61D5200241419 /* StatusItemViewModel.swift */; };
 		34E1902325B76CFE00E9491B /* CalendarPickerViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E1902225B76CFE00E9491B /* CalendarPickerViewModelTests.swift */; };
 		34E259832B659B5600074D3A /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 34E259822B659B5600074D3A /* KeyboardShortcuts */; };
+		34E5F2382C9F309E0048E25D /* AppearanceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E5F2372C9F309E0048E25D /* AppearanceViewController.swift */; };
+		34E5F23C2C9F76EF0048E25D /* DisposableWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E5F23B2C9F76EF0048E25D /* DisposableWrapper.swift */; };
 		34E60D6126A0D6D6004DA082 /* NSAccessibilityProtocol+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E60D6026A0D6D6004DA082 /* NSAccessibilityProtocol+Rx.swift */; };
 		34E60D6326A0EA32004DA082 /* NSAccessibilityProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E60D6226A0EA32004DA082 /* NSAccessibilityProtocol.swift */; };
 		34E855682C70E92500757B58 /* AutoUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E855672C70E92500757B58 /* AutoUpdater.swift */; };
@@ -365,6 +367,8 @@
 		34D88DC92C4C687B0047D636 /* SettingsUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsUI.swift; sourceTree = "<group>"; };
 		34E004A625B61D5200241419 /* StatusItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemViewModel.swift; sourceTree = "<group>"; };
 		34E1902225B76CFE00E9491B /* CalendarPickerViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPickerViewModelTests.swift; sourceTree = "<group>"; };
+		34E5F2372C9F309E0048E25D /* AppearanceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceViewController.swift; sourceTree = "<group>"; };
+		34E5F23B2C9F76EF0048E25D /* DisposableWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisposableWrapper.swift; sourceTree = "<group>"; };
 		34E60D6026A0D6D6004DA082 /* NSAccessibilityProtocol+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAccessibilityProtocol+Rx.swift"; sourceTree = "<group>"; };
 		34E60D6226A0EA32004DA082 /* NSAccessibilityProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSAccessibilityProtocol.swift; sourceTree = "<group>"; };
 		34E66E2627C41B5C00A7A77A /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -773,6 +777,7 @@
 			isa = PBXGroup;
 			children = (
 				345CC3672C8CC93B00B0DD1A /* Cache.swift */,
+				34E5F23B2C9F76EF0048E25D /* DisposableWrapper.swift */,
 				34C1D4202C6E632F00295E5E /* Sentry.swift */,
 				3438AEED2C6192A9002BE3E1 /* XCTest.swift */,
 			);
@@ -802,6 +807,7 @@
 			isa = PBXGroup;
 			children = (
 				34C459BB25DF114300561C29 /* AboutViewController.swift */,
+				34E5F2372C9F309E0048E25D /* AppearanceViewController.swift */,
 				346CB087295E209600E018EF /* AutoLauncher.swift */,
 				34E855672C70E92500757B58 /* AutoUpdater.swift */,
 				3449403125C348C70020E664 /* CalendarPickerViewController.swift */,
@@ -1082,6 +1088,7 @@
 				34AC60C626925FA5005312B6 /* PreviewExtensions.swift in Sources */,
 				3477F3CE25FAE56A008EA888 /* EventDetailsViewModel.swift in Sources */,
 				3487A43C25E70F5B00FCC7D7 /* NextEventView.swift in Sources */,
+				34E5F23C2C9F76EF0048E25D /* DisposableWrapper.swift in Sources */,
 				34C459A425DF030000561C29 /* BuildConfig.swift in Sources */,
 				3449402E25C348B20020E664 /* GeneralSettingsViewController.swift in Sources */,
 				349355A625BCA8D400957945 /* EventListView.swift in Sources */,
@@ -1147,6 +1154,7 @@
 				347D0FF225954920002451EC /* EventModel.swift in Sources */,
 				34A4C3E925963FB200D0F949 /* NSStackView.swift in Sources */,
 				34D3655829402D5700849457 /* NSColor.swift in Sources */,
+				34E5F2382C9F309E0048E25D /* AppearanceViewController.swift in Sources */,
 				34A591E42C175BBD00DE419D /* AppEditShortcuts.swift in Sources */,
 				3453E6FF28393943002DCC3C /* ContextMenu.swift in Sources */,
 				34D88DCA2C4C687B0047D636 /* SettingsUI.swift in Sources */,
@@ -1418,7 +1426,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.12.7;
+				MARKETING_VERSION = 1.13.0;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Config/Calendr-Bridging-Header.h";
@@ -1446,7 +1454,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.12.7;
+				MARKETING_VERSION = 1.13.0;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Config/Calendr-Bridging-Header.h";

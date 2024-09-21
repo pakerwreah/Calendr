@@ -13,10 +13,12 @@ class MockEventDetailsSettings: EventDetailsSettings {
 
     let showMap: Observable<Bool>
     let popoverMaterial: Observable<PopoverMaterial>
+    let textScaling: Observable<Double>
 
     init(showMap: Bool = false, popoverMaterial: PopoverMaterial = .popover) {
         self.showMap = .just(showMap)
         self.popoverMaterial = .just(popoverMaterial)
+        self.textScaling = .just(1)
     }
 }
 

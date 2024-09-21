@@ -9,7 +9,13 @@ import Cocoa
 import RxSwift
 
 enum Scaling {
-    static let observable = UserDefaults.standard.rx.observe(\.calendarScaling).share(replay: 1)
+    static let observable = UserDefaults.standard.rx.observe(\.textScaling).share(replay: 1)
+
+    static var current: Double {
+        var value: Double = 1
+        observable.bind { value = $0 }.dispose()
+        return value
+    }
 }
 
 class Label: NSTextField {
@@ -24,11 +30,14 @@ class Label: NSTextField {
         stringValue.isEmpty && attributedStringValue.length == 0
     }
 
-    private var baseFont = BehaviorSubject<NSFont?>(value: .systemFont(ofSize: NSFont.systemFontSize))
+    private var baseFont = BehaviorSubject<NSFont>(value: .systemFont(ofSize: NSFont.systemFontSize))
 
     override var font: NSFont? {
         get { super.font }
-        set { baseFont.onNext(newValue) }
+        set {
+            guard let newValue else { return }
+            baseFont.onNext(newValue)
+        }
     }
 
     private let disposeBag = DisposeBag()
@@ -60,9 +69,8 @@ class Label: NSTextField {
 
         Observable
             .combineLatest(baseFont, Scaling.observable)
-            .compactMap { font, scaling in
-                guard let font else { return nil }
-                return font.withSize(font.pointSize * scaling)
+            .map { font, scaling in
+                font.withSize(font.pointSize * scaling)
             }
             .observe(on: MainScheduler.instance)
             .bind {

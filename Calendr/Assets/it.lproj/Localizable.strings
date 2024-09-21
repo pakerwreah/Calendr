@@ -40,7 +40,7 @@
 "settings.events.finished.fade" = "Dissolvi";
 "settings.events.finished.hide" = "Nascondi";
 
-"settings.transparency" = "Transparenza";
+"settings.appearance.transparency" = "Transparenza";
 
 "settings.keyboard.local_shortcuts.title" = "Scorciatoie locali";
 "settings.keyboard.local_shortcuts.prev_date" = "Data precedente";

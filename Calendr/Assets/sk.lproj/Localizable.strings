@@ -39,7 +39,7 @@
 "settings.events.finished.fade" = "Vyblednúť";
 "settings.events.finished.hide" = "Skryť";
 
-"settings.transparency" = "Priehľadnosť";
+"settings.appearance.transparency" = "Priehľadnosť";
 
 "settings.keyboard.local_shortcuts.title" = "Lokálne skratky";
 "settings.keyboard.local_shortcuts.prev_date" = "Predchádzajúci dátum";

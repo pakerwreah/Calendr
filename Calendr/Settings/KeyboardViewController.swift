@@ -11,14 +11,16 @@ import KeyboardShortcuts
 
 class KeyboardViewController: NSViewController, SettingsUI {
 
-    let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     typealias LocalShortcuts = Strings.Settings.Keyboard.LocalShortcuts
     typealias GlobalShortcuts = Strings.Settings.Keyboard.GlobalShortcuts
 
+    private var commandCharWidth = NSLayoutGuide()
+
     init() {
         super.init(nibName: nil, bundle: nil)
-        
+
         setUpAccessibility()
     }
 
@@ -34,16 +36,26 @@ class KeyboardViewController: NSViewController, SettingsUI {
 
         view = NSView()
 
-        let stackView = NSStackView(views: [
-            makeSection(title: LocalShortcuts.title, content: localContent),
-            makeSection(title: GlobalShortcuts.title, content: globalContent),
-        ])
+        view.addLayoutGuide(commandCharWidth)
+
+        let stackView = NSStackView(
+            views: Sections.create([
+                makeSection(title: LocalShortcuts.title, content: localContent),
+                makeSection(title: GlobalShortcuts.title, content: globalContent),
+            ])
+            .disposed(by: disposeBag)
+        )
         .with(spacing: Constants.contentSpacing)
         .with(orientation: .vertical)
 
         view.addSubview(stackView)
 
         stackView.edges(equalTo: view, margins: .init(bottom: 1))
+
+        Scaling.observable
+            .map { CGFloat(16 * $0) }
+            .bind(to: commandCharWidth.width(equalTo: 1).rx.constant)
+            .disposed(by: disposeBag)
     }
 
     private lazy var localContent: NSView = {
@@ -99,7 +111,14 @@ class KeyboardViewController: NSViewController, SettingsUI {
     private func makeCommand(text: String) -> NSView {
 
         let charViews = text.split(separator: " ").map {
-            Label(text: String($0), font: .systemFont(ofSize: 13, weight: .regular), align: .center).with(width: 16)
+            Label(text: String($0), font: .systemFont(ofSize: 13, weight: .regular), align: .center)
+        }
+
+        // defer until after they are in the same hierarchy
+        Task {
+            for view in charViews {
+                view.width(equalTo: commandCharWidth)
+            }
         }
 
         return NSStackView(views: charViews).with(spacing: 0)

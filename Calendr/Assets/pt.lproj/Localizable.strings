@@ -40,7 +40,7 @@
 "settings.events.finished.fade" = "Sombrear";
 "settings.events.finished.hide" = "Ocultar";
 
-"settings.transparency" = "Transparência";
+"settings.appearance.transparency" = "Transparência";
 
 "settings.keyboard.local_shortcuts.title" = "Atalhos locais";
 "settings.keyboard.local_shortcuts.prev_date" = "Data anterior";

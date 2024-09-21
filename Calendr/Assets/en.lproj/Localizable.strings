@@ -22,6 +22,7 @@
 
 "settings.title" = "Preferences";
 "settings.tab.general" = "General";
+"settings.tab.appearance" = "Appearance";
 "settings.tab.calendars" = "Calendars";
 "settings.tab.keyboard" = "Shortcuts";
 "settings.tab.about" = "About";
@@ -50,7 +51,8 @@
 "settings.events.finished.fade" = "Fade";
 "settings.events.finished.hide" = "Hide";
 
-"settings.transparency" = "Transparency";
+"settings.appearance.transparency" = "Transparency";
+"settings.appearance.accessibility" = "Accessibility";
 
 "settings.keyboard.local_shortcuts.title" = "Local shortcuts";
 "settings.keyboard.local_shortcuts.prev_date" = "Previous date";

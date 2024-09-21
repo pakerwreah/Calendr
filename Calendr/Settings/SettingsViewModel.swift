@@ -49,6 +49,7 @@ protocol StatusItemSettings {
 
 protocol CalendarSettings {
     var calendarScaling: Observable<Double> { get }
+    var textScaling: Observable<Double> { get }
     var firstWeekday: Observable<Int> { get }
     var highlightedWeekdays: Observable<[Int]> { get }
     var showWeekNumbers: Observable<Bool> { get }
@@ -56,9 +57,13 @@ protocol CalendarSettings {
     var preserveSelectedDate: Observable<Bool> { get }
 }
 
-protocol EventDetailsSettings {
-    var showMap: Observable<Bool> { get }
+protocol AppearanceSettings {
     var popoverMaterial: Observable<PopoverMaterial> { get }
+    var textScaling: Observable<Double> { get }
+}
+
+protocol EventDetailsSettings: AppearanceSettings {
+    var showMap: Observable<Bool> { get }
 }
 
 protocol EventListSettings: EventDetailsSettings {
@@ -73,7 +78,9 @@ protocol NextEventSettings: EventDetailsSettings {
     var eventStatusItemDetectNotch: Observable<Bool> { get }
 }
 
-class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings, EventListSettings  {
+class SettingsViewModel:
+    StatusItemSettings, NextEventSettings, CalendarSettings,
+    EventListSettings, EventDetailsSettings, AppearanceSettings {
 
     struct IconStyleOption: Equatable {
         let style: StatusItemIconStyle
@@ -109,6 +116,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
     let toggleMap: AnyObserver<Bool>
     let togglePastEvents: AnyObserver<Bool>
     let transparencyObserver: AnyObserver<Int>
+    let textScalingObserver: AnyObserver<Double>
 
     // Observables
     let autoLaunch: Observable<Bool>
@@ -138,6 +146,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
     let showPastEvents: Observable<Bool>
     let popoverTransparency: Observable<Int>
     let popoverMaterial: Observable<PopoverMaterial>
+    let textScaling: Observable<Double>
 
     let isPresented = BehaviorSubject(value: false)
 
@@ -177,6 +186,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
         toggleMap = userDefaults.rx.observer(for: \.showMap)
         togglePastEvents = userDefaults.rx.observer(for: \.showPastEvents)
         transparencyObserver = userDefaults.rx.observer(for: \.transparencyLevel)
+        textScalingObserver = userDefaults.rx.observer(for: \.textScaling)
 
         // MARK: - Observables
 
@@ -213,6 +223,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
         showMap = userDefaults.rx.observe(\.showMap)
         showPastEvents = userDefaults.rx.observe(\.showPastEvents)
         popoverTransparency = userDefaults.rx.observe(\.transparencyLevel)
+        textScaling = userDefaults.rx.observe(\.textScaling)
 
         let localeChangeObservable = notificationCenter.rx
             .notification(NSLocale.currentLocaleDidChangeNotification)
@@ -255,13 +266,7 @@ class SettingsViewModel: StatusItemSettings, NextEventSettings, CalendarSettings
             }
             .share(replay: 1)
 
-        isDateFormatInputVisible = Observable.combineLatest(
-            showStatusItemDate,
-            statusItemDateStyle.map(\.isCustom)
-        )
-        .map { $0 && $1 }
-        .distinctUntilChanged()
-        .share(replay: 1)
+        isDateFormatInputVisible = statusItemDateStyle.map(\.isCustom).share(replay: 1)
 
         eventStatusItemCheckRangeLabel = eventStatusItemCheckRange
             .repeat(when: calendarChangeObservable)

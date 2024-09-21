@@ -16,12 +16,30 @@ protocol LayoutItem {
     var heightAnchor: NSLayoutDimension { get }
     var centerXAnchor: NSLayoutXAxisAnchor { get }
     var centerYAnchor: NSLayoutYAxisAnchor { get }
+
+    @discardableResult
+    func forAutoLayout() -> Self
 }
 
-extension NSView: LayoutItem { }
-extension NSLayoutGuide: LayoutItem { }
+extension NSView: LayoutItem {
 
-extension NSView {
+    @discardableResult
+    func forAutoLayout() -> Self {
+        translatesAutoresizingMaskIntoConstraints = false
+        return self
+    }
+}
+
+extension NSLayoutGuide: LayoutItem {
+
+    @discardableResult
+    func forAutoLayout() -> Self {
+        return self
+    }
+}
+
+
+extension LayoutItem {
 
     typealias LayoutConstraints = (
         top: NSLayoutConstraint,
@@ -39,12 +57,6 @@ extension NSView {
         horizontal: NSLayoutConstraint,
         vertical: NSLayoutConstraint
     )
-
-    @discardableResult
-    func forAutoLayout() -> Self {
-        translatesAutoresizingMaskIntoConstraints = false
-        return self
-    }
 
     @discardableResult
     func leading(equalTo anchor: NSLayoutXAxisAnchor, constant: CGFloat = 0, priority: NSLayoutConstraint.Priority = .required) -> NSLayoutConstraint {
@@ -458,23 +470,28 @@ extension NSView {
 
 extension NSView {
 
-    func with(width: CGFloat = 0) -> NSView {
+    func with(width: CGFloat = 0) -> Self {
         self.width(equalTo: width)
         return self
     }
 
-    func with(height: CGFloat = 0) -> NSView {
+    func with(height: CGFloat = 0) -> Self {
         self.height(equalTo: height)
         return self
     }
 
-    func with(size: CGSize) -> NSView {
+    func with(size: CGSize) -> Self {
         self.size(equalTo: size)
         return self
     }
 
-    func with(size: CGFloat) -> NSView {
+    func with(size: CGFloat) -> Self {
         self.size(equalTo: size)
+        return self
+    }
+
+    func with(config: (Self) -> Void) -> Self {
+        config(self)
         return self
     }
 }

@@ -113,7 +113,7 @@ class CalendarPickerViewController: NSViewController {
                             makeCalendarItemEnabled($0),
                             showNextEvent ? makeCalendarItemNextEvent($0) : nil
                         ]
-                            .compact()
+                        .compact()
                     )
                     .with(alignment: .centerY)
                 }
