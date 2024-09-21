@@ -267,13 +267,11 @@ class MainViewController: NSViewController {
         mainStackView.width(equalTo: calendarView)
         mainStackView.top(equalTo: view, constant: Constants.MainStackView.margin)
         mainStackView.leading(equalTo: view, constant: Constants.MainStackView.margin)
-        mainStackView.trailing(equalTo: view, constant: Constants.MainStackView.margin)
+        mainStackView.trailing(equalTo: view, constant: -Constants.MainStackView.margin)
 
-        heightConstraint = view.height(equalTo: 0).activate()
+        heightConstraint = view.height(equalTo: 0)
 
-        let maxHeightConstraint = mainStackView
-            .heightAnchor.constraint(lessThanOrEqualToConstant: 0)
-            .activate()
+        let maxHeightConstraint = mainStackView.height(lessThanOrEqualTo: 0)
 
         screenProvider.screenObservable
             .map { 0.9 * $0.visibleFrame.height }
@@ -744,8 +742,8 @@ class MainViewController: NSViewController {
         scrollView.drawsBackground = false
         scrollView.documentView = eventListView
 
-        scrollView.contentView.edges(to: scrollView)
-        scrollView.contentView.edges(to: eventListView).bottom.priority = .dragThatCanResizeWindow
+        scrollView.contentView.edges(equalTo: scrollView)
+        scrollView.contentView.edges(equalTo: eventListView).bottom.priority = .dragThatCanResizeWindow
 
         calendarViewModel.cellViewModelsObservable
             .compactMap { $0.first(where: \.isSelected)?.date }

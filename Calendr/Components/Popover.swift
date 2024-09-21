@@ -69,7 +69,7 @@ class Popover: NSObject, PopoverWindowDelegate {
         container.maskImage = .mask(withCornerRadius: 12)
         container.state = .active
         container.addSubview(contentView)
-        container.edges(to: contentView)
+        container.edges(equalTo: contentView)
 
         let window = PopoverWindow()
         window.contentView = container

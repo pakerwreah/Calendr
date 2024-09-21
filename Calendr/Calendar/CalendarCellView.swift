@@ -87,7 +87,7 @@ class CalendarCellView: NSView {
         eventsStackView.top(equalTo: eventsContainer)
         eventsStackView.bottom(equalTo: eventsContainer)
         eventsStackView.center(in: eventsContainer, orientation: .horizontal)
-        eventsStackView.widthAnchor.constraint(lessThanOrEqualTo: eventsContainer.widthAnchor).activate()
+        eventsStackView.width(lessThanOrEqualTo: eventsContainer)
 
         let contentStackView = NSStackView(views: [label, eventsContainer])
             .with(orientation: .vertical)

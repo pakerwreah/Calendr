@@ -43,7 +43,7 @@ class KeyboardViewController: NSViewController, SettingsUI {
 
         view.addSubview(stackView)
 
-        stackView.edges(to: view, insets: .init(bottom: 1))
+        stackView.edges(equalTo: view, margins: .init(bottom: 1))
     }
 
     private lazy var localContent: NSView = {

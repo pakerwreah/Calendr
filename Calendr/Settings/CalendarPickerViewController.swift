@@ -52,12 +52,12 @@ class CalendarPickerViewController: NSViewController {
 
         view.addSubview(scrollView)
 
-        scrollView.edges(to: view, insets: configuration.insets)
+        scrollView.edges(equalTo: view, margins: configuration.margins)
 
         scrollView.drawsBackground = false
         scrollView.documentView = contentStackView.forAutoLayout()
 
-        scrollView.contentView.edges(to: scrollView)
+        scrollView.contentView.edges(equalTo: scrollView)
         scrollView.contentView.top(equalTo: contentStackView)
         scrollView.contentView.leading(equalTo: contentStackView)
         scrollView.contentView.trailing(equalTo: contentStackView)
@@ -65,7 +65,7 @@ class CalendarPickerViewController: NSViewController {
 
         if configuration ~= .settings {
             height.priority = .dragThatCanResizeWindow
-            scrollView.contentView.heightAnchor.constraint(lessThanOrEqualToConstant: 600).activate()
+            scrollView.contentView.height(lessThanOrEqualTo: 600)
         }
 
         contentStackView.spacing = 16
@@ -205,7 +205,7 @@ extension CalendarPickerConfiguration {
         }
     }
 
-    var insets: NSEdgeInsets {
+    var margins: NSEdgeInsets {
         switch self {
         case .settings:
             return .init()

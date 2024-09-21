@@ -162,7 +162,7 @@ class EventView: NSView {
 
         let contentStackView = NSStackView(views: [colorBar, eventStackView])
         addSubview(contentStackView)
-        contentStackView.edges(to: self)
+        contentStackView.edges(equalTo: self)
 
         addSubview(progress, positioned: .below, relativeTo: nil)
 

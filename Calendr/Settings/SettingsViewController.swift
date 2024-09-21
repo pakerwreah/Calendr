@@ -81,7 +81,7 @@ class SettingsViewController: NSTabViewController, NSWindowDelegate {
 
         view.addSubview(contentView)
 
-        contentView.edges(to: view, constant: Constants.padding)
+        contentView.edges(equalTo: view, margin: Constants.padding)
     }
 
     override func viewWillAppear() {

@@ -85,7 +85,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
 
         view.addSubview(stackView)
 
-        stackView.edges(to: view)
+        stackView.edges(equalTo: view)
 
         iconStyleDropdown.height(equalTo: showMenuBarIconCheckbox)
 
@@ -222,7 +222,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         label.preferredMaxLayoutWidth = 190
         label.lineBreakMode = NSLineBreakMode.byWordWrapping
         view.addSubview(label)
-        label.edges(to: view, constant: 8)
+        label.edges(equalTo: view, margin: 8)
 
         let button = ImageButton(image: Icons.Settings.tooltip, cursor: nil)
 

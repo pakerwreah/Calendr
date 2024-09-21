@@ -58,7 +58,7 @@ class CalendarView: NSView {
 
         addSubview(gridView)
 
-        gridView.edges(to: self)
+        gridView.edges(equalTo: self)
     }
 
     private func setUpBindings() {

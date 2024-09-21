@@ -18,8 +18,8 @@ extension NSView {
 
     static var dummy: NSView {
         let spacer = NSView.spacer
-        spacer.width(equalTo: 0).priority = .defaultHigh
-        spacer.height(equalTo: 0).priority = .defaultHigh
+        spacer.width(equalTo: 0, priority: .defaultHigh)
+        spacer.height(equalTo: 0, priority: .defaultHigh)
         return spacer
     }
 
