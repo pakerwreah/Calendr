@@ -46,6 +46,7 @@
 		3449402E25C348B20020E664 /* GeneralSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3449402D25C348B20020E664 /* GeneralSettingsViewController.swift */; };
 		3449403225C348C70020E664 /* CalendarPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3449403125C348C70020E664 /* CalendarPickerViewController.swift */; };
 		344A59DB29AEBBBF004F0452 /* EventUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 344A59DA29AEBBBF004F0452 /* EventUtils.swift */; };
+		344D5EBC2CA0DAAF00523F9E /* NSImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 344D5EBB2CA0DAAF00523F9E /* NSImageView.swift */; };
 		3453E6FD28386A84002DCC3C /* Bool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3453E6FC28386A84002DCC3C /* Bool.swift */; };
 		3453E6FF28393943002DCC3C /* ContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3453E6FE28393943002DCC3C /* ContextMenu.swift */; };
 		345A34972C4DADD000AF0002 /* TrackedMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345A34962C4DADD000AF0002 /* TrackedMenu.swift */; };
@@ -242,6 +243,7 @@
 		3449402D25C348B20020E664 /* GeneralSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsViewController.swift; sourceTree = "<group>"; };
 		3449403125C348C70020E664 /* CalendarPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPickerViewController.swift; sourceTree = "<group>"; };
 		344A59DA29AEBBBF004F0452 /* EventUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventUtils.swift; sourceTree = "<group>"; };
+		344D5EBB2CA0DAAF00523F9E /* NSImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSImageView.swift; sourceTree = "<group>"; };
 		3453E6FC28386A84002DCC3C /* Bool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bool.swift; sourceTree = "<group>"; };
 		3453E6FE28393943002DCC3C /* ContextMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextMenu.swift; sourceTree = "<group>"; };
 		345A34962C4DADD000AF0002 /* TrackedMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackedMenu.swift; sourceTree = "<group>"; };
@@ -647,6 +649,7 @@
 				34D19FBF262299D300B2732C /* NSEdgeInsets.swift */,
 				34B2C59D279FFF0600B52BF3 /* NSGestureRecognizer+Rx.swift */,
 				34091736267E81870023B76D /* NSImage.swift */,
+				344D5EBB2CA0DAAF00523F9E /* NSImageView.swift */,
 				34934CD728E71B0F009635D4 /* NSObject+Rx.swift */,
 				34A4C3E825963FB200D0F949 /* NSStackView.swift */,
 				3430ED02259634E00045DA53 /* NSStackView+Rx.swift */,
@@ -1090,6 +1093,7 @@
 				34C1D41E2C6E567100295E5E /* ProcessInfo.swift in Sources */,
 				3421930827999FB7002BCD36 /* TimeZone+Factory.swift in Sources */,
 				3417A40A2A702643005C77E4 /* StatusItemIconFactory.swift in Sources */,
+				344D5EBC2CA0DAAF00523F9E /* NSImageView.swift in Sources */,
 				34EDE71B2AC46515007C5854 /* Error.swift in Sources */,
 				345DD97326920D1B00294D90 /* CalendarViewPreview.swift in Sources */,
 				3492C460269FCF5B009CFAD2 /* Accessibility.swift in Sources */,

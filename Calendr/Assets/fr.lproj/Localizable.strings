@@ -54,7 +54,6 @@
 
 "settings.appearance.transparency" = "Transparence";
 "settings.appearance.accessibility" = "Accessibilité";
-"settings.appearance.calendar_accessibility" = "Accessibilité du calendrier";
 
 "settings.keyboard.local_shortcuts.title" = "Raccourcis locaux";
 "settings.keyboard.local_shortcuts.prev_date" = "Date précédente";
