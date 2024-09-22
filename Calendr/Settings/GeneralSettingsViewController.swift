@@ -88,7 +88,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
 
         iconStyleDropdown.height(equalTo: showMenuBarIconCheckbox)
 
-        dateFormatDropdown.width(lessThanOrEqualTo: view, multiplier: 0.5, priority: .fittingSizeCompression)
+        dateFormatDropdown.width(equalTo: 150)
 
         if #unavailable(macOS 13.0) {
             autoLaunchCheckbox.isHidden = true
@@ -106,6 +106,8 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
 
     private lazy var menuBarContent: NSView = {
 
+        dateFormatDropdown.isBordered = false
+
         dateFormatTextField.placeholderString = viewModel.dateFormatPlaceholder
         dateFormatTextField.refusesFirstResponder = true
         dateFormatTextField.focusRingType = .none
@@ -117,7 +119,6 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             showMenuBarIconCheckbox,
             iconStyleDropdown
         ])
-        .with(insets: .init(right: 4))
 
         let dateFormat = NSStackView(
             views: [
@@ -391,6 +392,11 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         viewModel.isDateFormatInputVisible
             .map(!)
             .bind(to: dateFormatTextField.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        viewModel.isDateFormatInputVisible
+            .map { $0 ? .left : .right }
+            .bind(to: dateFormatDropdown.rx.alignment)
             .disposed(by: disposeBag)
 
         viewModel.isDateFormatInputVisible
