@@ -27,7 +27,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     private let showNextEventCheckbox = Checkbox(title: Strings.Settings.NextEvent.showNextEvent)
     private let nextEventRangeStepper = NSStepper()
     private let nextEventLengthSlider = Slider.make(minValue: 10, maxValue: 50, numberOfTickMarks: 12)
-    private let nextEventDetectNotchCheckbox = Checkbox(title: Strings.Settings.NextEvent.nextEventDetectNotch)
+    private let nextEventDetectNotchCheckbox = Checkbox(title: Strings.Settings.NextEvent.detectNotch)
     private let nextEventFontSizeStepper = NSStepper()
 
     // Calendar

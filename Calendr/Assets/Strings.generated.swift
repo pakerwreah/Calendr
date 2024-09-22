@@ -207,10 +207,10 @@ internal enum Strings {
       internal static let showIconDate = Strings.tr("Localizable", "settings.menu_bar.show_icon_date", fallback: "Show date in icon")
     }
     internal enum NextEvent {
+      /// Shorten if 'notch' is present
+      internal static let detectNotch = Strings.tr("Localizable", "settings.next_event.detect_notch", fallback: "Shorten if 'notch' is present")
       /// Font size
       internal static let fontSize = Strings.tr("Localizable", "settings.next_event.font_size", fallback: "Font size")
-      /// Shorten if 'notch' is present
-      internal static let nextEventDetectNotch = Strings.tr("Localizable", "settings.next_event.next_event_detect_notch", fallback: "Shorten if 'notch' is present")
       /// Show next event
       internal static let showNextEvent = Strings.tr("Localizable", "settings.next_event.show_next_event", fallback: "Show next event")
     }

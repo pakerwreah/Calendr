@@ -38,7 +38,7 @@
 "settings.next_event" = "Next Event";
 "settings.next_event.show_next_event" = "Show next event";
 "settings.next_event.font_size" = "Font size";
-"settings.next_event.next_event_detect_notch" = "Shorten if 'notch' is present";
+"settings.next_event.detect_notch" = "Shorten if 'notch' is present";
 
 "settings.calendar" = "Calendar";
 "settings.calendar.show_week_numbers" = "Show week numbers";
