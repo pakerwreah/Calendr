@@ -80,7 +80,7 @@ class SettingsViewController: NSTabViewController, NSWindowDelegate {
 
         for title in tabTitles {
             let titleSize = (title as NSString).size(withAttributes: [.font: font])
-            totalWidth += titleSize.width + 4
+            totalWidth += titleSize.width + 8
         }
 
         return totalWidth
