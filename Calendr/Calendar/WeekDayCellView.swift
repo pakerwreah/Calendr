@@ -12,7 +12,7 @@ class WeekDayCellView: NSView {
 
     private let disposeBag = DisposeBag()
 
-    private let label = Label()
+    private let label = CalendarLabel()
 
     init(weekDay: Observable<String>, scaling: Observable<Double>) {
 

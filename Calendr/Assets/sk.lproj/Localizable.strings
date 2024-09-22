@@ -54,6 +54,7 @@
 
 "settings.appearance.transparency" = "Priehľadnosť";
 "settings.appearance.accessibility" = "Prístupnosť";
+"settings.appearance.calendar_accessibility" = "Dostupnosť kalendára";
 
 "settings.keyboard.local_shortcuts.title" = "Lokálne skratky";
 "settings.keyboard.local_shortcuts.prev_date" = "Predchádzajúci dátum";

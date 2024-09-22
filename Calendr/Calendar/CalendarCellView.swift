@@ -17,9 +17,9 @@ class CalendarCellView: NSView {
     private let clickObserver: AnyObserver<Date>
     private let doubleClickObserver: AnyObserver<Date>
     private let calendarScaling: Observable<Double>
-    private let textScaling: Observable<Double>
+    private let calendarTextScaling: Observable<Double>
 
-    private let label = Label()
+    private let label = CalendarLabel()
     private let eventsStackView = NSStackView()
     private let borderLayer = CALayer()
 
@@ -29,7 +29,7 @@ class CalendarCellView: NSView {
         clickObserver: AnyObserver<Date>,
         doubleClickObserver: AnyObserver<Date>,
         calendarScaling: Observable<Double>,
-        textScaling: Observable<Double>
+        calendarTextScaling: Observable<Double>
     ) {
 
         self.viewModel = viewModel
@@ -37,7 +37,7 @@ class CalendarCellView: NSView {
         self.clickObserver = clickObserver
         self.doubleClickObserver = doubleClickObserver
         self.calendarScaling = calendarScaling
-        self.textScaling = textScaling
+        self.calendarTextScaling = calendarTextScaling
 
         super.init(frame: .zero)
 
@@ -137,11 +137,11 @@ class CalendarCellView: NSView {
         Observable.combineLatest(
             viewModel.map(\.dots).distinctUntilChanged(),
             calendarScaling,
-            textScaling
+            calendarTextScaling
         )
-        .map { dots, calendarScaling, textScaling in
+        .map { dots, calendarScaling, calendarTextScaling in
             (dots.isEmpty ? [.clear] : dots).map {
-                makeEventDot(color: $0, scaling: calendarScaling * textScaling)
+                makeEventDot(color: $0, scaling: calendarScaling * calendarTextScaling)
             }
         }
         .bind(to: eventsStackView.rx.arrangedSubviews)

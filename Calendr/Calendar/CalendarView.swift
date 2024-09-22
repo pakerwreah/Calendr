@@ -150,7 +150,7 @@ class CalendarView: NSView {
                 clickObserver: clickObserver,
                 doubleClickObserver: doubleClickObserver,
                 calendarScaling: viewModel.calendarScaling,
-                textScaling: viewModel.textScaling
+                calendarTextScaling: viewModel.calendarTextScaling
             )
             gridView.cell(atColumnIndex: 1 + day % 7, rowIndex: 1 + day / 7).contentView = cellView
         }

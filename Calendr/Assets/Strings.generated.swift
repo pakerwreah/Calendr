@@ -129,6 +129,8 @@ internal enum Strings {
     internal enum Appearance {
       /// Accessibility
       internal static let accessibility = Strings.tr("Localizable", "settings.appearance.accessibility", fallback: "Accessibility")
+      /// Calendar accessibility
+      internal static let calendarAccessibility = Strings.tr("Localizable", "settings.appearance.calendar_accessibility", fallback: "Calendar accessibility")
       /// Transparency
       internal static let transparency = Strings.tr("Localizable", "settings.appearance.transparency", fallback: "Transparency")
     }

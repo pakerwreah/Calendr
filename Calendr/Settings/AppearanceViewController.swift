@@ -19,6 +19,9 @@ class AppearanceViewController: NSViewController, SettingsUI {
 
     // Accessibility
     private let textScalingSlider = Slider.make(minValue: 1, maxValue: 1.6, numberOfTickMarks: 13)
+    
+    // Calendar Accessibility
+    private let calendarTextScalingSlider = Slider.make(minValue: 1, maxValue: 1.5, numberOfTickMarks: 13)
 
     init(viewModel: SettingsViewModel) {
 
@@ -45,7 +48,8 @@ class AppearanceViewController: NSViewController, SettingsUI {
         let stackView = NSStackView(
             views: Sections.create([
                 makeSection(title: Strings.Settings.Appearance.transparency, content: transparencyContent),
-                makeSection(title: Strings.Settings.Appearance.accessibility, content: accessibilityContent)
+                makeSection(title: Strings.Settings.Appearance.accessibility, content: accessibilityContent),
+                makeSection(title: Strings.Settings.Appearance.calendarAccessibility, content: calendarAccessibilityContent)
             ])
             .disposed(by: disposeBag)
         )
@@ -74,6 +78,15 @@ class AppearanceViewController: NSViewController, SettingsUI {
             NSImageView(image: Icons.Settings.textLarge)
         ])
     }()
+    
+    private lazy var calendarAccessibilityContent: NSView = {
+
+        NSStackView(views: [
+            NSImageView(image: Icons.Settings.textSmall),
+            calendarTextScalingSlider,
+            NSImageView(image: Icons.Settings.textLarge)
+        ])
+    }()
 
     private func setUpBindings() {
 
@@ -89,6 +102,11 @@ class AppearanceViewController: NSViewController, SettingsUI {
             observable: viewModel.textScaling,
             observer: viewModel.textScalingObserver
         )
+        .disposed(by: disposeBag)
+        
+        bind(control: calendarTextScalingSlider,
+             observable: viewModel.calendarTextScaling,
+             observer: viewModel.calendarTextScalingObserver)
         .disposed(by: disposeBag)
     }
 

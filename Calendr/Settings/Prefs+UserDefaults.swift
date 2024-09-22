@@ -42,6 +42,7 @@ enum Prefs {
     // Appearance
     static let transparencyLevel = "transparency_level"
     static let textScaling = "text_scaling"
+    static let calendarTextScaling = "calendar_text_scaling"
 
     // Misc
     static let lastCheckedVersion = "last_checked_version"
@@ -87,6 +88,7 @@ func registerDefaultPrefs(in userDefaults: UserDefaults, calendar: Calendar = .c
         // Appearance
         Prefs.transparencyLevel: 2,
         Prefs.textScaling: 1,
+        Prefs.calendarTextScaling: 1
     ])
 }
 
@@ -217,6 +219,11 @@ extension UserDefaults {
     @objc dynamic var textScaling: Double {
         get { double(forKey: Prefs.textScaling) }
         set { set(newValue, forKey: Prefs.textScaling) }
+    }
+    
+    @objc dynamic var calendarTextScaling: Double {
+        get { double(forKey: Prefs.calendarTextScaling) }
+        set { set(newValue, forKey: Prefs.calendarTextScaling) }
     }
 
     // Misc
