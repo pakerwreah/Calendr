@@ -8,10 +8,21 @@
 "quit" = "退出";
 "search" = "搜索";
 
+//"access_required.calendars" = "Calendar pending 'Full access' authorization";
+//"access_required.reminders" = "Reminders pending authorization";
+//"access_required.open_settings" = "Open Settings";
+//"access_required.cancel" = "Cancel";
+
+//"auto_update.check_for_updates" = "Check for updates";
+//"auto_update.fetching_releases" = "Fetching releases";
 "auto_update.new_version" = "有新版本可用：%@";
+//"auto_update.updated_to" = "Updated to version %@";
+//"auto_update.downloading" = "Downloading version %@";
+//"auto_update.install" = "Install";
 
 "settings.title" = "设置";
 "settings.tab.general" = "通用";
+//"settings.tab.appearance" = "Appearance";
 "settings.tab.calendars" = "日历";
 "settings.tab.keyboard" = "快捷方式";
 "settings.tab.about" = "关于";
@@ -36,11 +47,13 @@
 "settings.calendar.show_declined_events_tooltip" = "此功能需在原生日历应用中同样启用。";
 
 "settings.events" = "日程";
+//"settings.events.show_map" = "Show map and weather";
 "settings.events.finished" = "已完成";
 "settings.events.finished.fade" = "渐隐";
 "settings.events.finished.hide" = "隐藏";
 
 "settings.appearance.transparency" = "透明度";
+//"settings.appearance.accessibility" = "Accessibility";
 
 "settings.keyboard.local_shortcuts.title" = "本地快捷键";
 "settings.keyboard.local_shortcuts.prev_date" = "前一天";

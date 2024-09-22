@@ -8,10 +8,21 @@
 "quit" = "Avsluta";
 "search" = "Sök";
 
+//"access_required.calendars" = "Calendar pending 'Full access' authorization";
+//"access_required.reminders" = "Reminders pending authorization";
+//"access_required.open_settings" = "Open Settings";
+//"access_required.cancel" = "Cancel";
+
+//"auto_update.check_for_updates" = "Check for updates";
+//"auto_update.fetching_releases" = "Fetching releases";
 "auto_update.new_version" = "Ny version tillgänglig på: %@";
+//"auto_update.updated_to" = "Updated to version %@";
+//"auto_update.downloading" = "Downloading version %@";
+//"auto_update.install" = "Install";
 
 "settings.title" = "Inställningar";
 "settings.tab.general" = "Allmänt";
+//"settings.tab.appearance" = "Appearance";
 "settings.tab.calendars" = "Kalendrar";
 "settings.tab.keyboard" = "Genvägar";
 "settings.tab.about" = "Om";
@@ -36,11 +47,13 @@
 "settings.calendar.show_declined_events_tooltip" = "Detta fungerar bara om det också är aktiverat i den inbyggda kalenderappen.";
 
 "settings.events" = "Händelser";
+//"settings.events.show_map" = "Show map and weather";
 "settings.events.finished" = "Avslutad";
 "settings.events.finished.fade" = "Tona";
 "settings.events.finished.hide" = "Dölj";
 
 "settings.appearance.transparency" = "Transparens";
+//"settings.appearance.accessibility" = "Accessibility";
 
 "settings.keyboard.local_shortcuts.title" = "Lokala genvägar";
 "settings.keyboard.local_shortcuts.prev_date" = "Föregående datum";
