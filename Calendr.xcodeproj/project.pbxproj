@@ -250,6 +250,7 @@
 		345CC36B2C8CCE5400B0DD1A /* GeocodeServiceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeocodeServiceProvider.swift; sourceTree = "<group>"; };
 		345CC36D2C8CE13100B0DD1A /* MockGeocodeServiceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockGeocodeServiceProvider.swift; sourceTree = "<group>"; };
 		345DD97226920D1B00294D90 /* CalendarViewPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewPreview.swift; sourceTree = "<group>"; };
+		345E93B92CA05DAC0048EEA4 /* SyncLocalizations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncLocalizations.swift; sourceTree = "<group>"; };
 		345EAD492C8E26EE00D56857 /* MockWeatherServiceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockWeatherServiceProvider.swift; sourceTree = "<group>"; };
 		345FBD98293EA476005DD6DF /* Keyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keyboard.swift; sourceTree = "<group>"; };
 		34651EFB25E1B26800518C5A /* swiftgen.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = swiftgen.yml; sourceTree = "<group>"; };
@@ -486,10 +487,11 @@
 		34273C2F25E1AE2800B35091 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
-				34651F1425E1BB8400518C5A /* Strings.generated.swift */,
 				3492C45F269FCF5B009CFAD2 /* Accessibility.swift */,
 				34F24D232C64F335001F99A9 /* AppConstants.swift */,
 				3409173A267E90210023B76D /* Icons.swift */,
+				34651F1425E1BB8400518C5A /* Strings.generated.swift */,
+				345E93B92CA05DAC0048EEA4 /* SyncLocalizations.swift */,
 				347D0F9925952F8A002451EC /* Images.xcassets */,
 				34651F2C25E1C99900518C5A /* Localizable.strings */,
 			);
@@ -847,6 +849,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 347D0FB825952F8A002451EC /* Build configuration list for PBXNativeTarget "Calendr" */;
 			buildPhases = (
+				345E93BB2CA064A00048EEA4 /* SyncLocalizations */,
 				34651EFA25E1B10000518C5A /* SwiftGen */,
 				3477E70D2C67AC2D008D3844 /* Environment */,
 				347D0F9025952F89002451EC /* Sources */,
@@ -898,7 +901,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1250;
-				LastUpgradeCheck = 1540;
+				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					34427696269B5CA4004CFE1C = {
 						CreatedOnToolsVersion = 12.5.1;
@@ -976,6 +979,36 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		345E93BB2CA064A00048EEA4 /* SyncLocalizations */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${SRCROOT}/${TARGET_NAME}/Assets/SyncLocalizations.swift",
+				"${SRCROOT}/${TARGET_NAME}/Assets/en.lproj/Localizable.strings",
+			);
+			name = SyncLocalizations;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${SRCROOT}/${TARGET_NAME}/Assets/de.lproj/Localizable.strings",
+				"${SRCROOT}/${TARGET_NAME}/Assets/zh-Hans.lproj/Localizable.strings",
+				"${SRCROOT}/${TARGET_NAME}/Assets/es.lproj/Localizable.strings",
+				"${SRCROOT}/${TARGET_NAME}/Assets/it.lproj/Localizable.strings",
+				"${SRCROOT}/${TARGET_NAME}/Assets/sk.lproj/Localizable.strings",
+				"${SRCROOT}/${TARGET_NAME}/Assets/sv.lproj/Localizable.strings",
+				"${SRCROOT}/${TARGET_NAME}/Assets/cs.lproj/Localizable.strings",
+				"${SRCROOT}/${TARGET_NAME}/Assets/fr.lproj/Localizable.strings",
+				"${SRCROOT}/${TARGET_NAME}/Assets/pt.lproj/Localizable.strings",
+				"$(SRCROOT)/MISSING_TRANSLATIONS.md",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [[ -z $CI ]]; then\n    swift \"${SRCROOT}/${TARGET_NAME}/Assets/SyncLocalizations.swift\"\nfi\n";
+		};
 		34651EFA25E1B10000518C5A /* SwiftGen */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;

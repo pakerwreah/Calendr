@@ -8,10 +8,21 @@
 "quit" = "Ukončit";
 "search" = "Hledat";
 
+//"access_required.calendars" = "Calendar pending 'Full access' authorization";
+//"access_required.reminders" = "Reminders pending authorization";
+//"access_required.open_settings" = "Open Settings";
+//"access_required.cancel" = "Cancel";
+
+//"auto_update.check_for_updates" = "Check for updates";
+//"auto_update.fetching_releases" = "Fetching releases";
 "auto_update.new_version" = "Nová verze k dispozici: %@";
+//"auto_update.updated_to" = "Updated to version %@";
+//"auto_update.downloading" = "Downloading version %@";
+//"auto_update.install" = "Install";
 
 "settings.title" = "Předvolby";
 "settings.tab.general" = "Obecné";
+//"settings.tab.appearance" = "Appearance";
 "settings.tab.calendars" = "Kalendáře";
 "settings.tab.keyboard" = "Zkratky";
 "settings.tab.about" = "O aplikaci";
@@ -36,11 +47,13 @@
 "settings.calendar.show_declined_events_tooltip" = "Funguje pouze tehdy, pokud je také zapnuto v nativní aplikaci Kalendář.";
 
 "settings.events" = "Události";
+//"settings.events.show_map" = "Show map and weather";
 "settings.events.finished" = "Dokončené";
 "settings.events.finished.fade" = "Vyblednout";
 "settings.events.finished.hide" = "Skrýt";
 
 "settings.appearance.transparency" = "Průhlednost";
+//"settings.appearance.accessibility" = "Accessibility";
 
 "settings.keyboard.local_shortcuts.title" = "Místní zkratky";
 "settings.keyboard.local_shortcuts.prev_date" = "Předchozí datum";
