@@ -47,7 +47,7 @@ struct EventListViewPreview: PreviewProvider {
                     .make(
                         start: .make(hour: 19, minute: 00),
                         title: "Take the trash out",
-                        type: .reminder,
+                        type: .reminder(completed: false),
                         calendar: .make(color: .systemOrange)
                     ),
                 ])),

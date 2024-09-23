@@ -172,7 +172,7 @@ class EventViewModelFadeTests: XCTestCase {
         let viewModel = mock(
             start: .make(year: 2021, month: 1, day: 1, hour: 10),
             end: .make(year: 2021, month: 1, day: 1, hour: 10),
-            type: .reminder
+            type: .reminder(completed: false)
         )
 
         var isFaded: Bool?
@@ -191,7 +191,7 @@ class EventViewModelFadeTests: XCTestCase {
         let viewModel = mock(
             start: .make(year: 2021, month: 1, day: 1, hour: 10),
             end: .make(year: 2021, month: 1, day: 1, hour: 10),
-            type: .reminder
+            type: .reminder(completed: false)
         )
 
         var isFaded: Bool?
@@ -210,7 +210,7 @@ class EventViewModelFadeTests: XCTestCase {
         let viewModel = mock(
             start: .make(year: 2021, month: 1, day: 1, hour: 10),
             end: .make(year: 2021, month: 1, day: 1, hour: 10),
-            type: .reminder,
+            type: .reminder(completed: false),
             isTodaySelected: false
         )
 

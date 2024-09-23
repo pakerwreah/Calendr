@@ -19,6 +19,7 @@ class EventViewModelTests: XCTestCase {
     let weatherService = MockWeatherServiceProvider()
     let workspace = MockWorkspaceServiceProvider()
     let settings = MockEventDetailsSettings()
+    let scheduler = HistoricalScheduler()
 
     override func setUp() {
         dateProvider.m_calendar.locale = Locale(identifier: "en_US")
@@ -313,11 +314,100 @@ class EventViewModelTests: XCTestCase {
     func testBarStyle() {
 
         XCTAssertEqual(mock(type: .birthday).barStyle, .filled)
-        XCTAssertEqual(mock(type: .reminder).barStyle, .filled)
+        XCTAssertEqual(mock(type: .reminder(completed: false)).barStyle, .filled)
         XCTAssertEqual(mock(type: .event(.accepted)).barStyle, .filled)
         XCTAssertEqual(mock(type: .event(.pending)).barStyle, .filled)
         XCTAssertEqual(mock(type: .event(.declined)).barStyle, .filled)
         XCTAssertEqual(mock(type: .event(.maybe)).barStyle, .bordered)
+    }
+
+    func testReminder_toggleComplete_isNotCompleted() {
+
+        let viewModel = mock(type: .reminder(completed: false))
+
+        var isCompleted: Bool?
+        var serviceCompleted: Bool?
+
+        viewModel.isCompleted
+            .bind { isCompleted = $0 }
+            .disposed(by: disposeBag)
+
+        calendarService.spyCompleteObservable
+            .bind { serviceCompleted = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(isCompleted, false)
+
+        viewModel.completeTapped.onNext(())
+
+        XCTAssertEqual(isCompleted, true)
+        XCTAssertNil(serviceCompleted)
+
+        scheduler.advance(.milliseconds(500))
+
+        XCTAssertEqual(isCompleted, true)
+        XCTAssertEqual(serviceCompleted, true)
+    }
+
+    func testReminder_toggleComplete_isCompleted() {
+
+        let viewModel = mock(type: .reminder(completed: true))
+
+        var isCompleted: Bool?
+        var serviceCompleted: Bool?
+
+        viewModel.isCompleted
+            .bind { isCompleted = $0 }
+            .disposed(by: disposeBag)
+
+        calendarService.spyCompleteObservable
+            .bind { serviceCompleted = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(isCompleted, true)
+
+        viewModel.completeTapped.onNext(())
+
+        XCTAssertEqual(isCompleted, false)
+        XCTAssertNil(serviceCompleted)
+
+        scheduler.advance(.milliseconds(500))
+
+        XCTAssertEqual(isCompleted, false)
+        XCTAssertEqual(serviceCompleted, false)
+    }
+
+    func testReminder_toggleComplete_notChanged_shouldNotTriggerService() {
+
+        let viewModel = mock(type: .reminder(completed: false))
+
+        var isCompleted: Bool?
+        var serviceCompleted: Bool?
+
+        viewModel.isCompleted
+            .bind { isCompleted = $0 }
+            .disposed(by: disposeBag)
+
+        calendarService.spyCompleteObservable
+            .bind { serviceCompleted = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(isCompleted, false)
+
+        viewModel.completeTapped.onNext(())
+
+        XCTAssertEqual(isCompleted, true)
+        XCTAssertNil(serviceCompleted)
+
+        viewModel.completeTapped.onNext(())
+
+        XCTAssertEqual(isCompleted, false)
+        XCTAssertNil(serviceCompleted)
+
+        scheduler.advance(.milliseconds(500))
+
+        XCTAssertEqual(isCompleted, false)
+        XCTAssertNil(serviceCompleted)
     }
 
     func mock(type: EventType) -> EventViewModel { mock(event: .make(type: type)) }
@@ -334,7 +424,7 @@ class EventViewModelTests: XCTestCase {
             settings: settings,
             isShowingDetails: .dummy(),
             isTodaySelected: true,
-            scheduler: MainScheduler.instance
+            scheduler: scheduler
         )
     }
 }

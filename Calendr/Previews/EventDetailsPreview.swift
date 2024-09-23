@@ -112,7 +112,7 @@ struct EventDetailsPreview: PreviewProvider {
             viewModel: EventDetailsViewModel(
                 event: .make(
                     title: "Some reminder",
-                    type: .reminder
+                    type: .reminder(completed: false)
                 ),
                 dateProvider: dateProvider,
                 calendarService: calendarService,

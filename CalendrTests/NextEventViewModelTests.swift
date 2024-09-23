@@ -544,7 +544,7 @@ class NextEventViewModelTests: XCTestCase {
             .disposed(by: disposeBag)
 
         calendarService.changeEvents([
-            .make(start: now + 6000, type: .reminder)
+            .make(start: now + 6000, type: .reminder(completed: false))
         ])
 
         XCTAssertEqual(time, "in 1h 40m")
@@ -570,7 +570,7 @@ class NextEventViewModelTests: XCTestCase {
             .disposed(by: disposeBag)
 
         calendarService.changeEvents([
-            .make(start: start, type: .reminder)
+            .make(start: start, type: .reminder(completed: false))
         ])
 
         XCTAssertEqual(time, "1h 40m ago")
@@ -592,7 +592,7 @@ class NextEventViewModelTests: XCTestCase {
             .disposed(by: disposeBag)
 
         calendarService.changeEvents([
-            .make(start: dateProvider.now + 30, type: .reminder)
+            .make(start: dateProvider.now + 30, type: .reminder(completed: false))
         ])
 
         XCTAssertEqual(time, "in 30s")
@@ -614,8 +614,8 @@ class NextEventViewModelTests: XCTestCase {
             .disposed(by: disposeBag)
 
         calendarService.changeEvents([
-            .make(start: now + 1, title: "Reminder 2", type: .reminder),
-            .make(start: now, title: "Reminder 1", type: .reminder)
+            .make(start: now + 1, title: "Reminder 2", type: .reminder(completed: false)),
+            .make(start: now, title: "Reminder 1", type: .reminder(completed: false))
         ])
 
         XCTAssertEqual(title, "Reminder 1")

@@ -106,6 +106,9 @@ class NextEventViewModel {
                         let end = dateProvider.calendar.date(byAdding: .hour, value: 48, to: start)!
                         return calendarService.events(from: start, to: end, calendars: calendars)
                     }
+                    .map {
+                        $0.filter { $0.type != .reminder(completed: true) }
+                    }
             }
 
         let eventsObservable = Observable.combineLatest(nextEvents, skippedEvents)

@@ -15,7 +15,7 @@ protocol CalendarServiceProviding {
 
     func calendars() -> Single<[CalendarModel]>
     func events(from start: Date, to end: Date, calendars: [String]) -> Single<[EventModel]>
-    func completeReminder(id: String) -> Completable
+    func completeReminder(id: String, complete: Bool) -> Completable
     func rescheduleReminder(id: String, to: Date) -> Completable
     func changeEventStatus(id: String, date: Date, to: EventStatus) -> Completable
 }
@@ -184,22 +184,46 @@ class CalendarServiceProvider: CalendarServiceProviding {
 
         guard store.hasAccess(to: .reminder) else { return .just([]) }
 
-        return Single.create { [store, dateProvider] observer in
+        let incomplete = Single.create { [store] observer in
 
             let predicate = store.predicateForIncompleteReminders(
                 withDueDateStarting: start, ending: end, calendars: calendars
             )
 
             store.fetchReminders(matching: predicate) {
-                observer(.success($0?.compactMap { EventModel(from: $0, dateProvider: dateProvider) } ?? []))
+                observer(.success($0 ?? []))
             }
 
             return Disposables.create()
         }
         .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+
+        let completed = Single.create { [store] observer in
+
+            let predicate = store.predicateForCompletedReminders(
+                withCompletionDateStarting: start, ending: end, calendars: calendars
+            )
+
+            store.fetchReminders(matching: predicate) {
+                observer(.success($0 ?? []))
+            }
+
+            return Disposables.create()
+        }
+        .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+
+        return Single.zip(incomplete, completed).map { [dateProvider] in
+            Array(
+                Dictionary(grouping: $0 + $1, by: \.calendarItemIdentifier)
+                    .compactMapValues {
+                        $0.first.flatMap { EventModel(from: $0, dateProvider: dateProvider) }
+                    }
+                    .values
+            )
+        }
     }
 
-    func completeReminder(id: String) -> Completable {
+    func completeReminder(id: String, complete: Bool) -> Completable {
 
         Completable.create { [store] observer in
 
@@ -211,7 +235,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
             }
 
             do {
-                reminder.isCompleted = true
+                reminder.isCompleted = complete
                 try store.save(reminder, commit: true)
                 observer(.completed)
             } catch {
@@ -235,6 +259,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
             }
 
             do {
+                reminder.isCompleted = false
                 reminder.dueDateComponents = date.dateComponents(dateProvider)
                 reminder.alarms?.forEach(reminder.removeAlarm)
                 reminder.addAlarm(EKAlarm(absoluteDate: date))
@@ -466,7 +491,7 @@ private extension EventModel {
             notes: reminder.notes,
             url: reminder.url, // doesn't work
             isAllDay: dueDateComponents.hour == nil,
-            type: .reminder,
+            type: .reminder(completed: reminder.isCompleted),
             calendar: .init(from: calendar),
             participants: [],
             timeZone: calendar.isSubscribed || calendar.isDelegate ? nil : reminder.timeZone,

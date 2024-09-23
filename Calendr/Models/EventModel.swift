@@ -49,13 +49,13 @@ enum EventStatus: Comparable {
 enum EventType: Equatable {
     case event(EventStatus)
     case birthday
-    case reminder
+    case reminder(completed: Bool)
 }
 
 extension EventType {
     var isEvent: Bool { if case .event = self { return true } else { return false } }
     var isBirthday: Bool { self ~= .birthday }
-    var isReminder: Bool { self ~= .reminder }
+    var isReminder: Bool { if case .reminder = self { return true } else { return false } }
 }
 
 extension EventModel {

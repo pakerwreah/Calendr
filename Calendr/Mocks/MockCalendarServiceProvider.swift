@@ -40,7 +40,7 @@ class MockCalendarServiceProvider: CalendarServiceProviding {
 
     func calendars() -> Single<[CalendarModel]> { .just(m_calendars) }
 
-    func completeReminder(id: String) -> Completable { .empty() }
+    func completeReminder(id: String, complete: Bool) -> Completable { .empty() }
 
     func rescheduleReminder(id: String, to: Date) -> Completable { .empty() }
 
