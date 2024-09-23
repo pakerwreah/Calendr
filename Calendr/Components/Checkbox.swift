@@ -10,7 +10,7 @@ import RxSwift
 
 class Checkbox: CursorButton {
 
-    private var baseFont = BehaviorSubject<NSFont>(value: .systemFont(ofSize: NSFont.systemFontSize))
+    private let baseFont = BehaviorSubject<NSFont>(value: .systemFont(ofSize: NSFont.systemFontSize))
 
     override var font: NSFont? {
         get { super.font }
@@ -44,7 +44,6 @@ class Checkbox: CursorButton {
             .map { font, scaling in
                 font.withSize(font.pointSize * scaling)
             }
-            .observe(on: MainScheduler.instance)
             .bind {
                 super.font = $0
             }

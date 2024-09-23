@@ -67,7 +67,6 @@ class Label: NSTextField {
             .map { font, scaling in
                 font.withSize(font.pointSize * scaling)
             }
-            .observe(on: MainScheduler.instance)
             .bind {
                 super.font = $0
             }
