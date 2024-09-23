@@ -470,7 +470,7 @@ extension LayoutItem {
 
 protocol ConfigurableView { }
 
-/// if we extend NSView directly, it loses reference to `Self`  type inside closures, like `(Self) -> Void` ¯\_(ツ)_/¯
+/// if we extend NSView directly, it loses reference to `Self` type inside closures, like `(Self) -> Void` ¯\_(ツ)_/¯
 extension ConfigurableView where Self: NSView {
 
     func with(width: CGFloat = 0) -> Self {
