@@ -18,8 +18,9 @@ class CalendarCellView: NSView {
     private let doubleClickObserver: AnyObserver<Date>
     private let calendarScaling: Observable<Double>
     private let calendarTextScaling: Observable<Double>
+    private let combinedScaling: Observable<Double>
 
-    private let label = CalendarLabel()
+    private let label: Label
     private let eventsStackView = NSStackView()
     private let borderLayer = CALayer()
 
@@ -38,6 +39,13 @@ class CalendarCellView: NSView {
         self.doubleClickObserver = doubleClickObserver
         self.calendarScaling = calendarScaling
         self.calendarTextScaling = calendarTextScaling
+
+        self.combinedScaling = Observable
+            .combineLatest(calendarScaling, calendarTextScaling)
+            .map(*)
+            .share(replay: 1)
+
+        label = Label(scaling: combinedScaling)
 
         super.init(frame: .zero)
 
@@ -82,6 +90,7 @@ class CalendarCellView: NSView {
 
         label.alignment = .center
         label.textColor = .headerTextColor
+        label.font = .systemFont(ofSize: Constants.fontSize)
 
         let eventsContainer = NSView()
         eventsContainer.addSubview(eventsStackView)
@@ -102,11 +111,6 @@ class CalendarCellView: NSView {
     }
 
     private func setUpBindings() {
-
-        calendarScaling
-            .map { .systemFont(ofSize: Constants.fontSize * $0) }
-            .bind(to: label.rx.font)
-            .disposed(by: disposeBag)
 
         calendarScaling
             .bind { [weak self, borderLayer] in
@@ -136,12 +140,11 @@ class CalendarCellView: NSView {
 
         Observable.combineLatest(
             viewModel.map(\.dots).distinctUntilChanged(),
-            calendarScaling,
-            calendarTextScaling
+            combinedScaling
         )
-        .map { dots, calendarScaling, calendarTextScaling in
+        .map { dots, scaling in
             (dots.isEmpty ? [.clear] : dots).map {
-                makeEventDot(color: $0, scaling: calendarScaling * calendarTextScaling)
+                makeEventDot(color: $0, scaling: scaling)
             }
         }
         .bind(to: eventsStackView.rx.arrangedSubviews)

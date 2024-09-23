@@ -10,14 +10,13 @@ import Cocoa
 extension NSButton {
 
     func setTitleColor(color: NSColor, font: NSFont) {
-        let attrTitle = NSMutableAttributedString(string: title)
-        let range = NSRange(location: 0, length: attributedTitle.length)
 
-        attrTitle.addAttributes([
-            .foregroundColor: color,
-            .font: font.withSize(font.pointSize),
-        ], range: range)
-
-        attributedTitle = attrTitle
+        attributedTitle = .init(
+            string: title,
+            attributes: [
+                .foregroundColor: color,
+                .font: font
+            ]
+        )
     }
 }

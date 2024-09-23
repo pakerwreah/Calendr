@@ -8,26 +8,6 @@
 import Cocoa
 import RxSwift
 
-enum Scaling {
-    static let observable = UserDefaults.standard.rx.observe(\.textScaling).share(replay: 1)
-
-    static var current: Double {
-        var value: Double = 1
-        observable.bind { value = $0 }.dispose()
-        return value
-    }
-}
-
-enum CalendarTextScaling {
-    static let observable = UserDefaults.standard.rx.observe(\.calendarTextScaling).share(replay: 1)
-
-    static var current: Double {
-        var value: Double = 1
-        observable.bind { value = $0 }.dispose()
-        return value
-    }
-}
-
 class Label: NSTextField {
 
     var forceVibrancy: Bool?
@@ -40,7 +20,7 @@ class Label: NSTextField {
         stringValue.isEmpty && attributedStringValue.length == 0
     }
 
-    fileprivate var baseFont = BehaviorSubject<NSFont>(value: .systemFont(ofSize: NSFont.systemFontSize))
+    private var baseFont = BehaviorSubject<NSFont>(value: .systemFont(ofSize: NSFont.systemFontSize))
 
     override var font: NSFont? {
         get { super.font }
@@ -50,97 +30,40 @@ class Label: NSTextField {
         }
     }
 
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
 
     convenience init() {
         self.init(text: "")
     }
 
-    convenience init(text: String = "", font: NSFont? = nil, color: NSColor? = nil, align: NSTextAlignment = .left) {
+    convenience init(
+        text: String = "",
+        font: NSFont? = nil,
+        color: NSColor? = nil,
+        align: NSTextAlignment = .left,
+        scaling: Observable<Double> = Scaling.observable
+    ) {
         self.init(labelWithString: text)
         self.font = font
         self.textColor = color
         self.alignment = align
         setUpLayout()
-        setUpBindings()
+        setUpBindings(scaling)
     }
 
     convenience init(text: NSAttributedString) {
         self.init(labelWithAttributedString: text)
         setUpLayout()
-        setUpBindings()
     }
 
     private func setUpLayout() {
         setContentHuggingPriority(.fittingSizeCompression, for: .horizontal)
     }
 
-    fileprivate func setUpBindings() {
+    private func setUpBindings(_ scaling: Observable<Double>) {
 
         Observable
-            .combineLatest(baseFont, Scaling.observable)
-            .map { font, scaling in
-                font.withSize(font.pointSize * scaling)
-            }
-            .observe(on: MainScheduler.instance)
-            .bind {
-                super.font = $0
-            }
-            .disposed(by: disposeBag)
-    }
-}
-
-class CalendarLabel: NSTextField {
-
-    var forceVibrancy: Bool?
-
-    override var allowsVibrancy: Bool {
-        forceVibrancy ?? super.allowsVibrancy
-    }
-
-    var isEmpty: Bool {
-        stringValue.isEmpty && attributedStringValue.length == 0
-    }
-
-    fileprivate var baseFont = BehaviorSubject<NSFont>(value: .systemFont(ofSize: NSFont.systemFontSize))
-
-    override var font: NSFont? {
-        get { super.font }
-        set {
-            guard let newValue else { return }
-            baseFont.onNext(newValue)
-        }
-    }
-
-    fileprivate let disposeBag = DisposeBag()
-
-    convenience init() {
-        self.init(text: "")
-    }
-
-    convenience init(text: String = "", font: NSFont? = nil, color: NSColor? = nil, align: NSTextAlignment = .left) {
-        self.init(labelWithString: text)
-        self.font = font
-        self.textColor = color
-        self.alignment = align
-        setUpLayout()
-        setUpBindings()
-    }
-
-    convenience init(text: NSAttributedString) {
-        self.init(labelWithAttributedString: text)
-        setUpLayout()
-        setUpBindings()
-    }
-
-    private func setUpLayout() {
-        setContentHuggingPriority(.fittingSizeCompression, for: .horizontal)
-    }
-
-    fileprivate func setUpBindings() {
-
-        Observable
-            .combineLatest(baseFont, CalendarTextScaling.observable)
+            .combineLatest(baseFont, scaling)
             .map { font, scaling in
                 font.withSize(font.pointSize * scaling)
             }

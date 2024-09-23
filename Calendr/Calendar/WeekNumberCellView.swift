@@ -12,10 +12,12 @@ class WeekNumberCellView: NSView {
 
     private let disposeBag = DisposeBag()
 
-    private let label = CalendarLabel()
+    private let label: Label
 
     init(weekNumber: Observable<Int>, scaling: Observable<Double>) {
-        
+
+        label = Label(font: .systemFont(ofSize: Constants.fontSize), scaling: scaling)
+
         super.init(frame: .zero)
 
         setUpAccessibility()
@@ -26,11 +28,6 @@ class WeekNumberCellView: NSView {
             .map(String.init)
             .observe(on: MainScheduler.instance)
             .bind(to: label.rx.text)
-            .disposed(by: disposeBag)
-
-        scaling
-            .map { .systemFont(ofSize: Constants.fontSize * $0) }
-            .bind(to: label.rx.font)
             .disposed(by: disposeBag)
     }
 
