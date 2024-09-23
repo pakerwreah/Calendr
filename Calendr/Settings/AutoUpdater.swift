@@ -260,9 +260,9 @@ class AutoUpdater: AutoUpdating {
                 dialog.directoryURL = appUrl.deletingLastPathComponent()
                 dialog.nameFieldStringValue = appUrl.lastPathComponent
                 dialog.nameFieldLabel = "Calendr.app"
-                dialog.prompt = "Install"
-                dialog.title = "Please don't change anything"
-                dialog.message = "Confirm the app location so we have permission to replace it"
+                dialog.prompt = Strings.AutoUpdate.install
+                dialog.title = Strings.AutoUpdate.Replace.title
+                dialog.message = Strings.AutoUpdate.Replace.message
                 dialog.begin { result in
                     continuation.resume(returning: result == .cancel ? nil : dialog.url)
                 }

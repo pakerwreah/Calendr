@@ -116,7 +116,7 @@ struct SyncLocalizations {
 
             print("Supported languages:", supportedLanguages)
 
-            var missingLang: [(lang: String, path: String)] = []
+            var missingLang: [(lang: String, path: String, count: Int)] = []
 
             for language in supportedLanguages {
                 let localizationPath = "\(assetsPath)/\(language).lproj/Localizable.strings"
@@ -155,11 +155,12 @@ struct SyncLocalizations {
                 try writeFile(content: content, to: localizationPath)
 
                 if hasMissing {
-                    missingLang.append((language, "\(targetName)/Assets/\(language).lproj/Localizable.strings"))
+                    let path = "\(targetName)/Assets/\(language).lproj/Localizable.strings"
+                    missingLang.append((language, path, missingKeys.count))
                 }
             }
 
-            let body = missingLang.map { lang, path in
+            let body = missingLang.map { lang, path, count in
 
                 let locale = Locale(identifier: lang)
                 let enLocale = Locale(identifier: "en")
@@ -167,7 +168,7 @@ struct SyncLocalizations {
                 let englishName = enLocale.localizedString(forLanguageCode: lang) ?? ""
                 let languageNames = [englishName, nativeName, "(\(lang))"].joined(separator: " - ")
 
-                return "- [\(languageNames)](\(path))"
+                return "[\(languageNames)](\(path))|\(count)"
 
             }.joined(separator: "\n")
 
@@ -178,7 +179,10 @@ struct SyncLocalizations {
                 return
             }
 
-            let content = "# The following languages have missing translations\n\(body)\n\n"
+            let content = "# The following languages have missing translations\n"
+            + "Language|Count\n"
+            + "-|-"
+            + "\n\(body)\n\n"
             + "Feel free to open a new issue or pull request with the missing values.\n\n"
             + "All missing translations in the files start with a `//`.\n\n"
             + "<sub>This file is auto-generated and should be always up to date.</sub>\n"

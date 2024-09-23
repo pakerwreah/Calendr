@@ -46,6 +46,12 @@ internal enum Strings {
     internal static func updatedTo(_ p1: Any) -> String {
       return Strings.tr("Localizable", "auto_update.updated_to", String(describing: p1), fallback: "Updated to version %@")
     }
+    internal enum Replace {
+      /// Confirm the app location so we have permission to replace it
+      internal static let message = Strings.tr("Localizable", "auto_update.replace.message", fallback: "Confirm the app location so we have permission to replace it")
+      /// Please don't change anything
+      internal static let title = Strings.tr("Localizable", "auto_update.replace.title", fallback: "Please don't change anything")
+    }
   }
   internal enum EventAction {
     /// Accept
