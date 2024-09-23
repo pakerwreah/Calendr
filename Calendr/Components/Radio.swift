@@ -29,6 +29,10 @@ class Radio: NSButton {
         setUpBindings()
     }
 
+    private func setFont(_ font: NSFont) {
+        super.font = font
+    }
+
     private func setUpBindings() {
 
         Observable
@@ -36,8 +40,8 @@ class Radio: NSButton {
             .map { font, scaling in
                 font.withSize(font.pointSize * scaling)
             }
-            .bind {
-                super.font = $0
+            .bind { [weak self] in
+                self?.setFont($0)
             }
             .disposed(by: disposeBag)
     }

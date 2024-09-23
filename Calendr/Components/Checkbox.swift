@@ -37,6 +37,10 @@ class Checkbox: CursorButton {
         fatalError("init(coder:) has not been implemented")
     }
 
+    private func setFont(_ font: NSFont) {
+        super.font = font
+    }
+
     private func setUpBindings() {
 
         Observable
@@ -44,8 +48,8 @@ class Checkbox: CursorButton {
             .map { font, scaling in
                 font.withSize(font.pointSize * scaling)
             }
-            .bind {
-                super.font = $0
+            .bind { [weak self] in
+                self?.setFont($0)
             }
             .disposed(by: disposeBag)
     }
