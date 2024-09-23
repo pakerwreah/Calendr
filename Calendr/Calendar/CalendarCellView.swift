@@ -45,7 +45,7 @@ class CalendarCellView: NSView {
             .map(*)
             .share(replay: 1)
 
-        label = Label(scaling: combinedScaling)
+        label = Label(font: .systemFont(ofSize: Constants.fontSize), scaling: combinedScaling)
 
         super.init(frame: .zero)
 
@@ -90,7 +90,6 @@ class CalendarCellView: NSView {
 
         label.alignment = .center
         label.textColor = .headerTextColor
-        label.font = .systemFont(ofSize: Constants.fontSize)
 
         let eventsContainer = NSView()
         eventsContainer.addSubview(eventsStackView)
