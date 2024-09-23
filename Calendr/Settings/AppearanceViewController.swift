@@ -113,7 +113,7 @@ class AppearanceViewController: NSViewController, SettingsUI {
         // Next event length
 
         let nextEventLengthView = NSStackView(views: [
-            NSImageView(image: Icons.Settings.ruler.with(scale: .large)),
+            makeIcon(Icons.Settings.ruler, .large),
             nextEventLengthSlider
         ])
 
