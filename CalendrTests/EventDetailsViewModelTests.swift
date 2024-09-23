@@ -84,7 +84,7 @@ class EventDetailsViewModelTests: XCTestCase {
         let viewModel = mock(
             event: .make(
                 start: .make(year: 2021, month: 1, day: 1, hour: 10),
-                type: .reminder
+                type: .reminder(completed: false)
             )
         )
 
@@ -185,7 +185,7 @@ class EventDetailsViewModelTests: XCTestCase {
     func testSkip_withSouceMenubar_isReminder_shouldNotShowSkip() {
         
         let viewModel = mock(
-            event: .make(type: .reminder),
+            event: .make(type: .reminder(completed: false)),
             source: .list
         )
         

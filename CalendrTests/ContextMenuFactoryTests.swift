@@ -42,11 +42,18 @@ class ContextMenuFactoryTests: XCTestCase {
         XCTAssertNil(make(event: .make(type: .event(.unknown)), source: .details))
     }
 
-    func testFactory_isReminder_fromAnySource_shouldMakeViewModel() throws {
+    func testFactory_isReminder_notCompleted_fromAnySource_shouldMakeViewModel() throws {
 
         for source: ContextMenuSource in [.list, .menubar, .details] {
-            let viewModel = try XCTUnwrap(make(event: .make(type: .reminder), source: source))
+            let viewModel = try XCTUnwrap(make(event: .make(type: .reminder(completed: false)), source: source))
             XCTAssert(viewModel is ReminderOptionsViewModel)
+        }
+    }
+
+    func testFactory_isReminder_isCompleted_fromAnySource_shouldNotMakeViewModel() throws {
+
+        for source: ContextMenuSource in [.list, .menubar, .details] {
+            XCTAssertNil(make(event: .make(type: .reminder(completed: true)), source: source))
         }
     }
 

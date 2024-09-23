@@ -21,7 +21,7 @@ class ReminderOptionsViewModel: BaseContextMenuViewModel<ReminderAction> {
     private let calendarService: CalendarServiceProviding
     private let workspace: WorkspaceServiceProviding
 
-    init(
+    init?(
         event: EventModel,
         dateProvider: DateProviding,
         calendarService: CalendarServiceProviding,
@@ -29,6 +29,8 @@ class ReminderOptionsViewModel: BaseContextMenuViewModel<ReminderAction> {
         source: ContextMenuSource,
         callback: AnyObserver<ReminderAction>
     ) {
+        guard event.type == .reminder(completed: false) else { return nil }
+
         self.event = event
         self.dateProvider = dateProvider
         self.calendarService = calendarService
@@ -61,7 +63,7 @@ class ReminderOptionsViewModel: BaseContextMenuViewModel<ReminderAction> {
             return .empty()
 
         case .complete:
-            return calendarService.completeReminder(id: event.id)
+            return calendarService.completeReminder(id: event.id, complete: true)
 
         case .remind(let dateComponents):
             let date = dateProvider.calendar.date(byAdding: dateComponents, to: dateProvider.now)!

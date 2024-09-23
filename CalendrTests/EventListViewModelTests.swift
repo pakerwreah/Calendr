@@ -302,9 +302,9 @@ class EventListViewModelTests: XCTestCase {
         eventsSubject.onNext(
             testEvents() +
             [
-                .make(start: yesterday, title: "Overdue 1", type: .reminder),
-                .make(start: yesterday + 10, title: "Overdue 2", type: .reminder),
-                .make(start: twoDaysAgo, title: "All day overdue", isAllDay: true, type: .reminder),
+                .make(start: yesterday, title: "Overdue 1", type: .reminder(completed: false)),
+                .make(start: yesterday + 10, title: "Overdue 2", type: .reminder(completed: false)),
+                .make(start: twoDaysAgo, title: "All day overdue", isAllDay: true, type: .reminder(completed: false)),
             ]
         )
 
@@ -335,10 +335,10 @@ class EventListViewModelTests: XCTestCase {
             [
                 .make(start: date, end: date + 10, title: "Event 1"),
                 .make(start: date + 60, end: date + 120, title: "Event 2"),
-                .make(start: date + 200, title: "Overdue 1", type: .reminder),
-                .make(start: date + 300, title: "Overdue 2", type: .reminder),
+                .make(start: date + 200, title: "Overdue 1", type: .reminder(completed: false)),
+                .make(start: date + 300, title: "Overdue 2", type: .reminder(completed: false)),
                 .make(start: date, title: "All day event", isAllDay: true),
-                .make(start: date, title: "All day overdue", isAllDay: true, type: .reminder)
+                .make(start: date, title: "All day overdue", isAllDay: true, type: .reminder(completed: false))
             ]
         )
 

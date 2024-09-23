@@ -21,8 +21,10 @@ class EventView: NSView {
     private let subtitle = Label()
     private let subtitleLink = Label()
     private let duration = Label()
+    private let relativeDuration = Label()
     private let progress = NSView()
     private let linkBtn = ImageButton()
+    private let completeBtn = ImageButton()
     private let hoverLayer = CALayer()
     private let colorBar = NSView()
 
@@ -61,21 +63,24 @@ class EventView: NSView {
             setUpContextMenu(contextMenuViewModel)
         }
 
+        icon.isHidden = true
+        completeBtn.isHidden = true
+
         switch viewModel.type {
 
         case .birthday:
             icon.image = Icons.Event.birthday.with(scale: .small)
             icon.contentTintColor = .systemRed
+            icon.isHidden = false
 
         case .reminder:
-            icon.image = Icons.Event.reminder.with(scale: .small).with(pointSize: 9)
-            icon.contentTintColor = .headerTextColor
+            completeBtn.contentTintColor = viewModel.color
+            completeBtn.isHidden = false
 
         case .event(let status):
             if status ~= .pending {
                 layer?.backgroundColor = Self.pendingBackground
             }
-            icon.isHidden = true
         }
 
         switch viewModel.barStyle {
@@ -104,6 +109,8 @@ class EventView: NSView {
         duration.stringValue = viewModel.duration
         duration.isHidden = duration.isEmpty
 
+        relativeDuration.isHidden = true
+
         linkBtn.isHidden = viewModel.link == nil
         linkBtn.toolTip = viewModel.link?.url.absoluteString
     }
@@ -119,8 +126,10 @@ class EventView: NSView {
         hoverLayer.backgroundColor = NSColor.gray.cgColor.copy(alpha: 0.2)
         layer?.addSublayer(hoverLayer)
 
-        icon.setContentHuggingPriority(.required, for: .horizontal)
-        icon.setContentCompressionResistancePriority(.required, for: .horizontal)
+        [icon, completeBtn, relativeDuration].forEach {
+            $0.setContentHuggingPriority(.required, for: .horizontal)
+            $0.setContentCompressionResistancePriority(.required, for: .horizontal)
+        }
 
         title.forceVibrancy = false
         title.lineBreakMode = .byWordWrapping
@@ -130,6 +139,9 @@ class EventView: NSView {
         duration.lineBreakMode = .byWordWrapping
         duration.textColor = .secondaryLabelColor
         duration.font = .systemFont(ofSize: 11)
+
+        relativeDuration.textColor = .secondaryLabelColor
+        relativeDuration.font = .systemFont(ofSize: 11)
 
         subtitle.lineBreakMode = .byWordWrapping
         subtitle.maximumNumberOfLines = 2
@@ -147,18 +159,21 @@ class EventView: NSView {
 
         linkBtn.width(equalTo: 22)
 
-        let titleStackView = NSStackView(views: [icon, title]).with(spacing: 4).with(alignment: .firstBaseline)
+        let titleStackView = NSStackView(views: [icon, completeBtn, title]).with(spacing: 4).with(alignment: .firstBaseline)
 
         let linkStackView = NSStackView(views: [subtitleLink, linkBtn]).with(spacing: 0)
+
+        let durationStackView = NSStackView(views: [duration, relativeDuration]).with(insets: .init(right: 4))
+        durationStackView.setHuggingPriority(.fittingSizeCompression, for: .horizontal)
 
         linkStackView.rx.isContentHidden
             .bind(to: linkStackView.rx.isHidden)
             .disposed(by: disposeBag)
 
-        let eventStackView = NSStackView(views: [titleStackView, subtitle, linkStackView, duration])
+        let eventStackView = NSStackView(views: [titleStackView, subtitle, linkStackView, durationStackView])
             .with(orientation: .vertical)
-            .with(spacing: 2)
-            .with(insets: .init(vertical: 1))
+            .with(spacing: 3)
+            .with(insets: .init(vertical: 2))
 
         let contentStackView = NSStackView(views: [colorBar, eventStackView])
         addSubview(contentStackView)
@@ -196,16 +211,19 @@ class EventView: NSView {
                 .disposed(by: disposeBag)
 
             linkBtn.rx.tap
-                .bind { [viewModel] in viewModel.workspace.open(link.url) }
+                .bind(to: viewModel.linkTapped)
                 .disposed(by: disposeBag)
         }
 
-        if viewModel.type.isEvent || viewModel.type.isReminder {
+        if !viewModel.type.isBirthday {
 
             viewModel.isFaded
                 .map { $0 ? 0.5 : 1 }
                 .bind(to: rx.alpha)
                 .disposed(by: disposeBag)
+        }
+
+        if viewModel.type.isEvent {
 
             Observable.combineLatest(
                 viewModel.progress, rx.observe(\.frame)
@@ -219,6 +237,29 @@ class EventView: NSView {
             viewModel.isInProgress
                 .map(!)
                 .bind(to: progress.rx.isHidden)
+                .disposed(by: disposeBag)
+        }
+
+        if viewModel.type.isReminder {
+            Observable
+                .combineLatest(viewModel.isCompleted, Scaling.observable)
+                .map { completed, scaling in
+                    let icon = completed ? Icons.Reminder.complete :  Icons.Reminder.incomplete
+                    return icon.with(pointSize: 12 * scaling)
+                }
+                .bind(to: completeBtn.rx.image)
+                .disposed(by: disposeBag)
+
+            viewModel.relativeDuration
+                .bind(to: relativeDuration.rx.stringValue)
+                .disposed(by: disposeBag)
+
+            viewModel.relativeDuration.map(false)
+                .bind(to: relativeDuration.rx.isHidden)
+                .disposed(by: disposeBag)
+
+            completeBtn.rx.tap
+                .bind(to: viewModel.completeTapped)
                 .disposed(by: disposeBag)
         }
 

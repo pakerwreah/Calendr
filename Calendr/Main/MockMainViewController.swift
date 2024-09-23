@@ -130,7 +130,7 @@ private extension MockCalendarServiceProvider {
                         .make(
                             start: time(19, 00),
                             title: "Take the trash out",
-                            type: .reminder,
+                            type: .reminder(completed: false),
                             calendar: .reminders
                         )
                     ]

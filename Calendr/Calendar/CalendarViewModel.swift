@@ -247,7 +247,7 @@ class CalendarViewModel {
                 let overdue = dates
                     .filter { dateProvider.calendar.isDate($0.date, lessThan: dateProvider.now, granularity: .day) }
                     .flatMap(\.events)
-                    .filter(\.type.isReminder)
+                    .filter { $0.type == .reminder(completed: false) }
 
                 return (focused.date, overdue + focused.events)
             }

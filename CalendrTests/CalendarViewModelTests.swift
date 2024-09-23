@@ -438,7 +438,7 @@ class CalendarViewModelTests: XCTestCase {
             .make(
                 start: .make(year: 2020, month: 12, day: 31),
                 title: "Overdue",
-                type: .reminder,
+                type: .reminder(completed: false),
                 calendar: calendarService.m_calendars[0]
             )
         )
@@ -463,7 +463,7 @@ class CalendarViewModelTests: XCTestCase {
             .make(
                 start: .make(year: 2020, month: 12, day: 31),
                 title: "Overdue",
-                type: .reminder,
+                type: .reminder(completed: false),
                 calendar: calendarService.m_calendars[0]
             )
         )

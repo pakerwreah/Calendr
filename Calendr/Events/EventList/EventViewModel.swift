@@ -24,6 +24,13 @@ class EventViewModel {
     let backgroundColor: Observable<NSColor>
     let isFaded: Observable<Bool>
     let progress: Observable<CGFloat?>
+    let isCompleted: Observable<Bool>
+    let relativeDuration: Observable<String>
+
+    let linkTapped: AnyObserver<Void>
+
+    private let completeTappedObservable: Observable<Void>
+    let completeTapped: AnyObserver<Void>
 
     private let isShowingDetails: AnyObserver<Bool>
 
@@ -33,8 +40,9 @@ class EventViewModel {
     private let geocoder: GeocodeServiceProviding
     private let weatherService: WeatherServiceProviding
     private let settings: EventDetailsSettings
+    private let workspace: WorkspaceServiceProviding
 
-    let workspace: WorkspaceServiceProviding
+    private let disposeBag = DisposeBag()
 
     init(
         event: EventModel,
@@ -64,6 +72,33 @@ class EventViewModel {
         isDeclined = event.status ~= .declined
         barStyle = event.status ~= .maybe ? .bordered : .filled
         link = event.detectLink(using: workspace)
+
+        linkTapped = .init { [link] _ in
+            if let link {
+                workspace.open(link.url)
+            }
+        }
+
+        (completeTappedObservable, completeTapped) = PublishSubject.pipe()
+
+        if case .reminder(let wasCompleted) = type {
+
+            self.isCompleted = completeTappedObservable
+                .scan(wasCompleted) { isCompleted, _ in !isCompleted }
+                .startWith(wasCompleted)
+                .share(replay: 1, scope: .forever)
+
+            isCompleted
+                .debounce(.microseconds(600), scheduler: scheduler)
+                .filter { $0 != wasCompleted }
+                .flatMapFirst {
+                    calendarService.completeReminder(id: event.id, complete: $0)
+                }
+                .subscribe()
+                .disposed(by: disposeBag)
+        } else {
+            self.isCompleted = .just(false)
+        }
 
         var subtitleText = event.location?.trimmed.replacingOccurrences(of: .newlines, with: " ") ?? ""
         let linkText = link?.url.domain
@@ -160,7 +195,23 @@ class EventViewModel {
             clock = .empty()
         }
 
-        progress = total <= 0 || event.isAllDay || !range.isSingleDay || !range.endsToday
+        if event.type.isReminder {
+
+            let dateFormatter = DateComponentsFormatter()
+            dateFormatter.calendar = dateProvider.calendar
+            dateFormatter.unitsStyle = .abbreviated
+            dateFormatter.allowedUnits = [.hour, .minute]
+
+            relativeDuration = clock.map {
+                Strings.Formatter.Date.Relative.ago(
+                    dateFormatter.string(from: event.start, to: dateProvider.now) ?? ""
+                )
+            }
+        } else {
+            relativeDuration = .empty()
+        }
+
+        progress = total <= 0 || event.isAllDay || !range.isSingleDay || !range.endsToday || event.type == .reminder(completed: true)
             ? .just(nil)
             : clock.map {
 
@@ -181,8 +232,8 @@ class EventViewModel {
 
         if isDeclined {
             isFaded = .just(true)
-        } else if type.isReminder {
-            isFaded = .just(isTodaySelected && !range.startsToday)
+        } else if case .reminder(let completed) = type {
+            isFaded = .just(completed || isTodaySelected && !range.startsToday)
         } else if event.isAllDay || !range.endsToday {
             isFaded = .just(false)
         } else {

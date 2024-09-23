@@ -53,6 +53,7 @@ enum Icons {
     }
 
     enum Reminder {
+        static let incomplete = NSImage(systemName: "circle")
         static let complete = NSImage(systemName: "circle.inset.filled")
     }
 
