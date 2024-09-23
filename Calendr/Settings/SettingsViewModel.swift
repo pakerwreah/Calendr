@@ -50,6 +50,7 @@ protocol StatusItemSettings {
 protocol CalendarSettings {
     var calendarScaling: Observable<Double> { get }
     var textScaling: Observable<Double> { get }
+    var calendarTextScaling: Observable<Double> { get }
     var firstWeekday: Observable<Int> { get }
     var highlightedWeekdays: Observable<[Int]> { get }
     var showWeekNumbers: Observable<Bool> { get }
@@ -60,6 +61,7 @@ protocol CalendarSettings {
 protocol AppearanceSettings {
     var popoverMaterial: Observable<PopoverMaterial> { get }
     var textScaling: Observable<Double> { get }
+    var calendarTextScaling: Observable<Double> { get }
 }
 
 protocol EventDetailsSettings: AppearanceSettings {
@@ -117,6 +119,7 @@ class SettingsViewModel:
     let togglePastEvents: AnyObserver<Bool>
     let transparencyObserver: AnyObserver<Int>
     let textScalingObserver: AnyObserver<Double>
+    let calendarTextScalingObserver: AnyObserver<Double>
 
     // Observables
     let autoLaunch: Observable<Bool>
@@ -147,6 +150,7 @@ class SettingsViewModel:
     let popoverTransparency: Observable<Int>
     let popoverMaterial: Observable<PopoverMaterial>
     let textScaling: Observable<Double>
+    let calendarTextScaling: Observable<Double>
 
     let isPresented = BehaviorSubject(value: false)
 
@@ -187,6 +191,7 @@ class SettingsViewModel:
         togglePastEvents = userDefaults.rx.observer(for: \.showPastEvents)
         transparencyObserver = userDefaults.rx.observer(for: \.transparencyLevel)
         textScalingObserver = userDefaults.rx.observer(for: \.textScaling)
+        calendarTextScalingObserver = userDefaults.rx.observer(for: \.calendarTextScaling)
 
         // MARK: - Observables
 
@@ -224,6 +229,7 @@ class SettingsViewModel:
         showPastEvents = userDefaults.rx.observe(\.showPastEvents)
         popoverTransparency = userDefaults.rx.observe(\.transparencyLevel)
         textScaling = userDefaults.rx.observe(\.textScaling)
+        calendarTextScaling = userDefaults.rx.observe(\.calendarTextScaling)
 
         let localeChangeObservable = notificationCenter.rx
             .notification(NSLocale.currentLocaleDidChangeNotification)

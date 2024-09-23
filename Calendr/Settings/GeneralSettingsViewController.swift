@@ -22,16 +22,10 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     private let iconStyleDropdown = Dropdown()
     private let dateFormatDropdown = Dropdown()
     private let dateFormatTextField = NSTextField()
-
-    // Next Event
     private let showNextEventCheckbox = Checkbox(title: Strings.Settings.NextEvent.showNextEvent)
     private let nextEventRangeStepper = NSStepper()
-    private let nextEventLengthSlider = Slider.make(minValue: 10, maxValue: 50, numberOfTickMarks: 12)
-    private let nextEventDetectNotchCheckbox = Checkbox(title: Strings.Settings.NextEvent.detectNotch)
-    private let nextEventFontSizeStepper = NSStepper()
 
     // Calendar
-    private let calendarScalingSlider = Slider.make(minValue: 1, maxValue: 1.6, numberOfTickMarks: 13)
     private let firstWeekdayPrev = ImageButton(image: Icons.Settings.prev)
     private let firstWeekdayNext = ImageButton(image: Icons.Settings.next)
     private let highlightedWeekdaysButtons = NSStackView()
@@ -70,7 +64,6 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         let stackView = NSStackView(
             views: Sections.create([
                 makeSection(title: Strings.Settings.menuBar, content: menuBarContent),
-                makeSection(title: Strings.Settings.nextEvent, content: nextEventContent),
                 makeSection(title: Strings.Settings.calendar, content: calendarContent),
                 makeSection(title: Strings.Settings.events, content: eventsContent),
             ])
@@ -135,21 +128,13 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             autoLaunchCheckbox,
             iconStyle,
             dateFormat,
-            showMenuBarBackgroundCheckbox
+            showMenuBarBackgroundCheckbox,
+            nextEventContent
         ])
         .with(orientation: .vertical)
     }()
 
     private lazy var nextEventContent: NSView = {
-
-        // Next event length
-
-        let nextEventLengthView = NSStackView(views: [
-            NSImageView(image: Icons.Settings.ruler.with(scale: .large)),
-            nextEventLengthSlider
-        ])
-
-        nextEventDetectNotchCheckbox.font = .systemFont(ofSize: 11, weight: .light)
 
         // Next event range
 
@@ -178,45 +163,9 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             .bind(to: rangeStepperLabel.rx.text)
             .disposed(by: disposeBag)
 
-        // Next event font size
-
-        let fontSizeLabel = Label(text: Strings.Settings.NextEvent.fontSize, font: .systemFont(ofSize: 13))
-        let fontSizeStepperLabel = Label(font: .systemFont(ofSize: 13))
-
-        nextEventFontSizeStepper.minValue = 10
-        nextEventFontSizeStepper.maxValue = 13
-        nextEventFontSizeStepper.increment = 0.5
-        nextEventFontSizeStepper.valueWraps = false
-        nextEventFontSizeStepper.refusesFirstResponder = true
-        nextEventFontSizeStepper.focusRingType = .none
-
-        let fontSizeStepperProperty = nextEventFontSizeStepper.rx.controlProperty(
-            getter: \.floatValue,
-            setter: { $0.floatValue = $1 }
-        )
-
-        viewModel.eventStatusItemFontSize
-            .bind(to: fontSizeStepperProperty)
-            .disposed(by: disposeBag)
-
-        fontSizeStepperProperty
-            .bind(to: viewModel.eventStatusItemFontSizeObserver)
-            .disposed(by: disposeBag)
-
-        viewModel.eventStatusItemFontSize
-            .map { .init(format: "%.1f", $0) }
-            .bind(to: fontSizeStepperLabel.rx.text)
-            .disposed(by: disposeBag)
-
         // Next event stack view
 
-        return NSStackView(views: [
-            NSStackView(views: [showNextEventCheckbox, .spacer, rangeStepperLabel, nextEventRangeStepper]),
-            NSStackView(views: [fontSizeLabel, .spacer, fontSizeStepperLabel, nextEventFontSizeStepper]),
-            nextEventLengthView,
-            nextEventDetectNotchCheckbox,
-        ])
-        .with(orientation: .vertical)
+        return NSStackView(views: [showNextEventCheckbox, .spacer, rangeStepperLabel, nextEventRangeStepper])
     }()
 
     private lazy var showDeclinedEventsTooltip: NSView = {
@@ -253,12 +202,6 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         firstWeekdayNext.setContentHuggingPriority(.fittingSizeCompression, for: .horizontal)
 
         return NSStackView(views: [
-            NSStackView(views: [
-                NSImageView(image: Icons.Settings.zoomOut),
-                calendarScalingSlider,
-                NSImageView(image: Icons.Settings.zoomIn)
-            ]),
-            .dummy,
             NSStackView(views: [firstWeekdayPrev, highlightedWeekdaysButtons, firstWeekdayNext])
                 .with(distribution: .fillProportionally),
             .dummy,
@@ -281,7 +224,6 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
 
     private func setUpBindings() {
         setUpMenuBar()
-        setUpNextEvent()
         setUpCalendar()
         setUpEvents()
     }
@@ -313,6 +255,13 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             control: showMenuBarBackgroundCheckbox,
             observable: viewModel.showStatusItemBackground,
             observer: viewModel.toggleStatusItemBackground
+        )
+        .disposed(by: disposeBag)
+
+        bind(
+            control: showNextEventCheckbox,
+            observable: viewModel.showEventStatusItem,
+            observer: viewModel.toggleEventStatusItem
         )
         .disposed(by: disposeBag)
 
@@ -421,43 +370,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             .disposed(by: disposeBag)
     }
 
-    private func setUpNextEvent() {
-
-        bind(
-            control: showNextEventCheckbox,
-            observable: viewModel.showEventStatusItem,
-            observer: viewModel.toggleEventStatusItem
-        )
-        .disposed(by: disposeBag)
-
-        viewModel.eventStatusItemLength
-            .bind(to: nextEventLengthSlider.rx.integerValue)
-            .disposed(by: disposeBag)
-
-        nextEventLengthSlider.rx.value
-            .skip(1)
-            .map(Int.init)
-            .bind(to: viewModel.eventStatusItemLengthObserver)
-            .disposed(by: disposeBag)
-
-        bind(
-            control: nextEventDetectNotchCheckbox,
-            observable: viewModel.eventStatusItemDetectNotch,
-            observer: viewModel.toggleEventStatusItemDetectNotch
-        )
-        .disposed(by: disposeBag)
-    }
-
     private func setUpCalendar() {
-
-        viewModel.calendarScaling
-            .bind(to: calendarScalingSlider.rx.doubleValue)
-            .disposed(by: disposeBag)
-
-        calendarScalingSlider.rx.value
-            .skip(1)
-            .bind(to: viewModel.calendarScalingObserver)
-            .disposed(by: disposeBag)
 
         setUpfirstWeekday()
         setUpHighlightedWeekdays()

@@ -17,9 +17,10 @@ class CalendarCellView: NSView {
     private let clickObserver: AnyObserver<Date>
     private let doubleClickObserver: AnyObserver<Date>
     private let calendarScaling: Observable<Double>
-    private let textScaling: Observable<Double>
+    private let calendarTextScaling: Observable<Double>
+    private let combinedScaling: Observable<Double>
 
-    private let label = Label()
+    private let label: Label
     private let eventsStackView = NSStackView()
     private let borderLayer = CALayer()
 
@@ -29,7 +30,7 @@ class CalendarCellView: NSView {
         clickObserver: AnyObserver<Date>,
         doubleClickObserver: AnyObserver<Date>,
         calendarScaling: Observable<Double>,
-        textScaling: Observable<Double>
+        calendarTextScaling: Observable<Double>
     ) {
 
         self.viewModel = viewModel
@@ -37,7 +38,14 @@ class CalendarCellView: NSView {
         self.clickObserver = clickObserver
         self.doubleClickObserver = doubleClickObserver
         self.calendarScaling = calendarScaling
-        self.textScaling = textScaling
+        self.calendarTextScaling = calendarTextScaling
+
+        self.combinedScaling = Observable
+            .combineLatest(calendarScaling, calendarTextScaling)
+            .map(*)
+            .share(replay: 1)
+
+        label = Label(font: .systemFont(ofSize: Constants.fontSize), scaling: combinedScaling)
 
         super.init(frame: .zero)
 
@@ -104,11 +112,6 @@ class CalendarCellView: NSView {
     private func setUpBindings() {
 
         calendarScaling
-            .map { .systemFont(ofSize: Constants.fontSize * $0) }
-            .bind(to: label.rx.font)
-            .disposed(by: disposeBag)
-
-        calendarScaling
             .bind { [weak self, borderLayer] in
                 borderLayer.borderWidth = Constants.borderWidth * $0
                 self?.updateLayer()
@@ -136,12 +139,11 @@ class CalendarCellView: NSView {
 
         Observable.combineLatest(
             viewModel.map(\.dots).distinctUntilChanged(),
-            calendarScaling,
-            textScaling
+            combinedScaling
         )
-        .map { dots, calendarScaling, textScaling in
+        .map { dots, scaling in
             (dots.isEmpty ? [.clear] : dots).map {
-                makeEventDot(color: $0, scaling: calendarScaling * textScaling)
+                makeEventDot(color: $0, scaling: scaling)
             }
         }
         .bind(to: eventsStackView.rx.arrangedSubviews)

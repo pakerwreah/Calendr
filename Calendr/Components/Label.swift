@@ -8,16 +8,6 @@
 import Cocoa
 import RxSwift
 
-enum Scaling {
-    static let observable = UserDefaults.standard.rx.observe(\.textScaling).share(replay: 1)
-
-    static var current: Double {
-        var value: Double = 1
-        observable.bind { value = $0 }.dispose()
-        return value
-    }
-}
-
 class Label: NSTextField {
 
     var forceVibrancy: Bool?
@@ -46,29 +36,34 @@ class Label: NSTextField {
         self.init(text: "")
     }
 
-    convenience init(text: String = "", font: NSFont? = nil, color: NSColor? = nil, align: NSTextAlignment = .left) {
+    convenience init(
+        text: String = "",
+        font: NSFont? = nil,
+        color: NSColor? = nil,
+        align: NSTextAlignment = .left,
+        scaling: Observable<Double> = Scaling.observable
+    ) {
         self.init(labelWithString: text)
         self.font = font
         self.textColor = color
         self.alignment = align
         setUpLayout()
-        setUpBindings()
+        setUpBindings(scaling)
     }
 
     convenience init(text: NSAttributedString) {
         self.init(labelWithAttributedString: text)
         setUpLayout()
-        setUpBindings()
     }
 
     private func setUpLayout() {
         setContentHuggingPriority(.fittingSizeCompression, for: .horizontal)
     }
 
-    private func setUpBindings() {
+    private func setUpBindings(_ scaling: Observable<Double>) {
 
         Observable
-            .combineLatest(baseFont, Scaling.observable)
+            .combineLatest(baseFont, scaling)
             .map { font, scaling in
                 font.withSize(font.pointSize * scaling)
             }

@@ -13,4 +13,5 @@ class MockEventDetailsSettings: EventDetailsSettings {
     let showMap: Observable<Bool> = .just(false)
     let popoverMaterial: Observable<PopoverMaterial> = .just(.popover)
     let textScaling: Observable<Double> = .just(1)
+    let calendarTextScaling: Observable<Double> = .just(1)
 }

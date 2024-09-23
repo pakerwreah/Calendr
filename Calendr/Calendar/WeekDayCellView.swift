@@ -12,9 +12,11 @@ class WeekDayCellView: NSView {
 
     private let disposeBag = DisposeBag()
 
-    private let label = Label()
+    private let label: Label
 
     init(weekDay: Observable<String>, scaling: Observable<Double>) {
+
+        label = Label(font: .boldSystemFont(ofSize: Constants.fontSize), scaling: scaling)
 
         super.init(frame: .zero)
 
@@ -25,11 +27,6 @@ class WeekDayCellView: NSView {
         weekDay
             .observe(on: MainScheduler.instance)
             .bind(to: label.rx.text)
-            .disposed(by: disposeBag)
-
-        scaling
-            .map { .boldSystemFont(ofSize: Constants.fontSize * $0) }
-            .bind(to: label.rx.font)
             .disposed(by: disposeBag)
     }
 
