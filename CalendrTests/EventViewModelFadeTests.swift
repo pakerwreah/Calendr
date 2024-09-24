@@ -184,7 +184,7 @@ class EventViewModelFadeTests: XCTestCase {
         XCTAssertEqual(isFaded, false)
     }
 
-    func testFade_isOverdue_isTodaySelected_isReminder_shouldFade() {
+    func testFade_isOverdue_isTodaySelected_isReminder_shouldNotFade() {
 
         dateProvider.now = .make(year: 2021, month: 1, day: 2, hour: 15)
 
@@ -192,6 +192,25 @@ class EventViewModelFadeTests: XCTestCase {
             start: .make(year: 2021, month: 1, day: 1, hour: 10),
             end: .make(year: 2021, month: 1, day: 1, hour: 10),
             type: .reminder(completed: false)
+        )
+
+        var isFaded: Bool?
+
+        viewModel.isFaded
+            .bind { isFaded = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(isFaded, false)
+    }
+
+    func testFade_isCompleted_isTodaySelected_isReminder_shouldFade() {
+
+        dateProvider.now = .make(year: 2021, month: 1, day: 2, hour: 15)
+
+        let viewModel = mock(
+            start: .make(year: 2021, month: 1, day: 1, hour: 10),
+            end: .make(year: 2021, month: 1, day: 1, hour: 10),
+            type: .reminder(completed: true)
         )
 
         var isFaded: Bool?

@@ -331,12 +331,14 @@ class EventListViewModelTests: XCTestCase {
         let date = dateProvider.calendar.date(byAdding: .day, value: -1, to: dateProvider.now)!
         dateSubject.onNext(date)
 
+        settings.togglePastEvents.onNext(false)
+
         eventsSubject.onNext(
             [
                 .make(start: date, end: date + 10, title: "Event 1"),
                 .make(start: date + 60, end: date + 120, title: "Event 2"),
-                .make(start: date + 200, title: "Overdue 1", type: .reminder(completed: false)),
-                .make(start: date + 300, title: "Overdue 2", type: .reminder(completed: false)),
+                .make(start: date + 200, title: "Overdue", type: .reminder(completed: false)),
+                .make(start: date + 300, title: "Completed", type: .reminder(completed: true)),
                 .make(start: date, title: "All day event", isAllDay: true),
                 .make(start: date, title: "All day overdue", isAllDay: true, type: .reminder(completed: false))
             ]
@@ -350,8 +352,66 @@ class EventListViewModelTests: XCTestCase {
             .event("Event 1"),
             .event("Event 2"),
             .interval("1m"),
-            .event("Overdue 1"),
-            .event("Overdue 2")
+            .event("Overdue"),
+            .event("Completed")
+        ])
+    }
+
+    func testEventList_withCompletedReminders_isToday_shouldShowNormally() {
+
+        let date = dateProvider.now
+
+        eventsSubject.onNext(
+            [
+                .make(start: date, end: date + 10, title: "Event 1"),
+                .make(start: date + 60, end: date + 120, title: "Event 2"),
+                .make(start: date + 200, title: "Reminder 1", type: .reminder(completed: true)),
+                .make(start: date + 300, title: "Reminder 2", type: .reminder(completed: false)),
+                .make(start: date, title: "All day event", isAllDay: true),
+                .make(start: date, title: "All day overdue", isAllDay: true, type: .reminder(completed: false))
+            ]
+        )
+
+        XCTAssertEqual(eventListItems, [
+            .section("All day"),
+            .event("All day event"),
+            .event("All day overdue"),
+            .section("Today"),
+            .event("Event 1"),
+            .event("Event 2"),
+            .interval("1m"),
+            .event("Reminder 1"),
+            .event("Reminder 2")
+        ])
+    }
+
+
+    func testEventList_withCompletedReminders_withHidePastEventsEnabled_isToday_shouldHideCompleted() {
+
+        let date = dateProvider.now
+
+        settings.togglePastEvents.onNext(false)
+
+        eventsSubject.onNext(
+            [
+                .make(start: date, end: date + 10, title: "Event 1"),
+                .make(start: date + 60, end: date + 120, title: "Event 2"),
+                .make(start: date + 200, title: "Reminder 1", type: .reminder(completed: true)),
+                .make(start: date + 300, title: "Reminder 2", type: .reminder(completed: false)),
+                .make(start: date, title: "All day event", isAllDay: true),
+                .make(start: date, title: "All day overdue", isAllDay: true, type: .reminder(completed: false))
+            ]
+        )
+
+        XCTAssertEqual(eventListItems, [
+            .section("All day"),
+            .event("All day event"),
+            .event("All day overdue"),
+            .section("Today"),
+            .event("Event 1"),
+            .event("Event 2"),
+            .interval("3m"),
+            .event("Reminder 2")
         ])
     }
 }

@@ -233,7 +233,7 @@ class EventViewModel {
         if isDeclined {
             isFaded = .just(true)
         } else if case .reminder(let completed) = type {
-            isFaded = .just(completed || isTodaySelected && !range.startsToday)
+            isFaded = .just(isTodaySelected && completed)
         } else if event.isAllDay || !range.endsToday {
             isFaded = .just(false)
         } else {

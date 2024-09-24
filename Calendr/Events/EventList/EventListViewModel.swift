@@ -98,7 +98,10 @@ class EventListViewModel {
             .startWith(())
             .map {
                 events.filter {
-                    $0.isAllDay || $0.type.isReminder || !$0.range(using: dateProvider).isPast
+                    if case .reminder(let completed) = $0.type {
+                        return !completed
+                    }
+                    return $0.isAllDay || !$0.range(using: dateProvider).isPast
                 }
             }
             .map { ($0, date, isTodaySelected) }
