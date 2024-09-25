@@ -17,16 +17,29 @@ protocol Cache: AnyObject {
 }
 
 // Least Recently Used
-actor LRUCache<Key: Hashable, Value>: @preconcurrency Cache {
+class LRUCache<Key: Hashable, Value>: Cache {
     private var cache: [Key: Value] = [:]
     private var order: [Key] = []
     private let capacity: Int
+    private let locker = NSLock()
 
     init(capacity: Int) {
         self.capacity = capacity
     }
 
     func get(_ key: Key) -> Value? {
+        locker.withLock { unsafe_get(key) }
+    }
+
+    func set(_ key: Key, _ value: Value) {
+        locker.withLock { unsafe_set(key, value) }
+    }
+
+    func remove(_ key: Key) {
+        locker.withLock { unsafe_remove(key) }
+    }
+
+    private func unsafe_get(_ key: Key) -> Value? {
         if let value = cache[key] {
             // Move the key to the end to mark it as recently used
             if let index = order.firstIndex(of: key) {
@@ -38,7 +51,7 @@ actor LRUCache<Key: Hashable, Value>: @preconcurrency Cache {
         return nil
     }
 
-    func set(_ key: Key, _ value: Value) {
+    private func unsafe_set(_ key: Key, _ value: Value) {
         if cache[key] != nil {
             // If the key already exists, update the value and move it to the end
             if let index = order.firstIndex(of: key) {
@@ -53,7 +66,7 @@ actor LRUCache<Key: Hashable, Value>: @preconcurrency Cache {
         cache[key] = value
     }
 
-    func remove(_ key: Key) {
+    private func unsafe_remove(_ key: Key) {
         if let index = order.firstIndex(of: key) {
             order.remove(at: index)
             cache.removeValue(forKey: key)
