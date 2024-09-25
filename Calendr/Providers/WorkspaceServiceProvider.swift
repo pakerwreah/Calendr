@@ -85,7 +85,7 @@ class Workspace: WorkspaceServiceProviding {
 
     func open(_ link: EventLink) -> Bool {
         guard
-            !link.isMeeting,
+            !link.isNative,
             let browserPath = userDefaults.defaultBrowserPerCalendar[link.calendarId],
             let browserUrl = URL(string: browserPath)
         else {
