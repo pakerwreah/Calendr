@@ -28,6 +28,11 @@ extension NSImage {
         withSymbolConfiguration(.init(pointSize: pointSize, weight: weight))!
     }
 
+    func with(size: NSSize) -> NSImage {
+        self.size = size
+        return self
+    }
+
     func with(color: NSColor) -> NSImage {
         let image = self.copy() as! NSImage
         image.lockFocus()

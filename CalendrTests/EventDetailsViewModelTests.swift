@@ -255,6 +255,7 @@ class EventDetailsViewModelTests: XCTestCase {
             geocoder: geocoder,
             weatherService: weatherService,
             workspace: workspace,
+            userDefaults: .init(),
             settings: settings,
             isShowingObserver: .dummy(),
             isInProgress: .just(false),

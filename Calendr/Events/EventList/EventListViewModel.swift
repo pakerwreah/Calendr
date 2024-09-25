@@ -25,6 +25,7 @@ class EventListViewModel {
     private let geocoder: GeocodeServiceProviding
     private let weatherService: WeatherServiceProviding
     private let workspace: WorkspaceServiceProviding
+    private let userDefaults: UserDefaults
     private let settings: EventListSettings
     private let scheduler: SchedulerType
 
@@ -40,6 +41,7 @@ class EventListViewModel {
         geocoder: GeocodeServiceProviding,
         weatherService: WeatherServiceProviding,
         workspace: WorkspaceServiceProviding,
+        userDefaults: UserDefaults,
         settings: EventListSettings,
         scheduler: SchedulerType
     ) {
@@ -49,6 +51,7 @@ class EventListViewModel {
         self.geocoder = geocoder
         self.weatherService = weatherService
         self.workspace = workspace
+        self.userDefaults = userDefaults
         self.settings = settings
         self.scheduler = scheduler
 
@@ -132,6 +135,7 @@ class EventListViewModel {
             geocoder: geocoder,
             weatherService: weatherService,
             workspace: workspace,
+            userDefaults: userDefaults,
             settings: settings,
             isShowingDetails: isShowingDetails.asObserver(),
             isTodaySelected: isTodaySelected,

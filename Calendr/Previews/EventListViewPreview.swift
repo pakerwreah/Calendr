@@ -57,6 +57,7 @@ struct EventListViewPreview: PreviewProvider {
                 geocoder: geocoder,
                 weatherService: weatherService,
                 workspace: workspace,
+                userDefaults: .init(),
                 settings: settings,
                 scheduler: MainScheduler.instance
             )

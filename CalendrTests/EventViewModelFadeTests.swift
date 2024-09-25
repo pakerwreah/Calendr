@@ -257,6 +257,7 @@ class EventViewModelFadeTests: XCTestCase {
             geocoder: geocoder,
             weatherService: weatherService,
             workspace: workspace,
+            userDefaults: .init(),
             settings: settings,
             isShowingDetails: .dummy(),
             isTodaySelected: isTodaySelected,

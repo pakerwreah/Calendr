@@ -272,6 +272,7 @@ class NextEventViewModel {
             geocoder: geocoder,
             weatherService: weatherService,
             workspace: workspace,
+            userDefaults: userDefaults,
             settings: settings,
             isShowingObserver: isShowingDetails,
             isInProgress: isInProgress,

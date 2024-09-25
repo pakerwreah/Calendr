@@ -9,7 +9,9 @@ import Foundation
 
 struct EventLink: Equatable {
     let url: URL
+    let original: URL
     let isMeeting: Bool
+    let calendarId: String
 }
 
 extension EventModel {
@@ -20,11 +22,11 @@ extension EventModel {
             ? detectLinks([location, url?.absoluteString, notes])
             : []
 
-        if let url = links.lazy.compactMap({ detectMeeting(url: $0, using: workspace) }).first {
-            return .init(url: url, isMeeting: true)
+        if let (url, original) = links.lazy.compactMap({ url in detectMeeting(url: url, using: workspace).map { ($0, url) } }).first {
+            return .init(url: url, original: original, isMeeting: true, calendarId: calendar.id)
         }
         else if let url = links.first {
-            return .init(url: url, isMeeting: false)
+            return .init(url: url, original: url, isMeeting: false, calendarId: calendar.id)
         }
 
         return nil

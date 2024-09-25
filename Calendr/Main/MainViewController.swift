@@ -173,6 +173,7 @@ class MainViewController: NSViewController {
             geocoder: geocoder,
             weatherService: weatherService,
             workspace: workspace,
+            userDefaults: userDefaults,
             settings: settingsViewModel,
             scheduler: WallTimeScheduler()
         )
