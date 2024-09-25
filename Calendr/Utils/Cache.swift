@@ -17,7 +17,7 @@ protocol Cache: AnyObject {
 }
 
 // Least Recently Used
-class LRUCache<Key: Hashable, Value>: Cache {
+actor LRUCache<Key: Hashable, Value>: @preconcurrency Cache {
     private var cache: [Key: Value] = [:]
     private var order: [Key] = []
     private let capacity: Int
