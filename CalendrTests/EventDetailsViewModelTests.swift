@@ -246,6 +246,48 @@ class EventDetailsViewModelTests: XCTestCase {
         XCTAssertEqual(action, .event(.status(.accept)))
     }
 
+    func testBrowserOptions() {
+
+        workspace.m_urlForApplicationToOpenURL = makeUrl("Default")
+        workspace.m_urlForApplicationToOpenContentType = makeUrl("Default")
+
+        XCTAssertEqual(workspace.urlForDefaultBrowserApplication(), makeUrl("Default"))
+
+        workspace.m_urlsForApplicationsToOpenURL = [makeUrl("Browser 2"), makeUrl("Browser 1"), makeUrl("Default"), makeUrl("Browser 3")]
+        workspace.m_urlsForApplicationsToOpenContentType = [makeUrl("Browser 2"), makeUrl("Browser 1"), makeUrl("Default"), makeUrl("Browser 3"), makeUrl("Not a real browser 4")]
+
+        let urlsForBrowsers = workspace.urlsForBrowsersApplications()
+
+        let expectedURLs = [makeUrl("Browser 2"), makeUrl("Browser 1"), makeUrl("Default"), makeUrl("Browser 3")]
+
+        XCTAssertEqual(urlsForBrowsers.count, 4)
+        XCTAssert(expectedURLs.allSatisfy(urlsForBrowsers.contains))
+
+        let viewModel = mock(event: .make(location: "https://example.com"))
+
+        let sortedBrowserNames = viewModel.browserOptions.map(\.name)
+
+        XCTAssertEqual(sortedBrowserNames, ["Default", "Browser 1", "Browser 2", "Browser 3"])
+
+    }
+
+    private class MockedURL: NSURL, @unchecked Sendable {
+
+        var resourceValues: [URLResourceKey : Any] = [:]
+
+        override func resourceValues(forKeys keys: [URLResourceKey]) throws -> [URLResourceKey : Any] {
+            return resourceValues
+        }
+    }
+
+    func makeUrl(_ name: String) -> URL {
+        let path = "/path/Applications/\(name).app".addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!
+        let url = MockedURL(string: path)!
+        url.resourceValues[.nameKey] = "\(name).app"
+        url.resourceValues[.effectiveIconKey] = NSImage()
+        return url as URL
+    }
+
     func mock(event: EventModel, source: EventDetailsSource = .list, callback: @escaping (ContextCallbackAction?) -> Void = { _ in }) -> EventDetailsViewModel {
 
         EventDetailsViewModel(

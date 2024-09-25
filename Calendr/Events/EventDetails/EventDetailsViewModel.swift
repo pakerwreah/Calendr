@@ -244,7 +244,15 @@ class EventDetailsViewModel {
                 isDefault: url == defaultBrowserURL
             )
         }
-        .sorted { $0.isDefault || $0.name < $1.name }
+        .sorted {
+            if $0.isDefault && !$1.isDefault {
+                return true // $0 is default, so it should come first
+            }
+            if !$0.isDefault && $1.isDefault {
+                return false // $1 is default, so it should come first
+            }
+            return $0.name < $1.name // Otherwise, sort by name
+        }
 
         selectedBrowserIndex = userDefaults.rx.observe(\.defaultBrowserPerCalendar)
             .map {
