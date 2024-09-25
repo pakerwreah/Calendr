@@ -330,7 +330,6 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
 
         let titleStack = NSStackView(views: [titleLabel, eventTypeIcon, linkBtn]).with(alignment: .firstBaseline)
         titleStack.setHuggingPriority(.required, for: .vertical)
-        titleStack.setCustomSpacing(2, after: linkBtn)
 
         if !viewModel.title.isEmpty {
             titleLabel.stringValue = viewModel.title
