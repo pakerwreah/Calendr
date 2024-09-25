@@ -48,6 +48,7 @@ enum Prefs {
     static let lastCheckedVersion = "last_checked_version"
     static let updatedVersion = "updated_version"
     static let permissionSuppressed = "permission_suppressed"
+    static let defaultBrowserPerCalendar = "default_browser_per_calendar"
 
     // System
     static let statusItemPreferredPosition = "NSStatusItem Preferred Position"
@@ -88,7 +89,10 @@ func registerDefaultPrefs(in userDefaults: UserDefaults, calendar: Calendar = .c
         // Appearance
         Prefs.transparencyLevel: 2,
         Prefs.textScaling: 1,
-        Prefs.calendarTextScaling: 1
+        Prefs.calendarTextScaling: 1,
+
+        // Misc
+        Prefs.defaultBrowserPerCalendar: [:]
     ])
 }
 
@@ -241,5 +245,10 @@ extension UserDefaults {
     @objc dynamic var permissionSuppressed: [String] {
         get { array(forKey: Prefs.permissionSuppressed) as? [String] ?? [] }
         set { set(newValue, forKey: Prefs.permissionSuppressed) }
+    }
+
+    @objc dynamic var defaultBrowserPerCalendar: [String: String] {
+        get { dictionary(forKey: Prefs.defaultBrowserPerCalendar) as? [String: String] ?? [:] }
+        set { set(newValue, forKey: Prefs.defaultBrowserPerCalendar) }
     }
 }

@@ -95,7 +95,7 @@ class EventOptionsViewModel: BaseContextMenuViewModel<EventAction> {
         case .open:
             openEvent()
         case .link(let link, _):
-            workspace.open(link.url)
+            workspace.open(link)
         case .skip:
             break
         case .status(let action):

@@ -41,6 +41,7 @@ class EventViewModel {
     private let weatherService: WeatherServiceProviding
     private let settings: EventDetailsSettings
     private let workspace: WorkspaceServiceProviding
+    private let userDefaults: UserDefaults
 
     private let disposeBag = DisposeBag()
 
@@ -51,6 +52,7 @@ class EventViewModel {
         geocoder: GeocodeServiceProviding,
         weatherService: WeatherServiceProviding,
         workspace: WorkspaceServiceProviding,
+        userDefaults: UserDefaults,
         settings: EventDetailsSettings,
         isShowingDetails: AnyObserver<Bool>,
         isTodaySelected: Bool,
@@ -62,6 +64,7 @@ class EventViewModel {
         self.dateProvider = dateProvider
         self.calendarService = calendarService
         self.workspace = workspace
+        self.userDefaults = userDefaults
         self.geocoder = geocoder
         self.weatherService = weatherService
         self.isShowingDetails = isShowingDetails
@@ -75,7 +78,7 @@ class EventViewModel {
 
         linkTapped = .init { [link] _ in
             if let link {
-                workspace.open(link.url)
+                workspace.open(link)
             }
         }
 
@@ -256,6 +259,7 @@ class EventViewModel {
             geocoder: geocoder,
             weatherService: weatherService,
             workspace: workspace,
+            userDefaults: userDefaults,
             settings: settings,
             isShowingObserver: isShowingDetails,
             isInProgress: isInProgress,

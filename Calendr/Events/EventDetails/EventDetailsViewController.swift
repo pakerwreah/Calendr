@@ -16,6 +16,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
 
     private let scrollView = NSScrollView()
     private let eventTypeIcon = NSImageView()
+    private let browserDropdown = Dropdown()
     private let contentStackView = NSStackView(.vertical)
     private let participantsStackView = NSStackView(.vertical)
     private let detailsStackView = NSStackView(.vertical)
@@ -98,6 +99,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         contentStackView.edges(equalTo: view, margins: .init(vertical: 12))
 
         setUpIcon()
+        setUpBrowser()
         setUpLink()
         setUpSkip()
         setUpOptions()
@@ -128,18 +130,49 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         eventTypeIcon.setContentCompressionResistancePriority(.required, for: .horizontal)
     }
 
+    private func setUpBrowser() {
+
+        browserDropdown.isBordered = false
+        browserDropdown.imagePosition = .imageOnly
+        browserDropdown.setContentHuggingPriority(.required, for: .horizontal)
+
+        let menu = NSMenu()
+        for option in viewModel.browserOptions {
+            let item = NSMenuItem()
+            item.image = option.icon
+            item.title = option.name
+            menu.addItem(item)
+        }
+        browserDropdown.menu = menu
+
+        let browserControl = browserDropdown.rx.controlProperty(
+            getter: \.indexOfSelectedItem,
+            setter: { $0.selectItem(at: $1) }
+        )
+
+        browserControl.skip(1)
+            .bind(to: viewModel.selectedBrowserObserver)
+            .disposed(by: disposeBag)
+
+        viewModel.selectedBrowserIndex
+            .bind(to: browserControl)
+            .disposed(by: disposeBag)
+    }
+
     private func setUpLink() {
 
         guard let link = viewModel.link else {
             linkBtn.isHidden = true
+            browserDropdown.isHidden = true
             return
         }
 
         viewModel.isInProgress
             .observe(on: MainScheduler.instance)
-            .bind { [linkBtn] isInProgress in
+            .bind { [linkBtn, browserDropdown] isInProgress in
                 if link.isMeeting {
                     linkBtn.image = isInProgress ? Icons.Event.video_fill : Icons.Event.video
+                    browserDropdown.isHidden = true
                 } else {
                     linkBtn.image = Icons.Event.link
                 }
@@ -297,6 +330,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
 
         let titleStack = NSStackView(views: [titleLabel, eventTypeIcon, linkBtn]).with(alignment: .firstBaseline)
         titleStack.setHuggingPriority(.required, for: .vertical)
+        titleStack.setCustomSpacing(2, after: linkBtn)
 
         if !viewModel.title.isEmpty {
             titleLabel.stringValue = viewModel.title
@@ -305,8 +339,12 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
 
         if !viewModel.url.isEmpty {
             urlLabel.stringValue = viewModel.url
+
+            let urlStackView = NSStackView(views: [urlLabel, browserDropdown])
+            urlStackView.setHuggingPriority(.required, for: .vertical)
+
             detailsStackView.addArrangedSubview(makeLine())
-            detailsStackView.addArrangedSubview(urlLabel)
+            detailsStackView.addArrangedSubview(urlStackView)
         }
 
         if !viewModel.location.isEmpty {

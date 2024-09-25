@@ -271,6 +271,17 @@ class EventOptionsViewModelTests: XCTestCase {
 
 private extension EventLink {
 
-    static let zoomLink: Self = .init(url: URL(string: "https://zoom.us/j/9999999999")!, isMeeting: true)
-    static let genericLink: Self = .init(url: URL(string: "https://google.com/something")!, isMeeting: false)
+    static let zoomLink: Self = .init(
+        url: URL(string: "https://zoom.us/j/9999999999")!,
+        original: URL(string: "https://zoom.us/j/9999999999")!,
+        isMeeting: true,
+        calendarId: ""
+    )
+
+    static let genericLink: Self = .init(
+        url: URL(string: "https://google.com/something")!,
+        original: URL(string: "https://google.com/something")!,
+        isMeeting: false,
+        calendarId: ""
+    )
 }

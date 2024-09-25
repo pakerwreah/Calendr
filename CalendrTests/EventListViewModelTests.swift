@@ -32,6 +32,7 @@ class EventListViewModelTests: XCTestCase {
         geocoder: geocoder,
         weatherService: weatherService,
         workspace: workspace,
+        userDefaults: .init(),
         settings: settings,
         scheduler: scheduler
     )

@@ -27,11 +27,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         let userDefaults = UserDefaults.standard
         let notificationCenter = NotificationCenter.default
-        let workspace = NSWorkspace.shared
         let fileManager = FileManager.default
 
         registerDefaultPrefs(in: userDefaults)
 
+        let workspace = Workspace(userDefaults: userDefaults)
         let dateProvider = DateProvider(notificationCenter: notificationCenter, userDefaults: userDefaults)
         let notificationProvider = LocalNotificationProvider()
 

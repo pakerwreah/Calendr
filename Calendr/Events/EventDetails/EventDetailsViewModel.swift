@@ -5,7 +5,7 @@
 //  Created by Paker on 11/03/2021.
 //
 
-import Foundation
+import Cocoa
 import RxSwift
 
 enum EventDetailsSource {
@@ -14,6 +14,12 @@ enum EventDetailsSource {
 }
 
 class EventDetailsViewModel {
+
+    struct BrowserOption {
+        let icon: NSImage
+        let name: String
+        let url: URL
+    }
 
     let type: EventType
     let status: EventStatus
@@ -26,6 +32,7 @@ class EventDetailsViewModel {
     let link: EventLink?
     let settings: EventDetailsSettings
     let showSkip: Bool
+    let browserOptions: [BrowserOption]
     let optimisticLoadTime: DispatchTimeInterval
 
     let canShowMap = BehaviorSubject<Bool>(value: false)
@@ -38,6 +45,9 @@ class EventDetailsViewModel {
     let skipTapped: AnyObserver<Void>
     let openMaps: AnyObserver<Coordinates>
     let isShowingObserver: AnyObserver<Bool>
+
+    let selectedBrowserObserver: AnyObserver<Int>
+    let selectedBrowserIndex: Observable<Int>
 
     private let event: EventModel
     private let dateProvider: DateProviding
@@ -67,6 +77,7 @@ class EventDetailsViewModel {
         geocoder: GeocodeServiceProviding,
         weatherService: WeatherServiceProviding,
         workspace: WorkspaceServiceProviding,
+        userDefaults: UserDefaults,
         settings: EventDetailsSettings,
         isShowingObserver: AnyObserver<Bool>,
         isInProgress: Observable<Bool>,
@@ -84,7 +95,8 @@ class EventDetailsViewModel {
         type = event.type
         status = event.status
         title = event.title
-        url = (type.isBirthday ? nil : event.url?.absoluteString) ?? ""
+        link = event.detectLink(using: workspace)
+        url = type.isBirthday ? "" : link.map { $0.isMeeting ? "" : $0.original.absoluteString } ?? ""
         location = event.location ?? ""
         notes = event.notes ?? ""
         participants = event.participants.sorted {
@@ -93,11 +105,9 @@ class EventDetailsViewModel {
             ($1.isOrganizer, $1.isCurrentUser, $1.status, $1.name)
         }
 
-        link = event.detectLink(using: workspace)
-
         linkTapped = .init { [link] _ in
             if let link {
-                workspace.open(link.url)
+                workspace.open(link)
             }
         }
 
@@ -213,6 +223,44 @@ class EventDetailsViewModel {
         weather.subscribe().disposed(by: disposeBag)
 
         optimisticLoadTime = .milliseconds(canShowMap.value && !event.location.isNilOrEmpty ? 50 : 0)
+
+        let browserOptions: [BrowserOption] = workspace.urlsForBrowsersApplications().compactMap { url in
+            guard
+                url.lastPathComponent.hasSuffix(".app"),
+                url.deletingLastPathComponent().lastPathComponent == "Applications",
+                let res = try? url.resourceValues(forKeys: [.nameKey, .effectiveIconKey]),
+                let icon = res.effectiveIcon as? NSImage,
+                let name = res.name
+            else {
+                return nil
+            }
+            return .init(
+                icon: icon.with(size: .init(width: 16, height: 16)),
+                name: String(name.dropLast(4)),
+                url: url
+            )
+        }
+        .sorted(by: \.name)
+
+        selectedBrowserIndex = userDefaults.rx.observe(\.defaultBrowserPerCalendar)
+            .map {
+                let url = if let path = $0[event.calendar.id], let pathUrl = URL(string: path) {
+                    pathUrl
+                } else {
+                    workspace.urlForDefaultBrowserApplication()
+                }
+                return browserOptions.firstIndex { $0.url == url } ?? 0
+            }
+
+        selectedBrowserObserver = userDefaults.rx.observer(for: \.defaultBrowserPerCalendar)
+            .mapObserver { index in
+                print("selecting", index)
+                var mapping = userDefaults.defaultBrowserPerCalendar
+                mapping[event.calendar.id] = browserOptions[index].url.absoluteString
+                return mapping
+            }
+
+        self.browserOptions = browserOptions
     }
 
     func makeContextMenuViewModel() -> (any ContextMenuViewModel)? {
