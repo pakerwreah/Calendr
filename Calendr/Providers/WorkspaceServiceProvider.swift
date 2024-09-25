@@ -33,8 +33,8 @@ extension WorkspaceServiceProviding {
         URL(string: scheme).flatMap(urlForApplication(toOpen:)) != nil
     }
 
-    func urlForDefaultBrowserApplication() -> URL {
-        urlForApplication(toOpen: .html)!
+    func urlForDefaultBrowserApplication() -> URL? {
+        urlForApplication(toOpen: .html)
     }
 
     func urlsForBrowsersApplications() -> [URL] {
@@ -91,6 +91,7 @@ class Workspace: WorkspaceServiceProviding {
         else {
             return open(link.url)
         }
-        return open(browserUrl)
+        workspace.open([link.url], withApplicationAt: browserUrl, configuration: NSWorkspace.OpenConfiguration())
+        return true
     }
 }
