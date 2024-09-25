@@ -19,6 +19,7 @@ class EventDetailsViewModel {
         let icon: NSImage
         let name: String
         let url: URL
+        let isDefault: Bool
     }
 
     let type: EventType
@@ -224,6 +225,8 @@ class EventDetailsViewModel {
 
         optimisticLoadTime = .milliseconds(canShowMap.value && !event.location.isNilOrEmpty ? 50 : 0)
 
+        let defaultBrowserURL = workspace.urlForDefaultBrowserApplication()
+
         let browserOptions: [BrowserOption] = workspace.urlsForBrowsersApplications().compactMap { url in
             guard
                 url.lastPathComponent.hasSuffix(".app"),
@@ -235,28 +238,32 @@ class EventDetailsViewModel {
                 return nil
             }
             return .init(
-                icon: icon.with(size: .init(width: 16, height: 16)),
+                icon: icon,
                 name: String(name.dropLast(4)),
-                url: url
+                url: url,
+                isDefault: url == defaultBrowserURL
             )
         }
-        .sorted(by: \.name)
+        .sorted { $0.isDefault || $0.name < $1.name }
 
         selectedBrowserIndex = userDefaults.rx.observe(\.defaultBrowserPerCalendar)
             .map {
                 let url = if let path = $0[event.calendar.id], let pathUrl = URL(string: path) {
                     pathUrl
                 } else {
-                    workspace.urlForDefaultBrowserApplication()
+                    defaultBrowserURL
                 }
                 return browserOptions.firstIndex { $0.url == url } ?? 0
             }
 
         selectedBrowserObserver = userDefaults.rx.observer(for: \.defaultBrowserPerCalendar)
             .mapObserver { index in
-                print("selecting", index)
                 var mapping = userDefaults.defaultBrowserPerCalendar
-                mapping[event.calendar.id] = browserOptions[index].url.absoluteString
+                if index > 0 {
+                    mapping[event.calendar.id] = browserOptions[index].url.absoluteString
+                } else {
+                    mapping.removeValue(forKey: event.calendar.id)
+                }
                 return mapping
             }
 

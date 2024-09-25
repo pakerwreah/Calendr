@@ -137,17 +137,29 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         browserDropdown.setContentHuggingPriority(.required, for: .horizontal)
 
         let menu = NSMenu()
-        for option in viewModel.browserOptions {
+
+        for (index, option) in viewModel.browserOptions.enumerated() {
             let item = NSMenuItem()
-            item.image = option.icon
+            item.image = option.icon.with(size: .init(width: 16, height: 16))
             item.title = option.name
+            item.tag = index
             menu.addItem(item)
         }
+
+        menu.insertItem(.separator(), at: 1)
+
         browserDropdown.menu = menu
 
+        // hack to hide the icon
+        let constraint = browserDropdown.width(equalTo: 15)
+
+        // selected index counts separators, so we have to use tags
         let browserControl = browserDropdown.rx.controlProperty(
-            getter: \.indexOfSelectedItem,
-            setter: { $0.selectItem(at: $1) }
+            getter: { $0.selectedItem?.tag ?? 0 },
+            setter: {
+                constraint.isActive = $1 == 0
+                $0.selectItem(withTag: $1)
+            }
         )
 
         browserControl.skip(1)
