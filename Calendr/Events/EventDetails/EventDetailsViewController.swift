@@ -571,8 +571,11 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         scrollView.contentView.heightAnchor.constraint(lessThanOrEqualToConstant: 222).activate()
 
         participantsStackView.setHuggingPriority(.required, for: .vertical)
-        participantsStackView.layoutSubtreeIfNeeded()
-        participantsStackView.scrollTop()
+
+        DispatchQueue.main.async {
+            self.participantsStackView.layoutSubtreeIfNeeded()
+            self.participantsStackView.scrollTop()
+        }
     }
 
     private func setUpBindings() {
