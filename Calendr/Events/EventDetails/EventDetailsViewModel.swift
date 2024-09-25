@@ -96,7 +96,7 @@ class EventDetailsViewModel {
         status = event.status
         title = event.title
         link = event.detectLink(using: workspace)
-        url = type.isBirthday ? "" : link.map { $0.isMeeting ? "" : $0.original.absoluteString } ?? ""
+        url = type.isBirthday ? "" : link.map { $0.isNative ? "" : $0.original.absoluteString } ?? ""
         location = event.location ?? ""
         notes = event.notes ?? ""
         participants = event.participants.sorted {

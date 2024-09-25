@@ -14,6 +14,14 @@ struct EventLink: Equatable {
     let calendarId: String
 }
 
+extension EventLink {
+
+    var isNative: Bool {
+        guard let scheme = url.scheme else { return false }
+        return !["http", "https"].contains(scheme)
+    }
+}
+
 extension EventModel {
 
     func detectLink(using workspace: WorkspaceServiceProviding) -> EventLink? {

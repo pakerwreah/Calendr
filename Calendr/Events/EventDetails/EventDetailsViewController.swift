@@ -169,10 +169,9 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
 
         viewModel.isInProgress
             .observe(on: MainScheduler.instance)
-            .bind { [linkBtn, browserDropdown] isInProgress in
+            .bind { [linkBtn] isInProgress in
                 if link.isMeeting {
                     linkBtn.image = isInProgress ? Icons.Event.video_fill : Icons.Event.video
-                    browserDropdown.isHidden = true
                 } else {
                     linkBtn.image = Icons.Event.link
                 }
