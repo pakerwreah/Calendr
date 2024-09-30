@@ -852,9 +852,9 @@ private class StatusItemClickHandler {
         guard let event = NSApp.currentEvent else { return }
 
         switch event.type {
-        case .leftMouseUp:
+        case .leftMouseDown:
             self.leftClick.onNext(())
-        case .rightMouseUp:
+        case .rightMouseDown:
             self.rightClick.onNext(())
         default:
             break
