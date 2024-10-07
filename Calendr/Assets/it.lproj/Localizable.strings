@@ -47,6 +47,7 @@
 "settings.calendar.preserve_selected_date" = "Conserva la data selezionata quando la nascondi";
 "settings.calendar.show_declined_events" = "Mostra eventi rifiutati";
 "settings.calendar.show_declined_events_tooltip" = "Funziona solo se è abilitato anche nell'app Calendario nativa.";
+//"settings.calendar.date_hover_option" = "Hold ⌥ to peek at hovered dates";
 
 "settings.events" = "Eventi";
 "settings.events.show_map" = "Mostra mappa e meteo";

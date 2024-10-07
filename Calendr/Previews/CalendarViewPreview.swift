@@ -34,6 +34,7 @@ struct CalendarViewPreview: PreviewProvider {
                 searchObservable: .just(""),
                 dateObservable: selected,
                 hoverObservable: hovered,
+                keyboardModifiers: .just([]),
                 enabledCalendars: .empty(),
                 calendarService: calendarService,
                 dateProvider: dateProvider,

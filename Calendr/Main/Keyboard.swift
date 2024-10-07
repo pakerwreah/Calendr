@@ -35,11 +35,11 @@ class Keyboard {
 
     deinit { removeMonitor() }
 
-    func listen(in vc: NSViewController, handler: @escaping (NSEvent, Key) -> NSEvent?) {
+    func listen(in vc: NSViewController, handler: @escaping (NSEvent, Key?) -> NSEvent?) {
         removeMonitor()
-        eventMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak vc] event in
-            if vc?.view.window == event.window, let key = Key.from(event) {
-                return handler(event, key)
+        eventMonitor = NSEvent.addLocalMonitorForEvents(matching: [.keyDown, .flagsChanged]) { [weak vc] event in
+            if vc?.view.window == event.window {
+                return handler(event, Key.from(event))
             }
             return event
         }
@@ -49,6 +49,10 @@ class Keyboard {
 private extension Keyboard.Key {
 
     static func from(_ event: NSEvent) -> Self? {
+
+        guard event.type == .keyDown else {
+            return nil
+        }
 
         var key: Self?
 

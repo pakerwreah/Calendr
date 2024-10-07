@@ -47,6 +47,7 @@
 "settings.calendar.preserve_selected_date" = "隐藏时保留所选日期";
 "settings.calendar.show_declined_events" = "显示拒绝的日程";
 "settings.calendar.show_declined_events_tooltip" = "此功能需在原生日历应用中同样启用。";
+//"settings.calendar.date_hover_option" = "Hold ⌥ to peek at hovered dates";
 
 "settings.events" = "日程";
 //"settings.events.show_map" = "Show map and weather";

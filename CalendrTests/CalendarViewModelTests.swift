@@ -16,6 +16,7 @@ class CalendarViewModelTests: XCTestCase {
     let searchSubject = BehaviorSubject<String>(value: "")
     let dateSubject = PublishSubject<Date>()
     let hoverSubject = PublishSubject<Date?>()
+    let keyboardModifiers = BehaviorSubject<NSEvent.ModifierFlags>(value: [])
     let calendarsSubject = PublishSubject<[String]>()
 
     let calendarService = MockCalendarServiceProvider()
@@ -26,6 +27,7 @@ class CalendarViewModelTests: XCTestCase {
         searchObservable: searchSubject,
         dateObservable: dateSubject,
         hoverObservable: hoverSubject,
+        keyboardModifiers: keyboardModifiers,
         enabledCalendars: calendarsSubject,
         calendarService: calendarService,
         dateProvider: dateProvider,
@@ -312,6 +314,26 @@ class CalendarViewModelTests: XCTestCase {
 
         dateSubject.onNext(.make(year: 2021, month: 2, day: 2))
         XCTAssertFalse(hasHoveredDate)
+    }
+
+    func testHoverWithOption() {
+
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+
+        hoverSubject.onNext(.make(year: 2021, month: 1, day: 1))
+        XCTAssertTrue(hasHoveredDate)
+
+        settings.toggleDateHoverOption.onNext(true)
+        XCTAssertFalse(hasHoveredDate)
+
+        keyboardModifiers.onNext([.command])
+        XCTAssertFalse(hasHoveredDate)
+
+        keyboardModifiers.onNext([.option])
+        XCTAssertTrue(hasHoveredDate)
+
+        keyboardModifiers.onNext([.option, .capsLock])
+        XCTAssertTrue(hasHoveredDate)
     }
 
     var hasHoveredDate: Bool {

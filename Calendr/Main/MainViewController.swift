@@ -57,6 +57,7 @@ class MainViewController: NSViewController {
     private let isShowingDetails = BehaviorSubject<Bool>(value: false)
     private let searchInputText = BehaviorSubject<String>(value: "")
     private let navigationSubject = PublishSubject<Keyboard.Key>()
+    private let keyboardModifiers = BehaviorSubject<NSEvent.ModifierFlags>(value: [])
 
     // Properties
     private let keyboard = Keyboard()
@@ -149,6 +150,7 @@ class MainViewController: NSViewController {
             searchObservable: searchInputText,
             dateObservable: selectedDate,
             hoverObservable: hoverObservable,
+            keyboardModifiers: keyboardModifiers,
             enabledCalendars: calendarPickerViewModel.enabledCalendars,
             calendarService: calendarService,
             dateProvider: dateProvider,
@@ -652,6 +654,12 @@ class MainViewController: NSViewController {
 
         keyboard.listen(in: self) { [weak self] event, key -> NSEvent? in
             guard let self else { return event }
+
+            keyboardModifiers.onNext(event.modifierFlags)
+
+            guard let key else {
+                return event
+            }
 
             switch key {
             case .command(.char("q")):

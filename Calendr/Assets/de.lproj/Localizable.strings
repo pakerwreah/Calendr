@@ -47,6 +47,7 @@
 "settings.calendar.preserve_selected_date" = "Ausgewähltes Datum beim Ausblenden beibehalten";
 "settings.calendar.show_declined_events" = "Abgelehnte Ereignisse anzeigen";
 "settings.calendar.show_declined_events_tooltip" = "Dies funktioniert nur, wenn es auch in der nativen Kalender-App aktiviert ist.";
+//"settings.calendar.date_hover_option" = "Hold ⌥ to peek at hovered dates";
 
 "settings.events" = "Termine";
 "settings.events.show_map" = "Karte und Wetter anzeigen";

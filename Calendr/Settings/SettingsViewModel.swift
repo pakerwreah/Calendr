@@ -56,6 +56,7 @@ protocol CalendarSettings {
     var showWeekNumbers: Observable<Bool> { get }
     var showDeclinedEvents: Observable<Bool> { get }
     var preserveSelectedDate: Observable<Bool> { get }
+    var dateHoverOption: Observable<Bool> { get }
 }
 
 protocol AppearanceSettings {
@@ -115,6 +116,7 @@ class SettingsViewModel:
     let toggleWeekNumbers: AnyObserver<Bool>
     let toggleDeclinedEvents: AnyObserver<Bool>
     let togglePreserveSelectedDate: AnyObserver<Bool>
+    let toggleDateHoverOption: AnyObserver<Bool>
     let toggleMap: AnyObserver<Bool>
     let togglePastEvents: AnyObserver<Bool>
     let transparencyObserver: AnyObserver<Int>
@@ -145,6 +147,7 @@ class SettingsViewModel:
     let showWeekNumbers: Observable<Bool>
     let showDeclinedEvents: Observable<Bool>
     let preserveSelectedDate: Observable<Bool>
+    let dateHoverOption: Observable<Bool>
     let showMap: Observable<Bool>
     let showPastEvents: Observable<Bool>
     let popoverTransparency: Observable<Int>
@@ -187,6 +190,7 @@ class SettingsViewModel:
         toggleWeekNumbers = userDefaults.rx.observer(for: \.showWeekNumbers)
         toggleDeclinedEvents = userDefaults.rx.observer(for: \.showDeclinedEvents)
         togglePreserveSelectedDate = userDefaults.rx.observer(for: \.preserveSelectedDate)
+        toggleDateHoverOption = userDefaults.rx.observer(for: \.dateHoverOption)
         toggleMap = userDefaults.rx.observer(for: \.showMap)
         togglePastEvents = userDefaults.rx.observer(for: \.showPastEvents)
         transparencyObserver = userDefaults.rx.observer(for: \.transparencyLevel)
@@ -225,6 +229,7 @@ class SettingsViewModel:
         showWeekNumbers = userDefaults.rx.observe(\.showWeekNumbers)
         showDeclinedEvents = userDefaults.rx.observe(\.showDeclinedEvents)
         preserveSelectedDate = userDefaults.rx.observe(\.preserveSelectedDate)
+        dateHoverOption = userDefaults.rx.observe(\.dateHoverOption)
         showMap = userDefaults.rx.observe(\.showMap)
         showPastEvents = userDefaults.rx.observe(\.showPastEvents)
         popoverTransparency = userDefaults.rx.observe(\.transparencyLevel)

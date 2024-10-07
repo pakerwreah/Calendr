@@ -47,6 +47,7 @@
 "settings.calendar.preserve_selected_date" = "Preservar a data selecionada ao ocultar";
 "settings.calendar.show_declined_events" = "Mostrar eventos recusados";
 "settings.calendar.show_declined_events_tooltip" = "Isso só funciona se também estiver ativado no aplicativo Calendário nativo.";
+"settings.calendar.date_hover_option" = "Segure ⌥ para espiar datas sob o cursor";
 
 "settings.events" = "Eventos";
 "settings.events.show_map" = "Mostrar mapa e clima";

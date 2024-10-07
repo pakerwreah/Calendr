@@ -32,6 +32,7 @@ enum Prefs {
     static let showWeekNumbers = "show_week_numbers"
     static let showDeclinedEvents = "show_declined_events"
     static let preserveSelectedDate = "preserve_selected_date"
+    static let dateHoverOption = "date_hover_option"
 
     // Event Details
     static let showMap = "show_map"
@@ -79,6 +80,7 @@ func registerDefaultPrefs(in userDefaults: UserDefaults, calendar: Calendar = .c
         Prefs.showWeekNumbers: false,
         Prefs.showDeclinedEvents: false,
         Prefs.preserveSelectedDate: false,
+        Prefs.dateHoverOption: false,
 
         // Event Details
         Prefs.showMap: true,
@@ -197,6 +199,11 @@ extension UserDefaults {
     @objc dynamic var preserveSelectedDate: Bool {
         get { bool(forKey: Prefs.preserveSelectedDate) }
         set { set(newValue, forKey: Prefs.preserveSelectedDate) }
+    }
+
+    @objc dynamic var dateHoverOption: Bool {
+        get { bool(forKey: Prefs.dateHoverOption) }
+        set { set(newValue, forKey: Prefs.dateHoverOption) }
     }
 
     // Event Details

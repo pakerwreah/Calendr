@@ -19,6 +19,7 @@ class MockCalendarSettings: CalendarSettings {
     let showWeekNumbers: Observable<Bool>
     let showDeclinedEvents: Observable<Bool>
     let preserveSelectedDate: Observable<Bool>
+    let dateHoverOption: Observable<Bool>
 
     init(
         calendarScaling: Double = 1,
@@ -36,6 +37,7 @@ class MockCalendarSettings: CalendarSettings {
         self.showWeekNumbers = .just(showWeekNumbers)
         self.preserveSelectedDate = .just(false)
         self.showDeclinedEvents = .just(false)
+        self.dateHoverOption = .just(false)
     }
 }
 

@@ -47,6 +47,7 @@
 "settings.calendar.preserve_selected_date" = "Bevara valt datum när gömd";
 "settings.calendar.show_declined_events" = "Visa avböjda händelser";
 "settings.calendar.show_declined_events_tooltip" = "Detta fungerar bara om det också är aktiverat i den inbyggda kalenderappen.";
+//"settings.calendar.date_hover_option" = "Hold ⌥ to peek at hovered dates";
 
 "settings.events" = "Händelser";
 //"settings.events.show_map" = "Show map and weather";

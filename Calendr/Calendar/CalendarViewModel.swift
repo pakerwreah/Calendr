@@ -5,7 +5,7 @@
 //  Created by Paker on 24/12/20.
 //
 
-import Foundation
+import AppKit
 import RxSwift
 
 class CalendarViewModel {
@@ -25,6 +25,7 @@ class CalendarViewModel {
         searchObservable: Observable<String>,
         dateObservable: Observable<Date>,
         hoverObservable: Observable<Date?>,
+        keyboardModifiers: Observable<NSEvent.ModifierFlags>,
         enabledCalendars: Observable<[String]>,
         calendarService: CalendarServiceProviding,
         dateProvider: DateProviding,
@@ -202,11 +203,11 @@ class CalendarViewModel {
 
         // Check which cell is hovered
         cellViewModelsObservable = Observable.combineLatest(
-            isSelectedObservable, hoverObservable
+            isSelectedObservable, hoverObservable, keyboardModifiers, settings.dateHoverOption
         )
-        .map { cellViewModels, hoveredDate -> [CalendarCellViewModel] in
+        .map { cellViewModels, hoveredDate, keyboardModifiers, dateHoverOption -> [CalendarCellViewModel] in
 
-            if let hoveredDate = hoveredDate {
+            if let hoveredDate, !dateHoverOption || keyboardModifiers.contains(.option) {
                 return cellViewModels.map {
                     $0.with(
                         isHovered: dateProvider.calendar.isDate($0.date, inSameDayAs: hoveredDate),

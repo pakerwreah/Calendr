@@ -139,6 +139,8 @@ internal enum Strings {
       internal static let transparency = Strings.tr("Localizable", "settings.appearance.transparency", fallback: "Transparency")
     }
     internal enum Calendar {
+      /// Hold ⌥ to peek at hovered dates
+      internal static let dateHoverOption = Strings.tr("Localizable", "settings.calendar.date_hover_option", fallback: "Hold ⌥ to peek at hovered dates")
       /// Preserve selected date on hide
       internal static let preserveSelectedDate = Strings.tr("Localizable", "settings.calendar.preserve_selected_date", fallback: "Preserve selected date on hide")
       /// Show declined events

@@ -47,6 +47,7 @@
 "settings.calendar.preserve_selected_date" = "Zachovat vybrané datum při skrytí";
 "settings.calendar.show_declined_events" = "Zobrazit odmítnuté události";
 "settings.calendar.show_declined_events_tooltip" = "Funguje pouze tehdy, pokud je také zapnuto v nativní aplikaci Kalendář.";
+//"settings.calendar.date_hover_option" = "Hold ⌥ to peek at hovered dates";
 
 "settings.events" = "Události";
 //"settings.events.show_map" = "Show map and weather";
