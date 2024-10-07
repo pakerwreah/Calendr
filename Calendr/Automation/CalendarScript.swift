@@ -28,6 +28,7 @@ class CalendarScript {
                     tell application "Calendar"
                     switch view to \(mode) view
                     view calendar at date ("\(formatter.string(from: date))")
+                    activate
                     end tell
                 """)
             } catch {
