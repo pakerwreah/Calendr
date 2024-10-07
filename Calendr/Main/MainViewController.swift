@@ -833,11 +833,14 @@ private enum Constants {
 private extension NSMenu {
     
     func show(in view: NSView) {
+
+        Popover.closeAll()
+
+        guard let screen = view.window?.screen else { return }
+
+        let offsetY = !screen.hasNotch ? view.frame.height + 7 : 0
+
         DispatchQueue.main.async {
-            guard let screen = view.window?.screen else { return }
-
-            let offsetY = !screen.hasNotch ? view.frame.height + 7 : 0
-
             // this is a blocking operation
             self.popUp(positioning: nil, at: .init(x: 0, y: offsetY), in: view)
         }
