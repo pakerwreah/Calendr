@@ -177,7 +177,7 @@ class EventViewModel {
         let isPast: Observable<Bool>
         let clock: Observable<Void>
 
-        if secondsToEnd > 0 {
+        if isTodaySelected, !event.isAllDay, secondsToEnd > 0, event.type != .reminder(completed: true) {
 
             isPast = Observable<Int>.timer(.seconds(secondsToEnd), scheduler: scheduler)
                 .map(true)
@@ -206,8 +206,10 @@ class EventViewModel {
             dateFormatter.unitsStyle = .abbreviated
             dateFormatter.allowedUnits = [.hour, .minute]
 
-            relativeDuration = clock.map {
-                Strings.Formatter.Date.Relative.ago(
+            relativeDuration = clock.compactMap {
+                guard event.start.distance(to: dateProvider.now) > 60 else { return nil }
+
+                return Strings.Formatter.Date.Relative.ago(
                     dateFormatter.string(from: event.start, to: dateProvider.now) ?? ""
                 )
             }
