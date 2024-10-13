@@ -51,10 +51,8 @@
 
 "settings.events" = "Eventi";
 "settings.events.show_map" = "Mostra mappa e meteo";
-"settings.events.finished" = "Finiti";
-"settings.events.finished.fade" = "Dissolvi";
-"settings.events.finished.hide" = "Nascondi";
 //"settings.events.show_overdue_reminders" = "Show overdue reminders";
+//"settings.events.show_finished_events" = "Show finished events";
 
 "settings.appearance.transparency" = "Trasparenza";
 "settings.appearance.accessibility" = "Accessibilità";

@@ -51,10 +51,8 @@
 
 "settings.events" = "Événements";
 "settings.events.show_map" = "Afficher la carte et la météo";
-"settings.events.finished" = "Terminés";
-"settings.events.finished.fade" = "Atténuer";
-"settings.events.finished.hide" = "Masquer";
 "settings.events.show_overdue_reminders" = "Afficher les rappels en retard";
+"settings.events.show_finished_events" = "Afficher les événements terminés";
 
 "settings.appearance.transparency" = "Transparence";
 "settings.appearance.accessibility" = "Accessibilité";

@@ -51,10 +51,8 @@
 
 "settings.events" = "Události";
 //"settings.events.show_map" = "Show map and weather";
-"settings.events.finished" = "Dokončené";
-"settings.events.finished.fade" = "Vyblednout";
-"settings.events.finished.hide" = "Skrýt";
 //"settings.events.show_overdue_reminders" = "Show overdue reminders";
+//"settings.events.show_finished_events" = "Show finished events";
 
 "settings.appearance.transparency" = "Průhlednost";
 //"settings.appearance.accessibility" = "Accessibility";

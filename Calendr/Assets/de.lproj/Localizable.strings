@@ -51,10 +51,8 @@
 
 "settings.events" = "Termine";
 "settings.events.show_map" = "Karte und Wetter anzeigen";
-"settings.events.finished" = "Erledigt";
-"settings.events.finished.fade" = "Verblassen";
-"settings.events.finished.hide" = "Verstecken";
 //"settings.events.show_overdue_reminders" = "Show overdue reminders";
+//"settings.events.show_finished_events" = "Show finished events";
 
 "settings.appearance.transparency" = "Transparent";
 "settings.appearance.accessibility" = "Zugänglichkeit";

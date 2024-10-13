@@ -51,10 +51,8 @@
 
 "settings.events" = "Händelser";
 //"settings.events.show_map" = "Show map and weather";
-"settings.events.finished" = "Avslutad";
-"settings.events.finished.fade" = "Tona";
-"settings.events.finished.hide" = "Dölj";
 //"settings.events.show_overdue_reminders" = "Show overdue reminders";
+//"settings.events.show_finished_events" = "Show finished events";
 
 "settings.appearance.transparency" = "Transparens";
 //"settings.appearance.accessibility" = "Accessibility";

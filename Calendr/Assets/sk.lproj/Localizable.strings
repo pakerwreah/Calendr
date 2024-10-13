@@ -51,10 +51,8 @@
 
 "settings.events" = "Udalosti";
 "settings.events.show_map" = "Zobraziť mapu a počasie";
-"settings.events.finished" = "Ukončené";
-"settings.events.finished.fade" = "Vyblednúť";
-"settings.events.finished.hide" = "Skryť";
 //"settings.events.show_overdue_reminders" = "Show overdue reminders";
+//"settings.events.show_finished_events" = "Show finished events";
 
 "settings.appearance.transparency" = "Priehľadnosť";
 "settings.appearance.accessibility" = "Prístupnosť";

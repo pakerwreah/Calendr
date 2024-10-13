@@ -51,10 +51,8 @@
 
 "settings.events" = "日程";
 //"settings.events.show_map" = "Show map and weather";
-"settings.events.finished" = "已完成";
-"settings.events.finished.fade" = "渐隐";
-"settings.events.finished.hide" = "隐藏";
 //"settings.events.show_overdue_reminders" = "Show overdue reminders";
+//"settings.events.show_finished_events" = "Show finished events";
 
 "settings.appearance.transparency" = "透明度";
 //"settings.appearance.accessibility" = "Accessibility";

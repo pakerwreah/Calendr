@@ -36,8 +36,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
 
     // Events
     private let showMapCheckbox = Checkbox(title: Strings.Settings.Events.showMap)
-    private let fadePastEventsRadio = Radio(title: Strings.Settings.Events.Finished.fade)
-    private let hidePastEventsRadio = Radio(title: Strings.Settings.Events.Finished.hide)
+    private let showFinishedEventsCheckbox = Checkbox(title: Strings.Settings.Events.showFinishedEvents)
     private let showOverdueCheckbox = Checkbox(title: Strings.Settings.Events.showOverdueReminders)
 
     init(viewModel: SettingsViewModel) {
@@ -215,13 +214,10 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         .with(orientation: .vertical)
     }()
 
-    let finishedLabel = Label(text: "\(Strings.Settings.Events.finished):", font: .systemFont(ofSize: 13))
-
     private lazy var eventsContent: NSView = {
         NSStackView(views: [
             showMapCheckbox,
-            .dummy,
-            NSStackView(views: [finishedLabel, .spacer, fadePastEventsRadio, hidePastEventsRadio]),
+            showFinishedEventsCheckbox,
             showOverdueCheckbox
         ]).with(orientation: .vertical)
     }()
@@ -463,16 +459,9 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         .disposed(by: disposeBag)
 
         bind(
-            control: fadePastEventsRadio,
+            control: showFinishedEventsCheckbox,
             observable: viewModel.showPastEvents,
             observer: viewModel.togglePastEvents
-        )
-        .disposed(by: disposeBag)
-
-        bind(
-            control: hidePastEventsRadio,
-            observable: viewModel.showPastEvents.map(!),
-            observer: viewModel.togglePastEvents.mapObserver(!)
         )
         .disposed(by: disposeBag)
 
