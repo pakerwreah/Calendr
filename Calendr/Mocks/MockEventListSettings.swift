@@ -13,9 +13,11 @@ import RxSwift
 class MockEventListSettings: MockEventDetailsSettings, EventListSettings {
 
     let showPastEvents: Observable<Bool>
+    let showOverdueReminders: Observable<Bool>
 
-    init(showPastEvents: Bool = true, popoverMaterial: PopoverMaterial = .popover) {
+    init(showPastEvents: Bool = true, showOverdueReminders: Bool = true, popoverMaterial: PopoverMaterial = .popover) {
         self.showPastEvents = .just(showPastEvents)
+        self.showOverdueReminders = .just(showOverdueReminders)
     }
 }
 

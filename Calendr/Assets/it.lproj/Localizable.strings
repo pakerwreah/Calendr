@@ -54,6 +54,7 @@
 "settings.events.finished" = "Finiti";
 "settings.events.finished.fade" = "Dissolvi";
 "settings.events.finished.hide" = "Nascondi";
+//"settings.events.show_overdue_reminders" = "Show overdue reminders";
 
 "settings.appearance.transparency" = "Trasparenza";
 "settings.appearance.accessibility" = "Accessibilità";

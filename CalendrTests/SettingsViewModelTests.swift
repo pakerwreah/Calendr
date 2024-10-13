@@ -42,6 +42,7 @@ class SettingsViewModelTests: XCTestCase {
     var userDefaultsPreserveSelectedDate: Bool? { userDefaults.object(forKey: Prefs.preserveSelectedDate) as! Bool? }
     var userDefaultsShowMap: Bool? { userDefaults.object(forKey: Prefs.showMap) as! Bool? }
     var userDefaultsShowPastEvents: Bool? { userDefaults.object(forKey: Prefs.showPastEvents) as! Bool? }
+    var userDefaultsShowOverdueReminders: Bool? { userDefaults.object(forKey: Prefs.showOverdueReminders) as! Bool? }
     var userDefaultsTransparency: Int? { userDefaults.object(forKey: Prefs.transparencyLevel) as! Int? }
 
     override func setUp() {
@@ -65,6 +66,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertNil(userDefaultsPreserveSelectedDate)
         XCTAssertNil(userDefaultsShowMap)
         XCTAssertNil(userDefaultsShowPastEvents)
+        XCTAssertNil(userDefaultsShowOverdueReminders)
         XCTAssertNil(userDefaultsTransparency)
 
         registerDefaultPrefs(in: userDefaults, calendar: .gregorian.with(firstWeekday: 3))
@@ -89,6 +91,7 @@ class SettingsViewModelTests: XCTestCase {
         var preserveSelectedDate: Bool?
         var showMap: Bool?
         var showPastEvents: Bool?
+        var showOverdueReminders: Bool?
         var popoverTransparency: Int?
         var popoverMaterial: PopoverMaterial?
 
@@ -160,6 +163,10 @@ class SettingsViewModelTests: XCTestCase {
             .bind { showPastEvents = $0 }
             .disposed(by: disposeBag)
 
+        viewModel.showOverdueReminders
+            .bind { showOverdueReminders = $0 }
+            .disposed(by: disposeBag)
+
         viewModel.popoverTransparency
             .bind { popoverTransparency = $0 }
             .disposed(by: disposeBag)
@@ -185,6 +192,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(preserveSelectedDate, false)
         XCTAssertEqual(showMap, true)
         XCTAssertEqual(showPastEvents, true)
+        XCTAssertEqual(showOverdueReminders, true)
         XCTAssertEqual(popoverTransparency, 2)
         XCTAssertEqual(popoverMaterial, .headerView)
 
@@ -205,6 +213,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(userDefaultsPreserveSelectedDate, false)
         XCTAssertEqual(userDefaultsShowMap, true)
         XCTAssertEqual(userDefaultsShowPastEvents, true)
+        XCTAssertEqual(userDefaultsShowOverdueReminders, true)
         XCTAssertEqual(userDefaultsTransparency, 2)
     }
 
@@ -609,6 +618,30 @@ class SettingsViewModelTests: XCTestCase {
 
         XCTAssertEqual(showPastEvents, false)
         XCTAssertEqual(userDefaultsShowPastEvents, false)
+    }
+
+    func testToggleShowOverdueReminders() {
+
+        userDefaults.showOverdueReminders = false
+
+        var showOverdueReminders: Bool?
+
+        viewModel.showOverdueReminders
+            .bind { showOverdueReminders = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(showOverdueReminders, false)
+        XCTAssertEqual(userDefaultsShowOverdueReminders, false)
+
+        viewModel.toggleOverdueReminders.onNext(true)
+
+        XCTAssertEqual(showOverdueReminders, true)
+        XCTAssertEqual(userDefaultsShowOverdueReminders, true)
+
+        viewModel.toggleOverdueReminders.onNext(false)
+
+        XCTAssertEqual(showOverdueReminders, false)
+        XCTAssertEqual(userDefaultsShowOverdueReminders, false)
     }
 
     func testChangeTransparency() {

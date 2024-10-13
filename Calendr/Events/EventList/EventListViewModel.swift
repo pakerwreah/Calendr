@@ -33,6 +33,14 @@ class EventListViewModel {
     private let relativeFormatter: RelativeDateTimeFormatter
     private let dateComponentsFormatter: DateComponentsFormatter
 
+    private struct EventListProps: Equatable {
+        var events: [EventModel]
+        let date: Date
+        let showPastEvents: Bool
+        let showOverdue: Bool
+        let isTodaySelected: Bool
+    }
+
     init(
         eventsObservable: Observable<(Date, [EventModel])>,
         isShowingDetails: BehaviorSubject<Bool>,
@@ -69,23 +77,32 @@ class EventListViewModel {
         Observable.combineLatest(
             eventsObservable,
             settings.showPastEvents,
+            settings.showOverdueReminders,
             isShowingDetails
         )
-        .compactMap { dateEvents, showPast, isShowingDetails -> ([EventModel], Date, Bool)? in
+        .compactMap { dateEvents, showPast, showOverdue, isShowingDetails -> EventListProps? in
             guard !isShowingDetails else { return nil }
             let (date, events) = dateEvents
-            return (events, date, showPast)
-        }
-        .distinctUntilChanged(==)
-        .flatMapLatest { events, date, showPastEvents -> Observable<([EventModel], Date, Bool)> in
-
             let isTodaySelected = dateProvider.calendar.isDate(date, inSameDayAs: dateProvider.now)
 
-            guard isTodaySelected && !showPastEvents else { return .just((events, date, isTodaySelected)) }
+            return .init(
+                events: events,
+                date: date,
+                showPastEvents: showPast,
+                showOverdue: showOverdue,
+                isTodaySelected: isTodaySelected
+            )
+        }
+        .distinctUntilChanged()
+        .flatMapLatest { props -> Observable<EventListProps> in
+
+            guard props.isTodaySelected && !props.showPastEvents else {
+                return .just(props)
+            }
 
             // schedule refresh for every event end to hide past events
             return Observable.merge(
-                events
+                props.events
                     .filter {
                         !$0.isAllDay && !$0.type.isReminder && $0.range(using: dateProvider).endsToday
                     }
@@ -100,18 +117,19 @@ class EventListViewModel {
             .void()
             .startWith(())
             .map {
-                events.filter {
+                var props = props
+                props.events = props.events.filter {
                     if case .reminder(let completed) = $0.type {
                         return !completed
                     }
                     return $0.isAllDay || !$0.range(using: dateProvider).isPast
                 }
+                return props
             }
-            .map { ($0, date, isTodaySelected) }
         }
         // build event list
-        .compactMap { [weak self] events, date, isTodaySelected in
-            self?.buildEventList(events, date, isTodaySelected)
+        .compactMap { [weak self] props in
+            self?.buildEventList(props)
         }
         .bind(to: viewModels)
         .disposed(by: disposeBag)
@@ -121,10 +139,10 @@ class EventListViewModel {
 
     // MARK: - Private
 
-    private func buildEventList(_ events: [EventModel], _ date: Date, _ isTodaySelected: Bool) -> [EventListItem] {
-        overdueViewModels(events, isTodaySelected)
-        + allDayViewModels(events, isTodaySelected)
-        + todayViewModels(events, date, isTodaySelected)
+    private func buildEventList(_ props: EventListProps) -> [EventListItem] {
+        overdueViewModels(props)
+        + allDayViewModels(props)
+        + todayViewModels(props)
     }
 
     private func makeEventViewModel(_ event: EventModel, _ isTodaySelected: Bool) -> EventViewModel {
@@ -148,17 +166,20 @@ class EventListViewModel {
         && dateProvider.calendar.isDate(event.start, lessThan: dateProvider.now, granularity: .day)
     }
 
-    private func overdueViewModels(_ events: [EventModel], _ isTodaySelected: Bool) -> [EventListItem] {
-        events
-            .filter { isOverdue($0) && isTodaySelected }
+    private func overdueViewModels(_ props: EventListProps) -> [EventListItem] {
+
+        guard props.showOverdue else { return [] }
+
+        return props.events
+            .filter { isOverdue($0) && props.isTodaySelected }
             .sorted(by: \.start)
             .prevMap { prev, curr -> [EventListItem] in
 
-                let viewModel = makeEventViewModel(curr, isTodaySelected)
+                let viewModel = makeEventViewModel(curr, props.isTodaySelected)
                 let eventItem: EventListItem = .event(viewModel)
 
                 guard let prev, dateProvider.calendar.isDate(curr.start, inSameDayAs: prev.start) else {
-                    let label = isTodaySelected
+                    let label = props.isTodaySelected
                         ? relativeFormatter.localizedString(for: curr.start, relativeTo: dateProvider.now).ucfirst
                         : dateFormatter.string(from: curr.start)
                     return [.section(label), eventItem]
@@ -169,11 +190,11 @@ class EventListViewModel {
             .flatten()
     }
 
-    private func allDayViewModels(_ events: [EventModel], _ isTodaySelected: Bool) -> [EventListItem] {
-        var viewModels: [EventListItem] = events
-            .filter { $0.isAllDay && (!isOverdue($0) || !isTodaySelected) }
+    private func allDayViewModels(_ props: EventListProps) -> [EventListItem] {
+        var viewModels: [EventListItem] = props.events
+            .filter { $0.isAllDay && (!isOverdue($0) || !props.isTodaySelected) }
             .sorted(by: \.calendar.color.hashValue)
-            .map { .event(makeEventViewModel($0, isTodaySelected)) }
+            .map { .event(makeEventViewModel($0, props.isTodaySelected)) }
 
         if !viewModels.isEmpty {
             viewModels.insert(.section(Strings.Formatter.Date.allDay), at: 0)
@@ -181,22 +202,22 @@ class EventListViewModel {
         return viewModels
     }
 
-    private func todayViewModels(_ events: [EventModel], _ date: Date, _ isTodaySelected: Bool) -> [EventListItem] {
-        events
-            .filter { !$0.isAllDay && (!isOverdue($0) || !isTodaySelected) }
+    private func todayViewModels(_ props: EventListProps) -> [EventListItem] {
+        props.events
+            .filter { !$0.isAllDay && (!isOverdue($0) || !props.isTodaySelected) }
             .sorted {
                 ($0.start, $0.end) < ($1.start, $1.end)
             }
             .prevMap { prev, curr -> [EventListItem] in
 
-                let viewModel = makeEventViewModel(curr, isTodaySelected)
+                let viewModel = makeEventViewModel(curr, props.isTodaySelected)
                 let eventItem: EventListItem = .event(viewModel)
 
                 guard let prev else {
                     // if first event, show today section
-                    let title = isTodaySelected
+                    let title = props.isTodaySelected
                         ? Strings.Formatter.Date.today
-                        : dateFormatter.string(from: date)
+                        : dateFormatter.string(from: props.date)
 
                     return [.section(title), eventItem]
                 }

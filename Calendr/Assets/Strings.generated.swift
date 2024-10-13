@@ -161,6 +161,8 @@ internal enum Strings {
         /// Hide
         internal static let hide = Strings.tr("Localizable", "settings.events.finished.hide", fallback: "Hide")
       }
+      /// Show overdue reminders
+      internal static let showOverdueReminders = Strings.tr("Localizable", "settings.events.show_overdue_reminders", fallback: "Show overdue reminders")
     }
     internal enum Keyboard {
       internal enum GlobalShortcuts {

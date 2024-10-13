@@ -54,6 +54,7 @@
 "settings.events.finished" = "Terminados";
 "settings.events.finished.fade" = "Sombrear";
 "settings.events.finished.hide" = "Ocultar";
+"settings.events.show_overdue_reminders" = "Mostrar lembretes atrasados";
 
 "settings.appearance.transparency" = "Transparência";
 "settings.appearance.accessibility" = "Acessibilidade";

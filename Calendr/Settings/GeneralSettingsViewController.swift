@@ -38,6 +38,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     private let showMapCheckbox = Checkbox(title: Strings.Settings.Events.showMap)
     private let fadePastEventsRadio = Radio(title: Strings.Settings.Events.Finished.fade)
     private let hidePastEventsRadio = Radio(title: Strings.Settings.Events.Finished.hide)
+    private let showOverdueCheckbox = Checkbox(title: Strings.Settings.Events.showOverdueReminders)
 
     init(viewModel: SettingsViewModel) {
 
@@ -220,7 +221,8 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         NSStackView(views: [
             showMapCheckbox,
             .dummy,
-            NSStackView(views: [finishedLabel, .spacer, fadePastEventsRadio, hidePastEventsRadio])
+            NSStackView(views: [finishedLabel, .spacer, fadePastEventsRadio, hidePastEventsRadio]),
+            showOverdueCheckbox
         ]).with(orientation: .vertical)
     }()
 
@@ -471,6 +473,13 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             control: hidePastEventsRadio,
             observable: viewModel.showPastEvents.map(!),
             observer: viewModel.togglePastEvents.mapObserver(!)
+        )
+        .disposed(by: disposeBag)
+
+        bind(
+            control: showOverdueCheckbox,
+            observable: viewModel.showOverdueReminders,
+            observer: viewModel.toggleOverdueReminders
         )
         .disposed(by: disposeBag)
     }

@@ -327,6 +327,35 @@ class EventListViewModelTests: XCTestCase {
         ])
     }
 
+    func testEventList_withOverdueReminders_withShowOverdueDisabled_shouldNotShowOverdueReminders() {
+
+        settings.toggleOverdueReminders.onNext(false)
+
+        let yesterday = dateProvider.calendar.date(byAdding: .day, value: -1, to: dateProvider.now)!
+        let twoDaysAgo = dateProvider.calendar.date(byAdding: .day, value: -2, to: dateProvider.now)!
+
+        eventsSubject.onNext(
+            testEvents() +
+            [
+                .make(start: yesterday, title: "Overdue 1", type: .reminder(completed: false)),
+                .make(start: yesterday + 10, title: "Overdue 2", type: .reminder(completed: false)),
+                .make(start: twoDaysAgo, title: "All day overdue", isAllDay: true, type: .reminder(completed: false)),
+            ]
+        )
+
+        XCTAssertEqual(eventListItems, [
+            .section("All day"),
+            .event("All day 1"),
+            .event("All day 2"),
+            .section("Today"),
+            .event("Multi day"),
+            .event("Event 3"),
+            .interval("1m"),
+            .event("Event 2"),
+            .event("Event 1")
+        ])
+    }
+
     func testEventList_withOverdueReminders_isNotToday_shouldShowNormally() {
 
         let date = dateProvider.calendar.date(byAdding: .day, value: -1, to: dateProvider.now)!
