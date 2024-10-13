@@ -16,18 +16,13 @@ class CalendarScript {
         self.workspace = workspace
     }
 
-    enum CalendarViewMode: String {
-        case day
-        case month
-    }
-
     func openCalendar(at date: Date, mode: CalendarViewMode) {
         Task {
             do {
                 try await runScript("""
                     tell application "Calendar"
-                    switch view to \(mode) view
                     view calendar at date ("\(formatter.string(from: date))")
+                    switch view to \(mode) view
                     activate
                     end tell
                 """)

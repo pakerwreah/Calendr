@@ -48,6 +48,10 @@
 "settings.calendar.show_declined_events" = "Mostra eventi rifiutati";
 "settings.calendar.show_declined_events_tooltip" = "Funziona solo se è abilitato anche nell'app Calendario nativa.";
 //"settings.calendar.date_hover_option" = "Hold ⌥ to peek at hovered dates";
+//"settings.calendar.calendar_app_view_mode" = "Calendar app view mode";
+//"settings.calendar.month" = "month";
+//"settings.calendar.week" = "week";
+//"settings.calendar.day" = "day";
 
 "settings.events" = "Eventi";
 "settings.events.show_map" = "Mostra mappa e meteo";

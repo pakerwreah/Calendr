@@ -31,6 +31,12 @@ extension PopoverMaterial {
     }
 }
 
+enum CalendarViewMode: String, CaseIterable {
+    case month
+    case week
+    case day
+}
+
 enum StatusItemIconStyle: String, CaseIterable {
     case calendar
     case date
@@ -57,6 +63,7 @@ protocol CalendarSettings {
     var showDeclinedEvents: Observable<Bool> { get }
     var preserveSelectedDate: Observable<Bool> { get }
     var dateHoverOption: Observable<Bool> { get }
+    var calendarAppViewMode: Observable<CalendarViewMode> { get }
 }
 
 protocol AppearanceSettings {
@@ -101,6 +108,11 @@ class SettingsViewModel:
         let title: String
     }
 
+    struct CalendarViewModeOption: Equatable {
+        let mode: CalendarViewMode
+        let title: String
+    }
+
     // Observers
     let toggleAutoLaunch: AnyObserver<Bool>
     let toggleStatusItemIcon: AnyObserver<Bool>
@@ -129,6 +141,7 @@ class SettingsViewModel:
     let transparencyObserver: AnyObserver<Int>
     let textScalingObserver: AnyObserver<Double>
     let calendarTextScalingObserver: AnyObserver<Double>
+    let calendarAppViewModeObserver: AnyObserver<CalendarViewMode>
 
     // Observables
     let autoLaunch: Observable<Bool>
@@ -163,8 +176,22 @@ class SettingsViewModel:
     let popoverMaterial: Observable<PopoverMaterial>
     let textScaling: Observable<Double>
     let calendarTextScaling: Observable<Double>
+    let calendarAppViewMode: Observable<CalendarViewMode>
 
     let isPresented = BehaviorSubject(value: false)
+
+    let calendarAppViewModeOptions = CalendarViewMode.allCases.map {
+        let title = switch $0 {
+        case .month:
+            Strings.Settings.Calendar.month
+        case .week:
+            Strings.Settings.Calendar.week
+        case .day:
+            Strings.Settings.Calendar.day
+        }
+
+        return CalendarViewModeOption(mode: $0, title: title)
+    }
 
     let dateFormatPlaceholder = AppConstants.defaultCustomDateFormat
 
@@ -207,6 +234,7 @@ class SettingsViewModel:
         transparencyObserver = userDefaults.rx.observer(for: \.transparencyLevel)
         textScalingObserver = userDefaults.rx.observer(for: \.textScaling)
         calendarTextScalingObserver = userDefaults.rx.observer(for: \.calendarTextScaling)
+        calendarAppViewModeObserver = userDefaults.rx.observer(for: \.calendarAppViewMode).mapObserver(\.rawValue)
 
         // MARK: - Observables
 
@@ -226,8 +254,8 @@ class SettingsViewModel:
         /* ----------------------- */
 
         showStatusItemBackground = userDefaults.rx.observe(\.statusItemBackgroundEnabled)
-        statusItemIconStyle = userDefaults.rx.observe(\.statusItemIconStyle).map { StatusItemIconStyle(rawValue: $0) ?? .calendar }
-        statusItemDateStyle = userDefaults.rx.observe(\.statusItemDateStyle).map { StatusItemDateStyle(rawValue: $0) ?? .none }
+        statusItemIconStyle = userDefaults.rx.observe(\.statusItemIconStyle).map { .init(rawValue: $0) ?? .calendar }
+        statusItemDateStyle = userDefaults.rx.observe(\.statusItemDateStyle).map { .init(rawValue: $0) ?? .none }
         statusItemDateFormat = userDefaults.rx.observe(\.statusItemDateFormat)
         showEventStatusItem = userDefaults.rx.observe(\.showEventStatusItem)
         eventStatusItemFontSize = userDefaults.rx.observe(\.eventStatusItemFontSize)
@@ -248,6 +276,7 @@ class SettingsViewModel:
         popoverTransparency = userDefaults.rx.observe(\.transparencyLevel)
         textScaling = userDefaults.rx.observe(\.textScaling)
         calendarTextScaling = userDefaults.rx.observe(\.calendarTextScaling)
+        calendarAppViewMode = userDefaults.rx.observe(\.calendarAppViewMode).map { .init(rawValue: $0) ?? .month }
 
         let localeChangeObservable = notificationCenter.rx
             .notification(NSLocale.currentLocaleDidChangeNotification)

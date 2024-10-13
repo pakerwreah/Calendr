@@ -393,9 +393,15 @@ class MainViewController: NSViewController {
             .disposed(by: disposeBag)
 
         calendarBtn.rx.tap
-            .withLatestFrom(selectedDate)
-            .bind { date in
-                calendarScript.openCalendar(at: date, mode: .month)
+            .withLatestFrom(
+                Observable.combineLatest(selectedDate, settingsViewModel.calendarAppViewMode)
+            )
+            .bind { [dateProvider] date, mode in
+                var date = date
+                if mode == .week, let week = dateProvider.calendar.dateInterval(of: .weekOfYear, for: date) {
+                    date = week.start
+                }
+                calendarScript.openCalendar(at: date, mode: mode)
             }
             .disposed(by: disposeBag)
 

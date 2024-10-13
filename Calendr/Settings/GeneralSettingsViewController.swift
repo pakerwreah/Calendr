@@ -33,6 +33,8 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     private let showDeclinedEventsCheckbox = Checkbox(title: Strings.Settings.Calendar.showDeclinedEvents)
     private let preserveSelectedDateCheckbox = Checkbox(title: Strings.Settings.Calendar.preserveSelectedDate)
     private let dateHoverOptionCheckbox = Checkbox(title: Strings.Settings.Calendar.dateHoverOption)
+    private let calendarAppViewModeLabel = Label(text: Strings.Settings.Calendar.calendarAppViewMode)
+    private let calendarAppViewModeDropdown = Dropdown()
 
     // Events
     private let showMapCheckbox = Checkbox(title: Strings.Settings.Events.showMap)
@@ -203,6 +205,9 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         firstWeekdayPrev.setContentHuggingPriority(.fittingSizeCompression, for: .horizontal)
         firstWeekdayNext.setContentHuggingPriority(.fittingSizeCompression, for: .horizontal)
 
+        calendarAppViewModeDropdown.isBordered = false
+        calendarAppViewModeDropdown.setContentHuggingPriority(.required, for: .horizontal)
+
         return NSStackView(views: [
             NSStackView(views: [firstWeekdayPrev, highlightedWeekdaysButtons, firstWeekdayNext])
                 .with(distribution: .fillProportionally),
@@ -210,7 +215,9 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             showWeekNumbersCheckbox,
             NSStackView(views: [showDeclinedEventsCheckbox, showDeclinedEventsTooltip]),
             preserveSelectedDateCheckbox,
-            dateHoverOptionCheckbox
+            dateHoverOptionCheckbox,
+            .dummy,
+            NSStackView(views: [calendarAppViewModeLabel, calendarAppViewModeDropdown])
         ])
         .with(orientation: .vertical)
     }()
@@ -270,6 +277,8 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         setUpIconStyle()
 
         setUpDateFormat()
+
+        setUpCalendarAppViewMode()
     }
 
     private func setUpIconStyle() {
@@ -369,6 +378,28 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
 
         viewModel.statusItemDateFormat
             .bind(to: dateFormatTextField.rx.text)
+            .disposed(by: disposeBag)
+    }
+
+    private func setUpCalendarAppViewMode() {
+
+        let calendarAppViewModeControl = calendarAppViewModeDropdown.rx.controlProperty(
+            getter: \.indexOfSelectedItem,
+            setter: { $0.selectItem(at: $1) }
+        )
+
+        let options = viewModel.calendarAppViewModeOptions
+        calendarAppViewModeDropdown.addItems(withTitles: options.map { "\($0.title) " })
+
+        calendarAppViewModeControl
+            .skip(1)
+            .map { options[$0].mode }
+            .bind(to: viewModel.calendarAppViewModeObserver)
+            .disposed(by: disposeBag)
+
+        viewModel.calendarAppViewMode
+            .compactMap(options.map(\.mode).firstIndex(of:))
+            .bind(to: calendarAppViewModeControl)
             .disposed(by: disposeBag)
     }
 
