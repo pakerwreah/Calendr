@@ -53,6 +53,7 @@
 "settings.events.show_map" = "Zobraziť mapu a počasie";
 //"settings.events.show_overdue_reminders" = "Show overdue reminders";
 //"settings.events.show_finished_events" = "Show finished events";
+//"settings.events.show_recurrence_indicator" = "Show recurrence indicator";
 
 "settings.appearance.transparency" = "Priehľadnosť";
 "settings.appearance.accessibility" = "Prístupnosť";

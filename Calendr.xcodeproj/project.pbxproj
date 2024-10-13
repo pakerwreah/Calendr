@@ -134,6 +134,9 @@
 		34ABB9F029A166220021F3CF /* ContextMenuFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34ABB9EF29A166220021F3CF /* ContextMenuFactoryTests.swift */; };
 		34ABB9F229A2AFA30021F3CF /* CursorButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34ABB9F129A2AFA30021F3CF /* CursorButton.swift */; };
 		34AC60C626925FA5005312B6 /* PreviewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34AC60C526925FA5005312B6 /* PreviewExtensions.swift */; };
+		34B1B3BB2CBC3730002AC38E /* MockEventSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B1B3BA2CBC3730002AC38E /* MockEventSettings.swift */; };
+		34B1B3BE2CBC3762002AC38E /* MockEventSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B1B3BD2CBC3762002AC38E /* MockEventSettings.swift */; };
+		34B1B3BF2CBC3762002AC38E /* MockAppearanceSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B1B3BC2CBC3762002AC38E /* MockAppearanceSettings.swift */; };
 		34B1C7C525EDA01F00E5CA80 /* EventIntervalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B1C7C425EDA01F00E5CA80 /* EventIntervalView.swift */; };
 		34B2C59E279FFF0600B52BF3 /* NSGestureRecognizer+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B2C59D279FFF0600B52BF3 /* NSGestureRecognizer+Rx.swift */; };
 		34B5A09325B0CE6F00F7F7ED /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B5A09225B0CE6F00F7F7ED /* SettingsViewController.swift */; };
@@ -147,7 +150,6 @@
 		34C459BC25DF114300561C29 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C459BB25DF114300561C29 /* AboutViewController.swift */; };
 		34C72F7E25E844E500FD20FA /* NextEventViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C72F7D25E844E500FD20FA /* NextEventViewModelTests.swift */; };
 		34C72F8425E88B6600FD20FA /* MockStatusItemSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C72F8325E88B6600FD20FA /* MockStatusItemSettings.swift */; };
-		34C72F8825E88C0300FD20FA /* MockPopoverSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C72F8725E88C0300FD20FA /* MockPopoverSettings.swift */; };
 		34C72F8C25E88DA100FD20FA /* MockCalendarSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C72F8B25E88DA100FD20FA /* MockCalendarSettings.swift */; };
 		34C72F9625E8A05700FD20FA /* MockNextEventSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C72F9525E8A05700FD20FA /* MockNextEventSettings.swift */; };
 		34C72F9C25E9847300FD20FA /* EventListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C72F9B25E9847300FD20FA /* EventListViewModel.swift */; };
@@ -341,6 +343,9 @@
 		34ABB9EF29A166220021F3CF /* ContextMenuFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextMenuFactoryTests.swift; sourceTree = "<group>"; };
 		34ABB9F129A2AFA30021F3CF /* CursorButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CursorButton.swift; sourceTree = "<group>"; };
 		34AC60C526925FA5005312B6 /* PreviewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewExtensions.swift; sourceTree = "<group>"; };
+		34B1B3BA2CBC3730002AC38E /* MockEventSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockEventSettings.swift; sourceTree = "<group>"; };
+		34B1B3BC2CBC3762002AC38E /* MockAppearanceSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAppearanceSettings.swift; sourceTree = "<group>"; };
+		34B1B3BD2CBC3762002AC38E /* MockEventSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockEventSettings.swift; sourceTree = "<group>"; };
 		34B1C7C425EDA01F00E5CA80 /* EventIntervalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventIntervalView.swift; sourceTree = "<group>"; };
 		34B2C59D279FFF0600B52BF3 /* NSGestureRecognizer+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSGestureRecognizer+Rx.swift"; sourceTree = "<group>"; };
 		34B5A09225B0CE6F00F7F7ED /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
@@ -355,7 +360,6 @@
 		34C459BB25DF114300561C29 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		34C72F7D25E844E500FD20FA /* NextEventViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextEventViewModelTests.swift; sourceTree = "<group>"; };
 		34C72F8325E88B6600FD20FA /* MockStatusItemSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockStatusItemSettings.swift; sourceTree = "<group>"; };
-		34C72F8725E88C0300FD20FA /* MockPopoverSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPopoverSettings.swift; sourceTree = "<group>"; };
 		34C72F8B25E88DA100FD20FA /* MockCalendarSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCalendarSettings.swift; sourceTree = "<group>"; };
 		34C72F9525E8A05700FD20FA /* MockNextEventSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNextEventSettings.swift; sourceTree = "<group>"; };
 		34C72F9B25E9847300FD20FA /* EventListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventListViewModel.swift; sourceTree = "<group>"; };
@@ -431,11 +435,13 @@
 			isa = PBXGroup;
 			children = (
 				3421DA192693F12400056837 /* Factories */,
+				34B1B3BC2CBC3762002AC38E /* MockAppearanceSettings.swift */,
 				3421DA132693E75A00056837 /* MockCalendarServiceProvider.swift */,
 				3421DA152693EDEB00056837 /* MockCalendarSettings.swift */,
 				3421DA172693EEBD00056837 /* MockDateProvider.swift */,
 				3421DA112693E70E00056837 /* MockEventDetailsSettings.swift */,
 				34F201322693F562006CE2FF /* MockEventListSettings.swift */,
+				34B1B3BD2CBC3762002AC38E /* MockEventSettings.swift */,
 				345CC36D2C8CE13100B0DD1A /* MockGeocodeServiceProvider.swift */,
 				34299F742C72507100A0269B /* MockLocalNotificationProvider.swift */,
 				34299F722C724FA000A0269B /* MockNetworkServiceProvider.swift */,
@@ -715,8 +721,8 @@
 				34C72F8B25E88DA100FD20FA /* MockCalendarSettings.swift */,
 				348E703B25C617F100B3B160 /* MockDateProvider.swift */,
 				3477F3D925FD44C1008EA888 /* MockEventListSettings.swift */,
+				34B1B3BA2CBC3730002AC38E /* MockEventSettings.swift */,
 				34C72F9525E8A05700FD20FA /* MockNextEventSettings.swift */,
-				34C72F8725E88C0300FD20FA /* MockPopoverSettings.swift */,
 				346E70CA2802289F00A785FF /* MockScreenProvider.swift */,
 				34C72F8325E88B6600FD20FA /* MockStatusItemSettings.swift */,
 				34651F7925E325EA00518C5A /* MockWorkspaceServiceProvider.swift */,
@@ -1152,6 +1158,8 @@
 				34F7E03A28427AC00028FF25 /* EventDetailsPreview.swift in Sources */,
 				34F4C47D2A6C56AA00397C80 /* MockScreenProvider.swift in Sources */,
 				346CB088295E209600E018EF /* AutoLauncher.swift in Sources */,
+				34B1B3BE2CBC3762002AC38E /* MockEventSettings.swift in Sources */,
+				34B1B3BF2CBC3762002AC38E /* MockAppearanceSettings.swift in Sources */,
 				3421DA1E2693F12400056837 /* Date+Factory.swift in Sources */,
 				3487A43825E706F800FCC7D7 /* NextEventViewModel.swift in Sources */,
 				34A6434D25F42375000A0F08 /* EventViewPreview.swift in Sources */,
@@ -1228,8 +1236,8 @@
 				349E4CEF25CF48ED00A6FC18 /* VirtualTimeScheduler.swift in Sources */,
 				34924CE4259FCB36009C3450 /* DateSelectorTests.swift in Sources */,
 				34C72F8C25E88DA100FD20FA /* MockCalendarSettings.swift in Sources */,
-				34C72F8825E88C0300FD20FA /* MockPopoverSettings.swift in Sources */,
 				34C2CF9125C2070400FC2CFF /* EventViewModelTests.swift in Sources */,
+				34B1B3BB2CBC3730002AC38E /* MockEventSettings.swift in Sources */,
 				345CC36A2C8CCB1C00B0DD1A /* CacheTests.swift in Sources */,
 				3477F3DA25FD44C1008EA888 /* MockEventListSettings.swift in Sources */,
 				346E70CB2802289F00A785FF /* MockScreenProvider.swift in Sources */,
@@ -1467,7 +1475,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.13.4;
+				MARKETING_VERSION = 1.14.0;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Config/Calendr-Bridging-Header.h";
@@ -1495,7 +1503,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.13.4;
+				MARKETING_VERSION = 1.14.0;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Config/Calendr-Bridging-Header.h";

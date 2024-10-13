@@ -25,7 +25,7 @@ class MockNextEventSettings: MockEventDetailsSettings, NextEventSettings {
     let toggleEventStatusItemDetectNotch: AnyObserver<Bool>
     let eventStatusItemDetectNotch: Observable<Bool>
 
-    override init() {
+    init() {
         (showEventStatusItem, toggleStatusItem) = BehaviorSubject.pipe(value: true)
         (eventStatusItemFontSize, eventStatusItemFontSizeObserver) = BehaviorSubject.pipe(value: 12)
         (eventStatusItemCheckRange, eventStatusItemCheckRangeObserver) = BehaviorSubject.pipe(value: 18)

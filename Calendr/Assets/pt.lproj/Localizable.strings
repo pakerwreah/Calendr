@@ -53,6 +53,7 @@
 "settings.events.show_map" = "Mostrar mapa e clima";
 "settings.events.show_overdue_reminders" = "Mostrar lembretes atrasados";
 "settings.events.show_finished_events" = "Mostrar eventos terminados";
+"settings.events.show_recurrence_indicator" = "Mostrar indicador de recorrência";
 
 "settings.appearance.transparency" = "Transparência";
 "settings.appearance.accessibility" = "Acessibilidade";

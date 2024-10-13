@@ -16,7 +16,7 @@ class EventViewModelLinkTests: XCTestCase {
     let geocoder = MockGeocodeServiceProvider()
     let weatherService = MockWeatherServiceProvider()
     let workspace = MockWorkspaceServiceProvider()
-    let settings = MockEventDetailsSettings()
+    let settings = MockEventSettings()
 
     func testLink_withRegularLocation_withoutURL_shouldNotShowLinkButton() {
 

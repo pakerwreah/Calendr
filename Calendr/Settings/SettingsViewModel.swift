@@ -69,7 +69,11 @@ protocol EventDetailsSettings: AppearanceSettings {
     var showMap: Observable<Bool> { get }
 }
 
-protocol EventListSettings: EventDetailsSettings {
+protocol EventSettings: EventDetailsSettings {
+    var showRecurrenceIndicator: Observable<Bool> { get }
+}
+
+protocol EventListSettings: EventSettings {
     var showPastEvents: Observable<Bool> { get }
     var showOverdueReminders: Observable<Bool> { get }
 }
@@ -121,6 +125,7 @@ class SettingsViewModel:
     let toggleMap: AnyObserver<Bool>
     let togglePastEvents: AnyObserver<Bool>
     let toggleOverdueReminders: AnyObserver<Bool>
+    let toggleRecurrenceIndicator: AnyObserver<Bool>
     let transparencyObserver: AnyObserver<Int>
     let textScalingObserver: AnyObserver<Double>
     let calendarTextScalingObserver: AnyObserver<Double>
@@ -153,6 +158,7 @@ class SettingsViewModel:
     let showMap: Observable<Bool>
     let showPastEvents: Observable<Bool>
     let showOverdueReminders: Observable<Bool>
+    let showRecurrenceIndicator: Observable<Bool>
     let popoverTransparency: Observable<Int>
     let popoverMaterial: Observable<PopoverMaterial>
     let textScaling: Observable<Double>
@@ -197,6 +203,7 @@ class SettingsViewModel:
         toggleMap = userDefaults.rx.observer(for: \.showMap)
         togglePastEvents = userDefaults.rx.observer(for: \.showPastEvents)
         toggleOverdueReminders = userDefaults.rx.observer(for: \.showOverdueReminders)
+        toggleRecurrenceIndicator = userDefaults.rx.observer(for: \.showRecurrenceIndicator)
         transparencyObserver = userDefaults.rx.observer(for: \.transparencyLevel)
         textScalingObserver = userDefaults.rx.observer(for: \.textScaling)
         calendarTextScalingObserver = userDefaults.rx.observer(for: \.calendarTextScaling)
@@ -237,6 +244,7 @@ class SettingsViewModel:
         showMap = userDefaults.rx.observe(\.showMap)
         showPastEvents = userDefaults.rx.observe(\.showPastEvents)
         showOverdueReminders = userDefaults.rx.observe(\.showOverdueReminders)
+        showRecurrenceIndicator = userDefaults.rx.observe(\.showRecurrenceIndicator)
         popoverTransparency = userDefaults.rx.observe(\.transparencyLevel)
         textScaling = userDefaults.rx.observe(\.textScaling)
         calendarTextScaling = userDefaults.rx.observe(\.calendarTextScaling)

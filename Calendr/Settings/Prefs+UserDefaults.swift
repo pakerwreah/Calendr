@@ -40,6 +40,7 @@ enum Prefs {
     // Events
     static let showPastEvents = "show_past_events"
     static let showOverdueReminders = "show_overdue_reminders"
+    static let showRecurrenceIndicator = "show_recurrence_indicator"
 
     // Appearance
     static let transparencyLevel = "transparency_level"
@@ -89,6 +90,7 @@ func registerDefaultPrefs(in userDefaults: UserDefaults, calendar: Calendar = .c
         // Events
         Prefs.showPastEvents: true,
         Prefs.showOverdueReminders: true,
+        Prefs.showRecurrenceIndicator: true,
 
         // Appearance
         Prefs.transparencyLevel: 2,
@@ -225,6 +227,11 @@ extension UserDefaults {
     @objc dynamic var showOverdueReminders: Bool {
         get { bool(forKey: Prefs.showOverdueReminders) }
         set { set(newValue, forKey: Prefs.showOverdueReminders) }
+    }
+
+    @objc dynamic var showRecurrenceIndicator: Bool {
+        get { bool(forKey: Prefs.showRecurrenceIndicator) }
+        set { set(newValue, forKey: Prefs.showRecurrenceIndicator) }
     }
 
     // Appearance

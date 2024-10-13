@@ -16,7 +16,8 @@ class EventView: NSView {
 
     private let viewModel: EventViewModel
 
-    private let icon = NSImageView()
+    private let birthdayIcon = NSImageView()
+    private let recurrenceIcon = NSImageView()
     private let title = Label()
     private let subtitle = Label()
     private let subtitleLink = Label()
@@ -40,9 +41,9 @@ class EventView: NSView {
 
         configureLayout()
 
-        setUpBindings()
-
         setData()
+
+        setUpBindings()
     }
 
     private func setUpAccessibility() {
@@ -63,15 +64,10 @@ class EventView: NSView {
             setUpContextMenu(contextMenuViewModel)
         }
 
-        icon.isHidden = true
-        completeBtn.isHidden = true
-
         switch viewModel.type {
 
         case .birthday:
-            icon.image = Icons.Event.birthday.with(scale: .small)
-            icon.contentTintColor = .systemRed
-            icon.isHidden = false
+            birthdayIcon.isHidden = false
 
         case .reminder:
             completeBtn.contentTintColor = viewModel.color
@@ -109,8 +105,6 @@ class EventView: NSView {
         duration.stringValue = viewModel.duration
         duration.isHidden = duration.isEmpty
 
-        relativeDuration.isHidden = true
-
         linkBtn.isHidden = viewModel.link == nil
         linkBtn.toolTip = viewModel.link?.url.absoluteString
     }
@@ -126,10 +120,15 @@ class EventView: NSView {
         hoverLayer.backgroundColor = NSColor.gray.cgColor.copy(alpha: 0.2)
         layer?.addSublayer(hoverLayer)
 
-        [icon, completeBtn, relativeDuration].forEach {
+        [birthdayIcon, recurrenceIcon, completeBtn, relativeDuration].forEach {
             $0.setContentHuggingPriority(.required, for: .horizontal)
             $0.setContentCompressionResistancePriority(.required, for: .horizontal)
         }
+
+        completeBtn.isHidden = true
+
+        birthdayIcon.isHidden = true
+        birthdayIcon.contentTintColor = .systemRed
 
         title.forceVibrancy = false
         title.lineBreakMode = .byWordWrapping
@@ -140,8 +139,9 @@ class EventView: NSView {
         duration.textColor = .secondaryLabelColor
         duration.font = .systemFont(ofSize: 11)
 
+        relativeDuration.isHidden = true
         relativeDuration.textColor = .secondaryLabelColor
-        relativeDuration.font = .systemFont(ofSize: 11)
+        relativeDuration.font = .systemFont(ofSize: 10)
 
         subtitle.lineBreakMode = .byWordWrapping
         subtitle.maximumNumberOfLines = 2
@@ -157,17 +157,22 @@ class EventView: NSView {
         colorBar.layer?.cornerRadius = 2
         colorBar.width(equalTo: 4)
 
-        linkBtn.width(equalTo: 22)
-
-        let titleStackView = NSStackView(views: [icon, completeBtn, title]).with(spacing: 4).with(alignment: .firstBaseline)
+        let titleStackView = NSStackView(views: [birthdayIcon, completeBtn, title, recurrenceIcon])
+            .with(spacing: 4)
+            .with(alignment: .firstBaseline)
 
         let linkStackView = NSStackView(views: [subtitleLink, linkBtn]).with(spacing: 0)
 
-        let durationStackView = NSStackView(views: [duration, relativeDuration]).with(insets: .init(right: 4))
-        durationStackView.setHuggingPriority(.fittingSizeCompression, for: .horizontal)
+        let durationStackView = NSStackView(views: [duration, relativeDuration])
+        duration.setContentHuggingPriority(.fittingSizeCompression, for: .horizontal)
+        durationStackView.setHuggingPriority(.defaultHigh, for: .horizontal)
 
         linkStackView.rx.isContentHidden
             .bind(to: linkStackView.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        durationStackView.rx.isContentHidden
+            .bind(to: durationStackView.rx.isHidden)
             .disposed(by: disposeBag)
 
         let eventStackView = NSStackView(views: [titleStackView, subtitle, linkStackView, durationStackView])
@@ -175,7 +180,7 @@ class EventView: NSView {
             .with(spacing: 3)
             .with(insets: .init(vertical: 2))
 
-        let contentStackView = NSStackView(views: [colorBar, eventStackView])
+        let contentStackView = NSStackView(views: [colorBar, .dummy, eventStackView, .dummy]).with(spacing: 4)
         addSubview(contentStackView)
         contentStackView.edges(equalTo: self)
 
@@ -215,11 +220,29 @@ class EventView: NSView {
                 .disposed(by: disposeBag)
         }
 
-        if !viewModel.type.isBirthday {
+        if viewModel.type.isBirthday {
+
+            Scaling.observable
+                .map { Icons.Event.birthday.with(pointSize: 10 * $0) }
+                .bind(to: birthdayIcon.rx.image)
+                .disposed(by: disposeBag)
+
+        } else {
 
             viewModel.isFaded
                 .map { $0 ? 0.5 : 1 }
                 .bind(to: rx.alpha)
+                .disposed(by: disposeBag)
+
+            Observable.combineLatest(viewModel.showRecurrenceIndicator, Scaling.observable)
+                .filter(\.0)
+                .map { Icons.Event.recurrence.with(pointSize: 10 * $1) }
+                .bind(to: recurrenceIcon.rx.image)
+                .disposed(by: disposeBag)
+
+            viewModel.showRecurrenceIndicator
+                .map(!)
+                .bind(to: recurrenceIcon.rx.isHidden)
                 .disposed(by: disposeBag)
         }
 
@@ -254,7 +277,7 @@ class EventView: NSView {
                 .bind(to: relativeDuration.rx.stringValue)
                 .disposed(by: disposeBag)
 
-            viewModel.relativeDuration.map(false)
+            viewModel.relativeDuration.map(\.isEmpty)
                 .bind(to: relativeDuration.rx.isHidden)
                 .disposed(by: disposeBag)
 

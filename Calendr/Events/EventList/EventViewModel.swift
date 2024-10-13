@@ -26,6 +26,7 @@ class EventViewModel {
     let progress: Observable<CGFloat?>
     let isCompleted: Observable<Bool>
     let relativeDuration: Observable<String>
+    let showRecurrenceIndicator: Observable<Bool>
 
     let linkTapped: AnyObserver<Void>
 
@@ -39,7 +40,7 @@ class EventViewModel {
     private let calendarService: CalendarServiceProviding
     private let geocoder: GeocodeServiceProviding
     private let weatherService: WeatherServiceProviding
-    private let settings: EventDetailsSettings
+    private let settings: EventSettings
     private let workspace: WorkspaceServiceProviding
     private let userDefaults: UserDefaults
 
@@ -53,7 +54,7 @@ class EventViewModel {
         weatherService: WeatherServiceProviding,
         workspace: WorkspaceServiceProviding,
         userDefaults: UserDefaults,
-        settings: EventDetailsSettings,
+        settings: EventSettings,
         isShowingDetails: AnyObserver<Bool>,
         isTodaySelected: Bool,
         scheduler: SchedulerType
@@ -210,6 +211,8 @@ class EventViewModel {
                     dateFormatter.string(from: event.start, to: dateProvider.now) ?? ""
                 )
             }
+            .distinctUntilChanged()
+            .share(replay: 1)
         } else {
             relativeDuration = .empty()
         }
@@ -248,6 +251,8 @@ class EventViewModel {
         let progressBackgroundColor = color.withAlphaComponent(0.15)
 
         backgroundColor = isInProgress.map { $0 ? progressBackgroundColor : .clear }
+
+        showRecurrenceIndicator = settings.showRecurrenceIndicator.map { $0 && event.hasRecurrenceRules }
     }
 
     func makeDetailsViewModel() -> EventDetailsViewModel {

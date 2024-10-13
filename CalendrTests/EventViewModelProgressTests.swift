@@ -18,7 +18,7 @@ class EventViewModelProgressTests: XCTestCase {
     let geocoder = MockGeocodeServiceProvider()
     let weatherService = MockWeatherServiceProvider()
     let workspace = MockWorkspaceServiceProvider()
-    let settings = MockEventDetailsSettings()
+    let settings = MockEventSettings()
 
     func testProgress_isAllDay_shouldNotCalculateProgress() {
 

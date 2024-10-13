@@ -43,6 +43,8 @@ class EventListView: NSView {
 
         addSubview(contentStackView)
 
+        contentStackView.setHuggingPriority(.required, for: .horizontal)
+
         contentStackView.edges(equalTo: self)
     }
 

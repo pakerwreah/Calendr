@@ -9,18 +9,12 @@
 
 import RxSwift
 
-class MockEventDetailsSettings: EventDetailsSettings {
+class MockEventDetailsSettings: MockAppearanceSettings, EventDetailsSettings {
 
     let showMap: Observable<Bool>
-    let popoverMaterial: Observable<PopoverMaterial>
-    let textScaling: Observable<Double>
-    let calendarTextScaling: Observable<Double>
 
-    init(showMap: Bool = false, popoverMaterial: PopoverMaterial = .popover) {
+    init(showMap: Bool = false) {
         self.showMap = .just(showMap)
-        self.popoverMaterial = .just(popoverMaterial)
-        self.textScaling = .just(1)
-        self.calendarTextScaling = .just(1)
     }
 }
 

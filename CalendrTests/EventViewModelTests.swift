@@ -18,7 +18,7 @@ class EventViewModelTests: XCTestCase {
     let geocoder = MockGeocodeServiceProvider()
     let weatherService = MockWeatherServiceProvider()
     let workspace = MockWorkspaceServiceProvider()
-    let settings = MockEventDetailsSettings()
+    let settings = MockEventSettings()
     let scheduler = HistoricalScheduler()
 
     override func setUp() {
@@ -408,6 +408,36 @@ class EventViewModelTests: XCTestCase {
 
         XCTAssertEqual(isCompleted, false)
         XCTAssertNil(serviceCompleted)
+    }
+
+    func testRecurrenceIndicator_withNonRecurrentEvent() {
+
+        let viewModel = mock(event: .make(type: .event(.unknown), hasRecurrenceRules: false))
+
+        var showRecurrenceIndicator: Bool?
+
+        viewModel.showRecurrenceIndicator
+            .bind { showRecurrenceIndicator = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(showRecurrenceIndicator, false)
+    }
+
+    func testRecurrenceIndicator_withRecurrentEvent() {
+
+        let viewModel = mock(event: .make(type: .event(.unknown), hasRecurrenceRules: true))
+
+        var showRecurrenceIndicator: Bool?
+
+        viewModel.showRecurrenceIndicator
+            .bind { showRecurrenceIndicator = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(showRecurrenceIndicator, true)
+
+        settings.toggleRecurrenceIndicator.onNext(false)
+
+        XCTAssertEqual(showRecurrenceIndicator, false)
     }
 
     func mock(type: EventType) -> EventViewModel { mock(event: .make(type: type)) }

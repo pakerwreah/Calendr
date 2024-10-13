@@ -38,6 +38,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     private let showMapCheckbox = Checkbox(title: Strings.Settings.Events.showMap)
     private let showFinishedEventsCheckbox = Checkbox(title: Strings.Settings.Events.showFinishedEvents)
     private let showOverdueCheckbox = Checkbox(title: Strings.Settings.Events.showOverdueReminders)
+    private let showRecurrenceCheckbox = Checkbox(title: Strings.Settings.Events.showRecurrenceIndicator)
 
     init(viewModel: SettingsViewModel) {
 
@@ -218,7 +219,8 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         NSStackView(views: [
             showMapCheckbox,
             showFinishedEventsCheckbox,
-            showOverdueCheckbox
+            showOverdueCheckbox,
+            showRecurrenceCheckbox
         ]).with(orientation: .vertical)
     }()
 
@@ -469,6 +471,13 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             control: showOverdueCheckbox,
             observable: viewModel.showOverdueReminders,
             observer: viewModel.toggleOverdueReminders
+        )
+        .disposed(by: disposeBag)
+
+        bind(
+            control: showRecurrenceCheckbox,
+            observable: viewModel.showRecurrenceIndicator,
+            observer: viewModel.toggleRecurrenceIndicator
         )
         .disposed(by: disposeBag)
     }

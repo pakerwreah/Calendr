@@ -50,6 +50,7 @@ enum Icons {
         static let video = NSImage(systemName: "video")
         static let video_fill = NSImage(systemName: "video.fill")
         static let skip = NSImage(systemName: "forward")
+        static let recurrence = NSImage(systemName: "repeat")
     }
 
     enum Reminder {

@@ -10,7 +10,7 @@
 import Foundation
 import RxSwift
 
-class MockEventListSettings: MockEventDetailsSettings, EventListSettings {
+class MockEventListSettings: MockEventSettings, EventListSettings {
 
     let showPastEvents: Observable<Bool>
     let showOverdueReminders: Observable<Bool>

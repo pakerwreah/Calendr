@@ -157,6 +157,8 @@ internal enum Strings {
       internal static let showMap = Strings.tr("Localizable", "settings.events.show_map", fallback: "Show map and weather")
       /// Show overdue reminders
       internal static let showOverdueReminders = Strings.tr("Localizable", "settings.events.show_overdue_reminders", fallback: "Show overdue reminders")
+      /// Show recurrence indicator
+      internal static let showRecurrenceIndicator = Strings.tr("Localizable", "settings.events.show_recurrence_indicator", fallback: "Show recurrence indicator")
     }
     internal enum Keyboard {
       internal enum GlobalShortcuts {

@@ -43,6 +43,7 @@ class SettingsViewModelTests: XCTestCase {
     var userDefaultsShowMap: Bool? { userDefaults.object(forKey: Prefs.showMap) as! Bool? }
     var userDefaultsShowPastEvents: Bool? { userDefaults.object(forKey: Prefs.showPastEvents) as! Bool? }
     var userDefaultsShowOverdueReminders: Bool? { userDefaults.object(forKey: Prefs.showOverdueReminders) as! Bool? }
+    var userDefaultsShowRecurrenceIndicator: Bool? { userDefaults.object(forKey: Prefs.showRecurrenceIndicator) as! Bool? }
     var userDefaultsTransparency: Int? { userDefaults.object(forKey: Prefs.transparencyLevel) as! Int? }
 
     override func setUp() {
@@ -67,6 +68,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertNil(userDefaultsShowMap)
         XCTAssertNil(userDefaultsShowPastEvents)
         XCTAssertNil(userDefaultsShowOverdueReminders)
+        XCTAssertNil(userDefaultsShowRecurrenceIndicator)
         XCTAssertNil(userDefaultsTransparency)
 
         registerDefaultPrefs(in: userDefaults, calendar: .gregorian.with(firstWeekday: 3))
@@ -92,6 +94,7 @@ class SettingsViewModelTests: XCTestCase {
         var showMap: Bool?
         var showPastEvents: Bool?
         var showOverdueReminders: Bool?
+        var showRecurrenceIndicator: Bool?
         var popoverTransparency: Int?
         var popoverMaterial: PopoverMaterial?
 
@@ -167,6 +170,10 @@ class SettingsViewModelTests: XCTestCase {
             .bind { showOverdueReminders = $0 }
             .disposed(by: disposeBag)
 
+        viewModel.showRecurrenceIndicator
+            .bind { showRecurrenceIndicator = $0 }
+            .disposed(by: disposeBag)
+
         viewModel.popoverTransparency
             .bind { popoverTransparency = $0 }
             .disposed(by: disposeBag)
@@ -193,6 +200,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(showMap, true)
         XCTAssertEqual(showPastEvents, true)
         XCTAssertEqual(showOverdueReminders, true)
+        XCTAssertEqual(showRecurrenceIndicator, true)
         XCTAssertEqual(popoverTransparency, 2)
         XCTAssertEqual(popoverMaterial, .headerView)
 
@@ -214,6 +222,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(userDefaultsShowMap, true)
         XCTAssertEqual(userDefaultsShowPastEvents, true)
         XCTAssertEqual(userDefaultsShowOverdueReminders, true)
+        XCTAssertEqual(userDefaultsShowRecurrenceIndicator, true)
         XCTAssertEqual(userDefaultsTransparency, 2)
     }
 
@@ -642,6 +651,30 @@ class SettingsViewModelTests: XCTestCase {
 
         XCTAssertEqual(showOverdueReminders, false)
         XCTAssertEqual(userDefaultsShowOverdueReminders, false)
+    }
+
+    func testToggleShowRecurrenceIndicator() {
+
+        userDefaults.showRecurrenceIndicator = false
+
+        var showRecurrenceIndicator: Bool?
+
+        viewModel.showRecurrenceIndicator
+            .bind { showRecurrenceIndicator = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(showRecurrenceIndicator, false)
+        XCTAssertEqual(userDefaultsShowRecurrenceIndicator, false)
+
+        viewModel.toggleRecurrenceIndicator.onNext(true)
+
+        XCTAssertEqual(showRecurrenceIndicator, true)
+        XCTAssertEqual(userDefaultsShowRecurrenceIndicator, true)
+
+        viewModel.toggleRecurrenceIndicator.onNext(false)
+
+        XCTAssertEqual(showRecurrenceIndicator, false)
+        XCTAssertEqual(userDefaultsShowRecurrenceIndicator, false)
     }
 
     func testChangeTransparency() {

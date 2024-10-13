@@ -470,7 +470,7 @@ private extension EventModel {
             calendar: .init(from: calendar),
             participants: .init(from: event),
             timeZone: calendar.isSubscribed || calendar.isDelegate ? nil : event.timeZone,
-            hasRecurrenceRules: event.hasRecurrenceRules
+            hasRecurrenceRules: event.hasRecurrenceRules || event.isDetached
         )
     }
 
