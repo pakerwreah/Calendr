@@ -48,10 +48,7 @@
 "settings.calendar.show_declined_events" = "Zobrazit odmítnuté události";
 "settings.calendar.show_declined_events_tooltip" = "Funguje pouze tehdy, pokud je také zapnuto v nativní aplikaci Kalendář.";
 //"settings.calendar.date_hover_option" = "Hold ⌥ to peek at hovered dates";
-//"settings.calendar.calendar_app_view_mode" = "Calendar app view mode";
-//"settings.calendar.month" = "month";
-//"settings.calendar.week" = "week";
-//"settings.calendar.day" = "day";
+//"settings.calendar.calendar_app_view_mode" = "Calendar app view";
 
 "settings.events" = "Události";
 //"settings.events.show_map" = "Show map and weather";

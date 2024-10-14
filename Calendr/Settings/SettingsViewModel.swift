@@ -180,22 +180,39 @@ class SettingsViewModel:
 
     let isPresented = BehaviorSubject(value: false)
 
-    let calendarAppViewModeOptions = CalendarViewMode.allCases.map {
-        let title = switch $0 {
-        case .month:
-            Strings.Settings.Calendar.month
-        case .week:
-            Strings.Settings.Calendar.week
-        case .day:
-            Strings.Settings.Calendar.day
-        }
+    private func localizedUnit(for mode: CalendarViewMode) -> String {
 
-        return CalendarViewModeOption(mode: $0, title: title)
+        let numberFormatter = NumberFormatter()
+        numberFormatter.notANumberSymbol = ""
+
+        let formatter = MeasurementFormatter()
+        formatter.unitStyle = .long
+        formatter.numberFormatter = numberFormatter
+        formatter.locale = dateProvider.calendar.locale
+
+        return formatter.string(from: Measurement(value: .nan, unit: Unit(symbol: mode.rawValue)))
     }
+
+    private(set) lazy var calendarAppViewModeOptions: [CalendarViewModeOption] = {
+
+        return CalendarViewMode.allCases.map {
+            let title = switch $0 {
+            case .month:
+                localizedUnit(for: .month)
+            case .week:
+                localizedUnit(for: .week)
+            case .day:
+                localizedUnit(for: .day)
+            }
+
+            return CalendarViewModeOption(mode: $0, title: title)
+        }
+    }()
 
     let dateFormatPlaceholder = AppConstants.defaultCustomDateFormat
 
     private let autoLauncher: AutoLauncher
+    private let dateProvider: DateProviding
 
     init(
         autoLauncher: AutoLauncher,
@@ -204,6 +221,7 @@ class SettingsViewModel:
         notificationCenter: NotificationCenter
     ) {
         self.autoLauncher = autoLauncher
+        self.dateProvider = dateProvider
 
         // MARK: - Observers
 

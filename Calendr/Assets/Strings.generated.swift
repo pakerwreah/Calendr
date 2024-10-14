@@ -139,14 +139,10 @@ internal enum Strings {
       internal static let transparency = Strings.tr("Localizable", "settings.appearance.transparency", fallback: "Transparency")
     }
     internal enum Calendar {
-      /// Calendar app view mode
-      internal static let calendarAppViewMode = Strings.tr("Localizable", "settings.calendar.calendar_app_view_mode", fallback: "Calendar app view mode")
+      /// Calendar app view
+      internal static let calendarAppViewMode = Strings.tr("Localizable", "settings.calendar.calendar_app_view_mode", fallback: "Calendar app view")
       /// Hold ⌥ to peek at hovered dates
       internal static let dateHoverOption = Strings.tr("Localizable", "settings.calendar.date_hover_option", fallback: "Hold ⌥ to peek at hovered dates")
-      /// day
-      internal static let day = Strings.tr("Localizable", "settings.calendar.day", fallback: "day")
-      /// month
-      internal static let month = Strings.tr("Localizable", "settings.calendar.month", fallback: "month")
       /// Preserve selected date on hide
       internal static let preserveSelectedDate = Strings.tr("Localizable", "settings.calendar.preserve_selected_date", fallback: "Preserve selected date on hide")
       /// Show declined events
@@ -155,8 +151,6 @@ internal enum Strings {
       internal static let showDeclinedEventsTooltip = Strings.tr("Localizable", "settings.calendar.show_declined_events_tooltip", fallback: "This only works if it is also enabled in the native Calendar app.")
       /// Show week numbers
       internal static let showWeekNumbers = Strings.tr("Localizable", "settings.calendar.show_week_numbers", fallback: "Show week numbers")
-      /// week
-      internal static let week = Strings.tr("Localizable", "settings.calendar.week", fallback: "week")
     }
     internal enum Events {
       /// Show finished events
