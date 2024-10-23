@@ -8,23 +8,23 @@
 "quit" = "退出";
 "search" = "搜索";
 
-//"access_required.calendars" = "Calendar pending 'Full access' authorization";
-//"access_required.reminders" = "Reminders pending authorization";
-//"access_required.open_settings" = "Open Settings";
-//"access_required.cancel" = "Cancel";
+"access_required.calendars" = "Calendar 正在等待'完全访问权限'授权";
+"access_required.reminders" = "提醒事项待授权";
+"access_required.open_settings" = "打开设置";
+"access_required.cancel" = "取消";
 
-//"auto_update.check_for_updates" = "Check for updates";
-//"auto_update.fetching_releases" = "Fetching releases";
+"auto_update.check_for_updates" = "检查更新";
+"auto_update.fetching_releases" = "获取更新中";
 "auto_update.new_version" = "有新版本可用：%@";
-//"auto_update.updated_to" = "Updated to version %@";
-//"auto_update.downloading" = "Downloading version %@";
-//"auto_update.install" = "Install";
-//"auto_update.replace.title" = "Please don't change anything";
-//"auto_update.replace.message" = "Confirm the app location so we have permission to replace it";
+"auto_update.updated_to" = "升级版本到 %@";
+"auto_update.downloading" = "下载版本 %@";
+"auto_update.install" = "安装";
+"auto_update.replace.title" = "请不要做任何修改";
+"auto_update.replace.message" = "请确认应用程序的位置，以便获得权限来替换。";
 
 "settings.title" = "设置";
 "settings.tab.general" = "通用";
-//"settings.tab.appearance" = "Appearance";
+"settings.tab.appearance" = "外观";
 "settings.tab.calendars" = "日历";
 "settings.tab.keyboard" = "快捷方式";
 "settings.tab.about" = "关于";
@@ -47,17 +47,17 @@
 "settings.calendar.preserve_selected_date" = "隐藏时保留所选日期";
 "settings.calendar.show_declined_events" = "显示拒绝的日程";
 "settings.calendar.show_declined_events_tooltip" = "此功能需在原生日历应用中同样启用。";
-//"settings.calendar.date_hover_option" = "Hold ⌥ to peek at hovered dates";
-//"settings.calendar.calendar_app_view_mode" = "Calendar app view";
+"settings.calendar.date_hover_option" = "按住 ⌥ 键预览悬停日期详情";
+"settings.calendar.calendar_app_view_mode" = "日历应用展示模式";
 
 "settings.events" = "日程";
-//"settings.events.show_map" = "Show map and weather";
-//"settings.events.show_overdue_reminders" = "Show overdue reminders";
-//"settings.events.show_finished_events" = "Show finished events";
-//"settings.events.show_recurrence_indicator" = "Show recurrence indicator";
+"settings.events.show_map" = "展示地图和天气";
+"settings.events.show_overdue_reminders" = "展示逾期日程";
+"settings.events.show_finished_events" = "展示已完成日程";
+"settings.events.show_recurrence_indicator" = "展示日程重复标识";
 
 "settings.appearance.transparency" = "透明度";
-//"settings.appearance.accessibility" = "Accessibility";
+"settings.appearance.accessibility" = "无障碍";
 
 "settings.keyboard.local_shortcuts.title" = "本地快捷键";
 "settings.keyboard.local_shortcuts.prev_date" = "前一天";
