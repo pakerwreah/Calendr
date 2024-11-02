@@ -103,3 +103,12 @@
 "event_action.accept" = "Accepter";
 "event_action.maybe" = "Peut-être";
 "event_action.decline" = "Refuser";
+
+//"tooltips.navigation.prev_month" = "Previous month";
+//"tooltips.navigation.today" = "Today";
+//"tooltips.navigation.next_month" = "Next month";
+
+//"tooltips.toolbar.stay_open" = "Stay open";
+//"tooltips.toolbar.open_calendar" = "Open Calendar";
+//"tooltips.toolbar.open_reminders" = "Open Reminders";
+//"tooltips.toolbar.open_menu" = "Open menu";

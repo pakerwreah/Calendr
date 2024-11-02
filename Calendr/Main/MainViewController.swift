@@ -780,8 +780,13 @@ class MainViewController: NSViewController {
         [prevBtn, resetBtn, nextBtn].forEach { $0.size(equalTo: 22) }
 
         prevBtn.image = Icons.Calendar.prev
+        prevBtn.toolTip = Strings.Tooltips.Navigation.prevMonth
+
         resetBtn.image = Icons.Calendar.reset.with(scale: .small)
+        resetBtn.toolTip = Strings.Tooltips.Navigation.today
+
         nextBtn.image = Icons.Calendar.next
+        nextBtn.toolTip = Strings.Tooltips.Navigation.nextMonth
 
         return NSStackView(views: [
             .spacer(width: 5), titleLabel, .spacer, prevBtn, resetBtn, nextBtn
@@ -796,10 +801,16 @@ class MainViewController: NSViewController {
         pinBtn.setButtonType(.toggle)
         pinBtn.image = Icons.Calendar.unpinned
         pinBtn.alternateImage = Icons.Calendar.pinned
+        pinBtn.toolTip = Strings.Tooltips.Toolbar.stayOpen
 
         remindersBtn.image = Icons.Calendar.reminders.with(scale: .large)
+        remindersBtn.toolTip = Strings.Tooltips.Toolbar.openReminders
+
         calendarBtn.image = Icons.Calendar.calendar.with(scale: .large)
+        calendarBtn.toolTip = Strings.Tooltips.Toolbar.openCalendar
+
         settingsBtn.image = Icons.Calendar.settings.with(scale: .large)
+        settingsBtn.toolTip = Strings.Tooltips.Toolbar.openMenu
 
         return NSStackView(views: [pinBtn, .spacer, remindersBtn, calendarBtn, settingsBtn])
     }

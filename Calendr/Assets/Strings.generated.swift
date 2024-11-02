@@ -235,6 +235,26 @@ internal enum Strings {
       internal static let keyboard = Strings.tr("Localizable", "settings.tab.keyboard", fallback: "Shortcuts")
     }
   }
+  internal enum Tooltips {
+    internal enum Navigation {
+      /// Next month
+      internal static let nextMonth = Strings.tr("Localizable", "tooltips.navigation.next_month", fallback: "Next month")
+      /// Previous month
+      internal static let prevMonth = Strings.tr("Localizable", "tooltips.navigation.prev_month", fallback: "Previous month")
+      /// Today
+      internal static let today = Strings.tr("Localizable", "tooltips.navigation.today", fallback: "Today")
+    }
+    internal enum Toolbar {
+      /// Open Calendar
+      internal static let openCalendar = Strings.tr("Localizable", "tooltips.toolbar.open_calendar", fallback: "Open Calendar")
+      /// Open menu
+      internal static let openMenu = Strings.tr("Localizable", "tooltips.toolbar.open_menu", fallback: "Open menu")
+      /// Open Reminders
+      internal static let openReminders = Strings.tr("Localizable", "tooltips.toolbar.open_reminders", fallback: "Open Reminders")
+      /// Stay open
+      internal static let stayOpen = Strings.tr("Localizable", "tooltips.toolbar.stay_open", fallback: "Stay open")
+    }
+  }
 }
 // swiftlint:enable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:enable nesting type_body_length type_name vertical_whitespace_opening_braces
