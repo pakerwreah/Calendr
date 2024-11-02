@@ -49,8 +49,6 @@ internal enum Strings {
     internal enum Replace {
       /// Confirm the app location so we have permission to replace it
       internal static let message = Strings.tr("Localizable", "auto_update.replace.message", fallback: "Confirm the app location so we have permission to replace it")
-      /// Please don't change anything
-      internal static let title = Strings.tr("Localizable", "auto_update.replace.title", fallback: "Please don't change anything")
     }
   }
   internal enum EventAction {

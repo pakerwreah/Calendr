@@ -19,7 +19,6 @@
 "auto_update.updated_to" = "Mise à jour vers la version %@";
 "auto_update.downloading" = "Téléchargement de la version %@";
 "auto_update.install" = "Installer";
-//"auto_update.replace.title" = "Please don't change anything";
 //"auto_update.replace.message" = "Confirm the app location so we have permission to replace it";
 
 "settings.title" = "Préférences";

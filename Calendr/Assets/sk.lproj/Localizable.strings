@@ -19,7 +19,6 @@
 "auto_update.updated_to" = "Aktualizované na verziu %@";
 "auto_update.downloading" = "Sťahovanie verzie %@";
 "auto_update.install" = "Inštalovať";
-"auto_update.replace.title" = "Prosím, nič nemeň";
 "auto_update.replace.message" = "Potvrď umiestnenie aplikácie pre povolenie ju nahradiť";
 
 "settings.title" = "Nastavenia";

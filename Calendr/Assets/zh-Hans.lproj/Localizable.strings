@@ -19,7 +19,6 @@
 "auto_update.updated_to" = "升级版本到 %@";
 "auto_update.downloading" = "下载版本 %@";
 "auto_update.install" = "安装";
-"auto_update.replace.title" = "请不要做任何修改";
 "auto_update.replace.message" = "请确认应用程序的位置，以便获得权限来替换。";
 
 "settings.title" = "设置";
