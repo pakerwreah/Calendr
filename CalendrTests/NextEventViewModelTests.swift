@@ -24,6 +24,7 @@ class NextEventViewModelTests: XCTestCase {
     let workspace = MockWorkspaceServiceProvider()
     let screenProvider = MockScreenProvider()
     let scheduler = HistoricalScheduler()
+    let soundPlayer = MockSoundPlayer()
 
     lazy var viewModel = makeViewModel(type: .event)
 
@@ -40,7 +41,8 @@ class NextEventViewModelTests: XCTestCase {
             workspace: workspace,
             screenProvider: screenProvider,
             isShowingDetails: .dummy(),
-            scheduler: scheduler
+            scheduler: scheduler,
+            soundPlayer: soundPlayer
         )
     }
 

@@ -145,6 +145,8 @@
 		34C1D41E2C6E567100295E5E /* ProcessInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C1D41D2C6E567100295E5E /* ProcessInfo.swift */; };
 		34C1D4212C6E632F00295E5E /* Sentry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C1D4202C6E632F00295E5E /* Sentry.swift */; };
 		34C2CF9125C2070400FC2CFF /* EventViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C2CF9025C2070400FC2CFF /* EventViewModelTests.swift */; };
+		34C39F6D2CD6A15000933E6D /* SoundPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C39F6C2CD6A15000933E6D /* SoundPlayer.swift */; };
+		34C39F6F2CD6B45300933E6D /* MockSoundPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C39F6E2CD6B45300933E6D /* MockSoundPlayer.swift */; };
 		34C4599C25DEFFDA00561C29 /* BuildConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C4599B25DEFFDA00561C29 /* BuildConfig.m */; };
 		34C459A425DF030000561C29 /* BuildConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C459A325DF030000561C29 /* BuildConfig.swift */; };
 		34C459BC25DF114300561C29 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C459BB25DF114300561C29 /* AboutViewController.swift */; };
@@ -354,6 +356,8 @@
 		34C1D41D2C6E567100295E5E /* ProcessInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessInfo.swift; sourceTree = "<group>"; };
 		34C1D4202C6E632F00295E5E /* Sentry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sentry.swift; sourceTree = "<group>"; };
 		34C2CF9025C2070400FC2CFF /* EventViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventViewModelTests.swift; sourceTree = "<group>"; };
+		34C39F6C2CD6A15000933E6D /* SoundPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundPlayer.swift; sourceTree = "<group>"; };
+		34C39F6E2CD6B45300933E6D /* MockSoundPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockSoundPlayer.swift; sourceTree = "<group>"; };
 		34C4599A25DEFFDA00561C29 /* Calendr-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Calendr-Bridging-Header.h"; sourceTree = "<group>"; };
 		34C4599B25DEFFDA00561C29 /* BuildConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BuildConfig.m; sourceTree = "<group>"; };
 		34C459A325DF030000561C29 /* BuildConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildConfig.swift; sourceTree = "<group>"; };
@@ -699,6 +703,7 @@
 				34E855692C7115A100757B58 /* LocalNotificationProvider.swift */,
 				34299F702C72289400A0269B /* NetworkServiceProvider.swift */,
 				346E70C82802278E00A785FF /* ScreenProvider.swift */,
+				34C39F6C2CD6A15000933E6D /* SoundPlayer.swift */,
 				348732282C8E057300B9B110 /* WeatherServiceProvider.swift */,
 				34651F7325E3207200518C5A /* WorkspaceServiceProvider.swift */,
 			);
@@ -724,6 +729,7 @@
 				34B1B3BA2CBC3730002AC38E /* MockEventSettings.swift */,
 				34C72F9525E8A05700FD20FA /* MockNextEventSettings.swift */,
 				346E70CA2802289F00A785FF /* MockScreenProvider.swift */,
+				34C39F6E2CD6B45300933E6D /* MockSoundPlayer.swift */,
 				34C72F8325E88B6600FD20FA /* MockStatusItemSettings.swift */,
 				34651F7925E325EA00518C5A /* MockWorkspaceServiceProvider.swift */,
 			);
@@ -913,7 +919,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1250;
-				LastUpgradeCheck = 1600;
+				LastUpgradeCheck = 1610;
 				TargetAttributes = {
 					34427696269B5CA4004CFE1C = {
 						CreatedOnToolsVersion = 12.5.1;
@@ -1162,6 +1168,7 @@
 				34B1B3BF2CBC3762002AC38E /* MockAppearanceSettings.swift in Sources */,
 				3421DA1E2693F12400056837 /* Date+Factory.swift in Sources */,
 				3487A43825E706F800FCC7D7 /* NextEventViewModel.swift in Sources */,
+				34C39F6D2CD6A15000933E6D /* SoundPlayer.swift in Sources */,
 				34A6434D25F42375000A0F08 /* EventViewPreview.swift in Sources */,
 				3453E6FD28386A84002DCC3C /* Bool.swift in Sources */,
 				348D693D29ABDD91009F1882 /* CalendarScript.swift in Sources */,
@@ -1247,6 +1254,7 @@
 				3477F3D425FAF079008EA888 /* MockCalendarServiceProvider.swift in Sources */,
 				34ABB9EA29A158080021F3CF /* ReminderOptionsViewModelTests.swift in Sources */,
 				347E6D3E25AA2811009A6716 /* CalendarViewModelTests.swift in Sources */,
+				34C39F6F2CD6B45300933E6D /* MockSoundPlayer.swift in Sources */,
 				348E702D25C6161900B3B160 /* EventViewModelFadeTests.swift in Sources */,
 				34D19FC62622A02C00B2732C /* EventDetailsViewModelTests.swift in Sources */,
 				34ABB9F029A166220021F3CF /* ContextMenuFactoryTests.swift in Sources */,

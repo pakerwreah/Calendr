@@ -194,7 +194,8 @@ class MainViewController: NSViewController {
             workspace: workspace,
             screenProvider: screenProvider,
             isShowingDetails: isShowingDetails.asObserver(),
-            scheduler: MainScheduler.instance
+            scheduler: MainScheduler.instance,
+            soundPlayer: .shared
         )
 
         nextReminderViewModel = NextEventViewModel(
@@ -209,7 +210,8 @@ class MainViewController: NSViewController {
             workspace: workspace,
             screenProvider: screenProvider,
             isShowingDetails: isShowingDetails.asObserver(),
-            scheduler: MainScheduler.instance
+            scheduler: MainScheduler.instance,
+            soundPlayer: .shared
         )
 
         nextEventView = NextEventView(viewModel: nextEventViewModel)

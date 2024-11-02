@@ -45,7 +45,8 @@ struct NextEventPreview: PreviewProvider {
                 workspace: workspace,
                 screenProvider: screenProvider,
                 isShowingDetails: .dummy(),
-                scheduler: MainScheduler.instance
+                scheduler: MainScheduler.instance,
+                soundPlayer: .shared
             )
         )
         .preview()

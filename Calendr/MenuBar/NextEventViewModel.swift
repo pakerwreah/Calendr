@@ -82,7 +82,8 @@ class NextEventViewModel {
         workspace: WorkspaceServiceProviding,
         screenProvider: ScreenProviding,
         isShowingDetails: AnyObserver<Bool>,
-        scheduler: SchedulerType
+        scheduler: SchedulerType,
+        soundPlayer: SoundPlaying
     ) {
 
         self.type = type
@@ -168,7 +169,40 @@ class NextEventViewModel {
 
         backgroundColor = nextEventObservable
             .skipNil()
-            .map { $0.isInProgress ? $0.event.calendar.color.withAlphaComponent(0.2): .clear }
+            .map { [dateProvider] nextEvent in
+
+                guard !nextEvent.isInProgress else {
+                    return nextEvent.event.calendar.color.withAlphaComponent(0.2)
+                }
+
+                let diff = dateProvider.calendar.dateComponents([.minute, .second], from: dateProvider.now, to: nextEvent.event.start)
+
+                guard let minutes = diff.minute, let seconds = diff.second else { return .clear }
+
+                // play when event starts
+                if minutes == 0 && seconds == 0 {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
+                        soundPlayer.play(.glass)
+                    }
+                }
+
+                // play at 5 minutes + 1 minute to start
+                if [1, 5].contains(minutes) && seconds == 0 {
+                    soundPlayer.play(.ping)
+                }
+
+                // flash continuously under 30 seconds to start
+                if minutes == 0 && seconds <= 30 {
+                    return seconds % 2 == 0 ? .systemRed : .clear
+                }
+
+                // flash 5x every minute
+                if minutes <= 5 {
+                    return seconds > 50 && seconds % 2 == 1 ? .systemRed : .clear
+                }
+
+                return .clear
+            }
             .distinctUntilChanged()
 
         let shouldCompact = Observable
