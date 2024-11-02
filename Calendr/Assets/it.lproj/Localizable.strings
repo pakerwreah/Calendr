@@ -3,6 +3,7 @@
   Calendr
 
   Created by Albiji on 18/01/2023.
+  Modified by @ilMagnifico on 02/10/2024. 
 */
 
 "quit" = "Esci";
@@ -19,7 +20,7 @@
 "auto_update.updated_to" = "Aggiornato alla versione %@";
 "auto_update.downloading" = "Scaricamento della versione %@";
 "auto_update.install" = "Installa";
-//"auto_update.replace.message" = "Confirm the app location so we have permission to replace it";
+"auto_update.replace.message" = "Conferma la posizione dell'app così da avere l'autorizzazione a sostituirla";
 
 "settings.title" = "Preferenze";
 "settings.tab.general" = "Generali";
@@ -46,14 +47,14 @@
 "settings.calendar.preserve_selected_date" = "Conserva la data selezionata quando la nascondi";
 "settings.calendar.show_declined_events" = "Mostra eventi rifiutati";
 "settings.calendar.show_declined_events_tooltip" = "Funziona solo se è abilitato anche nell'app Calendario nativa.";
-//"settings.calendar.date_hover_option" = "Hold ⌥ to peek at hovered dates";
-//"settings.calendar.calendar_app_view_mode" = "Calendar app view";
+"settings.calendar.date_hover_option" = "Tieni premuto ⌥ per dare un'occhiata alle date su cui passi il mouse";
+"settings.calendar.calendar_app_view_mode" = "Visualizzazione dell'app Calendario";
 
 "settings.events" = "Eventi";
 "settings.events.show_map" = "Mostra mappa e meteo";
-//"settings.events.show_overdue_reminders" = "Show overdue reminders";
-//"settings.events.show_finished_events" = "Show finished events";
-//"settings.events.show_recurrence_indicator" = "Show recurrence indicator";
+"settings.events.show_overdue_reminders" = "Mostra promemoria scaduti";
+"settings.events.show_finished_events" = "Mostra eventi terminati";
+"settings.events.show_recurrence_indicator" = "Mostra indicatore di ricorrenza";
 
 "settings.appearance.transparency" = "Trasparenza";
 "settings.appearance.accessibility" = "Accessibilità";
@@ -103,11 +104,11 @@
 "event_action.maybe" = "Forse";
 "event_action.decline" = "Rifiuta";
 
-//"tooltips.navigation.prev_month" = "Previous month";
-//"tooltips.navigation.today" = "Today";
-//"tooltips.navigation.next_month" = "Next month";
+"tooltips.navigation.prev_month" = "Mese precedente";
+"tooltips.navigation.today" = "Oggi";
+"tooltips.navigation.next_month" = "Mese prossimo";
 
-//"tooltips.toolbar.stay_open" = "Stay open";
-//"tooltips.toolbar.open_calendar" = "Open Calendar";
-//"tooltips.toolbar.open_reminders" = "Open Reminders";
-//"tooltips.toolbar.open_menu" = "Open menu";
+"tooltips.toolbar.stay_open" = "Fissa";
+"tooltips.toolbar.open_calendar" = "Apri Calendario";
+"tooltips.toolbar.open_reminders" = "Apri Promemoria";
+"tooltips.toolbar.open_menu" = "Apri Menu";
