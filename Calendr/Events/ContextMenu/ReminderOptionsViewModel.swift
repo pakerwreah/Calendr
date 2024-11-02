@@ -66,7 +66,12 @@ class ReminderOptionsViewModel: BaseContextMenuViewModel<ReminderAction> {
             return calendarService.completeReminder(id: event.id, complete: true)
 
         case .remind(let dateComponents):
-            let date = dateProvider.calendar.date(byAdding: dateComponents, to: dateProvider.now)!
+            guard
+                let truncated = dateProvider.calendar.dateInterval(of: .minute, for: dateProvider.now)?.start,
+                let date = dateProvider.calendar.date(byAdding: dateComponents, to: truncated)
+            else {
+                return .empty()
+            }
             return calendarService.rescheduleReminder(id: event.id, to: date)
         }
     }
