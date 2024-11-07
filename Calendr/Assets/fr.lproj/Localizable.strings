@@ -47,7 +47,6 @@
 "settings.calendar.show_declined_events" = "Afficher les événements refusés";
 "settings.calendar.show_declined_events_tooltip" = "Cela ne fonctionne que s'il est également activé dans l'application Calendrier native.";
 "settings.calendar.date_hover_option" = "Maintenir ⌥ pour avoir un aperçu des dates survolées";
-
 "settings.calendar.calendar_app_view_mode" = "Vue de l'app Calendrier";
 
 "settings.events" = "Événements";
