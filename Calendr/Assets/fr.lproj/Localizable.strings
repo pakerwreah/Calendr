@@ -21,7 +21,6 @@
 "auto_update.install" = "Installer";
 "auto_update.replace.message" = "Confirmer l'emplacement de l'app pour pouvoir la remplacer";
 
-
 "settings.title" = "Préférences";
 "settings.tab.general" = "Général";
 "settings.tab.appearance" = "Apparence";
@@ -50,7 +49,6 @@
 "settings.calendar.date_hover_option" = "Maintenir ⌥ pour avoir un aperçu des dates survolées";
 
 "settings.calendar.calendar_app_view_mode" = "Vue de l'app Calendrier";
-
 
 "settings.events" = "Événements";
 "settings.events.show_map" = "Afficher la carte et la météo";
