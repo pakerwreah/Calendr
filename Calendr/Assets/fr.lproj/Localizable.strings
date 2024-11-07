@@ -1,4 +1,4 @@
-/* 
+/*
   Localizable.strings
   Calendr
 
@@ -19,7 +19,8 @@
 "auto_update.updated_to" = "Mise à jour vers la version %@";
 "auto_update.downloading" = "Téléchargement de la version %@";
 "auto_update.install" = "Installer";
-//"auto_update.replace.message" = "Confirm the app location so we have permission to replace it";
+"auto_update.replace.message" = "Confirmer l'emplacement de l'app pour pouvoir la remplacer";
+
 
 "settings.title" = "Préférences";
 "settings.tab.general" = "Général";
@@ -46,8 +47,10 @@
 "settings.calendar.preserve_selected_date" = "Conserver la date sélectionnée lors du masquage";
 "settings.calendar.show_declined_events" = "Afficher les événements refusés";
 "settings.calendar.show_declined_events_tooltip" = "Cela ne fonctionne que s'il est également activé dans l'application Calendrier native.";
-//"settings.calendar.date_hover_option" = "Hold ⌥ to peek at hovered dates";
-//"settings.calendar.calendar_app_view_mode" = "Calendar app view";
+"settings.calendar.date_hover_option" = "Maintenir ⌥ pour avoir un aperçu des dates survolées";
+
+"settings.calendar.calendar_app_view_mode" = "Vue de l'app Calendrier";
+
 
 "settings.events" = "Événements";
 "settings.events.show_map" = "Afficher la carte et la météo";
@@ -103,11 +106,11 @@
 "event_action.maybe" = "Peut-être";
 "event_action.decline" = "Refuser";
 
-//"tooltips.navigation.prev_month" = "Previous month";
-//"tooltips.navigation.today" = "Today";
-//"tooltips.navigation.next_month" = "Next month";
+"tooltips.navigation.prev_month" = "Mois précédent";
+"tooltips.navigation.today" = "Aujourd'hui";
+"tooltips.navigation.next_month" = "Mois suivant";
 
-//"tooltips.toolbar.stay_open" = "Stay open";
-//"tooltips.toolbar.open_calendar" = "Open Calendar";
-//"tooltips.toolbar.open_reminders" = "Open Reminders";
-//"tooltips.toolbar.open_menu" = "Open menu";
+"tooltips.toolbar.stay_open" = "Maintenir ouvert";
+"tooltips.toolbar.open_calendar" = "Ouvrir Calendrier";
+"tooltips.toolbar.open_reminders" = "Ouvrir Rappels";
+"tooltips.toolbar.open_menu" = "Ouvrir le menu";
