@@ -1014,8 +1014,10 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
+				"${SRCROOT}/MISSING_TRANSLATIONS.md",
 				"${SRCROOT}/${TARGET_NAME}/Assets/de.lproj/Localizable.strings",
 				"${SRCROOT}/${TARGET_NAME}/Assets/zh-Hans.lproj/Localizable.strings",
+				"${SRCROOT}/${TARGET_NAME}/Assets/zh-Hant-TW.lproj/Localizable.strings",
 				"${SRCROOT}/${TARGET_NAME}/Assets/es.lproj/Localizable.strings",
 				"${SRCROOT}/${TARGET_NAME}/Assets/it.lproj/Localizable.strings",
 				"${SRCROOT}/${TARGET_NAME}/Assets/sk.lproj/Localizable.strings",
@@ -1023,7 +1025,6 @@
 				"${SRCROOT}/${TARGET_NAME}/Assets/cs.lproj/Localizable.strings",
 				"${SRCROOT}/${TARGET_NAME}/Assets/fr.lproj/Localizable.strings",
 				"${SRCROOT}/${TARGET_NAME}/Assets/pt.lproj/Localizable.strings",
-				"$(SRCROOT)/MISSING_TRANSLATIONS.md",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
