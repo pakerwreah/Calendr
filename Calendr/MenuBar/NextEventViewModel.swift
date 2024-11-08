@@ -47,12 +47,12 @@ class NextEventViewModel {
 
     let title: Observable<String>
     let time: Observable<String>
-    let fontSize: Observable<Float>
     let barStyle: Observable<EventBarStyle>
     let barColor: Observable<NSColor>
     let backgroundColor: Observable<NSColor>
     let hasEvent: Observable<Bool>
     let isInProgress: Observable<Bool>
+    let textScaling: Observable<Double>
 
     private let disposeBag = DisposeBag()
     private let event = BehaviorSubject<EventModel?>(value: nil)
@@ -95,7 +95,7 @@ class NextEventViewModel {
         self.settings = settings
         self.workspace = workspace
         self.isShowingDetails = isShowingDetails
-        self.fontSize = settings.eventStatusItemFontSize
+        self.textScaling = settings.eventStatusItemTextScaling
 
         let nextEvents = settings.showEventStatusItem
             .flatMapLatest { isEnabled -> Observable<[EventModel]> in

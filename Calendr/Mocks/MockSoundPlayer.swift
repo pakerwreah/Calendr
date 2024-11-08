@@ -1,14 +1,17 @@
 //
 //  MockSoundPlayer.swift
-//  CalendrTests
+//  Calendr
 //
 //  Created by Paker on 02/11/2024.
 //
 
+#if DEBUG
+
 import Foundation
-@testable import Calendr
 
 class MockSoundPlayer: SoundPlaying {
 
     func play(_ name: SystemSound) { }
 }
+
+#endif

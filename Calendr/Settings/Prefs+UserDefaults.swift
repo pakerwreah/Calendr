@@ -17,13 +17,14 @@ enum Prefs {
     static let statusItemDateStyle = "status_item_date_style"
     static let statusItemDateFormat = "status_item_date_format"
     static let statusItemBackgroundEnabled = "status_item_background_enabled"
+    static let statusItemTextScaling = "status_item_text_scaling"
 
     // Next Event
     static let showEventStatusItem = "show_event_status_item"
-    static let eventStatusItemFontSize = "event_status_item_font_size"
     static let eventStatusItemCheckRange = "event_status_item_check_range"
     static let eventStatusItemLength = "event_status_item_length"
     static let eventStatusItemDetectNotch = "event_status_item_detect_notch"
+    static let eventStatusItemTextScaling = "event_status_item_text_scaling"
 
     // Calendar
     static let calendarScaling = "calendar_scaling"
@@ -34,6 +35,7 @@ enum Prefs {
     static let preserveSelectedDate = "preserve_selected_date"
     static let dateHoverOption = "date_hover_option"
     static let calendarAppViewMode = "calendar_app_view_mode"
+    static let calendarTextScaling = "calendar_text_scaling"
 
     // Event Details
     static let showMap = "show_map"
@@ -46,7 +48,6 @@ enum Prefs {
     // Appearance
     static let transparencyLevel = "transparency_level"
     static let textScaling = "text_scaling"
-    static let calendarTextScaling = "calendar_text_scaling"
 
     // Misc
     static let lastCheckedVersion = "last_checked_version"
@@ -68,11 +69,12 @@ func registerDefaultPrefs(in userDefaults: UserDefaults, calendar: Calendar = .c
         Prefs.statusItemDateStyle: StatusItemDateStyle.short.rawValue,
         Prefs.statusItemDateFormat: AppConstants.defaultCustomDateFormat,
         Prefs.statusItemBackgroundEnabled: false,
+        Prefs.statusItemTextScaling: 1.2,
 
         // Next Event
         Prefs.showEventStatusItem: false,
-        Prefs.eventStatusItemFontSize: 12,
         Prefs.eventStatusItemCheckRange: 6,
+        Prefs.eventStatusItemTextScaling: 1.2,
         Prefs.eventStatusItemLength: 18,
         Prefs.eventStatusItemDetectNotch: false,
 
@@ -85,6 +87,7 @@ func registerDefaultPrefs(in userDefaults: UserDefaults, calendar: Calendar = .c
         Prefs.preserveSelectedDate: false,
         Prefs.dateHoverOption: false,
         Prefs.calendarAppViewMode: CalendarViewMode.month.rawValue,
+        Prefs.calendarTextScaling: 1,
 
         // Event Details
         Prefs.showMap: true,
@@ -97,7 +100,6 @@ func registerDefaultPrefs(in userDefaults: UserDefaults, calendar: Calendar = .c
         // Appearance
         Prefs.transparencyLevel: 2,
         Prefs.textScaling: 1,
-        Prefs.calendarTextScaling: 1,
 
         // Misc
         Prefs.defaultBrowserPerCalendar: [:]
@@ -148,6 +150,11 @@ extension UserDefaults {
         set { set(newValue, forKey: Prefs.statusItemBackgroundEnabled) }
     }
 
+    @objc dynamic var statusItemTextScaling: Double {
+        get { double(forKey: Prefs.statusItemTextScaling) }
+        set { set(newValue, forKey: Prefs.statusItemTextScaling) }
+    }
+
     // Next Event
 
     @objc dynamic var showEventStatusItem: Bool {
@@ -155,14 +162,14 @@ extension UserDefaults {
         set { set(newValue, forKey: Prefs.showEventStatusItem) }
     }
 
-    @objc dynamic var eventStatusItemFontSize: Float {
-        get { float(forKey: Prefs.eventStatusItemFontSize) }
-        set { set(newValue, forKey: Prefs.eventStatusItemFontSize) }
-    }
-
     @objc dynamic var eventStatusItemCheckRange: Int {
         get { integer(forKey: Prefs.eventStatusItemCheckRange) }
         set { set(newValue, forKey: Prefs.eventStatusItemCheckRange) }
+    }
+
+    @objc dynamic var eventStatusItemTextScaling: Double {
+        get { double(forKey: Prefs.eventStatusItemTextScaling) }
+        set { set(newValue, forKey: Prefs.eventStatusItemTextScaling) }
     }
 
     @objc dynamic var eventStatusItemLength: Int {
@@ -217,6 +224,11 @@ extension UserDefaults {
         set { set(newValue, forKey: Prefs.calendarAppViewMode) }
     }
 
+    @objc dynamic var calendarTextScaling: Double {
+        get { double(forKey: Prefs.calendarTextScaling) }
+        set { set(newValue, forKey: Prefs.calendarTextScaling) }
+    }
+
     // Event Details
 
     @objc dynamic var showMap: Bool {
@@ -251,11 +263,6 @@ extension UserDefaults {
     @objc dynamic var textScaling: Double {
         get { double(forKey: Prefs.textScaling) }
         set { set(newValue, forKey: Prefs.textScaling) }
-    }
-    
-    @objc dynamic var calendarTextScaling: Double {
-        get { double(forKey: Prefs.calendarTextScaling) }
-        set { set(newValue, forKey: Prefs.calendarTextScaling) }
     }
 
     // Misc

@@ -122,6 +122,7 @@
 		349355B225BCB07B00957945 /* EventViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349355B125BCB07B00957945 /* EventViewModel.swift */; };
 		349868E62C8D4E5E00DBFE8D /* HorizontalScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349868E52C8D4E5E00DBFE8D /* HorizontalScrollView.swift */; };
 		349E4CEF25CF48ED00A6FC18 /* VirtualTimeScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349E4CEE25CF48ED00A6FC18 /* VirtualTimeScheduler.swift */; };
+		34A0E12D2CDE9609005BF256 /* MockSoundPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C39F6E2CD6B45300933E6D /* MockSoundPlayer.swift */; };
 		34A4C3E925963FB200D0F949 /* NSStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A4C3E825963FB200D0F949 /* NSStackView.swift */; };
 		34A591E42C175BBD00DE419D /* AppEditShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A591E32C175BBD00DE419D /* AppEditShortcuts.swift */; };
 		34A591E62C175C0F00DE419D /* AppResignFocus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A591E52C175C0F00DE419D /* AppResignFocus.swift */; };
@@ -146,7 +147,6 @@
 		34C1D4212C6E632F00295E5E /* Sentry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C1D4202C6E632F00295E5E /* Sentry.swift */; };
 		34C2CF9125C2070400FC2CFF /* EventViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C2CF9025C2070400FC2CFF /* EventViewModelTests.swift */; };
 		34C39F6D2CD6A15000933E6D /* SoundPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C39F6C2CD6A15000933E6D /* SoundPlayer.swift */; };
-		34C39F6F2CD6B45300933E6D /* MockSoundPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C39F6E2CD6B45300933E6D /* MockSoundPlayer.swift */; };
 		34C4599C25DEFFDA00561C29 /* BuildConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C4599B25DEFFDA00561C29 /* BuildConfig.m */; };
 		34C459A425DF030000561C29 /* BuildConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C459A325DF030000561C29 /* BuildConfig.swift */; };
 		34C459BC25DF114300561C29 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C459BB25DF114300561C29 /* AboutViewController.swift */; };
@@ -452,6 +452,7 @@
 				34299F722C724FA000A0269B /* MockNetworkServiceProvider.swift */,
 				346C5A4B2BC2D87F0007106C /* MockNextEventSettings.swift */,
 				34F4C47C2A6C56AA00397C80 /* MockScreenProvider.swift */,
+				34C39F6E2CD6B45300933E6D /* MockSoundPlayer.swift */,
 				34F4C47E2A6C57B300397C80 /* MockStatusItemSettings.swift */,
 				345EAD492C8E26EE00D56857 /* MockWeatherServiceProvider.swift */,
 			);
@@ -730,7 +731,6 @@
 				34B1B3BA2CBC3730002AC38E /* MockEventSettings.swift */,
 				34C72F9525E8A05700FD20FA /* MockNextEventSettings.swift */,
 				346E70CA2802289F00A785FF /* MockScreenProvider.swift */,
-				34C39F6E2CD6B45300933E6D /* MockSoundPlayer.swift */,
 				34C72F8325E88B6600FD20FA /* MockStatusItemSettings.swift */,
 				34651F7925E325EA00518C5A /* MockWorkspaceServiceProvider.swift */,
 			);
@@ -1116,6 +1116,7 @@
 				345DD97326920D1B00294D90 /* CalendarViewPreview.swift in Sources */,
 				3492C460269FCF5B009CFAD2 /* Accessibility.swift in Sources */,
 				34299F712C72289400A0269B /* NetworkServiceProvider.swift in Sources */,
+				34A0E12D2CDE9609005BF256 /* MockSoundPlayer.swift in Sources */,
 				346C5A4C2BC2D87F0007106C /* MockNextEventSettings.swift in Sources */,
 				349868E62C8D4E5E00DBFE8D /* HorizontalScrollView.swift in Sources */,
 				348E704B25C61B8D00B3B160 /* Radio.swift in Sources */,
@@ -1257,7 +1258,6 @@
 				3477F3D425FAF079008EA888 /* MockCalendarServiceProvider.swift in Sources */,
 				34ABB9EA29A158080021F3CF /* ReminderOptionsViewModelTests.swift in Sources */,
 				347E6D3E25AA2811009A6716 /* CalendarViewModelTests.swift in Sources */,
-				34C39F6F2CD6B45300933E6D /* MockSoundPlayer.swift in Sources */,
 				348E702D25C6161900B3B160 /* EventViewModelFadeTests.swift in Sources */,
 				34D19FC62622A02C00B2732C /* EventDetailsViewModelTests.swift in Sources */,
 				34ABB9F029A166220021F3CF /* ContextMenuFactoryTests.swift in Sources */,

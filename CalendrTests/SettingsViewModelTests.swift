@@ -29,9 +29,10 @@ class SettingsViewModelTests: XCTestCase {
     var userDefaultsStatusItemDateEnabled: Bool? { userDefaults.object(forKey: Prefs.statusItemDateEnabled) as! Bool? }
     var userDefaultsStatusItemBackgroundEnabled: Bool? { userDefaults.object(forKey: Prefs.statusItemBackgroundEnabled) as! Bool? }
     var userDefaultsStatusItemDateStyle: Int? { userDefaults.object(forKey: Prefs.statusItemDateStyle) as! Int? }
+    var userDefaultsStatusItemTextScaling: Double? { userDefaults.object(forKey: Prefs.statusItemTextScaling) as! Double? }
     var userDefaultsShowEventStatusItem: Bool? { userDefaults.object(forKey: Prefs.showEventStatusItem) as! Bool? }
     var userDefaultsEventStatusItemCheckRange: Int? { userDefaults.object(forKey: Prefs.eventStatusItemCheckRange) as! Int? }
-    var userDefaultsEventStatusItemFontSize: Float? { userDefaults.object(forKey: Prefs.eventStatusItemFontSize) as! Float? }
+    var userDefaultsEventStatusItemTextScaling: Double? { userDefaults.object(forKey: Prefs.eventStatusItemTextScaling) as! Double? }
     var userDefaultsEventStatusItemLength: Int? { userDefaults.object(forKey: Prefs.eventStatusItemLength) as! Int? }
     var userDefaultsEventStatusItemDetectNotch: Bool? { userDefaults.object(forKey: Prefs.eventStatusItemDetectNotch) as! Bool? }
     var userDefaultsCalendarScaling: Double? { userDefaults.object(forKey: Prefs.calendarScaling) as! Double? }
@@ -54,9 +55,10 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertNil(userDefaultsStatusItemDateEnabled)
         XCTAssertNil(userDefaultsStatusItemBackgroundEnabled)
         XCTAssertNil(userDefaultsStatusItemDateStyle)
+        XCTAssertNil(userDefaultsStatusItemTextScaling)
         XCTAssertNil(userDefaultsShowEventStatusItem)
         XCTAssertNil(userDefaultsEventStatusItemCheckRange)
-        XCTAssertNil(userDefaultsEventStatusItemFontSize)
+        XCTAssertNil(userDefaultsEventStatusItemTextScaling)
         XCTAssertNil(userDefaultsEventStatusItemLength)
         XCTAssertNil(userDefaultsEventStatusItemDetectNotch)
         XCTAssertNil(userDefaultsCalendarScaling)
@@ -80,8 +82,9 @@ class SettingsViewModelTests: XCTestCase {
         var showStatusItemDate: Bool?
         var showStatusItemBackground: Bool?
         var statusItemDateStyle: StatusItemDateStyle?
+        var statusItemTextScaling: Double?
         var showEventStatusItem: Bool?
-        var eventStatusItemFontSize: Float?
+        var eventStatusItemTextScaling: Double?
         var eventStatusItemCheckRange: Int?
         var eventStatusItemLength: Int?
         var eventStatusItemDetectNotch: Bool?
@@ -114,12 +117,16 @@ class SettingsViewModelTests: XCTestCase {
             .bind { statusItemDateStyle = $0 }
             .disposed(by: disposeBag)
 
+        viewModel.statusItemTextScaling
+            .bind { statusItemTextScaling = $0 }
+            .disposed(by: disposeBag)
+
         viewModel.showEventStatusItem
             .bind { showEventStatusItem = $0 }
             .disposed(by: disposeBag)
 
-        viewModel.eventStatusItemFontSize
-            .bind { eventStatusItemFontSize = $0 }
+        viewModel.eventStatusItemTextScaling
+            .bind { eventStatusItemTextScaling = $0 }
             .disposed(by: disposeBag)
 
         viewModel.eventStatusItemCheckRange
@@ -186,8 +193,9 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(showStatusItemDate, true)
         XCTAssertEqual(showStatusItemBackground, false)
         XCTAssertEqual(statusItemDateStyle, .short)
+        XCTAssertEqual(statusItemTextScaling, 1.2)
         XCTAssertEqual(showEventStatusItem, false)
-        XCTAssertEqual(eventStatusItemFontSize, 12)
+        XCTAssertEqual(eventStatusItemTextScaling, 1.2)
         XCTAssertEqual(eventStatusItemCheckRange, 6)
         XCTAssertEqual(eventStatusItemLength, 18)
         XCTAssertEqual(eventStatusItemDetectNotch, false)
@@ -207,9 +215,10 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(userDefaultsStatusItemIconEnabled, true)
         XCTAssertEqual(userDefaultsStatusItemDateEnabled, true)
         XCTAssertEqual(userDefaultsStatusItemBackgroundEnabled, false)
+        XCTAssertEqual(userDefaultsStatusItemTextScaling, 1.2)
         XCTAssertEqual(userDefaultsStatusItemDateStyle, 1)
         XCTAssertEqual(userDefaultsShowEventStatusItem, false)
-        XCTAssertEqual(userDefaultsEventStatusItemFontSize, 12)
+        XCTAssertEqual(userDefaultsEventStatusItemTextScaling, 1.2)
         XCTAssertEqual(userDefaultsEventStatusItemCheckRange, 6)
         XCTAssertEqual(userDefaultsEventStatusItemLength, 18)
         XCTAssertEqual(userDefaultsEventStatusItemDetectNotch, false)
@@ -347,25 +356,6 @@ class SettingsViewModelTests: XCTestCase {
 
         XCTAssertEqual(showEventStatusItem, true)
         XCTAssertEqual(userDefaultsShowEventStatusItem, true)
-    }
-
-    func testChangeEventStatusItemFontSize() {
-
-        userDefaults.eventStatusItemFontSize = 12
-
-        var eventStatusItemFontSize: Float?
-
-        viewModel.eventStatusItemFontSize
-            .bind { eventStatusItemFontSize = $0 }
-            .disposed(by: disposeBag)
-
-        XCTAssertEqual(eventStatusItemFontSize, 12)
-        XCTAssertEqual(userDefaultsEventStatusItemFontSize, 12)
-
-        viewModel.eventStatusItemFontSizeObserver.onNext(13)
-
-        XCTAssertEqual(eventStatusItemFontSize, 13)
-        XCTAssertEqual(userDefaultsEventStatusItemFontSize, 13)
     }
 
     func testChangeEventStatusItemLength() {
