@@ -19,7 +19,7 @@
 "auto_update.updated_to" = "Aktualisiert auf Version %@";
 "auto_update.downloading" = "Version %@ herunterladen";
 "auto_update.install" = "Installieren";
-//"auto_update.replace.message" = "Confirm the app location so we have permission to replace it";
+"auto_update.replace.message" = "Speicherort der Anwendung bestätigen, um die Erlaubnis zu erhalten, sie zu ersetzen"; 
 
 "settings.title" = "Einstellungen";
 "settings.tab.general" = "Allgemein";
@@ -46,14 +46,14 @@
 "settings.calendar.preserve_selected_date" = "Ausgewähltes Datum beim Ausblenden beibehalten";
 "settings.calendar.show_declined_events" = "Abgelehnte Ereignisse anzeigen";
 "settings.calendar.show_declined_events_tooltip" = "Dies funktioniert nur, wenn es auch in der nativen Kalender-App aktiviert ist.";
-//"settings.calendar.date_hover_option" = "Hold ⌥ to peek at hovered dates";
-//"settings.calendar.calendar_app_view_mode" = "Calendar app view";
+"settings.calendar.date_hover_option" = "⌥ gedrückt halten, um die hervorgehobenen Daten zu sehen";
+"settings.calendar.calendar_app_view_mode" = "Kalender-App-Ansicht";
 
 "settings.events" = "Termine";
 "settings.events.show_map" = "Karte und Wetter anzeigen";
-//"settings.events.show_overdue_reminders" = "Show overdue reminders";
-//"settings.events.show_finished_events" = "Show finished events";
-//"settings.events.show_recurrence_indicator" = "Show recurrence indicator";
+"settings.events.show_overdue_reminders" = "Überfällige Erinnerungen anzeigen";
+"settings.events.show_finished_events" = "Abgeschlossene Ereignisse anzeigen";
+"settings.events.show_recurrence_indicator" = "Wiederholungsindikator anzeigen";
 
 "settings.appearance.transparency" = "Transparent";
 "settings.appearance.accessibility" = "Zugänglichkeit";
@@ -103,11 +103,11 @@
 "event_action.maybe" = "Vielleicht";
 "event_action.decline" = "Ablehnen";
 
-//"tooltips.navigation.prev_month" = "Previous month";
-//"tooltips.navigation.today" = "Today";
-//"tooltips.navigation.next_month" = "Next month";
+"tooltips.navigation.prev_month" = "Vorheriger Monat";
+"tooltips.navigation.today" = "Heute";
+"tooltips.navigation.next_month" = "Nächster Monat";
 
-//"tooltips.toolbar.stay_open" = "Stay open";
-//"tooltips.toolbar.open_calendar" = "Open Calendar";
-//"tooltips.toolbar.open_reminders" = "Open Reminders";
-//"tooltips.toolbar.open_menu" = "Open menu";
+"tooltips.toolbar.stay_open" = "Geöffnet lassen";
+"tooltips.toolbar.open_calendar" = "Kalender öffnen";
+"tooltips.toolbar.open_reminders" = "Erinnerungen öffnen";
+"tooltips.toolbar.open_menu" = "Menü öffnen";
