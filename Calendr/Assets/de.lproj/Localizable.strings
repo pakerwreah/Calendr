@@ -19,7 +19,7 @@
 "auto_update.updated_to" = "Aktualisiert auf Version %@";
 "auto_update.downloading" = "Version %@ herunterladen";
 "auto_update.install" = "Installieren";
-"auto_update.replace.message" = "Speicherort der Anwendung bestätigen, um die Erlaubnis zu erhalten, sie zu ersetzen"; 
+"auto_update.replace.message" = "Speicherort der Anwendung bestätigen, um die Erlaubnis zu erhalten, sie zu ersetzen";
 
 "settings.title" = "Einstellungen";
 "settings.tab.general" = "Allgemein";
