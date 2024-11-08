@@ -401,6 +401,7 @@
 		34F7E03928427AC00028FF25 /* EventDetailsPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailsPreview.swift; sourceTree = "<group>"; };
 		34F96CED25B523ED0020DEEA /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		34FD09D825AE269600AAAAE2 /* DateProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateProvider.swift; sourceTree = "<group>"; };
+		A122CF0E2CDDFD6100B95699 /* zh-Hant-TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant-TW"; path = "zh-Hant-TW.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		C492E3CD29FD64BA007C7DF3 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -951,6 +952,7 @@
 				cs,
 				sk,
 				sv,
+				"zh-Hant-TW",
 			);
 			mainGroup = 347D0F8B25952F89002451EC;
 			packageReferences = (
@@ -1294,6 +1296,7 @@
 				27F573032B9F4B3B000DA607 /* cs */,
 				34F2F7342BB711F300666507 /* sk */,
 				34D88DC62C4C3D1A0047D636 /* sv */,
+				A122CF0E2CDDFD6100B95699 /* zh-Hant-TW */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
