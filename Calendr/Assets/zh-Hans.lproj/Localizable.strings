@@ -103,11 +103,11 @@
 "event_action.maybe" = "也许";
 "event_action.decline" = "拒绝";
 
-//"tooltips.navigation.prev_month" = "Previous month";
-//"tooltips.navigation.today" = "Today";
-//"tooltips.navigation.next_month" = "Next month";
+"tooltips.navigation.prev_month" = "上个月";
+"tooltips.navigation.today" = "今天";
+"tooltips.navigation.next_month" = "下个月";
 
-//"tooltips.toolbar.stay_open" = "Stay open";
-//"tooltips.toolbar.open_calendar" = "Open Calendar";
-//"tooltips.toolbar.open_reminders" = "Open Reminders";
-//"tooltips.toolbar.open_menu" = "Open menu";
+"tooltips.toolbar.stay_open" = "保持打开";
+"tooltips.toolbar.open_calendar" = "打开日历";
+"tooltips.toolbar.open_reminders" = "打开提醒";
+"tooltips.toolbar.open_menu" = "打开菜单";
