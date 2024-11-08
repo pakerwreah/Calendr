@@ -51,6 +51,7 @@ protocol StatusItemSettings {
     var statusItemDateStyle: Observable<StatusItemDateStyle> { get }
     var statusItemDateFormat: Observable<String> { get }
     var showEventStatusItem: Observable<Bool> { get }
+    var statusItemTextScaling: Observable<Double> { get }
 }
 
 protocol CalendarSettings {
@@ -69,7 +70,6 @@ protocol CalendarSettings {
 protocol AppearanceSettings {
     var popoverMaterial: Observable<PopoverMaterial> { get }
     var textScaling: Observable<Double> { get }
-    var calendarTextScaling: Observable<Double> { get }
 }
 
 protocol EventDetailsSettings: AppearanceSettings {
@@ -87,8 +87,8 @@ protocol EventListSettings: EventSettings {
 
 protocol NextEventSettings: EventDetailsSettings {
     var showEventStatusItem: Observable<Bool> { get }
-    var eventStatusItemFontSize: Observable<Float> { get }
     var eventStatusItemCheckRange: Observable<Int> { get }
+    var eventStatusItemTextScaling: Observable<Double> { get }
     var eventStatusItemLength: Observable<Int> { get }
     var eventStatusItemDetectNotch: Observable<Bool> { get }
 }
@@ -118,11 +118,12 @@ class SettingsViewModel:
     let toggleStatusItemIcon: AnyObserver<Bool>
     let toggleStatusItemDate: AnyObserver<Bool>
     let toggleStatusItemBackground: AnyObserver<Bool>
+    let statusItemTextScalingObserver: AnyObserver<Double>
     let statusItemIconStyleObserver: AnyObserver<StatusItemIconStyle>
     let statusItemDateStyleObserver: AnyObserver<StatusItemDateStyle>
     let statusItemDateFormatObserver: AnyObserver<String>
     let toggleEventStatusItem: AnyObserver<Bool>
-    let eventStatusItemFontSizeObserver: AnyObserver<Float>
+    let eventStatusItemTextScalingObserver: AnyObserver<Double>
     let eventStatusItemCheckRangeObserver: AnyObserver<Int>
     let eventStatusItemLengthObserver: AnyObserver<Int>
     let toggleEventStatusItemDetectNotch: AnyObserver<Bool>
@@ -155,7 +156,8 @@ class SettingsViewModel:
     let statusItemDateFormat: Observable<String>
     let isDateFormatInputVisible: Observable<Bool>
     let showEventStatusItem: Observable<Bool>
-    let eventStatusItemFontSize: Observable<Float>
+    let statusItemTextScaling: Observable<Double>
+    let eventStatusItemTextScaling: Observable<Double>
     let eventStatusItemCheckRange: Observable<Int>
     let eventStatusItemCheckRangeLabel: Observable<String>
     let eventStatusItemLength: Observable<Int>
@@ -233,7 +235,8 @@ class SettingsViewModel:
         statusItemDateStyleObserver = userDefaults.rx.observer(for: \.statusItemDateStyle).mapObserver(\.rawValue)
         statusItemDateFormatObserver = userDefaults.rx.observer(for: \.statusItemDateFormat)
         toggleEventStatusItem = userDefaults.rx.observer(for: \.showEventStatusItem)
-        eventStatusItemFontSizeObserver = userDefaults.rx.observer(for: \.eventStatusItemFontSize)
+        statusItemTextScalingObserver = userDefaults.rx.observer(for: \.statusItemTextScaling)
+        eventStatusItemTextScalingObserver = userDefaults.rx.observer(for: \.eventStatusItemTextScaling)
         eventStatusItemCheckRangeObserver = userDefaults.rx.observer(for: \.eventStatusItemCheckRange)
         eventStatusItemLengthObserver = userDefaults.rx.observer(for: \.eventStatusItemLength)
         toggleEventStatusItemDetectNotch = userDefaults.rx.observer(for: \.eventStatusItemDetectNotch)
@@ -276,7 +279,8 @@ class SettingsViewModel:
         statusItemDateStyle = userDefaults.rx.observe(\.statusItemDateStyle).map { .init(rawValue: $0) ?? .none }
         statusItemDateFormat = userDefaults.rx.observe(\.statusItemDateFormat)
         showEventStatusItem = userDefaults.rx.observe(\.showEventStatusItem)
-        eventStatusItemFontSize = userDefaults.rx.observe(\.eventStatusItemFontSize)
+        statusItemTextScaling = userDefaults.rx.observe(\.statusItemTextScaling)
+        eventStatusItemTextScaling = userDefaults.rx.observe(\.eventStatusItemTextScaling)
         eventStatusItemCheckRange = userDefaults.rx.observe(\.eventStatusItemCheckRange)
         eventStatusItemLength = userDefaults.rx.observe(\.eventStatusItemLength)
         eventStatusItemDetectNotch = userDefaults.rx.observe(\.eventStatusItemDetectNotch)
@@ -313,7 +317,12 @@ class SettingsViewModel:
         iconStyleOptions = calendarChangeObservable
             .map {
                 StatusItemIconStyle.allCases.map {
-                    let icon = StatusItemIconFactory.icon(size: .init(15), style: $0, dateProvider: dateProvider)
+                    let icon = StatusItemIconFactory.icon(
+                        size: .init(15),
+                        style: $0,
+                        textScaling: 1.2,
+                        dateProvider: dateProvider
+                    )
                     return IconStyleOption(style: $0, image: icon, title: $0.rawValue)
                 }
             }

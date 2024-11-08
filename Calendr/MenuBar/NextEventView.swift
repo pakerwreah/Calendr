@@ -71,8 +71,8 @@ class NextEventView: NSView {
 
     private func setUpBindings() {
 
-        let fontSizeObservable = viewModel.fontSize
-            .map { NSFont.systemFont(ofSize: CGFloat($0)) }
+        let fontSizeObservable = viewModel.textScaling
+            .map { NSFont.systemFont(ofSize: 10 * CGFloat($0)) }
             .share(replay: 1)
 
         fontSizeObservable

@@ -25,12 +25,15 @@ class MockNextEventSettings: MockEventDetailsSettings, NextEventSettings {
     let toggleEventStatusItemDetectNotch: AnyObserver<Bool>
     let eventStatusItemDetectNotch: Observable<Bool>
 
+    let eventStatusItemTextScaling: Observable<Double>
+
     init() {
         (showEventStatusItem, toggleStatusItem) = BehaviorSubject.pipe(value: true)
         (eventStatusItemFontSize, eventStatusItemFontSizeObserver) = BehaviorSubject.pipe(value: 12)
         (eventStatusItemCheckRange, eventStatusItemCheckRangeObserver) = BehaviorSubject.pipe(value: 18)
         (eventStatusItemLength, eventStatusItemLengthObserver) = BehaviorSubject.pipe(value: 18)
         (eventStatusItemDetectNotch, toggleEventStatusItemDetectNotch) = BehaviorSubject.pipe(value: false)
+        eventStatusItemTextScaling = .just(1)
         super.init()
     }
 }

@@ -17,9 +17,10 @@ struct NextEventPreview: PreviewProvider {
     static let geocoder = MockGeocodeServiceProvider()
     static let weatherService = MockWeatherServiceProvider()
     static let screenProvider = MockScreenProvider(screen: MockScreen(hasNotch: true))
-    static let settings = MockNextEventSettings(showItem: true, fontSize: 13, length: 30, detectNotch: false)
+    static let settings = MockNextEventSettings(showItem: true, textScaling: 1.1, length: 35, detectNotch: false)
     static let notificationCenter = NotificationCenter()
     static let workspace = NSWorkspace.shared
+    static let soundPlayer = MockSoundPlayer()
 
     static let events: [EventModel] = [
         .make(
@@ -46,7 +47,7 @@ struct NextEventPreview: PreviewProvider {
                 screenProvider: screenProvider,
                 isShowingDetails: .dummy(),
                 scheduler: MainScheduler.instance,
-                soundPlayer: .shared
+                soundPlayer: soundPlayer
             )
         )
         .preview()

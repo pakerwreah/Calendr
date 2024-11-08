@@ -12,20 +12,20 @@ import RxSwift
 class MockNextEventSettings: MockEventDetailsSettings, NextEventSettings {
 
     let showEventStatusItem: Observable<Bool>
-    let eventStatusItemFontSize: Observable<Float>
+    let eventStatusItemTextScaling: Observable<Double>
     let eventStatusItemCheckRange: Observable<Int>
     let eventStatusItemLength: Observable<Int>
     let eventStatusItemDetectNotch: Observable<Bool>
 
     init(
         showItem: Bool = true,
-        fontSize: Float = 12,
+        textScaling: Double = 1,
         checkRange: Int = 10,
         length: Int = 20,
         detectNotch: Bool = false
     ) {
         showEventStatusItem = .just(showItem)
-        eventStatusItemFontSize = .just(fontSize)
+        eventStatusItemTextScaling = .just(textScaling)
         eventStatusItemCheckRange = .just(checkRange)
         eventStatusItemLength = .just(length)
         eventStatusItemDetectNotch = .just(detectNotch)

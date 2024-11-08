@@ -25,6 +25,7 @@ class MockStatusItemSettings: StatusItemSettings {
     let statusItemDateStyle: Observable<StatusItemDateStyle>
     let statusItemDateFormat: Observable<String>
     let showEventStatusItem: Observable<Bool>
+    let statusItemTextScaling: Observable<Double>
 
     init() {
         (showStatusItemIcon, toggleIcon) = BehaviorSubject.pipe(value: true)
@@ -34,5 +35,6 @@ class MockStatusItemSettings: StatusItemSettings {
         (statusItemDateStyle, statusItemDateStyleObserver) = BehaviorSubject.pipe(value: .short)
         (statusItemDateFormat, statusItemDateFormatObserver) = BehaviorSubject.pipe(value: "")
         (showEventStatusItem, showEventStatusItemObserver) = BehaviorSubject.pipe(value: true)
+        statusItemTextScaling = .just(1)
     }
 }

@@ -19,16 +19,18 @@ class AppearanceViewController: NSViewController, SettingsUI {
 
     // Accessibility
     private let textScalingSlider = Slider.make(minValue: 1, maxValue: 1.6, numberOfTickMarks: 13)
-    
+
+    // Menu bar
+    private let menuBarTextScalingSlider = Slider.make(minValue: 1.2, maxValue: 1.6, numberOfTickMarks: 13)
+
     // Calendar
     private let calendarScalingSlider = Slider.make(minValue: 1, maxValue: 1.6, numberOfTickMarks: 13)
     private let calendarTextScalingSlider = Slider.make(minValue: 1, maxValue: 1.6, numberOfTickMarks: 13)
 
     // Next Event
-    private let nextEventRangeStepper = NSStepper()
-    private let nextEventLengthSlider = Slider.make(minValue: 10, maxValue: 50, numberOfTickMarks: 12)
+    private let nextEventTextScalingSlider = Slider.make(minValue: 1, maxValue: 1.6, numberOfTickMarks: 13)
+    private let nextEventLengthSlider = Slider.make(minValue: 10, maxValue: 50, numberOfTickMarks: 13)
     private let nextEventDetectNotchCheckbox = Checkbox(title: Strings.Settings.NextEvent.detectNotch)
-    private let nextEventFontSizeStepper = NSStepper()
 
     init(viewModel: SettingsViewModel) {
 
@@ -56,6 +58,7 @@ class AppearanceViewController: NSViewController, SettingsUI {
             views: Sections.create([
                 makeSection(title: Strings.Settings.Appearance.transparency, content: transparencyContent),
                 makeSection(title: Strings.Settings.Appearance.accessibility, content: accessibilityContent),
+                makeSection(title: Strings.Settings.Appearance.menuBar, content: menuBarContent),
                 makeSection(title: Strings.Settings.Appearance.calendar, content: calendarContent),
                 makeSection(title: Strings.Settings.Appearance.nextEvent, content: nextEventContent),
             ])
@@ -89,7 +92,16 @@ class AppearanceViewController: NSViewController, SettingsUI {
             makeIcon(Icons.Settings.textLarge, .large)
         ])
     }()
-    
+
+    private lazy var menuBarContent: NSView = {
+
+        NSStackView(views: [
+            makeIcon(Icons.Settings.textSmall, .large),
+            menuBarTextScalingSlider,
+            makeIcon(Icons.Settings.textLarge, .large)
+        ])
+    }()
+
     private lazy var calendarContent: NSView = {
 
         NSStackView(views: [
@@ -113,46 +125,25 @@ class AppearanceViewController: NSViewController, SettingsUI {
         // Next event length
 
         let nextEventLengthView = NSStackView(views: [
-            makeIcon(Icons.Settings.ruler, .large),
-            nextEventLengthSlider
+            makeIcon(Icons.Settings.length_small, .large),
+            nextEventLengthSlider,
+            makeIcon(Icons.Settings.length_big, .large),
         ])
 
         nextEventDetectNotchCheckbox.font = .systemFont(ofSize: 11, weight: .light)
 
-        // Next event font size
+        // Next event text scaling
 
-        let fontSizeLabel = Label(text: Strings.Settings.NextEvent.fontSize, font: .systemFont(ofSize: 13))
-        let fontSizeStepperLabel = Label(font: .systemFont(ofSize: 13))
-
-        nextEventFontSizeStepper.minValue = 10
-        nextEventFontSizeStepper.maxValue = 13
-        nextEventFontSizeStepper.increment = 0.5
-        nextEventFontSizeStepper.valueWraps = false
-        nextEventFontSizeStepper.refusesFirstResponder = true
-        nextEventFontSizeStepper.focusRingType = .none
-
-        let fontSizeStepperProperty = nextEventFontSizeStepper.rx.controlProperty(
-            getter: \.floatValue,
-            setter: { $0.floatValue = $1 }
-        )
-
-        viewModel.eventStatusItemFontSize
-            .bind(to: fontSizeStepperProperty)
-            .disposed(by: disposeBag)
-
-        fontSizeStepperProperty
-            .bind(to: viewModel.eventStatusItemFontSizeObserver)
-            .disposed(by: disposeBag)
-
-        viewModel.eventStatusItemFontSize
-            .map { .init(format: "%.1f", $0) }
-            .bind(to: fontSizeStepperLabel.rx.text)
-            .disposed(by: disposeBag)
+        let textScalingView = NSStackView(views: [
+            makeIcon(Icons.Settings.textSmall, .large),
+            nextEventTextScalingSlider,
+            makeIcon(Icons.Settings.textLarge, .large)
+        ])
 
         // Next event stack view
 
         return NSStackView(views: [
-            NSStackView(views: [fontSizeLabel, .spacer, fontSizeStepperLabel, nextEventFontSizeStepper]),
+            textScalingView,
             nextEventLengthView,
             nextEventDetectNotchCheckbox,
         ])
@@ -165,6 +156,13 @@ class AppearanceViewController: NSViewController, SettingsUI {
             control: transparencySlider,
             observable: viewModel.popoverTransparency,
             observer: viewModel.transparencyObserver
+        )
+        .disposed(by: disposeBag)
+
+        bind(
+            control: menuBarTextScalingSlider,
+            observable: viewModel.statusItemTextScaling,
+            observer: viewModel.statusItemTextScalingObserver
         )
         .disposed(by: disposeBag)
 
@@ -186,6 +184,13 @@ class AppearanceViewController: NSViewController, SettingsUI {
             control: calendarTextScalingSlider,
             observable: viewModel.calendarTextScaling,
             observer: viewModel.calendarTextScalingObserver
+        )
+        .disposed(by: disposeBag)
+
+        bind(
+            control: nextEventTextScalingSlider,
+            observable: viewModel.eventStatusItemTextScaling,
+            observer: viewModel.eventStatusItemTextScalingObserver
         )
         .disposed(by: disposeBag)
 
@@ -215,6 +220,7 @@ private func makeIcon(_ image: NSImage, _ scale: NSImage.SymbolScale = .medium) 
 
 private extension Strings.Settings.Appearance {
 
+    static let menuBar = Strings.Settings.menuBar
     static let calendar = Strings.Settings.calendar
     static let nextEvent = Strings.Settings.nextEvent
 }

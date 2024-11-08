@@ -95,16 +95,17 @@ class StatusItemViewModel {
             dateTextObservable,
             settings.showStatusItemIcon,
             settings.statusItemIconStyle,
+            settings.statusItemTextScaling,
             hasBirthdaysObservable
         )
-        .map { title, showIcon, iconStyle, hasBirthdays in
+        .map { title, showIcon, iconStyle, textScaling, hasBirthdays in
 
             var birthdayIcon: BirthdayIcon?
             var calendarIcon: CalendarIcon?
 
             let showDate = !title.isEmpty
 
-            let iconSize: CGFloat = showDate ? 15 : 16
+            let iconSize: CGFloat = 12 * textScaling
 
             if hasBirthdays {
                 birthdayIcon = .init(size: iconSize - 2)
@@ -129,10 +130,11 @@ class StatusItemViewModel {
         self.image = Observable.combineLatest(
             iconsAndText,
             settings.showStatusItemBackground,
-            settings.statusItemDateFormat
+            settings.statusItemDateFormat,
+            settings.statusItemTextScaling
         )
         .debounce(.nanoseconds(1), scheduler: scheduler)
-        .map { iconsAndText, showBackground, dateFormat in
+        .map { iconsAndText, showBackground, dateFormat, textScaling in
 
             let (birthdayIcon, calendarIcon, text) = iconsAndText
 
@@ -143,11 +145,13 @@ class StatusItemViewModel {
             }
 
             if let icon = calendarIcon {
-                icons.append(StatusItemIconFactory.icon(size: icon.size, style: icon.style, dateProvider: dateProvider))
+                icons.append(StatusItemIconFactory.icon(
+                    size: icon.size, style: icon.style, textScaling: textScaling, dateProvider: dateProvider
+                ))
             }
 
             let title = text.isEmpty ? nil : NSAttributedString(string: text, attributes: [
-                .font: NSFont.systemFont(ofSize: 12.5, weight: showBackground ? .regular : .medium)
+                .font: NSFont.systemFont(ofSize: 10 * textScaling, weight: .medium)
             ])
 
             if let title {
@@ -163,8 +167,8 @@ class StatusItemViewModel {
             }
 
             let radius: CGFloat = 3
-            let border: CGFloat = 0.5
-            let padding: NSPoint = text.isEmpty ? .init(x: border, y: border) : .init(x: 4, y: 1.5)
+            let border: CGFloat = 1
+            let padding: NSPoint = text.isEmpty ? .init(x: border, y: border) : .init(x: 4, y: 2)
             let spacing: CGFloat = 4
             var iconsWidth = icons.map(\.size.width).reduce(0) { $0 + $1 + spacing }
             let height = max(icons.map(\.size.height).reduce(0, max), 15)

@@ -9,7 +9,7 @@ import AppKit
 
 enum StatusItemIconFactory {
 
-    static func icon(size: CGFloat, style: StatusItemIconStyle, dateProvider: DateProviding) -> NSImage {
+    static func icon(size: CGFloat, style: StatusItemIconStyle, textScaling: Double, dateProvider: DateProviding) -> NSImage {
         let headerHeight: CGFloat = 3.5
         let borderWidth: CGFloat = 2
         let radius: CGFloat = 2.5
@@ -32,10 +32,10 @@ enum StatusItemIconFactory {
                 drawCalendarDots(rect: rect, borderWidth: borderWidth, headerHeight: headerHeight)
 
             case .date:
-                drawDate(rect: rect, headerHeight: headerHeight, dateProvider: dateProvider)
+                drawDate(rect: rect, headerHeight: headerHeight, textScaling: textScaling, dateProvider: dateProvider)
 
             case .dayOfWeek:
-                drawDayOfWeekAndDate(rect: rect, dateProvider: dateProvider)
+                drawDayOfWeekAndDate(rect: rect, textScaling: textScaling, dateProvider: dateProvider)
             }
 
             return true
@@ -84,19 +84,20 @@ enum StatusItemIconFactory {
         }
     }
 
-    static func drawDate(rect: CGRect, headerHeight: CGFloat, dateProvider: DateProviding) {
+    static func drawDate(rect: CGRect, headerHeight: CGFloat, textScaling: Double, dateProvider: DateProviding) {
         let formatter = DateFormatter(format: "d", calendar: dateProvider.calendar)
         let date = formatter.string(from: dateProvider.now)
         let paragraph = NSMutableParagraphStyle()
         paragraph.alignment = .center
+        let fontSize = 0.5 * rect.height * textScaling
         NSAttributedString(string: date, attributes: [
-            .font: NSFont.systemFont(ofSize: 0.6 * rect.height),
+            .font: NSFont.systemFont(ofSize: fontSize, weight: .medium),
             .foregroundColor: NSColor.red,
             .paragraphStyle: paragraph
-        ]).draw(in: rect.offsetBy(dx: 0, dy: rect.height / 5))
+        ]).draw(in: rect.offsetBy(dx: 0, dy: rect.height / 2 - fontSize / 2))
     }
 
-    static func drawDayOfWeekAndDate(rect: CGRect, dateProvider: DateProviding) {
+    static func drawDayOfWeekAndDate(rect: CGRect, textScaling: Double, dateProvider: DateProviding) {
         func run(fn: () -> Void) { fn() }
 
         let formatter = DateFormatter(calendar: dateProvider.calendar)
@@ -104,22 +105,25 @@ enum StatusItemIconFactory {
         let paragraph = NSMutableParagraphStyle()
         paragraph.alignment = .center
 
+        let headerFontSize = round(6.5 * textScaling)
+        let dateFontSize = round(7.5 * textScaling)
+
         run {
             formatter.dateFormat = "E"
             let date = formatter.string(from: dateProvider.now).uppercased().trimmingCharacters(in: ["."])
             NSAttributedString(string: date, attributes: [
-                .font: NSFont.systemFont(ofSize: 7, weight: .bold),
+                .font: NSFont.systemFont(ofSize: headerFontSize, weight: .bold),
                 .foregroundColor: NSColor.red,
                 .paragraphStyle: paragraph
             ])
-            .draw(in: rect.offsetBy(dx: 0, dy: -1).insetBy(dx: -0.5, dy: 0))
+            .draw(in: rect.offsetBy(dx: 0, dy: -2).insetBy(dx: -0.5, dy: 0))
         }
 
         run {
             formatter.dateFormat = "d"
             let date = formatter.string(from: dateProvider.now)
             NSAttributedString(string: date, attributes: [
-                .font: NSFont.systemFont(ofSize: 9.5, weight: .medium),
+                .font: NSFont.systemFont(ofSize: dateFontSize, weight: .medium),
                 .foregroundColor: NSColor.red,
                 .paragraphStyle: paragraph
             ])
