@@ -33,7 +33,7 @@ enum Icons {
         static let about = NSImage(systemName: "book")
         static let tooltip = NSImage(systemName: "info.circle")
         static let length_small = NSImage(systemName: "character.textbox")
-        static let length_big = NSImage(systemName: "textformat.characters.arrow.left.and.right")
+        static let length_big = NSImage(systemName: "textformat.abc")
         static let zoomIn = NSImage(systemName: "plus.magnifyingglass")
         static let zoomOut = NSImage(systemName: "minus.magnifyingglass")
         static let transparencyLow = NSImage(systemName: "cube.transparent")
