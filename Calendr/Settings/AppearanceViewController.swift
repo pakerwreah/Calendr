@@ -110,7 +110,6 @@ class AppearanceViewController: NSViewController, SettingsUI {
                 calendarScalingSlider,
                 makeIcon(Icons.Settings.zoomIn)
             ]),
-            .dummy,
             NSStackView(views: [
                 makeIcon(Icons.Settings.textSmall, .large),
                 calendarTextScalingSlider,
