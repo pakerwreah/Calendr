@@ -171,7 +171,7 @@ class StatusItemViewModel {
             let padding: NSPoint = text.isEmpty ? .init(x: border, y: border) : .init(x: 4, y: 2)
             let spacing: CGFloat = 4
             var iconsWidth = icons.map(\.size.width).reduce(0) { $0 + $1 + spacing }
-            let height = max(icons.map(\.size.height).reduce(0, max), 15)
+            let height = icons.map(\.size.height).reduce(0, max)
             if text.isEmpty {
                 iconsWidth -= spacing
             }

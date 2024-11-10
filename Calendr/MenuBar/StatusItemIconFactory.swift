@@ -10,13 +10,19 @@ import AppKit
 enum StatusItemIconFactory {
 
     static func icon(size: CGFloat, style: StatusItemIconStyle, textScaling: Double, dateProvider: DateProviding) -> NSImage {
-        let headerHeight: CGFloat = 3.5
+        let headerHeight: CGFloat = 3 * textScaling
         let borderWidth: CGFloat = 2
         let radius: CGFloat = 2.5
-        let ratio: CGFloat = 1.15
-        let rect = CGRect(x: 0, y: 0, width: size * ratio, height: size)
+        let rect = CGRect(x: 0, y: 0, width: size + borderWidth, height: size)
 
-        let image = NSImage(size: rect.size, flipped: true) { _ in
+        let size = switch style {
+        case .calendar, .date:
+            rect.size
+        case .dayOfWeek:
+            rect.insetBy(dx: -2, dy: -1).size
+        }
+
+        let image = NSImage(size: size, flipped: true) { _ in
             /// can be any opaque color, but red is good for debugging
             let color = NSColor.red
             color.setStroke()
@@ -89,7 +95,7 @@ enum StatusItemIconFactory {
         let date = formatter.string(from: dateProvider.now)
         let paragraph = NSMutableParagraphStyle()
         paragraph.alignment = .center
-        let fontSize = 0.5 * rect.height * textScaling
+        let fontSize = 0.6 * rect.height
         NSAttributedString(string: date, attributes: [
             .font: NSFont.systemFont(ofSize: fontSize, weight: .medium),
             .foregroundColor: NSColor.red,
@@ -105,29 +111,31 @@ enum StatusItemIconFactory {
         let paragraph = NSMutableParagraphStyle()
         paragraph.alignment = .center
 
-        let headerFontSize = round(6.5 * textScaling)
-        let dateFontSize = round(7.5 * textScaling)
+        let fontSize = 0.6 * rect.height
+        let middleY = rect.height / 2 - fontSize / 2 + 1
+        let middleYSpread = fontSize / 2.5 + 1
+        let insetX = 2.5
 
         run {
             formatter.dateFormat = "E"
             let date = formatter.string(from: dateProvider.now).uppercased().trimmingCharacters(in: ["."])
             NSAttributedString(string: date, attributes: [
-                .font: NSFont.systemFont(ofSize: headerFontSize, weight: .bold),
+                .font: NSFont.systemFont(ofSize: fontSize, weight: .bold),
                 .foregroundColor: NSColor.red,
                 .paragraphStyle: paragraph
             ])
-            .draw(in: rect.offsetBy(dx: 0, dy: -2).insetBy(dx: -0.5, dy: 0))
+            .draw(in: rect.offsetBy(dx: insetX, dy: middleY - middleYSpread).insetBy(dx: -insetX, dy: 0))
         }
 
         run {
             formatter.dateFormat = "d"
             let date = formatter.string(from: dateProvider.now)
             NSAttributedString(string: date, attributes: [
-                .font: NSFont.systemFont(ofSize: dateFontSize, weight: .medium),
+                .font: NSFont.systemFont(ofSize: fontSize, weight: .bold),
                 .foregroundColor: NSColor.red,
                 .paragraphStyle: paragraph
             ])
-            .draw(in: rect.offsetBy(dx: 0, dy: rect.height / 3))
+            .draw(in: rect.offsetBy(dx: insetX, dy: middleY + middleYSpread).insetBy(dx: 0, dy: -1))
         }
     }
 }
