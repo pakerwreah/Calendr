@@ -318,7 +318,7 @@ class SettingsViewModel:
             .map {
                 StatusItemIconStyle.allCases.map {
                     let icon = StatusItemIconFactory.icon(
-                        size: .init(15),
+                        size: 15,
                         style: $0,
                         textScaling: 1.2,
                         dateProvider: dateProvider

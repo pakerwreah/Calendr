@@ -42,4 +42,20 @@ extension NSImage {
         image.isTemplate = false
         return image
     }
+
+    func with(padding: NSPoint) -> NSImage {
+        let newSize = NSSize(width: size.width + 2 * padding.x, height: size.height + 2 * padding.y)
+        let paddedImage = NSImage(size: newSize)
+        paddedImage.lockFocus()
+        let drawRect = NSRect(
+            x: padding.x,
+            y: padding.y,
+            width: size.width,
+            height: size.height
+        )
+        draw(in: drawRect, from: .zero, operation: .sourceOver, fraction: 1.0)
+        paddedImage.isTemplate = isTemplate
+        paddedImage.unlockFocus()
+        return paddedImage
+    }
 }

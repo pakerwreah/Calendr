@@ -300,10 +300,11 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         )
         .bind { [dropdown = iconStyleDropdown] options, iconStyle in
             let menu = NSMenu()
+            let width = options.map(\.image.size.width).reduce(0, max)
             for option in options {
                 let item = NSMenuItem()
                 item.title = " "
-                item.image = option.image
+                item.image = option.image.with(padding: .init(x: (width - option.image.size.width) / 2, y: 0))
                 menu.addItem(item)
             }
             dropdown.menu = menu
