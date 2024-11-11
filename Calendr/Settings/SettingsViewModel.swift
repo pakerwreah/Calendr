@@ -184,15 +184,19 @@ class SettingsViewModel:
 
     private func localizedUnit(for mode: CalendarViewMode) -> String {
 
-        let numberFormatter = NumberFormatter()
-        numberFormatter.notANumberSymbol = ""
+        let formatter = DateComponentsFormatter()
+        formatter.unitsStyle = .full
+        formatter.maximumUnitCount = 1
+        formatter.zeroFormattingBehavior = .dropAll
+        formatter.calendar = dateProvider.calendar
 
-        let formatter = MeasurementFormatter()
-        formatter.unitStyle = .long
-        formatter.numberFormatter = numberFormatter
-        formatter.locale = dateProvider.calendar.locale
+        let components: DateComponents = switch mode {
+            case .month: .init(month: 1)
+            case .week: .init(weekOfMonth: 1)
+            case .day: .init(day: 1)
+        }
 
-        return formatter.string(from: Measurement(value: .nan, unit: Unit(symbol: mode.rawValue)))
+        return formatter.string(from: components)?.trimmingCharacters(in: .decimalDigits.union(.whitespaces)) ?? mode.rawValue
     }
 
     private(set) lazy var calendarAppViewModeOptions: [CalendarViewModeOption] = {
