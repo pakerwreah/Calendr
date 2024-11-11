@@ -14,12 +14,13 @@ enum StatusItemIconFactory {
         let borderWidth: CGFloat = 2
         let radius: CGFloat = 2.5
         let rect = CGRect(x: 0, y: 0, width: size + borderWidth, height: size)
+        let insetX = 2.5 * textScaling
 
         let size = switch style {
         case .calendar, .date:
             rect.size
         case .dayOfWeek:
-            rect.insetBy(dx: -2, dy: -1).size
+            rect.insetBy(dx: -insetX, dy: -1).size
         }
 
         let image = NSImage(size: size, flipped: true) { _ in
@@ -41,7 +42,7 @@ enum StatusItemIconFactory {
                 drawDate(rect: rect, headerHeight: headerHeight, textScaling: textScaling, dateProvider: dateProvider)
 
             case .dayOfWeek:
-                drawDayOfWeekAndDate(rect: rect, textScaling: textScaling, dateProvider: dateProvider)
+                drawDayOfWeekAndDate(rect: rect, insetX: insetX, textScaling: textScaling, dateProvider: dateProvider)
             }
 
             return true
@@ -103,7 +104,7 @@ enum StatusItemIconFactory {
         ]).draw(in: rect.offsetBy(dx: 0, dy: rect.height / 2 - fontSize / 2))
     }
 
-    static func drawDayOfWeekAndDate(rect: CGRect, textScaling: Double, dateProvider: DateProviding) {
+    static func drawDayOfWeekAndDate(rect: CGRect, insetX: CGFloat, textScaling: Double, dateProvider: DateProviding) {
         func run(fn: () -> Void) { fn() }
 
         let formatter = DateFormatter(calendar: dateProvider.calendar)
@@ -114,7 +115,6 @@ enum StatusItemIconFactory {
         let fontSize = 0.6 * rect.height
         let middleY = rect.height / 2 - fontSize / 2 + 1
         let middleYSpread = fontSize / 2.5 + 1
-        let insetX = 2.5
 
         run {
             formatter.dateFormat = "E"
