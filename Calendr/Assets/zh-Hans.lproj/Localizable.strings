@@ -111,3 +111,5 @@
 "tooltips.toolbar.open_calendar" = "打开日历";
 "tooltips.toolbar.open_reminders" = "打开提醒";
 "tooltips.toolbar.open_menu" = "打开菜单";
+
+//"calendars.source.others" = "Others";

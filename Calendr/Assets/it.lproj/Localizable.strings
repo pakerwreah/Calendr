@@ -112,3 +112,5 @@
 "tooltips.toolbar.open_calendar" = "Apri Calendario";
 "tooltips.toolbar.open_reminders" = "Apri Promemoria";
 "tooltips.toolbar.open_menu" = "Apri Menu";
+
+//"calendars.source.others" = "Others";

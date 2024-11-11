@@ -84,8 +84,20 @@ class CalendarPickerViewController: NSViewController {
 
                 itemsDisposeBag = DisposeBag()
 
+                func isOther(_ account: String) -> Bool {
+                    account == Strings.Calendars.Source.others
+                }
+
                 return Dictionary(grouping: calendars, by: { $0.account })
-                    .sorted(by: \.key.localizedLowercase)
+                    .sorted {
+                        if isOther($0.key) && !isOther($1.key) {
+                            return false // $0 is Other, so it should go down
+                        }
+                        if !isOther($0.key) && isOther($1.key) {
+                            return true // $1 is Other, so it should go down
+                        }
+                        return $0.key.localizedLowercase < $1.key.localizedLowercase // Otherwise, sort by name
+                    }
                     .map { account, calendars in
                         self.makeCalendarSection(
                             title: account,
