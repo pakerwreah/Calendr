@@ -111,3 +111,5 @@
 "tooltips.toolbar.open_calendar" = "Otvoriť Kalendár";
 "tooltips.toolbar.open_reminders" = "Otvoriť Pripomienky";
 "tooltips.toolbar.open_menu" = "Otvoriť menu";
+
+//"calendars.source.others" = "Others";

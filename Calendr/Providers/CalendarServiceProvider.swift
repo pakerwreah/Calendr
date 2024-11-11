@@ -420,14 +420,27 @@ private extension EventStatus {
     }
 }
 
+private extension EKCalendar {
+
+    var accountTitle: String {
+        switch source.sourceType {
+        case .local, .subscribed, .birthdays:
+            Strings.Calendars.Source.others
+        default:
+            source.title
+        }
+    }
+}
+
 private extension CalendarModel {
 
     init(from calendar: EKCalendar) {
         self.init(
             id: calendar.calendarIdentifier,
-            account: calendar.source.title,
+            account: calendar.accountTitle,
             title: calendar.title,
-            color: calendar.color
+            color: calendar.color,
+            isSubscribed: calendar.isSubscribed || calendar.isDelegate
         )
     }
 }

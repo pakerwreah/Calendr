@@ -21,8 +21,9 @@ enum Icons {
     }
 
     enum CalendarPicker {
-        static let nextEventSelected = NSImage(systemName: "alarm")
-        static let nextEventUnselected = NSImage(systemName: "moon.zzz")
+        static let nextEventEnabled = NSImage(systemName: "alarm")
+        static let nextEventSilenced = NSImage(systemName: "moon.zzz")
+        static let subscribed = NSImage(systemName: "wave.3.right")
     }
 
     enum Settings {

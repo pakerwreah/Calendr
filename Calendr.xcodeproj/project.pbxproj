@@ -58,6 +58,7 @@
 		345DD97326920D1B00294D90 /* CalendarViewPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345DD97226920D1B00294D90 /* CalendarViewPreview.swift */; };
 		345EAD4A2C8E26EE00D56857 /* MockWeatherServiceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345EAD492C8E26EE00D56857 /* MockWeatherServiceProvider.swift */; };
 		345FBD99293EA476005DD6DF /* Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345FBD98293EA476005DD6DF /* Keyboard.swift */; };
+		34650E642CE2727A000BEACF /* CalendarPickerPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34650E632CE2727A000BEACF /* CalendarPickerPreview.swift */; };
 		34651F1525E1BB8400518C5A /* Strings.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34651F1425E1BB8400518C5A /* Strings.generated.swift */; };
 		34651F2F25E1C99900518C5A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 34651F2C25E1C99900518C5A /* Localizable.strings */; };
 		34651F5425E22A3900518C5A /* DateIntervalFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34651F5325E22A3900518C5A /* DateIntervalFormatter.swift */; };
@@ -261,6 +262,7 @@
 		345E93B92CA05DAC0048EEA4 /* SyncLocalizations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncLocalizations.swift; sourceTree = "<group>"; };
 		345EAD492C8E26EE00D56857 /* MockWeatherServiceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockWeatherServiceProvider.swift; sourceTree = "<group>"; };
 		345FBD98293EA476005DD6DF /* Keyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keyboard.swift; sourceTree = "<group>"; };
+		34650E632CE2727A000BEACF /* CalendarPickerPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPickerPreview.swift; sourceTree = "<group>"; };
 		34651EFB25E1B26800518C5A /* swiftgen.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = swiftgen.yml; sourceTree = "<group>"; };
 		34651F1425E1BB8400518C5A /* Strings.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Strings.generated.swift; sourceTree = "<group>"; };
 		34651F2D25E1C99900518C5A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -740,13 +742,14 @@
 		34A6434B25F42375000A0F08 /* Previews */ = {
 			isa = PBXGroup;
 			children = (
+				34650E632CE2727A000BEACF /* CalendarPickerPreview.swift */,
 				345DD97226920D1B00294D90 /* CalendarViewPreview.swift */,
 				34F7E03928427AC00028FF25 /* EventDetailsPreview.swift */,
 				3421DA0D2693E35000056837 /* EventListViewPreview.swift */,
 				34A6434C25F42375000A0F08 /* EventViewPreview.swift */,
+				346C5A492BC2D6F60007106C /* NextEventPreview.swift */,
 				34AC60C526925FA5005312B6 /* PreviewExtensions.swift */,
 				34F4C47A2A6C54A900397C80 /* StatusItemPreview.swift */,
-				346C5A492BC2D6F60007106C /* NextEventPreview.swift */,
 			);
 			path = Previews;
 			sourceTree = "<group>";
@@ -1109,6 +1112,7 @@
 				3477F3E825FD52AA008EA888 /* NSViewController+Rx.swift in Sources */,
 				34B5A09325B0CE6F00F7F7ED /* SettingsViewController.swift in Sources */,
 				34C1D41E2C6E567100295E5E /* ProcessInfo.swift in Sources */,
+				34650E642CE2727A000BEACF /* CalendarPickerPreview.swift in Sources */,
 				3421930827999FB7002BCD36 /* TimeZone+Factory.swift in Sources */,
 				3417A40A2A702643005C77E4 /* StatusItemIconFactory.swift in Sources */,
 				344D5EBC2CA0DAAF00523F9E /* NSImageView.swift in Sources */,
@@ -1487,7 +1491,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.14.5;
+				MARKETING_VERSION = 1.14.6;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Config/Calendr-Bridging-Header.h";
@@ -1515,7 +1519,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.14.5;
+				MARKETING_VERSION = 1.14.6;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Config/Calendr-Bridging-Header.h";
