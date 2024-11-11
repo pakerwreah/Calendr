@@ -89,7 +89,7 @@
 "event_details.participant.organizer" = "Veranstaltende Person";
 "event_details.participant.me" = "Ich";
 
-"event_status.label" = "Mein status:";
+"event_status.label" = "Mein Status:";
 
 "event_status.accepted" = "Akzeptiert";
 "event_status.maybe" = "Vielleicht";
