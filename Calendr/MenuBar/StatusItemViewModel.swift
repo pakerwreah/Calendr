@@ -171,11 +171,11 @@ class StatusItemViewModel {
             let padding: NSPoint = text.isEmpty ? .init(x: border, y: border) : .init(x: 4, y: 2)
             let spacing: CGFloat = 4
             var iconsWidth = icons.map(\.size.width).reduce(0) { $0 + $1 + spacing }
-            let height = icons.map(\.size.height).reduce(0, max)
+            let iconsHeight = icons.map(\.size.height).reduce(0, max)
             if text.isEmpty {
                 iconsWidth -= spacing
             }
-            var size = CGSize(width: iconsWidth + titleWidth, height: height)
+            var size = CGSize(width: iconsWidth + titleWidth, height: max(iconsHeight, title?.size().height ?? 0))
 
             let textImage = NSImage(size: size, flipped: false) {
                 var offsetX: CGFloat = 0
