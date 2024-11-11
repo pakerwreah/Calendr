@@ -273,6 +273,20 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(options?.first, .init(style: .short, title: "01/01/2021"))
     }
 
+    func testCalendarAppViewModeOptions_pt() {
+
+        dateProvider.m_calendar.locale = Locale(identifier: "pt")
+
+        XCTAssertEqual(viewModel.calendarAppViewModeOptions.map(\.title), ["mês", "semana", "dia"])
+    }
+
+    func testCalendarAppViewModeOptions_de() {
+
+        dateProvider.m_calendar.locale = Locale(identifier: "de")
+
+        XCTAssertEqual(viewModel.calendarAppViewModeOptions.map(\.title), ["Monat", "Woche", "Tag"])
+    }
+
     func testDateStyleSelected() {
 
         userDefaults.statusItemDateStyle = 1

@@ -51,6 +51,12 @@ internal enum Strings {
       internal static let message = Strings.tr("Localizable", "auto_update.replace.message", fallback: "Confirm the app location so we have permission to replace it")
     }
   }
+  internal enum Calendars {
+    internal enum Source {
+      /// Others
+      internal static let others = Strings.tr("Localizable", "calendars.source.others", fallback: "Others")
+    }
+  }
   internal enum EventAction {
     /// Accept
     internal static let accept = Strings.tr("Localizable", "event_action.accept", fallback: "Accept")

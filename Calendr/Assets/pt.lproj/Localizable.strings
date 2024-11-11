@@ -111,3 +111,5 @@
 "tooltips.toolbar.open_calendar" = "Abrir Calendário";
 "tooltips.toolbar.open_reminders" = "Abrir Lembretes";
 "tooltips.toolbar.open_menu" = "Abrir menu";
+
+"calendars.source.others" = "Outros";
