@@ -13,8 +13,8 @@
 "access_required.open_settings" = "Einstellungen öffnen";
 "access_required.cancel" = "Abbrechen";
 
-"auto_update.check_for_updates" = "Nach Updates suchen";
-"auto_update.fetching_releases" = "Releases abrufen";
+"auto_update.check_for_updates" = "Nach Aktualisierungen suchen";
+"auto_update.fetching_releases" = "Veröffentlichungen abrufen";
 "auto_update.new_version" = "Neue Version verfügbar: %@";
 "auto_update.updated_to" = "Aktualisiert auf Version %@";
 "auto_update.downloading" = "Version %@ herunterladen";
@@ -34,9 +34,9 @@
 "settings.menu_bar.show_date" = "Zeige Datum";
 "settings.menu_bar.show_icon_date" = "Datum im Icon anzeigen";
 "settings.menu_bar.show_background" = "Opaken Hintergrund anzeigen";
-"settings.menu_bar.date_format_custom" = "Benutzerdefiniert";
+"settings.menu_bar.date_format_custom" = "Angepasst";
 
-"settings.next_event" = "Nächsten Termin";
+"settings.next_event" = "Nächster Termin";
 "settings.next_event.show_next_event" = "Zeige nächsten Termin";
 "settings.next_event.font_size" = "Schriftgröße";
 "settings.next_event.detect_notch" = "Kürzen, wenn 'notch' vorhanden ist";
@@ -55,7 +55,7 @@
 "settings.events.show_finished_events" = "Abgeschlossene Ereignisse anzeigen";
 "settings.events.show_recurrence_indicator" = "Wiederholungsindikator anzeigen";
 
-"settings.appearance.transparency" = "Transparent";
+"settings.appearance.transparency" = "Transparenz";
 "settings.appearance.accessibility" = "Zugänglichkeit";
 
 "settings.keyboard.local_shortcuts.title" = "Lokale Tastenkombinationen";
@@ -86,10 +86,10 @@
 "reminder.options.complete" = "Erledigt";
 "reminder.options.remind" = "Erinnerung %@";
 
-"event_details.participant.organizer" = "Veranstalter";
-"event_details.participant.me" = "mich";
+"event_details.participant.organizer" = "Veranstaltende Person";
+"event_details.participant.me" = "Ich";
 
-"event_status.label" = "mein status:";
+"event_status.label" = "Mein status:";
 
 "event_status.accepted" = "Akzeptiert";
 "event_status.maybe" = "Vielleicht";
@@ -112,4 +112,4 @@
 "tooltips.toolbar.open_reminders" = "Erinnerungen öffnen";
 "tooltips.toolbar.open_menu" = "Menü öffnen";
 
-//"calendars.source.others" = "Others";
+"calendars.source.others" = "Andere";
