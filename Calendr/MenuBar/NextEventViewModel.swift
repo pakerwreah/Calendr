@@ -169,7 +169,10 @@ class NextEventViewModel {
 
         backgroundColor = nextEventObservable
             .skipNil()
-            .map { [dateProvider] nextEvent in
+            .withLatestFrom(
+                Observable.combineLatest(settings.eventStatusItemFlashing, settings.eventStatusItemSound)
+            ) { ($0, $1.0, $1.1) }
+            .map { [dateProvider] nextEvent, flashing, sound in
 
                 guard !nextEvent.isInProgress else {
                     return nextEvent.event.calendar.color.withAlphaComponent(0.2)
@@ -179,26 +182,28 @@ class NextEventViewModel {
 
                 guard let minutes = diff.minute, let seconds = diff.second else { return .clear }
 
-                // play when event starts
-                if minutes == 0 && seconds == 0 {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
-                        soundPlayer.play(.glass)
+                if sound {
+                    // play at 5 minutes
+                    if minutes == 5 && seconds == 0 {
+                        soundPlayer.play(.ping)
+                    }
+
+                    // play at 30 seconds to start
+                    if minutes == 0 && seconds == 30 {
+                        soundPlayer.play(.ping)
                     }
                 }
 
-                // play at 5 minutes + 1 minute to start
-                if [1, 5].contains(minutes) && seconds == 0 {
-                    soundPlayer.play(.ping)
-                }
+                if flashing {
+                    // flash continuously under 30 seconds to start
+                    if minutes == 0 && seconds <= 30 {
+                        return seconds % 2 == 0 ? .systemRed : .clear
+                    }
 
-                // flash continuously under 30 seconds to start
-                if minutes == 0 && seconds <= 30 {
-                    return seconds % 2 == 0 ? .systemRed : .clear
-                }
-
-                // flash 5x every minute
-                if minutes <= 5 {
-                    return seconds > 50 && seconds % 2 == 1 ? .systemRed : .clear
+                    // flash 5x every minute
+                    if minutes <= 5 {
+                        return seconds > 50 && seconds % 2 == 1 ? .systemRed : .clear
+                    }
                 }
 
                 return .clear

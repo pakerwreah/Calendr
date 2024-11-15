@@ -38,7 +38,9 @@
 
 "settings.next_event" = "下一個事件";
 "settings.next_event.show_next_event" = "顯示下一個事件";
-"settings.next_event.font_size" = "字型大小";
+//"settings.next_event.grab_attention" = "Grab attention when event is close";
+//"settings.next_event.grab_attention.flashing" = "Flashing";
+//"settings.next_event.grab_attention.sound" = "Play sound";
 "settings.next_event.detect_notch" = "若有 '瀏海' 則縮短";
 
 "settings.calendar" = "行事曆";

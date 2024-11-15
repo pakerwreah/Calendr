@@ -38,7 +38,9 @@
 
 "settings.next_event" = "Další událost";
 "settings.next_event.show_next_event" = "Zobrazit další událost";
-"settings.next_event.font_size" = "Velikost písma";
+//"settings.next_event.grab_attention" = "Grab attention when event is close";
+//"settings.next_event.grab_attention.flashing" = "Flashing";
+//"settings.next_event.grab_attention.sound" = "Play sound";
 "settings.next_event.detect_notch" = "Zkrátit, pokud je 'výřez' přítomen";
 
 "settings.calendar" = "Kalendář";
