@@ -38,7 +38,9 @@
 
 "settings.next_event" = "下一个日程";
 "settings.next_event.show_next_event" = "显示下一个日程";
-"settings.next_event.font_size" = "字体大小";
+//"settings.next_event.grab_attention" = "Grab attention when event is close";
+//"settings.next_event.grab_attention.flashing" = "Flashing";
+//"settings.next_event.grab_attention.sound" = "Play sound";
 "settings.next_event.detect_notch" = "为屏幕“刘海”缩短长度";
 
 "settings.calendar" = "日历";

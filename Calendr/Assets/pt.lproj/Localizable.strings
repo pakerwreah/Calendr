@@ -38,7 +38,9 @@
 
 "settings.next_event" = "Próximo Evento";
 "settings.next_event.show_next_event" = "Mostrar próximo evento";
-"settings.next_event.font_size" = "Tamanho da fonte";
+"settings.next_event.grab_attention" = "Chamar atenção quando o evento estiver próximo";
+"settings.next_event.grab_attention.flashing" = "Piscando";
+"settings.next_event.grab_attention.sound" = "Tocar som";
 "settings.next_event.detect_notch" = "Encurtar se 'notch' estiver presente";
 
 "settings.calendar" = "Calendário";

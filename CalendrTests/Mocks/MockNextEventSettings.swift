@@ -13,11 +13,14 @@ class MockNextEventSettings: MockEventDetailsSettings, NextEventSettings {
     let toggleStatusItem: AnyObserver<Bool>
     let showEventStatusItem: Observable<Bool>
 
-    let eventStatusItemFontSizeObserver: AnyObserver<Float>
-    let eventStatusItemFontSize: Observable<Float>
-
     let eventStatusItemCheckRangeObserver: AnyObserver<Int>
     let eventStatusItemCheckRange: Observable<Int>
+
+    let toggleEventStatusItemFlashing: AnyObserver<Bool>
+    let eventStatusItemFlashing: Observable<Bool>
+
+    let toggleEventStatusItemSound: AnyObserver<Bool>
+    let eventStatusItemSound: Observable<Bool>
 
     let eventStatusItemLengthObserver: AnyObserver<Int>
     let eventStatusItemLength: Observable<Int>
@@ -29,8 +32,9 @@ class MockNextEventSettings: MockEventDetailsSettings, NextEventSettings {
 
     init() {
         (showEventStatusItem, toggleStatusItem) = BehaviorSubject.pipe(value: true)
-        (eventStatusItemFontSize, eventStatusItemFontSizeObserver) = BehaviorSubject.pipe(value: 12)
         (eventStatusItemCheckRange, eventStatusItemCheckRangeObserver) = BehaviorSubject.pipe(value: 18)
+        (eventStatusItemFlashing, toggleEventStatusItemFlashing) = BehaviorSubject.pipe(value: false)
+        (eventStatusItemSound, toggleEventStatusItemSound) = BehaviorSubject.pipe(value: false)
         (eventStatusItemLength, eventStatusItemLengthObserver) = BehaviorSubject.pipe(value: 18)
         (eventStatusItemDetectNotch, toggleEventStatusItemDetectNotch) = BehaviorSubject.pipe(value: false)
         eventStatusItemTextScaling = .just(1)

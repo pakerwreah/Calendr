@@ -88,6 +88,8 @@ protocol EventListSettings: EventSettings {
 protocol NextEventSettings: EventDetailsSettings {
     var showEventStatusItem: Observable<Bool> { get }
     var eventStatusItemCheckRange: Observable<Int> { get }
+    var eventStatusItemFlashing: Observable<Bool> { get }
+    var eventStatusItemSound: Observable<Bool> { get }
     var eventStatusItemTextScaling: Observable<Double> { get }
     var eventStatusItemLength: Observable<Int> { get }
     var eventStatusItemDetectNotch: Observable<Bool> { get }
@@ -123,8 +125,10 @@ class SettingsViewModel:
     let statusItemDateStyleObserver: AnyObserver<StatusItemDateStyle>
     let statusItemDateFormatObserver: AnyObserver<String>
     let toggleEventStatusItem: AnyObserver<Bool>
-    let eventStatusItemTextScalingObserver: AnyObserver<Double>
     let eventStatusItemCheckRangeObserver: AnyObserver<Int>
+    let toggleEventStatusItemFlashing: AnyObserver<Bool>
+    let toggleEventStatusItemSound: AnyObserver<Bool>
+    let eventStatusItemTextScalingObserver: AnyObserver<Double>
     let eventStatusItemLengthObserver: AnyObserver<Int>
     let toggleEventStatusItemDetectNotch: AnyObserver<Bool>
     let calendarScalingObserver: AnyObserver<Double>
@@ -157,9 +161,11 @@ class SettingsViewModel:
     let isDateFormatInputVisible: Observable<Bool>
     let showEventStatusItem: Observable<Bool>
     let statusItemTextScaling: Observable<Double>
-    let eventStatusItemTextScaling: Observable<Double>
     let eventStatusItemCheckRange: Observable<Int>
     let eventStatusItemCheckRangeLabel: Observable<String>
+    let eventStatusItemFlashing: Observable<Bool>
+    let eventStatusItemSound: Observable<Bool>
+    let eventStatusItemTextScaling: Observable<Double>
     let eventStatusItemLength: Observable<Int>
     let eventStatusItemDetectNotch: Observable<Bool>
     let calendarScaling: Observable<Double>
@@ -240,8 +246,10 @@ class SettingsViewModel:
         statusItemDateFormatObserver = userDefaults.rx.observer(for: \.statusItemDateFormat)
         toggleEventStatusItem = userDefaults.rx.observer(for: \.showEventStatusItem)
         statusItemTextScalingObserver = userDefaults.rx.observer(for: \.statusItemTextScaling)
-        eventStatusItemTextScalingObserver = userDefaults.rx.observer(for: \.eventStatusItemTextScaling)
         eventStatusItemCheckRangeObserver = userDefaults.rx.observer(for: \.eventStatusItemCheckRange)
+        toggleEventStatusItemFlashing = userDefaults.rx.observer(for: \.eventStatusItemFlashing)
+        toggleEventStatusItemSound = userDefaults.rx.observer(for: \.eventStatusItemSound)
+        eventStatusItemTextScalingObserver = userDefaults.rx.observer(for: \.eventStatusItemTextScaling)
         eventStatusItemLengthObserver = userDefaults.rx.observer(for: \.eventStatusItemLength)
         toggleEventStatusItemDetectNotch = userDefaults.rx.observer(for: \.eventStatusItemDetectNotch)
         calendarScalingObserver = userDefaults.rx.observer(for: \.calendarScaling)
@@ -284,8 +292,10 @@ class SettingsViewModel:
         statusItemDateFormat = userDefaults.rx.observe(\.statusItemDateFormat)
         showEventStatusItem = userDefaults.rx.observe(\.showEventStatusItem)
         statusItemTextScaling = userDefaults.rx.observe(\.statusItemTextScaling)
-        eventStatusItemTextScaling = userDefaults.rx.observe(\.eventStatusItemTextScaling)
         eventStatusItemCheckRange = userDefaults.rx.observe(\.eventStatusItemCheckRange)
+        eventStatusItemFlashing = userDefaults.rx.observe(\.eventStatusItemFlashing)
+        eventStatusItemSound = userDefaults.rx.observe(\.eventStatusItemSound)
+        eventStatusItemTextScaling = userDefaults.rx.observe(\.eventStatusItemTextScaling)
         eventStatusItemLength = userDefaults.rx.observe(\.eventStatusItemLength)
         eventStatusItemDetectNotch = userDefaults.rx.observe(\.eventStatusItemDetectNotch)
         calendarScaling = userDefaults.rx.observe(\.calendarScaling)

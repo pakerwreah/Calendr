@@ -22,6 +22,8 @@ enum Prefs {
     // Next Event
     static let showEventStatusItem = "show_event_status_item"
     static let eventStatusItemCheckRange = "event_status_item_check_range"
+    static let eventStatusItemFlashing = "event_status_item_flashing"
+    static let eventStatusItemSound = "event_status_item_sound"
     static let eventStatusItemLength = "event_status_item_length"
     static let eventStatusItemDetectNotch = "event_status_item_detect_notch"
     static let eventStatusItemTextScaling = "event_status_item_text_scaling"
@@ -74,6 +76,8 @@ func registerDefaultPrefs(in userDefaults: UserDefaults, calendar: Calendar = .c
         // Next Event
         Prefs.showEventStatusItem: false,
         Prefs.eventStatusItemCheckRange: 6,
+        Prefs.eventStatusItemFlashing: false,
+        Prefs.eventStatusItemSound: false,
         Prefs.eventStatusItemTextScaling: 1.2,
         Prefs.eventStatusItemLength: 18,
         Prefs.eventStatusItemDetectNotch: false,
@@ -165,6 +169,16 @@ extension UserDefaults {
     @objc dynamic var eventStatusItemCheckRange: Int {
         get { integer(forKey: Prefs.eventStatusItemCheckRange) }
         set { set(newValue, forKey: Prefs.eventStatusItemCheckRange) }
+    }
+
+    @objc dynamic var eventStatusItemFlashing: Bool {
+        get { bool(forKey: Prefs.eventStatusItemFlashing) }
+        set { set(newValue, forKey: Prefs.eventStatusItemFlashing) }
+    }
+
+    @objc dynamic var eventStatusItemSound: Bool {
+        get { bool(forKey: Prefs.eventStatusItemSound) }
+        set { set(newValue, forKey: Prefs.eventStatusItemSound) }
     }
 
     @objc dynamic var eventStatusItemTextScaling: Double {

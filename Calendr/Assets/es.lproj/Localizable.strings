@@ -38,7 +38,9 @@
 
 "settings.next_event" = "Próximo evento";
 "settings.next_event.show_next_event" = "Mostrar próximo evento";
-"settings.next_event.font_size" = "Tamaño de fuente";
+//"settings.next_event.grab_attention" = "Grab attention when event is close";
+//"settings.next_event.grab_attention.flashing" = "Flashing";
+//"settings.next_event.grab_attention.sound" = "Play sound";
 "settings.next_event.detect_notch" = "Acortar si 'notch' está presente";
 
 "settings.calendar" = "Calendario";
