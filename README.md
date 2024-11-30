@@ -7,19 +7,29 @@
 
 Menu bar calendar for macOS
 
-<img width="350" src="resources/screenshot.png" title="Calendr" />
-
-Right click
 <table>
 <tr>
-  <td valign='top'>
-  <img width=150 src='https://github.com/pakerwreah/Calendr/assets/803954/8b3ebb0f-52ad-461c-91c3-7b4d2646712e' />
-  </td>
-  <td valign='top'>
-  <img width=150 src='https://github.com/pakerwreah/Calendr/assets/803954/8e8d342d-9be5-4bad-b741-875cc407ec1a' />
+  <td>
+    <img width=350 src="resources/screenshot.png" title="Calendr" />
+    <img valign='top' width=170 src='https://github.com/pakerwreah/Calendr/assets/803954/8b3ebb0f-52ad-461c-91c3-7b4d2646712e' />
+    <img valign='top' width=150 src='https://github.com/pakerwreah/Calendr/assets/803954/8e8d342d-9be5-4bad-b741-875cc407ec1a' />
   </td>
 </tr>
 </table>
 
 Hey 🙋🏻‍♂️ if you like my app, please consider buying me a coffee to keep me motivated.<br>
 <sub>(and maybe update the screenshot once in a while)</sub>
+
+<table>
+<tr>
+  <td>
+    <a href="https://star-history.com/#pakerwreah/Calendr&Date">
+     <picture>
+       <source width=679 media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=pakerwreah/Calendr&type=Date&theme=dark" />
+       <source width=679 media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=pakerwreah/Calendr&type=Date" />
+       <img width=679 alt="Star History Chart" src="https://api.star-history.com/svg?repos=pakerwreah/Calendr&type=Date" />
+     </picture>
+    </a>
+  </td>
+</tr>
+</table>
