@@ -38,9 +38,9 @@
 
 "settings.next_event" = "Nächster Termin";
 "settings.next_event.show_next_event" = "Zeige nächsten Termin";
-//"settings.next_event.grab_attention" = "Grab attention when event is close";
-//"settings.next_event.grab_attention.flashing" = "Flashing";
-//"settings.next_event.grab_attention.sound" = "Play sound";
+"settings.next_event.grab_attention" = "Aufmerksamkeit erzeugen, wenn Ereignis kurz bevorsteht";
+"settings.next_event.grab_attention.flashing" = "Blinken";
+"settings.next_event.grab_attention.sound" = "Ton abspielen";
 "settings.next_event.detect_notch" = "Kürzen, wenn 'notch' vorhanden ist";
 
 "settings.calendar" = "Kalender";
