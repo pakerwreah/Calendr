@@ -304,19 +304,7 @@ class MainViewController: NSViewController {
 
         super.viewDidAppear()
         
-        view.window?.makeKey()
-        NSApp.activate(ignoringOtherApps: true)
-
         eventListView.scrollTop()
-    }
-
-    override func mouseEntered(with event: NSEvent) {
-
-        super.mouseEntered(with: event)
-
-        guard !NSApp.isActive else { return }
-
-        NSApp.activate(ignoringOtherApps: true)
     }
 
     // MARK: - Setup

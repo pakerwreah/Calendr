@@ -25,6 +25,7 @@ class Popover: NSObject, PopoverWindowDelegate {
 
     private var window: PopoverWindow?
     private var isClosing = false
+    private var frameObserver: Any?
 
     var contentViewController: NSViewController?
     weak var delegate: PopoverDelegate?
@@ -71,15 +72,27 @@ class Popover: NSObject, PopoverWindowDelegate {
         container.addSubview(contentView)
         container.edges(equalTo: contentView)
 
-        let window = PopoverWindow()
+        let window = PopoverWindow(
+            contentRect: .zero,
+            styleMask: [.borderless, .nonactivatingPanel],
+            backing: .buffered,
+            defer: false
+        )
         window.contentView = container
         window.isOpaque = false
         window.backgroundColor = .clear
-        window.styleMask = .borderless
+        window.collectionBehavior = .moveToActiveSpace
         window.level = .popUpMenu
         window.isReleasedWhenClosed = false
+        window.isMovableByWindowBackground = false
+        window.isFloatingPanel = true
+        window.animationBehavior = .utilityWindow
         window._delegate = self
-        window.move(to: view, edge: edge, spacing: spacing)
+
+        frameObserver = window.observe(\.frame) { [weak view] window, _ in
+            guard let view else { return }
+            window.move(to: view, edge: edge, spacing: spacing)
+        }
         window.activate()
 
         delegate?.popoverDidShow?()
@@ -106,10 +119,6 @@ class Popover: NSObject, PopoverWindowDelegate {
             return
         }
 
-        guard NSApp.isActive else {
-            return Popover.closeAll()
-        }
-
         guard !isMouseInside else {
             return
         }
@@ -133,7 +142,11 @@ class Popover: NSObject, PopoverWindowDelegate {
             return
         }
 
-        newTop.activate()
+        DispatchQueue.main.async {
+            if !newTop.isKeyWindow {
+                newTop.performClose(nil)
+            }
+        }
     }
 }
 
@@ -141,7 +154,7 @@ class Popover: NSObject, PopoverWindowDelegate {
     @objc optional func windowDidClose()
 }
 
-private class PopoverWindow: NSWindow {
+private class PopoverWindow: NSPanel {
 
     override weak var delegate: NSWindowDelegate? {
         set {
@@ -159,6 +172,10 @@ private class PopoverWindow: NSWindow {
 
     override var canBecomeKey: Bool {
         return true
+    }
+
+    override var canBecomeMain: Bool {
+        return false
     }
 
     override var acceptsFirstResponder: Bool {
@@ -183,8 +200,6 @@ private class PopoverWindow: NSWindow {
 
     func activate() {
         makeKeyAndOrderFront(nil)
-        NSRunningApplication.current.activate()
-        NSApp.activate(ignoringOtherApps: true)
         makeFirstResponder(nil)
     }
 
