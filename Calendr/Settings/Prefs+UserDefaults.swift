@@ -9,8 +9,8 @@ import Foundation
 
 enum Prefs {
     // Menu Bar
-    static let enabledCalendars = "enabled_calendars"
-    static let nextEventCalendars = "next_event_calendars"
+    static let disabledCalendars = "disabled_calendars"
+    static let silencedCalendars = "silenced_calendars"
     static let statusItemIconEnabled = "status_item_icon_enabled"
     static let statusItemIconStyle = "status_item_icon_style"
     static let statusItemDateEnabled = "status_item_date_enabled"
@@ -114,14 +114,14 @@ extension UserDefaults {
 
     // Menu Bar
 
-    @objc dynamic var enabledCalendars: [String]? {
-        get { stringArray(forKey: Prefs.enabledCalendars) }
-        set { set(newValue, forKey: Prefs.enabledCalendars) }
+    @objc dynamic var disabledCalendars: [String] {
+        get { stringArray(forKey: Prefs.disabledCalendars) ?? [] }
+        set { set(newValue, forKey: Prefs.disabledCalendars) }
     }
 
-    @objc dynamic var nextEventCalendars: [String]? {
-        get { stringArray(forKey: Prefs.nextEventCalendars) }
-        set { set(newValue, forKey: Prefs.nextEventCalendars) }
+    @objc dynamic var silencedCalendars: [String] {
+        get { stringArray(forKey: Prefs.silencedCalendars) ?? [] }
+        set { set(newValue, forKey: Prefs.silencedCalendars) }
     }
 
     @objc dynamic var statusItemIconEnabled: Bool {

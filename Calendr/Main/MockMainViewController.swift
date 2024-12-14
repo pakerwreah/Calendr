@@ -28,7 +28,6 @@ class MockMainViewController: MainViewController {
             Prefs.showWeekNumbers: true,
             Prefs.showEventStatusItem: true,
             Prefs.transparencyLevel: 5,
-            Prefs.enabledCalendars: CalendarModel.all.map(\.id)
         ])
 
         let notificationCenter = NotificationCenter()

@@ -15,7 +15,7 @@ struct CalendarPickerPreview: PreviewProvider {
         let userDefaults = UserDefaults(suiteName: String(describing: Self.self))!
 
         userDefaults.showEventStatusItem = true
-        userDefaults.nextEventCalendars = [CalendarModel].mock
+        userDefaults.silencedCalendars = [CalendarModel].mock
             .enumerated()
             .filter { $0.offset % 3 == 0 }
             .map(\.element.id)
