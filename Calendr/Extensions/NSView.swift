@@ -9,7 +9,10 @@ import Cocoa
 
 extension NSView {
 
-    func scrollTop() { scroll(.init(x: 0, y: frame.height)) }
+    func scrollTop() {
+        // NSTextView is flipped by default (which took me ages to figure out)
+        scroll(.init(x: 0, y: isFlipped ? 0 : frame.height))
+    }
 }
 
 // MARK: - Factory

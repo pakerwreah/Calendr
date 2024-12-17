@@ -28,7 +28,8 @@ class EventDetailsViewModel {
     let duration: String
     let url: String
     let location: String
-    let notes: String
+    let notes: String?
+    let meetingInfo: String?
     let participants: [Participant]
     let link: EventLink?
     let settings: EventDetailsSettings
@@ -99,7 +100,7 @@ class EventDetailsViewModel {
         link = event.detectLink(using: workspace)
         url = type.isBirthday ? "" : link.map { $0.isNative ? "" : $0.original.absoluteString } ?? ""
         location = event.location ?? ""
-        notes = event.notes ?? ""
+        (notes, meetingInfo) = parseNotesMeetingInfo(from: event.notes)
         participants = event.participants.sorted {
             ($0.isOrganizer, $0.isCurrentUser, $0.status, $0.name)
             <
@@ -289,4 +290,26 @@ class EventDetailsViewModel {
             callback: callback
         )
     }
+}
+
+private func parseNotesMeetingInfo(from notes: String?) -> (notes: String?, meetingInfo: String?) {
+    
+    let marker = "-::~:~::~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~::~:~::-"
+
+    guard
+        var notes,
+        let startRange = notes.range(of: marker),
+        let endRange = notes.range(of: marker, range: startRange.upperBound..<notes.endIndex)
+    else {
+        return (notes, nil) // Return input unchanged if markers not found
+    }
+
+    let meetingInfo = notes[startRange.upperBound..<endRange.lowerBound]
+        .trimmingCharacters(in: .whitespacesAndNewlines)
+
+    // Remove the markers and content
+    notes.removeSubrange(startRange.lowerBound..<endRange.upperBound)
+    notes = notes.trimmingCharacters(in: .whitespacesAndNewlines)
+
+    return (notes, meetingInfo)
 }
