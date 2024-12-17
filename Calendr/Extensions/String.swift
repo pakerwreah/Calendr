@@ -8,7 +8,7 @@
 import Cocoa
 
 extension StringProtocol {
-    
+
     static var uuid: String { UUID().uuidString }
 
     var trimmed: String {
