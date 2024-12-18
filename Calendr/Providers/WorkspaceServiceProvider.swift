@@ -80,10 +80,12 @@ class Workspace: WorkspaceServiceProviding {
     }
 
     func open(_ url: URL) -> Bool {
-        workspace.open(url)
+        Popover.closeAll()
+        return workspace.open(url)
     }
 
     func open(_ link: EventLink) -> Bool {
+        Popover.closeAll()
         guard
             !link.isNative,
             let browserPath = userDefaults.defaultBrowserPerCalendar[link.calendarId],
