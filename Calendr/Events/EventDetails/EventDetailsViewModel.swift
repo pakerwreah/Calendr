@@ -224,7 +224,7 @@ class EventDetailsViewModel {
         // trigger early fetch and keep value
         weather.subscribe().disposed(by: disposeBag)
 
-        optimisticLoadTime = .milliseconds(canShowMap.value && !event.location.isNilOrEmpty ? 50 : 0)
+        optimisticLoadTime = .milliseconds(canShowMap.current && !event.location.isNilOrEmpty ? 50 : 0)
 
         let defaultBrowserURL = workspace.urlForDefaultBrowserApplication()
 
