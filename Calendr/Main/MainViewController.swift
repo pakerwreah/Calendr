@@ -451,6 +451,9 @@ class MainViewController: NSViewController {
             guard var range = text.range(of: month, options: [.caseInsensitive, .diacriticInsensitive]) else {
                 return nil
             }
+            guard range.upperBound == text.endIndex || !text[range.upperBound].isLetter else {
+                return nil
+            }
             components.month = index + 1
 
             // Extract year if it exists after the month
