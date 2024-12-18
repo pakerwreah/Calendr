@@ -140,7 +140,7 @@ class CalendarViewModel {
             events.filter {
                 (showDeclinedEvents || $0.status != .declined)
                 &&
-                (searchTerm.isEmpty || $0.contains(searchTerm))
+                (searchTerm.isEmpty || $0.propertiesContain(searchTerm))
             }
         }
         .optional()
@@ -287,14 +287,19 @@ private enum Constants {
 
 private extension EventModel {
 
-    func contains(_ searchTerm: String) -> Bool {
-        [
+    func propertiesContain(_ searchTerm: String) -> Bool {
+
+        let searchTerm = searchTerm.trimmingCharacters(in: .whitespaces)
+
+        return [
             title,
             location,
             url?.absoluteString,
             notes,
             participants.map(\.name).joined(separator: " ")
         ]
-        .contains { $0?.localizedCaseInsensitiveContains(searchTerm) ?? false }
+        .contains {
+            $0?.range(of: searchTerm, options: [.caseInsensitive, .diacriticInsensitive]) != nil
+        }
     }
 }

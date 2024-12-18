@@ -52,7 +52,7 @@ extension BehaviorSubject {
         { ($0.asObservable().observe(on: scheduler), $0.asObserver()) }(Self.init(value: value))
     }
 
-    var value: Element { try! value() }
+    var current: Element { try! value() }
 }
 
 extension Bool {

@@ -85,6 +85,8 @@
 		3477F3DA25FD44C1008EA888 /* MockEventListSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3477F3D925FD44C1008EA888 /* MockEventListSettings.swift */; };
 		3477F3E425FD5285008EA888 /* NSView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3477F3E325FD5285008EA888 /* NSView+Rx.swift */; };
 		3477F3E825FD52AA008EA888 /* NSViewController+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3477F3E725FD52AA008EA888 /* NSViewController+Rx.swift */; };
+		347C04A12D13691100F67E7C /* NSControl+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 347C04A02D13691100F67E7C /* NSControl+Rx.swift */; };
+		347C04A32D136BF800F67E7C /* SearchSuggestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 347C04A22D136BF400F67E7C /* SearchSuggestionView.swift */; };
 		347D0F9825952F89002451EC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 347D0F9725952F89002451EC /* AppDelegate.swift */; };
 		347D0F9A25952F8A002451EC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 347D0F9925952F8A002451EC /* Images.xcassets */; };
 		347D0FDF259533C3002451EC /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 347D0FDE259533C3002451EC /* CalendarView.swift */; };
@@ -292,6 +294,8 @@
 		3477F3D925FD44C1008EA888 /* MockEventListSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockEventListSettings.swift; sourceTree = "<group>"; };
 		3477F3E325FD5285008EA888 /* NSView+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSView+Rx.swift"; sourceTree = "<group>"; };
 		3477F3E725FD52AA008EA888 /* NSViewController+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSViewController+Rx.swift"; sourceTree = "<group>"; };
+		347C04A02D13691100F67E7C /* NSControl+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSControl+Rx.swift"; sourceTree = "<group>"; };
+		347C04A22D136BF400F67E7C /* SearchSuggestionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchSuggestionView.swift; sourceTree = "<group>"; };
 		347D0F9425952F89002451EC /* Calendr.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Calendr.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		347D0F9725952F89002451EC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		347D0F9925952F8A002451EC /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -636,6 +640,7 @@
 		347D0FE22595384E002451EC /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				347C04A22D136BF400F67E7C /* SearchSuggestionView.swift */,
 				34CC382C25B636A6006CBD99 /* Checkbox.swift */,
 				34ABB9F129A2AFA30021F3CF /* CursorButton.swift */,
 				341B2B3D25D06A6F00336342 /* Dropdown.swift */,
@@ -663,6 +668,7 @@
 				34B5A09625B0F8A500F7F7ED /* NSButton.swift */,
 				34D3655729402D5700849457 /* NSColor.swift */,
 				34926A702931B18C0090C8FC /* NSControl.swift */,
+				347C04A02D13691100F67E7C /* NSControl+Rx.swift */,
 				34D19FBF262299D300B2732C /* NSEdgeInsets.swift */,
 				34B2C59D279FFF0600B52BF3 /* NSGestureRecognizer+Rx.swift */,
 				34091736267E81870023B76D /* NSImage.swift */,
@@ -1117,6 +1123,7 @@
 				3417A40A2A702643005C77E4 /* StatusItemIconFactory.swift in Sources */,
 				344D5EBC2CA0DAAF00523F9E /* NSImageView.swift in Sources */,
 				34EDE71B2AC46515007C5854 /* Error.swift in Sources */,
+				347C04A12D13691100F67E7C /* NSControl+Rx.swift in Sources */,
 				345DD97326920D1B00294D90 /* CalendarViewPreview.swift in Sources */,
 				3492C460269FCF5B009CFAD2 /* Accessibility.swift in Sources */,
 				34299F712C72289400A0269B /* NetworkServiceProvider.swift in Sources */,
@@ -1134,6 +1141,7 @@
 				348E701F25C43C5200B3B160 /* WeekDay.swift in Sources */,
 				34091737267E81870023B76D /* NSImage.swift in Sources */,
 				34ABB9EE29A163890021F3CF /* ContextMenuFactory.swift in Sources */,
+				347C04A32D136BF800F67E7C /* SearchSuggestionView.swift in Sources */,
 				34299F732C724FA000A0269B /* MockNetworkServiceProvider.swift in Sources */,
 				3468E653284BD44600B21EC8 /* EventBarStyle.swift in Sources */,
 				34F128E12597B9C9007DF31C /* MainViewController.swift in Sources */,
