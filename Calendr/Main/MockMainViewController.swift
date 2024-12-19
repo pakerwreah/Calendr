@@ -34,6 +34,7 @@ class MockMainViewController: MainViewController {
         let fileManager = FileManager.default
 
         super.init(
+            deeplink: .empty(),
             autoLauncher: AutoLauncher(),
             workspace: NSWorkspace.shared,
             calendarService: MockCalendarServiceProvider(dateProvider: dateProvider),
