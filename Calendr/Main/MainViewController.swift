@@ -63,6 +63,7 @@ class MainViewController: NSViewController {
 
     // Properties
     private let keyboard = Keyboard()
+    private let deeplink: Observable<URL>
     private let workspace: WorkspaceServiceProviding
     private let calendarService: CalendarServiceProviding
     private let dateProvider: DateProviding
@@ -75,6 +76,7 @@ class MainViewController: NSViewController {
     // MARK: - Initalization
 
     init(
+        deeplink: Observable<URL>,
         autoLauncher: AutoLauncher,
         workspace: WorkspaceServiceProviding,
         calendarService: CalendarServiceProviding,
@@ -89,6 +91,7 @@ class MainViewController: NSViewController {
         fileManager: FileManager
     ) {
 
+        self.deeplink = deeplink
         self.workspace = workspace
         self.calendarService = calendarService
         self.dateProvider = dateProvider
@@ -235,6 +238,8 @@ class MainViewController: NSViewController {
         setUpKeyboard()
 
         refreshDate.onNext(())
+
+        setUpDeeplink()
 
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(5)) { [autoUpdater] in
             autoUpdater.start()
@@ -779,6 +784,38 @@ class MainViewController: NSViewController {
                 self?.reminderStatusItemClickHandler.rightClick.onNext(())
             }
         }
+    }
+
+    private func setUpDeeplink() {
+
+        let handleColdStart = mainStatusItem.rx.observe(\.button)
+            .skipNil()
+            .flatMapLatest { $0.rx.observe(\.frame) }
+            .debounce(.milliseconds(100), scheduler: MainScheduler.instance)
+            .take(1)
+            .ignoreElements()
+            .asCompletable()
+
+        let formatter = DateFormatter(format: "yyyyMMdd", calendar: dateProvider.calendar)
+
+        let date = handleColdStart
+            .andThen(deeplink)
+            .compactMap { url -> Date? in
+                guard let action = url.host, action == "date" else {
+                    return nil
+                }
+                return formatter.date(from: url.lastPathComponent)
+            }
+            .share(replay: 1)
+
+        date.bind(to: selectedDate)
+            .disposed(by: disposeBag)
+
+        date.void()
+            .filter { [view] in view.window == nil }
+            .bind(to: mainStatusItemClickHandler.leftClick)
+            .disposed(by: disposeBag)
+
     }
 
     // MARK: - Factories
