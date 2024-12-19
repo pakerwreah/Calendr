@@ -102,6 +102,8 @@
 		3487A43825E706F800FCC7D7 /* NextEventViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3487A43725E706F800FCC7D7 /* NextEventViewModel.swift */; };
 		3487A43C25E70F5B00FCC7D7 /* NextEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3487A43B25E70F5B00FCC7D7 /* NextEventView.swift */; };
 		348B8D0425B2925100E518FE /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348B8D0325B2925100E518FE /* SettingsViewModel.swift */; };
+		348CF5012D13971100B9BFE0 /* DateSearchParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348CF5002D13970600B9BFE0 /* DateSearchParser.swift */; };
+		348CF5032D1398FA00B9BFE0 /* DateSearchParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348CF5022D1398F600B9BFE0 /* DateSearchParserTests.swift */; };
 		348D693D29ABDD91009F1882 /* CalendarScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348D693C29ABDD91009F1882 /* CalendarScript.swift */; };
 		348D694029ABF29C009F1882 /* AppleScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348D693F29ABF29C009F1882 /* AppleScript.swift */; };
 		348E701F25C43C5200B3B160 /* WeekDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348E701E25C43C5200B3B160 /* WeekDay.swift */; };
@@ -316,6 +318,8 @@
 		3487A43725E706F800FCC7D7 /* NextEventViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextEventViewModel.swift; sourceTree = "<group>"; };
 		3487A43B25E70F5B00FCC7D7 /* NextEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextEventView.swift; sourceTree = "<group>"; };
 		348B8D0325B2925100E518FE /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
+		348CF5002D13970600B9BFE0 /* DateSearchParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateSearchParser.swift; sourceTree = "<group>"; };
+		348CF5022D1398F600B9BFE0 /* DateSearchParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateSearchParserTests.swift; sourceTree = "<group>"; };
 		348D693C29ABDD91009F1882 /* CalendarScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarScript.swift; sourceTree = "<group>"; };
 		348D693F29ABF29C009F1882 /* AppleScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleScript.swift; sourceTree = "<group>"; };
 		348E701E25C43C5200B3B160 /* WeekDay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekDay.swift; sourceTree = "<group>"; };
@@ -604,6 +608,7 @@
 				34E1902225B76CFE00E9491B /* CalendarPickerViewModelTests.swift */,
 				347E6D3D25AA2811009A6716 /* CalendarViewModelTests.swift */,
 				34ABB9EF29A166220021F3CF /* ContextMenuFactoryTests.swift */,
+				348CF5022D1398F600B9BFE0 /* DateSearchParserTests.swift */,
 				34924CE3259FCB36009C3450 /* DateSelectorTests.swift */,
 				34D19FC52622A02C00B2732C /* EventDetailsViewModelTests.swift */,
 				34C72FA125E987F000FD20FA /* EventListViewModelTests.swift */,
@@ -807,6 +812,7 @@
 			isa = PBXGroup;
 			children = (
 				345CC3672C8CC93B00B0DD1A /* Cache.swift */,
+				348CF5002D13970600B9BFE0 /* DateSearchParser.swift */,
 				34E5F23B2C9F76EF0048E25D /* DisposableWrapper.swift */,
 				34C1D4202C6E632F00295E5E /* Sentry.swift */,
 				3438AEED2C6192A9002BE3E1 /* XCTest.swift */,
@@ -1211,6 +1217,7 @@
 				34E004A725B61D5200241419 /* StatusItemViewModel.swift in Sources */,
 				34D19FC0262299D300B2732C /* NSEdgeInsets.swift in Sources */,
 				345CC3682C8CC93C00B0DD1A /* Cache.swift in Sources */,
+				348CF5012D13971100B9BFE0 /* DateSearchParser.swift in Sources */,
 				348732292C8E057300B9B110 /* WeatherServiceProvider.swift in Sources */,
 				34702168259E761100827AE7 /* Calendar.swift in Sources */,
 				34F201332693F562006CE2FF /* MockEventListSettings.swift in Sources */,
@@ -1272,6 +1279,7 @@
 				347E6D3E25AA2811009A6716 /* CalendarViewModelTests.swift in Sources */,
 				348E702D25C6161900B3B160 /* EventViewModelFadeTests.swift in Sources */,
 				34D19FC62622A02C00B2732C /* EventDetailsViewModelTests.swift in Sources */,
+				348CF5032D1398FA00B9BFE0 /* DateSearchParserTests.swift in Sources */,
 				34ABB9F029A166220021F3CF /* ContextMenuFactoryTests.swift in Sources */,
 				34C72FA225E987F000FD20FA /* EventListViewModelTests.swift in Sources */,
 				34C72F9625E8A05700FD20FA /* MockNextEventSettings.swift in Sources */,

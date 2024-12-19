@@ -57,8 +57,7 @@ class MainViewController: NSViewController {
     private let selectedDate: BehaviorSubject<Date>
     private let isShowingDetails = BehaviorSubject<Bool>(value: false)
     private let searchInputText = BehaviorSubject<String>(value: "")
-    private typealias DateSuggestionMatch = (date: Date, range: Range<String.Index>)
-    private let searchInputSuggestionDate = BehaviorSubject<DateSuggestionMatch?>(value: nil)
+    private let searchInputSuggestionDate = BehaviorSubject<DateSuggestionResult?>(value: nil)
     private let navigationSubject = PublishSubject<Keyboard.Key>()
     private let keyboardModifiers = BehaviorSubject<NSEvent.ModifierFlags>(value: [])
 
@@ -432,68 +431,11 @@ class MainViewController: NSViewController {
         .disposed(by: disposeBag)
     }
 
-    private func searchMatchDate(text: String) -> DateSuggestionMatch? {
-        let detector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.date.rawValue)
-        let matches = detector?.matches(in: text, options: [], range: NSRange(location: 0, length: text.count))
-        guard
-            let match = matches?.first(where: \.date.isNotNil),
-            let date = match.date,
-            let range = Range(match.range, in: text)
-        else {
-            return nil
-        }
-        return (date, range)
-    }
-
-    private func searchMatchMonth(text: String, symbols: [String]) -> DateSuggestionMatch? {
-        var components = dateProvider.calendar.dateComponents([.year, .month, .day], from: dateProvider.now)
-        return symbols.lazy.enumerated().compactMap { index, month in
-            guard var range = text.range(of: month, options: [.caseInsensitive, .diacriticInsensitive]) else {
-                return nil
-            }
-            guard range.upperBound == text.endIndex || !text[range.upperBound].isLetter else {
-                return nil
-            }
-            components.month = index + 1
-
-            // Extract year if it exists after the month
-            if let yearRange = text[range.upperBound...].range(of: #"(\d{4})"#, options: .regularExpression) {
-                if let yearStr = Int(text[yearRange].trimmingCharacters(in: .whitespaces)) {
-                    components.year = yearStr
-                    // Extend the range to include the year
-                    range = range.lowerBound..<yearRange.upperBound
-                }
-            }
-
-            guard let date = dateProvider.calendar.date(from: components) else {
-                return nil
-            }
-            return (date, range)
-        }.first
-    }
-
     private func setUpDateSuggestion() {
 
-        let formatter = DateFormatter(calendar: dateProvider.calendar)
-        formatter.dateStyle = .long
-
         searchInputText
-            .map { [weak self] text -> DateSuggestionMatch? in
-                guard let self else { return nil }
-
-                if let match = searchMatchDate(text: text) {
-                    return match
-                }
-
-                if let match = searchMatchMonth(text: text, symbols: formatter.monthSymbols) {
-                    return match
-                }
-
-                if let match = searchMatchMonth(text: text, symbols: formatter.shortMonthSymbols) {
-                    return match
-                }
-
-                return nil
+            .map { [dateProvider] text in
+                DateSearchParser.parse(text: text, using: dateProvider)
             }
             .bind(to: searchInputSuggestionDate)
             .disposed(by: disposeBag)
@@ -505,6 +447,9 @@ class MainViewController: NSViewController {
             }
             .bind(to: searchInputSuggestionView.rx.isHidden)
             .disposed(by: disposeBag)
+
+        let formatter = DateFormatter(calendar: dateProvider.calendar)
+        formatter.dateStyle = .long
 
         searchInputSuggestionDate
             .compactMap(\.?.date)
@@ -765,15 +710,11 @@ class MainViewController: NSViewController {
                 hideSearchInput()
 
             case .enter where searchInput.hasFocus:
-                var search = searchInputText.current
-                guard
-                    let (date, range) = searchInputSuggestionDate.current
-                else { return event }
-
-                search.removeSubrange(range)
-
+                guard let (date, result) = searchInputSuggestionDate.current else {
+                    return event
+                }
                 selectedDate.onNext(date)
-                searchInputText.onNext(search.trimmingCharacters(in: .whitespaces))
+                searchInputText.onNext(result)
 
             case _ where searchInput.hasFocus:
                 return event
