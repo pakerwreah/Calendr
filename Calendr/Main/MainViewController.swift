@@ -796,15 +796,14 @@ class MainViewController: NSViewController {
             .ignoreElements()
             .asCompletable()
 
-        let formatter = DateFormatter(format: "yyyyMMdd", calendar: dateProvider.calendar)
-
         let date = handleColdStart
             .andThen(deeplink)
-            .compactMap { url -> Date? in
+            .compactMap { [dateProvider] url -> Date? in
                 guard let action = url.host, action == "date" else {
                     return nil
                 }
-                return formatter.date(from: url.lastPathComponent)
+                let result = DateSearchParser.parse(text: url.lastPathComponent, using: dateProvider)
+                return result?.date
             }
             .share(replay: 1)
 
