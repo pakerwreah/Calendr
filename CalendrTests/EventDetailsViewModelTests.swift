@@ -13,14 +13,19 @@ class EventDetailsViewModelTests: XCTestCase {
 
     let disposeBag = DisposeBag()
 
+    let userDefaults = UserDefaults(suiteName: className())!
+
     let dateProvider = MockDateProvider()
     let calendarService = MockCalendarServiceProvider()
     let geocoder = MockGeocodeServiceProvider()
     let weatherService = MockWeatherServiceProvider()
-    let workspace = MockWorkspaceServiceProvider()
+    lazy var workspace = MockWorkspaceServiceProvider(userDefaults: userDefaults)
     let settings = MockEventDetailsSettings()
 
     override func setUp() {
+        userDefaults.setVolatileDomain([:], forName: UserDefaults.registrationDomain)
+        userDefaults.removePersistentDomain(forName: className)
+
         dateProvider.m_calendar.locale = Locale(identifier: "en_US")
     }
 
@@ -153,42 +158,42 @@ class EventDetailsViewModelTests: XCTestCase {
     }
 
     func testSkip_withSouceList_shouldNotShowSkip() {
-        
+
         let viewModel = mock(
             event: .make(type: .event(.unknown)),
             source: .list
         )
-        
+
         XCTAssertFalse(viewModel.showSkip)
     }
 
     func testSkip_withSouceMenubar_shouldShowSkip() {
-        
+
         let viewModel = mock(
             event: .make(type: .event(.unknown)),
             source: .menubar
         )
-        
+
         XCTAssertTrue(viewModel.showSkip)
     }
 
     func testSkip_withSouceMenubar_isBirthday_shouldShowSkip() {
-        
+
         let viewModel = mock(
             event: .make(type: .birthday),
             source: .menubar
         )
-        
+
         XCTAssertTrue(viewModel.showSkip)
     }
 
     func testSkip_withSouceMenubar_isReminder_shouldNotShowSkip() {
-        
+
         let viewModel = mock(
             event: .make(type: .reminder(completed: false)),
             source: .list
         )
-        
+
         XCTAssertFalse(viewModel.showSkip)
     }
 
@@ -248,13 +253,9 @@ class EventDetailsViewModelTests: XCTestCase {
 
     func testBrowserOptions() {
 
-        workspace.m_urlForApplicationToOpenURL = makeUrl("Default")
-        workspace.m_urlForApplicationToOpenContentType = makeUrl("Default")
+        mockBrowsers()
 
         XCTAssertEqual(workspace.urlForDefaultBrowserApplication(), makeUrl("Default"))
-
-        workspace.m_urlsForApplicationsToOpenURL = [makeUrl("Browser 2"), makeUrl("Browser 1"), makeUrl("Default"), makeUrl("Browser 3")]
-        workspace.m_urlsForApplicationsToOpenContentType = [makeUrl("Browser 2"), makeUrl("Browser 1"), makeUrl("Default"), makeUrl("Browser 3"), makeUrl("Not a real browser 4")]
 
         let urlsForBrowsers = workspace.urlsForBrowsersApplications()
 
@@ -268,24 +269,56 @@ class EventDetailsViewModelTests: XCTestCase {
         let sortedBrowserNames = viewModel.browserOptions.map(\.name)
 
         XCTAssertEqual(sortedBrowserNames, ["Default", "Browser 1", "Browser 2", "Browser 3"])
-
     }
 
-    private class MockedURL: NSURL, @unchecked Sendable {
+    func testOpenLinkWithSelectedBrowser() {
 
-        var resourceValues: [URLResourceKey : Any] = [:]
+        mockBrowsers()
 
-        override func resourceValues(forKeys keys: [URLResourceKey]) throws -> [URLResourceKey : Any] {
-            return resourceValues
+        let viewModel = mock(event: .make(location: "https://example.com", calendar: .make(id: "1")))
+
+        let defaultBrowserExpectation = expectation(description: "Default")
+        let selectedBrowserExpectation = expectation(description: "Selected")
+
+        workspace.didOpen = { url in
+            XCTAssertEqual(url.absoluteString, "https://example.com")
+            defaultBrowserExpectation.fulfill()
         }
+
+        workspace.didOpenWithApplication = { url, appUrl in
+            XCTFail("No default browser selected")
+            defaultBrowserExpectation.fulfill()
+        }
+
+        viewModel.linkTapped.onNext(())
+
+        wait(for: [defaultBrowserExpectation], timeout: 1)
+
+        XCTAssertEqual(userDefaults.defaultBrowserPerCalendar, [:])
+
+        viewModel.selectedBrowserObserver.onNext(2)
+
+        let browser2Url = makeUrl("Browser 2").absoluteString
+
+        XCTAssertEqual(userDefaults.defaultBrowserPerCalendar, ["1": browser2Url])
+
+        workspace.didOpenWithApplication = { url, appUrl in
+            XCTAssertEqual(url.absoluteString, "https://example.com")
+            XCTAssertEqual(appUrl?.absoluteString, browser2Url)
+            selectedBrowserExpectation.fulfill()
+        }
+
+        viewModel.linkTapped.onNext(())
+
+        wait(for: [selectedBrowserExpectation], timeout: 1)
     }
 
-    func makeUrl(_ name: String) -> URL {
-        let path = "/path/Applications/\(name).app".addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!
-        let url = MockedURL(string: path)!
-        url.resourceValues[.nameKey] = "\(name).app"
-        url.resourceValues[.effectiveIconKey] = NSImage()
-        return url as URL
+    func mockBrowsers() {
+        workspace.m_urlForApplicationToOpenURL = makeUrl("Default")
+        workspace.m_urlForApplicationToOpenContentType = makeUrl("Default")
+
+        workspace.m_urlsForApplicationsToOpenURL = [makeUrl("Browser 2"), makeUrl("Browser 1"), makeUrl("Default"), makeUrl("Browser 3")]
+        workspace.m_urlsForApplicationsToOpenContentType = [makeUrl("Browser 2"), makeUrl("Browser 1"), makeUrl("Default"), makeUrl("Browser 3"), makeUrl("Not a real browser 4")]
     }
 
     func mock(event: EventModel, source: EventDetailsSource = .list, callback: @escaping (ContextCallbackAction?) -> Void = { _ in }) -> EventDetailsViewModel {
@@ -297,7 +330,7 @@ class EventDetailsViewModelTests: XCTestCase {
             geocoder: geocoder,
             weatherService: weatherService,
             workspace: workspace,
-            userDefaults: .init(),
+            userDefaults: userDefaults,
             settings: settings,
             isShowingObserver: .dummy(),
             isInProgress: .just(false),
@@ -305,4 +338,21 @@ class EventDetailsViewModelTests: XCTestCase {
             callback: .init { callback($0.element) }
         )
     }
+}
+
+private class MockedURL: NSURL, @unchecked Sendable {
+
+    var resourceValues: [URLResourceKey : Any] = [:]
+
+    override func resourceValues(forKeys keys: [URLResourceKey]) throws -> [URLResourceKey : Any] {
+        return resourceValues
+    }
+}
+
+private func makeUrl(_ name: String) -> URL {
+    let path = "/path/Applications/\(name).app".addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!
+    let url = MockedURL(string: path)!
+    url.resourceValues[.nameKey] = "\(name).app"
+    url.resourceValues[.effectiveIconKey] = NSImage()
+    return url as URL
 }
