@@ -10,6 +10,8 @@ import UniformTypeIdentifiers
 
 protocol WorkspaceServiceProviding {
 
+    var userDefaults: UserDefaults { get }
+    var dateProvider: DateProviding { get }
     var notificationCenter: NotificationCenter { get }
 
     func urlForApplication(toOpen url: URL) -> URL?
@@ -22,7 +24,11 @@ protocol WorkspaceServiceProviding {
 
     @discardableResult func open(_ url: URL) -> Bool
 
-    @discardableResult func open(_ link: EventLink) -> Bool
+    func open(_ url: URL, withApplicationAt applicationURL: URL)
+
+    func open(_ link: EventLink)
+
+    func open(_ event: EventModel)
 }
 
 private let httpsSchemeURL = URL(string: "https:")!
@@ -44,22 +50,34 @@ extension WorkspaceServiceProviding {
         return Array(Set(htmlHandlerAppsURLs).intersection(httpsHandlerAppsURLs))
     }
 
-    func open(_ link: EventLink) -> Bool {
-        return false
+    func open(_ link: EventLink) {
+        guard
+            !link.isNative,
+            let browserPath = userDefaults.defaultBrowserPerCalendar[link.calendarId],
+            let browserUrl = URL(string: browserPath)
+        else {
+            open(link.url)
+            return
+        }
+        open(link.url, withApplicationAt: browserUrl)
+    }
+
+    func open(_ event: EventModel) {
+        open(event.calendarAppURL(using: dateProvider))
     }
 }
 
-extension NSWorkspace: WorkspaceServiceProviding { }
-
 class Workspace: WorkspaceServiceProviding {
 
-    private let userDefaults: UserDefaults
-    private let workspace: NSWorkspace
+    private let workspace: NSWorkspace = .shared
+
+    let userDefaults: UserDefaults
+    let dateProvider: DateProviding
     let notificationCenter: NotificationCenter
 
-    init(userDefaults: UserDefaults) {
+    init(userDefaults: UserDefaults, dateProvider: DateProviding) {
         self.userDefaults = userDefaults
-        self.workspace = .shared
+        self.dateProvider = dateProvider
         self.notificationCenter = workspace.notificationCenter
     }
 
@@ -84,16 +102,8 @@ class Workspace: WorkspaceServiceProviding {
         return workspace.open(url)
     }
 
-    func open(_ link: EventLink) -> Bool {
+    func open(_ url: URL, withApplicationAt applicationURL: URL) {
         Popover.closeAll()
-        guard
-            !link.isNative,
-            let browserPath = userDefaults.defaultBrowserPerCalendar[link.calendarId],
-            let browserUrl = URL(string: browserPath)
-        else {
-            return open(link.url)
-        }
-        workspace.open([link.url], withApplicationAt: browserUrl, configuration: NSWorkspace.OpenConfiguration())
-        return true
+        workspace.open([url], withApplicationAt: applicationURL, configuration: NSWorkspace.OpenConfiguration())
     }
 }

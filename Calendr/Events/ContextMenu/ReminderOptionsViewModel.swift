@@ -59,7 +59,7 @@ class ReminderOptionsViewModel: BaseContextMenuViewModel<ReminderAction> {
 
         switch action {
         case .open:
-            workspace.open(URL(string: "x-apple-reminderkit://remcdreminder/\(event.id)")!)
+            workspace.open(event)
             return .empty()
 
         case .complete:

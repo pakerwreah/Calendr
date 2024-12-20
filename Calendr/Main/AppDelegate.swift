@@ -34,8 +34,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         registerDefaultPrefs(in: userDefaults)
 
-        let workspace = Workspace(userDefaults: userDefaults)
         let dateProvider = DateProvider(notificationCenter: notificationCenter, userDefaults: userDefaults)
+        let workspace = Workspace(userDefaults: userDefaults, dateProvider: dateProvider)
         let notificationProvider = LocalNotificationProvider()
 
         viewController = MainViewController(

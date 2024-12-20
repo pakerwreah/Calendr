@@ -15,7 +15,7 @@ class EventOptionsViewModelTests: XCTestCase {
 
     let dateProvider = MockDateProvider()
     let calendarService = MockCalendarServiceProvider()
-    let workspace = MockWorkspaceServiceProvider()
+    lazy var workspace = MockWorkspaceServiceProvider(dateProvider: dateProvider)
 
     func testOptions_withPendingInvitationStatus() {
 

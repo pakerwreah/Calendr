@@ -77,6 +77,7 @@
 		34702150259E163000827AE7 /* CalendarModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3470214F259E163000827AE7 /* CalendarModel.swift */; };
 		34702168259E761100827AE7 /* Calendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34702167259E761100827AE7 /* Calendar.swift */; };
 		3470654B292EFCF90079C68A /* NSTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3470654A292EFCF90079C68A /* NSTextView.swift */; };
+		34711F6F2D16261800A89C72 /* MockWorkspaceServiceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34711F6E2D16261400A89C72 /* MockWorkspaceServiceProvider.swift */; };
 		3477E70C2C67A6A9008D3844 /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = 3477E70B2C67A6A9008D3844 /* Sentry */; };
 		3477E7102C67C15A008D3844 /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3477E70F2C67C15A008D3844 /* Environment.swift */; };
 		3477E7122C67C25F008D3844 /* Environment.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3477E7112C67C25F008D3844 /* Environment.generated.swift */; };
@@ -289,6 +290,7 @@
 		3470214F259E163000827AE7 /* CalendarModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarModel.swift; sourceTree = "<group>"; };
 		34702167259E761100827AE7 /* Calendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Calendar.swift; sourceTree = "<group>"; };
 		3470654A292EFCF90079C68A /* NSTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSTextView.swift; sourceTree = "<group>"; };
+		34711F6E2D16261400A89C72 /* MockWorkspaceServiceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockWorkspaceServiceProvider.swift; sourceTree = "<group>"; };
 		3477E70F2C67C15A008D3844 /* Environment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Environment.swift; sourceTree = "<group>"; };
 		3477E7112C67C25F008D3844 /* Environment.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Environment.generated.swift; sourceTree = "<group>"; };
 		3477F3CD25FAE56A008EA888 /* EventDetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailsViewModel.swift; sourceTree = "<group>"; };
@@ -465,6 +467,7 @@
 				34C39F6E2CD6B45300933E6D /* MockSoundPlayer.swift */,
 				34F4C47E2A6C57B300397C80 /* MockStatusItemSettings.swift */,
 				345EAD492C8E26EE00D56857 /* MockWeatherServiceProvider.swift */,
+				34711F6E2D16261400A89C72 /* MockWorkspaceServiceProvider.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -935,7 +938,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1250;
-				LastUpgradeCheck = 1610;
+				LastUpgradeCheck = 1620;
 				TargetAttributes = {
 					34427696269B5CA4004CFE1C = {
 						CreatedOnToolsVersion = 12.5.1;
@@ -1115,6 +1118,7 @@
 				34651F5A25E2F08500518C5A /* String.swift in Sources */,
 				34651F7425E3207200518C5A /* WorkspaceServiceProvider.swift in Sources */,
 				34286E4625D5CD9C0097EC5D /* WeekNumberCellView.swift in Sources */,
+				34711F6F2D16261800A89C72 /* MockWorkspaceServiceProvider.swift in Sources */,
 				34ABB9F229A2AFA30021F3CF /* CursorButton.swift in Sources */,
 				341B2B3E25D06A6F00336342 /* Dropdown.swift in Sources */,
 				345CC36E2C8CE13100B0DD1A /* MockGeocodeServiceProvider.swift in Sources */,

@@ -15,7 +15,6 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
     private let disposeBag = DisposeBag()
 
     private let scrollView = NSScrollView()
-    private let eventTypeIcon = NSImageView()
     private let browserDropdown = Dropdown()
     private let contentStackView = NSStackView(.vertical)
     private let participantsStackView = NSStackView(.vertical)
@@ -31,12 +30,9 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
     private let meetingInfoTextView = NSTextView()
     private let meetingInfoScrollView = NSScrollView()
 
+    private let openButton = NSButton()
     private let skipButton = NSButton()
-
-    private let optionsLabel = Label()
     private let optionsButton = NSButton()
-
-    private var hasFooter = false
 
     private let viewModel: EventDetailsViewModel
     
@@ -112,9 +108,9 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         meetingInfoScrollView.contentView.trailing(equalTo: meetingInfoTextView, constant: 10)
         meetingInfoScrollView.contentView.height(equalTo: meetingInfoTextView, priority: .dragThatCanResizeWindow)
 
-        setUpIcon()
         setUpBrowser()
         setUpLink()
+        setUpOpen()
         setUpSkip()
         setUpOptions()
         setUpLabels()
@@ -123,25 +119,6 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         addParticipants()
         addNotes()
         addFooter()
-    }
-
-    private func setUpIcon() {
-
-        switch viewModel.type {
-        case .event:
-            eventTypeIcon.isHidden = true
-            return
-
-        case .birthday:
-            eventTypeIcon.image = Icons.Event.birthday
-            eventTypeIcon.contentTintColor = .systemRed
-
-        case .reminder:
-            eventTypeIcon.image = Icons.Event.reminder.with(pointSize: 12)
-            eventTypeIcon.contentTintColor = .headerTextColor
-        }
-
-        eventTypeIcon.setContentCompressionResistancePriority(.required, for: .horizontal)
     }
 
     private func setUpBrowser() {
@@ -210,6 +187,15 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
             .disposed(by: disposeBag)
     }
 
+    private func setUpOpen() {
+
+        addOpenButton()
+
+        openButton.rx.tap
+            .bind(to: viewModel.openTapped)
+            .disposed(by: disposeBag)
+    }
+
     private func setUpSkip() {
         guard viewModel.showSkip else { return }
 
@@ -269,8 +255,16 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         button.setContentCompressionResistancePriority(.required, for: .vertical)
     }
 
+    private func addOpenButton() {
+
+        openButton.title = Strings.EventAction.open
+
+        setButtonStyle(openButton)
+
+        footerStackView.addArrangedSubview(openButton)
+    }
+
     private func addSkipButton() {
-        hasFooter = true
 
         skipButton.title = Strings.EventAction.skip
         skipButton.image = Icons.Event.skip.with(scale: .small)
@@ -278,49 +272,48 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
 
         setButtonStyle(skipButton)
 
-        footerStackView.addArrangedSubview(skipButton)
         footerStackView.addArrangedSubview(.spacer)
+        footerStackView.addArrangedSubview(skipButton)
     }
 
     private func addReminderOptionsButton() {
-        hasFooter = true
 
         optionsButton.title = Strings.Reminder.Options.button
         optionsButton.image = Icons.EventDetails.optionsArrow.with(scale: .small)
         optionsButton.imagePosition = .imageTrailing
 
-        setButtonStyle(optionsButton)
-
-        footerStackView.addArrangedSubview(.spacer)
-        footerStackView.addArrangedSubview(optionsButton)
+        addOptionsButton()
     }
 
     private func addEventStatusButton(icon: NSImage, color: NSColor, title: String) {
-        hasFooter = true
-
-        optionsLabel.stringValue = Strings.EventStatus.label
-        optionsLabel.textColor = .secondaryLabelColor
-        optionsLabel.setContentHuggingPriority(.required, for: .vertical)
-        optionsLabel.setContentCompressionResistancePriority(.required, for: .vertical)
 
         optionsButton.image = icon.with(color: color)
         optionsButton.title = title
         optionsButton.imagePosition = .imageLeading
+        optionsButton.showsBorderOnlyWhileMouseInside = true
+
+        addOptionsButton()
+    }
+
+    private func addOptionsButton() {
 
         setButtonStyle(optionsButton)
 
-        optionsButton.showsBorderOnlyWhileMouseInside = true
-
-        footerStackView.addArrangedSubview(.spacer)
-        footerStackView.addArrangedSubview(optionsLabel)
+        footerStackView.addArrangedSubview(
+            .spacer.with { $0.width(equalTo: 999, priority: .fittingSizeCompression) }
+        )
         footerStackView.addArrangedSubview(optionsButton)
     }
 
     private func addFooter() {
-        guard hasFooter else { return }
 
         detailsStackView.addArrangedSubview(makeLine())
 
+        if footerStackView.arrangedSubviews.count == 1 {
+            footerStackView.insertArrangedSubview(.spacer, at: 0)
+        }
+
+        footerStackView.spacing = 4
         footerStackView.alignment = .centerY
         footerStackView.edgeInsets = .init(horizontal: 12)
         footerStackView.setHuggingPriority(.defaultHigh, for: .vertical)
@@ -357,7 +350,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
 
     private func addInformation() {
 
-        let titleStack = NSStackView(views: [titleLabel, eventTypeIcon, linkBtn]).with(alignment: .firstBaseline)
+        let titleStack = NSStackView(views: [titleLabel, linkBtn]).with(alignment: .firstBaseline)
         titleStack.setHuggingPriority(.required, for: .vertical)
 
         if !viewModel.title.isEmpty {
