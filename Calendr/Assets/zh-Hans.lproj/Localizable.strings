@@ -91,8 +91,6 @@
 "event_details.participant.organizer" = "发起人";
 "event_details.participant.me" = "我";
 
-"event_status.label" = "我的状态：";
-
 "event_status.accepted" = "已接受";
 "event_status.maybe" = "也许";
 "event_status.declined" = "已拒绝";

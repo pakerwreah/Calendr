@@ -84,8 +84,6 @@ internal enum Strings {
     internal static let accepted = Strings.tr("Localizable", "event_status.accepted", fallback: "Accepted")
     /// Declined
     internal static let declined = Strings.tr("Localizable", "event_status.declined", fallback: "Declined")
-    /// my status:
-    internal static let label = Strings.tr("Localizable", "event_status.label", fallback: "my status:")
     /// Maybe
     internal static let maybe = Strings.tr("Localizable", "event_status.maybe", fallback: "Maybe")
     /// Pending

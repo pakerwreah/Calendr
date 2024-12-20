@@ -44,6 +44,7 @@ class EventDetailsViewModel {
     let close: Completable
 
     let linkTapped: AnyObserver<Void>
+    let openTapped: AnyObserver<Void>
     let skipTapped: AnyObserver<Void>
     let openMaps: AnyObserver<Coordinates>
     let isShowingObserver: AnyObserver<Bool>
@@ -57,7 +58,6 @@ class EventDetailsViewModel {
     private let workspace: WorkspaceServiceProviding
 
     private let callback: AnyObserver<ContextCallbackAction>
-    private let action = PublishSubject<ContextCallbackAction>()
 
     private let disposeBag = DisposeBag()
 
@@ -129,7 +129,7 @@ class EventDetailsViewModel {
             }
         }
 
-        showSkip = !type.isReminder && source ~= .menubar
+        showSkip = source ~= .menubar
 
         let formatter = DateIntervalFormatter()
         formatter.dateStyle = .medium
@@ -174,7 +174,12 @@ class EventDetailsViewModel {
         }
 
         skipTapped = self.callback.mapObserver { _ in
+            // handled by NextEventViewModel
             return .event(.skip)
+        }
+
+        openTapped = .init { _ in
+            workspace.open(event)
         }
 
         let showMap = settings.showMap.take(1)

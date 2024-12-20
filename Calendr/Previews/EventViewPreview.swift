@@ -16,7 +16,7 @@ struct EventViewPreview: PreviewProvider {
     static let calendarService = MockCalendarServiceProvider()
     static let geocoder = MockGeocodeServiceProvider()
     static let weatherService = MockWeatherServiceProvider()
-    static let workspace = NSWorkspace.shared
+    static let workspace = MockWorkspaceServiceProvider()
     static let settings = MockEventSettings()
 
     static var previews: some View {

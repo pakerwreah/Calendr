@@ -74,26 +74,11 @@ class EventOptionsViewModel: BaseContextMenuViewModel<EventAction> {
         guard !items.isEmpty else { return nil }
     }
 
-    private func openEvent() {
-
-        let date: String
-        if event.hasRecurrenceRules {
-            let formatter = DateFormatter(format: "yyyyMMdd'T'HHmmss'Z'", calendar: dateProvider.calendar)
-            if !event.isAllDay {
-                formatter.timeZone = .init(secondsFromGMT: 0)
-            }
-            date = "/\(formatter.string(for: event.start)!)"
-        } else {
-            date =  ""
-        }
-        workspace.open(URL(string: "ical://ekevent\(date)/\(event.id)?method=show&options=more")!)
-    }
-
     override func onAction(_ action: Action) -> Completable {
 
         switch action {
         case .open:
-            openEvent()
+            workspace.open(event)
         case .link(let link, _):
             workspace.open(link)
         case .skip:

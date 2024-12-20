@@ -67,6 +67,25 @@ extension EventModel {
     var status: EventStatus { if case .event(let status) = type { return status } else { return .unknown } }
 
     var isMeeting: Bool { !participants.isEmpty }
+
+    func calendarAppURL(using dateProvider: DateProviding) -> URL {
+
+        guard !type.isReminder else {
+            return URL(string: "x-apple-reminderkit://remcdreminder/\(id)")!
+        }
+
+        let date: String
+        if hasRecurrenceRules {
+            let formatter = DateFormatter(format: "yyyyMMdd'T'HHmmss'Z'", calendar: dateProvider.calendar)
+            if !isAllDay {
+                formatter.timeZone = .init(secondsFromGMT: 0)
+            }
+            date = "/\(formatter.string(for: start)!)"
+        } else {
+            date =  ""
+        }
+        return URL(string: "ical://ekevent\(date)/\(id)?method=show&options=more")!
+    }
 }
 
 struct Participant: Hashable {

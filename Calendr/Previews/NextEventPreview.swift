@@ -19,7 +19,7 @@ struct NextEventPreview: PreviewProvider {
     static let screenProvider = MockScreenProvider(screen: MockScreen(hasNotch: true))
     static let settings = MockNextEventSettings(showItem: true, textScaling: 1.1, length: 35, detectNotch: false)
     static let notificationCenter = NotificationCenter()
-    static let workspace = NSWorkspace.shared
+    static let workspace = MockWorkspaceServiceProvider()
     static let soundPlayer = MockSoundPlayer()
 
     static let events: [EventModel] = [

@@ -92,8 +92,6 @@
 "event_details.participant.organizer" = "Organizzatore";
 "event_details.participant.me" = "io";
 
-"event_status.label" = "mio stato:";
-
 "event_status.accepted" = "Accettato";
 "event_status.maybe" = "Forse";
 "event_status.declined" = "Rifiutato";

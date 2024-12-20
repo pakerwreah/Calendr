@@ -36,7 +36,7 @@ class MockMainViewController: MainViewController {
         super.init(
             deeplink: .empty(),
             autoLauncher: AutoLauncher(),
-            workspace: NSWorkspace.shared,
+            workspace: MockWorkspaceServiceProvider(),
             calendarService: MockCalendarServiceProvider(dateProvider: dateProvider),
             geocoder: MockGeocodeServiceProvider(),
             weatherService: MockWeatherServiceProvider(),
