@@ -37,6 +37,12 @@ extension ObservableType {
     func `repeat`<T: ObservableType>(when other: T) -> Observable<Element> where T.Element == Void {
         Observable.combineLatest(self, other.startWith(())).map(\.0)
     }
+
+    func lastValue() -> Element? {
+        var value: Element? = nil
+        bind { value = $0 }.dispose()
+        return value
+    }
 }
 
 extension PublishSubject {

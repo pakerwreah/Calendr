@@ -72,12 +72,10 @@ protocol AppearanceSettings {
     var textScaling: Observable<Double> { get }
 }
 
-protocol EventDetailsSettings: AppearanceSettings {
-    var showMap: Observable<Bool> { get }
-}
-
-protocol EventSettings: EventDetailsSettings {
+protocol EventSettings: AppearanceSettings {
     var showRecurrenceIndicator: Observable<Bool> { get }
+    var forceLocalTimeZone: Observable<Bool> { get }
+    var showMap: Observable<Bool> { get }
 }
 
 protocol EventListSettings: EventSettings {
@@ -85,7 +83,7 @@ protocol EventListSettings: EventSettings {
     var showOverdueReminders: Observable<Bool> { get }
 }
 
-protocol NextEventSettings: EventDetailsSettings {
+protocol NextEventSettings: EventSettings {
     var showEventStatusItem: Observable<Bool> { get }
     var eventStatusItemCheckRange: Observable<Int> { get }
     var eventStatusItemFlashing: Observable<Bool> { get }
@@ -97,7 +95,7 @@ protocol NextEventSettings: EventDetailsSettings {
 
 class SettingsViewModel:
     StatusItemSettings, NextEventSettings, CalendarSettings,
-    EventListSettings, EventDetailsSettings, AppearanceSettings {
+    EventListSettings, EventSettings, AppearanceSettings {
 
     struct IconStyleOption: Equatable {
         let style: StatusItemIconStyle
@@ -143,6 +141,7 @@ class SettingsViewModel:
     let togglePastEvents: AnyObserver<Bool>
     let toggleOverdueReminders: AnyObserver<Bool>
     let toggleRecurrenceIndicator: AnyObserver<Bool>
+    let toggleForceLocalTimeZone: AnyObserver<Bool>
     let transparencyObserver: AnyObserver<Int>
     let textScalingObserver: AnyObserver<Double>
     let calendarTextScalingObserver: AnyObserver<Double>
@@ -180,6 +179,7 @@ class SettingsViewModel:
     let showPastEvents: Observable<Bool>
     let showOverdueReminders: Observable<Bool>
     let showRecurrenceIndicator: Observable<Bool>
+    let forceLocalTimeZone: Observable<Bool>
     let popoverTransparency: Observable<Int>
     let popoverMaterial: Observable<PopoverMaterial>
     let textScaling: Observable<Double>
@@ -264,6 +264,7 @@ class SettingsViewModel:
         togglePastEvents = userDefaults.rx.observer(for: \.showPastEvents)
         toggleOverdueReminders = userDefaults.rx.observer(for: \.showOverdueReminders)
         toggleRecurrenceIndicator = userDefaults.rx.observer(for: \.showRecurrenceIndicator)
+        toggleForceLocalTimeZone = userDefaults.rx.observer(for: \.forceLocalTimeZone)
         transparencyObserver = userDefaults.rx.observer(for: \.transparencyLevel)
         textScalingObserver = userDefaults.rx.observer(for: \.textScaling)
         calendarTextScalingObserver = userDefaults.rx.observer(for: \.calendarTextScaling)
@@ -309,6 +310,7 @@ class SettingsViewModel:
         showPastEvents = userDefaults.rx.observe(\.showPastEvents)
         showOverdueReminders = userDefaults.rx.observe(\.showOverdueReminders)
         showRecurrenceIndicator = userDefaults.rx.observe(\.showRecurrenceIndicator)
+        forceLocalTimeZone = userDefaults.rx.observe(\.forceLocalTimeZone)
         popoverTransparency = userDefaults.rx.observe(\.transparencyLevel)
         textScaling = userDefaults.rx.observe(\.textScaling)
         calendarTextScaling = userDefaults.rx.observe(\.calendarTextScaling)

@@ -56,6 +56,7 @@
 "settings.events.show_overdue_reminders" = "顯示逾期提醒";
 "settings.events.show_finished_events" = "顯示已完成的事件";
 "settings.events.show_recurrence_indicator" = "顯示重複指示器";
+//"settings.events.force_local_time_zone" = "Show all events in local time zone";
 
 "settings.appearance.transparency" = "透明度";
 "settings.appearance.accessibility" = "輔助功能";

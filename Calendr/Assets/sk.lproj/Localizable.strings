@@ -56,6 +56,7 @@
 "settings.events.show_overdue_reminders" = "Zobraziť pripomienky po termíne";
 "settings.events.show_finished_events" = "Zobraziť ukončené udalosti";
 "settings.events.show_recurrence_indicator" = "Zobraziť indikátor opakovania";
+//"settings.events.force_local_time_zone" = "Show all events in local time zone";
 
 "settings.appearance.transparency" = "Priehľadnosť";
 "settings.appearance.accessibility" = "Prístupnosť";

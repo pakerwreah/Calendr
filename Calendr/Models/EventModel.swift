@@ -60,7 +60,9 @@ extension EventType {
 
 extension EventModel {
 
-    func range(using dateProvider: DateProviding) -> DateRange { .init(start: start, end: end, dateProvider: dateProvider) }
+    func range(using dateProvider: DateProviding, timeZone: TimeZone? = nil) -> DateRange {
+        .init(start: start, end: end, timeZone: timeZone, dateProvider: dateProvider)
+    }
 
     func isInProgress(using dateProvider: DateProviding) -> Bool { dateProvider.calendar.isDate(dateProvider.now, in: (start, end), granularity: .second) }
 

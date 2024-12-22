@@ -13,12 +13,10 @@ enum EventUtils {
         from start: Date,
         to end: Date,
         timeZone: TimeZone?,
-        formatter: DateIntervalFormatter,
-        isMeeting: Bool
+        formatter: DateIntervalFormatter
     ) -> String {
 
         guard
-            !isMeeting,
             let timeZone, timeZone != formatter.timeZone,
             let tz_abbreviation = timeZone.abbreviation(for: start)
         else {

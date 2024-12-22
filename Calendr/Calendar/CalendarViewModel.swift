@@ -148,17 +148,17 @@ class CalendarViewModel {
         .distinctUntilChanged()
         .share(replay: 1)
 
-        var timezone = dateProvider.calendar.timeZone
+        var timeZone = dateProvider.calendar.timeZone
 
         // Check if today has changed
         let todayObservable = dateObservable
             .void()
             .map { dateProvider.now }
             .distinctUntilChanged { a, b in
-                timezone == dateProvider.calendar.timeZone && dateProvider.calendar.isDate(a, inSameDayAs: b)
+                timeZone == dateProvider.calendar.timeZone && dateProvider.calendar.isDate(a, inSameDayAs: b)
             }
             .do(afterNext: { _ in
-                timezone = dateProvider.calendar.timeZone
+                timeZone = dateProvider.calendar.timeZone
             })
             .share(replay: 1)
 

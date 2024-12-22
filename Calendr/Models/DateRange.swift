@@ -13,11 +13,12 @@ class DateRange {
     let end: Date
 
     private let dateProvider: DateProviding
-    private var calendar: Calendar { dateProvider.calendar }
+    private let timeZone: TimeZone
+    private var calendar: Calendar { dateProvider.calendar.with(timeZone: timeZone) }
     private var now: Date { dateProvider.now }
 
     // fix range ending at 00:00 of the next day
-    lazy var fixedEnd = end == start ? end : calendar.date(byAdding: .second, value: -1, to: end)!
+    lazy var fixedEnd = end == start ? end : endsMidnight ? calendar.date(byAdding: .second, value: -1, to: end)! : end
     lazy var isSingleDay = calendar.isDate(start, inSameDayAs: fixedEnd)
     lazy var isSameMonth = calendar.isDate(start, equalTo: fixedEnd, toGranularity: .month)
     lazy var startsMidnight = calendar.date(start, matchesComponents: .midnightStart)
@@ -28,10 +29,11 @@ class DateRange {
     var endsToday: Bool { calendar.isDate(fixedEnd, inSameDayAs: now) }
     var isPast: Bool { calendar.isDate(end, lessThan: now, granularity: .second) }
 
-    init(start: Date, end: Date, dateProvider: DateProviding) {
+    init(start: Date, end: Date, timeZone: TimeZone?, dateProvider: DateProviding) {
         self.start = start
         self.end = end
         self.dateProvider = dateProvider
+        self.timeZone = timeZone ?? dateProvider.calendar.timeZone
     }
 }
 

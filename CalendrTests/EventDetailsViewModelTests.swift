@@ -20,7 +20,7 @@ class EventDetailsViewModelTests: XCTestCase {
     let geocoder = MockGeocodeServiceProvider()
     let weatherService = MockWeatherServiceProvider()
     lazy var workspace = MockWorkspaceServiceProvider(userDefaults: userDefaults)
-    let settings = MockEventDetailsSettings()
+    let settings = MockEventSettings()
 
     override func setUp() {
         userDefaults.setVolatileDomain([:], forName: UserDefaults.registrationDomain)
