@@ -9,7 +9,7 @@
 
 import RxSwift
 
-class MockNextEventSettings: MockEventDetailsSettings, NextEventSettings {
+class MockNextEventSettings: MockEventSettings, NextEventSettings {
 
     let showEventStatusItem: Observable<Bool>
     let eventStatusItemTextScaling: Observable<Double>

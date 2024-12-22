@@ -32,7 +32,7 @@ class EventDetailsViewModel {
     let meetingInfo: String?
     let participants: [Participant]
     let link: EventLink?
-    let settings: EventDetailsSettings
+    let settings: EventSettings
     let showSkip: Bool
     let browserOptions: [BrowserOption]
     let optimisticLoadTime: DispatchTimeInterval
@@ -80,7 +80,7 @@ class EventDetailsViewModel {
         weatherService: WeatherServiceProviding,
         workspace: WorkspaceServiceProviding,
         userDefaults: UserDefaults,
-        settings: EventDetailsSettings,
+        settings: EventSettings,
         isShowingObserver: AnyObserver<Bool>,
         isInProgress: Observable<Bool>,
         source: EventDetailsSource,
@@ -155,12 +155,14 @@ class EventDetailsViewModel {
                 end = event.end
             }
 
+            let forceLocalTimeZone = settings.forceLocalTimeZone.lastValue() ?? false
+            let timeZone = event.isMeeting || forceLocalTimeZone ? nil : event.timeZone
+
             duration = EventUtils.duration(
                 from: event.start,
                 to: end,
-                timeZone: event.timeZone,
-                formatter: formatter,
-                isMeeting: event.isMeeting
+                timeZone: timeZone,
+                formatter: formatter
             )
         }
 

@@ -56,6 +56,7 @@
 "settings.events.show_overdue_reminders" = "Mostrar recordatorios atrasados";
 "settings.events.show_finished_events" = "Mostrar eventos finalizados";
 "settings.events.show_recurrence_indicator" = "Mostrar indicador de recurrencia";
+//"settings.events.force_local_time_zone" = "Show all events in local time zone";
 
 "settings.appearance.transparency" = "Transparencia";
 "settings.appearance.accessibility" = "Accesibilidad";

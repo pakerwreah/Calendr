@@ -63,7 +63,7 @@ class NextEventViewModel {
 
     private let type: NextEventType
     private let userDefaults: UserDefaults
-    private let settings: EventDetailsSettings
+    private let settings: EventSettings
     private let dateProvider: DateProviding
     private let calendarService: CalendarServiceProviding
     private let geocoder: GeocodeServiceProviding

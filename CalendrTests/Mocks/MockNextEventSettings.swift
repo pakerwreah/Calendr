@@ -8,7 +8,7 @@
 import RxSwift
 @testable import Calendr
 
-class MockNextEventSettings: MockEventDetailsSettings, NextEventSettings {
+class MockNextEventSettings: MockEventSettings, NextEventSettings {
 
     let toggleStatusItem: AnyObserver<Bool>
     let showEventStatusItem: Observable<Bool>
@@ -30,7 +30,7 @@ class MockNextEventSettings: MockEventDetailsSettings, NextEventSettings {
 
     let eventStatusItemTextScaling: Observable<Double>
 
-    init() {
+    override init() {
         (showEventStatusItem, toggleStatusItem) = BehaviorSubject.pipe(value: true)
         (eventStatusItemCheckRange, eventStatusItemCheckRangeObserver) = BehaviorSubject.pipe(value: 18)
         (eventStatusItemFlashing, toggleEventStatusItemFlashing) = BehaviorSubject.pipe(value: false)

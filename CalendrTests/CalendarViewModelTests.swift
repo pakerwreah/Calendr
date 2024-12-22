@@ -388,7 +388,7 @@ class CalendarViewModelTests: XCTestCase {
         }
     }
 
-    func testTimezoneChange() {
+    func testTimeZoneChange() {
 
         let timeZone = TimeZone(abbreviation: "UTC-1")!
 

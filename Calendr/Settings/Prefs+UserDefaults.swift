@@ -46,6 +46,7 @@ enum Prefs {
     static let showPastEvents = "show_past_events"
     static let showOverdueReminders = "show_overdue_reminders"
     static let showRecurrenceIndicator = "show_recurrence_indicator"
+    static let forceLocalTimeZone = "force_local_time_zone"
 
     // Appearance
     static let transparencyLevel = "transparency_level"
@@ -100,6 +101,7 @@ func registerDefaultPrefs(in userDefaults: UserDefaults, calendar: Calendar = .c
         Prefs.showPastEvents: true,
         Prefs.showOverdueReminders: true,
         Prefs.showRecurrenceIndicator: true,
+        Prefs.forceLocalTimeZone: false,
 
         // Appearance
         Prefs.transparencyLevel: 2,
@@ -265,6 +267,11 @@ extension UserDefaults {
     @objc dynamic var showRecurrenceIndicator: Bool {
         get { bool(forKey: Prefs.showRecurrenceIndicator) }
         set { set(newValue, forKey: Prefs.showRecurrenceIndicator) }
+    }
+
+    @objc dynamic var forceLocalTimeZone: Bool {
+        get { bool(forKey: Prefs.forceLocalTimeZone) }
+        set { set(newValue, forKey: Prefs.forceLocalTimeZone) }
     }
 
     // Appearance

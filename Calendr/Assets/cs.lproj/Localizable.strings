@@ -56,6 +56,7 @@
 //"settings.events.show_overdue_reminders" = "Show overdue reminders";
 //"settings.events.show_finished_events" = "Show finished events";
 //"settings.events.show_recurrence_indicator" = "Show recurrence indicator";
+//"settings.events.force_local_time_zone" = "Show all events in local time zone";
 
 "settings.appearance.transparency" = "Průhlednost";
 //"settings.appearance.accessibility" = "Accessibility";

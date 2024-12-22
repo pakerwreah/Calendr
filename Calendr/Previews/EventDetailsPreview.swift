@@ -17,7 +17,7 @@ struct EventDetailsPreview: PreviewProvider {
     static let geocoder = MockGeocodeServiceProvider()
     static let weatherService = MockWeatherServiceProvider()
     static let workspace = MockWorkspaceServiceProvider()
-    static let settings = MockEventDetailsSettings()
+    static let settings = MockEventSettings()
     static var vcs: [NSViewController] = []
 
     static func makeMeeting() -> some View {

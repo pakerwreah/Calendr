@@ -102,9 +102,6 @@ class EventView: NSView {
             subtitleLink.isHidden = true
         }
 
-        duration.stringValue = viewModel.duration
-        duration.isHidden = duration.isEmpty
-
         linkBtn.isHidden = viewModel.link == nil
         linkBtn.toolTip = viewModel.link?.url.absoluteString
     }
@@ -260,6 +257,14 @@ class EventView: NSView {
             viewModel.isInProgress
                 .map(!)
                 .bind(to: progress.rx.isHidden)
+                .disposed(by: disposeBag)
+
+            viewModel.duration
+                .bind(to: duration.rx.stringValue)
+                .disposed(by: disposeBag)
+
+            viewModel.duration.map(\.isEmpty)
+                .bind(to: duration.rx.isHidden)
                 .disposed(by: disposeBag)
         }
 

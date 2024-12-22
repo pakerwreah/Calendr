@@ -47,6 +47,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     private let showFinishedEventsCheckbox = Checkbox(title: Strings.Settings.Events.showFinishedEvents)
     private let showOverdueCheckbox = Checkbox(title: Strings.Settings.Events.showOverdueReminders)
     private let showRecurrenceCheckbox = Checkbox(title: Strings.Settings.Events.showRecurrenceIndicator)
+    private let forceLocalTimeZoneCheckbox = Checkbox(title: Strings.Settings.Events.forceLocalTimeZone)
 
     init(viewModel: SettingsViewModel) {
 
@@ -222,7 +223,8 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             showMapCheckbox,
             showFinishedEventsCheckbox,
             showOverdueCheckbox,
-            showRecurrenceCheckbox
+            showRecurrenceCheckbox,
+            forceLocalTimeZoneCheckbox
         ]).with(orientation: .vertical)
     }()
 
@@ -545,6 +547,13 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             control: showRecurrenceCheckbox,
             observable: viewModel.showRecurrenceIndicator,
             observer: viewModel.toggleRecurrenceIndicator
+        )
+        .disposed(by: disposeBag)
+
+        bind(
+            control: forceLocalTimeZoneCheckbox,
+            observable: viewModel.forceLocalTimeZone,
+            observer: viewModel.toggleForceLocalTimeZone
         )
         .disposed(by: disposeBag)
     }
