@@ -18,6 +18,8 @@ protocol CalendarServiceProviding {
     func completeReminder(id: String, complete: Bool) -> Completable
     func rescheduleReminder(id: String, to: Date) -> Completable
     func changeEventStatus(id: String, date: Date, to: EventStatus) -> Completable
+
+    @MainActor func requestAccess()
 }
 
 class CalendarServiceProvider: CalendarServiceProviding {
@@ -46,8 +48,6 @@ class CalendarServiceProvider: CalendarServiceProviding {
         self.notificationCenter = notificationCenter
 
         (changeObservable, changeObserver) = PublishSubject.pipe(scheduler: MainScheduler.instance)
-
-        requestAccess()
     }
 
     private func listenToStoreChanges() {
@@ -85,22 +85,20 @@ class CalendarServiceProvider: CalendarServiceProviding {
         return false
     }
 
-    private func requestAccess() {
+    func requestAccess() {
         Task {
             listenToStoreChanges()
 
             let events = await requestAccess(to: .event)
             let reminders = await requestAccess(to: .reminder)
 
-            DispatchQueue.main.async {
-                if !events {
-                    if self.openPrivacySettings(for: .calendars) {
-                        return
-                    }
+            if !events {
+                if self.openPrivacySettings(for: .calendars) {
+                    return
                 }
-                if !reminders {
-                    self.openPrivacySettings(for: .reminders)
-                }
+            }
+            if !reminders {
+                self.openPrivacySettings(for: .reminders)
             }
         }
     }

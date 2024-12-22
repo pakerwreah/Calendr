@@ -244,6 +244,8 @@ class MainViewController: NSViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(5)) { [autoUpdater] in
             autoUpdater.start()
         }
+
+        calendarService.requestAccess()
     }
 
     required init?(coder: NSCoder) {

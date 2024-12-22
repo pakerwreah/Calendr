@@ -12,7 +12,7 @@ import ZIPFoundation
 import Sentry
 
 protocol AutoUpdating {
-    func start()
+    @MainActor func start()
     func checkRelease(notify: Bool)
     func downloadAndInstall()
 }
@@ -120,8 +120,8 @@ class AutoUpdater: AutoUpdating {
                 Timer.scheduledTimer(
                     withTimeInterval: 3 * 60 * 60,
                     repeats: true
-                ) { _ in
-                    self.checkRelease(notify: true)
+                ) { [weak self] _ in
+                    self?.checkRelease(notify: true)
                 }
             }
         }
@@ -130,7 +130,7 @@ class AutoUpdater: AutoUpdating {
     func checkRelease(notify: Bool) {
         Task {
             do {
-                try await checkRelease(notify)
+                try await checkReleaseAsync(notify: notify)
             } catch {
                 newVersionAvailableObserver.onNext(.initial)
                 print(error.localizedDescription)
@@ -172,7 +172,7 @@ class AutoUpdater: AutoUpdating {
         notificationProvider.send(id: .uuid, content)
     }
 
-    private func checkRelease(_ notify: Bool) async throws {
+    private func checkReleaseAsync(notify: Bool) async throws {
 
         guard !BuildConfig.isUITesting else { return }
 
