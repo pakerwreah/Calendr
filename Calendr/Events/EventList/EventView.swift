@@ -197,6 +197,14 @@ class EventView: NSView {
             .bind(to: hoverLayer.rx.isHidden)
             .disposed(by: disposeBag)
 
+        viewModel.duration
+            .bind(to: duration.rx.stringValue)
+            .disposed(by: disposeBag)
+
+        viewModel.duration.map(\.isEmpty)
+            .bind(to: duration.rx.isHidden)
+            .disposed(by: disposeBag)
+
         if let link = viewModel.link {
             Observable.combineLatest(
                 link.isMeeting
@@ -257,14 +265,6 @@ class EventView: NSView {
             viewModel.isInProgress
                 .map(!)
                 .bind(to: progress.rx.isHidden)
-                .disposed(by: disposeBag)
-
-            viewModel.duration
-                .bind(to: duration.rx.stringValue)
-                .disposed(by: disposeBag)
-
-            viewModel.duration.map(\.isEmpty)
-                .bind(to: duration.rx.isHidden)
                 .disposed(by: disposeBag)
         }
 
