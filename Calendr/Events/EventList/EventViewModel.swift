@@ -129,7 +129,7 @@ class EventViewModel {
 
                 return ""
 
-            } else if range.isSingleDay {
+            } else if range.isSingleDay || event.type.isReminder {
 
                 let formatter = DateIntervalFormatter()
                 formatter.dateStyle = .none
