@@ -213,15 +213,17 @@ class EventViewModel {
 
         } else {
             isPast = .just(true)
-            clock = .empty()
+            clock = .just(())
         }
 
-        if event.type.isReminder {
+        if event.type == .reminder(completed: false)  {
 
             let dateFormatter = DateComponentsFormatter()
             dateFormatter.calendar = dateProvider.calendar
             dateFormatter.unitsStyle = .abbreviated
-            dateFormatter.allowedUnits = [.hour, .minute]
+            dateFormatter.allowedUnits = [.day, .hour, .minute]
+            dateFormatter.maximumUnitCount = 2
+            dateFormatter.zeroFormattingBehavior = .dropAll
 
             relativeDuration = clock.compactMap {
                 guard event.start.distance(to: dateProvider.now) > 60 else { return nil }
