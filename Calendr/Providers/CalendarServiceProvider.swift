@@ -463,6 +463,23 @@ private extension Array where Element == Participant {
     }
 }
 
+private extension Priority {
+
+    /// 1-4 are considered "high," a priority of 5 is "medium," and priorities of 6-9 are "low"
+    init?(from p: Int) {
+        switch p {
+        case 1...4:
+            self = .high
+        case 5:
+            self = .medium
+        case 6...9:
+            self = .low
+        default:
+            return nil
+        }
+    }
+}
+
 private extension EventModel {
 
     init?(from event: EKEvent, dateProvider: DateProviding) {
@@ -481,7 +498,8 @@ private extension EventModel {
             calendar: .init(from: calendar),
             participants: .init(from: event),
             timeZone: calendar.isSubscribed || calendar.isDelegate ? nil : event.timeZone,
-            hasRecurrenceRules: event.hasRecurrenceRules || event.isDetached
+            hasRecurrenceRules: event.hasRecurrenceRules || event.isDetached,
+            priority: nil
         )
     }
 
@@ -506,7 +524,8 @@ private extension EventModel {
             calendar: .init(from: calendar),
             participants: [],
             timeZone: calendar.isSubscribed || calendar.isDelegate ? nil : reminder.timeZone,
-            hasRecurrenceRules: reminder.hasRecurrenceRules
+            hasRecurrenceRules: reminder.hasRecurrenceRules,
+            priority: .init(from: reminder.priority)
         )
     }
 }
