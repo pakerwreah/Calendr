@@ -18,6 +18,7 @@ class EventViewModel {
     let type: EventType
     let isDeclined: Bool
     let link: EventLink?
+    let priority: String?
 
     let duration: Observable<String>
     let isInProgress: Observable<Bool>
@@ -76,6 +77,13 @@ class EventViewModel {
         isDeclined = event.status ~= .declined
         barStyle = event.status ~= .maybe ? .bordered : .filled
         link = event.detectLink(using: workspace)
+
+        priority = switch event.priority {
+            case .high: "!!!"
+            case .medium: "!!"
+            case .low: "!"
+            default: nil
+        }
 
         linkTapped = .init { [link] _ in
             if let link {

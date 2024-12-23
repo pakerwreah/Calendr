@@ -18,6 +18,7 @@ class EventView: NSView {
 
     private let birthdayIcon = NSImageView()
     private let recurrenceIcon = NSImageView()
+    private let priority = Label()
     private let title = Label()
     private let subtitle = Label()
     private let subtitleLink = Label()
@@ -70,6 +71,10 @@ class EventView: NSView {
             birthdayIcon.isHidden = false
 
         case .reminder:
+            priority.textColor = viewModel.color
+            priority.stringValue = viewModel.priority ?? ""
+            priority.isHidden = viewModel.priority == nil
+
             completeBtn.contentTintColor = viewModel.color
             completeBtn.isHidden = false
 
@@ -117,12 +122,15 @@ class EventView: NSView {
         hoverLayer.backgroundColor = NSColor.gray.cgColor.copy(alpha: 0.2)
         layer?.addSublayer(hoverLayer)
 
-        [birthdayIcon, recurrenceIcon, completeBtn, relativeDuration].forEach {
+        [birthdayIcon, recurrenceIcon, completeBtn, priority, relativeDuration].forEach {
             $0.setContentHuggingPriority(.required, for: .horizontal)
             $0.setContentCompressionResistancePriority(.required, for: .horizontal)
         }
 
         completeBtn.isHidden = true
+
+        priority.isHidden = true
+        priority.font = .systemFont(ofSize: 13)
 
         birthdayIcon.isHidden = true
         birthdayIcon.contentTintColor = .systemRed
@@ -154,8 +162,8 @@ class EventView: NSView {
         colorBar.layer?.cornerRadius = 2
         colorBar.width(equalTo: 4)
 
-        let titleStackView = NSStackView(views: [birthdayIcon, completeBtn, title, recurrenceIcon])
-            .with(spacing: 4)
+        let titleStackView = NSStackView(views: [birthdayIcon, completeBtn, priority, title, recurrenceIcon])
+            .with(spacing: 3)
             .with(alignment: .firstBaseline)
 
         let linkStackView = NSStackView(views: [subtitleLink, linkBtn]).with(spacing: 0)

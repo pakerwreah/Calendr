@@ -22,6 +22,7 @@ struct EventModel: Equatable {
     let participants: [Participant]
     let timeZone: TimeZone?
     let hasRecurrenceRules: Bool
+    let priority: Priority?
 }
 
 enum EventStatus: Comparable {
@@ -95,4 +96,10 @@ struct Participant: Hashable {
     let status: EventStatus
     let isOrganizer: Bool
     let isCurrentUser: Bool
+}
+
+enum Priority {
+    case high
+    case medium
+    case low
 }

@@ -24,7 +24,8 @@ extension EventModel {
         calendar: CalendarModel = .make(),
         participants: [Participant] = [],
         timeZone: TimeZone? = nil,
-        hasRecurrenceRules: Bool = false
+        hasRecurrenceRules: Bool = false,
+        priority: Priority? = nil
     ) -> EventModel {
 
         .init(
@@ -41,7 +42,8 @@ extension EventModel {
             calendar: calendar,
             participants: participants,
             timeZone: timeZone,
-            hasRecurrenceRules: hasRecurrenceRules
+            hasRecurrenceRules: hasRecurrenceRules,
+            priority: priority
         )
     }
 }
