@@ -3,7 +3,7 @@
   Calendr
 
   Created by Albiji on 18/01/2023.
-  Modified by @ilMagnifico on 15/11/2024. 
+  Modified by @ilMagnifico on 23/12/2024. 
 */
 
 "quit" = "Esci";
@@ -57,7 +57,7 @@
 "settings.events.show_overdue_reminders" = "Mostra promemoria scaduti";
 "settings.events.show_finished_events" = "Mostra eventi terminati";
 "settings.events.show_recurrence_indicator" = "Mostra indicatore di ricorrenza";
-//"settings.events.force_local_time_zone" = "Show all events in local time zone";
+"settings.events.force_local_time_zone" = "Mostra tutti gli eventi nel fuso orario locale";
 
 "settings.appearance.transparency" = "Trasparenza";
 "settings.appearance.accessibility" = "Accessibilità";
@@ -114,4 +114,4 @@
 "tooltips.toolbar.open_reminders" = "Apri Promemoria";
 "tooltips.toolbar.open_menu" = "Apri Menu";
 
-//"calendars.source.others" = "Others";
+"calendars.source.others" = "Altri";
