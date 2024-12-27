@@ -321,6 +321,64 @@ class EventViewModelTests: XCTestCase {
         XCTAssertEqual(mock(type: .event(.maybe)).barStyle, .bordered)
     }
 
+    func testReminderDuration() {
+
+        let viewModel = mock(
+            event: .make(
+                start: .make(year: 2021, month: 1, day: 1, hour: 1),
+                type: .reminder(completed: false)
+            )
+        )
+
+        XCTAssertEqual(viewModel.duration.lastValue(), "1:00 AM")
+    }
+
+    func testOverdueReminder_shouldShowRelativeDuration() {
+
+        dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 0, minute: 30)
+
+        let viewModel = mock(
+            event: .make(
+                start: .make(year: 2021, month: 1, day: 1, hour: 0, minute: 15),
+                type: .reminder(completed: false)
+            )
+        )
+
+        XCTAssertEqual(viewModel.duration.lastValue(), "12:15 AM")
+        XCTAssertEqual(viewModel.relativeDuration.lastValue(), "15m ago")
+    }
+
+    func testOverdueReminder_isCompleted_shouldNotShowRelativeDuration() {
+
+        dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 0, minute: 30)
+
+        let viewModel = mock(
+            event: .make(
+                start: .make(year: 2021, month: 1, day: 1, hour: 0, minute: 15),
+                type: .reminder(completed: true)
+            )
+        )
+
+        XCTAssertEqual(viewModel.duration.lastValue(), "12:15 AM")
+        XCTAssertNil(viewModel.relativeDuration.lastValue())
+    }
+
+    func testOverdueReminder_isAllDay_shouldNotShowDurationOrRelativeDuration() {
+
+        dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 0, minute: 30)
+
+        let viewModel = mock(
+            event: .make(
+                start: .make(year: 2021, month: 1, day: 1),
+                isAllDay: true,
+                type: .reminder(completed: false)
+            )
+        )
+
+        XCTAssertEqual(viewModel.duration.lastValue(), "")
+        XCTAssertNil(viewModel.relativeDuration.lastValue())
+    }
+
     func testReminder_toggleComplete_isNotCompleted() {
 
         let viewModel = mock(type: .reminder(completed: false))
