@@ -224,7 +224,7 @@ class EventViewModel {
             clock = .just(())
         }
 
-        if event.type == .reminder(completed: false)  {
+        if event.type == .reminder(completed: false), !event.isAllDay  {
 
             let dateFormatter = DateComponentsFormatter()
             dateFormatter.calendar = dateProvider.calendar
