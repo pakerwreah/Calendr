@@ -48,7 +48,7 @@
 "settings.calendar.preserve_selected_date" = "Zachovať vybraný dátum pri skrytí";
 "settings.calendar.show_declined_events" = "Zobraziť odmietnuté udalosti";
 "settings.calendar.show_declined_events_tooltip" = "Funguje, len ak je to povolené aj v natívnej aplikácii Kalendár.";
-"settings.calendar.date_hover_option" = "Podržaním ⌥ zobazíš náhľad dátumov";
+"settings.calendar.date_hover_option" = "Podržaním ⌥ zobrazíš náhľad dátumov";
 "settings.calendar.calendar_app_view_mode" = "Pohľad v kalendári";
 
 "settings.events" = "Udalosti";
@@ -56,7 +56,7 @@
 "settings.events.show_overdue_reminders" = "Zobraziť pripomienky po termíne";
 "settings.events.show_finished_events" = "Zobraziť ukončené udalosti";
 "settings.events.show_recurrence_indicator" = "Zobraziť indikátor opakovania";
-//"settings.events.force_local_time_zone" = "Show all events in local time zone";
+"settings.events.force_local_time_zone" = "Zobraziť všetky udalosti v miestnom čase";
 
 "settings.appearance.transparency" = "Priehľadnosť";
 "settings.appearance.accessibility" = "Prístupnosť";
