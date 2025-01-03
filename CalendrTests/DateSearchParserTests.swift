@@ -19,8 +19,8 @@ class DateSearchParserTests: XCTestCase {
 
     func testValidDates() throws {
         // unfortunately, there's no way to mock the current date in NSDataDetector
-        // and if it detects a date that's missing the year, it defaults to the current year
-        let year = try XCTUnwrap(Calendar.current.dateComponents([.year], from: Date()).year)
+        // and if it detects a date that's missing the year, it defaults to the closest year to that date
+        let year = try XCTUnwrap(closestYearFor(day: 20, month: 12))
 
         var dateStrings: [(String, String)] = [
             ("2021-12-18",          "18/12/2021"),
@@ -32,7 +32,7 @@ class DateSearchParserTests: XCTestCase {
             ("20Dec2021",           "20/12/2021"),
             ("20Dec",               "20/12/\(year)"),
             ("20 Dec",              "20/12/\(year)"),
-            ("20 Decs 21 Dec",      "21/12/\(year)"),
+            ("19 Decs 20 Dec",      "20/12/\(year)"),
         ]
 
         dateStrings += dateStrings.map { text, expected in (text.lowercased(), expected) }
@@ -79,4 +79,17 @@ class DateSearchParserTests: XCTestCase {
             XCTAssertNil(DateSearchParser.parse(text: text, using: dateProvider), text)
         }
     }
+}
+
+private func closestYearFor(day: Int, month: Int) -> Int? {
+    let calendar = Calendar.current
+    let today = Date()
+    let currentYear = calendar.component(.year, from: today)
+
+    return (-1...1)
+        .compactMap { offset in
+            calendar.date(from: DateComponents(year: currentYear + offset, month: month, day: day))
+        }
+        .min(by: { abs($0.timeIntervalSince(today)) < abs($1.timeIntervalSince(today)) })
+        .map { calendar.component(.year, from: $0) }
 }
