@@ -126,6 +126,7 @@ class StatusItemViewModel {
 
         var titleWidth: CGFloat = 0
         var currDateFormat = ""
+        var currHour = 0
 
         self.image = Observable.combineLatest(
             iconsAndText,
@@ -155,12 +156,15 @@ class StatusItemViewModel {
             ])
 
             if let title {
-                if currDateFormat == dateFormat && dateFormatContainsTime(dateFormat) {
+                // reset max title width every hour
+                let hour = dateProvider.calendar.dateComponents([.hour], from: dateProvider.now).hour ?? 0
+                if currDateFormat == dateFormat && currHour == hour && dateFormatContainsTime(dateFormat) {
                     titleWidth = max(titleWidth, title.size().width)
                 } else {
                     titleWidth = title.size().width
                 }
                 currDateFormat = dateFormat
+                currHour = hour
             } else {
                 titleWidth = 0
                 currDateFormat = ""
