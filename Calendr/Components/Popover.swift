@@ -85,7 +85,6 @@ class Popover: NSObject, PopoverWindowDelegate {
         window.level = .popUpMenu
         window.isReleasedWhenClosed = false
         window.isMovableByWindowBackground = false
-        window.isFloatingPanel = true
         window.animationBehavior = .utilityWindow
         window._delegate = self
 
