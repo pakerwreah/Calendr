@@ -108,6 +108,10 @@ class Popover: NSObject, PopoverWindowDelegate {
     }
 
     static func closeAll() {
+        guard Thread.isMainThread else {
+            DispatchQueue.main.sync { closeAll() }
+            return
+        }
         for popover in popovers {
             popover.window?.performClose(nil)
         }
