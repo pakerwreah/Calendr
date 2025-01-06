@@ -49,7 +49,7 @@ class NextEventViewModel {
     let time: Observable<String>
     let barStyle: Observable<EventBarStyle>
     let barColor: Observable<NSColor>
-    let backgroundColor: Observable<NSColor>
+    let backgroundColor: Observable<EventBackground>
     let hasEvent: Observable<Bool>
     let isInProgress: Observable<Bool>
     let textScaling: Observable<Double>
@@ -97,32 +97,58 @@ class NextEventViewModel {
         self.isShowingDetails = isShowingDetails
         self.textScaling = settings.eventStatusItemTextScaling
 
-        let nextEvents = settings.showEventStatusItem
-            .flatMapLatest { isEnabled -> Observable<[EventModel]> in
+        let nextEvents = Observable
+            .combineLatest(
+                settings.showEventStatusItem,
+                nextEventCalendars
+            )
+            .repeat(when: calendarService.changeObservable)
+            .repeat(when: dateProvider.calendarUpdated.void())
+            .flatMapLatest { isEnabled, calendars -> Single<[EventModel]> in
 
-                !isEnabled ? .just([]) : nextEventCalendars
-                    .repeat(when: calendarService.changeObservable)
-                    .flatMapLatest { calendars -> Single<[EventModel]> in
-                        let start = dateProvider.calendar.startOfDay(for: dateProvider.now)
-                        let end = dateProvider.calendar.date(byAdding: .hour, value: 48, to: start)!
-                        return calendarService.events(from: start, to: end, calendars: calendars)
-                    }
-                    .map {
-                        $0.filter { $0.type != .reminder(completed: true) }
-                    }
+                guard isEnabled else { return .just([]) }
+
+                let start = dateProvider.calendar.startOfDay(for: dateProvider.now)
+                let end = dateProvider.calendar.date(byAdding: .hour, value: 48, to: start)!
+                let events = calendarService.events(from: start, to: end, calendars: calendars)
+
+                return events
             }
 
-        let eventsObservable = Observable.combineLatest(nextEvents, skippedEvents)
+        let filteredEvents = Observable
+            .combineLatest(
+                nextEvents, skippedEvents
+            )
             .map { events, skipped in
                 events.filter { event in
+                    type.matches(event.type) &&
+                    event.type != .reminder(completed: true) &&
                     !event.isAllDay &&
-                    ![.pending, .declined].contains(event.status) &&
+                    event.status != .declined &&
                     !skipped.contains(Skipped(event))
                 }
             }
 
+        let statusOrder: [EventStatus] = [.accepted, .maybe, .pending, .unknown]
+
+        // This is a low effort strategy to untie events starting at the same time
+        // where one has a chosen status with higher priority than the other
+        let sortedEvents = filteredEvents.map { events in
+            events.sorted {
+                guard
+                    $0.start == $1.start,
+                    $0.status != $1.status,
+                    let firstStatusIndex = statusOrder.firstIndex(of: $0.status),
+                    let secondStatusIndex = statusOrder.firstIndex(of: $1.status)
+                else {
+                    return $0.start < $1.start
+                }
+                return firstStatusIndex < secondStatusIndex
+            }
+        }
+
         let nextEventObservable = Observable
-            .combineLatest(eventsObservable, settings.eventStatusItemCheckRange)
+            .combineLatest(sortedEvents, settings.eventStatusItemCheckRange)
             .flatMapLatest { [dateProvider] events, hoursToCheck -> Observable<NextEvent?> in
 
                 Observable<Int>.interval(.seconds(1), scheduler: scheduler)
@@ -130,10 +156,7 @@ class NextEventViewModel {
                     .startWith(())
                     .map {
                         events
-                            .sorted(by: \.start)
                             .first(where: { event in
-                                type.matches(event.type)
-                                &&
                                 dateProvider.calendar.isDate(
                                     dateProvider.now, lessThan: event.end, granularity: .second
                                 )
@@ -174,8 +197,10 @@ class NextEventViewModel {
             ) { ($0, $1.0, $1.1) }
             .map { [dateProvider] nextEvent, flashing, sound in
 
+                guard nextEvent.event.status != .pending else { return .pending }
+
                 guard !nextEvent.isInProgress else {
-                    return nextEvent.event.calendar.color.withAlphaComponent(0.2)
+                    return .color(nextEvent.event.calendar.color.withAlphaComponent(0.2))
                 }
 
                 let diff = dateProvider.calendar.dateComponents([.minute, .second], from: dateProvider.now, to: nextEvent.event.start)
@@ -197,12 +222,12 @@ class NextEventViewModel {
                 if flashing {
                     // flash continuously under 30 seconds to start
                     if minutes == 0 && seconds <= 30 {
-                        return seconds % 2 == 0 ? .systemRed : .clear
+                        return seconds % 2 == 0 ? .color(.systemRed) : .clear
                     }
 
                     // flash 5x every minute
                     if minutes <= 5 {
-                        return seconds > 50 && seconds % 2 == 1 ? .systemRed : .clear
+                        return seconds > 50 && seconds % 2 == 1 ? .color(.systemRed) : .clear
                     }
                 }
 

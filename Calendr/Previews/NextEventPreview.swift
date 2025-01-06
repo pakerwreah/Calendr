@@ -24,10 +24,10 @@ struct NextEventPreview: PreviewProvider {
 
     static let events: [EventModel] = [
         .make(
-            start: dateProvider.now + 70,
+            start: dateProvider.now + 5,
             end: dateProvider.now + 999,
             title: "Test with a very long event name and some more extra text",
-            type: .event(.accepted),
+            type: .event(.pending),
             calendar: .make(color: .systemYellow)
         )
     ]

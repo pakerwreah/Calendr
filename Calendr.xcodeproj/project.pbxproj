@@ -148,6 +148,7 @@
 		34B5A09325B0CE6F00F7F7ED /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B5A09225B0CE6F00F7F7ED /* SettingsViewController.swift */; };
 		34B5A09725B0F8A500F7F7ED /* NSButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B5A09625B0F8A500F7F7ED /* NSButton.swift */; };
 		34B5A09D25B118EC00F7F7ED /* CalendarPickerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B5A09C25B118EC00F7F7ED /* CalendarPickerViewModel.swift */; };
+		34B99FBB2D2C8605003D4EA4 /* EventBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B99FBA2D2C8605003D4EA4 /* EventBackground.swift */; };
 		34C1D41E2C6E567100295E5E /* ProcessInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C1D41D2C6E567100295E5E /* ProcessInfo.swift */; };
 		34C1D4212C6E632F00295E5E /* Sentry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C1D4202C6E632F00295E5E /* Sentry.swift */; };
 		34C2CF9125C2070400FC2CFF /* EventViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C2CF9025C2070400FC2CFF /* EventViewModelTests.swift */; };
@@ -363,6 +364,7 @@
 		34B5A09225B0CE6F00F7F7ED /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		34B5A09625B0F8A500F7F7ED /* NSButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSButton.swift; sourceTree = "<group>"; };
 		34B5A09C25B118EC00F7F7ED /* CalendarPickerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPickerViewModel.swift; sourceTree = "<group>"; };
+		34B99FBA2D2C8605003D4EA4 /* EventBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventBackground.swift; sourceTree = "<group>"; };
 		34C1D41D2C6E567100295E5E /* ProcessInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessInfo.swift; sourceTree = "<group>"; };
 		34C1D4202C6E632F00295E5E /* Sentry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sentry.swift; sourceTree = "<group>"; };
 		34C2CF9025C2070400FC2CFF /* EventViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventViewModelTests.swift; sourceTree = "<group>"; };
@@ -800,12 +802,21 @@
 		34ABB9E429A12A720021F3CF /* Events */ = {
 			isa = PBXGroup;
 			children = (
+				34B99FBC2D2C861E003D4EA4 /* Background */,
 				34ABB9E129A129F00021F3CF /* ContextMenu */,
 				34ABB9DE29A129D10021F3CF /* EventDetails */,
 				34ABB9E329A129FE0021F3CF /* EventList */,
 				344A59D929AEBBB0004F0452 /* EventUtils */,
 			);
 			path = Events;
+			sourceTree = "<group>";
+		};
+		34B99FBC2D2C861E003D4EA4 /* Background */ = {
+			isa = PBXGroup;
+			children = (
+				34B99FBA2D2C8605003D4EA4 /* EventBackground.swift */,
+			);
+			path = Background;
 			sourceTree = "<group>";
 		};
 		34C1D41F2C6E631700295E5E /* Utils */ = {
@@ -1150,6 +1161,7 @@
 				34ABB9EE29A163890021F3CF /* ContextMenuFactory.swift in Sources */,
 				347C04A32D136BF800F67E7C /* SearchSuggestionView.swift in Sources */,
 				34299F732C724FA000A0269B /* MockNetworkServiceProvider.swift in Sources */,
+				34B99FBB2D2C8605003D4EA4 /* EventBackground.swift in Sources */,
 				3468E653284BD44600B21EC8 /* EventBarStyle.swift in Sources */,
 				34F128E12597B9C9007DF31C /* MainViewController.swift in Sources */,
 				34934CD828E71B0F009635D4 /* NSObject+Rx.swift in Sources */,
@@ -1498,7 +1510,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 32973VC289;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1507,7 +1519,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.15.2;
+				MARKETING_VERSION = 1.15.3;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Config/Calendr-Bridging-Header.h";
@@ -1526,7 +1538,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 32973VC289;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1535,7 +1547,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.15.2;
+				MARKETING_VERSION = 1.15.3;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Config/Calendr-Bridging-Header.h";

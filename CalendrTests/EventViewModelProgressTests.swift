@@ -156,7 +156,7 @@ class EventViewModelProgressTests: XCTestCase {
             end: .make(year: 2021, month: 1, day: 1, hour: 15)
         )
 
-        var backgroundColor: NSColor?
+        var backgroundColor: EventBackground?
 
         viewModel.backgroundColor
             .bind { backgroundColor = $0 }
@@ -174,13 +174,51 @@ class EventViewModelProgressTests: XCTestCase {
             end: .make(year: 2021, month: 1, day: 1, hour: 15)
         )
 
-        var backgroundColor: NSColor?
+        var backgroundColor: EventBackground?
 
         viewModel.backgroundColor
             .bind { backgroundColor = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(backgroundColor, viewModel.color.withAlphaComponent(0.15))
+        XCTAssertEqual(backgroundColor, .color(viewModel.color.withAlphaComponent(0.15)))
+    }
+
+    func testProgress_isNotInProgress_isPending_shouldShowPendingBackground() {
+
+        dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 9)
+
+        let viewModel = mock(
+            start: .make(year: 2021, month: 1, day: 1, hour: 10),
+            end: .make(year: 2021, month: 1, day: 1, hour: 15),
+            type: .event(.pending)
+        )
+
+        var backgroundColor: EventBackground?
+
+        viewModel.backgroundColor
+            .bind { backgroundColor = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(backgroundColor, .pending)
+    }
+
+    func testProgress_isInProgress_isPending_shouldShowPendingBackground() {
+
+        dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 12)
+
+        let viewModel = mock(
+            start: .make(year: 2021, month: 1, day: 1, hour: 10),
+            end: .make(year: 2021, month: 1, day: 1, hour: 15),
+            type: .event(.pending)
+        )
+
+        var backgroundColor: EventBackground?
+
+        viewModel.backgroundColor
+            .bind { backgroundColor = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(backgroundColor, .pending)
     }
 
     func testProgressClock() {
@@ -236,11 +274,12 @@ class EventViewModelProgressTests: XCTestCase {
         start: Date,
         end: Date,
         isAllDay: Bool = false,
+        type: EventType = .event(.accepted),
         scheduler: SchedulerType = MainScheduler.instance
     ) -> EventViewModel {
 
         EventViewModel(
-            event: .make(start: start, end: end, isAllDay: isAllDay),
+            event: .make(start: start, end: end, isAllDay: isAllDay, type: type),
             dateProvider: dateProvider,
             calendarService: calendarService,
             geocoder: geocoder,
