@@ -22,7 +22,7 @@ class EventViewModel {
 
     let duration: Observable<String>
     let isInProgress: Observable<Bool>
-    let backgroundColor: Observable<NSColor>
+    let backgroundColor: Observable<EventBackground>
     let isFaded: Observable<Bool>
     let progress: Observable<CGFloat?>
     let isCompleted: Observable<Bool>
@@ -277,9 +277,10 @@ class EventViewModel {
 
         isInProgress = progress.map(\.isNotNil).distinctUntilChanged()
 
-        let progressBackgroundColor = color.withAlphaComponent(0.15)
-
-        backgroundColor = isInProgress.map { $0 ? progressBackgroundColor : .clear }
+        backgroundColor = isInProgress.map { isInProgress in
+            guard event.status != .pending else { return .pending }
+            return isInProgress ? .color(event.calendar.color.withAlphaComponent(0.15)) : .clear
+        }
 
         showRecurrenceIndicator = settings.showRecurrenceIndicator.map { $0 && event.hasRecurrenceRules }
     }

@@ -67,30 +67,29 @@ class EventView: NSView {
 
         switch viewModel.type {
 
-        case .birthday:
-            birthdayIcon.isHidden = false
+            case .birthday:
+                birthdayIcon.isHidden = false
 
-        case .reminder:
-            priority.textColor = viewModel.color
-            priority.stringValue = viewModel.priority ?? ""
-            priority.isHidden = viewModel.priority == nil
+            case .reminder:
+                priority.textColor = viewModel.color
+                priority.stringValue = viewModel.priority ?? ""
+                priority.isHidden = viewModel.priority == nil
 
-            completeBtn.contentTintColor = viewModel.color
-            completeBtn.isHidden = false
+                completeBtn.contentTintColor = viewModel.color
+                completeBtn.isHidden = false
 
-        case .event(let status):
-            if status ~= .pending {
-                layer?.backgroundColor = Self.pendingBackground
-            }
+            case .event:
+                break
         }
 
         switch viewModel.barStyle {
-        case .filled:
-            colorBar.layer?.backgroundColor = viewModel.color.cgColor
 
-        case .bordered:
-            colorBar.layer?.borderWidth = 1
-            colorBar.layer?.borderColor = viewModel.color.cgColor
+            case .filled:
+                colorBar.layer?.backgroundColor = viewModel.color.cgColor
+
+            case .bordered:
+                colorBar.layer?.borderWidth = 1
+                colorBar.layer?.borderColor = viewModel.color.cgColor
         }
 
         title.attributedStringValue = .init(
@@ -280,7 +279,7 @@ class EventView: NSView {
             Observable
                 .combineLatest(viewModel.isCompleted, Scaling.observable)
                 .map { completed, scaling in
-                    let icon = completed ? Icons.Reminder.complete :  Icons.Reminder.incomplete
+                    let icon = completed ? Icons.Reminder.complete : Icons.Reminder.incomplete
                     return icon.with(pointSize: 12 * scaling)
                 }
                 .bind(to: completeBtn.rx.image)
@@ -350,26 +349,6 @@ class EventView: NSView {
             return hoverLayer.isHidden = true
         }
     }
-
-    private static let pendingBackground: CGColor = {
-
-        let stripes = CIFilter.stripesGenerator()
-        stripes.color0 = CIColor(color: NSColor.gray.withAlphaComponent(0.25))!
-        stripes.color1 = .clear
-        stripes.width = 2.5
-        stripes.sharpness = 0
-
-        let rotated = CIFilter.affineClamp()
-        rotated.inputImage = stripes.outputImage!
-        rotated.transform = CGAffineTransform(rotationAngle: -.pi / 4)
-
-        let ciImage = rotated.outputImage!.cropped(to: CGRect(x: 0, y: 0, width: 300, height: 300))
-        let rep = NSCIImageRep(ciImage: ciImage)
-        let nsImage = NSImage(size: rep.size)
-        nsImage.addRepresentation(rep)
-
-        return NSColor(patternImage: nsImage).cgColor
-    }()
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
