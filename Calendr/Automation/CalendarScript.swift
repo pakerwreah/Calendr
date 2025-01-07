@@ -17,6 +17,7 @@ class CalendarScript {
     }
 
     func openCalendar(at date: Date, mode: CalendarViewMode) {
+        Popover.closeAll()
         Task {
             do {
                 try await runScript("""
