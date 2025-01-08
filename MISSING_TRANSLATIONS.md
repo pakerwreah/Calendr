@@ -1,7 +1,6 @@
 # The following languages have missing translations
 Language|Count
 -|-
-[German - Deutsch - (de)](Calendr/Assets/de.lproj/Localizable.strings)|1
 [Chinese - 中文 - (zh-Hant-TW)](Calendr/Assets/zh-Hant-TW.lproj/Localizable.strings)|5
 [Chinese - 中文 - (zh-Hans)](Calendr/Assets/zh-Hans.lproj/Localizable.strings)|5
 [Spanish - español - (es)](Calendr/Assets/es.lproj/Localizable.strings)|15
