@@ -36,8 +36,8 @@
 "settings.menu_bar.show_background" = "Opaken Hintergrund anzeigen";
 "settings.menu_bar.date_format_custom" = "Angepasst";
 
-"settings.next_event" = "Nächster Termin";
-"settings.next_event.show_next_event" = "Zeige nächsten Termin";
+"settings.next_event" = "Nächstes Ereignis";
+"settings.next_event.show_next_event" = "Zeige nächstes Ereignis";
 "settings.next_event.grab_attention" = "Aufmerksamkeit erzeugen, wenn Ereignis kurz bevorsteht";
 "settings.next_event.grab_attention.flashing" = "Blinken";
 "settings.next_event.grab_attention.sound" = "Ton abspielen";
@@ -56,7 +56,7 @@
 "settings.events.show_overdue_reminders" = "Überfällige Erinnerungen anzeigen";
 "settings.events.show_finished_events" = "Abgeschlossene Ereignisse anzeigen";
 "settings.events.show_recurrence_indicator" = "Wiederholungsindikator anzeigen";
-//"settings.events.force_local_time_zone" = "Show all events in local time zone";
+"settings.events.force_local_time_zone" = "Alle Ereignisse in der lokalen Zeitzone anzeigen";
 
 "settings.appearance.transparency" = "Transparenz";
 "settings.appearance.accessibility" = "Zugänglichkeit";
