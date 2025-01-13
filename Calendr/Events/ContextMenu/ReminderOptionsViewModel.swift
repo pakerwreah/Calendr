@@ -29,7 +29,10 @@ class ReminderOptionsViewModel: BaseContextMenuViewModel<ReminderAction> {
         source: ContextMenuSource,
         callback: AnyObserver<ReminderAction>
     ) {
-        guard event.type == .reminder(completed: false) else { return nil }
+        guard
+            case .reminder(let completed) = event.type,
+            source == .list || !completed
+        else { return nil }
 
         self.event = event
         self.dateProvider = dateProvider
@@ -41,6 +44,8 @@ class ReminderOptionsViewModel: BaseContextMenuViewModel<ReminderAction> {
         if [.list, .menubar].contains(source) {
             addItem(.open)
         }
+
+        guard !completed else { return }
 
         addSeparator()
         addItem(.complete(event.calendar.color))

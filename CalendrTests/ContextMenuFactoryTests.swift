@@ -50,11 +50,20 @@ class ContextMenuFactoryTests: XCTestCase {
         }
     }
 
-    func testFactory_isReminder_isCompleted_fromAnySource_shouldNotMakeViewModel() throws {
+    func testFactory_isReminder_isCompleted_fromList_shouldMakeViewModel() throws {
 
-        for source: ContextMenuSource in [.list, .menubar, .details] {
-            XCTAssertNil(make(event: .make(type: .reminder(completed: true)), source: source))
-        }
+        let viewModel = try XCTUnwrap(make(event: .make(type: .reminder(completed: true)), source: .list))
+        XCTAssert(viewModel is ReminderOptionsViewModel)
+    }
+
+    func testFactory_isReminder_isCompleted_fromMenuBar_shouldNotMakeViewModel() throws {
+
+        XCTAssertNil(make(event: .make(type: .reminder(completed: true)), source: .menubar))
+    }
+
+    func testFactory_isReminder_isCompleted_fromDetails_shouldNotMakeViewModel() throws {
+
+        XCTAssertNil(make(event: .make(type: .reminder(completed: true)), source: .details))
     }
 
     func testFactory_isBirthday_fromList_shouldMakeViewModel() throws {
