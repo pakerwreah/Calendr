@@ -1660,8 +1660,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/getsentry/sentry-cocoa.git";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 8.33.0;
+				kind = upToNextMinorVersion;
+				minimumVersion = 8.41.0;
 			};
 		};
 		34E259812B659B5600074D3A /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */ = {
