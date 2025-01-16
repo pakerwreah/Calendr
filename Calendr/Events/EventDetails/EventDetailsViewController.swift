@@ -106,7 +106,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         meetingInfoScrollView.contentView.top(equalTo: meetingInfoTextView)
         meetingInfoScrollView.contentView.leading(equalTo: meetingInfoTextView)
         meetingInfoScrollView.contentView.trailing(equalTo: meetingInfoTextView, constant: 10)
-        meetingInfoScrollView.contentView.height(equalTo: meetingInfoTextView, priority: .dragThatCanResizeWindow)
+        meetingInfoScrollView.contentView.height(equalTo: meetingInfoTextView, priority: .defaultHigh)
 
         setUpBrowser()
         setUpLink()
