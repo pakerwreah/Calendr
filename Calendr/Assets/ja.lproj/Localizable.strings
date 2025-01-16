@@ -5,112 +5,112 @@
   Created by NIWA Yuichiro on 16/01/2025.
 */
 
-"quit" = "Quit";
-"search" = "Search";
+"quit" = "終了";
+"search" = "検索";
 
-"access_required.calendars" = "Calendar pending 'Full access' authorization";
-"access_required.reminders" = "Reminders pending authorization";
-"access_required.open_settings" = "Open Settings";
-"access_required.cancel" = "Cancel";
+"access_required.calendars" = "カレンダーへのフルアクセスが必要です";
+"access_required.reminders" = "リマインダーへのフルアクセスが必要です";
+"access_required.open_settings" = "設定を開く";
+"access_required.cancel" = "キャンセル";
 
-"auto_update.check_for_updates" = "Check for updates";
-"auto_update.fetching_releases" = "Fetching releases";
-"auto_update.new_version" = "New version available: %@";
-"auto_update.updated_to" = "Updated to version %@";
-"auto_update.downloading" = "Downloading version %@";
-"auto_update.install" = "Install";
-"auto_update.replace.message" = "Confirm the app location so we have permission to replace it";
+"auto_update.check_for_updates" = "更新を確認";
+"auto_update.fetching_releases" = "更新を確認中";
+"auto_update.new_version" = "バージョン %@ が利用可能です";
+"auto_update.updated_to" = "バージョン %@ に更新されました";
+"auto_update.downloading" = "バージョン %@ をダウンロード中";
+"auto_update.install" = "インストール";
+"auto_update.replace.message" = "アプリのインストール先を確認してください。古いバージョンと同じ場所を選ぶと、新しいバージョンのアプリに置き換えられます。";
 
-"settings.title" = "Preferences";
-"settings.tab.general" = "General";
-"settings.tab.appearance" = "Appearance";
-"settings.tab.calendars" = "Calendars";
-"settings.tab.keyboard" = "Shortcuts";
-"settings.tab.about" = "About";
+"settings.title" = "設定";
+"settings.tab.general" = "一般";
+"settings.tab.appearance" = "外観";
+"settings.tab.calendars" = "カレンダー";
+"settings.tab.keyboard" = "ショートカット";
+"settings.tab.about" = "このアプリについて";
 
-"settings.menu_bar" = "Menu Bar";
-"settings.menu_bar.auto_launch" = "Launch at login";
-"settings.menu_bar.show_icon" = "Show icon";
-"settings.menu_bar.show_date" = "Show date";
-"settings.menu_bar.show_icon_date" = "Show date in icon";
-"settings.menu_bar.show_background" = "Show opaque background";
-"settings.menu_bar.date_format_custom" = "Custom";
+"settings.menu_bar" = "メニューバー";
+"settings.menu_bar.auto_launch" = "ログイン時に起動";
+"settings.menu_bar.show_icon" = "アイコンを表示";
+"settings.menu_bar.show_date" = "日付を表示";
+//"settings.menu_bar.show_icon_date" = "Show date in icon";
+"settings.menu_bar.show_background" = "不透明な背景";
+"settings.menu_bar.date_format_custom" = "カスタム";
 
-"settings.next_event" = "Next Event";
-"settings.next_event.show_next_event" = "Show next event";
-"settings.next_event.grab_attention" = "Grab attention when event is close";
-"settings.next_event.grab_attention.flashing" = "Flashing";
-"settings.next_event.grab_attention.sound" = "Play sound";
-"settings.next_event.detect_notch" = "Shorten if 'notch' is present";
+"settings.next_event" = "次の予定";
+"settings.next_event.show_next_event" = "次の予定をメニューバーに表示";
+"settings.next_event.grab_attention" = "予定が近づいたら";
+"settings.next_event.grab_attention.flashing" = "点滅させる";
+"settings.next_event.grab_attention.sound" = "音を鳴らす";
+"settings.next_event.detect_notch" = "ノッチがある場合に短くする";
 
-"settings.calendar" = "Calendar";
-"settings.calendar.show_week_numbers" = "Show week numbers";
-"settings.calendar.preserve_selected_date" = "Preserve selected date on hide";
-"settings.calendar.show_declined_events" = "Show declined events";
-"settings.calendar.show_declined_events_tooltip" = "This only works if it is also enabled in the native Calendar app.";
-"settings.calendar.date_hover_option" = "Hold ⌥ to peek at hovered dates";
-"settings.calendar.calendar_app_view_mode" = "Calendar app view";
+"settings.calendar" = "カレンダー";
+"settings.calendar.show_week_numbers" = "週番号を表示";
+"settings.calendar.preserve_selected_date" = "選択した日付を保持";
+"settings.calendar.show_declined_events" = "辞退した予定を表示";
+"settings.calendar.show_declined_events_tooltip" = "ネイティブのカレンダーアプリでもこの設定が有効になっている必要があります。";
+"settings.calendar.date_hover_option" = "⌥キーを押しながらホバーで予定を表示";
+"settings.calendar.calendar_app_view_mode" = "カレンダーの表示";
 
-"settings.events" = "Events";
-"settings.events.show_map" = "Show map and weather";
-"settings.events.show_overdue_reminders" = "Show overdue reminders";
-"settings.events.show_finished_events" = "Show finished events";
-"settings.events.show_recurrence_indicator" = "Show recurrence indicator";
-"settings.events.force_local_time_zone" = "Show all events in local time zone";
+"settings.events" = "予定";
+"settings.events.show_map" = "地図と天気を表示";
+"settings.events.show_overdue_reminders" = "期限が過ぎたリマインダーを表示";
+"settings.events.show_finished_events" = "終了済みの予定を表示";
+"settings.events.show_recurrence_indicator" = "繰り返しの予定にマークを表示";
+"settings.events.force_local_time_zone" = "すべての予定を端末のタイムゾーンで表示";
 
-"settings.appearance.transparency" = "Transparency";
-"settings.appearance.accessibility" = "Accessibility";
+"settings.appearance.transparency" = "透明度";
+"settings.appearance.accessibility" = "アクセシビリティ";
 
-"settings.keyboard.local_shortcuts.title" = "Local shortcuts";
-"settings.keyboard.local_shortcuts.prev_date" = "Previous date";
-"settings.keyboard.local_shortcuts.next_date" = "Next date";
-"settings.keyboard.local_shortcuts.prev_week" = "Previous week";
-"settings.keyboard.local_shortcuts.next_week" = "Next week";
-"settings.keyboard.local_shortcuts.prev_month" = "Previous month";
-"settings.keyboard.local_shortcuts.next_month" = "Next month";
-"settings.keyboard.local_shortcuts.curr_date" = "Current date";
-"settings.keyboard.local_shortcuts.open_date" = "Open selected date";
-"settings.keyboard.local_shortcuts.pin_calendar" = "Pin calendar";
+"settings.keyboard.local_shortcuts.title" = "アプリ内ショートカット";
+"settings.keyboard.local_shortcuts.prev_date" = "前日";
+"settings.keyboard.local_shortcuts.next_date" = "翌日";
+"settings.keyboard.local_shortcuts.prev_week" = "前の週";
+"settings.keyboard.local_shortcuts.next_week" = "次の週";
+"settings.keyboard.local_shortcuts.prev_month" = "前の月";
+"settings.keyboard.local_shortcuts.next_month" = "次の月";
+"settings.keyboard.local_shortcuts.curr_date" = "今日";
+"settings.keyboard.local_shortcuts.open_date" = "選択した日付をカレンダーで開く";
+"settings.keyboard.local_shortcuts.pin_calendar" = "前面に固定";
 
-"settings.keyboard.global_shortcuts.title" = "Global shortcuts";
-"settings.keyboard.global_shortcuts.open_calendar" = "Open calendar";
-"settings.keyboard.global_shortcuts.open_next_event" = "Open next event";
-"settings.keyboard.global_shortcuts.open_next_event_options" = "Next event options";
-"settings.keyboard.global_shortcuts.open_next_reminder" = "Open next reminder";
-"settings.keyboard.global_shortcuts.open_next_reminder_options" = "Next reminder options";
+"settings.keyboard.global_shortcuts.title" = "グローバルショートカット";
+"settings.keyboard.global_shortcuts.open_calendar" = "カレンダーを展開";
+"settings.keyboard.global_shortcuts.open_next_event" = "次の予定を展開";
+"settings.keyboard.global_shortcuts.open_next_event_options" = "次の予定のオプションを表示";
+"settings.keyboard.global_shortcuts.open_next_reminder" = "次のリマインダーを展開";
+"settings.keyboard.global_shortcuts.open_next_reminder_options" = "次のリマインダーのオプションを表示";
 
-"formatter.date.all_day" = "All day";
-"formatter.date.today" = "Today";
-"formatter.date.relative.in" = "in %@";
-"formatter.date.relative.ago" = "%@ ago";
-"formatter.date.relative.left" = "%@ left";
+"formatter.date.all_day" = "全日";
+"formatter.date.today" = "今日";
+"formatter.date.relative.in" = "%@後";
+"formatter.date.relative.ago" = "%@前";
+"formatter.date.relative.left" = "残り%@";
 
-"reminder.options.button" = "Options";
-"reminder.options.complete" = "Complete";
-"reminder.options.remind" = "Remind %@";
+"reminder.options.button" = "オプション";
+"reminder.options.complete" = "完了";
+"reminder.options.remind" = "%@ にリマインド";
 
-"event_details.participant.organizer" = "organizer";
-"event_details.participant.me" = "me";
+"event_details.participant.organizer" = "主催者";
+"event_details.participant.me" = "自分";
 
-"event_status.accepted" = "Accepted";
-"event_status.maybe" = "Maybe";
-"event_status.declined" = "Declined";
-"event_status.pending" = "Pending";
+"event_status.accepted" = "出席";
+"event_status.maybe" = "仮承諾";
+"event_status.declined" = "欠席";
+"event_status.pending" = "未回答";
 
-"event_action.open" = "Open";
-"event_action.join" = "Join";
-"event_action.skip" = "Skip";
-"event_action.accept" = "Accept";
-"event_action.maybe" = "Maybe";
-"event_action.decline" = "Decline";
+"event_action.open" = "開く";
+"event_action.join" = "参加する";
+"event_action.skip" = "スキップ";
+"event_action.accept" = "出席";
+"event_action.maybe" = "仮承諾";
+"event_action.decline" = "欠席";
 
-"tooltips.navigation.prev_month" = "Previous month";
-"tooltips.navigation.today" = "Today";
-"tooltips.navigation.next_month" = "Next month";
+"tooltips.navigation.prev_month" = "先月";
+"tooltips.navigation.today" = "今日";
+"tooltips.navigation.next_month" = "翌月";
 
-"tooltips.toolbar.stay_open" = "Stay open";
-"tooltips.toolbar.open_calendar" = "Open Calendar";
-"tooltips.toolbar.open_reminders" = "Open Reminders";
-"tooltips.toolbar.open_menu" = "Open menu";
+"tooltips.toolbar.stay_open" = "前面に固定";
+"tooltips.toolbar.open_calendar" = "カレンダーを開く";
+"tooltips.toolbar.open_reminders" = "リマインダーを開く";
+"tooltips.toolbar.open_menu" = "メニューを開く";
 
-"calendars.source.others" = "Others";
+"calendars.source.others" = "その他";
