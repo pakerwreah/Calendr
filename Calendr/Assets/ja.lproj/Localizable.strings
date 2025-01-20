@@ -32,7 +32,7 @@
 "settings.menu_bar.auto_launch" = "ログイン時に起動";
 "settings.menu_bar.show_icon" = "アイコンを表示";
 "settings.menu_bar.show_date" = "日付を表示";
-//"settings.menu_bar.show_icon_date" = "Show date in icon";
+"settings.menu_bar.show_icon_date" = "アイコンに日付を表示";
 "settings.menu_bar.show_background" = "不透明な背景";
 "settings.menu_bar.date_format_custom" = "カスタム";
 
