@@ -215,6 +215,7 @@
 
 /* Begin PBXFileReference section */
 		27F573032B9F4B3B000DA607 /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/Localizable.strings; sourceTree = "<group>"; };
+		2CC85A822D50CF7800838D68 /* sq */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sq; path = sq.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3408B26D26A5008700DA8429 /* SettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTests.swift; sourceTree = "<group>"; };
 		3408D13D25982DB400CF1425 /* DateSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateSelector.swift; sourceTree = "<group>"; };
 		3408F17525FAAA4B00C1EAD4 /* EventDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailsViewController.swift; sourceTree = "<group>"; };
@@ -983,6 +984,7 @@
 				"zh-Hant-TW",
 				ja,
 				ko,
+				sq,
 			);
 			mainGroup = 347D0F8B25952F89002451EC;
 			packageReferences = (
@@ -1338,6 +1340,7 @@
 				A122CF0E2CDDFD6100B95699 /* zh-Hant-TW */,
 				EF3A22A62D394A2200752418 /* ja */,
 				BB2E33372D3EB62C000AF21D /* ko */,
+				2CC85A822D50CF7800838D68 /* sq */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
