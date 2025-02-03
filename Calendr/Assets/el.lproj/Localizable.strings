@@ -5,8 +5,8 @@
   Created by Petros Dhespollari on 03/02/2025.
 */
 
-"quit" = "Έξοδος",
-"search" = "Αναζήτηση",
+"quit" = "Έξοδος";
+"search" = "Αναζήτηση";
 
 "access_required.calendars" = "Ημερολόγιο που εκκρεμεί εξουσιοδότηση 'Πλήρης πρόσβαση'";
 "access_required.reminders" = "Υπενθυμίσεις εν αναμονή εξουσιοδότησης";
