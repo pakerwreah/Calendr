@@ -41,7 +41,7 @@
 "settings.next_event.grab_attention" = "Τράβηξε την προσοχή όταν το συμβάν είναι κοντά";
 "settings.next_event.grab_attention.flashing" = "Αναβοσβήνει";
 "settings.next_event.grab_attention.sound" = "Αναπαραγωγή ήχου";
-"settings.next_event.detect_notch" = "Μείωση αν υπάρχει "εγκοπή'";
+"settings.next_event.detect_notch" = "Μείωση αν υπάρχει 'εγκοπή'";
 
 "settings.calendar" = "Ημερολόγιο";
 "settings.calendar.show_week_numbers" = "Εμφάνιση αριθμών εβδομάδας";
