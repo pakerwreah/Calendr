@@ -86,7 +86,7 @@
 "formatter.date.relative.left" = "%@ μείνανε";
 
 "reminder.options.button" = "Επιλογές";
-"reminder.options.complete" = "Ολοκληρώθηκε"
+"reminder.options.complete" = "Ολοκληρώθηκε";
 "reminder.options.remind" = "Υπενθύμιση %@";
 
 "event_details.participant.organizer" = "διοργανωτής";
