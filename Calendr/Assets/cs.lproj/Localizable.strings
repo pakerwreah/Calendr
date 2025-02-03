@@ -19,7 +19,7 @@
 "auto_update.updated_to" = "Aktualizováno na verzi %@";
 "auto_update.downloading" = "Stahování verze %@";
 "auto_update.install" = "Instalace";
-"auto_update.replace.message" = "Potvrzení umístění aplikace, abychom měli oprávnění ji nahradit.";
+"auto_update.replace.message" = "Potvrzení umístění aplikace, abychom měli oprávnění ji nahradit";
 
 "settings.title" = "Předvolby";
 "settings.tab.general" = "Obecné";
