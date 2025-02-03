@@ -8,22 +8,22 @@
 "quit" = "Ukončit";
 "search" = "Hledat";
 
-//"access_required.calendars" = "Calendar pending 'Full access' authorization";
-//"access_required.reminders" = "Reminders pending authorization";
-//"access_required.open_settings" = "Open Settings";
-//"access_required.cancel" = "Cancel";
+"access_required.calendars" = "Kalendář čeká na autorizaci 'Úplný přístup'";
+"access_required.reminders" = "Připomínky čekající na autorizaci";
+"access_required.open_settings" = "Otevřít nastavení";
+"access_required.cancel" = "Zrušit";
 
-//"auto_update.check_for_updates" = "Check for updates";
-//"auto_update.fetching_releases" = "Fetching releases";
+"auto_update.check_for_updates" = "Zkontrolujte aktualizace";
+"auto_update.fetching_releases" = "Získávání verzí";
 "auto_update.new_version" = "Nová verze k dispozici: %@";
-//"auto_update.updated_to" = "Updated to version %@";
-//"auto_update.downloading" = "Downloading version %@";
-//"auto_update.install" = "Install";
-//"auto_update.replace.message" = "Confirm the app location so we have permission to replace it";
+"auto_update.updated_to" = "Aktualizováno na verzi %@";
+"auto_update.downloading" = "Stahování verze %@";
+"auto_update.install" = "Instalace";
+"auto_update.replace.message" = "Potvrzení umístění aplikace, abychom měli oprávnění ji nahradit.";
 
 "settings.title" = "Předvolby";
 "settings.tab.general" = "Obecné";
-//"settings.tab.appearance" = "Appearance";
+"settings.tab.appearance" = "Vzhled";
 "settings.tab.calendars" = "Kalendáře";
 "settings.tab.keyboard" = "Zkratky";
 "settings.tab.about" = "O aplikaci";
@@ -38,9 +38,9 @@
 
 "settings.next_event" = "Další událost";
 "settings.next_event.show_next_event" = "Zobrazit další událost";
-//"settings.next_event.grab_attention" = "Grab attention when event is close";
-//"settings.next_event.grab_attention.flashing" = "Flashing";
-//"settings.next_event.grab_attention.sound" = "Play sound";
+"settings.next_event.grab_attention" = "Upoutejte pozornost, když je událost blízko";
+"settings.next_event.grab_attention.flashing" = "Blikání";
+"settings.next_event.grab_attention.sound" = "Přehrát zvuk";
 "settings.next_event.detect_notch" = "Zkrátit, pokud je 'výřez' přítomen";
 
 "settings.calendar" = "Kalendář";
@@ -48,18 +48,18 @@
 "settings.calendar.preserve_selected_date" = "Zachovat vybrané datum při skrytí";
 "settings.calendar.show_declined_events" = "Zobrazit odmítnuté události";
 "settings.calendar.show_declined_events_tooltip" = "Funguje pouze tehdy, pokud je také zapnuto v nativní aplikaci Kalendář.";
-//"settings.calendar.date_hover_option" = "Hold ⌥ to peek at hovered dates";
-//"settings.calendar.calendar_app_view_mode" = "Calendar app view";
+"settings.calendar.date_hover_option" = "Podržením ⌥ se můžete podívat na data, na která se vznášíte";
+"settings.calendar.calendar_app_view_mode" = "Zobrazení aplikace Kalendář";
 
 "settings.events" = "Události";
-//"settings.events.show_map" = "Show map and weather";
-//"settings.events.show_overdue_reminders" = "Show overdue reminders";
-//"settings.events.show_finished_events" = "Show finished events";
-//"settings.events.show_recurrence_indicator" = "Show recurrence indicator";
-//"settings.events.force_local_time_zone" = "Show all events in local time zone";
+"settings.events.show_map" = "Zobrazit mapu a počasí";
+"settings.events.show_overdue_reminders" = "Zobrazení upomínek za zpoždění";
+"settings.events.show_finished_events" = "Zobrazit dokončené události";
+"settings.events.show_recurrence_indicator" = "Zobrazit indikátor opakování";
+"settings.events.force_local_time_zone" = "Zobrazit všechny události v místním časovém pásmu";
 
 "settings.appearance.transparency" = "Průhlednost";
-//"settings.appearance.accessibility" = "Accessibility";
+"settings.appearance.accessibility" = "Přístupnost";
 
 "settings.keyboard.local_shortcuts.title" = "Místní zkratky";
 "settings.keyboard.local_shortcuts.prev_date" = "Předchozí datum";
@@ -104,13 +104,13 @@
 "event_action.maybe" = "Možná";
 "event_action.decline" = "Odmítnout";
 
-//"tooltips.navigation.prev_month" = "Previous month";
-//"tooltips.navigation.today" = "Today";
-//"tooltips.navigation.next_month" = "Next month";
+"tooltips.navigation.prev_month" = "Předchozí měsíc";
+"tooltips.navigation.today" = "Dnes";
+"tooltips.navigation.next_month" = "Příští měsíc";
 
-//"tooltips.toolbar.stay_open" = "Stay open";
-//"tooltips.toolbar.open_calendar" = "Open Calendar";
-//"tooltips.toolbar.open_reminders" = "Open Reminders";
-//"tooltips.toolbar.open_menu" = "Open menu";
+"tooltips.toolbar.stay_open" = "Zůstaňte otevření";
+"tooltips.toolbar.open_calendar" = "Otevřený kalendář";
+"tooltips.toolbar.open_reminders" = "Otevřené připomenutí";
+"tooltips.toolbar.open_menu" = "Otevřít nabídku";
 
-//"calendars.source.others" = "Others";
+"calendars.source.others" = "Ostatní";
