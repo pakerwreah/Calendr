@@ -1,0 +1,109 @@
+"quit" = "Çık";
+"search" = "Ara";
+
+"access_required.calendars" = "Takvim, 'Tam erişim' yetkilendirmesi bekliyor";
+"access_required.reminders" = "Hatırlatıcılar için yetkilendirme bekleniyor";
+"access_required.open_settings" = "Ayarları Aç";
+"access_required.cancel" = "İptal";
+
+"auto_update.check_for_updates" = "Güncellemeleri kontrol et";
+"auto_update.fetching_releases" = "Sürümler aranıyor";
+"auto_update.new_version" = "Yeni sürüm mevcut: %@";
+"auto_update.updated_to" = "%@ sürümüne güncellendi";
+"auto_update.downloading" = "%@ sürümü indiriliyor";
+"auto_update.install" = "Yükle";
+"auto_update.replace.message" = "Uygulamanın konumunu onaylayın, böylece değiştirme iznine sahip olabiliriz";
+
+"settings.title" = "Tercihler";
+"settings.tab.general" = "Genel";
+"settings.tab.appearance" = "Görünüm";
+"settings.tab.calendars" = "Takvimler";
+"settings.tab.keyboard" = "Kısayollar";
+"settings.tab.about" = "Hakkında";
+
+"settings.menu_bar" = "Menü Çubuğu";
+"settings.menu_bar.auto_launch" = "Girişte başlat";
+"settings.menu_bar.show_icon" = "Simgeyi göster";
+"settings.menu_bar.show_date" = "Tarihi göster";
+"settings.menu_bar.show_icon_date" = "Tarihi simgede göster";
+"settings.menu_bar.show_background" = "Opak arka plan göster";
+"settings.menu_bar.date_format_custom" = "Özel";
+
+"settings.next_event" = "Sonraki Etkinlik";
+"settings.next_event.show_next_event" = "Sonraki etkinliği göster";
+"settings.next_event.grab_attention" = "Etkinlik yaklaştığında dikkat çek";
+"settings.next_event.grab_attention.flashing" = "Yanıp sönme";
+"settings.next_event.grab_attention.sound" = "Ses çal";
+"settings.next_event.detect_notch" = "'Çentik' varsa kısalt";
+
+"settings.calendar" = "Takvim";
+"settings.calendar.show_week_numbers" = "Hafta numaralarını göster";
+"settings.calendar.preserve_selected_date" = "Gizlendiğinde seçili tarihi koru";
+"settings.calendar.show_declined_events" = "Reddedilen etkinlikleri göster";
+"settings.calendar.show_declined_events_tooltip" = "Bu, yalnızca yerel Takvim uygulamasında da etkinleştirilmişse çalışır.";
+"settings.calendar.date_hover_option" = "Üzerine gelinen tarihleri önizlemek için ⌥ tuşuna basılı tut";
+"settings.calendar.calendar_app_view_mode" = "Takvim uygulaması görünüm modu";
+
+"settings.events" = "Etkinlikler";
+"settings.events.show_map" = "Harita ve hava durumunu göster";
+"settings.events.show_overdue_reminders" = "Gecikmiş hatırlatıcıları göster";
+"settings.events.show_finished_events" = "Tamamlanmış etkinlikleri göster";
+"settings.events.show_recurrence_indicator" = "Tekrarlama göstergesini göster";
+"settings.events.force_local_time_zone" = "Tüm etkinlikleri yerel saat diliminde göster";
+
+"settings.appearance.transparency" = "Şeffaflık";
+"settings.appearance.accessibility" = "Erişilebilirlik";
+
+"settings.keyboard.local_shortcuts.title" = "Yerel kısayollar";
+"settings.keyboard.local_shortcuts.prev_date" = "Önceki tarih";
+"settings.keyboard.local_shortcuts.next_date" = "Sonraki tarih";
+"settings.keyboard.local_shortcuts.prev_week" = "Önceki hafta";
+"settings.keyboard.local_shortcuts.next_week" = "Sonraki hafta";
+"settings.keyboard.local_shortcuts.prev_month" = "Önceki ay";
+"settings.keyboard.local_shortcuts.next_month" = "Sonraki ay";
+"settings.keyboard.local_shortcuts.curr_date" = "Bugünün tarihi";
+"settings.keyboard.local_shortcuts.open_date" = "Seçili tarihi aç";
+"settings.keyboard.local_shortcuts.pin_calendar" = "Takvimi sabitle";
+
+"settings.keyboard.global_shortcuts.title" = "Genel kısayollar";
+"settings.keyboard.global_shortcuts.open_calendar" = "Takvimi aç";
+"settings.keyboard.global_shortcuts.open_next_event" = "Sonraki etkinliği aç";
+"settings.keyboard.global_shortcuts.open_next_event_options" = "Sonraki etkinlik seçenekleri";
+"settings.keyboard.global_shortcuts.open_next_reminder" = "Sonraki hatırlatıcıyı aç";
+"settings.keyboard.global_shortcuts.open_next_reminder_options" = "Sonraki hatırlatıcı seçenekleri";
+
+"formatter.date.all_day" = "Tüm gün";
+"formatter.date.today" = "Bugün";
+"formatter.date.relative.in" = "%@ içinde";
+"formatter.date.relative.ago" = "%@ önce";
+"formatter.date.relative.left" = "%@ kaldı";
+
+"reminder.options.button" = "Seçenekler";
+"reminder.options.complete" = "Tamamlandı";
+"reminder.options.remind" = "%@ hatırlat";
+
+"event_details.participant.organizer" = "organizatör";
+"event_details.participant.me" = "ben";
+
+"event_status.accepted" = "Kabul edildi";
+"event_status.maybe" = "Belki";
+"event_status.declined" = "Reddedildi";
+"event_status.pending" = "Beklemede";
+
+"event_action.open" = "Aç";
+"event_action.join" = "Katıl";
+"event_action.skip" = "Atla";
+"event_action.accept" = "Kabul et";
+"event_action.maybe" = "Belki";
+"event_action.decline" = "Reddet";
+
+"tooltips.navigation.prev_month" = "Önceki ay";
+"tooltips.navigation.today" = "Bugün";
+"tooltips.navigation.next_month" = "Sonraki ay";
+
+"tooltips.toolbar.stay_open" = "Açık kal";
+"tooltips.toolbar.open_calendar" = "Takvimi aç";
+"tooltips.toolbar.open_reminders" = "Hatırlatıcıları aç";
+"tooltips.toolbar.open_menu" = "Menüyü aç";
+
+"calendars.source.others" = "Diğerleri";
