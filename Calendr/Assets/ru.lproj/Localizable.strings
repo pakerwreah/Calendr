@@ -26,7 +26,7 @@
 "settings.tab.appearance" = "Внешний вид";
 "settings.tab.calendars" = "Календари";
 "settings.tab.keyboard" = "Горячие клавиши";
-"settings.tab.about" = "О Calendr";
+"settings.tab.about" = "О приложении";
 
 "settings.menu_bar" = "Панель меню";
 "settings.menu_bar.auto_launch" = "Запуск при входе в систему";
@@ -49,7 +49,7 @@
 "settings.calendar.show_declined_events" = "Показывать отклоненные события";
 "settings.calendar.show_declined_events_tooltip" = "Это работает только в том случае, если он также включен в родном приложении Календарь.";
 "settings.calendar.date_hover_option" = "Удерживайте ⌥, чтобы просмотреть наведенные даты.";
-"settings.calendar.calendar_app_view_mode" = "Просмотр приложения «Календарь»;
+"settings.calendar.calendar_app_view_mode" = "Просмотр приложения «Календарь»";
 
 "settings.events" = "События";
 "settings.events.show_map" = "Показывать карту и погоду";
