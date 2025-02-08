@@ -383,6 +383,7 @@
 		34C72F9525E8A05700FD20FA /* MockNextEventSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNextEventSettings.swift; sourceTree = "<group>"; };
 		34C72F9B25E9847300FD20FA /* EventListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventListViewModel.swift; sourceTree = "<group>"; };
 		34C72FA125E987F000FD20FA /* EventListViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventListViewModelTests.swift; sourceTree = "<group>"; };
+		34CB48F12D57C20F005F63DB /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34CC382C25B636A6006CBD99 /* Checkbox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checkbox.swift; sourceTree = "<group>"; };
 		34D19FBF262299D300B2732C /* NSEdgeInsets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSEdgeInsets.swift; sourceTree = "<group>"; };
 		34D19FC52622A02C00B2732C /* EventDetailsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailsViewModelTests.swift; sourceTree = "<group>"; };
@@ -989,6 +990,7 @@
 				sq,
 				el,
 				ru,
+				tr,
 			);
 			mainGroup = 347D0F8B25952F89002451EC;
 			packageReferences = (
@@ -1066,6 +1068,7 @@
 				"${SRCROOT}/${TARGET_NAME}/Assets/el.lproj/Localizable.strings",
 				"${SRCROOT}/${TARGET_NAME}/Assets/sq.lproj/Localizable.strings",
 				"${SRCROOT}/${TARGET_NAME}/Assets/ru.lproj/Localizable.strings",
+				"${SRCROOT}/${TARGET_NAME}/Assets/tr.lproj/Localizable.strings",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1350,6 +1353,7 @@
 				2CC85A822D50CF7800838D68 /* sq */,
 				2CC85A832D50D9CA00838D68 /* el */,
 				2CDDCF162D57AD36004BF510 /* ru */,
+				34CB48F12D57C20F005F63DB /* tr */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -1539,7 +1543,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.15.6;
+				MARKETING_VERSION = 1.15.7;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Config/Calendr-Bridging-Header.h";
@@ -1567,7 +1571,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.15.6;
+				MARKETING_VERSION = 1.15.7;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Config/Calendr-Bridging-Header.h";
