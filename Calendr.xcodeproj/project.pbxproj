@@ -217,6 +217,7 @@
 		27F573032B9F4B3B000DA607 /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/Localizable.strings; sourceTree = "<group>"; };
 		2CC85A822D50CF7800838D68 /* sq */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sq; path = sq.lproj/Localizable.strings; sourceTree = "<group>"; };
 		2CC85A832D50D9CA00838D68 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Localizable.strings; sourceTree = "<group>"; };
+		2CDDCF162D57AD36004BF510 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3408B26D26A5008700DA8429 /* SettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTests.swift; sourceTree = "<group>"; };
 		3408D13D25982DB400CF1425 /* DateSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateSelector.swift; sourceTree = "<group>"; };
 		3408F17525FAAA4B00C1EAD4 /* EventDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailsViewController.swift; sourceTree = "<group>"; };
@@ -987,6 +988,7 @@
 				ko,
 				sq,
 				el,
+				ru,
 			);
 			mainGroup = 347D0F8B25952F89002451EC;
 			packageReferences = (
@@ -1063,6 +1065,7 @@
 				"${SRCROOT}/${TARGET_NAME}/Assets/ko.lproj/Localizable.strings",
 				"${SRCROOT}/${TARGET_NAME}/Assets/el.lproj/Localizable.strings",
 				"${SRCROOT}/${TARGET_NAME}/Assets/sq.lproj/Localizable.strings",
+				"${SRCROOT}/${TARGET_NAME}/Assets/ru.lproj/Localizable.strings",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1346,6 +1349,7 @@
 				BB2E33372D3EB62C000AF21D /* ko */,
 				2CC85A822D50CF7800838D68 /* sq */,
 				2CC85A832D50D9CA00838D68 /* el */,
+				2CDDCF162D57AD36004BF510 /* ru */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
