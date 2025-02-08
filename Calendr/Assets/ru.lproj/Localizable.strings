@@ -1,0 +1,116 @@
+/* 
+  Localizable.strings
+  Calendr
+
+  Created by Petros Dhespollari on 20/02/2021.
+*/
+
+"quit" = "Выйти";
+"search" = "Поиск";
+
+"access_required.calendars" = "Календарь, ожидающий авторизации 'Полный доступ'";
+"access_required.reminders" = "Напоминания, ожидающие авторизации";
+"access_required.open_settings" = "Открыть настройки";
+"access_required.cancel" = "Отмена";
+
+"auto_update.check_for_updates" = "Проверьте наличие обновлений";
+"auto_update.fetching_releases" = "Получение релизов";
+"auto_update.new_version" = "Доступна новая версия: %@";
+"auto_update.updated_to" = "Обновлено до версии %@";
+"auto_update.downloading" = "Версия для скачивания %@";
+"auto_update.install" = "Установите";
+"auto_update.replace.message" = "Подтвердите местоположение приложения, чтобы у нас было разрешение на его замену";
+
+"settings.title" = "Предпочтения";
+"settings.tab.general" = "Общие сведения";
+"settings.tab.appearance" = "Внешний вид";
+"settings.tab.calendars" = "Календари";
+"settings.tab.keyboard" = "Ярлыки";
+"settings.tab.about" = "О сайте";
+
+"settings.menu_bar" = "Панель меню";
+"settings.menu_bar.auto_launch" = "Запуск при входе в систему";
+"settings.menu_bar.show_icon" = "Показать значок";
+"settings.menu_bar.show_date" = "Дата показа";
+"settings.menu_bar.show_icon_date" = "Отображение даты на значке";
+"settings.menu_bar.show_background" = "Показать непрозрачный фон";
+"settings.menu_bar.date_format_custom" = "Пользовательское";
+
+"settings.next_event" = "Следующее событие";
+"settings.next_event.show_next_event" = "Показать следующее событие";
+"settings.next_event.grab_attention" = "Привлеките внимание, когда событие уже близко";
+"settings.next_event.grab_attention.flashing" = "Мигающий";
+"settings.next_event.grab_attention.sound" = "Воспроизведение звука";
+"settings.next_event.detect_notch" = "Укоротите, если присутствует 'насечка'";
+
+"settings.calendar" = "Календарь";
+"settings.calendar.show_week_numbers" = "Номера недели показа";
+"settings.calendar.preserve_selected_date" = "Сохранение выбранной даты при скрытии";
+"settings.calendar.show_declined_events" = "Показать отклоненные события";
+"settings.calendar.show_declined_events_tooltip" = "Это работает только в том случае, если он также включен в родном приложении Календарь.";
+"settings.calendar.date_hover_option" = "Удерживайте ⌥, чтобы просмотреть наведенные даты.";
+"settings.calendar.calendar_app_view_mode" = "Просмотр приложения «Календарь";
+
+"settings.events" = "События";
+"settings.events.show_map" = "Показать карту и погоду";
+"settings.events.show_overdue_reminders" = "Показывайте напоминания о просрочке";
+"settings.events.show_finished_events" = "Показать завершенные события";
+"settings.events.show_recurrence_indicator" = "Показать индикатор рецидива";
+"settings.events.force_local_time_zone" = "Показать все события в местном часовом поясе";
+
+"settings.appearance.transparency" = "Прозрачность";
+"settings.appearance.accessibility" = "Доступность";
+
+"settings.keyboard.local_shortcuts.title" = "Локальные ярлыки";
+"settings.keyboard.local_shortcuts.prev_date" = "Предыдущая дата";
+"settings.keyboard.local_shortcuts.next_date" = "Следующая дата";
+"settings.keyboard.local_shortcuts.prev_week" = "Предыдущая неделя";
+"settings.keyboard.local_shortcuts.next_week" = "Следующая неделя";
+"settings.keyboard.local_shortcuts.prev_month" = "Предыдущий месяц";
+"settings.keyboard.local_shortcuts.next_month" = "Следующий месяц";
+"settings.keyboard.local_shortcuts.curr_date" = "Текущая дата";
+"settings.keyboard.local_shortcuts.open_date" = "Открыть выбранную дату";
+"settings.keyboard.local_shortcuts.pin_calendar" = "Календарь с булавками";
+
+"settings.keyboard.global_shortcuts.title" = "Глобальные ярлыки";
+"settings.keyboard.global_shortcuts.open_calendar" = "Открытый календарь";
+"settings.keyboard.global_shortcuts.open_next_event" = "Открыть следующее событие";
+"settings.keyboard.global_shortcuts.open_next_event_options" = "Варианты следующего события";
+"settings.keyboard.global_shortcuts.open_next_reminder" = "Открыть следующее напоминание";
+"settings.keyboard.global_shortcuts.open_next_reminder_options" = "Варианты следующего напоминания";
+
+"formatter.date.all_day" = "Весь день";
+"formatter.date.today" = "Сегодня";
+"formatter.date.relative.in" = "в %@";
+"formatter.date.relative.ago" = "%@ назад";
+"formatter.date.relative.left" = "%@ oсталось";
+
+"reminder.options.button" = "Опции";
+"reminder.options.complete" = "Полный";
+"reminder.options.remind" = "Напомнить %@";
+
+"event_details.participant.organizer" = "органайзер";
+"event_details.participant.me" = "мне";
+
+"event_status.accepted" = "Принято";
+"event_status.maybe" = "Может быть";
+"event_status.declined" = "Отклонено";
+"event_status.pending" = "В ожидании";
+
+"event_action.open" = "Открыть";
+"event_action.join" = "Присоединяйтесь к";
+"event_action.skip" = "Скип";
+"event_action.accept" = "Принять";
+"event_action.maybe" = "Может быть,";
+"event_action.decline" = "Упадок";
+
+"tooltips.navigation.prev_month" = "Предыдущий месяц";
+"tooltips.navigation.today" = "Сегодня";
+"tooltips.navigation.next_month" = "Следующий месяц";
+
+"tooltips.toolbar.stay_open" = "Оставайтесь открытыми";
+"tooltips.toolbar.open_calendar" = "Открытый календарь";
+"tooltips.toolbar.open_reminders" = "Открытые напоминания";
+"tooltips.toolbar.open_menu" = "Открыть меню";
+
+"calendars.source.others" = "Другие";
