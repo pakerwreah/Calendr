@@ -1,0 +1,116 @@
+/* 
+  Localizable.strings
+  Calendr
+
+  Created by Oleksandr Honcharov on 9/02/2025.
+*/
+
+"quit" = "Вихід";
+"search" = "Пошук";
+
+"access_required.calendars" = "Календар, що очікує авторизації 'Повний доступ'";
+"access_required.reminders" = "Нагадування, що очікують авторизації";
+"access_required.open_settings" = "Відкрити налаштування";
+"access_required.cancel" = "Скасувати";
+
+"auto_update.check_for_updates" = "Перевірити наявність оновлень";
+"auto_update.fetching_releases" = "Отримання релізів";
+"auto_update.new_version" = "Доступна нова версія: %@";
+"auto_update.updated_to" = "Оновлено до версії %@";
+"auto_update.downloading" = "Завантаження версії %@";
+"auto_update.install" = "Встановити";
+"auto_update.replace.message" = "Підтвердьте місцезнаходження програми, щоб надати дозвіл на її заміну";
+
+"settings.title" = "Налаштування";
+"settings.tab.general" = "Загальні";
+"settings.tab.appearance" = "Зовнішній вигляд";
+"settings.tab.calendars" = "Календарі";
+"settings.tab.keyboard" = "Гарячі клавіші";
+"settings.tab.about" = "Про програму";
+
+"settings.menu_bar" = "Панель меню";
+"settings.menu_bar.auto_launch" = "Запуск при вході в систему";
+"settings.menu_bar.show_icon" = "Показувати іконку";
+"settings.menu_bar.show_date" = "Показувати дату";
+"settings.menu_bar.show_icon_date" = "Показувати дату на іконці";
+"settings.menu_bar.show_background" = "Показувати непрозорий фон";
+"settings.menu_bar.date_format_custom" = "Задати формат";
+
+"settings.next_event" = "Наступна подія";
+"settings.next_event.show_next_event" = "Показувати наступну подію";
+"settings.next_event.grab_attention" = "Сповіщати про наближення події";
+"settings.next_event.grab_attention.flashing" = "Миготінням";
+"settings.next_event.grab_attention.sound" = "Звуком";
+"settings.next_event.detect_notch" = "Вкоротити, якщо присутній 'виріз'";
+
+"settings.calendar" = "Календар";
+"settings.calendar.show_week_numbers" = "Показувати номер тижня";
+"settings.calendar.preserve_selected_date" = "Зберігати вибрану дату при приховуванні";
+"settings.calendar.show_declined_events" = "Показувати відхилені події";
+"settings.calendar.show_declined_events_tooltip" = "Це працює лише у разі, якщо увімкнено в рідному додатку Календар.";
+"settings.calendar.date_hover_option" = "Утримуйте ⌥, щоб переглянути дати при наведенні.";
+"settings.calendar.calendar_app_view_mode" = "Режим перегляду програми «Календар»";
+
+"settings.events" = "Події";
+"settings.events.show_map" = "Показувати карту та погоду";
+"settings.events.show_overdue_reminders" = "Показувати прострочені нагадування";
+"settings.events.show_finished_events" = "Показувати завершені події";
+"settings.events.show_recurrence_indicator" = "Показувати індикатор повторення";
+"settings.events.force_local_time_zone" = "Показувати всі події в місцевому часовому поясі";
+
+"settings.appearance.transparency" = "Прозорість";
+"settings.appearance.accessibility" = "Доступність";
+
+"settings.keyboard.local_shortcuts.title" = "Локальні гарячі клавіші";
+"settings.keyboard.local_shortcuts.prev_date" = "Попередня дата";
+"settings.keyboard.local_shortcuts.next_date" = "Наступна дата";
+"settings.keyboard.local_shortcuts.prev_week" = "Попередній тиждень";
+"settings.keyboard.local_shortcuts.next_week" = "Наступний тиждень";
+"settings.keyboard.local_shortcuts.prev_month" = "Попередній місяць";
+"settings.keyboard.local_shortcuts.next_month" = "Наступний місяць";
+"settings.keyboard.local_shortcuts.curr_date" = "Поточна дата";
+"settings.keyboard.local_shortcuts.open_date" = "Відкрити вибрану дату";
+"settings.keyboard.local_shortcuts.pin_calendar" = "Закріпити календар";
+
+"settings.keyboard.global_shortcuts.title" = "Глобальні гарячі клавіші";
+"settings.keyboard.global_shortcuts.open_calendar" = "Відкрити календар";
+"settings.keyboard.global_shortcuts.open_next_event" = "Відкрити наступну подію";
+"settings.keyboard.global_shortcuts.open_next_event_options" = "Відкрити налаштування наступної події";
+"settings.keyboard.global_shortcuts.open_next_reminder" = "Відкрити наступне нагадування";
+"settings.keyboard.global_shortcuts.open_next_reminder_options" = "Відкрити налаштування наступного нагадування";
+
+"formatter.date.all_day" = "Весь день";
+"formatter.date.today" = "Сьогодні";
+"formatter.date.relative.in" = "через %@";
+"formatter.date.relative.ago" = "%@ тому";
+"formatter.date.relative.left" = "Залишилося %@";
+
+"reminder.options.button" = "Опції";
+"reminder.options.complete" = "Завершено";
+"reminder.options.remind" = "Нагадати %@";
+
+"event_details.participant.organizer" = "організатор";
+"event_details.participant.me" = "я";
+
+"event_status.accepted" = "Прийнято";
+"event_status.maybe" = "Можливо";
+"event_status.declined" = "Відхилено";
+"event_status.pending" = "Очікується";
+
+"event_action.open" = "Відкрити";
+"event_action.join" = "Приєднатися";
+"event_action.skip" = "Пропустити";
+"event_action.accept" = "Прийняти";
+"event_action.maybe" = "Можливо";
+"event_action.decline" = "Відхилити";
+
+"tooltips.navigation.prev_month" = "Попередній місяць";
+"tooltips.navigation.today" = "Сьогодні";
+"tooltips.navigation.next_month" = "Наступний місяць";
+
+"tooltips.toolbar.stay_open" = "Залишити відкритим";
+"tooltips.toolbar.open_calendar" = "Відкрити календар";
+"tooltips.toolbar.open_reminders" = "Відкрити нагадування";
+"tooltips.toolbar.open_menu" = "Відкрити меню";
+
+"calendars.source.others" = "Інші";
