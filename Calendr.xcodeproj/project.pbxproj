@@ -1071,6 +1071,7 @@
 				"${SRCROOT}/${TARGET_NAME}/Assets/sq.lproj/Localizable.strings",
 				"${SRCROOT}/${TARGET_NAME}/Assets/ru.lproj/Localizable.strings",
 				"${SRCROOT}/${TARGET_NAME}/Assets/tr.lproj/Localizable.strings",
+				"${SRCROOT}/${TARGET_NAME}/Assets/uk.lproj/Localizable.strings",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
