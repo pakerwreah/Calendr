@@ -32,7 +32,6 @@
 "settings.menu_bar.auto_launch" = "Spustiť pri štarte";
 "settings.menu_bar.show_icon" = "Zobraziť ikonu";
 "settings.menu_bar.show_date" = "Zobraziť dátum";
-"settings.menu_bar.show_icon_date" = "Zobraziť dátum v ikone";
 "settings.menu_bar.show_background" = "Zobraziť nepriehľadné pozadie";
 "settings.menu_bar.date_format_custom" = "Vlastný";
 

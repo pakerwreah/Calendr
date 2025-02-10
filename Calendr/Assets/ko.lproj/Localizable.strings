@@ -32,7 +32,6 @@
 "settings.menu_bar.auto_launch" = "로그인 시 실행";
 "settings.menu_bar.show_icon" = "아이콘 표시";
 "settings.menu_bar.show_date" = "날짜 표시";
-"settings.menu_bar.show_icon_date" = "아이콘에 날짜 표시";
 "settings.menu_bar.show_background" = "불투명한 배경 표시";
 "settings.menu_bar.date_format_custom" = "사용자 지정";
 

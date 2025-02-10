@@ -33,7 +33,6 @@
 "settings.menu_bar.auto_launch" = "Avvia al login";
 "settings.menu_bar.show_icon" = "Mostra icona";
 "settings.menu_bar.show_date" = "Mostra data";
-"settings.menu_bar.show_icon_date" = "Mostra la data nell'icona";
 "settings.menu_bar.show_background" = "Mostra sfondo opaco";
 "settings.menu_bar.date_format_custom" = "Personalizzato";
 

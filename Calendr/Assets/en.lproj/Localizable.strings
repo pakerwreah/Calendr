@@ -32,7 +32,6 @@
 "settings.menu_bar.auto_launch" = "Launch at login";
 "settings.menu_bar.show_icon" = "Show icon";
 "settings.menu_bar.show_date" = "Show date";
-"settings.menu_bar.show_icon_date" = "Show date in icon";
 "settings.menu_bar.show_background" = "Show opaque background";
 "settings.menu_bar.date_format_custom" = "Custom";
 

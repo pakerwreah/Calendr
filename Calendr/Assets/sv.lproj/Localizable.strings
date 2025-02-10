@@ -32,7 +32,6 @@
 "settings.menu_bar.auto_launch" = "Öppna vid inloggning";
 "settings.menu_bar.show_icon" = "Visa ikon";
 "settings.menu_bar.show_date" = "Visa datum";
-"settings.menu_bar.show_icon_date" = "Visa datum i ikon";
 "settings.menu_bar.show_background" = "Show ogenomskinlig bakgrund";
 "settings.menu_bar.date_format_custom" = "Anpassad";
 
