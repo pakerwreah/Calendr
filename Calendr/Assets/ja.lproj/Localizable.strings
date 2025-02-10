@@ -19,7 +19,7 @@
 "auto_update.updated_to" = "バージョン %@ に更新されました";
 "auto_update.downloading" = "バージョン %@ をダウンロード中";
 "auto_update.install" = "インストール";
-"auto_update.replace.message" = "アプリのインストール先を確認してください。古いバージョンと同じ場所を選ぶと、新しいバージョンのアプリに置き換えられます。";
+"auto_update.replace.message" = "アプリのインストール先を確認してください。古いバージョンと同じ場所を選ぶと、\n新しいバージョンのアプリに置き換えられます。";
 
 "settings.title" = "設定";
 "settings.tab.general" = "一般";
