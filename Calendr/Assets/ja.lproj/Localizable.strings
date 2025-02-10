@@ -19,7 +19,7 @@
 "auto_update.updated_to" = "バージョン %@ に更新されました";
 "auto_update.downloading" = "バージョン %@ をダウンロード中";
 "auto_update.install" = "インストール";
-"auto_update.replace.message" = "アプリのインストール先を確認してください。古いバージョンと同じ場所を選ぶと、新しいバージョンのアプリに置き換えられます。";
+"auto_update.replace.message" = "アプリのインストール先を確認してください。古いバージョンと同じ場所を選ぶと、\n新しいバージョンのアプリに置き換えられます。";
 
 "settings.title" = "設定";
 "settings.tab.general" = "一般";
@@ -54,7 +54,7 @@
 "settings.events" = "予定";
 "settings.events.show_map" = "地図と天気を表示";
 "settings.events.show_overdue_reminders" = "期限が過ぎたリマインダーを表示";
-"settings.events.show_finished_events" = "終了済みの予定を表示";
+"settings.events.show_finished_events" = "終了した予定を表示";
 "settings.events.show_recurrence_indicator" = "繰り返しの予定にマークを表示";
 "settings.events.force_local_time_zone" = "すべての予定を端末のタイムゾーンで表示";
 
