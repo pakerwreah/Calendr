@@ -54,7 +54,7 @@
 "settings.events" = "予定";
 "settings.events.show_map" = "地図と天気を表示";
 "settings.events.show_overdue_reminders" = "期限が過ぎたリマインダーを表示";
-"settings.events.show_finished_events" = "終了済みの予定を表示";
+"settings.events.show_finished_events" = "終了した予定を表示";
 "settings.events.show_recurrence_indicator" = "繰り返しの予定にマークを表示";
 "settings.events.force_local_time_zone" = "すべての予定を端末のタイムゾーンで表示";
 
