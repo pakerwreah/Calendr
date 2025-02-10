@@ -32,7 +32,6 @@
 "settings.menu_bar.auto_launch" = "Girişte başlat";
 "settings.menu_bar.show_icon" = "Simgeyi göster";
 "settings.menu_bar.show_date" = "Tarihi göster";
-"settings.menu_bar.show_icon_date" = "Tarihi simgede göster";
 "settings.menu_bar.show_background" = "Opak arka plan göster";
 "settings.menu_bar.date_format_custom" = "Özel";
 

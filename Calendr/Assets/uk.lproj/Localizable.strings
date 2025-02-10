@@ -32,7 +32,6 @@
 "settings.menu_bar.auto_launch" = "Запуск при вході в систему";
 "settings.menu_bar.show_icon" = "Показувати іконку";
 "settings.menu_bar.show_date" = "Показувати дату";
-"settings.menu_bar.show_icon_date" = "Показувати дату на іконці";
 "settings.menu_bar.show_background" = "Показувати непрозорий фон";
 "settings.menu_bar.date_format_custom" = "Задати формат";
 

@@ -32,7 +32,6 @@
 "settings.menu_bar.auto_launch" = "Εκκίνηση κατά την είσοδο";
 "settings.menu_bar.show_icon" = "Εμφάνιση εικονιδίου";
 "settings.menu_bar.show_date" = "Εμφάνιση ημερομηνίας";
-"settings.menu_bar.show_icon_date" = "Εμφάνιση ημερομηνίας στο εικονίδιο";
 "settings.menu_bar.show_background" = "Εμφάνιση αδιαφανούς φόντου";
 "settings.menu_bar.date_format_custom" = "Προσαρμοσμένη";
 
