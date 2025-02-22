@@ -182,7 +182,8 @@ class MainViewController: NSViewController {
             workspace: workspace,
             userDefaults: userDefaults,
             settings: settingsViewModel,
-            scheduler: WallTimeScheduler()
+            scheduler: WallTimeScheduler.instance,
+            eventsScheduler: WallTimeScheduler.instance
         )
 
         eventListView = EventListView(viewModel: eventListViewModel)

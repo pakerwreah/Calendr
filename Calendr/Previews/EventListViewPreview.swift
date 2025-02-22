@@ -59,7 +59,8 @@ struct EventListViewPreview: PreviewProvider {
                 workspace: workspace,
                 userDefaults: .init(),
                 settings: settings,
-                scheduler: MainScheduler.instance
+                scheduler: MainScheduler.instance,
+                eventsScheduler: MainScheduler.instance
             )
         )
         .preview()

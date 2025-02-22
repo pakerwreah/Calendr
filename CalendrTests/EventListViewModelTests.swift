@@ -23,6 +23,7 @@ class EventListViewModelTests: XCTestCase {
     let workspace = MockWorkspaceServiceProvider()
     let settings = MockEventListSettings()
     lazy var scheduler = TrackedHistoricalScheduler(initialClock: dateProvider.now)
+    let eventsScheduler = HistoricalScheduler()
 
     lazy var viewModel = EventListViewModel(
         eventsObservable: Observable.combineLatest(dateSubject, eventsSubject),
@@ -34,7 +35,8 @@ class EventListViewModelTests: XCTestCase {
         workspace: workspace,
         userDefaults: .init(),
         settings: settings,
-        scheduler: scheduler
+        scheduler: scheduler,
+        eventsScheduler: eventsScheduler
     )
 
     enum EventListItemTest: Equatable {
@@ -64,7 +66,7 @@ class EventListViewModelTests: XCTestCase {
 
         viewModel.asObservable()
             .bind { [weak self] in
-                self?.eventListItems = $0.map { item in
+                self?.eventListItems = $0.items.map { item in
                     switch item {
                     case .event(let viewModel):
                         return .event(viewModel.title)
@@ -226,7 +228,7 @@ class EventListViewModelTests: XCTestCase {
         viewModel.asObservable()
             .flatMap {
                 Observable.combineLatest(
-                    $0.compactMap { item -> Observable<Bool>? in
+                    $0.items.compactMap { item -> Observable<Bool>? in
                         switch item {
                         case .interval(_, let fade):
                             return fade
@@ -244,12 +246,12 @@ class EventListViewModelTests: XCTestCase {
         XCTAssertEqual(sectionsFaded, [false, false])
 
         dateProvider.add(1, .hour)
-        scheduler.advance(1, .hour)
+        eventsScheduler.advance(1, .hour)
 
         XCTAssertEqual(sectionsFaded, [true, false])
 
         dateProvider.add(1, .hour)
-        scheduler.advance(1, .hour)
+        eventsScheduler.advance(1, .hour)
 
         XCTAssertEqual(sectionsFaded, [true, true])
     }

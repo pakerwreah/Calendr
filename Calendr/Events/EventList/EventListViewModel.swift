@@ -45,6 +45,7 @@ class EventListViewModel {
     private let userDefaults: UserDefaults
     private let settings: EventListSettings
     private let scheduler: SchedulerType
+    private let eventsScheduler: SchedulerType
 
     private let dateFormatter: DateFormatter
     private let relativeFormatter: RelativeDateTimeFormatter
@@ -68,7 +69,8 @@ class EventListViewModel {
         workspace: WorkspaceServiceProviding,
         userDefaults: UserDefaults,
         settings: EventListSettings,
-        scheduler: SchedulerType
+        scheduler: SchedulerType,
+        eventsScheduler: SchedulerType
     ) {
         self.isShowingDetails = isShowingDetails
         self.dateProvider = dateProvider
@@ -79,6 +81,7 @@ class EventListViewModel {
         self.userDefaults = userDefaults
         self.settings = settings
         self.scheduler = scheduler
+        self.eventsScheduler = eventsScheduler
 
         dateFormatter = DateFormatter(calendar: dateProvider.calendar)
         dateFormatter.dateStyle = .short
@@ -203,7 +206,7 @@ class EventListViewModel {
             settings: settings,
             isShowingDetails: isShowingDetails.asObserver(),
             isTodaySelected: isTodaySelected,
-            scheduler: scheduler
+            scheduler: eventsScheduler
         )
     }
 
