@@ -31,7 +31,7 @@ class EventListView: NSView {
 
     func childRect(at index: Int) -> NSRect? {
         let children = contentStackView.arrangedSubviews
-        guard index > 0, index < children.count else {
+        guard index >= 0, index < children.count else {
             return nil
         }
         layoutSubtreeIfNeeded()
