@@ -78,30 +78,33 @@
 "settings.keyboard.global_shortcuts.open_next_reminder" = "Nächste Erinnerung öffnen";
 "settings.keyboard.global_shortcuts.open_next_reminder_options" = "Optionen für nächste Erinnerung";
 
-"formatter.date.all_day" = "Ganztägige Ereignisse";
 "formatter.date.today" = "Heute";
 "formatter.date.relative.in" = "in %@";
 "formatter.date.relative.ago" = "vor %@";
 "formatter.date.relative.left" = "%@ verbleibend";
 
+//"reminder.status.overdue" = "Overdue";
+
 "reminder.options.button" = "Optionen";
 "reminder.options.complete" = "Erledigt";
 "reminder.options.remind" = "Erinnerung %@";
 
-"event_details.participant.organizer" = "Veranstaltende Person";
-"event_details.participant.me" = "Ich";
+"event.details.participant.organizer" = "Veranstaltende Person";
+"event.details.participant.me" = "Ich";
 
-"event_status.accepted" = "Akzeptiert";
-"event_status.maybe" = "Vielleicht";
-"event_status.declined" = "Abgelehnt";
-"event_status.pending" = "Ausstehend";
+"event.all_day" = "Ganztägige Ereignisse";
 
-"event_action.open" = "Öffnen";
-"event_action.join" = "Beitreten";
-"event_action.skip" = "Überspringen";
-"event_action.accept" = "Akzeptieren";
-"event_action.maybe" = "Vielleicht";
-"event_action.decline" = "Ablehnen";
+"event.status.accepted" = "Akzeptiert";
+"event.status.maybe" = "Vielleicht";
+"event.status.declined" = "Abgelehnt";
+"event.status.pending" = "Ausstehend";
+
+"event.action.open" = "Öffnen";
+"event.action.join" = "Beitreten";
+"event.action.skip" = "Überspringen";
+"event.action.accept" = "Akzeptieren";
+"event.action.maybe" = "Vielleicht";
+"event.action.decline" = "Ablehnen";
 
 "tooltips.navigation.prev_month" = "Vorheriger Monat";
 "tooltips.navigation.today" = "Heute";

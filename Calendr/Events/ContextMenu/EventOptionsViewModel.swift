@@ -114,7 +114,7 @@ extension EventAction: ContextMenuAction {
         switch self {
         case .open:
             return Icons.Calendar.calendar
-        
+
         case .link(let link, let isInProgress):
             let icon = if link.isMeeting {
                 isInProgress ? Icons.Event.video_fill : Icons.Event.video
@@ -137,17 +137,17 @@ extension EventAction: ContextMenuAction {
     var title: String {
         switch self {
         case .open:
-            return Strings.EventAction.open
+            return Strings.Event.Action.open
         case .link(let link, _):
-            return link.isMeeting ? Strings.EventAction.join : link.url.domain ?? "???"
+            return link.isMeeting ? Strings.Event.Action.join : link.url.domain ?? "???"
         case .skip:
-            return Strings.EventAction.skip
+            return Strings.Event.Action.skip
         case .status(.accept):
-            return Strings.EventAction.accept
+            return Strings.Event.Action.accept
         case .status(.maybe):
-            return Strings.EventAction.maybe
+            return Strings.Event.Action.maybe
         case .status(.decline):
-            return Strings.EventAction.decline
+            return Strings.Event.Action.decline
         }
     }
 }

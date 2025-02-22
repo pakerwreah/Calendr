@@ -57,42 +57,44 @@ internal enum Strings {
       internal static let others = Strings.tr("Localizable", "calendars.source.others", fallback: "Others")
     }
   }
-  internal enum EventAction {
-    /// Accept
-    internal static let accept = Strings.tr("Localizable", "event_action.accept", fallback: "Accept")
-    /// Decline
-    internal static let decline = Strings.tr("Localizable", "event_action.decline", fallback: "Decline")
-    /// Join
-    internal static let join = Strings.tr("Localizable", "event_action.join", fallback: "Join")
-    /// Maybe
-    internal static let maybe = Strings.tr("Localizable", "event_action.maybe", fallback: "Maybe")
-    /// Open
-    internal static let `open` = Strings.tr("Localizable", "event_action.open", fallback: "Open")
-    /// Skip
-    internal static let skip = Strings.tr("Localizable", "event_action.skip", fallback: "Skip")
-  }
-  internal enum EventDetails {
-    internal enum Participant {
-      /// me
-      internal static let me = Strings.tr("Localizable", "event_details.participant.me", fallback: "me")
-      /// organizer
-      internal static let organizer = Strings.tr("Localizable", "event_details.participant.organizer", fallback: "organizer")
+  internal enum Event {
+    /// All day
+    internal static let allDay = Strings.tr("Localizable", "event.all_day", fallback: "All day")
+    internal enum Action {
+      /// Accept
+      internal static let accept = Strings.tr("Localizable", "event.action.accept", fallback: "Accept")
+      /// Decline
+      internal static let decline = Strings.tr("Localizable", "event.action.decline", fallback: "Decline")
+      /// Join
+      internal static let join = Strings.tr("Localizable", "event.action.join", fallback: "Join")
+      /// Maybe
+      internal static let maybe = Strings.tr("Localizable", "event.action.maybe", fallback: "Maybe")
+      /// Open
+      internal static let `open` = Strings.tr("Localizable", "event.action.open", fallback: "Open")
+      /// Skip
+      internal static let skip = Strings.tr("Localizable", "event.action.skip", fallback: "Skip")
     }
-  }
-  internal enum EventStatus {
-    /// Accepted
-    internal static let accepted = Strings.tr("Localizable", "event_status.accepted", fallback: "Accepted")
-    /// Declined
-    internal static let declined = Strings.tr("Localizable", "event_status.declined", fallback: "Declined")
-    /// Maybe
-    internal static let maybe = Strings.tr("Localizable", "event_status.maybe", fallback: "Maybe")
-    /// Pending
-    internal static let pending = Strings.tr("Localizable", "event_status.pending", fallback: "Pending")
+    internal enum Details {
+      internal enum Participant {
+        /// me
+        internal static let me = Strings.tr("Localizable", "event.details.participant.me", fallback: "me")
+        /// organizer
+        internal static let organizer = Strings.tr("Localizable", "event.details.participant.organizer", fallback: "organizer")
+      }
+    }
+    internal enum Status {
+      /// Accepted
+      internal static let accepted = Strings.tr("Localizable", "event.status.accepted", fallback: "Accepted")
+      /// Declined
+      internal static let declined = Strings.tr("Localizable", "event.status.declined", fallback: "Declined")
+      /// Maybe
+      internal static let maybe = Strings.tr("Localizable", "event.status.maybe", fallback: "Maybe")
+      /// Pending
+      internal static let pending = Strings.tr("Localizable", "event.status.pending", fallback: "Pending")
+    }
   }
   internal enum Formatter {
     internal enum Date {
-      /// All day
-      internal static let allDay = Strings.tr("Localizable", "formatter.date.all_day", fallback: "All day")
       /// Today
       internal static let today = Strings.tr("Localizable", "formatter.date.today", fallback: "Today")
       internal enum Relative {
@@ -121,6 +123,10 @@ internal enum Strings {
       internal static func remind(_ p1: Any) -> String {
         return Strings.tr("Localizable", "reminder.options.remind", String(describing: p1), fallback: "Remind %@")
       }
+    }
+    internal enum Status {
+      /// Overdue
+      internal static let overdue = Strings.tr("Localizable", "reminder.status.overdue", fallback: "Overdue")
     }
   }
   internal enum Settings {

@@ -78,30 +78,33 @@
 "settings.keyboard.global_shortcuts.open_next_reminder" = "다음 미리 알림 열기";
 "settings.keyboard.global_shortcuts.open_next_reminder_options" = "다음 미리 알림 옵션";
 
-"formatter.date.all_day" = "하루 종일";
 "formatter.date.today" = "오늘";
 "formatter.date.relative.in" = "%@ 후";
 "formatter.date.relative.ago" = "%@ 전";
 "formatter.date.relative.left" = "%@ 남음";
 
+//"reminder.status.overdue" = "Overdue";
+
 "reminder.options.button" = "옵션";
 "reminder.options.complete" = "완료";
 "reminder.options.remind" = "%@ 후 알림";
 
-"event_details.participant.organizer" = "주최자";
-"event_details.participant.me" = "나";
+"event.details.participant.organizer" = "주최자";
+"event.details.participant.me" = "나";
 
-"event_status.accepted" = "수락됨";
-"event_status.maybe" = "미정";
-"event_status.declined" = "거절됨";
-"event_status.pending" = "대기 중";
+"event.all_day" = "하루 종일";
 
-"event_action.open" = "열기";
-"event_action.join" = "참여";
-"event_action.skip" = "건너뛰기";
-"event_action.accept" = "수락";
-"event_action.maybe" = "미정";
-"event_action.decline" = "거절";
+"event.status.accepted" = "수락됨";
+"event.status.maybe" = "미정";
+"event.status.declined" = "거절됨";
+"event.status.pending" = "대기 중";
+
+"event.action.open" = "열기";
+"event.action.join" = "참여";
+"event.action.skip" = "건너뛰기";
+"event.action.accept" = "수락";
+"event.action.maybe" = "미정";
+"event.action.decline" = "거절";
 
 "tooltips.navigation.prev_month" = "이전 달";
 "tooltips.navigation.today" = "오늘";

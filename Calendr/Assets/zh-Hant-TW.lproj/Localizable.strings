@@ -78,30 +78,33 @@
 "settings.keyboard.global_shortcuts.open_next_reminder" = "打開下一個提醒";
 "settings.keyboard.global_shortcuts.open_next_reminder_options" = "下一個提醒選項";
 
-"formatter.date.all_day" = "全天";
 "formatter.date.today" = "今天";
 "formatter.date.relative.in" = "在 %@ 之後";
 "formatter.date.relative.ago" = "%@ 之前";
 "formatter.date.relative.left" = "剩下 %@";
 
+//"reminder.status.overdue" = "Overdue";
+
 "reminder.options.button" = "選項";
 "reminder.options.complete" = "完成";
 "reminder.options.remind" = "提醒 %@";
 
-"event_details.participant.organizer" = "組織者";
-"event_details.participant.me" = "我";
+"event.details.participant.organizer" = "組織者";
+"event.details.participant.me" = "我";
 
-"event_status.accepted" = "已接受";
-"event_status.maybe" = "可能";
-"event_status.declined" = "已拒絕";
-"event_status.pending" = "待定";
+"event.all_day" = "全天";
 
-"event_action.open" = "打開";
-"event_action.join" = "加入";
-"event_action.skip" = "跳過";
-"event_action.accept" = "接受";
-"event_action.maybe" = "可能";
-"event_action.decline" = "拒絕";
+"event.status.accepted" = "已接受";
+"event.status.maybe" = "可能";
+"event.status.declined" = "已拒絕";
+"event.status.pending" = "待定";
+
+"event.action.open" = "打開";
+"event.action.join" = "加入";
+"event.action.skip" = "跳過";
+"event.action.accept" = "接受";
+"event.action.maybe" = "可能";
+"event.action.decline" = "拒絕";
 
 "tooltips.navigation.prev_month" = "前一個月";
 "tooltips.navigation.today" = "今天";

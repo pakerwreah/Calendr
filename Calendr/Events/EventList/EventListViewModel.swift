@@ -14,11 +14,28 @@ enum EventListItem {
     case event(EventViewModel)
 }
 
+extension EventListItem {
+    var isEvent: Bool { if case .event = self { true } else { false } }
+}
+
+struct EventListGroups {
+    let overdue: Int
+    let allday: Int
+    let pending: Int
+    let items: [EventListItem]
+}
+
+private extension EventListGroups {
+    static var empty: EventListGroups {
+        .init(overdue: 0, allday: 0, pending: 0, items: [])
+    }
+}
+
 class EventListViewModel {
 
     private let disposeBag = DisposeBag()
 
-    private let viewModels = BehaviorSubject<[EventListItem]>(value: [])
+    private let groups = BehaviorSubject<EventListGroups>(value: .empty)
     private let isShowingDetails: BehaviorSubject<Bool>
     private let dateProvider: DateProviding
     private let calendarService: CalendarServiceProviding
@@ -128,22 +145,51 @@ class EventListViewModel {
             }
         }
         // build event list
-        .compactMap { [weak self] props in
-            self?.buildEventList(props)
+        .compactMap { [weak self] props -> EventListGroups? in
+            guard let self else { return nil }
+
+            let overdueItems = overdueViewModels(props)
+            let alldayItems = allDayViewModels(props)
+            let todayItems = todayViewModels(props)
+
+            let overduePast = overdueItems.filter(\.isEvent)
+
+            let overdueToday = todayItems.filter {
+                guard
+                    case .event(let event) = $0,
+                    case .reminder(false) = event.type,
+                    let isInProgress = event.isInProgress.lastValue()
+                else { return false }
+
+                return isInProgress
+            }
+
+            let allday = alldayItems.filter(\.isEvent)
+
+            let pending = todayItems.filter {
+                guard
+                    case .event(let event) = $0,
+                    event.type.isEvent,
+                    let isFinished = event.isFaded.lastValue()
+                else { return false }
+
+                return !isFinished
+            }
+
+            return EventListGroups(
+                overdue: overduePast.count + overdueToday.count,
+                allday: allday.count,
+                pending: pending.count,
+                items: overdueItems + alldayItems + todayItems
+            )
         }
-        .bind(to: viewModels)
+        .bind(to: groups)
         .disposed(by: disposeBag)
     }
 
-    func asObservable() -> Observable<[EventListItem]> { viewModels }
+    func asObservable() -> Observable<EventListGroups> { groups }
 
     // MARK: - Private
-
-    private func buildEventList(_ props: EventListProps) -> [EventListItem] {
-        overdueViewModels(props)
-        + allDayViewModels(props)
-        + todayViewModels(props)
-    }
 
     private func makeEventViewModel(_ event: EventModel, _ isTodaySelected: Bool) -> EventViewModel {
         EventViewModel(
@@ -197,7 +243,7 @@ class EventListViewModel {
             .map { .event(makeEventViewModel($0, props.isTodaySelected)) }
 
         if !viewModels.isEmpty {
-            viewModels.insert(.section(Strings.Formatter.Date.allDay), at: 0)
+            viewModels.insert(.section(Strings.Event.allDay), at: 0)
         }
         return viewModels
     }

@@ -260,13 +260,25 @@ class MainViewController: NSViewController {
 
         let header = makeHeader()
         let toolBar = makeToolBar()
-        let eventList = makeEventList()
+        let eventListSummary = makeEventListSummary()
+        let eventListScroll = makeEventListScroll()
 
-        [header, searchInput, calendarView, toolBar, eventList].forEach(mainStackView.addArrangedSubview)
+        rx.viewDidLayout.withLatestFrom(selectedDate).map { [dateProvider, eventListView] date in
+            let isToday = dateProvider.calendar.isDateInToday(date)
+            let canScroll = eventListView.frame.height > eventListScroll.frame.height
+            let isVisible = isToday && canScroll
+            return !isVisible
+        }
+        .bind(to: eventListSummary.rx.isHidden)
+        .disposed(by: disposeBag)
+
+        [header, searchInput, calendarView, toolBar, eventListSummary, eventListScroll].forEach(mainStackView.addArrangedSubview)
 
         mainStackView.orientation = .vertical
         let mainStackSpacing: CGFloat = 4
         mainStackView.spacing = mainStackSpacing
+
+        mainStackView.setCustomSpacing(mainStackSpacing + 2, after: eventListSummary)
 
         searchInput.focusRingType = .none
 
@@ -293,7 +305,7 @@ class MainViewController: NSViewController {
         let maxHeightConstraint = mainStackView.height(lessThanOrEqualTo: 0)
 
         screenProvider.screenObservable
-            .map { 0.9 * $0.visibleFrame.height }
+            .map { $0.visibleFrame.height - 30 }
             .bind(to: maxHeightConstraint.rx.constant)
             .disposed(by: disposeBag)
 
@@ -312,13 +324,6 @@ class MainViewController: NSViewController {
         super.viewWillAppear()
 
         hideSearchInput()
-    }
-
-    override func viewDidAppear() {
-
-        super.viewDidAppear()
-        
-        eventListView.scrollTop()
     }
 
     // MARK: - Setup
@@ -821,7 +826,47 @@ class MainViewController: NSViewController {
 
     // MARK: - Factories
 
-    private func makeEventList() -> NSView {
+    private func makeEventListSummary() -> NSView {
+
+        let overdueLabel = Label()
+        let alldayLabel = Label()
+        let todayLabel = Label()
+
+        [overdueLabel, alldayLabel, todayLabel].forEach { label in
+            label.font = .systemFont(ofSize: 10)
+            label.textColor = .labelColor
+            label.lineBreakMode = .byTruncatingMiddle
+            label.alignment = .center
+            label.setContentHuggingPriority(.required, for: .horizontal)
+        }
+
+        let stackView = NSStackView(views: [overdueLabel, alldayLabel, todayLabel])
+            .with(distribution: .fillEqually)
+
+        eventListViewModel.asObservable()
+            .withLatestFrom(selectedDate) { ($0, $1) }
+            .observe(on: MainScheduler.instance)
+            .bind { [dateProvider] group, date in
+                guard dateProvider.calendar.isDateInToday(date) else {
+                    return
+                }
+                stackView.isHidden = false
+
+                overdueLabel.stringValue = Strings.Reminder.Status.overdue + ": \(group.overdue)"
+                overdueLabel.isHidden = group.overdue == 0
+
+                alldayLabel.stringValue = Strings.Event.allDay + ": \(group.allday)"
+                alldayLabel.isHidden = group.allday == 0
+
+                todayLabel.stringValue = Strings.Formatter.Date.today + ": \(group.pending)"
+                todayLabel.isHidden = group.pending == 0
+            }
+            .disposed(by: disposeBag)
+
+        return stackView
+    }
+
+    private func makeEventListScroll() -> NSView {
 
         let scrollView = NSScrollView()
 
@@ -831,12 +876,48 @@ class MainViewController: NSViewController {
         scrollView.contentView.edges(equalTo: scrollView)
         scrollView.contentView.edges(equalTo: eventListView).bottom.priority = .dragThatCanResizeWindow
 
-        calendarViewModel.cellViewModelsObservable
-            .compactMap { $0.first(where: \.isSelected)?.date }
-            .distinctUntilChanged()
-            .observe(on: MainScheduler.instance)
-            .bind { [view = eventListView] _ in
-                view.scroll(.init(x: 0, y: view.bounds.height))
+        rx.viewDidAppear.bind { [eventListView] in
+            eventListView.scrollTop()
+        }
+        .disposed(by: disposeBag)
+
+        eventListViewModel.asObservable()
+            .withLatestFrom(selectedDate.asObservable()) { ($0, $1) }
+            .repeat(when: rx.viewDidAppear)
+            .observe(on: MainScheduler.asyncInstance)
+            .bind { [dateProvider, eventListView] groups, date in
+
+                guard !groups.items.isEmpty, scrollView.frame != .zero else { return }
+
+                let isToday = dateProvider.calendar.isDateInToday(date)
+                let canScroll = eventListView.bounds.height > scrollView.bounds.height
+
+                guard isToday, canScroll else {
+                    eventListView.scrollTop()
+                    return
+                }
+
+                let index = groups.items.firstIndex {
+                    guard
+                        case .event(let event) = $0,
+                        !event.isAllDay,
+                        dateProvider.calendar.isDateInToday(event.start),
+                        let isFinished = event.isFaded.lastValue()
+                    else {
+                        return false
+                    }
+                    return !isFinished
+                } ?? groups.items.count - 1
+
+                guard let rect = eventListView.childRect(at: index) else { return }
+
+                let newOriginY = rect.midY - eventListView.bounds.height + scrollView.bounds.height / 2
+                let newOrigin = NSPoint(x: 0, y: newOriginY)
+
+                NSAnimationContext.runAnimationGroup({ context in
+                    context.duration = 0.3
+                    scrollView.contentView.animator().setBoundsOrigin(newOrigin)
+                })
             }
             .disposed(by: disposeBag)
 

@@ -78,30 +78,33 @@
 "settings.keyboard.global_shortcuts.open_next_reminder" = "Öppna nästa påminnelse";
 "settings.keyboard.global_shortcuts.open_next_reminder_options" = "Nästa påminnelsealternativ";
 
-"formatter.date.all_day" = "Heldag";
 "formatter.date.today" = "Idag";
 "formatter.date.relative.in" = "om %@";
 "formatter.date.relative.ago" = "%@ sedan";
 "formatter.date.relative.left" = "%@ kvar";
 
+//"reminder.status.overdue" = "Overdue";
+
 "reminder.options.button" = "Alternativ";
 "reminder.options.complete" = "Klar";
 "reminder.options.remind" = "Påminn %@";
 
-"event_details.participant.organizer" = "arrangören";
-"event_details.participant.me" = "jag";
+"event.details.participant.organizer" = "arrangören";
+"event.details.participant.me" = "jag";
 
-"event_status.accepted" = "Godkänd";
-"event_status.maybe" = "Kanske";
-"event_status.declined" = "Avböjd";
-"event_status.pending" = "Väntande";
+"event.all_day" = "Heldag";
 
-"event_action.open" = "Öppna";
-"event_action.join" = "Gå med";
-"event_action.skip" = "Skippa";
-"event_action.accept" = "Tacka ja";
-"event_action.maybe" = "Kanske";
-"event_action.decline" = "Avböj";
+"event.status.accepted" = "Godkänd";
+"event.status.maybe" = "Kanske";
+"event.status.declined" = "Avböjd";
+"event.status.pending" = "Väntande";
+
+"event.action.open" = "Öppna";
+"event.action.join" = "Gå med";
+"event.action.skip" = "Skippa";
+"event.action.accept" = "Tacka ja";
+"event.action.maybe" = "Kanske";
+"event.action.decline" = "Avböj";
 
 "tooltips.navigation.prev_month" = "Föregående månad";
 "tooltips.navigation.today" = "Idag";

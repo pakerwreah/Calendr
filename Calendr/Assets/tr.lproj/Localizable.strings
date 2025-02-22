@@ -78,30 +78,33 @@
 "settings.keyboard.global_shortcuts.open_next_reminder" = "Sonraki hatırlatıcıyı aç";
 "settings.keyboard.global_shortcuts.open_next_reminder_options" = "Sonraki hatırlatıcı seçenekleri";
 
-"formatter.date.all_day" = "Tüm gün";
 "formatter.date.today" = "Bugün";
 "formatter.date.relative.in" = "%@ içinde";
 "formatter.date.relative.ago" = "%@ önce";
 "formatter.date.relative.left" = "%@ kaldı";
 
+//"reminder.status.overdue" = "Overdue";
+
 "reminder.options.button" = "Seçenekler";
 "reminder.options.complete" = "Tamamlandı";
 "reminder.options.remind" = "%@ hatırlat";
 
-"event_details.participant.organizer" = "organizatör";
-"event_details.participant.me" = "ben";
+"event.details.participant.organizer" = "organizatör";
+"event.details.participant.me" = "ben";
 
-"event_status.accepted" = "Kabul edildi";
-"event_status.maybe" = "Belki";
-"event_status.declined" = "Reddedildi";
-"event_status.pending" = "Beklemede";
+"event.all_day" = "Tüm gün";
 
-"event_action.open" = "Aç";
-"event_action.join" = "Katıl";
-"event_action.skip" = "Atla";
-"event_action.accept" = "Kabul et";
-"event_action.maybe" = "Belki";
-"event_action.decline" = "Reddet";
+"event.status.accepted" = "Kabul edildi";
+"event.status.maybe" = "Belki";
+"event.status.declined" = "Reddedildi";
+"event.status.pending" = "Beklemede";
+
+"event.action.open" = "Aç";
+"event.action.join" = "Katıl";
+"event.action.skip" = "Atla";
+"event.action.accept" = "Kabul et";
+"event.action.maybe" = "Belki";
+"event.action.decline" = "Reddet";
 
 "tooltips.navigation.prev_month" = "Önceki ay";
 "tooltips.navigation.today" = "Bugün";

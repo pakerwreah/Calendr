@@ -194,7 +194,8 @@ class EventView: NSView {
         progress.wantsLayer = true
         progress.layer?.backgroundColor = NSColor.red.cgColor.copy(alpha: 0.7)
         progress.height(equalTo: 1)
-        progress.width(equalTo: self)
+        progress.leading(equalTo: self)
+        progress.trailing(equalTo: self)
     }
 
     private func setUpBindings() {
