@@ -64,9 +64,9 @@ class EventListViewModelTests: XCTestCase {
 
     override func setUp() {
 
-        viewModel.asObservable()
+        viewModel.items
             .bind { [weak self] in
-                self?.eventListItems = $0.items.map { item in
+                self?.eventListItems = $0.map { item in
                     switch item {
                     case .event(let viewModel):
                         return .event(viewModel.title)
@@ -225,10 +225,10 @@ class EventListViewModelTests: XCTestCase {
 
         var sectionsFaded: [Bool]?
 
-        viewModel.asObservable()
+        viewModel.items
             .flatMap {
                 Observable.combineLatest(
-                    $0.items.compactMap { item -> Observable<Bool>? in
+                    $0.compactMap { item -> Observable<Bool>? in
                         switch item {
                         case .interval(_, let fade):
                             return fade
