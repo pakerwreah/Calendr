@@ -105,45 +105,49 @@ class EventListViewModel {
 
         items = groups.map {
             $0.overdue + $0.allday + $0.today
-        }
+        }.share(replay: 1)
 
-        summary = groups.map { groups in
-            let overduePast = groups.overdue.compactMap(\.event)
+        summary = groups.flatMapLatest { groups in
 
-            let overdueToday: [EventViewModel] = groups.today.compactMap {
-                guard
-                    case .event(let event) = $0,
-                    case .reminder(false) = event.type,
-                    event.isInProgress.lastValue() == true
-                else {
-                    return nil
+            let overduePast = Observable.just(groups.overdue.compactMap(\.event))
+
+            let overdueToday: Observable<[EventViewModel]> = Observable.combineLatest(
+                groups.today
+                    .compactMap(\.event)
+                    .filter(\.type.isReminder)
+                    .map { event -> Observable<EventViewModel?> in
+                        event.isInProgress.map { $0 ? event : nil }
+                    }
+            ).map { $0.compact() }
+
+            let allday = Observable.just(groups.allday.compactMap(\.event))
+
+            // pending events except overdue today
+            let today: Observable<[EventViewModel]> = Observable.combineLatest(
+                groups.today.compactMap(\.event).map { event -> Observable<EventViewModel?> in
+                    Observable
+                        .combineLatest(event.isFaded, event.isInProgress)
+                        .map { isFaded, isInProgress -> EventViewModel? in
+                            isFaded || (event.type.isReminder && isInProgress) ? nil : event
+                        }
                 }
-                return event
-            }
-
-            let allday = groups.allday.compactMap(\.event)
-
-            let today: [EventViewModel] = groups.today.compactMap {
-                guard
-                    case .event(let event) = $0,
-                    event.isFaded.lastValue() != true
-                else {
-                    return nil
-                }
-                return event
-            }
+            ).map { $0.compact() }
 
             func makeItem(_ label: String, _ items: [EventViewModel]) -> EventListSummaryItem {
                 let r = Dictionary(grouping: items, by: \.color)
                 return .init(colors: Set(r.keys), label: label , count: r.values.map(\.count).reduce(0, +))
             }
 
-            return EventListSummary(
-                overdue: makeItem(Strings.Reminder.Status.overdue, overduePast + overdueToday),
-                allday: makeItem(Strings.Event.allDay, allday),
-                today: makeItem(Strings.Formatter.Date.today, today)
-            )
+            return Observable.combineLatest(overduePast, overdueToday, allday, today)
+                .map { overduePast, overdueToday, allday, today in
+                    EventListSummary(
+                        overdue: makeItem(Strings.Reminder.Status.overdue, overduePast + overdueToday),
+                        allday: makeItem(Strings.Event.allDay, allday),
+                        today: makeItem(Strings.Formatter.Date.today, today)
+                    )
+                }
         }
+        .share(replay: 1)
 
         Observable.combineLatest(
             eventsObservable,
