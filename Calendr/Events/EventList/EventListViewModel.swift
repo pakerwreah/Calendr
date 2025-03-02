@@ -14,11 +14,26 @@ enum EventListItem {
     case event(EventViewModel)
 }
 
+private extension EventListItem {
+    var event: EventViewModel? { if case .event(let event) = self { event } else { nil } }
+}
+
+struct EventListSummaryItem: Equatable {
+    let colors: Set<NSColor>
+    let label: String
+    let count: Int
+}
+
+struct EventListSummary: Equatable {
+    let overdue: EventListSummaryItem
+    let allday: EventListSummaryItem
+    let today: EventListSummaryItem
+}
+
 class EventListViewModel {
 
     private let disposeBag = DisposeBag()
 
-    private let viewModels = BehaviorSubject<[EventListItem]>(value: [])
     private let isShowingDetails: BehaviorSubject<Bool>
     private let dateProvider: DateProviding
     private let calendarService: CalendarServiceProviding
@@ -28,6 +43,7 @@ class EventListViewModel {
     private let userDefaults: UserDefaults
     private let settings: EventListSettings
     private let scheduler: SchedulerType
+    private let eventsScheduler: SchedulerType
 
     private let dateFormatter: DateFormatter
     private let relativeFormatter: RelativeDateTimeFormatter
@@ -41,6 +57,17 @@ class EventListViewModel {
         let isTodaySelected: Bool
     }
 
+    private struct EventListGroups {
+        let overdue: [EventListItem]
+        let allday: [EventListItem]
+        let today: [EventListItem]
+    }
+
+    private let groups = BehaviorSubject<EventListGroups>(value: .init(overdue: [], allday: [], today: []))
+
+    let items: Observable<[EventListItem]>
+    let summary: Observable<EventListSummary>
+
     init(
         eventsObservable: Observable<(Date, [EventModel])>,
         isShowingDetails: BehaviorSubject<Bool>,
@@ -51,7 +78,8 @@ class EventListViewModel {
         workspace: WorkspaceServiceProviding,
         userDefaults: UserDefaults,
         settings: EventListSettings,
-        scheduler: SchedulerType
+        scheduler: SchedulerType,
+        eventsScheduler: SchedulerType
     ) {
         self.isShowingDetails = isShowingDetails
         self.dateProvider = dateProvider
@@ -62,6 +90,7 @@ class EventListViewModel {
         self.userDefaults = userDefaults
         self.settings = settings
         self.scheduler = scheduler
+        self.eventsScheduler = eventsScheduler
 
         dateFormatter = DateFormatter(calendar: dateProvider.calendar)
         dateFormatter.dateStyle = .short
@@ -73,6 +102,52 @@ class EventListViewModel {
         dateComponentsFormatter.calendar = dateProvider.calendar
         dateComponentsFormatter.unitsStyle = .abbreviated
         dateComponentsFormatter.allowedUnits = [.hour, .minute]
+
+        items = groups.map {
+            $0.overdue + $0.allday + $0.today
+        }.share(replay: 1)
+
+        summary = groups.flatMapLatest { groups in
+
+            let overduePast = Observable.just(groups.overdue.compactMap(\.event))
+
+            let overdueToday: Observable<[EventViewModel]> = Observable.combineLatest(
+                groups.today
+                    .compactMap(\.event)
+                    .filter(\.type.isReminder)
+                    .map { event -> Observable<EventViewModel?> in
+                        event.isInProgress.map { $0 ? event : nil }
+                    }
+            ).map { $0.compact() }
+
+            let allday = Observable.just(groups.allday.compactMap(\.event))
+
+            // pending events except overdue today
+            let today: Observable<[EventViewModel]> = Observable.combineLatest(
+                groups.today.compactMap(\.event).map { event -> Observable<EventViewModel?> in
+                    Observable
+                        .combineLatest(event.isFaded, event.isInProgress)
+                        .map { isFaded, isInProgress -> EventViewModel? in
+                            isFaded || (event.type.isReminder && isInProgress) ? nil : event
+                        }
+                }
+            ).map { $0.compact() }
+
+            func makeItem(_ label: String, _ items: [EventViewModel]) -> EventListSummaryItem {
+                let r = Dictionary(grouping: items, by: \.color)
+                return .init(colors: Set(r.keys), label: label , count: r.values.map(\.count).reduce(0, +))
+            }
+
+            return Observable.combineLatest(overduePast, overdueToday, allday, today)
+                .map { overduePast, overdueToday, allday, today in
+                    EventListSummary(
+                        overdue: makeItem(Strings.Reminder.Status.overdue, overduePast + overdueToday),
+                        allday: makeItem(Strings.Event.allDay, allday),
+                        today: makeItem(Strings.Formatter.Date.today, today)
+                    )
+                }
+        }
+        .share(replay: 1)
 
         Observable.combineLatest(
             eventsObservable,
@@ -128,22 +203,20 @@ class EventListViewModel {
             }
         }
         // build event list
-        .compactMap { [weak self] props in
-            self?.buildEventList(props)
+        .compactMap { [weak self] props -> EventListGroups? in
+            guard let self else { return nil }
+
+            let overdue = overdueViewModels(props)
+            let allday = allDayViewModels(props)
+            let today = todayViewModels(props)
+
+            return EventListGroups(overdue: overdue, allday: allday, today: today)
         }
-        .bind(to: viewModels)
+        .bind(to: groups)
         .disposed(by: disposeBag)
     }
 
-    func asObservable() -> Observable<[EventListItem]> { viewModels }
-
     // MARK: - Private
-
-    private func buildEventList(_ props: EventListProps) -> [EventListItem] {
-        overdueViewModels(props)
-        + allDayViewModels(props)
-        + todayViewModels(props)
-    }
 
     private func makeEventViewModel(_ event: EventModel, _ isTodaySelected: Bool) -> EventViewModel {
         EventViewModel(
@@ -157,7 +230,7 @@ class EventListViewModel {
             settings: settings,
             isShowingDetails: isShowingDetails.asObserver(),
             isTodaySelected: isTodaySelected,
-            scheduler: scheduler
+            scheduler: eventsScheduler
         )
     }
 
@@ -197,7 +270,7 @@ class EventListViewModel {
             .map { .event(makeEventViewModel($0, props.isTodaySelected)) }
 
         if !viewModels.isEmpty {
-            viewModels.insert(.section(Strings.Formatter.Date.allDay), at: 0)
+            viewModels.insert(.section(Strings.Event.allDay), at: 0)
         }
         return viewModels
     }

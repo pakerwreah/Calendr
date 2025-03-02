@@ -213,16 +213,16 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         switch viewModel.type {
 
         case .event(.accepted):
-            addEventStatusButton(icon: Icons.EventStatus.accepted, color: .systemGreen, title: Strings.EventStatus.accepted)
+            addEventStatusButton(icon: Icons.EventStatus.accepted, color: .systemGreen, title: Strings.Event.Status.accepted)
 
         case .event(.maybe):
-            addEventStatusButton(icon: Icons.EventStatus.maybe, color: .systemOrange, title: Strings.EventStatus.maybe)
+            addEventStatusButton(icon: Icons.EventStatus.maybe, color: .systemOrange, title: Strings.Event.Status.maybe)
 
         case .event(.pending):
-            addEventStatusButton(icon: Icons.EventStatus.pending, color: .systemGray, title: Strings.EventStatus.pending)
+            addEventStatusButton(icon: Icons.EventStatus.pending, color: .systemGray, title: Strings.Event.Status.pending)
 
         case .event(.declined):
-            addEventStatusButton(icon: Icons.EventStatus.declined, color: .systemRed, title: Strings.EventStatus.declined)
+            addEventStatusButton(icon: Icons.EventStatus.declined, color: .systemRed, title: Strings.Event.Status.declined)
 
         case .reminder:
             addReminderOptionsButton()
@@ -257,7 +257,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
 
     private func addOpenButton() {
 
-        openButton.title = Strings.EventAction.open
+        openButton.title = Strings.Event.Action.open
 
         setButtonStyle(openButton)
 
@@ -266,7 +266,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
 
     private func addSkipButton() {
 
-        skipButton.title = Strings.EventAction.skip
+        skipButton.title = Strings.Event.Action.skip
         skipButton.image = Icons.Event.skip.with(scale: .small)
         skipButton.imagePosition = .imageTrailing
 
@@ -562,11 +562,11 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
             var info: String = participant.name
 
             if participant.isOrganizer {
-                info += " (\(Strings.EventDetails.Participant.organizer))"
+                info += " (\(Strings.Event.Details.Participant.organizer))"
             }
 
             if participant.isCurrentUser {
-                info += " (\(Strings.EventDetails.Participant.me))"
+                info += " (\(Strings.Event.Details.Participant.me))"
             }
 
             let label = Label(text: info, font: .small)

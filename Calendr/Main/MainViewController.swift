@@ -55,15 +55,16 @@ class MainViewController: NSViewController {
     private let dateDoubleClick = PublishSubject<Date>()
     private let refreshDate = PublishSubject<Void>()
     private let selectedDate: BehaviorSubject<Date>
+    private let focusedDateObservable: Observable<Date>
     private let isShowingDetails = BehaviorSubject<Bool>(value: false)
     private let searchInputText = BehaviorSubject<String>(value: "")
     private let searchInputSuggestionDate = BehaviorSubject<DateSuggestionResult?>(value: nil)
     private let navigationSubject = PublishSubject<Keyboard.Key>()
     private let keyboardModifiers = BehaviorSubject<NSEvent.ModifierFlags>(value: [])
+    private let deeplink: Observable<URL>
 
     // Properties
     private let keyboard = Keyboard()
-    private let deeplink: Observable<URL>
     private let workspace: WorkspaceServiceProviding
     private let calendarService: CalendarServiceProviding
     private let dateProvider: DateProviding
@@ -171,6 +172,9 @@ class MainViewController: NSViewController {
 
         let eventListEventsObservable = calendarViewModel.focusedDateEventsObservable
             .debounce(.milliseconds(50), scheduler: MainScheduler.instance)
+            .share(replay: 1)
+
+        focusedDateObservable = eventListEventsObservable.map(\.0)
 
         eventListViewModel = EventListViewModel(
             eventsObservable: eventListEventsObservable,
@@ -182,7 +186,8 @@ class MainViewController: NSViewController {
             workspace: workspace,
             userDefaults: userDefaults,
             settings: settingsViewModel,
-            scheduler: WallTimeScheduler()
+            scheduler: WallTimeScheduler.instance,
+            eventsScheduler: WallTimeScheduler.instance
         )
 
         eventListView = EventListView(viewModel: eventListViewModel)
@@ -260,13 +265,20 @@ class MainViewController: NSViewController {
 
         let header = makeHeader()
         let toolBar = makeToolBar()
-        let eventList = makeEventList()
+        let eventListSummary = makeEventListSummary()
+        let eventListScroll = makeEventListScroll()
 
-        [header, searchInput, calendarView, toolBar, eventList].forEach(mainStackView.addArrangedSubview)
+        [header, searchInput, calendarView, toolBar, eventListSummary, eventListScroll].forEach(mainStackView.addArrangedSubview)
+
+        // avoid collapsing because of content constraints
+        eventListSummary.width(equalTo: mainStackView)
+        eventListScroll.width(equalTo: mainStackView)
 
         mainStackView.orientation = .vertical
         let mainStackSpacing: CGFloat = 4
         mainStackView.spacing = mainStackSpacing
+
+        mainStackView.setCustomSpacing(mainStackSpacing + 2, after: eventListSummary)
 
         searchInput.focusRingType = .none
 
@@ -293,7 +305,7 @@ class MainViewController: NSViewController {
         let maxHeightConstraint = mainStackView.height(lessThanOrEqualTo: 0)
 
         screenProvider.screenObservable
-            .map { 0.9 * $0.visibleFrame.height }
+            .map { $0.visibleFrame.height - 30 }
             .bind(to: maxHeightConstraint.rx.constant)
             .disposed(by: disposeBag)
 
@@ -312,13 +324,6 @@ class MainViewController: NSViewController {
         super.viewWillAppear()
 
         hideSearchInput()
-    }
-
-    override func viewDidAppear() {
-
-        super.viewDidAppear()
-        
-        eventListView.scrollTop()
     }
 
     // MARK: - Setup
@@ -821,7 +826,71 @@ class MainViewController: NSViewController {
 
     // MARK: - Factories
 
-    private func makeEventList() -> NSView {
+    private func makeEventListSummary() -> NSView {
+
+        let stackView = NSStackView().with(distribution: .fillEqually).with(spacing: 4)
+
+        let container = NSVisualEffectView()
+        container.state = .active
+        container.blendingMode = .behindWindow
+
+        container.addSubview(stackView)
+        stackView.edges(equalTo: container)
+
+        settingsViewModel.popoverMaterial
+            .bind(to: container.rx.material)
+            .disposed(by: disposeBag)
+
+        func makeColorBar(_ color: NSColor) -> NSView {
+            let colorBar = NSView()
+            colorBar.wantsLayer = true
+            colorBar.layer?.cornerRadius = 1
+            colorBar.width(equalTo: 2)
+            colorBar.layer?.backgroundColor = color.cgColor
+            return colorBar
+        }
+
+        func makeColorBarStack(with colors: Set<NSColor>) -> NSStackView {
+            NSStackView(views: colors.map(makeColorBar)).with(spacing: 2)
+        }
+
+        func makeLabel(_ text: String) -> Label {
+            let label = Label(text: text, font: .systemFont(ofSize: 10))
+            label.lineBreakMode = .byWordWrapping
+            label.setContentHuggingPriority(.fittingSizeCompression, for: .vertical)
+            return label
+        }
+
+        func addItem(_ item: EventListSummaryItem, _ spacing: CGFloat) {
+            guard item.count > 0 else { return }
+            let stack = NSStackView().with(spacing: spacing)
+            let colorBars = makeColorBarStack(with: item.colors)
+            let label = makeLabel("\(item.label): \(item.count)")
+            stack.addArrangedSubview(colorBars)
+            stack.addArrangedSubview(label)
+            stackView.addArrangedSubview(stack)
+        }
+
+        eventListViewModel.summary
+            .observe(on: MainScheduler.instance)
+            .bind { info in
+                stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+
+                let count = [info.overdue, info.allday, info.today].filter { $0.count > 0 }.count
+                let spacing: CGFloat = count > 2 ? 4 : 6
+
+                addItem(info.overdue, spacing)
+                addItem(info.allday, spacing)
+                addItem(info.today, spacing)
+
+                container.isHidden = stackView.arrangedSubviews.isEmpty
+            }
+            .disposed(by: disposeBag)
+
+        return container
+    }
+
+    private func makeEventListScroll() -> NSScrollView {
 
         let scrollView = NSScrollView()
 
@@ -831,14 +900,53 @@ class MainViewController: NSViewController {
         scrollView.contentView.edges(equalTo: scrollView)
         scrollView.contentView.edges(equalTo: eventListView).bottom.priority = .dragThatCanResizeWindow
 
-        calendarViewModel.cellViewModelsObservable
-            .compactMap { $0.first(where: \.isSelected)?.date }
-            .distinctUntilChanged()
-            .observe(on: MainScheduler.instance)
-            .bind { [view = eventListView] _ in
-                view.scroll(.init(x: 0, y: view.bounds.height))
+        rx.viewDidAppear.bind { [eventListView] in
+            eventListView.scrollTop()
+        }
+        .disposed(by: disposeBag)
+
+        Observable.combineLatest(
+            eventListViewModel.items,
+            focusedDateObservable
+        )
+        .debounce(.milliseconds(10), scheduler: MainScheduler.instance)
+        .repeat(when: rx.viewDidAppear)
+        .bind { [dateProvider, eventListView] items, date in
+
+            guard !items.isEmpty, scrollView.bounds != .zero else {
+                return
             }
-            .disposed(by: disposeBag)
+
+            let isToday = dateProvider.calendar.isDateInToday(date)
+
+            guard isToday else {
+                eventListView.scrollTop()
+                return
+            }
+
+            let index = items.firstIndex {
+                guard
+                    case .event(let event) = $0,
+                    !event.isAllDay,
+                    dateProvider.calendar.isDateInToday(event.start),
+                    let isFinished = event.isFaded.lastValue()
+                else {
+                    return false
+                }
+                return !isFinished
+            } ?? items.count - 1
+
+            guard let rect = eventListView.childRect(at: index) else { return }
+
+            let newOriginY = rect.midY - eventListView.bounds.height + scrollView.bounds.height / 2
+            let newOrigin = NSPoint(x: 0, y: newOriginY)
+
+            NSAnimationContext.runAnimationGroup({ context in
+                context.duration = 0.3
+                scrollView.contentView.animator().setBoundsOrigin(newOrigin)
+            })
+        }
+        .disposed(by: disposeBag)
 
         return scrollView
     }

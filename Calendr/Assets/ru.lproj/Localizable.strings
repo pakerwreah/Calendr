@@ -79,30 +79,33 @@
 "settings.keyboard.global_shortcuts.open_next_reminder" = "Открыть следующее напоминание";
 "settings.keyboard.global_shortcuts.open_next_reminder_options" = "Открыть настройки следующего напоминания";
 
-"formatter.date.all_day" = "Весь день";
 "formatter.date.today" = "Сегодня";
 "formatter.date.relative.in" = "в %@";
 "formatter.date.relative.ago" = "%@ назад";
 "formatter.date.relative.left" = "%@ осталось";
 
+//"reminder.status.overdue" = "Overdue";
+
 "reminder.options.button" = "Опции";
 "reminder.options.complete" = "Полный";
 "reminder.options.remind" = "Напомнить %@";
 
-"event_details.participant.organizer" = "организатор";
-"event_details.participant.me" = "я";
+"event.details.participant.organizer" = "организатор";
+"event.details.participant.me" = "я";
 
-"event_status.accepted" = "Принято";
-"event_status.maybe" = "Возможно";
-"event_status.declined" = "Отклонено";
-"event_status.pending" = "В ожидании";
+"event.all_day" = "Весь день";
 
-"event_action.open" = "Открыть";
-"event_action.join" = "Присоединиться";
-"event_action.skip" = "Пропустить";
-"event_action.accept" = "Принять";
-"event_action.maybe" = "Возможно";
-"event_action.decline" = "Отклонить";
+"event.status.accepted" = "Принято";
+"event.status.maybe" = "Возможно";
+"event.status.declined" = "Отклонено";
+"event.status.pending" = "В ожидании";
+
+"event.action.open" = "Открыть";
+"event.action.join" = "Присоединиться";
+"event.action.skip" = "Пропустить";
+"event.action.accept" = "Принять";
+"event.action.maybe" = "Возможно";
+"event.action.decline" = "Отклонить";
 
 "tooltips.navigation.prev_month" = "Предыдущий месяц";
 "tooltips.navigation.today" = "Сегодня";

@@ -78,30 +78,33 @@
 "settings.keyboard.global_shortcuts.open_next_reminder" = "Άνοιγμα επόμενης υπενθύμισης";
 "settings.keyboard.global_shortcuts.open_next_reminder_options" = "Επιλογές επόμενης υπενθύμισης";
 
-"formatter.date.all_day" = "Όλη την ημέρα";
 "formatter.date.today" = "Σήμερα";
 "formatter.date.relative.in" = "σε %@";
 "formatter.date.relative.ago" = "%@ πριν";
 "formatter.date.relative.left" = "%@ μείνανε";
 
+//"reminder.status.overdue" = "Overdue";
+
 "reminder.options.button" = "Επιλογές";
 "reminder.options.complete" = "Ολοκληρώθηκε";
 "reminder.options.remind" = "Υπενθύμιση %@";
 
-"event_details.participant.organizer" = "διοργανωτής";
-"event_details.participant.me" = "εγω";
+"event.details.participant.organizer" = "διοργανωτής";
+"event.details.participant.me" = "εγω";
 
-"event_status.accepted" = "Αποδεκτή";
-"event_status.maybe" = "Ίσως";
-"event_status.declined" = "Απορρίφθηκε";
-"event_status.pending" = "Εκκρεμεί";
+"event.all_day" = "Όλη την ημέρα";
 
-"event_action.open" = "Άνοιγμα";
-"event_action.join" = "Συμμετοχή";
-"event_action.skip" = "Παράλειψη";
-"event_action.accept" = "Αποδοχή";
-"event_action.maybe" = "Ίσως";
-"event_action.decline" = "Απορρίπτεται";
+"event.status.accepted" = "Αποδεκτή";
+"event.status.maybe" = "Ίσως";
+"event.status.declined" = "Απορρίφθηκε";
+"event.status.pending" = "Εκκρεμεί";
+
+"event.action.open" = "Άνοιγμα";
+"event.action.join" = "Συμμετοχή";
+"event.action.skip" = "Παράλειψη";
+"event.action.accept" = "Αποδοχή";
+"event.action.maybe" = "Ίσως";
+"event.action.decline" = "Απορρίπτεται";
 
 "tooltips.navigation.prev_month" = "Προηγούμενος μήνας";
 "tooltips.navigation.today" = "Σήμερα";

@@ -78,30 +78,33 @@
 "settings.keyboard.global_shortcuts.open_next_reminder" = "次のリマインダーを展開";
 "settings.keyboard.global_shortcuts.open_next_reminder_options" = "次のリマインダーのオプションを表示";
 
-"formatter.date.all_day" = "全日";
 "formatter.date.today" = "今日";
 "formatter.date.relative.in" = "%@後";
 "formatter.date.relative.ago" = "%@前";
 "formatter.date.relative.left" = "残り%@";
 
+//"reminder.status.overdue" = "Overdue";
+
 "reminder.options.button" = "オプション";
 "reminder.options.complete" = "完了";
 "reminder.options.remind" = "%@ にリマインド";
 
-"event_details.participant.organizer" = "主催者";
-"event_details.participant.me" = "自分";
+"event.details.participant.organizer" = "主催者";
+"event.details.participant.me" = "自分";
 
-"event_status.accepted" = "出席";
-"event_status.maybe" = "仮承諾";
-"event_status.declined" = "欠席";
-"event_status.pending" = "未回答";
+"event.all_day" = "全日";
 
-"event_action.open" = "開く";
-"event_action.join" = "参加する";
-"event_action.skip" = "スキップ";
-"event_action.accept" = "出席";
-"event_action.maybe" = "仮承諾";
-"event_action.decline" = "欠席";
+"event.status.accepted" = "出席";
+"event.status.maybe" = "仮承諾";
+"event.status.declined" = "欠席";
+"event.status.pending" = "未回答";
+
+"event.action.open" = "開く";
+"event.action.join" = "参加する";
+"event.action.skip" = "スキップ";
+"event.action.accept" = "出席";
+"event.action.maybe" = "仮承諾";
+"event.action.decline" = "欠席";
 
 "tooltips.navigation.prev_month" = "先月";
 "tooltips.navigation.today" = "今日";

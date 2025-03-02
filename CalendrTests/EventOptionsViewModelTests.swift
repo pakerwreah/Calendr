@@ -231,8 +231,8 @@ class EventOptionsViewModelTests: XCTestCase {
     }
 
     func testEventLinkAction_isMeeting() {
-        XCTAssertEqual(EventAction.link(.zoomLink, isInProgress: false).title, Strings.EventAction.join)
-        
+        XCTAssertEqual(EventAction.link(.zoomLink, isInProgress: false).title, Strings.Event.Action.join)
+
         XCTAssertEqual(EventAction.link(.zoomLink, isInProgress: false).icon, Icons.Event.video)
         
         XCTAssertEqual(

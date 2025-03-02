@@ -17,6 +17,8 @@ class EventViewModel {
     let barStyle: EventBarStyle
     let type: EventType
     let isDeclined: Bool
+    let isAllDay: Bool
+    let start: Date
     let link: EventLink?
     let priority: String?
 
@@ -75,6 +77,8 @@ class EventViewModel {
         color = event.calendar.color
         type = event.type
         isDeclined = event.status ~= .declined
+        isAllDay = event.isAllDay
+        start = event.start
         barStyle = event.status ~= .maybe ? .bordered : .filled
         link = event.detectLink(using: workspace)
 
@@ -220,7 +224,7 @@ class EventViewModel {
                 .take(until: isPast.matching(true))
 
         } else {
-            isPast = .just(true)
+            isPast = .just(secondsToEnd <= 0)
             clock = .just(())
         }
 

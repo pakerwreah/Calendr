@@ -107,7 +107,7 @@ extension ReminderAction: ContextMenuAction {
     var title: String {
         switch self {
         case .open:
-            return Strings.EventAction.open
+            return Strings.Event.Action.open
         case .complete:
             return Strings.Reminder.Options.complete
         case .remind(let dateComponents):

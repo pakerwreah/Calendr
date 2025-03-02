@@ -85,7 +85,7 @@ class Popover: NSObject, PopoverWindowDelegate {
         window.level = .popUpMenu
         window.isReleasedWhenClosed = false
         window.isMovableByWindowBackground = false
-        window.animationBehavior = .utilityWindow
+        window.animationBehavior = .none
         window._delegate = self
 
         frameObserver = window.observe(\.frame) { [weak view] window, _ in

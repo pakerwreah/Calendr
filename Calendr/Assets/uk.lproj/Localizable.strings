@@ -78,30 +78,33 @@
 "settings.keyboard.global_shortcuts.open_next_reminder" = "Відкрити наступне нагадування";
 "settings.keyboard.global_shortcuts.open_next_reminder_options" = "Відкрити налаштування наступного нагадування";
 
-"formatter.date.all_day" = "Весь день";
 "formatter.date.today" = "Сьогодні";
 "formatter.date.relative.in" = "через %@";
 "formatter.date.relative.ago" = "%@ тому";
 "formatter.date.relative.left" = "Залишилося %@";
 
+//"reminder.status.overdue" = "Overdue";
+
 "reminder.options.button" = "Опції";
 "reminder.options.complete" = "Завершено";
 "reminder.options.remind" = "Нагадати %@";
 
-"event_details.participant.organizer" = "організатор";
-"event_details.participant.me" = "я";
+"event.details.participant.organizer" = "організатор";
+"event.details.participant.me" = "я";
 
-"event_status.accepted" = "Прийнято";
-"event_status.maybe" = "Можливо";
-"event_status.declined" = "Відхилено";
-"event_status.pending" = "Очікується";
+"event.all_day" = "Весь день";
 
-"event_action.open" = "Відкрити";
-"event_action.join" = "Приєднатися";
-"event_action.skip" = "Пропустити";
-"event_action.accept" = "Прийняти";
-"event_action.maybe" = "Можливо";
-"event_action.decline" = "Відхилити";
+"event.status.accepted" = "Прийнято";
+"event.status.maybe" = "Можливо";
+"event.status.declined" = "Відхилено";
+"event.status.pending" = "Очікується";
+
+"event.action.open" = "Відкрити";
+"event.action.join" = "Приєднатися";
+"event.action.skip" = "Пропустити";
+"event.action.accept" = "Прийняти";
+"event.action.maybe" = "Можливо";
+"event.action.decline" = "Відхилити";
 
 "tooltips.navigation.prev_month" = "Попередній місяць";
 "tooltips.navigation.today" = "Сьогодні";

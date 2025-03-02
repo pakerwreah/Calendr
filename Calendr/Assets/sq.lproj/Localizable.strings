@@ -78,30 +78,33 @@
 "settings.keyboard.global_shortcuts.open_next_reminder" = "Hap kujtesën tjetër";
 "settings.keyboard.global_shortcuts.open_next_reminder_options" = "Opsionet e ardhshme përkujtues";
 
-"formatter.date.all_day" = "Gjithë ditën";
 "formatter.date.today" = "Sot";
 "formatter.date.relative.in" = "në %@";
 "formatter.date.relative.ago" = "%@ më parë";
 "formatter.date.relative.left" = "%@ mbeten";
 
+//"reminder.status.overdue" = "Overdue";
+
 "reminder.options.button" = "Opsionet";
 "reminder.options.complete" = "E Plotësuar";
 "reminder.options.remind" = "Kujto %@";
 
-"event_details.participant.organizer" = "organizator";
-"event_details.participant.me" = "unë";
+"event.details.participant.organizer" = "organizator";
+"event.details.participant.me" = "unë";
 
-"event_status.accepted" = "Pranuar";
-"event_status.maybe" = "Ndoshta";
-"event_status.declined" = "Refuzuar";
-"event_status.pending" = "Në Pritje";
+"event.all_day" = "Gjithë ditën";
 
-"event_action.open" = "Hapur";
-"event_action.join" = "Bashkohu";
-"event_action.skip" = "Kapërce";
-"event_action.accept" = "Pranoje";
-"event_action.maybe" = "Ndoshta";
-"event_action.decline" = "Rënia";
+"event.status.accepted" = "Pranuar";
+"event.status.maybe" = "Ndoshta";
+"event.status.declined" = "Refuzuar";
+"event.status.pending" = "Në Pritje";
+
+"event.action.open" = "Hapur";
+"event.action.join" = "Bashkohu";
+"event.action.skip" = "Kapërce";
+"event.action.accept" = "Pranoje";
+"event.action.maybe" = "Ndoshta";
+"event.action.decline" = "Rënia";
 
 "tooltips.navigation.prev_month" = "Muajin e kaluar";
 "tooltips.navigation.today" = "Sot";

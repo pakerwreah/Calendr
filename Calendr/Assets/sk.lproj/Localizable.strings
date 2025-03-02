@@ -78,30 +78,33 @@
 "settings.keyboard.global_shortcuts.open_next_reminder" = "Otvoriť ďalšiu pripomienku";
 "settings.keyboard.global_shortcuts.open_next_reminder_options" = "Možnosti ďalšej pripomienky";
 
-"formatter.date.all_day" = "Celý deň";
 "formatter.date.today" = "Dnes";
 "formatter.date.relative.in" = "za %@";
 "formatter.date.relative.ago" = "pred %@";
 "formatter.date.relative.left" = "zostáva %@";
 
+//"reminder.status.overdue" = "Overdue";
+
 "reminder.options.button" = "Možnosti";
 "reminder.options.complete" = "Dokončiť";
 "reminder.options.remind" = "Pripomenúť %@";
 
-"event_details.participant.organizer" = "organizátor";
-"event_details.participant.me" = "ja";
+"event.details.participant.organizer" = "organizátor";
+"event.details.participant.me" = "ja";
 
-"event_status.accepted" = "Prijaté";
-"event_status.maybe" = "Možno";
-"event_status.declined" = "Odmietnuté";
-"event_status.pending" = "Čakajúce";
+"event.all_day" = "Celý deň";
 
-"event_action.open" = "Otvoriť";
-"event_action.join" = "Pripojiť sa";
-"event_action.skip" = "Preskočiť";
-"event_action.accept" = "Prijať";
-"event_action.maybe" = "Možno";
-"event_action.decline" = "Odmietnuť";
+"event.status.accepted" = "Prijaté";
+"event.status.maybe" = "Možno";
+"event.status.declined" = "Odmietnuté";
+"event.status.pending" = "Čakajúce";
+
+"event.action.open" = "Otvoriť";
+"event.action.join" = "Pripojiť sa";
+"event.action.skip" = "Preskočiť";
+"event.action.accept" = "Prijať";
+"event.action.maybe" = "Možno";
+"event.action.decline" = "Odmietnuť";
 
 "tooltips.navigation.prev_month" = "Predchádzajúci mesiac";
 "tooltips.navigation.today" = "Dnes";

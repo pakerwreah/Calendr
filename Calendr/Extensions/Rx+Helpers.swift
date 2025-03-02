@@ -40,7 +40,7 @@ extension ObservableType {
 
     func lastValue() -> Element? {
         var value: Element? = nil
-        bind { value = $0 }.dispose()
+        _ = bind { value = $0 }
         return value
     }
 }
