@@ -224,7 +224,7 @@ class EventViewModel {
                 .take(until: isPast.matching(true))
 
         } else {
-            isPast = .just(true)
+            isPast = .just(secondsToEnd <= 0)
             clock = .just(())
         }
 

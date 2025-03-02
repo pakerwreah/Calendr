@@ -18,13 +18,13 @@ private extension EventListItem {
     var event: EventViewModel? { if case .event(let event) = self { event } else { nil } }
 }
 
-struct EventListSummaryItem {
+struct EventListSummaryItem: Equatable {
     let colors: Set<NSColor>
     let label: String
     let count: Int
 }
 
-struct EventListSummary {
+struct EventListSummary: Equatable {
     let overdue: EventListSummaryItem
     let allday: EventListSummaryItem
     let today: EventListSummaryItem
