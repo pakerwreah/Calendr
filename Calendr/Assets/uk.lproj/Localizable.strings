@@ -83,7 +83,7 @@
 "formatter.date.relative.ago" = "%@ тому";
 "formatter.date.relative.left" = "Залишилося %@";
 
-//"reminder.status.overdue" = "Overdue";
+"reminder.status.overdue" = "Прострочено";
 
 "reminder.options.button" = "Опції";
 "reminder.options.complete" = "Завершено";
