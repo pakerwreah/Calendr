@@ -83,7 +83,7 @@
 "formatter.date.relative.ago" = "vor %@";
 "formatter.date.relative.left" = "%@ verbleibend";
 
-//"reminder.status.overdue" = "Overdue";
+"reminder.status.overdue" = "Überfällig";
 
 "reminder.options.button" = "Optionen";
 "reminder.options.complete" = "Erledigt";
