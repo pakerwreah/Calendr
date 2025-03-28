@@ -25,7 +25,6 @@ class CalendarScript {
                     switch view to \(mode) view
                     delay 0.3
                     view calendar at date ("\(formatter.string(from: date))")
-                    
                     activate
                     end tell
                 """)
