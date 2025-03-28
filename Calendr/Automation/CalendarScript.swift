@@ -22,8 +22,9 @@ class CalendarScript {
             do {
                 try await runScript("""
                     tell application "Calendar"
-                    view calendar at date ("\(formatter.string(from: date))")
                     switch view to \(mode) view
+                    delay 0.3
+                    view calendar at date ("\(formatter.string(from: date))")
                     activate
                     end tell
                 """)
