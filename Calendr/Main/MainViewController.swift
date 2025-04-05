@@ -367,6 +367,12 @@ class MainViewController: NSViewController {
 
     private func setUpBindings() {
 
+        NSApp.rx.observe(\.isActive)
+            .matching(false)
+            .map([])
+            .bind(to: keyboardModifiers)
+            .disposed(by: disposeBag)
+
         makeDateSelector()
             .asObservable()
             .observe(on: MainScheduler.asyncInstance)
