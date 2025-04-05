@@ -53,6 +53,7 @@ class MainViewController: NSViewController {
     private var popoverDisposeBag = DisposeBag()
     private let dateClick = PublishSubject<Date>()
     private let dateDoubleClick = PublishSubject<Date>()
+    private let hoveredDate = BehaviorSubject<Date?>(value: nil)
     private let refreshDate = PublishSubject<Void>()
     private let selectedDate: BehaviorSubject<Date>
     private let focusedDateObservable: Observable<Date>
@@ -150,12 +151,10 @@ class MainViewController: NSViewController {
             fileManager: fileManager
         )
 
-        let (hoverObservable, hoverObserver) = PublishSubject<Date?>.pipe()
-
         calendarViewModel = CalendarViewModel(
             searchObservable: searchInputText,
             dateObservable: selectedDate,
-            hoverObservable: hoverObservable,
+            hoverObservable: hoveredDate,
             keyboardModifiers: keyboardModifiers,
             enabledCalendars: calendarPickerViewModel.enabledCalendars,
             calendarService: calendarService,
@@ -165,7 +164,7 @@ class MainViewController: NSViewController {
 
         calendarView = CalendarView(
             viewModel: calendarViewModel,
-            hoverObserver: hoverObserver,
+            hoverObserver: hoveredDate.asObserver(),
             clickObserver: dateClick.asObserver(),
             doubleClickObserver: dateDoubleClick.asObserver()
         )
@@ -280,6 +279,7 @@ class MainViewController: NSViewController {
 
         mainStackView.setCustomSpacing(mainStackSpacing + 2, after: eventListSummary)
 
+        searchInput.isHidden = true
         searchInput.focusRingType = .none
 
         searchInput.rx.observe(\.isHidden)
@@ -319,11 +319,14 @@ class MainViewController: NSViewController {
         .disposed(by: disposeBag)
     }
 
-    override func viewWillAppear() {
+    override func viewDidDisappear() {
 
-        super.viewWillAppear()
+        super.viewDidDisappear()
 
         hideSearchInput()
+
+        hoveredDate.onNext(nil)
+        keyboardModifiers.onNext([])
     }
 
     // MARK: - Setup
