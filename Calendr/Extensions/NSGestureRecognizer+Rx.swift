@@ -24,10 +24,17 @@ private class GestureProxy {
 extension Reactive where Base: NSView {
 
     var click: Observable<Void> { click { _ in } }
-    var doubleClick: Observable<Void> { click { $0.numberOfClicksRequired = 2 } }
+    var doubleClick: Observable<Void> { doubleClick { _ in } }
 
     func click<T: NSClickGestureRecognizer> (_ configure: @escaping (T) -> Void) -> Observable<Void> {
         gesture(configure)
+    }
+
+    func doubleClick<T: NSClickGestureRecognizer> (_ configure: @escaping (T) -> Void) -> Observable<Void> {
+        click { (gesture: T) in
+            gesture.numberOfClicksRequired = 2
+            configure(gesture)
+        }
     }
 
     private func gesture<T: NSGestureRecognizer>(_ configure: @escaping (T) -> Void) -> Observable<Void> {

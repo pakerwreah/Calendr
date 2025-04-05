@@ -8,7 +8,7 @@
 import Cocoa
 import RxSwift
 
-class CalendarCellView: NSView, NSGestureRecognizerDelegate {
+class CalendarCellView: NSView {
 
     private let disposeBag = DisposeBag()
 
@@ -149,25 +149,47 @@ class CalendarCellView: NSView, NSGestureRecognizerDelegate {
         .bind(to: eventsStackView.rx.arrangedSubviews)
         .disposed(by: disposeBag)
 
-        rx.click { $0.delegate = self }
-            .withLatestFrom(viewModel.map(\.date))
-            .bind(to: clickObserver)
-            .disposed(by: disposeBag)
+        /// When we single-click a date, it updates the event list, which causes the window to resize.
+        /// That causes the 2nd click to be cancelled by macOS, even though we're clicking at the exact same place.
+        /// Because of that, we have to calculate the time difference between single clicks and trigger the double click ourselves:
+        ///
+        /// Expected behavior:
+        ///  - If the user clicked a date in the current month, immediately fire the single click and the double click later, if detected.
+        ///  - If the user clicked a date in another month, wait for the double click. If detected, cancel the single click.
+        ///
+        /// That avoids changing months during the double click, which ends up opening the system calendar in the wrong date.
 
-        rx.doubleClick
-            .withLatestFrom(viewModel.map(\.date))
-            .bind(to: doubleClickObserver)
+        var lastClickTimestamp: TimeInterval = 0
+        var workItem: DispatchWorkItem?
+
+        rx.click
+            .withLatestFrom(viewModel)
+            .bind { [clickObserver, doubleClickObserver] vm in
+                let currentTimestamp = CACurrentMediaTime()
+                let doubleClicked = currentTimestamp - lastClickTimestamp < NSEvent.doubleClickInterval
+
+                if vm.inMonth {
+                    clickObserver.onNext(vm.date)
+                } else if !doubleClicked {
+                    workItem = DispatchWorkItem {
+                        clickObserver.onNext(vm.date)
+                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + NSEvent.doubleClickInterval, execute: workItem!)
+                }
+
+                if doubleClicked {
+                    workItem?.cancel()
+                    doubleClickObserver.onNext(vm.date)
+                }
+
+                lastClickTimestamp = currentTimestamp
+            }
             .disposed(by: disposeBag)
 
         rx.mouseEntered
             .withLatestFrom(viewModel.map(\.date))
             .bind(to: hoverObserver)
             .disposed(by: disposeBag)
-    }
-
-    // delay click until double click fails for dates outside the current month
-    func gestureRecognizer(_ gestureRecognizer: NSGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: NSGestureRecognizer) -> Bool {
-        return viewModel.lastValue()?.inMonth == false
     }
 
     override func updateLayer() {
