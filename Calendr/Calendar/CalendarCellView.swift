@@ -8,7 +8,7 @@
 import Cocoa
 import RxSwift
 
-class CalendarCellView: NSView {
+class CalendarCellView: NSView, NSGestureRecognizerDelegate {
 
     private let disposeBag = DisposeBag()
 
@@ -149,7 +149,7 @@ class CalendarCellView: NSView {
         .bind(to: eventsStackView.rx.arrangedSubviews)
         .disposed(by: disposeBag)
 
-        rx.click
+        rx.click { $0.delegate = self }
             .withLatestFrom(viewModel.map(\.date))
             .bind(to: clickObserver)
             .disposed(by: disposeBag)
@@ -163,6 +163,11 @@ class CalendarCellView: NSView {
             .withLatestFrom(viewModel.map(\.date))
             .bind(to: hoverObserver)
             .disposed(by: disposeBag)
+    }
+
+    // delay click until double click fails for dates outside the current month
+    func gestureRecognizer(_ gestureRecognizer: NSGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: NSGestureRecognizer) -> Bool {
+        return viewModel.lastValue()?.inMonth == false
     }
 
     override func updateLayer() {
