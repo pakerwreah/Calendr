@@ -71,10 +71,14 @@ extension EventModel {
 
     var isMeeting: Bool { !participants.isEmpty }
 
-    func calendarAppURL(using dateProvider: DateProviding) -> URL {
+    func calendarAppURL(using dateProvider: DateProviding) -> URL? {
+
+        guard let id = id.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) else {
+            return nil
+        }
 
         guard !type.isReminder else {
-            return URL(string: "x-apple-reminderkit://remcdreminder/\(id)")!
+            return URL(string: "x-apple-reminderkit://remcdreminder/\(id)")
         }
 
         let date: String
@@ -83,11 +87,15 @@ extension EventModel {
             if !isAllDay {
                 formatter.timeZone = .init(secondsFromGMT: 0)
             }
-            date = "/\(formatter.string(for: start)!)"
+            if let formattedDate = formatter.string(for: start) {
+                date = "/\(formattedDate)"
+            } else {
+                return nil
+            }
         } else {
             date =  ""
         }
-        return URL(string: "ical://ekevent\(date)/\(id)?method=show&options=more")!
+        return URL(string: "ical://ekevent\(date)/\(id)?method=show&options=more")
     }
 }
 
