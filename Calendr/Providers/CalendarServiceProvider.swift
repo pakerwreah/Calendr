@@ -483,7 +483,10 @@ private extension Priority {
 private extension EventModel {
 
     init?(from event: EKEvent, dateProvider: DateProviding) {
-        guard let calendar = event.calendar else { return nil }
+        guard
+            let calendar = event.calendar
+        else { return nil }
+
         self.init(
             id: event.calendarItemIdentifier,
             start: event.startDate,
@@ -499,7 +502,8 @@ private extension EventModel {
             participants: .init(from: event),
             timeZone: calendar.isSubscribed || calendar.isDelegate ? nil : event.timeZone,
             hasRecurrenceRules: event.hasRecurrenceRules || event.isDetached,
-            priority: nil
+            priority: nil,
+            attachments: event.attachments
         )
     }
 
@@ -509,7 +513,7 @@ private extension EventModel {
             let dueDateComponents = reminder.dueDateComponents,
             let date = dateProvider.calendar.date(from: dueDateComponents)
         else { return nil }
-        
+
         self.init(
             id: reminder.calendarItemIdentifier,
             start: date,
@@ -525,7 +529,8 @@ private extension EventModel {
             participants: [],
             timeZone: calendar.isSubscribed || calendar.isDelegate ? nil : reminder.timeZone,
             hasRecurrenceRules: reminder.hasRecurrenceRules,
-            priority: .init(from: reminder.priority)
+            priority: .init(from: reminder.priority),
+            attachments: reminder.attachments // doesn't work
         )
     }
 }

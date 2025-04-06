@@ -172,6 +172,9 @@
 		34D88DC82C4C66F80047D636 /* KeyboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D88DC72C4C66F80047D636 /* KeyboardViewController.swift */; };
 		34D88DCA2C4C687B0047D636 /* SettingsUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D88DC92C4C687B0047D636 /* SettingsUI.swift */; };
 		34E004A725B61D5200241419 /* StatusItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E004A625B61D5200241419 /* StatusItemViewModel.swift */; };
+		34E0C4522DA2C5A100B33B27 /* Attachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E0C4512DA2C5A100B33B27 /* Attachment.swift */; };
+		34E0C4572DA2D23B00B33B27 /* KVCError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E0C4562DA2D23B00B33B27 /* KVCError.swift */; };
+		34E0C4592DA2D27100B33B27 /* ExceptionCatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E0C4582DA2D27100B33B27 /* ExceptionCatcher.m */; };
 		34E1902325B76CFE00E9491B /* CalendarPickerViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E1902225B76CFE00E9491B /* CalendarPickerViewModelTests.swift */; };
 		34E259832B659B5600074D3A /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 34E259822B659B5600074D3A /* KeyboardShortcuts */; };
 		34E5F2382C9F309E0048E25D /* AppearanceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E5F2372C9F309E0048E25D /* AppearanceViewController.swift */; };
@@ -395,6 +398,10 @@
 		34D88DC72C4C66F80047D636 /* KeyboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardViewController.swift; sourceTree = "<group>"; };
 		34D88DC92C4C687B0047D636 /* SettingsUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsUI.swift; sourceTree = "<group>"; };
 		34E004A625B61D5200241419 /* StatusItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemViewModel.swift; sourceTree = "<group>"; };
+		34E0C4512DA2C5A100B33B27 /* Attachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Attachment.swift; sourceTree = "<group>"; };
+		34E0C4552DA2D23500B33B27 /* ExceptionCatcher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExceptionCatcher.h; sourceTree = "<group>"; };
+		34E0C4562DA2D23B00B33B27 /* KVCError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KVCError.swift; sourceTree = "<group>"; };
+		34E0C4582DA2D27100B33B27 /* ExceptionCatcher.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExceptionCatcher.m; sourceTree = "<group>"; };
 		34E1902225B76CFE00E9491B /* CalendarPickerViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPickerViewModelTests.swift; sourceTree = "<group>"; };
 		34E5F2372C9F309E0048E25D /* AppearanceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceViewController.swift; sourceTree = "<group>"; };
 		34E5F23B2C9F76EF0048E25D /* DisposableWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisposableWrapper.swift; sourceTree = "<group>"; };
@@ -708,6 +715,7 @@
 		347D0FF025954916002451EC /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				34E0C4512DA2C5A100B33B27 /* Attachment.swift */,
 				3470214F259E163000827AE7 /* CalendarModel.swift */,
 				34D19FCB2622B9CC00B2732C /* DateRange.swift */,
 				3468E652284BD44600B21EC8 /* EventBarStyle.swift */,
@@ -832,6 +840,9 @@
 				345CC3672C8CC93B00B0DD1A /* Cache.swift */,
 				348CF5002D13970600B9BFE0 /* DateSearchParser.swift */,
 				34E5F23B2C9F76EF0048E25D /* DisposableWrapper.swift */,
+				34E0C4552DA2D23500B33B27 /* ExceptionCatcher.h */,
+				34E0C4582DA2D27100B33B27 /* ExceptionCatcher.m */,
+				34E0C4562DA2D23B00B33B27 /* KVCError.swift */,
 				34C1D4202C6E632F00295E5E /* Sentry.swift */,
 				3438AEED2C6192A9002BE3E1 /* XCTest.swift */,
 			);
@@ -1145,6 +1156,7 @@
 				34B5A09D25B118EC00F7F7ED /* CalendarPickerViewModel.swift in Sources */,
 				3421DA0E2693E35000056837 /* EventListViewPreview.swift in Sources */,
 				34651F5A25E2F08500518C5A /* String.swift in Sources */,
+				34E0C4592DA2D27100B33B27 /* ExceptionCatcher.m in Sources */,
 				34651F7425E3207200518C5A /* WorkspaceServiceProvider.swift in Sources */,
 				34286E4625D5CD9C0097EC5D /* WeekNumberCellView.swift in Sources */,
 				34711F6F2D16261800A89C72 /* MockWorkspaceServiceProvider.swift in Sources */,
@@ -1161,6 +1173,7 @@
 				3421930827999FB7002BCD36 /* TimeZone+Factory.swift in Sources */,
 				3417A40A2A702643005C77E4 /* StatusItemIconFactory.swift in Sources */,
 				344D5EBC2CA0DAAF00523F9E /* NSImageView.swift in Sources */,
+				34E0C4572DA2D23B00B33B27 /* KVCError.swift in Sources */,
 				34EDE71B2AC46515007C5854 /* Error.swift in Sources */,
 				347C04A12D13691100F67E7C /* NSControl+Rx.swift in Sources */,
 				345DD97326920D1B00294D90 /* CalendarViewPreview.swift in Sources */,
@@ -1185,6 +1198,7 @@
 				34B99FBB2D2C8605003D4EA4 /* EventBackground.swift in Sources */,
 				3468E653284BD44600B21EC8 /* EventBarStyle.swift in Sources */,
 				34F128E12597B9C9007DF31C /* MainViewController.swift in Sources */,
+				34E0C4522DA2C5A100B33B27 /* Attachment.swift in Sources */,
 				34934CD828E71B0F009635D4 /* NSObject+Rx.swift in Sources */,
 				3477F3E425FD5285008EA888 /* NSView+Rx.swift in Sources */,
 				34D55FE325F06669007F5C81 /* Sequence.swift in Sources */,
@@ -1547,7 +1561,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.16.1;
+				MARKETING_VERSION = 1.16.2;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Config/Calendr-Bridging-Header.h";
@@ -1575,7 +1589,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.16.1;
+				MARKETING_VERSION = 1.16.2;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Config/Calendr-Bridging-Header.h";

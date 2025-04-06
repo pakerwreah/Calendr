@@ -58,6 +58,9 @@ enum Prefs {
     static let permissionSuppressed = "permission_suppressed"
     static let defaultBrowserPerCalendar = "default_browser_per_calendar"
 
+    // Security Scope Bookmarks
+    static let attachmentsBookmark = "attachments_folder_bookmark"
+
     // System
     static let statusItemPreferredPosition = "NSStatusItem Preferred Position"
 }
@@ -306,5 +309,11 @@ extension UserDefaults {
     @objc dynamic var defaultBrowserPerCalendar: [String: String] {
         get { dictionary(forKey: Prefs.defaultBrowserPerCalendar) as? [String: String] ?? [:] }
         set { set(newValue, forKey: Prefs.defaultBrowserPerCalendar) }
+    }
+
+    // Security Scope Bookmarks
+    @objc dynamic var attachmentsBookmark: Data? {
+        get { data(forKey: Prefs.attachmentsBookmark) }
+        set { set(newValue, forKey: Prefs.attachmentsBookmark) }
     }
 }

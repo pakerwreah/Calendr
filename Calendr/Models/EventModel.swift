@@ -23,6 +23,7 @@ struct EventModel: Equatable {
     let timeZone: TimeZone?
     let hasRecurrenceRules: Bool
     let priority: Priority?
+    let attachments: [Attachment]
 }
 
 enum EventStatus: Comparable {

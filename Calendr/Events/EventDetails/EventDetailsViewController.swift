@@ -118,6 +118,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         addInformation()
         addParticipants()
         addNotes()
+        addAttachments()
         addFooter()
     }
 
@@ -253,6 +254,42 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         button.contentTintColor = .labelColor
         button.refusesFirstResponder = true
         button.setContentCompressionResistancePriority(.required, for: .vertical)
+    }
+
+    private func addAttachments() {
+        guard !viewModel.attachments.isEmpty else { return }
+        detailsStackView.addArrangedSubview(makeLine())
+
+        let formatter = ByteCountFormatter()
+
+        for attachment in viewModel.attachments {
+            let button = NSButton()
+            button.refusesFirstResponder = true
+            button.imagePosition = .imageLeading
+            button.showsBorderOnlyWhileMouseInside = true
+            button.bezelStyle = .accessoryBar
+            button.contentTintColor = .labelColor
+            button.title = attachment.fileName
+            button.image = Icons.Event.attachment.with(scale: .small)
+            button.rx.tap.map(attachment)
+                .bind(to: viewModel.openAttachment)
+                .disposed(by: disposeBag)
+
+            button.setContentCompressionResistancePriority(.required, for: .vertical)
+
+            let stack = NSStackView(views: [button, .spacer])
+
+            if let fileSize = attachment.fileSize?.int64Value {
+                let sizeLabel = Label(
+                    text: formatter.string(fromByteCount: fileSize),
+                    font: .systemFont(ofSize: 11)
+                )
+                sizeLabel.setContentHuggingPriority(.required, for: .horizontal)
+                stack.addArrangedSubview(sizeLabel)
+            }
+
+            detailsStackView.addArrangedSubview(stack)
+        }
     }
 
     private func addOpenButton() {

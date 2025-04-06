@@ -21,6 +21,9 @@
 "auto_update.install" = "Встановити";
 "auto_update.replace.message" = "Підтвердьте місцезнаходження програми, щоб надати дозвіл на її заміну";
 
+//"attachments.open.message" = "Calendr needs permission to access your attachments";
+//"attachments.open.authorize" = "Authorize access to Attachments";
+
 "settings.title" = "Налаштування";
 "settings.tab.general" = "Загальні";
 "settings.tab.appearance" = "Зовнішній вигляд";

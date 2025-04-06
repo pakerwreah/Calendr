@@ -43,7 +43,8 @@ extension EventModel {
             participants: participants,
             timeZone: timeZone,
             hasRecurrenceRules: hasRecurrenceRules,
-            priority: priority
+            priority: priority,
+            attachments: []
         )
     }
 }
