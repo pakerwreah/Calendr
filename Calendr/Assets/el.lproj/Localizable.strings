@@ -21,6 +21,9 @@
 "auto_update.install" = "Εγκατάσταση";
 "auto_update.replace.message" = "Επιβεβαιώστε τη θέση της εφαρμογής ώστε να έχουμε την άδεια να την αντικαταστήσουμε";
 
+//"attachments.open.message" = "Calendr needs permission to access your attachments";
+//"attachments.open.authorize" = "Authorize access to Attachments";
+
 "settings.title" = "Προτιμήσεις";
 "settings.tab.general" = "Γενικά";
 "settings.tab.appearance" = "Εμφάνιση";

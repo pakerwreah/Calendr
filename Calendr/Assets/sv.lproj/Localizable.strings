@@ -21,6 +21,9 @@
 "auto_update.install" = "Installera";
 "auto_update.replace.message" = "Bekräfta appens plats så att vi har tillstånd att ersätta den";
 
+//"attachments.open.message" = "Calendr needs permission to access your attachments";
+//"attachments.open.authorize" = "Authorize access to Attachments";
+
 "settings.title" = "Inställningar";
 "settings.tab.general" = "Allmänt";
 "settings.tab.appearance" = "Utseende";

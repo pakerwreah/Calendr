@@ -36,6 +36,7 @@ class EventDetailsViewModel {
     let showSkip: Bool
     let browserOptions: [BrowserOption]
     let optimisticLoadTime: DispatchTimeInterval
+    let attachments: [Attachment]
 
     let canShowMap = BehaviorSubject<Bool>(value: false)
     let coordinates: Maybe<Coordinates>
@@ -46,6 +47,7 @@ class EventDetailsViewModel {
     let linkTapped: AnyObserver<Void>
     let openTapped: AnyObserver<Void>
     let skipTapped: AnyObserver<Void>
+    let openAttachment: AnyObserver<Attachment>
     let openMaps: AnyObserver<Coordinates>
     let isShowingObserver: AnyObserver<Bool>
 
@@ -97,6 +99,7 @@ class EventDetailsViewModel {
         type = event.type
         status = event.status
         title = event.title
+        attachments = event.attachments
         link = event.detectLink(using: workspace)
         url = type.isBirthday ? "" : link.map { $0.isNative ? "" : $0.original.absoluteString } ?? ""
         location = event.location ?? ""
@@ -113,6 +116,12 @@ class EventDetailsViewModel {
             }
         }
 
+        openAttachment = .init { event in
+            if let attachment = event.element {
+                workspace.open(attachment)
+            }
+        }
+
         openMaps = .init {
             guard
                 let c = $0.element,
@@ -123,7 +132,7 @@ class EventDetailsViewModel {
                 URLQueryItem(name: "ll", value: "\(c.latitude),\(c.longitude)"),
                 URLQueryItem(name: "q", value: event.title),
             ]
-            
+
             if let url = url.url {
                 workspace.open(url)
             }

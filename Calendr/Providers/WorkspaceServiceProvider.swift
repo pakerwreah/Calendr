@@ -67,6 +67,75 @@ extension WorkspaceServiceProviding {
             open(url)
         }
     }
+
+    func open(_ attachment: Attachment) {
+
+        guard let localURL = attachment.localURL else {
+            if let url = attachment.url {
+                _ = open(url)
+            }
+            return
+        }
+
+        var isStale = true
+        var resolvedURL: URL?
+
+        if let bookmarkData = userDefaults.attachmentsBookmark {
+            resolvedURL = try? URL(
+                resolvingBookmarkData: bookmarkData,
+                options: .withSecurityScope,
+                relativeTo: nil,
+                bookmarkDataIsStale: &isStale
+            )
+        }
+
+        if let resolvedURL, !isStale, resolvedURL.startAccessingSecurityScopedResource() {
+            defer { resolvedURL.stopAccessingSecurityScopedResource() }
+            if let relativePath = localURL.relativePath(from: resolvedURL) {
+                let urlToOpen = resolvedURL.appendingPathComponent(relativePath)
+
+                if !open(urlToOpen) {
+                    userDefaults.attachmentsBookmark = nil
+                }
+            }
+            return
+        }
+
+        let directoryURL = URL(fileURLWithPath: NSHomeDirectory())
+            .appendingPathComponent("Library/Group Containers/group.com.apple.calendar/Attachments")
+
+        let panel = NSOpenPanel()
+        panel.directoryURL = directoryURL
+        panel.canChooseFiles = false
+        panel.canChooseDirectories = true
+        panel.allowsMultipleSelection = false
+        panel.canCreateDirectories = false
+        panel.message = Strings.Attachments.Open.message
+        panel.prompt = Strings.Attachments.Open.authorize
+
+        panel.begin { [userDefaults] (result) in
+            guard
+                result == .OK, let url = panel.url,
+                url.startAccessingSecurityScopedResource()
+            else { return }
+            defer { url.stopAccessingSecurityScopedResource() }
+
+            do {
+                userDefaults.attachmentsBookmark = try url.bookmarkData(
+                    options: .withSecurityScope,
+                    includingResourceValuesForKeys: nil,
+                    relativeTo: nil
+                )
+            } catch {
+                print("Failed to create bookmark: \(error)")
+            }
+
+            _ = self.open(localURL)
+        }
+
+        panel.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
+    }
 }
 
 class Workspace: WorkspaceServiceProviding {

@@ -21,6 +21,9 @@
 "auto_update.install" = "설치";
 "auto_update.replace.message" = "앱을 대체할 수 있도록 애플리케이션 경로를 확인해주세요";
 
+//"attachments.open.message" = "Calendr needs permission to access your attachments";
+//"attachments.open.authorize" = "Authorize access to Attachments";
+
 "settings.title" = "설정";
 "settings.tab.general" = "일반";
 "settings.tab.appearance" = "모양";

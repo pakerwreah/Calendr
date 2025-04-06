@@ -21,6 +21,9 @@
 "auto_update.install" = "Inštalovať";
 "auto_update.replace.message" = "Potvrď umiestnenie aplikácie pre povolenie ju nahradiť";
 
+//"attachments.open.message" = "Calendr needs permission to access your attachments";
+//"attachments.open.authorize" = "Authorize access to Attachments";
+
 "settings.title" = "Nastavenia";
 "settings.tab.general" = "Všeobecné";
 "settings.tab.appearance" = "Vzhľad";

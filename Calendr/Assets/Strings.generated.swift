@@ -27,6 +27,14 @@ internal enum Strings {
     /// Reminders pending authorization
     internal static let reminders = Strings.tr("Localizable", "access_required.reminders", fallback: "Reminders pending authorization")
   }
+  internal enum Attachments {
+    internal enum Open {
+      /// Authorize access to Attachments
+      internal static let authorize = Strings.tr("Localizable", "attachments.open.authorize", fallback: "Authorize access to Attachments")
+      /// Calendr needs permission to access your attachments
+      internal static let message = Strings.tr("Localizable", "attachments.open.message", fallback: "Calendr needs permission to access your attachments")
+    }
+  }
   internal enum AutoUpdate {
     /// Check for updates
     internal static let checkForUpdates = Strings.tr("Localizable", "auto_update.check_for_updates", fallback: "Check for updates")

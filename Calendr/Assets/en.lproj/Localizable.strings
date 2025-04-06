@@ -21,6 +21,9 @@
 "auto_update.install" = "Install";
 "auto_update.replace.message" = "Confirm the app location so we have permission to replace it";
 
+"attachments.open.message" = "Calendr needs permission to access your attachments";
+"attachments.open.authorize" = "Authorize access to Attachments";
+
 "settings.title" = "Preferences";
 "settings.tab.general" = "General";
 "settings.tab.appearance" = "Appearance";

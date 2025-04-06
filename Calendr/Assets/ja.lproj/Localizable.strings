@@ -21,6 +21,9 @@
 "auto_update.install" = "インストール";
 "auto_update.replace.message" = "アプリのインストール先を確認してください。古いバージョンと同じ場所を選ぶと、\n新しいバージョンのアプリに置き換えられます。";
 
+//"attachments.open.message" = "Calendr needs permission to access your attachments";
+//"attachments.open.authorize" = "Authorize access to Attachments";
+
 "settings.title" = "設定";
 "settings.tab.general" = "一般";
 "settings.tab.appearance" = "外観";
