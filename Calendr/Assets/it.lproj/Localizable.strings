@@ -22,8 +22,8 @@
 "auto_update.install" = "Installa";
 "auto_update.replace.message" = "Conferma la posizione dell'app così da avere l'autorizzazione a sostituirla";
 
-//"attachments.open.message" = "Calendr needs permission to access your attachments";
-//"attachments.open.authorize" = "Authorize access to Attachments";
+//"attachments.open.message" = "Calendr necessita del permesso per accedere ai tuoi allegati";
+"attachments.open.authorize" = "Autorizza l’accesso agli allegati";
 
 "settings.title" = "Preferenze";
 "settings.tab.general" = "Generali";
