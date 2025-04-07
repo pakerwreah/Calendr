@@ -15,6 +15,8 @@ import RxSwift
 */
 class WallTimeScheduler: SchedulerType {
 
+    static let instance = WallTimeScheduler()
+
     var now: RxTime { Date() }
 
     func scheduleRelative<StateType>(_ state: StateType, dueTime: RxTimeInterval,

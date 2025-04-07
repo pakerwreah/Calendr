@@ -18,6 +18,7 @@ class EventView: NSView {
 
     private let birthdayIcon = NSImageView()
     private let recurrenceIcon = NSImageView()
+    private let priority = Label()
     private let title = Label()
     private let subtitle = Label()
     private let subtitleLink = Label()
@@ -66,26 +67,29 @@ class EventView: NSView {
 
         switch viewModel.type {
 
-        case .birthday:
-            birthdayIcon.isHidden = false
+            case .birthday:
+                birthdayIcon.isHidden = false
 
-        case .reminder:
-            completeBtn.contentTintColor = viewModel.color
-            completeBtn.isHidden = false
+            case .reminder:
+                priority.textColor = viewModel.color
+                priority.stringValue = viewModel.priority ?? ""
+                priority.isHidden = viewModel.priority == nil
 
-        case .event(let status):
-            if status ~= .pending {
-                layer?.backgroundColor = Self.pendingBackground
-            }
+                completeBtn.contentTintColor = viewModel.color
+                completeBtn.isHidden = false
+
+            case .event:
+                break
         }
 
         switch viewModel.barStyle {
-        case .filled:
-            colorBar.layer?.backgroundColor = viewModel.color.cgColor
 
-        case .bordered:
-            colorBar.layer?.borderWidth = 1
-            colorBar.layer?.borderColor = viewModel.color.cgColor
+            case .filled:
+                colorBar.layer?.backgroundColor = viewModel.color.cgColor
+
+            case .bordered:
+                colorBar.layer?.borderWidth = 1
+                colorBar.layer?.borderColor = viewModel.color.cgColor
         }
 
         title.attributedStringValue = .init(
@@ -102,9 +106,6 @@ class EventView: NSView {
             subtitleLink.isHidden = true
         }
 
-        duration.stringValue = viewModel.duration
-        duration.isHidden = duration.isEmpty
-
         linkBtn.isHidden = viewModel.link == nil
         linkBtn.toolTip = viewModel.link?.url.absoluteString
     }
@@ -120,12 +121,15 @@ class EventView: NSView {
         hoverLayer.backgroundColor = NSColor.gray.cgColor.copy(alpha: 0.2)
         layer?.addSublayer(hoverLayer)
 
-        [birthdayIcon, recurrenceIcon, completeBtn, relativeDuration].forEach {
+        [birthdayIcon, recurrenceIcon, completeBtn, priority, relativeDuration].forEach {
             $0.setContentHuggingPriority(.required, for: .horizontal)
             $0.setContentCompressionResistancePriority(.required, for: .horizontal)
         }
 
         completeBtn.isHidden = true
+
+        priority.isHidden = true
+        priority.font = .systemFont(ofSize: 13)
 
         birthdayIcon.isHidden = true
         birthdayIcon.contentTintColor = .systemRed
@@ -157,8 +161,8 @@ class EventView: NSView {
         colorBar.layer?.cornerRadius = 2
         colorBar.width(equalTo: 4)
 
-        let titleStackView = NSStackView(views: [birthdayIcon, completeBtn, title, recurrenceIcon])
-            .with(spacing: 4)
+        let titleStackView = NSStackView(views: [birthdayIcon, completeBtn, priority, title, recurrenceIcon])
+            .with(spacing: 3)
             .with(alignment: .firstBaseline)
 
         let linkStackView = NSStackView(views: [subtitleLink, linkBtn]).with(spacing: 0)
@@ -190,7 +194,8 @@ class EventView: NSView {
         progress.wantsLayer = true
         progress.layer?.backgroundColor = NSColor.red.cgColor.copy(alpha: 0.7)
         progress.height(equalTo: 1)
-        progress.width(equalTo: self)
+        progress.leading(equalTo: self)
+        progress.trailing(equalTo: self)
     }
 
     private func setUpBindings() {
@@ -198,6 +203,14 @@ class EventView: NSView {
         rx.isHovered
             .map(!)
             .bind(to: hoverLayer.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        viewModel.duration
+            .bind(to: duration.rx.stringValue)
+            .disposed(by: disposeBag)
+
+        viewModel.duration.map(\.isEmpty)
+            .bind(to: duration.rx.isHidden)
             .disposed(by: disposeBag)
 
         if let link = viewModel.link {
@@ -267,7 +280,7 @@ class EventView: NSView {
             Observable
                 .combineLatest(viewModel.isCompleted, Scaling.observable)
                 .map { completed, scaling in
-                    let icon = completed ? Icons.Reminder.complete :  Icons.Reminder.incomplete
+                    let icon = completed ? Icons.Reminder.complete : Icons.Reminder.incomplete
                     return icon.with(pointSize: 12 * scaling)
                 }
                 .bind(to: completeBtn.rx.image)
@@ -337,26 +350,6 @@ class EventView: NSView {
             return hoverLayer.isHidden = true
         }
     }
-
-    private static let pendingBackground: CGColor = {
-
-        let stripes = CIFilter.stripesGenerator()
-        stripes.color0 = CIColor(color: NSColor.gray.withAlphaComponent(0.25))!
-        stripes.color1 = .clear
-        stripes.width = 2.5
-        stripes.sharpness = 0
-
-        let rotated = CIFilter.affineClamp()
-        rotated.inputImage = stripes.outputImage!
-        rotated.transform = CGAffineTransform(rotationAngle: -.pi / 4)
-
-        let ciImage = rotated.outputImage!.cropped(to: CGRect(x: 0, y: 0, width: 300, height: 300))
-        let rep = NSCIImageRep(ciImage: ciImage)
-        let nsImage = NSImage(size: rep.size)
-        nsImage.addRepresentation(rep)
-
-        return NSColor(patternImage: nsImage).cgColor
-    }()
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

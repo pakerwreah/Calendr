@@ -7,3 +7,5 @@
 
 const char* BUILD_DATE;
 const char* BUILD_TIME;
+
+#import "ExceptionCatcher.h"

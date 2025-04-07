@@ -24,6 +24,7 @@ class NextEventViewModelTests: XCTestCase {
     let workspace = MockWorkspaceServiceProvider()
     let screenProvider = MockScreenProvider()
     let scheduler = HistoricalScheduler()
+    let soundPlayer = MockSoundPlayer()
 
     lazy var viewModel = makeViewModel(type: .event)
 
@@ -40,7 +41,8 @@ class NextEventViewModelTests: XCTestCase {
             workspace: workspace,
             screenProvider: screenProvider,
             isShowingDetails: .dummy(),
-            scheduler: scheduler
+            scheduler: scheduler,
+            soundPlayer: soundPlayer
         )
     }
 
@@ -233,7 +235,7 @@ class NextEventViewModelTests: XCTestCase {
 
     func testNextEvent_isNotInProgress_backgroundColor() {
 
-        var color: NSColor?
+        var color: EventBackground?
 
         viewModel.backgroundColor
             .bind { color = $0 }
@@ -248,7 +250,7 @@ class NextEventViewModelTests: XCTestCase {
 
     func testNextEvent_isInProgress_backgroundColor() {
 
-        var color: NSColor?
+        var color: EventBackground?
 
         viewModel.backgroundColor
             .bind { color = $0 }
@@ -258,7 +260,37 @@ class NextEventViewModelTests: XCTestCase {
             .make(start: now - 1, end: now + 1, calendar: .make(color: .white))
         ])
 
-        XCTAssertEqual(color, NSColor.white.withAlphaComponent(0.2))
+        XCTAssertEqual(color, .color(.white.withAlphaComponent(0.2)))
+    }
+
+    func testNextEvent_isNotInProgress_isPending_backgroundColor() {
+
+        var color: EventBackground?
+
+        viewModel.backgroundColor
+            .bind { color = $0 }
+            .disposed(by: disposeBag)
+
+        calendarService.changeEvents([
+            .make(start: now + 1, end: now + 2, type: .event(.pending), calendar: .make(color: .white))
+        ])
+
+        XCTAssertEqual(color, .pending)
+    }
+
+    func testNextEvent_isInProgress_isPending_backgroundColor() {
+
+        var color: EventBackground?
+
+        viewModel.backgroundColor
+            .bind { color = $0 }
+            .disposed(by: disposeBag)
+
+        calendarService.changeEvents([
+            .make(start: now - 1, end: now + 1, type: .event(.pending), calendar: .make(color: .white))
+        ])
+
+        XCTAssertEqual(color, .pending)
     }
 
     func testNextEvent_isAllDay_shouldNotAppear() {
@@ -277,7 +309,22 @@ class NextEventViewModelTests: XCTestCase {
         XCTAssertEqual(title, "Event 2")
     }
 
-    func testNextEvent_isPending_shouldNotAppear() {
+    func testNextEvent_isPending_shouldAppear() {
+
+        var title: String?
+
+        viewModel.title
+            .bind { title = $0 }
+            .disposed(by: disposeBag)
+
+        calendarService.changeEvents([
+            .make(start: now, end: now + 1, title: "Event 1", type: .event(.pending))
+        ])
+
+        XCTAssertEqual(title, "Event 1")
+    }
+
+    func testNextEvent_isPending_withSameStart_shouldNotAppearOverAccepted() {
 
         var title: String?
 
@@ -287,7 +334,39 @@ class NextEventViewModelTests: XCTestCase {
 
         calendarService.changeEvents([
             .make(start: now, end: now + 1, title: "Event 1", type: .event(.pending)),
-            .make(start: now + 1, end: now + 2, title: "Event 2", type: .event(.accepted))
+            .make(start: now, end: now + 2, title: "Event 2", type: .event(.accepted))
+        ])
+
+        XCTAssertEqual(title, "Event 2")
+    }
+
+    func testNextEvent_isPending_withSameStart_shouldNotAppearOverMaybe() {
+
+        var title: String?
+
+        viewModel.title
+            .bind { title = $0 }
+            .disposed(by: disposeBag)
+
+        calendarService.changeEvents([
+            .make(start: now, end: now + 1, title: "Event 1", type: .event(.pending)),
+            .make(start: now, end: now + 2, title: "Event 2", type: .event(.maybe))
+        ])
+
+        XCTAssertEqual(title, "Event 2")
+    }
+
+    func testNextEvent_isMaybe_withSameStart_shouldNotAppearOverAccepted() {
+
+        var title: String?
+
+        viewModel.title
+            .bind { title = $0 }
+            .disposed(by: disposeBag)
+
+        calendarService.changeEvents([
+            .make(start: now, end: now + 1, title: "Event 1", type: .event(.maybe)),
+            .make(start: now, end: now + 2, title: "Event 2", type: .event(.accepted))
         ])
 
         XCTAssertEqual(title, "Event 2")

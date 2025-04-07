@@ -6,10 +6,13 @@
 //
 
 import Cocoa
+import RxSwift
 
 class AppDelegate: NSObject, NSApplicationDelegate {
 
     private var viewController: NSViewController?
+
+    private let deeplink = BehaviorSubject<URL?>(value: nil)
 
     func applicationDidFinishLaunching(_ notification: Notification) {
 
@@ -31,11 +34,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         registerDefaultPrefs(in: userDefaults)
 
-        let workspace = Workspace(userDefaults: userDefaults)
         let dateProvider = DateProvider(notificationCenter: notificationCenter, userDefaults: userDefaults)
+        let workspace = Workspace(userDefaults: userDefaults, dateProvider: dateProvider)
         let notificationProvider = LocalNotificationProvider()
 
         viewController = MainViewController(
+            deeplink: deeplink.skipNil(),
             autoLauncher: .default,
             workspace: workspace,
             calendarService: CalendarServiceProvider(
@@ -44,10 +48,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 userDefaults: userDefaults,
                 notificationCenter: notificationCenter
             ),
-            geocoder: GeocodeServiceProvider(), 
+            geocoder: GeocodeServiceProvider(),
             weatherService: .make(dateProvider: dateProvider),
             dateProvider: dateProvider,
-            screenProvider: ScreenProvider(notificationCenter: notificationCenter), 
+            screenProvider: ScreenProvider(notificationCenter: notificationCenter),
             notificationProvider: notificationProvider,
             networkProvider: NetworkServiceProvider(),
             userDefaults: userDefaults,
@@ -57,5 +61,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         setUpEditShortcuts()
         setUpResignFocus()
+    }
+
+    func application(_ application: NSApplication, open urls: [URL]) {
+        guard let url = urls.first else { return }
+        deeplink.onNext(url)
     }
 }

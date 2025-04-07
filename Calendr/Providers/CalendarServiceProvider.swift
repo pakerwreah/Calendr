@@ -18,6 +18,8 @@ protocol CalendarServiceProviding {
     func completeReminder(id: String, complete: Bool) -> Completable
     func rescheduleReminder(id: String, to: Date) -> Completable
     func changeEventStatus(id: String, date: Date, to: EventStatus) -> Completable
+
+    @MainActor func requestAccess()
 }
 
 class CalendarServiceProvider: CalendarServiceProviding {
@@ -46,8 +48,6 @@ class CalendarServiceProvider: CalendarServiceProviding {
         self.notificationCenter = notificationCenter
 
         (changeObservable, changeObserver) = PublishSubject.pipe(scheduler: MainScheduler.instance)
-
-        requestAccess()
     }
 
     private func listenToStoreChanges() {
@@ -85,22 +85,20 @@ class CalendarServiceProvider: CalendarServiceProviding {
         return false
     }
 
-    private func requestAccess() {
+    func requestAccess() {
         Task {
             listenToStoreChanges()
 
             let events = await requestAccess(to: .event)
             let reminders = await requestAccess(to: .reminder)
 
-            DispatchQueue.main.async {
-                if !events {
-                    if self.openPrivacySettings(for: .calendars) {
-                        return
-                    }
+            if !events {
+                if self.openPrivacySettings(for: .calendars) {
+                    return
                 }
-                if !reminders {
-                    self.openPrivacySettings(for: .reminders)
-                }
+            }
+            if !reminders {
+                self.openPrivacySettings(for: .reminders)
             }
         }
     }
@@ -385,7 +383,7 @@ extension EKEvent {
     // Fix events that should be all-day but are not correctly reported as such (ex. Google's "Out of office")
     func shouldBeAllDay(_ dateProvider: DateProviding) -> Bool {
         guard !isAllDay else { return true }
-        let range = DateRange(start: startDate, end: endDate, dateProvider: dateProvider)
+        let range = DateRange(start: startDate, end: endDate, timeZone: timeZone, dateProvider: dateProvider)
         return !range.isSingleDay && range.startsMidnight && range.endsMidnight
     }
 }
@@ -420,14 +418,27 @@ private extension EventStatus {
     }
 }
 
+private extension EKCalendar {
+
+    var accountTitle: String {
+        switch source.sourceType {
+        case .local, .subscribed, .birthdays:
+            Strings.Calendars.Source.others
+        default:
+            source.title
+        }
+    }
+}
+
 private extension CalendarModel {
 
     init(from calendar: EKCalendar) {
         self.init(
             id: calendar.calendarIdentifier,
-            account: calendar.source.title,
+            account: calendar.accountTitle,
             title: calendar.title,
-            color: calendar.color
+            color: calendar.color,
+            isSubscribed: calendar.isSubscribed || calendar.isDelegate
         )
     }
 }
@@ -452,10 +463,30 @@ private extension Array where Element == Participant {
     }
 }
 
+private extension Priority {
+
+    /// 1-4 are considered "high," a priority of 5 is "medium," and priorities of 6-9 are "low"
+    init?(from p: Int) {
+        switch p {
+        case 1...4:
+            self = .high
+        case 5:
+            self = .medium
+        case 6...9:
+            self = .low
+        default:
+            return nil
+        }
+    }
+}
+
 private extension EventModel {
 
     init?(from event: EKEvent, dateProvider: DateProviding) {
-        guard let calendar = event.calendar else { return nil }
+        guard
+            let calendar = event.calendar
+        else { return nil }
+
         self.init(
             id: event.calendarItemIdentifier,
             start: event.startDate,
@@ -470,7 +501,9 @@ private extension EventModel {
             calendar: .init(from: calendar),
             participants: .init(from: event),
             timeZone: calendar.isSubscribed || calendar.isDelegate ? nil : event.timeZone,
-            hasRecurrenceRules: event.hasRecurrenceRules || event.isDetached
+            hasRecurrenceRules: event.hasRecurrenceRules || event.isDetached,
+            priority: nil,
+            attachments: event.attachments
         )
     }
 
@@ -480,7 +513,7 @@ private extension EventModel {
             let dueDateComponents = reminder.dueDateComponents,
             let date = dateProvider.calendar.date(from: dueDateComponents)
         else { return nil }
-        
+
         self.init(
             id: reminder.calendarItemIdentifier,
             start: date,
@@ -495,7 +528,9 @@ private extension EventModel {
             calendar: .init(from: calendar),
             participants: [],
             timeZone: calendar.isSubscribed || calendar.isDelegate ? nil : reminder.timeZone,
-            hasRecurrenceRules: reminder.hasRecurrenceRules
+            hasRecurrenceRules: reminder.hasRecurrenceRules,
+            priority: .init(from: reminder.priority),
+            attachments: reminder.attachments // doesn't work
         )
     }
 }

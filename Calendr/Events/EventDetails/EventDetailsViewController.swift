@@ -15,7 +15,6 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
     private let disposeBag = DisposeBag()
 
     private let scrollView = NSScrollView()
-    private let eventTypeIcon = NSImageView()
     private let browserDropdown = Dropdown()
     private let contentStackView = NSStackView(.vertical)
     private let participantsStackView = NSStackView(.vertical)
@@ -28,17 +27,18 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
     private let locationLabel = Label()
     private let durationLabel = Label()
     private let notesTextView = NSTextView()
+    private let meetingInfoTextView = NSTextView()
+    private let meetingInfoScrollView = NSScrollView()
 
+    private let openButton = NSButton()
     private let skipButton = NSButton()
-
-    private let optionsLabel = Label()
     private let optionsButton = NSButton()
-
-    private var hasFooter = false
 
     private let viewModel: EventDetailsViewModel
     
     private lazy var notesHeightConstraint = notesTextView.height(equalTo: 0)
+    private lazy var meetingInfoHeightConstraint = meetingInfoTextView.height(equalTo: 0)
+    private lazy var meetingInfoScrollViewHeightConstraint = meetingInfoScrollView.contentView.height(lessThanOrEqualTo: 150)
 
     init(viewModel: EventDetailsViewModel) {
 
@@ -78,9 +78,6 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         scrollView.scrollerStyle = .overlay
         scrollView.drawsBackground = false
         scrollView.documentView = detailsStackView.forAutoLayout()
-        detailsStackView.edgeInsets = .init(horizontal: 12)
-        detailsStackView.setHuggingPriority(.required, for: .horizontal)
-
         scrollView.contentView.edges(equalTo: scrollView)
         scrollView.contentView.top(equalTo: detailsStackView)
         scrollView.contentView.leading(equalTo: detailsStackView)
@@ -88,8 +85,11 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         scrollView.contentView.height(equalTo: detailsStackView, priority: .dragThatCanResizeWindow)
         scrollView.contentView.height(lessThanOrEqualTo: 0.8 * NSScreen.main!.visibleFrame.height)
 
+        detailsStackView.edgeInsets = .init(horizontal: 12)
+        detailsStackView.setHuggingPriority(.required, for: .horizontal)
+
         contentStackView.addArrangedSubview(scrollView)
-        contentStackView.spacing = 16
+        contentStackView.spacing = 8
         contentStackView.setHuggingPriority(.required, for: .vertical)
 
         detailsStackView.setHuggingPriority(.required, for: .vertical)
@@ -98,9 +98,19 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
 
         contentStackView.edges(equalTo: view, margins: .init(vertical: 12))
 
-        setUpIcon()
+        meetingInfoScrollView.hasVerticalScroller = true
+        meetingInfoScrollView.scrollerStyle = .overlay
+        meetingInfoScrollView.drawsBackground = false
+        meetingInfoScrollView.documentView = meetingInfoTextView.forAutoLayout()
+        meetingInfoScrollView.contentView.edges(equalTo: meetingInfoScrollView)
+        meetingInfoScrollView.contentView.top(equalTo: meetingInfoTextView)
+        meetingInfoScrollView.contentView.leading(equalTo: meetingInfoTextView)
+        meetingInfoScrollView.contentView.trailing(equalTo: meetingInfoTextView, constant: 10)
+        meetingInfoScrollView.contentView.height(equalTo: meetingInfoTextView, priority: .defaultHigh)
+
         setUpBrowser()
         setUpLink()
+        setUpOpen()
         setUpSkip()
         setUpOptions()
         setUpLabels()
@@ -108,26 +118,8 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         addInformation()
         addParticipants()
         addNotes()
+        addAttachments()
         addFooter()
-    }
-
-    private func setUpIcon() {
-
-        switch viewModel.type {
-        case .event:
-            eventTypeIcon.isHidden = true
-            return
-
-        case .birthday:
-            eventTypeIcon.image = Icons.Event.birthday
-            eventTypeIcon.contentTintColor = .systemRed
-
-        case .reminder:
-            eventTypeIcon.image = Icons.Event.reminder.with(pointSize: 12)
-            eventTypeIcon.contentTintColor = .headerTextColor
-        }
-
-        eventTypeIcon.setContentCompressionResistancePriority(.required, for: .horizontal)
     }
 
     private func setUpBrowser() {
@@ -196,6 +188,15 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
             .disposed(by: disposeBag)
     }
 
+    private func setUpOpen() {
+
+        addOpenButton()
+
+        openButton.rx.tap
+            .bind(to: viewModel.openTapped)
+            .disposed(by: disposeBag)
+    }
+
     private func setUpSkip() {
         guard viewModel.showSkip else { return }
 
@@ -213,16 +214,16 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         switch viewModel.type {
 
         case .event(.accepted):
-            addEventStatusButton(icon: Icons.EventStatus.accepted, color: .systemGreen, title: Strings.EventStatus.accepted)
+            addEventStatusButton(icon: Icons.EventStatus.accepted, color: .systemGreen, title: Strings.Event.Status.accepted)
 
         case .event(.maybe):
-            addEventStatusButton(icon: Icons.EventStatus.maybe, color: .systemOrange, title: Strings.EventStatus.maybe)
+            addEventStatusButton(icon: Icons.EventStatus.maybe, color: .systemOrange, title: Strings.Event.Status.maybe)
 
         case .event(.pending):
-            addEventStatusButton(icon: Icons.EventStatus.pending, color: .systemGray, title: Strings.EventStatus.pending)
+            addEventStatusButton(icon: Icons.EventStatus.pending, color: .systemGray, title: Strings.Event.Status.pending)
 
         case .event(.declined):
-            addEventStatusButton(icon: Icons.EventStatus.declined, color: .systemRed, title: Strings.EventStatus.declined)
+            addEventStatusButton(icon: Icons.EventStatus.declined, color: .systemRed, title: Strings.Event.Status.declined)
 
         case .reminder:
             addReminderOptionsButton()
@@ -255,56 +256,101 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         button.setContentCompressionResistancePriority(.required, for: .vertical)
     }
 
-    private func addSkipButton() {
-        hasFooter = true
+    private func addAttachments() {
+        guard !viewModel.attachments.isEmpty else { return }
+        detailsStackView.addArrangedSubview(makeLine())
 
-        skipButton.title = Strings.EventAction.skip
+        let formatter = ByteCountFormatter()
+
+        for attachment in viewModel.attachments {
+            let button = NSButton()
+            button.refusesFirstResponder = true
+            button.imagePosition = .imageLeading
+            button.showsBorderOnlyWhileMouseInside = true
+            button.bezelStyle = .accessoryBar
+            button.contentTintColor = .labelColor
+            button.title = attachment.fileName
+            button.image = Icons.Event.attachment.with(scale: .small)
+            button.rx.tap.map(attachment)
+                .bind(to: viewModel.openAttachment)
+                .disposed(by: disposeBag)
+
+            button.setContentCompressionResistancePriority(.required, for: .vertical)
+
+            let stack = NSStackView(views: [button, .spacer])
+
+            if let fileSize = attachment.fileSize?.int64Value {
+                let sizeLabel = Label(
+                    text: formatter.string(fromByteCount: fileSize),
+                    font: .systemFont(ofSize: 11)
+                )
+                sizeLabel.setContentHuggingPriority(.required, for: .horizontal)
+                stack.addArrangedSubview(sizeLabel)
+            }
+
+            detailsStackView.addArrangedSubview(stack)
+        }
+    }
+
+    private func addOpenButton() {
+
+        openButton.title = Strings.Event.Action.open
+
+        setButtonStyle(openButton)
+
+        footerStackView.addArrangedSubview(openButton)
+    }
+
+    private func addSkipButton() {
+
+        skipButton.title = Strings.Event.Action.skip
         skipButton.image = Icons.Event.skip.with(scale: .small)
         skipButton.imagePosition = .imageTrailing
 
         setButtonStyle(skipButton)
 
-        footerStackView.addArrangedSubview(skipButton)
         footerStackView.addArrangedSubview(.spacer)
+        footerStackView.addArrangedSubview(skipButton)
     }
 
     private func addReminderOptionsButton() {
-        hasFooter = true
 
         optionsButton.title = Strings.Reminder.Options.button
         optionsButton.image = Icons.EventDetails.optionsArrow.with(scale: .small)
         optionsButton.imagePosition = .imageTrailing
 
-        setButtonStyle(optionsButton)
-
-        footerStackView.addArrangedSubview(.spacer)
-        footerStackView.addArrangedSubview(optionsButton)
+        addOptionsButton()
     }
 
     private func addEventStatusButton(icon: NSImage, color: NSColor, title: String) {
-        hasFooter = true
-
-        optionsLabel.stringValue = Strings.EventStatus.label
-        optionsLabel.textColor = .secondaryLabelColor
-        optionsLabel.setContentHuggingPriority(.required, for: .vertical)
-        optionsLabel.setContentCompressionResistancePriority(.required, for: .vertical)
 
         optionsButton.image = icon.with(color: color)
         optionsButton.title = title
         optionsButton.imagePosition = .imageLeading
+        optionsButton.showsBorderOnlyWhileMouseInside = true
+
+        addOptionsButton()
+    }
+
+    private func addOptionsButton() {
 
         setButtonStyle(optionsButton)
 
-        optionsButton.showsBorderOnlyWhileMouseInside = true
-
-        footerStackView.addArrangedSubview(.spacer)
-        footerStackView.addArrangedSubview(optionsLabel)
+        footerStackView.addArrangedSubview(
+            .spacer.with { $0.width(equalTo: 999, priority: .fittingSizeCompression) }
+        )
         footerStackView.addArrangedSubview(optionsButton)
     }
 
     private func addFooter() {
-        guard hasFooter else { return }
 
+        detailsStackView.addArrangedSubview(makeLine())
+
+        if footerStackView.arrangedSubviews.count == 1 {
+            footerStackView.insertArrangedSubview(.spacer, at: 0)
+        }
+
+        footerStackView.spacing = 4
         footerStackView.alignment = .centerY
         footerStackView.edgeInsets = .init(horizontal: 12)
         footerStackView.setHuggingPriority(.defaultHigh, for: .vertical)
@@ -330,16 +376,18 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         urlLabel.font = .small
         durationLabel.font = .default
 
-        notesTextView.textColor = .labelColor
-        notesTextView.isSelectable = true
-        notesTextView.drawsBackground = false
-        notesTextView.isAutomaticLinkDetectionEnabled = true
-        notesTextView.textContainer?.lineFragmentPadding = .zero
+        for textView in [notesTextView, meetingInfoTextView] {
+            textView.textColor = .labelColor
+            textView.isSelectable = true
+            textView.drawsBackground = false
+            textView.isAutomaticLinkDetectionEnabled = true
+            textView.textContainer?.lineFragmentPadding = .zero
+        }
     }
 
     private func addInformation() {
 
-        let titleStack = NSStackView(views: [titleLabel, eventTypeIcon, linkBtn]).with(alignment: .firstBaseline)
+        let titleStack = NSStackView(views: [titleLabel, linkBtn]).with(alignment: .firstBaseline)
         titleStack.setHuggingPriority(.required, for: .vertical)
 
         if !viewModel.title.isEmpty {
@@ -361,7 +409,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
             locationLabel.stringValue = viewModel.location
             detailsStackView.addArrangedSubview(makeLine())
 
-            if viewModel.canShowMap.value {
+            if viewModel.canShowMap.current {
                 let weatherContainer = NSView().with(size: CGSize(width: 30, height: 26))
 
                 let locationStack = NSStackView(.horizontal).with(alignment: .centerY)
@@ -488,26 +536,56 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
     }
 
     private func addNotes() {
+        addNotes(from: viewModel.notes, to: notesTextView, font: .scaled(.default))
+        addNotes(from: viewModel.meetingInfo, to: meetingInfoTextView, font: .scaled(.small), scrollView: meetingInfoScrollView)
 
-        guard !viewModel.notes.isEmpty else { return }
-        let notes = viewModel.notes
+        meetingInfoScrollViewHeightConstraint.isActive = !(viewModel.notes?.isEmpty ?? true)
+    }
 
-        if ["<", ">"].allSatisfy(notes.contains), let html = notes.html(font: .scaled(.default), color: .labelColor) {
-            notesTextView.textStorage?.setAttributedString(html)
+    private func addNotes(from notes: String?, to textView: NSTextView, font: NSFont, scrollView: NSScrollView? = nil) {
+        guard let notes, !notes.isEmpty else { return }
+
+        if ["<", ">"].allSatisfy(notes.contains), let html = notes.html(font: font, color: .labelColor) {
+            textView.textStorage?.setAttributedString(html)
         } else {
-            notesTextView.font = .scaled(.default)
-            notesTextView.string = notes
+            textView.font = font
+            textView.string = notes
         }
-        notesTextView.checkTextInDocument(nil)
-        notesTextView.isEditable = false
+        textView.checkTextInDocument(nil)
+        textView.isEditable = false // has to be after check text
 
         detailsStackView.addArrangedSubview(makeLine())
-        detailsStackView.addArrangedSubview(notesTextView)
+        if let scrollView {
+            detailsStackView.addArrangedSubview(scrollView)
+        } else {
+            detailsStackView.addArrangedSubview(textView)
+        }
     }
 
     override func viewDidLayout() {
         super.viewDidLayout()
         notesHeightConstraint.constant = notesTextView.contentSize.height
+        meetingInfoHeightConstraint.constant = meetingInfoTextView.contentSize.height
+
+        notesTextView.scrollTop()
+        meetingInfoTextView.scrollTop()
+        participantsStackView.scrollTop()
+    }
+
+    override func viewWillAppear() {
+        super.viewWillAppear()
+
+        notesTextView.hideVerticalScroller()
+        meetingInfoTextView.hideVerticalScroller()
+        participantsStackView.hideVerticalScroller()
+    }
+
+    override func viewDidAppear() {
+        super.viewDidAppear()
+
+        notesTextView.showVerticalScroller()
+        meetingInfoTextView.showVerticalScroller()
+        participantsStackView.showVerticalScroller()
     }
 
     private func addParticipants() {
@@ -521,11 +599,11 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
             var info: String = participant.name
 
             if participant.isOrganizer {
-                info += " (\(Strings.EventDetails.Participant.organizer))"
+                info += " (\(Strings.Event.Details.Participant.organizer))"
             }
 
             if participant.isCurrentUser {
-                info += " (\(Strings.EventDetails.Participant.me))"
+                info += " (\(Strings.Event.Details.Participant.me))"
             }
 
             let label = Label(text: info, font: .small)
@@ -557,25 +635,27 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
             participantsStackView.addArrangedSubview(stack)
         }
 
+        participantsStackView.edgeInsets = .init(vertical: 8)
+
         let scrollView = NSScrollView()
-        detailsStackView.addArrangedSubview(makeLine())
+        let line = makeLine()
+        detailsStackView.addArrangedSubview(line)
         detailsStackView.addArrangedSubview(scrollView)
+        detailsStackView.setCustomSpacing(0, after: line)
+        detailsStackView.setCustomSpacing(0, after: scrollView)
 
         scrollView.hasVerticalScroller = true
-        scrollView.scrollerStyle = .legacy
+        scrollView.scrollerStyle = .overlay
         scrollView.drawsBackground = false
         scrollView.documentView = participantsStackView.forAutoLayout()
         scrollView.contentView.edges(equalTo: scrollView)
-        scrollView.contentView.width(equalTo: participantsStackView, constant: 20)
+        scrollView.contentView.top(equalTo: participantsStackView)
+        scrollView.contentView.leading(equalTo: participantsStackView)
+        scrollView.contentView.trailing(equalTo: participantsStackView, constant: 12)
         scrollView.contentView.height(equalTo: participantsStackView, priority: .defaultHigh)
-        scrollView.contentView.heightAnchor.constraint(lessThanOrEqualToConstant: 222).activate()
+        scrollView.contentView.height(lessThanOrEqualTo: 222)
 
         participantsStackView.setHuggingPriority(.required, for: .vertical)
-
-        DispatchQueue.main.async {
-            self.participantsStackView.layoutSubtreeIfNeeded()
-            self.participantsStackView.scrollTop()
-        }
     }
 
     private func setUpBindings() {
@@ -640,5 +720,20 @@ private extension NSFont {
 
     static func scaled(_ font: NSFont) -> NSFont {
         font.withSize(font.pointSize * Scaling.current)
+    }
+}
+
+private extension NSView {
+
+    func hideVerticalScroller() {
+        guard let enclosingScrollView else { return }
+        enclosingScrollView.hasVerticalScroller = false
+    }
+
+    func showVerticalScroller() {
+        guard let enclosingScrollView else { return }
+        enclosingScrollView.hasVerticalScroller = true
+        enclosingScrollView.reflectScrolledClipView(enclosingScrollView.contentView)
+        enclosingScrollView.flashScrollers()
     }
 }

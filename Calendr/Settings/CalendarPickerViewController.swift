@@ -84,8 +84,20 @@ class CalendarPickerViewController: NSViewController {
 
                 itemsDisposeBag = DisposeBag()
 
+                func isOther(_ account: String) -> Bool {
+                    account == Strings.Calendars.Source.others
+                }
+
                 return Dictionary(grouping: calendars, by: { $0.account })
-                    .sorted(by: \.key.localizedLowercase)
+                    .sorted {
+                        if isOther($0.key) && !isOther($1.key) {
+                            return false // $0 is Other, so it should go down
+                        }
+                        if !isOther($0.key) && isOther($1.key) {
+                            return true // $1 is Other, so it should go down
+                        }
+                        return $0.key.localizedLowercase < $1.key.localizedLowercase // Otherwise, sort by name
+                    }
                     .map { account, calendars in
                         self.makeCalendarSection(
                             title: account,
@@ -107,15 +119,19 @@ class CalendarPickerViewController: NSViewController {
             views: [
                 [label],
                 calendars.compactMap {
-                    NSStackView(
+                    let calendarItem = makeCalendarItem($0)
+                    return NSStackView(
                         views: [
                             .dummy,
-                            makeCalendarItemEnabled($0),
+                            calendarItem,
+                            $0.isSubscribed ? makeCalendarItemSubscribedIcon() : nil,
+                            .spacer,
                             showNextEvent ? makeCalendarItemNextEvent($0) : nil
                         ]
                         .compact()
                     )
                     .with(alignment: .centerY)
+                    .with(spacing: 0, after: calendarItem)
                 }
             ].flatten()
         ).with(orientation: .vertical)
@@ -139,9 +155,11 @@ class CalendarPickerViewController: NSViewController {
             .disposed(by: itemsDisposeBag)
     }
 
-    private func makeCalendarItemEnabled(_ calendar: CalendarModel) -> NSView {
+    private func makeCalendarItem(_ calendar: CalendarModel) -> NSView {
 
         let checkbox = Checkbox(title: calendar.title)
+        checkbox.setContentHuggingPriority(.required, for: .horizontal)
+        checkbox.setContentCompressionResistancePriority(.required, for: .horizontal)
 
         Scaling.observable.bind {
             checkbox.setTitleColor(color: calendar.color, font: .systemFont(ofSize: 13 * $0))
@@ -158,10 +176,16 @@ class CalendarPickerViewController: NSViewController {
         return checkbox
     }
 
+    private func makeCalendarItemSubscribedIcon() -> NSView {
+        let imageView = NSImageView(image: Icons.CalendarPicker.subscribed.with(scale: .small))
+        imageView.contentTintColor = .secondaryLabelColor
+        return imageView
+    }
+
     private func makeCalendarItemNextEvent(_ calendar: CalendarModel) -> NSView {
 
-        let selectedIcon = Icons.CalendarPicker.nextEventSelected.with(pointSize: 11)
-        let unselectedIcon = Icons.CalendarPicker.nextEventUnselected.with(pointSize: 11)
+        let selectedIcon = Icons.CalendarPicker.nextEventEnabled.with(pointSize: 11)
+        let unselectedIcon = Icons.CalendarPicker.nextEventSilenced.with(pointSize: 11)
         let button = ImageButton()
         button.setButtonType(.toggle)
 

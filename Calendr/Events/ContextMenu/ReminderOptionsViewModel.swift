@@ -29,7 +29,10 @@ class ReminderOptionsViewModel: BaseContextMenuViewModel<ReminderAction> {
         source: ContextMenuSource,
         callback: AnyObserver<ReminderAction>
     ) {
-        guard event.type == .reminder(completed: false) else { return nil }
+        guard
+            case .reminder(let completed) = event.type,
+            source == .list || !completed
+        else { return nil }
 
         self.event = event
         self.dateProvider = dateProvider
@@ -41,6 +44,8 @@ class ReminderOptionsViewModel: BaseContextMenuViewModel<ReminderAction> {
         if [.list, .menubar].contains(source) {
             addItem(.open)
         }
+
+        guard !completed else { return }
 
         addSeparator()
         addItem(.complete(event.calendar.color))
@@ -59,14 +64,19 @@ class ReminderOptionsViewModel: BaseContextMenuViewModel<ReminderAction> {
 
         switch action {
         case .open:
-            workspace.open(URL(string: "x-apple-reminderkit://remcdreminder/\(event.id)")!)
+            workspace.open(event)
             return .empty()
 
         case .complete:
             return calendarService.completeReminder(id: event.id, complete: true)
 
         case .remind(let dateComponents):
-            let date = dateProvider.calendar.date(byAdding: dateComponents, to: dateProvider.now)!
+            guard
+                let truncated = dateProvider.calendar.dateInterval(of: .minute, for: dateProvider.now)?.start,
+                let date = dateProvider.calendar.date(byAdding: dateComponents, to: truncated)
+            else {
+                return .empty()
+            }
             return calendarService.rescheduleReminder(id: event.id, to: date)
         }
     }
@@ -97,7 +107,7 @@ extension ReminderAction: ContextMenuAction {
     var title: String {
         switch self {
         case .open:
-            return Strings.EventAction.open
+            return Strings.Event.Action.open
         case .complete:
             return Strings.Reminder.Options.complete
         case .remind(let dateComponents):

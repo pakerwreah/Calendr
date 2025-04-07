@@ -8,23 +8,25 @@
 "quit" = "Ukončit";
 "search" = "Hledat";
 
-//"access_required.calendars" = "Calendar pending 'Full access' authorization";
-//"access_required.reminders" = "Reminders pending authorization";
-//"access_required.open_settings" = "Open Settings";
-//"access_required.cancel" = "Cancel";
+"access_required.calendars" = "Kalendář čeká na autorizaci 'Úplný přístup'";
+"access_required.reminders" = "Připomínky čekající na autorizaci";
+"access_required.open_settings" = "Otevřít nastavení";
+"access_required.cancel" = "Zrušit";
 
-//"auto_update.check_for_updates" = "Check for updates";
-//"auto_update.fetching_releases" = "Fetching releases";
+"auto_update.check_for_updates" = "Zkontrolujte aktualizace";
+"auto_update.fetching_releases" = "Získávání verzí";
 "auto_update.new_version" = "Nová verze k dispozici: %@";
-//"auto_update.updated_to" = "Updated to version %@";
-//"auto_update.downloading" = "Downloading version %@";
-//"auto_update.install" = "Install";
-//"auto_update.replace.title" = "Please don't change anything";
-//"auto_update.replace.message" = "Confirm the app location so we have permission to replace it";
+"auto_update.updated_to" = "Aktualizováno na verzi %@";
+"auto_update.downloading" = "Stahování verze %@";
+"auto_update.install" = "Instalace";
+"auto_update.replace.message" = "Potvrzení umístění aplikace, abychom měli oprávnění ji nahradit";
+
+//"attachments.open.message" = "Calendr needs permission to access your attachments";
+//"attachments.open.authorize" = "Authorize access to Attachments";
 
 "settings.title" = "Předvolby";
 "settings.tab.general" = "Obecné";
-//"settings.tab.appearance" = "Appearance";
+"settings.tab.appearance" = "Vzhled";
 "settings.tab.calendars" = "Kalendáře";
 "settings.tab.keyboard" = "Zkratky";
 "settings.tab.about" = "O aplikaci";
@@ -33,13 +35,14 @@
 "settings.menu_bar.auto_launch" = "Spustit při přihlášení";
 "settings.menu_bar.show_icon" = "Zobrazit ikonu";
 "settings.menu_bar.show_date" = "Zobrazit datum";
-"settings.menu_bar.show_icon_date" = "Zobrazit datum v ikoně";
 "settings.menu_bar.show_background" = "Zobrazit neprůhledné pozadí";
 "settings.menu_bar.date_format_custom" = "Vlastní";
 
 "settings.next_event" = "Další událost";
 "settings.next_event.show_next_event" = "Zobrazit další událost";
-"settings.next_event.font_size" = "Velikost písma";
+"settings.next_event.grab_attention" = "Upoutejte pozornost, když je událost blízko";
+"settings.next_event.grab_attention.flashing" = "Blikání";
+"settings.next_event.grab_attention.sound" = "Přehrát zvuk";
 "settings.next_event.detect_notch" = "Zkrátit, pokud je 'výřez' přítomen";
 
 "settings.calendar" = "Kalendář";
@@ -47,17 +50,18 @@
 "settings.calendar.preserve_selected_date" = "Zachovat vybrané datum při skrytí";
 "settings.calendar.show_declined_events" = "Zobrazit odmítnuté události";
 "settings.calendar.show_declined_events_tooltip" = "Funguje pouze tehdy, pokud je také zapnuto v nativní aplikaci Kalendář.";
-//"settings.calendar.date_hover_option" = "Hold ⌥ to peek at hovered dates";
-//"settings.calendar.calendar_app_view_mode" = "Calendar app view";
+"settings.calendar.date_hover_option" = "Podržením ⌥ se můžete podívat na data, na která se vznášíte";
+"settings.calendar.calendar_app_view_mode" = "Zobrazení aplikace Kalendář";
 
 "settings.events" = "Události";
-//"settings.events.show_map" = "Show map and weather";
-//"settings.events.show_overdue_reminders" = "Show overdue reminders";
-//"settings.events.show_finished_events" = "Show finished events";
-//"settings.events.show_recurrence_indicator" = "Show recurrence indicator";
+"settings.events.show_map" = "Zobrazit mapu a počasí";
+"settings.events.show_overdue_reminders" = "Zobrazení upomínek za zpoždění";
+"settings.events.show_finished_events" = "Zobrazit dokončené události";
+"settings.events.show_recurrence_indicator" = "Zobrazit indikátor opakování";
+"settings.events.force_local_time_zone" = "Zobrazit všechny události v místním časovém pásmu";
 
 "settings.appearance.transparency" = "Průhlednost";
-//"settings.appearance.accessibility" = "Accessibility";
+"settings.appearance.accessibility" = "Přístupnost";
 
 "settings.keyboard.local_shortcuts.title" = "Místní zkratky";
 "settings.keyboard.local_shortcuts.prev_date" = "Předchozí datum";
@@ -77,29 +81,41 @@
 "settings.keyboard.global_shortcuts.open_next_reminder" = "Otevřít další připomínku";
 "settings.keyboard.global_shortcuts.open_next_reminder_options" = "Možnosti další připomínky";
 
-"formatter.date.all_day" = "Celý den";
 "formatter.date.today" = "Dnes";
 "formatter.date.relative.in" = "za %@";
 "formatter.date.relative.ago" = "před %@";
 "formatter.date.relative.left" = "zbývá %@";
 
+//"reminder.status.overdue" = "Overdue";
+
 "reminder.options.button" = "Možnosti";
 "reminder.options.complete" = "Dokončit";
 "reminder.options.remind" = "Připomenout %@";
 
-"event_details.participant.organizer" = "pořadatel";
-"event_details.participant.me" = "já";
+"event.details.participant.organizer" = "pořadatel";
+"event.details.participant.me" = "já";
 
-"event_status.label" = "můj stav:";
+"event.all_day" = "Celý den";
 
-"event_status.accepted" = "Přijato";
-"event_status.maybe" = "Možná";
-"event_status.declined" = "Odmítnuto";
-"event_status.pending" = "Čeká";
+"event.status.accepted" = "Přijato";
+"event.status.maybe" = "Možná";
+"event.status.declined" = "Odmítnuto";
+"event.status.pending" = "Čeká";
 
-"event_action.open" = "Otevřít";
-"event_action.join" = "Připojit se";
-"event_action.skip" = "Přeskočit";
-"event_action.accept" = "Přijmout";
-"event_action.maybe" = "Možná";
-"event_action.decline" = "Odmítnout";
+"event.action.open" = "Otevřít";
+"event.action.join" = "Připojit se";
+"event.action.skip" = "Přeskočit";
+"event.action.accept" = "Přijmout";
+"event.action.maybe" = "Možná";
+"event.action.decline" = "Odmítnout";
+
+"tooltips.navigation.prev_month" = "Předchozí měsíc";
+"tooltips.navigation.today" = "Dnes";
+"tooltips.navigation.next_month" = "Příští měsíc";
+
+"tooltips.toolbar.stay_open" = "Zůstaňte otevření";
+"tooltips.toolbar.open_calendar" = "Otevřený kalendář";
+"tooltips.toolbar.open_reminders" = "Otevřené připomenutí";
+"tooltips.toolbar.open_menu" = "Otevřít nabídku";
+
+"calendars.source.others" = "Ostatní";

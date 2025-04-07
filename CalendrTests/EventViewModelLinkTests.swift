@@ -165,6 +165,30 @@ class EventViewModelLinkTests: XCTestCase {
         XCTAssertEqual(link.url.absoluteString, httpLink)
     }
 
+    func testLink_withWebexMeetingURL() throws {
+
+        let httpLink = "https://mycompany.webex.com/mycompany/j.php?MTID=12345"
+
+        let viewModel = mock(event: .make(location: httpLink))
+
+        let link = try XCTUnwrap(viewModel.link)
+
+        XCTAssertTrue(link.isMeeting)
+        XCTAssertEqual(link.url.absoluteString, httpLink)
+    }
+
+    func testLink_withWebexPersonalURL() throws {
+
+        let httpLink = "https://mycompany.webex.com/meet/name"
+
+        let viewModel = mock(event: .make(location: httpLink))
+
+        let link = try XCTUnwrap(viewModel.link)
+
+        XCTAssertTrue(link.isMeeting)
+        XCTAssertEqual(link.url.absoluteString, httpLink)
+    }
+
     func mock(event: EventModel) -> EventViewModel {
 
         EventViewModel(

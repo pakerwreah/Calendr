@@ -15,14 +15,16 @@ extension CalendarModel {
         id: String = "",
         account: String = "",
         title: String = "",
-        color: NSColor = .clear
+        color: NSColor = .clear,
+        isSubscribed: Bool = false
     ) -> CalendarModel {
 
         .init(
             id: id,
             account: account,
             title: title,
-            color: color
+            color: color,
+            isSubscribed: isSubscribed
         )
     }
 }

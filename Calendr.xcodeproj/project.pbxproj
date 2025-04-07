@@ -23,7 +23,7 @@
 		3421930827999FB7002BCD36 /* TimeZone+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3421930727999FB7002BCD36 /* TimeZone+Factory.swift */; };
 		3421AD3D25BA1D0800A4F468 /* SettingsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3421AD3C25BA1D0800A4F468 /* SettingsViewModelTests.swift */; };
 		3421DA0E2693E35000056837 /* EventListViewPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3421DA0D2693E35000056837 /* EventListViewPreview.swift */; };
-		3421DA122693E70E00056837 /* MockEventDetailsSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3421DA112693E70E00056837 /* MockEventDetailsSettings.swift */; };
+		3421DA122693E70E00056837 /* MockEventSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3421DA112693E70E00056837 /* MockEventSettings.swift */; };
 		3421DA142693E75A00056837 /* MockCalendarServiceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3421DA132693E75A00056837 /* MockCalendarServiceProvider.swift */; };
 		3421DA162693EDEB00056837 /* MockCalendarSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3421DA152693EDEB00056837 /* MockCalendarSettings.swift */; };
 		3421DA182693EEBD00056837 /* MockDateProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3421DA172693EEBD00056837 /* MockDateProvider.swift */; };
@@ -58,6 +58,7 @@
 		345DD97326920D1B00294D90 /* CalendarViewPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345DD97226920D1B00294D90 /* CalendarViewPreview.swift */; };
 		345EAD4A2C8E26EE00D56857 /* MockWeatherServiceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345EAD492C8E26EE00D56857 /* MockWeatherServiceProvider.swift */; };
 		345FBD99293EA476005DD6DF /* Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345FBD98293EA476005DD6DF /* Keyboard.swift */; };
+		34650E642CE2727A000BEACF /* CalendarPickerPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34650E632CE2727A000BEACF /* CalendarPickerPreview.swift */; };
 		34651F1525E1BB8400518C5A /* Strings.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34651F1425E1BB8400518C5A /* Strings.generated.swift */; };
 		34651F2F25E1C99900518C5A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 34651F2C25E1C99900518C5A /* Localizable.strings */; };
 		34651F5425E22A3900518C5A /* DateIntervalFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34651F5325E22A3900518C5A /* DateIntervalFormatter.swift */; };
@@ -76,6 +77,7 @@
 		34702150259E163000827AE7 /* CalendarModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3470214F259E163000827AE7 /* CalendarModel.swift */; };
 		34702168259E761100827AE7 /* Calendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34702167259E761100827AE7 /* Calendar.swift */; };
 		3470654B292EFCF90079C68A /* NSTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3470654A292EFCF90079C68A /* NSTextView.swift */; };
+		34711F6F2D16261800A89C72 /* MockWorkspaceServiceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34711F6E2D16261400A89C72 /* MockWorkspaceServiceProvider.swift */; };
 		3477E70C2C67A6A9008D3844 /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = 3477E70B2C67A6A9008D3844 /* Sentry */; };
 		3477E7102C67C15A008D3844 /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3477E70F2C67C15A008D3844 /* Environment.swift */; };
 		3477E7122C67C25F008D3844 /* Environment.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3477E7112C67C25F008D3844 /* Environment.generated.swift */; };
@@ -84,6 +86,8 @@
 		3477F3DA25FD44C1008EA888 /* MockEventListSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3477F3D925FD44C1008EA888 /* MockEventListSettings.swift */; };
 		3477F3E425FD5285008EA888 /* NSView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3477F3E325FD5285008EA888 /* NSView+Rx.swift */; };
 		3477F3E825FD52AA008EA888 /* NSViewController+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3477F3E725FD52AA008EA888 /* NSViewController+Rx.swift */; };
+		347C04A12D13691100F67E7C /* NSControl+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 347C04A02D13691100F67E7C /* NSControl+Rx.swift */; };
+		347C04A32D136BF800F67E7C /* SearchSuggestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 347C04A22D136BF400F67E7C /* SearchSuggestionView.swift */; };
 		347D0F9825952F89002451EC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 347D0F9725952F89002451EC /* AppDelegate.swift */; };
 		347D0F9A25952F8A002451EC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 347D0F9925952F8A002451EC /* Images.xcassets */; };
 		347D0FDF259533C3002451EC /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 347D0FDE259533C3002451EC /* CalendarView.swift */; };
@@ -99,6 +103,8 @@
 		3487A43825E706F800FCC7D7 /* NextEventViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3487A43725E706F800FCC7D7 /* NextEventViewModel.swift */; };
 		3487A43C25E70F5B00FCC7D7 /* NextEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3487A43B25E70F5B00FCC7D7 /* NextEventView.swift */; };
 		348B8D0425B2925100E518FE /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348B8D0325B2925100E518FE /* SettingsViewModel.swift */; };
+		348CF5012D13971100B9BFE0 /* DateSearchParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348CF5002D13970600B9BFE0 /* DateSearchParser.swift */; };
+		348CF5032D1398FA00B9BFE0 /* DateSearchParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348CF5022D1398F600B9BFE0 /* DateSearchParserTests.swift */; };
 		348D693D29ABDD91009F1882 /* CalendarScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348D693C29ABDD91009F1882 /* CalendarScript.swift */; };
 		348D694029ABF29C009F1882 /* AppleScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348D693F29ABF29C009F1882 /* AppleScript.swift */; };
 		348E701F25C43C5200B3B160 /* WeekDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348E701E25C43C5200B3B160 /* WeekDay.swift */; };
@@ -122,6 +128,7 @@
 		349355B225BCB07B00957945 /* EventViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349355B125BCB07B00957945 /* EventViewModel.swift */; };
 		349868E62C8D4E5E00DBFE8D /* HorizontalScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349868E52C8D4E5E00DBFE8D /* HorizontalScrollView.swift */; };
 		349E4CEF25CF48ED00A6FC18 /* VirtualTimeScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349E4CEE25CF48ED00A6FC18 /* VirtualTimeScheduler.swift */; };
+		34A0E12D2CDE9609005BF256 /* MockSoundPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C39F6E2CD6B45300933E6D /* MockSoundPlayer.swift */; };
 		34A4C3E925963FB200D0F949 /* NSStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A4C3E825963FB200D0F949 /* NSStackView.swift */; };
 		34A591E42C175BBD00DE419D /* AppEditShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A591E32C175BBD00DE419D /* AppEditShortcuts.swift */; };
 		34A591E62C175C0F00DE419D /* AppResignFocus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A591E52C175C0F00DE419D /* AppResignFocus.swift */; };
@@ -135,16 +142,17 @@
 		34ABB9F229A2AFA30021F3CF /* CursorButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34ABB9F129A2AFA30021F3CF /* CursorButton.swift */; };
 		34AC60C626925FA5005312B6 /* PreviewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34AC60C526925FA5005312B6 /* PreviewExtensions.swift */; };
 		34B1B3BB2CBC3730002AC38E /* MockEventSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B1B3BA2CBC3730002AC38E /* MockEventSettings.swift */; };
-		34B1B3BE2CBC3762002AC38E /* MockEventSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B1B3BD2CBC3762002AC38E /* MockEventSettings.swift */; };
 		34B1B3BF2CBC3762002AC38E /* MockAppearanceSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B1B3BC2CBC3762002AC38E /* MockAppearanceSettings.swift */; };
 		34B1C7C525EDA01F00E5CA80 /* EventIntervalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B1C7C425EDA01F00E5CA80 /* EventIntervalView.swift */; };
 		34B2C59E279FFF0600B52BF3 /* NSGestureRecognizer+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B2C59D279FFF0600B52BF3 /* NSGestureRecognizer+Rx.swift */; };
 		34B5A09325B0CE6F00F7F7ED /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B5A09225B0CE6F00F7F7ED /* SettingsViewController.swift */; };
 		34B5A09725B0F8A500F7F7ED /* NSButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B5A09625B0F8A500F7F7ED /* NSButton.swift */; };
 		34B5A09D25B118EC00F7F7ED /* CalendarPickerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B5A09C25B118EC00F7F7ED /* CalendarPickerViewModel.swift */; };
+		34B99FBB2D2C8605003D4EA4 /* EventBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B99FBA2D2C8605003D4EA4 /* EventBackground.swift */; };
 		34C1D41E2C6E567100295E5E /* ProcessInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C1D41D2C6E567100295E5E /* ProcessInfo.swift */; };
 		34C1D4212C6E632F00295E5E /* Sentry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C1D4202C6E632F00295E5E /* Sentry.swift */; };
 		34C2CF9125C2070400FC2CFF /* EventViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C2CF9025C2070400FC2CFF /* EventViewModelTests.swift */; };
+		34C39F6D2CD6A15000933E6D /* SoundPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C39F6C2CD6A15000933E6D /* SoundPlayer.swift */; };
 		34C4599C25DEFFDA00561C29 /* BuildConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C4599B25DEFFDA00561C29 /* BuildConfig.m */; };
 		34C459A425DF030000561C29 /* BuildConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C459A325DF030000561C29 /* BuildConfig.swift */; };
 		34C459BC25DF114300561C29 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C459BB25DF114300561C29 /* AboutViewController.swift */; };
@@ -164,6 +172,9 @@
 		34D88DC82C4C66F80047D636 /* KeyboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D88DC72C4C66F80047D636 /* KeyboardViewController.swift */; };
 		34D88DCA2C4C687B0047D636 /* SettingsUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D88DC92C4C687B0047D636 /* SettingsUI.swift */; };
 		34E004A725B61D5200241419 /* StatusItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E004A625B61D5200241419 /* StatusItemViewModel.swift */; };
+		34E0C4522DA2C5A100B33B27 /* Attachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E0C4512DA2C5A100B33B27 /* Attachment.swift */; };
+		34E0C4572DA2D23B00B33B27 /* KVCError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E0C4562DA2D23B00B33B27 /* KVCError.swift */; };
+		34E0C4592DA2D27100B33B27 /* ExceptionCatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E0C4582DA2D27100B33B27 /* ExceptionCatcher.m */; };
 		34E1902325B76CFE00E9491B /* CalendarPickerViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E1902225B76CFE00E9491B /* CalendarPickerViewModelTests.swift */; };
 		34E259832B659B5600074D3A /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 34E259822B659B5600074D3A /* KeyboardShortcuts */; };
 		34E5F2382C9F309E0048E25D /* AppearanceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E5F2372C9F309E0048E25D /* AppearanceViewController.swift */; };
@@ -207,6 +218,9 @@
 
 /* Begin PBXFileReference section */
 		27F573032B9F4B3B000DA607 /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/Localizable.strings; sourceTree = "<group>"; };
+		2CC85A822D50CF7800838D68 /* sq */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sq; path = sq.lproj/Localizable.strings; sourceTree = "<group>"; };
+		2CC85A832D50D9CA00838D68 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Localizable.strings; sourceTree = "<group>"; };
+		2CDDCF162D57AD36004BF510 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3408B26D26A5008700DA8429 /* SettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTests.swift; sourceTree = "<group>"; };
 		3408D13D25982DB400CF1425 /* DateSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateSelector.swift; sourceTree = "<group>"; };
 		3408F17525FAAA4B00C1EAD4 /* EventDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailsViewController.swift; sourceTree = "<group>"; };
@@ -220,7 +234,7 @@
 		3421930727999FB7002BCD36 /* TimeZone+Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TimeZone+Factory.swift"; sourceTree = "<group>"; };
 		3421AD3C25BA1D0800A4F468 /* SettingsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModelTests.swift; sourceTree = "<group>"; };
 		3421DA0D2693E35000056837 /* EventListViewPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventListViewPreview.swift; sourceTree = "<group>"; };
-		3421DA112693E70E00056837 /* MockEventDetailsSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockEventDetailsSettings.swift; sourceTree = "<group>"; };
+		3421DA112693E70E00056837 /* MockEventSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockEventSettings.swift; sourceTree = "<group>"; };
 		3421DA132693E75A00056837 /* MockCalendarServiceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCalendarServiceProvider.swift; sourceTree = "<group>"; };
 		3421DA152693EDEB00056837 /* MockCalendarSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCalendarSettings.swift; sourceTree = "<group>"; };
 		3421DA172693EEBD00056837 /* MockDateProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDateProvider.swift; sourceTree = "<group>"; };
@@ -259,6 +273,7 @@
 		345E93B92CA05DAC0048EEA4 /* SyncLocalizations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncLocalizations.swift; sourceTree = "<group>"; };
 		345EAD492C8E26EE00D56857 /* MockWeatherServiceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockWeatherServiceProvider.swift; sourceTree = "<group>"; };
 		345FBD98293EA476005DD6DF /* Keyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keyboard.swift; sourceTree = "<group>"; };
+		34650E632CE2727A000BEACF /* CalendarPickerPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPickerPreview.swift; sourceTree = "<group>"; };
 		34651EFB25E1B26800518C5A /* swiftgen.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = swiftgen.yml; sourceTree = "<group>"; };
 		34651F1425E1BB8400518C5A /* Strings.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Strings.generated.swift; sourceTree = "<group>"; };
 		34651F2D25E1C99900518C5A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -281,6 +296,7 @@
 		3470214F259E163000827AE7 /* CalendarModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarModel.swift; sourceTree = "<group>"; };
 		34702167259E761100827AE7 /* Calendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Calendar.swift; sourceTree = "<group>"; };
 		3470654A292EFCF90079C68A /* NSTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSTextView.swift; sourceTree = "<group>"; };
+		34711F6E2D16261400A89C72 /* MockWorkspaceServiceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockWorkspaceServiceProvider.swift; sourceTree = "<group>"; };
 		3477E70F2C67C15A008D3844 /* Environment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Environment.swift; sourceTree = "<group>"; };
 		3477E7112C67C25F008D3844 /* Environment.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Environment.generated.swift; sourceTree = "<group>"; };
 		3477F3CD25FAE56A008EA888 /* EventDetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailsViewModel.swift; sourceTree = "<group>"; };
@@ -288,6 +304,8 @@
 		3477F3D925FD44C1008EA888 /* MockEventListSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockEventListSettings.swift; sourceTree = "<group>"; };
 		3477F3E325FD5285008EA888 /* NSView+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSView+Rx.swift"; sourceTree = "<group>"; };
 		3477F3E725FD52AA008EA888 /* NSViewController+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSViewController+Rx.swift"; sourceTree = "<group>"; };
+		347C04A02D13691100F67E7C /* NSControl+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSControl+Rx.swift"; sourceTree = "<group>"; };
+		347C04A22D136BF400F67E7C /* SearchSuggestionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchSuggestionView.swift; sourceTree = "<group>"; };
 		347D0F9425952F89002451EC /* Calendr.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Calendr.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		347D0F9725952F89002451EC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		347D0F9925952F8A002451EC /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -308,6 +326,8 @@
 		3487A43725E706F800FCC7D7 /* NextEventViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextEventViewModel.swift; sourceTree = "<group>"; };
 		3487A43B25E70F5B00FCC7D7 /* NextEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextEventView.swift; sourceTree = "<group>"; };
 		348B8D0325B2925100E518FE /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
+		348CF5002D13970600B9BFE0 /* DateSearchParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateSearchParser.swift; sourceTree = "<group>"; };
+		348CF5022D1398F600B9BFE0 /* DateSearchParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateSearchParserTests.swift; sourceTree = "<group>"; };
 		348D693C29ABDD91009F1882 /* CalendarScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarScript.swift; sourceTree = "<group>"; };
 		348D693F29ABF29C009F1882 /* AppleScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleScript.swift; sourceTree = "<group>"; };
 		348E701E25C43C5200B3B160 /* WeekDay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekDay.swift; sourceTree = "<group>"; };
@@ -345,15 +365,17 @@
 		34AC60C526925FA5005312B6 /* PreviewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewExtensions.swift; sourceTree = "<group>"; };
 		34B1B3BA2CBC3730002AC38E /* MockEventSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockEventSettings.swift; sourceTree = "<group>"; };
 		34B1B3BC2CBC3762002AC38E /* MockAppearanceSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAppearanceSettings.swift; sourceTree = "<group>"; };
-		34B1B3BD2CBC3762002AC38E /* MockEventSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockEventSettings.swift; sourceTree = "<group>"; };
 		34B1C7C425EDA01F00E5CA80 /* EventIntervalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventIntervalView.swift; sourceTree = "<group>"; };
 		34B2C59D279FFF0600B52BF3 /* NSGestureRecognizer+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSGestureRecognizer+Rx.swift"; sourceTree = "<group>"; };
 		34B5A09225B0CE6F00F7F7ED /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		34B5A09625B0F8A500F7F7ED /* NSButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSButton.swift; sourceTree = "<group>"; };
 		34B5A09C25B118EC00F7F7ED /* CalendarPickerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPickerViewModel.swift; sourceTree = "<group>"; };
+		34B99FBA2D2C8605003D4EA4 /* EventBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventBackground.swift; sourceTree = "<group>"; };
 		34C1D41D2C6E567100295E5E /* ProcessInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessInfo.swift; sourceTree = "<group>"; };
 		34C1D4202C6E632F00295E5E /* Sentry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sentry.swift; sourceTree = "<group>"; };
 		34C2CF9025C2070400FC2CFF /* EventViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventViewModelTests.swift; sourceTree = "<group>"; };
+		34C39F6C2CD6A15000933E6D /* SoundPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundPlayer.swift; sourceTree = "<group>"; };
+		34C39F6E2CD6B45300933E6D /* MockSoundPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockSoundPlayer.swift; sourceTree = "<group>"; };
 		34C4599A25DEFFDA00561C29 /* Calendr-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Calendr-Bridging-Header.h"; sourceTree = "<group>"; };
 		34C4599B25DEFFDA00561C29 /* BuildConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BuildConfig.m; sourceTree = "<group>"; };
 		34C459A325DF030000561C29 /* BuildConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildConfig.swift; sourceTree = "<group>"; };
@@ -364,6 +386,7 @@
 		34C72F9525E8A05700FD20FA /* MockNextEventSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNextEventSettings.swift; sourceTree = "<group>"; };
 		34C72F9B25E9847300FD20FA /* EventListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventListViewModel.swift; sourceTree = "<group>"; };
 		34C72FA125E987F000FD20FA /* EventListViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventListViewModelTests.swift; sourceTree = "<group>"; };
+		34CB48F12D57C20F005F63DB /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34CC382C25B636A6006CBD99 /* Checkbox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checkbox.swift; sourceTree = "<group>"; };
 		34D19FBF262299D300B2732C /* NSEdgeInsets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSEdgeInsets.swift; sourceTree = "<group>"; };
 		34D19FC52622A02C00B2732C /* EventDetailsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailsViewModelTests.swift; sourceTree = "<group>"; };
@@ -375,6 +398,10 @@
 		34D88DC72C4C66F80047D636 /* KeyboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardViewController.swift; sourceTree = "<group>"; };
 		34D88DC92C4C687B0047D636 /* SettingsUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsUI.swift; sourceTree = "<group>"; };
 		34E004A625B61D5200241419 /* StatusItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemViewModel.swift; sourceTree = "<group>"; };
+		34E0C4512DA2C5A100B33B27 /* Attachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Attachment.swift; sourceTree = "<group>"; };
+		34E0C4552DA2D23500B33B27 /* ExceptionCatcher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExceptionCatcher.h; sourceTree = "<group>"; };
+		34E0C4562DA2D23B00B33B27 /* KVCError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KVCError.swift; sourceTree = "<group>"; };
+		34E0C4582DA2D27100B33B27 /* ExceptionCatcher.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExceptionCatcher.m; sourceTree = "<group>"; };
 		34E1902225B76CFE00E9491B /* CalendarPickerViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPickerViewModelTests.swift; sourceTree = "<group>"; };
 		34E5F2372C9F309E0048E25D /* AppearanceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceViewController.swift; sourceTree = "<group>"; };
 		34E5F23B2C9F76EF0048E25D /* DisposableWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisposableWrapper.swift; sourceTree = "<group>"; };
@@ -397,7 +424,11 @@
 		34F7E03928427AC00028FF25 /* EventDetailsPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailsPreview.swift; sourceTree = "<group>"; };
 		34F96CED25B523ED0020DEEA /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		34FD09D825AE269600AAAAE2 /* DateProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateProvider.swift; sourceTree = "<group>"; };
+		555CD10C2D58C0FE00CE8EF7 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Localizable.strings; sourceTree = "<group>"; };
+		A122CF0E2CDDFD6100B95699 /* zh-Hant-TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant-TW"; path = "zh-Hant-TW.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		BB2E33372D3EB62C000AF21D /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C492E3CD29FD64BA007C7DF3 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		EF3A22A62D394A2200752418 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -439,16 +470,17 @@
 				3421DA132693E75A00056837 /* MockCalendarServiceProvider.swift */,
 				3421DA152693EDEB00056837 /* MockCalendarSettings.swift */,
 				3421DA172693EEBD00056837 /* MockDateProvider.swift */,
-				3421DA112693E70E00056837 /* MockEventDetailsSettings.swift */,
 				34F201322693F562006CE2FF /* MockEventListSettings.swift */,
-				34B1B3BD2CBC3762002AC38E /* MockEventSettings.swift */,
+				3421DA112693E70E00056837 /* MockEventSettings.swift */,
 				345CC36D2C8CE13100B0DD1A /* MockGeocodeServiceProvider.swift */,
 				34299F742C72507100A0269B /* MockLocalNotificationProvider.swift */,
 				34299F722C724FA000A0269B /* MockNetworkServiceProvider.swift */,
 				346C5A4B2BC2D87F0007106C /* MockNextEventSettings.swift */,
 				34F4C47C2A6C56AA00397C80 /* MockScreenProvider.swift */,
+				34C39F6E2CD6B45300933E6D /* MockSoundPlayer.swift */,
 				34F4C47E2A6C57B300397C80 /* MockStatusItemSettings.swift */,
 				345EAD492C8E26EE00D56857 /* MockWeatherServiceProvider.swift */,
+				34711F6E2D16261400A89C72 /* MockWorkspaceServiceProvider.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -592,6 +624,7 @@
 				34E1902225B76CFE00E9491B /* CalendarPickerViewModelTests.swift */,
 				347E6D3D25AA2811009A6716 /* CalendarViewModelTests.swift */,
 				34ABB9EF29A166220021F3CF /* ContextMenuFactoryTests.swift */,
+				348CF5022D1398F600B9BFE0 /* DateSearchParserTests.swift */,
 				34924CE3259FCB36009C3450 /* DateSelectorTests.swift */,
 				34D19FC52622A02C00B2732C /* EventDetailsViewModelTests.swift */,
 				34C72FA125E987F000FD20FA /* EventListViewModelTests.swift */,
@@ -628,6 +661,7 @@
 		347D0FE22595384E002451EC /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				347C04A22D136BF400F67E7C /* SearchSuggestionView.swift */,
 				34CC382C25B636A6006CBD99 /* Checkbox.swift */,
 				34ABB9F129A2AFA30021F3CF /* CursorButton.swift */,
 				341B2B3D25D06A6F00336342 /* Dropdown.swift */,
@@ -655,6 +689,7 @@
 				34B5A09625B0F8A500F7F7ED /* NSButton.swift */,
 				34D3655729402D5700849457 /* NSColor.swift */,
 				34926A702931B18C0090C8FC /* NSControl.swift */,
+				347C04A02D13691100F67E7C /* NSControl+Rx.swift */,
 				34D19FBF262299D300B2732C /* NSEdgeInsets.swift */,
 				34B2C59D279FFF0600B52BF3 /* NSGestureRecognizer+Rx.swift */,
 				34091736267E81870023B76D /* NSImage.swift */,
@@ -680,6 +715,7 @@
 		347D0FF025954916002451EC /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				34E0C4512DA2C5A100B33B27 /* Attachment.swift */,
 				3470214F259E163000827AE7 /* CalendarModel.swift */,
 				34D19FCB2622B9CC00B2732C /* DateRange.swift */,
 				3468E652284BD44600B21EC8 /* EventBarStyle.swift */,
@@ -699,6 +735,7 @@
 				34E855692C7115A100757B58 /* LocalNotificationProvider.swift */,
 				34299F702C72289400A0269B /* NetworkServiceProvider.swift */,
 				346E70C82802278E00A785FF /* ScreenProvider.swift */,
+				34C39F6C2CD6A15000933E6D /* SoundPlayer.swift */,
 				348732282C8E057300B9B110 /* WeatherServiceProvider.swift */,
 				34651F7325E3207200518C5A /* WorkspaceServiceProvider.swift */,
 			);
@@ -733,13 +770,14 @@
 		34A6434B25F42375000A0F08 /* Previews */ = {
 			isa = PBXGroup;
 			children = (
+				34650E632CE2727A000BEACF /* CalendarPickerPreview.swift */,
 				345DD97226920D1B00294D90 /* CalendarViewPreview.swift */,
 				34F7E03928427AC00028FF25 /* EventDetailsPreview.swift */,
 				3421DA0D2693E35000056837 /* EventListViewPreview.swift */,
 				34A6434C25F42375000A0F08 /* EventViewPreview.swift */,
+				346C5A492BC2D6F60007106C /* NextEventPreview.swift */,
 				34AC60C526925FA5005312B6 /* PreviewExtensions.swift */,
 				34F4C47A2A6C54A900397C80 /* StatusItemPreview.swift */,
-				346C5A492BC2D6F60007106C /* NextEventPreview.swift */,
 			);
 			path = Previews;
 			sourceTree = "<group>";
@@ -779,6 +817,7 @@
 		34ABB9E429A12A720021F3CF /* Events */ = {
 			isa = PBXGroup;
 			children = (
+				34B99FBC2D2C861E003D4EA4 /* Background */,
 				34ABB9E129A129F00021F3CF /* ContextMenu */,
 				34ABB9DE29A129D10021F3CF /* EventDetails */,
 				34ABB9E329A129FE0021F3CF /* EventList */,
@@ -787,11 +826,23 @@
 			path = Events;
 			sourceTree = "<group>";
 		};
+		34B99FBC2D2C861E003D4EA4 /* Background */ = {
+			isa = PBXGroup;
+			children = (
+				34B99FBA2D2C8605003D4EA4 /* EventBackground.swift */,
+			);
+			path = Background;
+			sourceTree = "<group>";
+		};
 		34C1D41F2C6E631700295E5E /* Utils */ = {
 			isa = PBXGroup;
 			children = (
 				345CC3672C8CC93B00B0DD1A /* Cache.swift */,
+				348CF5002D13970600B9BFE0 /* DateSearchParser.swift */,
 				34E5F23B2C9F76EF0048E25D /* DisposableWrapper.swift */,
+				34E0C4552DA2D23500B33B27 /* ExceptionCatcher.h */,
+				34E0C4582DA2D27100B33B27 /* ExceptionCatcher.m */,
+				34E0C4562DA2D23B00B33B27 /* KVCError.swift */,
 				34C1D4202C6E632F00295E5E /* Sentry.swift */,
 				3438AEED2C6192A9002BE3E1 /* XCTest.swift */,
 			);
@@ -913,7 +964,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1250;
-				LastUpgradeCheck = 1600;
+				LastUpgradeCheck = 1620;
 				TargetAttributes = {
 					34427696269B5CA4004CFE1C = {
 						CreatedOnToolsVersion = 12.5.1;
@@ -945,6 +996,14 @@
 				cs,
 				sk,
 				sv,
+				"zh-Hant-TW",
+				ja,
+				ko,
+				sq,
+				el,
+				ru,
+				tr,
+				uk,
 			);
 			mainGroup = 347D0F8B25952F89002451EC;
 			packageReferences = (
@@ -1006,8 +1065,10 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
+				"${SRCROOT}/MISSING_TRANSLATIONS.md",
 				"${SRCROOT}/${TARGET_NAME}/Assets/de.lproj/Localizable.strings",
 				"${SRCROOT}/${TARGET_NAME}/Assets/zh-Hans.lproj/Localizable.strings",
+				"${SRCROOT}/${TARGET_NAME}/Assets/zh-Hant-TW.lproj/Localizable.strings",
 				"${SRCROOT}/${TARGET_NAME}/Assets/es.lproj/Localizable.strings",
 				"${SRCROOT}/${TARGET_NAME}/Assets/it.lproj/Localizable.strings",
 				"${SRCROOT}/${TARGET_NAME}/Assets/sk.lproj/Localizable.strings",
@@ -1015,7 +1076,13 @@
 				"${SRCROOT}/${TARGET_NAME}/Assets/cs.lproj/Localizable.strings",
 				"${SRCROOT}/${TARGET_NAME}/Assets/fr.lproj/Localizable.strings",
 				"${SRCROOT}/${TARGET_NAME}/Assets/pt.lproj/Localizable.strings",
-				"$(SRCROOT)/MISSING_TRANSLATIONS.md",
+				"${SRCROOT}/${TARGET_NAME}/Assets/ja.lproj/Localizable.strings",
+				"${SRCROOT}/${TARGET_NAME}/Assets/ko.lproj/Localizable.strings",
+				"${SRCROOT}/${TARGET_NAME}/Assets/el.lproj/Localizable.strings",
+				"${SRCROOT}/${TARGET_NAME}/Assets/sq.lproj/Localizable.strings",
+				"${SRCROOT}/${TARGET_NAME}/Assets/ru.lproj/Localizable.strings",
+				"${SRCROOT}/${TARGET_NAME}/Assets/tr.lproj/Localizable.strings",
+				"${SRCROOT}/${TARGET_NAME}/Assets/uk.lproj/Localizable.strings",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1089,24 +1156,30 @@
 				34B5A09D25B118EC00F7F7ED /* CalendarPickerViewModel.swift in Sources */,
 				3421DA0E2693E35000056837 /* EventListViewPreview.swift in Sources */,
 				34651F5A25E2F08500518C5A /* String.swift in Sources */,
+				34E0C4592DA2D27100B33B27 /* ExceptionCatcher.m in Sources */,
 				34651F7425E3207200518C5A /* WorkspaceServiceProvider.swift in Sources */,
 				34286E4625D5CD9C0097EC5D /* WeekNumberCellView.swift in Sources */,
+				34711F6F2D16261800A89C72 /* MockWorkspaceServiceProvider.swift in Sources */,
 				34ABB9F229A2AFA30021F3CF /* CursorButton.swift in Sources */,
 				341B2B3E25D06A6F00336342 /* Dropdown.swift in Sources */,
 				345CC36E2C8CE13100B0DD1A /* MockGeocodeServiceProvider.swift in Sources */,
 				347D0F9825952F89002451EC /* AppDelegate.swift in Sources */,
 				3449403225C348C70020E664 /* CalendarPickerViewController.swift in Sources */,
-				3421DA122693E70E00056837 /* MockEventDetailsSettings.swift in Sources */,
+				3421DA122693E70E00056837 /* MockEventSettings.swift in Sources */,
 				3477F3E825FD52AA008EA888 /* NSViewController+Rx.swift in Sources */,
 				34B5A09325B0CE6F00F7F7ED /* SettingsViewController.swift in Sources */,
 				34C1D41E2C6E567100295E5E /* ProcessInfo.swift in Sources */,
+				34650E642CE2727A000BEACF /* CalendarPickerPreview.swift in Sources */,
 				3421930827999FB7002BCD36 /* TimeZone+Factory.swift in Sources */,
 				3417A40A2A702643005C77E4 /* StatusItemIconFactory.swift in Sources */,
 				344D5EBC2CA0DAAF00523F9E /* NSImageView.swift in Sources */,
+				34E0C4572DA2D23B00B33B27 /* KVCError.swift in Sources */,
 				34EDE71B2AC46515007C5854 /* Error.swift in Sources */,
+				347C04A12D13691100F67E7C /* NSControl+Rx.swift in Sources */,
 				345DD97326920D1B00294D90 /* CalendarViewPreview.swift in Sources */,
 				3492C460269FCF5B009CFAD2 /* Accessibility.swift in Sources */,
 				34299F712C72289400A0269B /* NetworkServiceProvider.swift in Sources */,
+				34A0E12D2CDE9609005BF256 /* MockSoundPlayer.swift in Sources */,
 				346C5A4C2BC2D87F0007106C /* MockNextEventSettings.swift in Sources */,
 				349868E62C8D4E5E00DBFE8D /* HorizontalScrollView.swift in Sources */,
 				348E704B25C61B8D00B3B160 /* Radio.swift in Sources */,
@@ -1120,9 +1193,12 @@
 				348E701F25C43C5200B3B160 /* WeekDay.swift in Sources */,
 				34091737267E81870023B76D /* NSImage.swift in Sources */,
 				34ABB9EE29A163890021F3CF /* ContextMenuFactory.swift in Sources */,
+				347C04A32D136BF800F67E7C /* SearchSuggestionView.swift in Sources */,
 				34299F732C724FA000A0269B /* MockNetworkServiceProvider.swift in Sources */,
+				34B99FBB2D2C8605003D4EA4 /* EventBackground.swift in Sources */,
 				3468E653284BD44600B21EC8 /* EventBarStyle.swift in Sources */,
 				34F128E12597B9C9007DF31C /* MainViewController.swift in Sources */,
+				34E0C4522DA2C5A100B33B27 /* Attachment.swift in Sources */,
 				34934CD828E71B0F009635D4 /* NSObject+Rx.swift in Sources */,
 				3477F3E425FD5285008EA888 /* NSView+Rx.swift in Sources */,
 				34D55FE325F06669007F5C81 /* Sequence.swift in Sources */,
@@ -1158,10 +1234,10 @@
 				34F7E03A28427AC00028FF25 /* EventDetailsPreview.swift in Sources */,
 				34F4C47D2A6C56AA00397C80 /* MockScreenProvider.swift in Sources */,
 				346CB088295E209600E018EF /* AutoLauncher.swift in Sources */,
-				34B1B3BE2CBC3762002AC38E /* MockEventSettings.swift in Sources */,
 				34B1B3BF2CBC3762002AC38E /* MockAppearanceSettings.swift in Sources */,
 				3421DA1E2693F12400056837 /* Date+Factory.swift in Sources */,
 				3487A43825E706F800FCC7D7 /* NextEventViewModel.swift in Sources */,
+				34C39F6D2CD6A15000933E6D /* SoundPlayer.swift in Sources */,
 				34A6434D25F42375000A0F08 /* EventViewPreview.swift in Sources */,
 				3453E6FD28386A84002DCC3C /* Bool.swift in Sources */,
 				348D693D29ABDD91009F1882 /* CalendarScript.swift in Sources */,
@@ -1188,6 +1264,7 @@
 				34E004A725B61D5200241419 /* StatusItemViewModel.swift in Sources */,
 				34D19FC0262299D300B2732C /* NSEdgeInsets.swift in Sources */,
 				345CC3682C8CC93C00B0DD1A /* Cache.swift in Sources */,
+				348CF5012D13971100B9BFE0 /* DateSearchParser.swift in Sources */,
 				348732292C8E057300B9B110 /* WeatherServiceProvider.swift in Sources */,
 				34702168259E761100827AE7 /* Calendar.swift in Sources */,
 				34F201332693F562006CE2FF /* MockEventListSettings.swift in Sources */,
@@ -1249,6 +1326,7 @@
 				347E6D3E25AA2811009A6716 /* CalendarViewModelTests.swift in Sources */,
 				348E702D25C6161900B3B160 /* EventViewModelFadeTests.swift in Sources */,
 				34D19FC62622A02C00B2732C /* EventDetailsViewModelTests.swift in Sources */,
+				348CF5032D1398FA00B9BFE0 /* DateSearchParserTests.swift in Sources */,
 				34ABB9F029A166220021F3CF /* ContextMenuFactoryTests.swift in Sources */,
 				34C72FA225E987F000FD20FA /* EventListViewModelTests.swift in Sources */,
 				34C72F9625E8A05700FD20FA /* MockNextEventSettings.swift in Sources */,
@@ -1286,6 +1364,14 @@
 				27F573032B9F4B3B000DA607 /* cs */,
 				34F2F7342BB711F300666507 /* sk */,
 				34D88DC62C4C3D1A0047D636 /* sv */,
+				A122CF0E2CDDFD6100B95699 /* zh-Hant-TW */,
+				EF3A22A62D394A2200752418 /* ja */,
+				BB2E33372D3EB62C000AF21D /* ko */,
+				2CC85A822D50CF7800838D68 /* sq */,
+				2CC85A832D50D9CA00838D68 /* el */,
+				2CDDCF162D57AD36004BF510 /* ru */,
+				34CB48F12D57C20F005F63DB /* tr */,
+				555CD10C2D58C0FE00CE8EF7 /* uk */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -1475,7 +1561,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.14.1;
+				MARKETING_VERSION = 1.16.2;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Config/Calendr-Bridging-Header.h";
@@ -1503,7 +1589,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.14.1;
+				MARKETING_VERSION = 1.16.2;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Config/Calendr-Bridging-Header.h";
@@ -1613,8 +1699,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/getsentry/sentry-cocoa.git";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 8.33.0;
+				kind = upToNextMinorVersion;
+				minimumVersion = 8.41.0;
 			};
 		};
 		34E259812B659B5600074D3A /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */ = {

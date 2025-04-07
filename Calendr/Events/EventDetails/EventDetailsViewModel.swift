@@ -28,13 +28,15 @@ class EventDetailsViewModel {
     let duration: String
     let url: String
     let location: String
-    let notes: String
+    let notes: String?
+    let meetingInfo: String?
     let participants: [Participant]
     let link: EventLink?
-    let settings: EventDetailsSettings
+    let settings: EventSettings
     let showSkip: Bool
     let browserOptions: [BrowserOption]
     let optimisticLoadTime: DispatchTimeInterval
+    let attachments: [Attachment]
 
     let canShowMap = BehaviorSubject<Bool>(value: false)
     let coordinates: Maybe<Coordinates>
@@ -43,7 +45,9 @@ class EventDetailsViewModel {
     let close: Completable
 
     let linkTapped: AnyObserver<Void>
+    let openTapped: AnyObserver<Void>
     let skipTapped: AnyObserver<Void>
+    let openAttachment: AnyObserver<Attachment>
     let openMaps: AnyObserver<Coordinates>
     let isShowingObserver: AnyObserver<Bool>
 
@@ -56,7 +60,6 @@ class EventDetailsViewModel {
     private let workspace: WorkspaceServiceProviding
 
     private let callback: AnyObserver<ContextCallbackAction>
-    private let action = PublishSubject<ContextCallbackAction>()
 
     private let disposeBag = DisposeBag()
 
@@ -79,7 +82,7 @@ class EventDetailsViewModel {
         weatherService: WeatherServiceProviding,
         workspace: WorkspaceServiceProviding,
         userDefaults: UserDefaults,
-        settings: EventDetailsSettings,
+        settings: EventSettings,
         isShowingObserver: AnyObserver<Bool>,
         isInProgress: Observable<Bool>,
         source: EventDetailsSource,
@@ -96,10 +99,11 @@ class EventDetailsViewModel {
         type = event.type
         status = event.status
         title = event.title
+        attachments = event.attachments
         link = event.detectLink(using: workspace)
         url = type.isBirthday ? "" : link.map { $0.isNative ? "" : $0.original.absoluteString } ?? ""
         location = event.location ?? ""
-        notes = event.notes ?? ""
+        (notes, meetingInfo) = parseNotesMeetingInfo(from: event.notes)
         participants = event.participants.sorted {
             ($0.isOrganizer, $0.isCurrentUser, $0.status, $0.name)
             <
@@ -109,6 +113,12 @@ class EventDetailsViewModel {
         linkTapped = .init { [link] _ in
             if let link {
                 workspace.open(link)
+            }
+        }
+
+        openAttachment = .init { event in
+            if let attachment = event.element {
+                workspace.open(attachment)
             }
         }
 
@@ -122,13 +132,13 @@ class EventDetailsViewModel {
                 URLQueryItem(name: "ll", value: "\(c.latitude),\(c.longitude)"),
                 URLQueryItem(name: "q", value: event.title),
             ]
-            
+
             if let url = url.url {
                 workspace.open(url)
             }
         }
 
-        showSkip = !type.isReminder && source ~= .menubar
+        showSkip = source ~= .menubar
 
         let formatter = DateIntervalFormatter()
         formatter.dateStyle = .medium
@@ -154,12 +164,14 @@ class EventDetailsViewModel {
                 end = event.end
             }
 
+            let forceLocalTimeZone = settings.forceLocalTimeZone.lastValue() ?? false
+            let timeZone = event.isMeeting || forceLocalTimeZone ? nil : event.timeZone
+
             duration = EventUtils.duration(
                 from: event.start,
                 to: end,
-                timeZone: event.timeZone,
-                formatter: formatter,
-                isMeeting: event.isMeeting
+                timeZone: timeZone,
+                formatter: formatter
             )
         }
 
@@ -173,7 +185,12 @@ class EventDetailsViewModel {
         }
 
         skipTapped = self.callback.mapObserver { _ in
+            // handled by NextEventViewModel
             return .event(.skip)
+        }
+
+        openTapped = .init { _ in
+            workspace.open(event)
         }
 
         let showMap = settings.showMap.take(1)
@@ -223,7 +240,7 @@ class EventDetailsViewModel {
         // trigger early fetch and keep value
         weather.subscribe().disposed(by: disposeBag)
 
-        optimisticLoadTime = .milliseconds(canShowMap.value && !event.location.isNilOrEmpty ? 50 : 0)
+        optimisticLoadTime = .milliseconds(canShowMap.current && !event.location.isNilOrEmpty ? 50 : 0)
 
         let defaultBrowserURL = workspace.urlForDefaultBrowserApplication()
 
@@ -289,4 +306,26 @@ class EventDetailsViewModel {
             callback: callback
         )
     }
+}
+
+private func parseNotesMeetingInfo(from notes: String?) -> (notes: String?, meetingInfo: String?) {
+    
+    let marker = "-::~:~::~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~::~:~::-"
+
+    guard
+        var notes,
+        let startRange = notes.range(of: marker),
+        let endRange = notes.range(of: marker, range: startRange.upperBound..<notes.endIndex)
+    else {
+        return (notes, nil) // Return input unchanged if markers not found
+    }
+
+    let meetingInfo = notes[startRange.upperBound..<endRange.lowerBound]
+        .trimmingCharacters(in: .whitespacesAndNewlines)
+
+    // Remove the markers and content
+    notes.removeSubrange(startRange.lowerBound..<endRange.upperBound)
+    notes = notes.trimmingCharacters(in: .whitespacesAndNewlines)
+
+    return (notes, meetingInfo)
 }

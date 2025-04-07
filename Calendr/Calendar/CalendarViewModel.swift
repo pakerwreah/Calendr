@@ -140,7 +140,7 @@ class CalendarViewModel {
             events.filter {
                 (showDeclinedEvents || $0.status != .declined)
                 &&
-                (searchTerm.isEmpty || $0.contains(searchTerm))
+                (searchTerm.isEmpty || $0.propertiesContain(searchTerm))
             }
         }
         .optional()
@@ -148,17 +148,17 @@ class CalendarViewModel {
         .distinctUntilChanged()
         .share(replay: 1)
 
-        var timezone = dateProvider.calendar.timeZone
+        var timeZone = dateProvider.calendar.timeZone
 
         // Check if today has changed
         let todayObservable = dateObservable
             .void()
             .map { dateProvider.now }
             .distinctUntilChanged { a, b in
-                timezone == dateProvider.calendar.timeZone && dateProvider.calendar.isDate(a, inSameDayAs: b)
+                timeZone == dateProvider.calendar.timeZone && dateProvider.calendar.isDate(a, inSameDayAs: b)
             }
             .do(afterNext: { _ in
-                timezone = dateProvider.calendar.timeZone
+                timeZone = dateProvider.calendar.timeZone
             })
             .share(replay: 1)
 
@@ -287,14 +287,19 @@ private enum Constants {
 
 private extension EventModel {
 
-    func contains(_ searchTerm: String) -> Bool {
-        [
+    func propertiesContain(_ searchTerm: String) -> Bool {
+
+        let searchTerm = searchTerm.trimmingCharacters(in: .whitespaces)
+
+        return [
             title,
             location,
             url?.absoluteString,
             notes,
             participants.map(\.name).joined(separator: " ")
         ]
-        .contains { $0?.localizedCaseInsensitiveContains(searchTerm) ?? false }
+        .contains {
+            $0?.range(of: searchTerm, options: [.caseInsensitive, .diacriticInsensitive]) != nil
+        }
     }
 }

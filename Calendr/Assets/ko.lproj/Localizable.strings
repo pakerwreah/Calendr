@@ -1,0 +1,121 @@
+/* 
+  Localizable.strings
+  Calendr
+
+  Created by hw0603 on 21/01/2025.
+*/
+
+"quit" = "종료";
+"search" = "검색";
+
+"access_required.calendars" = "캘린더의 '전체 접근' 권한이 필요합니다";
+"access_required.reminders" = "미리 알림 접근 권한이 필요합니다";
+"access_required.open_settings" = "설정 열기";
+"access_required.cancel" = "취소";
+
+"auto_update.check_for_updates" = "업데이트 확인";
+"auto_update.fetching_releases" = "릴리즈 가져오는 중";
+"auto_update.new_version" = "새로운 버전 사용 가능: %@";
+"auto_update.updated_to" = "버전 %@ 으로 업데이트되었습니다.";
+"auto_update.downloading" = "버전 %@ 다운로드 중";
+"auto_update.install" = "설치";
+"auto_update.replace.message" = "앱을 대체할 수 있도록 애플리케이션 경로를 확인해주세요";
+
+//"attachments.open.message" = "Calendr needs permission to access your attachments";
+//"attachments.open.authorize" = "Authorize access to Attachments";
+
+"settings.title" = "설정";
+"settings.tab.general" = "일반";
+"settings.tab.appearance" = "모양";
+"settings.tab.calendars" = "캘린더";
+"settings.tab.keyboard" = "바로가기";
+"settings.tab.about" = "정보";
+
+"settings.menu_bar" = "메뉴 바";
+"settings.menu_bar.auto_launch" = "로그인 시 실행";
+"settings.menu_bar.show_icon" = "아이콘 표시";
+"settings.menu_bar.show_date" = "날짜 표시";
+"settings.menu_bar.show_background" = "불투명한 배경 표시";
+"settings.menu_bar.date_format_custom" = "사용자 지정";
+
+"settings.next_event" = "다음 일정";
+"settings.next_event.show_next_event" = "다음 일정 표시";
+"settings.next_event.grab_attention" = "일정이 가까워지면 주의 끌기";
+"settings.next_event.grab_attention.flashing" = "깜빡임";
+"settings.next_event.grab_attention.sound" = "소리 재생";
+"settings.next_event.detect_notch" = "노치 디스플레이에서 길이 조정";
+
+"settings.calendar" = "캘린더";
+"settings.calendar.show_week_numbers" = "주 번호 표시";
+"settings.calendar.preserve_selected_date" = "숨길 때 선택한 날짜 유지";
+"settings.calendar.show_declined_events" = "거절한 일정 표시";
+"settings.calendar.show_declined_events_tooltip" = "이 기능은 기본 캘린더 앱에서도 활성화해야 작동합니다. (메뉴바-보기-거부된 이벤트 보기)";
+"settings.calendar.date_hover_option" = "⌥ 키를 누르고 날짜 호버 시 미리보기";
+"settings.calendar.calendar_app_view_mode" = "캘린더 앱 보기 모드";
+
+"settings.events" = "일정";
+"settings.events.show_map" = "지도 및 날씨 표시";
+"settings.events.show_overdue_reminders" = "기한이 지난 미리 알림 표시";
+"settings.events.show_finished_events" = "완료된 일정 표시";
+"settings.events.show_recurrence_indicator" = "반복 일정 표시";
+"settings.events.force_local_time_zone" = "모든 일정을 로컬 시간대로 표시";
+
+"settings.appearance.transparency" = "투명도";
+"settings.appearance.accessibility" = "접근성";
+
+"settings.keyboard.local_shortcuts.title" = "바로가기";
+"settings.keyboard.local_shortcuts.prev_date" = "이전 날짜";
+"settings.keyboard.local_shortcuts.next_date" = "다음 날짜";
+"settings.keyboard.local_shortcuts.prev_week" = "이전 주";
+"settings.keyboard.local_shortcuts.next_week" = "다음 주";
+"settings.keyboard.local_shortcuts.prev_month" = "이전 달";
+"settings.keyboard.local_shortcuts.next_month" = "다음 달";
+"settings.keyboard.local_shortcuts.curr_date" = "현재 날짜";
+"settings.keyboard.local_shortcuts.open_date" = "선택한 날짜 열기";
+"settings.keyboard.local_shortcuts.pin_calendar" = "캘린더 고정";
+
+"settings.keyboard.global_shortcuts.title" = "전역 바로가기";
+"settings.keyboard.global_shortcuts.open_calendar" = "캘린더 열기";
+"settings.keyboard.global_shortcuts.open_next_event" = "다음 이벤트 열기";
+"settings.keyboard.global_shortcuts.open_next_event_options" = "다음 이벤트 옵션";
+"settings.keyboard.global_shortcuts.open_next_reminder" = "다음 미리 알림 열기";
+"settings.keyboard.global_shortcuts.open_next_reminder_options" = "다음 미리 알림 옵션";
+
+"formatter.date.today" = "오늘";
+"formatter.date.relative.in" = "%@ 후";
+"formatter.date.relative.ago" = "%@ 전";
+"formatter.date.relative.left" = "%@ 남음";
+
+//"reminder.status.overdue" = "Overdue";
+
+"reminder.options.button" = "옵션";
+"reminder.options.complete" = "완료";
+"reminder.options.remind" = "%@ 후 알림";
+
+"event.details.participant.organizer" = "주최자";
+"event.details.participant.me" = "나";
+
+"event.all_day" = "하루 종일";
+
+"event.status.accepted" = "수락됨";
+"event.status.maybe" = "미정";
+"event.status.declined" = "거절됨";
+"event.status.pending" = "대기 중";
+
+"event.action.open" = "열기";
+"event.action.join" = "참여";
+"event.action.skip" = "건너뛰기";
+"event.action.accept" = "수락";
+"event.action.maybe" = "미정";
+"event.action.decline" = "거절";
+
+"tooltips.navigation.prev_month" = "이전 달";
+"tooltips.navigation.today" = "오늘";
+"tooltips.navigation.next_month" = "다음 달";
+
+"tooltips.toolbar.stay_open" = "열어두기";
+"tooltips.toolbar.open_calendar" = "캘린더 열기";
+"tooltips.toolbar.open_reminders" = "미리 알림 열기";
+"tooltips.toolbar.open_menu" = "메뉴 열기";
+
+"calendars.source.others" = "기타";

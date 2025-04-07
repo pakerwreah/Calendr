@@ -1,0 +1,121 @@
+/* 
+  Localizable.strings
+  Calendr
+
+  Created by Petros Dhespollari on 03/02/2025.
+*/
+
+"quit" = "Dil";
+"search" = "Kërko";
+
+"access_required.calendars" = "Kalendar në pritje të autorizimit 'Qasje e plotë'";
+"access_required.reminders" = "Alarmet rikujtuese në pritje të autorizimit";
+"access_required.open_settings" = "Hap Cilësimet";
+"access_required.cancel" = "Anulo";
+
+"auto_update.check_for_updates" = "Kontrolloni për përditësime";
+"auto_update.fetching_releases" = "Duke marrë publikimet";
+"auto_update.new_version" = "Versioni i ri në dispozicion: %@";
+"auto_update.updated_to" = "Përditësuar në version %@";
+"auto_update.downloading" = "Versioni po shkarkohet %@";
+"auto_update.install" = "Instaloni";
+"auto_update.replace.message" = "Konfirmo vendndodhjen e aplikacionit në mënyrë që të kemi lejen për ta zëvendësuar atë";
+
+//"attachments.open.message" = "Calendr needs permission to access your attachments";
+//"attachments.open.authorize" = "Authorize access to Attachments";
+
+"settings.title" = "Preferencat";
+"settings.tab.general" = "Gjeneral";
+"settings.tab.appearance" = "Pamja e jashtme";
+"settings.tab.calendars" = "Kalendarët";
+"settings.tab.keyboard" = "Shkurtoret";
+"settings.tab.about" = "Rreth";
+
+"settings.menu_bar" = "Shiriti i Menysë";
+"settings.menu_bar.auto_launch" = "Nisni në hyrje";
+"settings.menu_bar.show_icon" = "Shfaq ikonën";
+"settings.menu_bar.show_date" = "Shfaq datën";
+"settings.menu_bar.show_background" = "Shfaq sfondin e errët";
+"settings.menu_bar.date_format_custom" = "Zakon";
+
+"settings.next_event" = "Ngjarja e Radhës";
+"settings.next_event.show_next_event" = "Shfaq ngjarjen e radhës";
+"settings.next_event.grab_attention" = "Tërhiq vëmendjen kur ngjarja është afër";
+"settings.next_event.grab_attention.flashing" = "Vezullim";
+"settings.next_event.grab_attention.sound" = "Luaj zërin";
+"settings.next_event.detect_notch" = "Shkurtojeni nëse 'notch' është i pranishëm";
+
+"settings.calendar" = "Kalendari";
+"settings.calendar.show_week_numbers" = "Shfaq numrat e javëve";
+"settings.calendar.preserve_selected_date" = "Ruaje datën e zgjedhur në fshehje";
+"settings.calendar.show_declined_events" = "Shfaq ngjarjet e refuzuara";
+"settings.calendar.show_declined_events_tooltip" = "Kjo funksionon vetëm nëse aktivizohet edhe në aplikacionin vendas të Kalendarit.";
+"settings.calendar.date_hover_option" = "Mbajeni ⌥ për të parë datat e vendosura pezull";
+"settings.calendar.calendar_app_view_mode" = "Pamja e aplikacionit të kalendarit";
+
+"settings.events" = "Ngjarjet";
+"settings.events.show_map" = "Trego hartën dhe motin";
+"settings.events.show_overdue_reminders" = "Shfaq alarmet rikujtuese të vonuara";
+"settings.events.show_finished_events" = "Shfaq ngjarjet e përfunduara";
+"settings.events.show_recurrence_indicator" = "Trego treguesin e përsëritjes";
+"settings.events.force_local_time_zone" = "Shfaq të gjitha ngjarjet në zonën kohore lokale";
+
+"settings.appearance.transparency" = "Transparenca";
+"settings.appearance.accessibility" = "Aksesueshmëria";
+
+"settings.keyboard.local_shortcuts.title" = "Shkurtoret lokale";
+"settings.keyboard.local_shortcuts.prev_date" = "Data e mëparshme";
+"settings.keyboard.local_shortcuts.next_date" = "Data e ardhshme";
+"settings.keyboard.local_shortcuts.prev_week" = "Javën e kaluar";
+"settings.keyboard.local_shortcuts.next_week" = "Javën e ardhshme";
+"settings.keyboard.local_shortcuts.prev_month" = "Muajin e kaluar";
+"settings.keyboard.local_shortcuts.next_month" = "Muajin tjetër";
+"settings.keyboard.local_shortcuts.curr_date" = "Data aktuale";
+"settings.keyboard.local_shortcuts.open_date" = "Hapni datën e zgjedhur";
+"settings.keyboard.local_shortcuts.pin_calendar" = "Gozhdoni kalendarin";
+
+"settings.keyboard.global_shortcuts.title" = "Shkurtoret globale";
+"settings.keyboard.global_shortcuts.open_calendar" = "Hap kalendarin";
+"settings.keyboard.global_shortcuts.open_next_event" = "Hap ngjarjen e radhës";
+"settings.keyboard.global_shortcuts.open_next_event_options" = "Opsionet e ngjarjes së ardhshme";
+"settings.keyboard.global_shortcuts.open_next_reminder" = "Hap kujtesën tjetër";
+"settings.keyboard.global_shortcuts.open_next_reminder_options" = "Opsionet e ardhshme përkujtues";
+
+"formatter.date.today" = "Sot";
+"formatter.date.relative.in" = "në %@";
+"formatter.date.relative.ago" = "%@ më parë";
+"formatter.date.relative.left" = "%@ mbeten";
+
+//"reminder.status.overdue" = "Overdue";
+
+"reminder.options.button" = "Opsionet";
+"reminder.options.complete" = "E Plotësuar";
+"reminder.options.remind" = "Kujto %@";
+
+"event.details.participant.organizer" = "organizator";
+"event.details.participant.me" = "unë";
+
+"event.all_day" = "Gjithë ditën";
+
+"event.status.accepted" = "Pranuar";
+"event.status.maybe" = "Ndoshta";
+"event.status.declined" = "Refuzuar";
+"event.status.pending" = "Në Pritje";
+
+"event.action.open" = "Hapur";
+"event.action.join" = "Bashkohu";
+"event.action.skip" = "Kapërce";
+"event.action.accept" = "Pranoje";
+"event.action.maybe" = "Ndoshta";
+"event.action.decline" = "Rënia";
+
+"tooltips.navigation.prev_month" = "Muajin e kaluar";
+"tooltips.navigation.today" = "Sot";
+"tooltips.navigation.next_month" = "Muajin tjetër";
+
+"tooltips.toolbar.stay_open" = "Qëndroni të hapur";
+"tooltips.toolbar.open_calendar" = "Hap Kalendarin";
+"tooltips.toolbar.open_reminders" = "Hapni Përkujtuesit";
+"tooltips.toolbar.open_menu" = "Hap menunë";
+
+"calendars.source.others" = "Të Tjerët";

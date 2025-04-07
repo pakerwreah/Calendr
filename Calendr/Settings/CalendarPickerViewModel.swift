@@ -17,8 +17,9 @@ class CalendarPickerViewModel {
     // Observables
     let calendars: Observable<[CalendarModel]>
     let showNextEvent: Observable<Bool>
-    private(set) lazy var enabledCalendars = selectedObservable(\.enabledCalendars)
-    private(set) lazy var nextEventCalendars = selectedObservable(\.nextEventCalendars)
+
+    private(set) lazy var enabledCalendars = selectedObservable(notIn: \.disabledCalendars)
+    private(set) lazy var nextEventCalendars = selectedObservable(notIn: \.silencedCalendars)
 
     private let userDefaults: UserDefaults
     private let toggleCalendarSubject = PublishSubject<String>()
@@ -50,24 +51,34 @@ class CalendarPickerViewModel {
 
         setUpBinding(
             subject: toggleCalendarSubject,
-            selected: enabledCalendars,
-            binder: userDefaults.rx.enabledCalendars
+            current: userDefaults.rx.observe(\.disabledCalendars),
+            binder: userDefaults.rx.disabledCalendars
         )
 
         setUpBinding(
             subject: toggleNextEventSubject,
-            selected: nextEventCalendars,
-            binder: userDefaults.rx.nextEventCalendars
+            current: userDefaults.rx.observe(\.silencedCalendars),
+            binder: userDefaults.rx.silencedCalendars
         )
+
+        calendars
+            .filter(\.isEmpty.isFalse)
+            .map { $0.map(\.id) }
+            .bind { [userDefaults] calendars in
+                // clean up removed calendars
+                userDefaults.disabledCalendars = userDefaults.disabledCalendars.filter(calendars.contains)
+                userDefaults.silencedCalendars = userDefaults.silencedCalendars.filter(calendars.contains)
+            }
+            .disposed(by: disposeBag)
     }
 
     private func setUpBinding(
         subject: PublishSubject<String>,
-        selected: Observable<[String]>,
-        binder: Binder<[String]?>
+        current: Observable<[String]>,
+        binder: Binder<[String]>
     ) {
         subject
-            .withLatestFrom(selected) { ($0, $1) }
+            .withLatestFrom(current) { ($0, $1) }
             .map { toggled, identifiers in
                 identifiers.contains(toggled)
                     ? identifiers.filter { $0 != toggled }
@@ -77,13 +88,15 @@ class CalendarPickerViewModel {
             .disposed(by: disposeBag)
     }
 
-    private func selectedObservable(_ keyPath: KeyPath<UserDefaults, [String]?>) -> Observable<[String]> {
+    private func selectedObservable(notIn keyPath: KeyPath<UserDefaults, [String]>) -> Observable<[String]> {
 
         Observable.combineLatest(
             userDefaults.rx.observe(keyPath),
             calendars.map { $0.map(\.id) }
         )
-        .map { $0?.filter($1.contains) ?? $1 }
+        .map { unselected, calendars in
+            calendars.filter { !unselected.contains($0) }
+        }
         .share(replay: 1)
     }
 }

@@ -17,16 +17,17 @@ struct NextEventPreview: PreviewProvider {
     static let geocoder = MockGeocodeServiceProvider()
     static let weatherService = MockWeatherServiceProvider()
     static let screenProvider = MockScreenProvider(screen: MockScreen(hasNotch: true))
-    static let settings = MockNextEventSettings(showItem: true, fontSize: 13, length: 30, detectNotch: false)
+    static let settings = MockNextEventSettings(showItem: true, textScaling: 1.1, length: 35, detectNotch: false)
     static let notificationCenter = NotificationCenter()
-    static let workspace = NSWorkspace.shared
+    static let workspace = MockWorkspaceServiceProvider()
+    static let soundPlayer = MockSoundPlayer()
 
     static let events: [EventModel] = [
         .make(
             start: dateProvider.now + 5,
             end: dateProvider.now + 999,
             title: "Test with a very long event name and some more extra text",
-            type: .event(.accepted),
+            type: .event(.pending),
             calendar: .make(color: .systemYellow)
         )
     ]
@@ -45,7 +46,8 @@ struct NextEventPreview: PreviewProvider {
                 workspace: workspace,
                 screenProvider: screenProvider,
                 isShowingDetails: .dummy(),
-                scheduler: MainScheduler.instance
+                scheduler: MainScheduler.instance,
+                soundPlayer: soundPlayer
             )
         )
         .preview()

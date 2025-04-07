@@ -15,7 +15,7 @@ class EventOptionsViewModelTests: XCTestCase {
 
     let dateProvider = MockDateProvider()
     let calendarService = MockCalendarServiceProvider()
-    let workspace = MockWorkspaceServiceProvider()
+    lazy var workspace = MockWorkspaceServiceProvider(dateProvider: dateProvider)
 
     func testOptions_withPendingInvitationStatus() {
 
@@ -231,8 +231,8 @@ class EventOptionsViewModelTests: XCTestCase {
     }
 
     func testEventLinkAction_isMeeting() {
-        XCTAssertEqual(EventAction.link(.zoomLink, isInProgress: false).title, Strings.EventAction.join)
-        
+        XCTAssertEqual(EventAction.link(.zoomLink, isInProgress: false).title, Strings.Event.Action.join)
+
         XCTAssertEqual(EventAction.link(.zoomLink, isInProgress: false).icon, Icons.Event.video)
         
         XCTAssertEqual(

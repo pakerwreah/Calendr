@@ -16,7 +16,7 @@ struct EventListViewPreview: PreviewProvider {
     static let calendarService = MockCalendarServiceProvider()
     static let geocoder = MockGeocodeServiceProvider()
     static let weatherService = MockWeatherServiceProvider()
-    static let workspace = NSWorkspace.shared
+    static let workspace = MockWorkspaceServiceProvider()
     static let settings = MockEventListSettings()
 
     static var now: Date { dateProvider.now }
@@ -59,7 +59,8 @@ struct EventListViewPreview: PreviewProvider {
                 workspace: workspace,
                 userDefaults: .init(),
                 settings: settings,
-                scheduler: MainScheduler.instance
+                scheduler: MainScheduler.instance,
+                eventsScheduler: MainScheduler.instance
             )
         )
         .preview()

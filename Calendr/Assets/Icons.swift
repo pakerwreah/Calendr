@@ -21,8 +21,9 @@ enum Icons {
     }
 
     enum CalendarPicker {
-        static let nextEventSelected = NSImage(systemName: "alarm")
-        static let nextEventUnselected = NSImage(systemName: "moon.zzz")
+        static let nextEventEnabled = NSImage(systemName: "alarm")
+        static let nextEventSilenced = NSImage(systemName: "moon.zzz")
+        static let subscribed = NSImage(systemName: "wave.3.right")
     }
 
     enum Settings {
@@ -32,7 +33,8 @@ enum Icons {
         static let appearance = NSImage(systemName: "paintbrush")
         static let about = NSImage(systemName: "book")
         static let tooltip = NSImage(systemName: "info.circle")
-        static let ruler = NSImage(systemName: "ruler")
+        static let length_small = NSImage(systemName: "character.textbox")
+        static let length_big = NSImage(systemName: "textformat.abc")
         static let zoomIn = NSImage(systemName: "plus.magnifyingglass")
         static let zoomOut = NSImage(systemName: "minus.magnifyingglass")
         static let transparencyLow = NSImage(systemName: "cube.transparent")
@@ -45,7 +47,7 @@ enum Icons {
 
     enum Event {
         static let birthday = NSImage(systemName: "gift")
-        static let reminder = NSImage(systemName: "bell.fill")
+        static let attachment = NSImage(systemName: "paperclip")
         static let link = NSImage(systemName: "link")
         static let video = NSImage(systemName: "video")
         static let video_fill = NSImage(systemName: "video.fill")

@@ -30,6 +30,7 @@ class MainViewController: NSViewController {
     private let eventListView: EventListView
     private let titleLabel = Label()
     private let searchInput = NSSearchField()
+    private let searchInputSuggestionView = SearchSuggestionView()
     private let prevBtn = ImageButton()
     private let resetBtn = ImageButton()
     private let nextBtn = ImageButton()
@@ -52,12 +53,16 @@ class MainViewController: NSViewController {
     private var popoverDisposeBag = DisposeBag()
     private let dateClick = PublishSubject<Date>()
     private let dateDoubleClick = PublishSubject<Date>()
+    private let hoveredDate = BehaviorSubject<Date?>(value: nil)
     private let refreshDate = PublishSubject<Void>()
     private let selectedDate: BehaviorSubject<Date>
+    private let focusedDateObservable: Observable<Date>
     private let isShowingDetails = BehaviorSubject<Bool>(value: false)
     private let searchInputText = BehaviorSubject<String>(value: "")
+    private let searchInputSuggestionDate = BehaviorSubject<DateSuggestionResult?>(value: nil)
     private let navigationSubject = PublishSubject<Keyboard.Key>()
     private let keyboardModifiers = BehaviorSubject<NSEvent.ModifierFlags>(value: [])
+    private let deeplink: Observable<URL>
 
     // Properties
     private let keyboard = Keyboard()
@@ -73,6 +78,7 @@ class MainViewController: NSViewController {
     // MARK: - Initalization
 
     init(
+        deeplink: Observable<URL>,
         autoLauncher: AutoLauncher,
         workspace: WorkspaceServiceProviding,
         calendarService: CalendarServiceProviding,
@@ -87,6 +93,7 @@ class MainViewController: NSViewController {
         fileManager: FileManager
     ) {
 
+        self.deeplink = deeplink
         self.workspace = workspace
         self.calendarService = calendarService
         self.dateProvider = dateProvider
@@ -144,12 +151,10 @@ class MainViewController: NSViewController {
             fileManager: fileManager
         )
 
-        let (hoverObservable, hoverObserver) = PublishSubject<Date?>.pipe()
-
         calendarViewModel = CalendarViewModel(
             searchObservable: searchInputText,
             dateObservable: selectedDate,
-            hoverObservable: hoverObservable,
+            hoverObservable: hoveredDate,
             keyboardModifiers: keyboardModifiers,
             enabledCalendars: calendarPickerViewModel.enabledCalendars,
             calendarService: calendarService,
@@ -159,13 +164,16 @@ class MainViewController: NSViewController {
 
         calendarView = CalendarView(
             viewModel: calendarViewModel,
-            hoverObserver: hoverObserver,
+            hoverObserver: hoveredDate.asObserver(),
             clickObserver: dateClick.asObserver(),
             doubleClickObserver: dateDoubleClick.asObserver()
         )
 
         let eventListEventsObservable = calendarViewModel.focusedDateEventsObservable
             .debounce(.milliseconds(50), scheduler: MainScheduler.instance)
+            .share(replay: 1)
+
+        focusedDateObservable = eventListEventsObservable.map(\.0)
 
         eventListViewModel = EventListViewModel(
             eventsObservable: eventListEventsObservable,
@@ -177,7 +185,8 @@ class MainViewController: NSViewController {
             workspace: workspace,
             userDefaults: userDefaults,
             settings: settingsViewModel,
-            scheduler: WallTimeScheduler()
+            scheduler: WallTimeScheduler.instance,
+            eventsScheduler: WallTimeScheduler.instance
         )
 
         eventListView = EventListView(viewModel: eventListViewModel)
@@ -194,7 +203,8 @@ class MainViewController: NSViewController {
             workspace: workspace,
             screenProvider: screenProvider,
             isShowingDetails: isShowingDetails.asObserver(),
-            scheduler: MainScheduler.instance
+            scheduler: MainScheduler.instance,
+            soundPlayer: .shared
         )
 
         nextReminderViewModel = NextEventViewModel(
@@ -209,7 +219,8 @@ class MainViewController: NSViewController {
             workspace: workspace,
             screenProvider: screenProvider,
             isShowingDetails: isShowingDetails.asObserver(),
-            scheduler: MainScheduler.instance
+            scheduler: MainScheduler.instance,
+            soundPlayer: .shared
         )
 
         nextEventView = NextEventView(viewModel: nextEventViewModel)
@@ -232,9 +243,13 @@ class MainViewController: NSViewController {
 
         refreshDate.onNext(())
 
+        setUpDeeplink()
+
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(5)) { [autoUpdater] in
             autoUpdater.start()
         }
+
+        calendarService.requestAccess()
     }
 
     required init?(coder: NSCoder) {
@@ -249,14 +264,22 @@ class MainViewController: NSViewController {
 
         let header = makeHeader()
         let toolBar = makeToolBar()
-        let eventList = makeEventList()
+        let eventListSummary = makeEventListSummary()
+        let eventListScroll = makeEventListScroll()
 
-        [header, searchInput, calendarView, toolBar, eventList].forEach(mainStackView.addArrangedSubview)
+        [header, searchInput, calendarView, toolBar, eventListSummary, eventListScroll].forEach(mainStackView.addArrangedSubview)
+
+        // avoid collapsing because of content constraints
+        eventListSummary.width(equalTo: mainStackView)
+        eventListScroll.width(equalTo: mainStackView)
 
         mainStackView.orientation = .vertical
         let mainStackSpacing: CGFloat = 4
         mainStackView.spacing = mainStackSpacing
 
+        mainStackView.setCustomSpacing(mainStackSpacing + 2, after: eventListSummary)
+
+        searchInput.isHidden = true
         searchInput.focusRingType = .none
 
         searchInput.rx.observe(\.isHidden)
@@ -266,6 +289,11 @@ class MainViewController: NSViewController {
             .disposed(by: disposeBag)
 
         view.addSubview(mainStackView)
+        view.addSubview(searchInputSuggestionView)
+
+        searchInputSuggestionView.top(equalTo: searchInput.bottomAnchor)
+        searchInputSuggestionView.leading(equalTo: searchInput, constant: 20)
+        searchInputSuggestionView.isHidden = true
 
         mainStackView.width(equalTo: calendarView)
         mainStackView.top(equalTo: view, constant: Constants.MainStackView.margin)
@@ -277,7 +305,7 @@ class MainViewController: NSViewController {
         let maxHeightConstraint = mainStackView.height(lessThanOrEqualTo: 0)
 
         screenProvider.screenObservable
-            .map { 0.9 * $0.visibleFrame.height }
+            .map { $0.visibleFrame.height - 30 }
             .bind(to: maxHeightConstraint.rx.constant)
             .disposed(by: disposeBag)
 
@@ -291,30 +319,14 @@ class MainViewController: NSViewController {
         .disposed(by: disposeBag)
     }
 
-    override func viewWillAppear() {
+    override func viewDidDisappear() {
 
-        super.viewWillAppear()
+        super.viewDidDisappear()
 
         hideSearchInput()
-    }
 
-    override func viewDidAppear() {
-
-        super.viewDidAppear()
-        
-        view.window?.makeKey()
-        NSApp.activate(ignoringOtherApps: true)
-
-        eventListView.scrollTop()
-    }
-
-    override func mouseEntered(with event: NSEvent) {
-
-        super.mouseEntered(with: event)
-
-        guard !NSApp.isActive else { return }
-
-        NSApp.activate(ignoringOtherApps: true)
+        hoveredDate.onNext(nil)
+        keyboardModifiers.onNext([])
     }
 
     // MARK: - Setup
@@ -354,6 +366,12 @@ class MainViewController: NSViewController {
     }
 
     private func setUpBindings() {
+
+        NSApp.rx.observe(\.isActive)
+            .matching(false)
+            .map([])
+            .bind(to: keyboardModifiers)
+            .disposed(by: disposeBag)
 
         makeDateSelector()
             .asObservable()
@@ -414,6 +432,8 @@ class MainViewController: NSViewController {
             .bind(to: searchInput.rx.stringValue)
             .disposed(by: disposeBag)
 
+        setUpDateSuggestion()
+
         autoUpdater.notificationTap.bind { [weak self] action in
             guard let self else { return }
 
@@ -430,6 +450,33 @@ class MainViewController: NSViewController {
 
         }
         .disposed(by: disposeBag)
+    }
+
+    private func setUpDateSuggestion() {
+
+        searchInputText
+            .map { [dateProvider] text in
+                DateSearchParser.parse(text: text, using: dateProvider)
+            }
+            .bind(to: searchInputSuggestionDate)
+            .disposed(by: disposeBag)
+
+        Observable
+            .combineLatest(searchInputSuggestionDate, searchInput.rx.hasFocus)
+            .map { suggestion, hasFocus in
+                return suggestion == nil || !hasFocus
+            }
+            .bind(to: searchInputSuggestionView.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        let formatter = DateFormatter(calendar: dateProvider.calendar)
+        formatter.dateStyle = .long
+
+        searchInputSuggestionDate
+            .compactMap(\.?.date)
+            .map(formatter.string(from:))
+            .bind(to: searchInputSuggestionView.textField.rx.text)
+            .disposed(by: disposeBag)
     }
 
     private func openReleasePage() {
@@ -472,7 +519,7 @@ class MainViewController: NSViewController {
 
     private func openSettingsTab(_ tab: SettingsTab) {
 
-        if !settingsViewModel.isPresented.value {
+        if !settingsViewModel.isPresented.current {
             settingsViewController.viewWillAppear()
             presentAsModalWindow(settingsViewController)
         }
@@ -683,6 +730,13 @@ class MainViewController: NSViewController {
             case .escape where searchInput.hasFocus:
                 hideSearchInput()
 
+            case .enter where searchInput.hasFocus:
+                guard let (date, result) = searchInputSuggestionDate.current else {
+                    return event
+                }
+                selectedDate.onNext(date)
+                searchInputText.onNext(result)
+
             case _ where searchInput.hasFocus:
                 return event
 
@@ -698,7 +752,7 @@ class MainViewController: NSViewController {
                 navigationSubject.onNext(key)
 
             case .enter:
-                dateDoubleClick.onNext(selectedDate.value)
+                dateDoubleClick.onNext(selectedDate.current)
 
             default:
                 return event
@@ -748,9 +802,104 @@ class MainViewController: NSViewController {
         }
     }
 
+    private func setUpDeeplink() {
+
+        let handleColdStart = mainStatusItem.rx.observe(\.button)
+            .skipNil()
+            .flatMapLatest { $0.rx.observe(\.frame) }
+            .debounce(.milliseconds(100), scheduler: MainScheduler.instance)
+            .take(1)
+            .ignoreElements()
+            .asCompletable()
+
+        let date = handleColdStart
+            .andThen(deeplink)
+            .compactMap { [dateProvider] url -> Date? in
+                guard let action = url.host, action == "date" else {
+                    return nil
+                }
+                let result = DateSearchParser.parse(text: url.lastPathComponent, using: dateProvider)
+                return result?.date
+            }
+            .share(replay: 1)
+
+        date.bind(to: selectedDate)
+            .disposed(by: disposeBag)
+
+        date.void()
+            .filter { [view] in view.window == nil }
+            .bind(to: mainStatusItemClickHandler.leftClick)
+            .disposed(by: disposeBag)
+
+    }
+
     // MARK: - Factories
 
-    private func makeEventList() -> NSView {
+    private func makeEventListSummary() -> NSView {
+
+        let stackView = NSStackView().with(distribution: .fillEqually).with(spacing: 4)
+
+        let container = NSVisualEffectView()
+        container.state = .active
+        container.blendingMode = .behindWindow
+
+        container.addSubview(stackView)
+        stackView.edges(equalTo: container)
+
+        settingsViewModel.popoverMaterial
+            .bind(to: container.rx.material)
+            .disposed(by: disposeBag)
+
+        func makeColorBar(_ color: NSColor) -> NSView {
+            let colorBar = NSView()
+            colorBar.wantsLayer = true
+            colorBar.layer?.cornerRadius = 1
+            colorBar.width(equalTo: 2)
+            colorBar.layer?.backgroundColor = color.cgColor
+            return colorBar
+        }
+
+        func makeColorBarStack(with colors: Set<NSColor>) -> NSStackView {
+            NSStackView(views: colors.map(makeColorBar)).with(spacing: 2)
+        }
+
+        func makeLabel(_ text: String) -> Label {
+            let label = Label(text: text, font: .systemFont(ofSize: 10))
+            label.lineBreakMode = .byWordWrapping
+            label.setContentHuggingPriority(.fittingSizeCompression, for: .vertical)
+            return label
+        }
+
+        func addItem(_ item: EventListSummaryItem, _ spacing: CGFloat) {
+            guard item.count > 0 else { return }
+            let stack = NSStackView().with(spacing: spacing)
+            let colorBars = makeColorBarStack(with: item.colors)
+            let label = makeLabel("\(item.label): \(item.count)")
+            stack.addArrangedSubview(colorBars)
+            stack.addArrangedSubview(label)
+            stackView.addArrangedSubview(stack)
+        }
+
+        eventListViewModel.summary
+            .observe(on: MainScheduler.instance)
+            .bind { info in
+                stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+
+                let count = [info.overdue, info.allday, info.today].filter { $0.count > 0 }.count
+                let spacing: CGFloat = count > 2 ? 4 : 6
+
+                addItem(info.overdue, spacing)
+                addItem(info.allday, spacing)
+                addItem(info.today, spacing)
+
+                container.isHidden = stackView.arrangedSubviews.isEmpty
+            }
+            .disposed(by: disposeBag)
+
+        return container
+    }
+
+    private func makeEventListScroll() -> NSScrollView {
 
         let scrollView = NSScrollView()
 
@@ -760,14 +909,53 @@ class MainViewController: NSViewController {
         scrollView.contentView.edges(equalTo: scrollView)
         scrollView.contentView.edges(equalTo: eventListView).bottom.priority = .dragThatCanResizeWindow
 
-        calendarViewModel.cellViewModelsObservable
-            .compactMap { $0.first(where: \.isSelected)?.date }
-            .distinctUntilChanged()
-            .observe(on: MainScheduler.instance)
-            .bind { [view = eventListView] _ in
-                view.scroll(.init(x: 0, y: view.bounds.height))
+        rx.viewDidAppear.bind { [eventListView] in
+            eventListView.scrollTop()
+        }
+        .disposed(by: disposeBag)
+
+        Observable.combineLatest(
+            eventListViewModel.items,
+            focusedDateObservable
+        )
+        .debounce(.milliseconds(10), scheduler: MainScheduler.instance)
+        .repeat(when: rx.viewDidAppear)
+        .bind { [dateProvider, eventListView] items, date in
+
+            guard !items.isEmpty, scrollView.bounds != .zero else {
+                return
             }
-            .disposed(by: disposeBag)
+
+            let isToday = dateProvider.calendar.isDateInToday(date)
+
+            guard isToday else {
+                eventListView.scrollTop()
+                return
+            }
+
+            let index = items.firstIndex {
+                guard
+                    case .event(let event) = $0,
+                    !event.isAllDay,
+                    dateProvider.calendar.isDateInToday(event.start),
+                    let isFinished = event.isFaded.lastValue()
+                else {
+                    return false
+                }
+                return !isFinished
+            } ?? items.count - 1
+
+            guard let rect = eventListView.childRect(at: index) else { return }
+
+            let newOriginY = rect.midY - eventListView.bounds.height + scrollView.bounds.height / 2
+            let newOrigin = NSPoint(x: 0, y: newOriginY)
+
+            NSAnimationContext.runAnimationGroup({ context in
+                context.duration = 0.3
+                scrollView.contentView.animator().setBoundsOrigin(newOrigin)
+            })
+        }
+        .disposed(by: disposeBag)
 
         return scrollView
     }
@@ -780,8 +968,13 @@ class MainViewController: NSViewController {
         [prevBtn, resetBtn, nextBtn].forEach { $0.size(equalTo: 22) }
 
         prevBtn.image = Icons.Calendar.prev
+        prevBtn.toolTip = Strings.Tooltips.Navigation.prevMonth
+
         resetBtn.image = Icons.Calendar.reset.with(scale: .small)
+        resetBtn.toolTip = Strings.Tooltips.Navigation.today
+
         nextBtn.image = Icons.Calendar.next
+        nextBtn.toolTip = Strings.Tooltips.Navigation.nextMonth
 
         return NSStackView(views: [
             .spacer(width: 5), titleLabel, .spacer, prevBtn, resetBtn, nextBtn
@@ -796,10 +989,16 @@ class MainViewController: NSViewController {
         pinBtn.setButtonType(.toggle)
         pinBtn.image = Icons.Calendar.unpinned
         pinBtn.alternateImage = Icons.Calendar.pinned
+        pinBtn.toolTip = Strings.Tooltips.Toolbar.stayOpen
 
         remindersBtn.image = Icons.Calendar.reminders.with(scale: .large)
+        remindersBtn.toolTip = Strings.Tooltips.Toolbar.openReminders
+
         calendarBtn.image = Icons.Calendar.calendar.with(scale: .large)
+        calendarBtn.toolTip = Strings.Tooltips.Toolbar.openCalendar
+
         settingsBtn.image = Icons.Calendar.settings.with(scale: .large)
+        settingsBtn.toolTip = Strings.Tooltips.Toolbar.openMenu
 
         return NSStackView(views: [pinBtn, .spacer, remindersBtn, calendarBtn, settingsBtn])
     }

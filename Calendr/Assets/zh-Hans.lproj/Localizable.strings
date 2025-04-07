@@ -8,23 +8,25 @@
 "quit" = "退出";
 "search" = "搜索";
 
-//"access_required.calendars" = "Calendar pending 'Full access' authorization";
-//"access_required.reminders" = "Reminders pending authorization";
-//"access_required.open_settings" = "Open Settings";
-//"access_required.cancel" = "Cancel";
+"access_required.calendars" = "Calendar 正在等待'完全访问权限'授权";
+"access_required.reminders" = "提醒事项待授权";
+"access_required.open_settings" = "打开设置";
+"access_required.cancel" = "取消";
 
-//"auto_update.check_for_updates" = "Check for updates";
-//"auto_update.fetching_releases" = "Fetching releases";
+"auto_update.check_for_updates" = "检查更新";
+"auto_update.fetching_releases" = "获取更新中";
 "auto_update.new_version" = "有新版本可用：%@";
-//"auto_update.updated_to" = "Updated to version %@";
-//"auto_update.downloading" = "Downloading version %@";
-//"auto_update.install" = "Install";
-//"auto_update.replace.title" = "Please don't change anything";
-//"auto_update.replace.message" = "Confirm the app location so we have permission to replace it";
+"auto_update.updated_to" = "升级版本到 %@";
+"auto_update.downloading" = "下载版本 %@";
+"auto_update.install" = "安装";
+"auto_update.replace.message" = "请确认应用程序的位置，以便获得权限来替换。";
+
+//"attachments.open.message" = "Calendr needs permission to access your attachments";
+//"attachments.open.authorize" = "Authorize access to Attachments";
 
 "settings.title" = "设置";
 "settings.tab.general" = "通用";
-//"settings.tab.appearance" = "Appearance";
+"settings.tab.appearance" = "外观";
 "settings.tab.calendars" = "日历";
 "settings.tab.keyboard" = "快捷方式";
 "settings.tab.about" = "关于";
@@ -33,13 +35,14 @@
 "settings.menu_bar.auto_launch" = "登录时打开";
 "settings.menu_bar.show_icon" = "显示图标";
 "settings.menu_bar.show_date" = "显示日期";
-"settings.menu_bar.show_icon_date" = "在图标中显示日期";
 "settings.menu_bar.show_background" = "启用不透明背景";
 "settings.menu_bar.date_format_custom" = "自定义";
 
 "settings.next_event" = "下一个日程";
 "settings.next_event.show_next_event" = "显示下一个日程";
-"settings.next_event.font_size" = "字体大小";
+//"settings.next_event.grab_attention" = "Grab attention when event is close";
+//"settings.next_event.grab_attention.flashing" = "Flashing";
+//"settings.next_event.grab_attention.sound" = "Play sound";
 "settings.next_event.detect_notch" = "为屏幕“刘海”缩短长度";
 
 "settings.calendar" = "日历";
@@ -47,17 +50,18 @@
 "settings.calendar.preserve_selected_date" = "隐藏时保留所选日期";
 "settings.calendar.show_declined_events" = "显示拒绝的日程";
 "settings.calendar.show_declined_events_tooltip" = "此功能需在原生日历应用中同样启用。";
-//"settings.calendar.date_hover_option" = "Hold ⌥ to peek at hovered dates";
-//"settings.calendar.calendar_app_view_mode" = "Calendar app view";
+"settings.calendar.date_hover_option" = "按住 ⌥ 键预览悬停日期详情";
+"settings.calendar.calendar_app_view_mode" = "日历应用展示模式";
 
 "settings.events" = "日程";
-//"settings.events.show_map" = "Show map and weather";
-//"settings.events.show_overdue_reminders" = "Show overdue reminders";
-//"settings.events.show_finished_events" = "Show finished events";
-//"settings.events.show_recurrence_indicator" = "Show recurrence indicator";
+"settings.events.show_map" = "展示地图和天气";
+"settings.events.show_overdue_reminders" = "展示逾期日程";
+"settings.events.show_finished_events" = "展示已完成日程";
+"settings.events.show_recurrence_indicator" = "展示日程重复标识";
+//"settings.events.force_local_time_zone" = "Show all events in local time zone";
 
 "settings.appearance.transparency" = "透明度";
-//"settings.appearance.accessibility" = "Accessibility";
+"settings.appearance.accessibility" = "无障碍";
 
 "settings.keyboard.local_shortcuts.title" = "本地快捷键";
 "settings.keyboard.local_shortcuts.prev_date" = "前一天";
@@ -77,29 +81,41 @@
 "settings.keyboard.global_shortcuts.open_next_reminder" = "打开下一个提醒";
 "settings.keyboard.global_shortcuts.open_next_reminder_options" = "下一个提醒选项";
 
-"formatter.date.all_day" = "全天";
 "formatter.date.today" = "今日";
 "formatter.date.relative.in" = "在 %@ 内";
 "formatter.date.relative.ago" = "%@ 之前";
 "formatter.date.relative.left" = "还剩 %@";
 
+//"reminder.status.overdue" = "Overdue";
+
 "reminder.options.button" = "选项";
 "reminder.options.complete" = "完成";
 "reminder.options.remind" = "%@提醒";
 
-"event_details.participant.organizer" = "发起人";
-"event_details.participant.me" = "我";
+"event.details.participant.organizer" = "发起人";
+"event.details.participant.me" = "我";
 
-"event_status.label" = "我的状态：";
+"event.all_day" = "全天";
 
-"event_status.accepted" = "已接受";
-"event_status.maybe" = "也许";
-"event_status.declined" = "已拒绝";
-"event_status.pending" = "等待中";
+"event.status.accepted" = "已接受";
+"event.status.maybe" = "也许";
+"event.status.declined" = "已拒绝";
+"event.status.pending" = "等待中";
 
-"event_action.open" = "打开";
-"event_action.join" = "加入";
-"event_action.skip" = "跳过";
-"event_action.accept" = "接受";
-"event_action.maybe" = "也许";
-"event_action.decline" = "拒绝";
+"event.action.open" = "打开";
+"event.action.join" = "加入";
+"event.action.skip" = "跳过";
+"event.action.accept" = "接受";
+"event.action.maybe" = "也许";
+"event.action.decline" = "拒绝";
+
+"tooltips.navigation.prev_month" = "上个月";
+"tooltips.navigation.today" = "今天";
+"tooltips.navigation.next_month" = "下个月";
+
+"tooltips.toolbar.stay_open" = "保持打开";
+"tooltips.toolbar.open_calendar" = "打开日历";
+"tooltips.toolbar.open_reminders" = "打开提醒";
+"tooltips.toolbar.open_menu" = "打开菜单";
+
+//"calendars.source.others" = "Others";

@@ -22,6 +22,8 @@ struct EventModel: Equatable {
     let participants: [Participant]
     let timeZone: TimeZone?
     let hasRecurrenceRules: Bool
+    let priority: Priority?
+    let attachments: [Attachment]
 }
 
 enum EventStatus: Comparable {
@@ -60,13 +62,42 @@ extension EventType {
 
 extension EventModel {
 
-    func range(using dateProvider: DateProviding) -> DateRange { .init(start: start, end: end, dateProvider: dateProvider) }
+    func range(using dateProvider: DateProviding, timeZone: TimeZone? = nil) -> DateRange {
+        .init(start: start, end: end, timeZone: timeZone, dateProvider: dateProvider)
+    }
 
     func isInProgress(using dateProvider: DateProviding) -> Bool { dateProvider.calendar.isDate(dateProvider.now, in: (start, end), granularity: .second) }
 
     var status: EventStatus { if case .event(let status) = type { return status } else { return .unknown } }
 
     var isMeeting: Bool { !participants.isEmpty }
+
+    func calendarAppURL(using dateProvider: DateProviding) -> URL? {
+
+        guard let id = id.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) else {
+            return nil
+        }
+
+        guard !type.isReminder else {
+            return URL(string: "x-apple-reminderkit://remcdreminder/\(id)")
+        }
+
+        let date: String
+        if hasRecurrenceRules {
+            let formatter = DateFormatter(format: "yyyyMMdd'T'HHmmss'Z'", calendar: dateProvider.calendar)
+            if !isAllDay {
+                formatter.timeZone = .init(secondsFromGMT: 0)
+            }
+            if let formattedDate = formatter.string(for: start) {
+                date = "/\(formattedDate)"
+            } else {
+                return nil
+            }
+        } else {
+            date =  ""
+        }
+        return URL(string: "ical://ekevent\(date)/\(id)?method=show&options=more")
+    }
 }
 
 struct Participant: Hashable {
@@ -74,4 +105,10 @@ struct Participant: Hashable {
     let status: EventStatus
     let isOrganizer: Bool
     let isCurrentUser: Bool
+}
+
+enum Priority {
+    case high
+    case medium
+    case low
 }

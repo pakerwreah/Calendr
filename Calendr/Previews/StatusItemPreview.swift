@@ -12,11 +12,11 @@ import RxSwift
 
 struct StatusItemPreview: PreviewProvider {
 
-    static let dateProvider = MockDateProvider()
+    static let dateProvider = MockDateProvider(start: .make(year: 2024, month: 12, day: 30))
     static let calendarService = MockCalendarServiceProvider(events: events, dateProvider: dateProvider)
     static let screenProvider = MockScreenProvider(screen: MockScreen(hasNotch: true))
     static let settings = MockStatusItemSettings(
-        showIcon: true, showDate: true, showBackground: true, iconStyle: .dayOfWeek, showNextEvent: true
+        showIcon: true, showDate: true, showBackground: true, iconStyle: .dayOfWeek, dateFormat: "MMM yyyy", showNextEvent: true, textScaling: 1.2
     )
     static let notificationCenter = NotificationCenter()
 

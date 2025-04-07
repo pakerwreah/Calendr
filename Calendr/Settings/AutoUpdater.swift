@@ -12,7 +12,7 @@ import ZIPFoundation
 import Sentry
 
 protocol AutoUpdating {
-    func start()
+    @MainActor func start()
     func checkRelease(notify: Bool)
     func downloadAndInstall()
 }
@@ -120,8 +120,8 @@ class AutoUpdater: AutoUpdating {
                 Timer.scheduledTimer(
                     withTimeInterval: 3 * 60 * 60,
                     repeats: true
-                ) { _ in
-                    self.checkRelease(notify: true)
+                ) { [weak self] _ in
+                    self?.checkRelease(notify: true)
                 }
             }
         }
@@ -130,7 +130,7 @@ class AutoUpdater: AutoUpdating {
     func checkRelease(notify: Bool) {
         Task {
             do {
-                try await checkRelease(notify)
+                try await checkReleaseAsync(notify: notify)
             } catch {
                 newVersionAvailableObserver.onNext(.initial)
                 print(error.localizedDescription)
@@ -172,7 +172,7 @@ class AutoUpdater: AutoUpdating {
         notificationProvider.send(id: .uuid, content)
     }
 
-    private func checkRelease(_ notify: Bool) async throws {
+    private func checkReleaseAsync(notify: Bool) async throws {
 
         guard !BuildConfig.isUITesting else { return }
 
@@ -215,15 +215,17 @@ class AutoUpdater: AutoUpdating {
         }
     }
 
-    /// bundleURL might return weird stuff if you restore the app from the trash 🔮
+    private func getApplicationsUrl() -> URL? {
+        try? fileManager.url(for: .applicationDirectory, in: .localDomainMask, appropriateFor: nil, create: false)
+    }
+
     private func getAppUrl() -> URL {
-        do {
-            let applications = try fileManager.url(for: .applicationDirectory, in: .localDomainMask, appropriateFor: nil, create: false)
-            return applications.appendingPathComponent("Calendr.app", conformingTo: .directory)
-        } catch {
-            SentrySDK.capture(error: error)
-            return Bundle.main.bundleURL
+        let appUrl = Bundle.main.bundleURL
+        /// gatekeeper might go nuts if you restore the app from the trash 🔮
+        guard appUrl.pathComponents.contains("AppTranslocation"), let applications = getApplicationsUrl() else {
+            return appUrl
         }
+        return applications.appendingPathComponent("Calendr.app", conformingTo: .directory)
     }
 
     private func downloadAndInstall() async throws {
@@ -242,16 +244,16 @@ class AutoUpdater: AutoUpdating {
 
         defer { try? fileManager.removeItem(at: archiveURL) }
 
-        try await savePanel(for: appUrl)
+        let selectedURL = try await savePanel(for: appUrl)
 
-        try await replaceApp(url: appUrl, archive: archiveURL)
+        try await replaceApp(url: selectedURL, archive: archiveURL)
 
         userDefaults.updatedVersion = release.name
 
-        try relaunchApp(url: appUrl)
+        try relaunchApp(url: selectedURL)
     }
 
-    private func savePanel(for appUrl: URL) async throws {
+    private func savePanel(for appUrl: URL) async throws -> URL {
 
         let selectedURL = try await withCheckedThrowingContinuation { continuation in
             DispatchQueue.main.async {
@@ -261,7 +263,6 @@ class AutoUpdater: AutoUpdating {
                 dialog.nameFieldStringValue = appUrl.lastPathComponent
                 dialog.nameFieldLabel = "Calendr.app"
                 dialog.prompt = Strings.AutoUpdate.install
-                dialog.title = Strings.AutoUpdate.Replace.title
                 dialog.message = Strings.AutoUpdate.Replace.message
                 dialog.begin { result in
                     continuation.resume(returning: result == .cancel ? nil : dialog.url)
@@ -271,9 +272,7 @@ class AutoUpdater: AutoUpdating {
         guard let selectedURL else {
             throw UnexpectedError(message: "User canceled the save panel")
         }
-        guard selectedURL == appUrl else {
-            throw UnexpectedError(message: "User selected different app url: \(selectedURL)")
-        }
+        return selectedURL
     }
 
     private func replaceApp(url appUrl: URL, archive archiveURL: URL) async throws {

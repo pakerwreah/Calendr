@@ -51,6 +51,7 @@ protocol StatusItemSettings {
     var statusItemDateStyle: Observable<StatusItemDateStyle> { get }
     var statusItemDateFormat: Observable<String> { get }
     var showEventStatusItem: Observable<Bool> { get }
+    var statusItemTextScaling: Observable<Double> { get }
 }
 
 protocol CalendarSettings {
@@ -69,15 +70,12 @@ protocol CalendarSettings {
 protocol AppearanceSettings {
     var popoverMaterial: Observable<PopoverMaterial> { get }
     var textScaling: Observable<Double> { get }
-    var calendarTextScaling: Observable<Double> { get }
 }
 
-protocol EventDetailsSettings: AppearanceSettings {
-    var showMap: Observable<Bool> { get }
-}
-
-protocol EventSettings: EventDetailsSettings {
+protocol EventSettings: AppearanceSettings {
     var showRecurrenceIndicator: Observable<Bool> { get }
+    var forceLocalTimeZone: Observable<Bool> { get }
+    var showMap: Observable<Bool> { get }
 }
 
 protocol EventListSettings: EventSettings {
@@ -85,17 +83,19 @@ protocol EventListSettings: EventSettings {
     var showOverdueReminders: Observable<Bool> { get }
 }
 
-protocol NextEventSettings: EventDetailsSettings {
+protocol NextEventSettings: EventSettings {
     var showEventStatusItem: Observable<Bool> { get }
-    var eventStatusItemFontSize: Observable<Float> { get }
     var eventStatusItemCheckRange: Observable<Int> { get }
+    var eventStatusItemFlashing: Observable<Bool> { get }
+    var eventStatusItemSound: Observable<Bool> { get }
+    var eventStatusItemTextScaling: Observable<Double> { get }
     var eventStatusItemLength: Observable<Int> { get }
     var eventStatusItemDetectNotch: Observable<Bool> { get }
 }
 
 class SettingsViewModel:
     StatusItemSettings, NextEventSettings, CalendarSettings,
-    EventListSettings, EventDetailsSettings, AppearanceSettings {
+    EventListSettings, EventSettings, AppearanceSettings {
 
     struct IconStyleOption: Equatable {
         let style: StatusItemIconStyle
@@ -118,12 +118,15 @@ class SettingsViewModel:
     let toggleStatusItemIcon: AnyObserver<Bool>
     let toggleStatusItemDate: AnyObserver<Bool>
     let toggleStatusItemBackground: AnyObserver<Bool>
+    let statusItemTextScalingObserver: AnyObserver<Double>
     let statusItemIconStyleObserver: AnyObserver<StatusItemIconStyle>
     let statusItemDateStyleObserver: AnyObserver<StatusItemDateStyle>
     let statusItemDateFormatObserver: AnyObserver<String>
     let toggleEventStatusItem: AnyObserver<Bool>
-    let eventStatusItemFontSizeObserver: AnyObserver<Float>
     let eventStatusItemCheckRangeObserver: AnyObserver<Int>
+    let toggleEventStatusItemFlashing: AnyObserver<Bool>
+    let toggleEventStatusItemSound: AnyObserver<Bool>
+    let eventStatusItemTextScalingObserver: AnyObserver<Double>
     let eventStatusItemLengthObserver: AnyObserver<Int>
     let toggleEventStatusItemDetectNotch: AnyObserver<Bool>
     let calendarScalingObserver: AnyObserver<Double>
@@ -138,6 +141,7 @@ class SettingsViewModel:
     let togglePastEvents: AnyObserver<Bool>
     let toggleOverdueReminders: AnyObserver<Bool>
     let toggleRecurrenceIndicator: AnyObserver<Bool>
+    let toggleForceLocalTimeZone: AnyObserver<Bool>
     let transparencyObserver: AnyObserver<Int>
     let textScalingObserver: AnyObserver<Double>
     let calendarTextScalingObserver: AnyObserver<Double>
@@ -155,9 +159,12 @@ class SettingsViewModel:
     let statusItemDateFormat: Observable<String>
     let isDateFormatInputVisible: Observable<Bool>
     let showEventStatusItem: Observable<Bool>
-    let eventStatusItemFontSize: Observable<Float>
+    let statusItemTextScaling: Observable<Double>
     let eventStatusItemCheckRange: Observable<Int>
     let eventStatusItemCheckRangeLabel: Observable<String>
+    let eventStatusItemFlashing: Observable<Bool>
+    let eventStatusItemSound: Observable<Bool>
+    let eventStatusItemTextScaling: Observable<Double>
     let eventStatusItemLength: Observable<Int>
     let eventStatusItemDetectNotch: Observable<Bool>
     let calendarScaling: Observable<Double>
@@ -172,6 +179,7 @@ class SettingsViewModel:
     let showPastEvents: Observable<Bool>
     let showOverdueReminders: Observable<Bool>
     let showRecurrenceIndicator: Observable<Bool>
+    let forceLocalTimeZone: Observable<Bool>
     let popoverTransparency: Observable<Int>
     let popoverMaterial: Observable<PopoverMaterial>
     let textScaling: Observable<Double>
@@ -182,15 +190,19 @@ class SettingsViewModel:
 
     private func localizedUnit(for mode: CalendarViewMode) -> String {
 
-        let numberFormatter = NumberFormatter()
-        numberFormatter.notANumberSymbol = ""
+        let formatter = DateComponentsFormatter()
+        formatter.unitsStyle = .full
+        formatter.maximumUnitCount = 1
+        formatter.zeroFormattingBehavior = .dropAll
+        formatter.calendar = dateProvider.calendar
 
-        let formatter = MeasurementFormatter()
-        formatter.unitStyle = .long
-        formatter.numberFormatter = numberFormatter
-        formatter.locale = dateProvider.calendar.locale
+        let components: DateComponents = switch mode {
+            case .month: .init(month: 1)
+            case .week: .init(weekOfMonth: 1)
+            case .day: .init(day: 1)
+        }
 
-        return formatter.string(from: Measurement(value: .nan, unit: Unit(symbol: mode.rawValue)))
+        return formatter.string(from: components)?.trimmingCharacters(in: .decimalDigits.union(.whitespaces)) ?? mode.rawValue
     }
 
     private(set) lazy var calendarAppViewModeOptions: [CalendarViewModeOption] = {
@@ -233,8 +245,11 @@ class SettingsViewModel:
         statusItemDateStyleObserver = userDefaults.rx.observer(for: \.statusItemDateStyle).mapObserver(\.rawValue)
         statusItemDateFormatObserver = userDefaults.rx.observer(for: \.statusItemDateFormat)
         toggleEventStatusItem = userDefaults.rx.observer(for: \.showEventStatusItem)
-        eventStatusItemFontSizeObserver = userDefaults.rx.observer(for: \.eventStatusItemFontSize)
+        statusItemTextScalingObserver = userDefaults.rx.observer(for: \.statusItemTextScaling)
         eventStatusItemCheckRangeObserver = userDefaults.rx.observer(for: \.eventStatusItemCheckRange)
+        toggleEventStatusItemFlashing = userDefaults.rx.observer(for: \.eventStatusItemFlashing)
+        toggleEventStatusItemSound = userDefaults.rx.observer(for: \.eventStatusItemSound)
+        eventStatusItemTextScalingObserver = userDefaults.rx.observer(for: \.eventStatusItemTextScaling)
         eventStatusItemLengthObserver = userDefaults.rx.observer(for: \.eventStatusItemLength)
         toggleEventStatusItemDetectNotch = userDefaults.rx.observer(for: \.eventStatusItemDetectNotch)
         calendarScalingObserver = userDefaults.rx.observer(for: \.calendarScaling)
@@ -249,6 +264,7 @@ class SettingsViewModel:
         togglePastEvents = userDefaults.rx.observer(for: \.showPastEvents)
         toggleOverdueReminders = userDefaults.rx.observer(for: \.showOverdueReminders)
         toggleRecurrenceIndicator = userDefaults.rx.observer(for: \.showRecurrenceIndicator)
+        toggleForceLocalTimeZone = userDefaults.rx.observer(for: \.forceLocalTimeZone)
         transparencyObserver = userDefaults.rx.observer(for: \.transparencyLevel)
         textScalingObserver = userDefaults.rx.observer(for: \.textScaling)
         calendarTextScalingObserver = userDefaults.rx.observer(for: \.calendarTextScaling)
@@ -276,8 +292,11 @@ class SettingsViewModel:
         statusItemDateStyle = userDefaults.rx.observe(\.statusItemDateStyle).map { .init(rawValue: $0) ?? .none }
         statusItemDateFormat = userDefaults.rx.observe(\.statusItemDateFormat)
         showEventStatusItem = userDefaults.rx.observe(\.showEventStatusItem)
-        eventStatusItemFontSize = userDefaults.rx.observe(\.eventStatusItemFontSize)
+        statusItemTextScaling = userDefaults.rx.observe(\.statusItemTextScaling)
         eventStatusItemCheckRange = userDefaults.rx.observe(\.eventStatusItemCheckRange)
+        eventStatusItemFlashing = userDefaults.rx.observe(\.eventStatusItemFlashing)
+        eventStatusItemSound = userDefaults.rx.observe(\.eventStatusItemSound)
+        eventStatusItemTextScaling = userDefaults.rx.observe(\.eventStatusItemTextScaling)
         eventStatusItemLength = userDefaults.rx.observe(\.eventStatusItemLength)
         eventStatusItemDetectNotch = userDefaults.rx.observe(\.eventStatusItemDetectNotch)
         calendarScaling = userDefaults.rx.observe(\.calendarScaling)
@@ -291,6 +310,7 @@ class SettingsViewModel:
         showPastEvents = userDefaults.rx.observe(\.showPastEvents)
         showOverdueReminders = userDefaults.rx.observe(\.showOverdueReminders)
         showRecurrenceIndicator = userDefaults.rx.observe(\.showRecurrenceIndicator)
+        forceLocalTimeZone = userDefaults.rx.observe(\.forceLocalTimeZone)
         popoverTransparency = userDefaults.rx.observe(\.transparencyLevel)
         textScaling = userDefaults.rx.observe(\.textScaling)
         calendarTextScaling = userDefaults.rx.observe(\.calendarTextScaling)
@@ -313,7 +333,12 @@ class SettingsViewModel:
         iconStyleOptions = calendarChangeObservable
             .map {
                 StatusItemIconStyle.allCases.map {
-                    let icon = StatusItemIconFactory.icon(size: .init(15), style: $0, dateProvider: dateProvider)
+                    let icon = StatusItemIconFactory.icon(
+                        size: 15,
+                        style: $0,
+                        textScaling: 1.2,
+                        dateProvider: dateProvider
+                    )
                     return IconStyleOption(style: $0, image: icon, title: $0.rawValue)
                 }
             }

@@ -74,26 +74,11 @@ class EventOptionsViewModel: BaseContextMenuViewModel<EventAction> {
         guard !items.isEmpty else { return nil }
     }
 
-    private func openEvent() {
-
-        let date: String
-        if event.hasRecurrenceRules {
-            let formatter = DateFormatter(format: "yyyyMMdd'T'HHmmss'Z'", calendar: dateProvider.calendar)
-            if !event.isAllDay {
-                formatter.timeZone = .init(secondsFromGMT: 0)
-            }
-            date = "/\(formatter.string(for: event.start)!)"
-        } else {
-            date =  ""
-        }
-        workspace.open(URL(string: "ical://ekevent\(date)/\(event.id)?method=show&options=more")!)
-    }
-
     override func onAction(_ action: Action) -> Completable {
 
         switch action {
         case .open:
-            openEvent()
+            workspace.open(event)
         case .link(let link, _):
             workspace.open(link)
         case .skip:
@@ -129,7 +114,7 @@ extension EventAction: ContextMenuAction {
         switch self {
         case .open:
             return Icons.Calendar.calendar
-        
+
         case .link(let link, let isInProgress):
             let icon = if link.isMeeting {
                 isInProgress ? Icons.Event.video_fill : Icons.Event.video
@@ -152,17 +137,17 @@ extension EventAction: ContextMenuAction {
     var title: String {
         switch self {
         case .open:
-            return Strings.EventAction.open
+            return Strings.Event.Action.open
         case .link(let link, _):
-            return link.isMeeting ? Strings.EventAction.join : link.url.domain ?? "???"
+            return link.isMeeting ? Strings.Event.Action.join : link.url.domain ?? "???"
         case .skip:
-            return Strings.EventAction.skip
+            return Strings.Event.Action.skip
         case .status(.accept):
-            return Strings.EventAction.accept
+            return Strings.Event.Action.accept
         case .status(.maybe):
-            return Strings.EventAction.maybe
+            return Strings.Event.Action.maybe
         case .status(.decline):
-            return Strings.EventAction.decline
+            return Strings.Event.Action.decline
         }
     }
 }

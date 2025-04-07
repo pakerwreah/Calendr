@@ -37,6 +37,12 @@ extension ObservableType {
     func `repeat`<T: ObservableType>(when other: T) -> Observable<Element> where T.Element == Void {
         Observable.combineLatest(self, other.startWith(())).map(\.0)
     }
+
+    func lastValue() -> Element? {
+        var value: Element? = nil
+        _ = bind { value = $0 }
+        return value
+    }
 }
 
 extension PublishSubject {
@@ -52,7 +58,7 @@ extension BehaviorSubject {
         { ($0.asObservable().observe(on: scheduler), $0.asObserver()) }(Self.init(value: value))
     }
 
-    var value: Element { try! value() }
+    var current: Element { try! value() }
 }
 
 extension Bool {

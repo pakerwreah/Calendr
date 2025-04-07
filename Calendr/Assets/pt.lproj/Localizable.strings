@@ -19,8 +19,10 @@
 "auto_update.updated_to" = "Atualizado para a versão %@";
 "auto_update.downloading" = "Baixando versão %@";
 "auto_update.install" = "Instalar";
-"auto_update.replace.title" = "Por favor, não mude nada";
 "auto_update.replace.message" = "Confirme a localização do aplicativo para que possamos substituí-lo";
+
+"attachments.open.message" = "Calendr precisa de permissão para accessar os seus anexos";
+"attachments.open.authorize" = "Autorizar accesso a Anexos";
 
 "settings.title" = "Preferências";
 "settings.tab.general" = "Geral";
@@ -33,13 +35,14 @@
 "settings.menu_bar.auto_launch" = "Iniciar no login";
 "settings.menu_bar.show_icon" = "Mostrar ícone";
 "settings.menu_bar.show_date" = "Mostrar data";
-"settings.menu_bar.show_icon_date" = "Mostrar data no ícone";
 "settings.menu_bar.show_background" = "Mostrar fundo opaco";
 "settings.menu_bar.date_format_custom" = "Personalizado";
 
 "settings.next_event" = "Próximo Evento";
 "settings.next_event.show_next_event" = "Mostrar próximo evento";
-"settings.next_event.font_size" = "Tamanho da fonte";
+"settings.next_event.grab_attention" = "Chamar atenção quando o evento estiver próximo";
+"settings.next_event.grab_attention.flashing" = "Piscando";
+"settings.next_event.grab_attention.sound" = "Tocar som";
 "settings.next_event.detect_notch" = "Encurtar se 'notch' estiver presente";
 
 "settings.calendar" = "Calendário";
@@ -55,6 +58,7 @@
 "settings.events.show_overdue_reminders" = "Mostrar lembretes atrasados";
 "settings.events.show_finished_events" = "Mostrar eventos terminados";
 "settings.events.show_recurrence_indicator" = "Mostrar indicador de recorrência";
+"settings.events.force_local_time_zone" = "Mostrar todos os eventos no horário local";
 
 "settings.appearance.transparency" = "Transparência";
 "settings.appearance.accessibility" = "Acessibilidade";
@@ -77,29 +81,41 @@
 "settings.keyboard.global_shortcuts.open_next_reminder" = "Abrir próximo lembrete";
 "settings.keyboard.global_shortcuts.open_next_reminder_options" = "Opções do próximo lembrete";
 
-"formatter.date.all_day" = "Dia inteiro";
 "formatter.date.today" = "Hoje";
 "formatter.date.relative.in" = "em %@";
 "formatter.date.relative.ago" = "%@ atrás";
 "formatter.date.relative.left" = "%@ rest.";
 
+"reminder.status.overdue" = "Atrasado";
+
 "reminder.options.button" = "Opções";
 "reminder.options.complete" = "Concluído";
 "reminder.options.remind" = "Lembrar %@";
 
-"event_details.participant.organizer" = "organizador";
-"event_details.participant.me" = "eu";
+"event.details.participant.organizer" = "organizador";
+"event.details.participant.me" = "eu";
 
-"event_status.label" = "meu status:";
+"event.all_day" = "Dia inteiro";
 
-"event_status.accepted" = "Aceito";
-"event_status.maybe" = "Talvez";
-"event_status.declined" = "Recusado";
-"event_status.pending" = "Pendente";
+"event.status.accepted" = "Aceito";
+"event.status.maybe" = "Talvez";
+"event.status.declined" = "Recusado";
+"event.status.pending" = "Pendente";
 
-"event_action.open" = "Abrir";
-"event_action.join" = "Entrar";
-"event_action.skip" = "Pular";
-"event_action.accept" = "Aceitar";
-"event_action.maybe" = "Talvez";
-"event_action.decline" = "Recusar";
+"event.action.open" = "Abrir";
+"event.action.join" = "Entrar";
+"event.action.skip" = "Pular";
+"event.action.accept" = "Aceitar";
+"event.action.maybe" = "Talvez";
+"event.action.decline" = "Recusar";
+
+"tooltips.navigation.prev_month" = "Mês anterior";
+"tooltips.navigation.today" = "Hoje";
+"tooltips.navigation.next_month" = "Próximo mês";
+
+"tooltips.toolbar.stay_open" = "Permanecer aberto";
+"tooltips.toolbar.open_calendar" = "Abrir Calendário";
+"tooltips.toolbar.open_reminders" = "Abrir Lembretes";
+"tooltips.toolbar.open_menu" = "Abrir menu";
+
+"calendars.source.others" = "Outros";

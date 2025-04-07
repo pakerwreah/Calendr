@@ -24,7 +24,7 @@ class DateSelector {
         prevMonth: Observable<Void>,
         nextMonth: Observable<Void>
     ) {
-        var timezone = calendar.timeZone
+        var timeZone = calendar.timeZone
 
         dateObservable = Observable.merge(
             initial,
@@ -46,10 +46,10 @@ class DateSelector {
             }
         )
         .distinctUntilChanged { a, b in
-            timezone == calendar.timeZone && calendar.isDate(a, inSameDayAs: b)
+            timeZone == calendar.timeZone && calendar.isDate(a, inSameDayAs: b)
         }
         .do(afterNext: { _ in
-            timezone = calendar.timeZone
+            timeZone = calendar.timeZone
         })
         .share(replay: 1)
     }

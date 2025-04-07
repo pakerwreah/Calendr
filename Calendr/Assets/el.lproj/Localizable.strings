@@ -1,0 +1,121 @@
+/*
+  Localizable.strings
+  Calendr
+
+  Created by Petros Dhespollari on 03/02/2025.
+*/
+
+"quit" = "Έξοδος";
+"search" = "Αναζήτηση";
+
+"access_required.calendars" = "Ημερολόγιο που εκκρεμεί εξουσιοδότηση 'Πλήρης πρόσβαση'";
+"access_required.reminders" = "Υπενθυμίσεις εν αναμονή εξουσιοδότησης";
+"access_required.open_settings" = "Άνοιγμα Ρυθμίσεων";
+"access_required.cancel" = "Ακύρωση";
+
+"auto_update.check_for_updates" = "Έλεγχος για ενημερώσεις";
+"auto_update.fetching_releases" = "Λήψη εκδόσεων";
+"auto_update.new_version" = "Νέα διαθέσιμη έκδοση: %@";
+"auto_update.updated_to" = "Ενημερώθηκε στην έκδοση %@";
+"auto_update.downloading" = "Λήψη της έκδοσης %@";
+"auto_update.install" = "Εγκατάσταση";
+"auto_update.replace.message" = "Επιβεβαιώστε τη θέση της εφαρμογής ώστε να έχουμε την άδεια να την αντικαταστήσουμε";
+
+//"attachments.open.message" = "Calendr needs permission to access your attachments";
+//"attachments.open.authorize" = "Authorize access to Attachments";
+
+"settings.title" = "Προτιμήσεις";
+"settings.tab.general" = "Γενικά";
+"settings.tab.appearance" = "Εμφάνιση";
+"settings.tab.calendars" = "Ημερολόγια";
+"settings.tab.keyboard" = "Συντομεύσεις";
+"settings.tab.about" = "Πληροφορίες";
+
+"settings.menu_bar" = "Γραμμή μενού";
+"settings.menu_bar.auto_launch" = "Εκκίνηση κατά την είσοδο";
+"settings.menu_bar.show_icon" = "Εμφάνιση εικονιδίου";
+"settings.menu_bar.show_date" = "Εμφάνιση ημερομηνίας";
+"settings.menu_bar.show_background" = "Εμφάνιση αδιαφανούς φόντου";
+"settings.menu_bar.date_format_custom" = "Προσαρμοσμένη";
+
+"settings.next_event" = "Επόμενο συμβάν";
+"settings.next_event.show_next_event" = "Εμφάνιση επόμενου συμβάντος";
+"settings.next_event.grab_attention" = "Τράβηξε την προσοχή όταν το συμβάν είναι κοντά";
+"settings.next_event.grab_attention.flashing" = "Αναβοσβήνει";
+"settings.next_event.grab_attention.sound" = "Αναπαραγωγή ήχου";
+"settings.next_event.detect_notch" = "Μείωση αν υπάρχει 'εγκοπή'";
+
+"settings.calendar" = "Ημερολόγιο";
+"settings.calendar.show_week_numbers" = "Εμφάνιση αριθμών εβδομάδας";
+"settings.calendar.preserve_selected_date" = "Διατήρηση της επιλεγμένης ημερομηνίας κατά την απόκρυψη";
+"settings.calendar.show_declined_events" = "Εμφάνιση απορριφθέντων συμβάντων";
+"settings.calendar.show_declined_events_tooltip" = "Αυτό λειτουργεί μόνο εάν είναι επίσης ενεργοποιημένο στην εγγενή εφαρμογή Ημερολόγιο";
+"settings.calendar.date_hover_option" = "Κρατήστε πατημένο το ⌥ για να κοιτάξετε τις ημερομηνίες που βρίσκονται σε κατάσταση αιώρησης";
+"settings.calendar.calendar_app_view_mode" = "Προβολή εφαρμογής ημερολογίου";
+
+"settings.events" = "Εκδηλώσεις";
+"settings.events.show_map" = "Εμφάνιση χάρτη και καιρού";
+"settings.events.show_overdue_reminders" = "Εμφάνιση ληξιπρόθεσμων υπενθυμίσεων";
+"settings.events.show_finished_events" = "Εμφάνιση τελειωμένων συμβάντων";
+"settings.events.show_recurrence_indicator" = "Εμφάνιση δείκτη επανάληψης";
+"settings.events.force_local_time_zone" = "Εμφάνιση όλων των συμβάντων στην τοπική ζώνη ώρας";
+
+"settings.appearance.transparency" = "Διαφάνεια";
+"settings.appearance.accessibility" = "Προσβασιμότητα";
+
+"settings.keyboard.local_shortcuts.title" = "Τοπικές συντομεύσεις";
+"settings.keyboard.local_shortcuts.prev_date" = "Προηγούμενη ημερομηνία";
+"settings.keyboard.local_shortcuts.next_date" = "Επόμενη ημερομηνία";
+"settings.keyboard.local_shortcuts.prev_week" = "Προηγούμενη εβδομάδα";
+"settings.keyboard.local_shortcuts.next_week" = "Επόμενη εβδομάδα";
+"settings.keyboard.local_shortcuts.prev_month" = "Προηγούμενος μήνας";
+"settings.keyboard.local_shortcuts.next_month" = "Επόμενος μήνας";
+"settings.keyboard.local_shortcuts.curr_date" = "Τρέχουσα ημερομηνία";
+"settings.keyboard.local_shortcuts.open_date" = "Άνοιγμα επιλεγμένης ημερομηνίας";
+"settings.keyboard.local_shortcuts.pin_calendar" = "Pin calendar";
+
+"settings.keyboard.global_shortcuts.title" = "Παγκόσμιες συντομεύσεις";
+"settings.keyboard.global_shortcuts.open_calendar" = "Άνοιγμα ημερολογίου";
+"settings.keyboard.global_shortcuts.open_next_event" = "Άνοιγμα επόμενου συμβάντος";
+"settings.keyboard.global_shortcuts.open_next_event_options" = "Επιλογές επόμενου συμβάντος";
+"settings.keyboard.global_shortcuts.open_next_reminder" = "Άνοιγμα επόμενης υπενθύμισης";
+"settings.keyboard.global_shortcuts.open_next_reminder_options" = "Επιλογές επόμενης υπενθύμισης";
+
+"formatter.date.today" = "Σήμερα";
+"formatter.date.relative.in" = "σε %@";
+"formatter.date.relative.ago" = "%@ πριν";
+"formatter.date.relative.left" = "%@ μείνανε";
+
+//"reminder.status.overdue" = "Overdue";
+
+"reminder.options.button" = "Επιλογές";
+"reminder.options.complete" = "Ολοκληρώθηκε";
+"reminder.options.remind" = "Υπενθύμιση %@";
+
+"event.details.participant.organizer" = "διοργανωτής";
+"event.details.participant.me" = "εγω";
+
+"event.all_day" = "Όλη την ημέρα";
+
+"event.status.accepted" = "Αποδεκτή";
+"event.status.maybe" = "Ίσως";
+"event.status.declined" = "Απορρίφθηκε";
+"event.status.pending" = "Εκκρεμεί";
+
+"event.action.open" = "Άνοιγμα";
+"event.action.join" = "Συμμετοχή";
+"event.action.skip" = "Παράλειψη";
+"event.action.accept" = "Αποδοχή";
+"event.action.maybe" = "Ίσως";
+"event.action.decline" = "Απορρίπτεται";
+
+"tooltips.navigation.prev_month" = "Προηγούμενος μήνας";
+"tooltips.navigation.today" = "Σήμερα";
+"tooltips.navigation.next_month" = "Επόμενος μήνας";
+
+"tooltips.toolbar.stay_open" = "Μείνετε ανοιχτοί";
+"tooltips.toolbar.open_calendar" = "Άνοιγμα Ημερολογίου";
+"tooltips.toolbar.open_reminders" = "Άνοιγμα Υπενθυμίσεων";
+"tooltips.toolbar.open_menu" = "Άνοιγμα μενού";
+
+"calendars.source.others" = "Άλλοι";

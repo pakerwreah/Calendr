@@ -17,8 +17,8 @@ class NextEventView: NSView {
     private let viewModel: NextEventViewModel
 
     private let colorBar = NSView()
-    private let nextEventTitle = Label()
-    private let nextEventTime = Label()
+    private let nextEventTitle: Label
+    private let nextEventTime: Label
     private let nextEventView = NSStackView()
 
     init(viewModel: NextEventViewModel) {
@@ -31,6 +31,10 @@ class NextEventView: NSView {
         )
         .map { $0 ? max($1 - 10, 0) : 0 }
         .distinctUntilChanged()
+
+        let font = NSFont.systemFont(ofSize: 10)
+        nextEventTitle = Label(font: font, scaling: viewModel.textScaling)
+        nextEventTime = Label(font: font, scaling: viewModel.textScaling)
 
         super.init(frame: .zero)
 
@@ -70,18 +74,6 @@ class NextEventView: NSView {
     }
 
     private func setUpBindings() {
-
-        let fontSizeObservable = viewModel.fontSize
-            .map { NSFont.systemFont(ofSize: CGFloat($0)) }
-            .share(replay: 1)
-
-        fontSizeObservable
-            .bind(to: nextEventTitle.rx.font)
-            .disposed(by: disposeBag)
-
-        fontSizeObservable
-            .bind(to: nextEventTime.rx.font)
-            .disposed(by: disposeBag)
 
         Observable.combineLatest(
             viewModel.barStyle,

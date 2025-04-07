@@ -192,7 +192,7 @@ class EventViewModelTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(viewModel.duration, "")
+        XCTAssertEqual(viewModel.duration.lastValue(), "")
     }
 
     func testDuration_isAllDay_isMultiDay_shouldShowDuration() {
@@ -205,7 +205,7 @@ class EventViewModelTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(viewModel.duration, "January 1 - 2")
+        XCTAssertEqual(viewModel.duration.lastValue(), "January 1 - 2")
     }
 
     func testDuration_isSameDay() {
@@ -217,7 +217,7 @@ class EventViewModelTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(viewModel.duration, "3:00 - 4:00 PM")
+        XCTAssertEqual(viewModel.duration.lastValue(), "3:00 - 4:00 PM")
     }
 
     func testDuration_endsMidnight() {
@@ -229,7 +229,7 @@ class EventViewModelTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(viewModel.duration, "3:00 PM - 12:00 AM")
+        XCTAssertEqual(viewModel.duration.lastValue(), "3:00 PM - 12:00 AM")
     }
 
     func testDuration_isMultiDay_isSameMonth_withTime() {
@@ -243,7 +243,7 @@ class EventViewModelTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(viewModel.duration, "2021-01-01 00:00\n2021-01-03 00:01")
+        XCTAssertEqual(viewModel.duration.lastValue(), "2021-01-01 00:00\n2021-01-03 00:01")
     }
 
     func testDuration_isMultiDay_isDifferentMonth_withTime() {
@@ -257,7 +257,7 @@ class EventViewModelTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(viewModel.duration, "2021-01-01 00:00\n2021-02-03 00:01")
+        XCTAssertEqual(viewModel.duration.lastValue(), "2021-01-01 00:00\n2021-02-03 00:01")
     }
 
     func testDuration_isMultiDay_isSameMonth_endsStartOfNextDay() {
@@ -269,7 +269,7 @@ class EventViewModelTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(viewModel.duration, "January 1 - 2")
+        XCTAssertEqual(viewModel.duration.lastValue(), "January 1 - 2")
     }
 
     func testDuration_isMultiDay_isDifferentMonth_endsStartOfNextDay() {
@@ -281,7 +281,7 @@ class EventViewModelTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(viewModel.duration, "Jan 1 - Feb 2")
+        XCTAssertEqual(viewModel.duration.lastValue(), "Jan 1 - Feb 2")
     }
 
     func testDuration_isSameDay_withDifferentTimeZone() {
@@ -294,7 +294,7 @@ class EventViewModelTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(viewModel.duration, "12:00 - 1:00 PM (GMT-3)")
+        XCTAssertEqual(viewModel.duration.lastValue(), "12:00 - 1:00 PM (GMT-3)")
     }
 
     func testDuration_isSameDay_isMeeting_withDifferentTimeZone() {
@@ -308,7 +308,7 @@ class EventViewModelTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(viewModel.duration, "3:00 - 4:00 PM")
+        XCTAssertEqual(viewModel.duration.lastValue(), "3:00 - 4:00 PM")
     }
 
     func testBarStyle() {
@@ -319,6 +319,64 @@ class EventViewModelTests: XCTestCase {
         XCTAssertEqual(mock(type: .event(.pending)).barStyle, .filled)
         XCTAssertEqual(mock(type: .event(.declined)).barStyle, .filled)
         XCTAssertEqual(mock(type: .event(.maybe)).barStyle, .bordered)
+    }
+
+    func testReminderDuration() {
+
+        let viewModel = mock(
+            event: .make(
+                start: .make(year: 2021, month: 1, day: 1, hour: 1),
+                type: .reminder(completed: false)
+            )
+        )
+
+        XCTAssertEqual(viewModel.duration.lastValue(), "1:00 AM")
+    }
+
+    func testOverdueReminder_shouldShowRelativeDuration() {
+
+        dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 0, minute: 30)
+
+        let viewModel = mock(
+            event: .make(
+                start: .make(year: 2021, month: 1, day: 1, hour: 0, minute: 15),
+                type: .reminder(completed: false)
+            )
+        )
+
+        XCTAssertEqual(viewModel.duration.lastValue(), "12:15 AM")
+        XCTAssertEqual(viewModel.relativeDuration.lastValue(), "15m ago")
+    }
+
+    func testOverdueReminder_isCompleted_shouldNotShowRelativeDuration() {
+
+        dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 0, minute: 30)
+
+        let viewModel = mock(
+            event: .make(
+                start: .make(year: 2021, month: 1, day: 1, hour: 0, minute: 15),
+                type: .reminder(completed: true)
+            )
+        )
+
+        XCTAssertEqual(viewModel.duration.lastValue(), "12:15 AM")
+        XCTAssertNil(viewModel.relativeDuration.lastValue())
+    }
+
+    func testOverdueReminder_isAllDay_shouldNotShowDurationOrRelativeDuration() {
+
+        dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 0, minute: 30)
+
+        let viewModel = mock(
+            event: .make(
+                start: .make(year: 2021, month: 1, day: 1),
+                isAllDay: true,
+                type: .reminder(completed: false)
+            )
+        )
+
+        XCTAssertEqual(viewModel.duration.lastValue(), "")
+        XCTAssertNil(viewModel.relativeDuration.lastValue())
     }
 
     func testReminder_toggleComplete_isNotCompleted() {

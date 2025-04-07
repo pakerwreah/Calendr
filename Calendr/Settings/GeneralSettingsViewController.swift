@@ -22,8 +22,14 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     private let iconStyleDropdown = Dropdown()
     private let dateFormatDropdown = Dropdown()
     private let dateFormatTextField = NSTextField()
+
+    // Next Event
     private let showNextEventCheckbox = Checkbox(title: Strings.Settings.NextEvent.showNextEvent)
+    private let nextEventRangeStepperLabel = Label()
     private let nextEventRangeStepper = NSStepper()
+    private let nextEventGrabAttentionLabel = Label(text: Strings.Settings.NextEvent.grabAttention)
+    private let nextEventFlashingCheckbox = Checkbox(title: Strings.Settings.NextEvent.GrabAttention.flashing)
+    private let nextEventSoundCheckbox = Checkbox(title: Strings.Settings.NextEvent.GrabAttention.sound)
 
     // Calendar
     private let firstWeekdayPrev = ImageButton(image: Icons.Settings.prev)
@@ -41,6 +47,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     private let showFinishedEventsCheckbox = Checkbox(title: Strings.Settings.Events.showFinishedEvents)
     private let showOverdueCheckbox = Checkbox(title: Strings.Settings.Events.showOverdueReminders)
     private let showRecurrenceCheckbox = Checkbox(title: Strings.Settings.Events.showRecurrenceIndicator)
+    private let forceLocalTimeZoneCheckbox = Checkbox(title: Strings.Settings.Events.forceLocalTimeZone)
 
     init(viewModel: SettingsViewModel) {
 
@@ -68,6 +75,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         let stackView = NSStackView(
             views: Sections.create([
                 makeSection(title: Strings.Settings.menuBar, content: menuBarContent),
+                makeSection(title: Strings.Settings.nextEvent, content: nextEventContent),
                 makeSection(title: Strings.Settings.calendar, content: calendarContent),
                 makeSection(title: Strings.Settings.events, content: eventsContent),
             ])
@@ -132,8 +140,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             autoLaunchCheckbox,
             iconStyle,
             dateFormat,
-            showMenuBarBackgroundCheckbox,
-            nextEventContent
+            showMenuBarBackgroundCheckbox
         ])
         .with(orientation: .vertical)
     }()
@@ -148,28 +155,17 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         nextEventRangeStepper.refusesFirstResponder = true
         nextEventRangeStepper.focusRingType = .none
 
-        let rangeStepperLabel = Label(font: .systemFont(ofSize: 13))
-
-        let rangeStepperProperty = nextEventRangeStepper.rx.controlProperty(
-            getter: \.integerValue,
-            setter: { $0.integerValue = $1 }
-        )
-
-        viewModel.eventStatusItemCheckRange
-            .bind(to: rangeStepperProperty)
-            .disposed(by: disposeBag)
-
-        rangeStepperProperty
-            .bind(to: viewModel.eventStatusItemCheckRangeObserver)
-            .disposed(by: disposeBag)
-
-        viewModel.eventStatusItemCheckRangeLabel
-            .bind(to: rangeStepperLabel.rx.text)
-            .disposed(by: disposeBag)
+        nextEventRangeStepperLabel.font = .systemFont(ofSize: 13)
 
         // Next event stack view
+        let showNextEventStack = NSStackView(views: [showNextEventCheckbox, .spacer, nextEventRangeStepperLabel, nextEventRangeStepper])
+        let grabAttentionStack = NSStackView(views: [nextEventFlashingCheckbox, nextEventSoundCheckbox]).with(insets: .init(horizontal: 16))
+        return NSStackView(views: [
+            showNextEventStack,
+            nextEventGrabAttentionLabel,
+            grabAttentionStack
 
-        return NSStackView(views: [showNextEventCheckbox, .spacer, rangeStepperLabel, nextEventRangeStepper])
+        ]).with(orientation: .vertical)
     }()
 
     private lazy var showDeclinedEventsTooltip: NSView = {
@@ -227,12 +223,14 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             showMapCheckbox,
             showFinishedEventsCheckbox,
             showOverdueCheckbox,
-            showRecurrenceCheckbox
+            showRecurrenceCheckbox,
+            forceLocalTimeZoneCheckbox
         ]).with(orientation: .vertical)
     }()
 
     private func setUpBindings() {
         setUpMenuBar()
+        setUpNextEvent()
         setUpCalendar()
         setUpEvents()
     }
@@ -253,6 +251,8 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         )
         .disposed(by: disposeBag)
 
+        setUpIconStyle()
+
         bind(
             control: showMenuBarDateCheckbox,
             observable: viewModel.showStatusItemDate,
@@ -260,12 +260,17 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         )
         .disposed(by: disposeBag)
 
+        setUpDateFormat()
+
         bind(
             control: showMenuBarBackgroundCheckbox,
             observable: viewModel.showStatusItemBackground,
             observer: viewModel.toggleStatusItemBackground
         )
         .disposed(by: disposeBag)
+    }
+
+    private func setUpNextEvent() {
 
         bind(
             control: showNextEventCheckbox,
@@ -274,11 +279,41 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         )
         .disposed(by: disposeBag)
 
-        setUpIconStyle()
+        setUpNextEventRangeStepper()
 
-        setUpDateFormat()
+        bind(
+            control: nextEventFlashingCheckbox,
+            observable: viewModel.eventStatusItemFlashing,
+            observer: viewModel.toggleEventStatusItemFlashing
+        )
+        .disposed(by: disposeBag)
 
-        setUpCalendarAppViewMode()
+        bind(
+            control: nextEventSoundCheckbox,
+            observable: viewModel.eventStatusItemSound,
+            observer: viewModel.toggleEventStatusItemSound
+        )
+        .disposed(by: disposeBag)
+    }
+
+    private func setUpNextEventRangeStepper() {
+
+        let rangeStepperProperty = nextEventRangeStepper.rx.controlProperty(
+            getter: \.integerValue,
+            setter: { $0.integerValue = $1 }
+        )
+
+        viewModel.eventStatusItemCheckRange
+            .bind(to: rangeStepperProperty)
+            .disposed(by: disposeBag)
+
+        rangeStepperProperty
+            .bind(to: viewModel.eventStatusItemCheckRangeObserver)
+            .disposed(by: disposeBag)
+
+        viewModel.eventStatusItemCheckRangeLabel
+            .bind(to: nextEventRangeStepperLabel.rx.text)
+            .disposed(by: disposeBag)
     }
 
     private func setUpIconStyle() {
@@ -300,10 +335,11 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         )
         .bind { [dropdown = iconStyleDropdown] options, iconStyle in
             let menu = NSMenu()
+            let width = options.map(\.image.size.width).reduce(0, max)
             for option in options {
                 let item = NSMenuItem()
                 item.title = " "
-                item.image = option.image
+                item.image = option.image.with(padding: .init(x: (width - option.image.size.width) / 2, y: 0))
                 menu.addItem(item)
             }
             dropdown.menu = menu
@@ -435,6 +471,8 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             observer: viewModel.toggleDateHoverOption
         )
         .disposed(by: disposeBag)
+
+        setUpCalendarAppViewMode()
     }
 
     private func setUpfirstWeekday() {
@@ -509,6 +547,13 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             control: showRecurrenceCheckbox,
             observable: viewModel.showRecurrenceIndicator,
             observer: viewModel.toggleRecurrenceIndicator
+        )
+        .disposed(by: disposeBag)
+
+        bind(
+            control: forceLocalTimeZoneCheckbox,
+            observable: viewModel.forceLocalTimeZone,
+            observer: viewModel.toggleForceLocalTimeZone
         )
         .disposed(by: disposeBag)
     }

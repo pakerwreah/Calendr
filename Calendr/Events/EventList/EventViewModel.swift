@@ -13,15 +13,18 @@ class EventViewModel {
     let title: String
     let subtitle: String
     let subtitleLink: String?
-    let duration: String
     let color: NSColor
     let barStyle: EventBarStyle
     let type: EventType
     let isDeclined: Bool
+    let isAllDay: Bool
+    let start: Date
     let link: EventLink?
+    let priority: String?
 
+    let duration: Observable<String>
     let isInProgress: Observable<Bool>
-    let backgroundColor: Observable<NSColor>
+    let backgroundColor: Observable<EventBackground>
     let isFaded: Observable<Bool>
     let progress: Observable<CGFloat?>
     let isCompleted: Observable<Bool>
@@ -74,8 +77,17 @@ class EventViewModel {
         color = event.calendar.color
         type = event.type
         isDeclined = event.status ~= .declined
+        isAllDay = event.isAllDay
+        start = event.start
         barStyle = event.status ~= .maybe ? .bordered : .filled
         link = event.detectLink(using: workspace)
+
+        priority = switch event.priority {
+            case .high: "!!!"
+            case .medium: "!!"
+            case .low: "!"
+            default: nil
+        }
 
         linkTapped = .init { [link] _ in
             if let link {
@@ -119,57 +131,74 @@ class EventViewModel {
         subtitle = subtitleText
         subtitleLink = linkText
 
-        let range = event.range(using: dateProvider)
-        let showTime = !(range.startsMidnight && range.endsMidnight)
+        duration = settings.forceLocalTimeZone.map { forceLocalTimeZone in
 
-        if event.isAllDay && range.isSingleDay {
+            let timeZone = event.isMeeting || forceLocalTimeZone ? nil : event.timeZone
+            let range = event.range(using: dateProvider, timeZone: timeZone)
+            let showTime = !(range.startsMidnight && range.endsMidnight)
 
-            duration = ""
+            if event.isAllDay && range.isSingleDay {
 
-        } else if range.isSingleDay {
+                return ""
 
-            let formatter = DateIntervalFormatter()
-            formatter.dateStyle = .none
-            formatter.timeStyle = .short
-            formatter.calendar = dateProvider.calendar
+            } else if range.isSingleDay || event.type.isReminder {
 
-            let end: Date
+                let formatter = DateIntervalFormatter()
+                formatter.dateStyle = .none
+                formatter.timeStyle = .short
+                formatter.calendar = dateProvider.calendar
 
-            if event.type.isReminder {
-                end = event.start
+                let end: Date
+
+                if event.type.isReminder {
+                    end = event.start
+                }
+                else if range.endsMidnight {
+                    end = dateProvider.calendar.startOfDay(for: event.start)
+                }
+                else {
+                    end = event.end
+                }
+
+                return EventUtils.duration(
+                    from: event.start,
+                    to: end,
+                    timeZone: timeZone,
+                    formatter: formatter
+                )
+
+            } else if showTime {
+
+                let formatter = DateIntervalFormatter()
+                formatter.dateTemplate = "ddMMyyyyHm"
+                formatter.calendar = dateProvider.calendar
+
+                return [
+                    EventUtils.duration(
+                        from: event.start,
+                        to: event.start,
+                        timeZone: timeZone,
+                        formatter: formatter
+                    ),
+                    EventUtils.duration(
+                        from: range.fixedEnd,
+                        to: range.fixedEnd,
+                        timeZone: timeZone,
+                        formatter: formatter
+                    )
+                ].joined(separator: "\n")
+
+            } else {
+
+                let formatter = DateIntervalFormatter()
+                formatter.dateTemplate = range.isSameMonth ? "ddMMMM" : "ddMMM"
+                formatter.calendar = dateProvider.calendar
+
+                return formatter.string(from: event.start, to: range.fixedEnd)
             }
-            else if range.endsMidnight {
-                end = dateProvider.calendar.startOfDay(for: event.start)
-            }
-            else {
-                end = event.end
-            }
-
-            duration = EventUtils.duration(
-                from: event.start,
-                to: end,
-                timeZone: event.timeZone,
-                formatter: formatter,
-                isMeeting: event.isMeeting
-            )
-
-        } else if !showTime {
-
-            let formatter = DateIntervalFormatter()
-            formatter.dateTemplate = range.isSameMonth ? "ddMMMM" : "ddMMM"
-            formatter.calendar = dateProvider.calendar
-
-            duration = formatter.string(from: event.start, to: range.fixedEnd)
-
-        } else {
-
-            let formatter = DateFormatter(template: "ddMMyyyyHm", calendar: dateProvider.calendar)
-            let start = formatter.string(from: event.start)
-            let end = formatter.string(from: showTime ? event.end : range.fixedEnd)
-
-            duration = "\(start)\n\(end)"
         }
 
+        let range = event.range(using: dateProvider)
         let total = event.start.distance(to: event.end)
         let secondsToStart = Int(dateProvider.now.distance(to: event.start))
         let secondsToEnd = Int(dateProvider.now.distance(to: event.end).rounded(.up)) + 1
@@ -195,16 +224,18 @@ class EventViewModel {
                 .take(until: isPast.matching(true))
 
         } else {
-            isPast = .just(true)
-            clock = .empty()
+            isPast = .just(secondsToEnd <= 0)
+            clock = .just(())
         }
 
-        if event.type.isReminder {
+        if event.type == .reminder(completed: false), !event.isAllDay  {
 
             let dateFormatter = DateComponentsFormatter()
             dateFormatter.calendar = dateProvider.calendar
             dateFormatter.unitsStyle = .abbreviated
-            dateFormatter.allowedUnits = [.hour, .minute]
+            dateFormatter.allowedUnits = [.day, .hour, .minute]
+            dateFormatter.maximumUnitCount = 2
+            dateFormatter.zeroFormattingBehavior = .dropAll
 
             relativeDuration = clock.compactMap {
                 guard event.start.distance(to: dateProvider.now) > 60 else { return nil }
@@ -250,9 +281,10 @@ class EventViewModel {
 
         isInProgress = progress.map(\.isNotNil).distinctUntilChanged()
 
-        let progressBackgroundColor = color.withAlphaComponent(0.15)
-
-        backgroundColor = isInProgress.map { $0 ? progressBackgroundColor : .clear }
+        backgroundColor = isInProgress.map { isInProgress in
+            guard event.status != .pending else { return .pending }
+            return isInProgress ? .color(event.calendar.color.withAlphaComponent(0.15)) : .clear
+        }
 
         showRecurrenceIndicator = settings.showRecurrenceIndicator.map { $0 && event.hasRecurrenceRules }
     }

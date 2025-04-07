@@ -19,8 +19,10 @@
 "auto_update.updated_to" = "Actualizado a la versión %@";
 "auto_update.downloading" = "Descargando la versión %@";
 "auto_update.install" = "Instalar";
-//"auto_update.replace.title" = "Please don't change anything";
-//"auto_update.replace.message" = "Confirm the app location so we have permission to replace it";
+"auto_update.replace.message" = "Confirmar la ubicación de la aplicación para que tengamos permiso para reemplazarla";
+
+//"attachments.open.message" = "Calendr needs permission to access your attachments";
+//"attachments.open.authorize" = "Authorize access to Attachments";
 
 "settings.title" = "Preferencias";
 "settings.tab.general" = "General";
@@ -33,13 +35,14 @@
 "settings.menu_bar.auto_launch" = "Comenzar al iniciar sesión";
 "settings.menu_bar.show_icon" = "Mostrar icono";
 "settings.menu_bar.show_date" = "Mostrar fecha";
-"settings.menu_bar.show_icon_date" = "Mostrar fecha en icono";
 "settings.menu_bar.show_background" = "Mostrar fondo opaco";
 "settings.menu_bar.date_format_custom" = "Personalizado";
 
 "settings.next_event" = "Próximo evento";
 "settings.next_event.show_next_event" = "Mostrar próximo evento";
-"settings.next_event.font_size" = "Tamaño de fuente";
+"settings.next_event.grab_attention" = "Captar la atención cuando el acontecimiento está cerca";
+"settings.next_event.grab_attention.flashing" = "Intermitente";
+"settings.next_event.grab_attention.sound" = "Reproducir sonido";
 "settings.next_event.detect_notch" = "Acortar si 'notch' está presente";
 
 "settings.calendar" = "Calendario";
@@ -47,14 +50,15 @@
 "settings.calendar.preserve_selected_date" = "Conservar la fecha seleccionada al ocultar";
 "settings.calendar.show_declined_events" = "Mostrar eventos rechazados";
 "settings.calendar.show_declined_events_tooltip" = "Esto solo funciona si también está habilitado en la aplicación Calendario nativa.";
-//"settings.calendar.date_hover_option" = "Hold ⌥ to peek at hovered dates";
-//"settings.calendar.calendar_app_view_mode" = "Calendar app view";
+"settings.calendar.date_hover_option" = "Mantén pulsado ⌥ para echar un vistazo a las fechas sobrevoladas";
+"settings.calendar.calendar_app_view_mode" = "Vista de la aplicación Calendario";
 
 "settings.events" = "Eventos";
 "settings.events.show_map" = "Mostrar mapa y clima";
 "settings.events.show_overdue_reminders" = "Mostrar recordatorios atrasados";
 "settings.events.show_finished_events" = "Mostrar eventos finalizados";
 "settings.events.show_recurrence_indicator" = "Mostrar indicador de recurrencia";
+"settings.events.force_local_time_zone" = "Mostrar todos los eventos en la zona horaria local";
 
 "settings.appearance.transparency" = "Transparencia";
 "settings.appearance.accessibility" = "Accesibilidad";
@@ -77,29 +81,41 @@
 "settings.keyboard.global_shortcuts.open_next_reminder" = "Abrir próximo recordatorio";
 "settings.keyboard.global_shortcuts.open_next_reminder_options" = "Opciones del próximo recordatorio";
 
-"formatter.date.all_day" = "Todo el día";
 "formatter.date.today" = "Hoy";
 "formatter.date.relative.in" = "en %@";
 "formatter.date.relative.ago" = "hace %@";
 "formatter.date.relative.left" = "%@ rest.";
 
+//"reminder.status.overdue" = "Overdue";
+
 "reminder.options.button" = "Opciones";
 "reminder.options.complete" = "Completado";
 "reminder.options.remind" = "Recordar %@";
 
-"event_details.participant.organizer" = "organizador";
-"event_details.participant.me" = "me";
+"event.details.participant.organizer" = "organizador";
+"event.details.participant.me" = "me";
 
-"event_status.label" = "mi estado:";
+"event.all_day" = "Todo el día";
 
-"event_status.accepted" = "Aceptado";
-"event_status.maybe" = "Quizá";
-"event_status.declined" = "Rechazado";
-"event_status.pending" = "Pendiente";
+"event.status.accepted" = "Aceptado";
+"event.status.maybe" = "Quizá";
+"event.status.declined" = "Rechazado";
+"event.status.pending" = "Pendiente";
 
-"event_action.open" = "Abrir";
-"event_action.join" = "Unirse";
-"event_action.skip" = "Saltar";
-"event_action.accept" = "Aceptar";
-"event_action.maybe" = "Quizá";
-"event_action.decline" = "Rechazar";
+"event.action.open" = "Abrir";
+"event.action.join" = "Unirse";
+"event.action.skip" = "Saltar";
+"event.action.accept" = "Aceptar";
+"event.action.maybe" = "Quizá";
+"event.action.decline" = "Rechazar";
+
+"tooltips.navigation.prev_month" = "Mes anterior";
+"tooltips.navigation.today" = "Hoy";
+"tooltips.navigation.next_month" = "Próximo mes";
+
+"tooltips.toolbar.stay_open" = "Permanecer abierto";
+"tooltips.toolbar.open_calendar" = "Calendario abierto";
+"tooltips.toolbar.open_reminders" = "Abrir recordatorios";
+"tooltips.toolbar.open_menu" = "Abrir menú";
+
+"calendars.source.others" = "Otros";

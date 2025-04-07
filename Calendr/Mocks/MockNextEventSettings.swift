@@ -9,24 +9,30 @@
 
 import RxSwift
 
-class MockNextEventSettings: MockEventDetailsSettings, NextEventSettings {
+class MockNextEventSettings: MockEventSettings, NextEventSettings {
 
     let showEventStatusItem: Observable<Bool>
-    let eventStatusItemFontSize: Observable<Float>
+    let eventStatusItemTextScaling: Observable<Double>
     let eventStatusItemCheckRange: Observable<Int>
+    let eventStatusItemFlashing: Observable<Bool>
+    let eventStatusItemSound: Observable<Bool>
     let eventStatusItemLength: Observable<Int>
     let eventStatusItemDetectNotch: Observable<Bool>
 
     init(
         showItem: Bool = true,
-        fontSize: Float = 12,
         checkRange: Int = 10,
+        flashing: Bool = true,
+        sound: Bool = true,
+        textScaling: Double = 1,
         length: Int = 20,
         detectNotch: Bool = false
     ) {
         showEventStatusItem = .just(showItem)
-        eventStatusItemFontSize = .just(fontSize)
         eventStatusItemCheckRange = .just(checkRange)
+        eventStatusItemFlashing = .just(flashing)
+        eventStatusItemSound = .just(sound)
+        eventStatusItemTextScaling = .just(textScaling)
         eventStatusItemLength = .just(length)
         eventStatusItemDetectNotch = .just(detectNotch)
     }

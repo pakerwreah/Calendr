@@ -29,6 +29,15 @@ class EventListView: NSView {
         setUpBindings()
     }
 
+    func childRect(at index: Int) -> NSRect? {
+        let children = contentStackView.arrangedSubviews
+        guard index >= 0, index < children.count else {
+            return nil
+        }
+        layoutSubtreeIfNeeded()
+        return children[index].frame
+    }
+
     private func setUpAccessibility() {
 
         guard BuildConfig.isUITesting else { return }
@@ -50,7 +59,7 @@ class EventListView: NSView {
 
     private func setUpBindings() {
 
-        viewModel.asObservable()
+        viewModel.items
             .observe(on: MainScheduler.instance)
             .withUnretained(self)
             .map { view, items in
@@ -70,7 +79,7 @@ class EventListView: NSView {
             .bind(to: contentStackView.rx.arrangedSubviews)
             .disposed(by: disposeBag)
 
-        viewModel.asObservable()
+        viewModel.items
             .observe(on: MainScheduler.instance)
             .map(\.isEmpty)
             .bind(to: rx.isHidden)

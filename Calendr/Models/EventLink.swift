@@ -97,7 +97,8 @@ private enum WorkspaceApp {
         }
         else if [
             "meet.google.com",
-            "hangouts.google.com"
+            "hangouts.google.com",
+            ".webex.com",
         ]
         .contains(where: link.contains) {
             self = .other
