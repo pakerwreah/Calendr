@@ -22,7 +22,7 @@
 "auto_update.replace.message" = "Confirme a localização do aplicativo para que possamos substituí-lo";
 
 "attachments.open.message" = "Calendr precisa de permissão para accessar os seus anexos";
-"attachments.open.authorize" = "Autorizar accesso a Anexos";
+"attachments.open.authorize" = "Autorizar accesso a anexos";
 
 "settings.title" = "Preferências";
 "settings.tab.general" = "Geral";
