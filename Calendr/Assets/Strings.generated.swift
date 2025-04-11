@@ -29,8 +29,8 @@ internal enum Strings {
   }
   internal enum Attachments {
     internal enum Open {
-      /// Authorize access to Attachments
-      internal static let authorize = Strings.tr("Localizable", "attachments.open.authorize", fallback: "Authorize access to Attachments")
+      /// Authorize access to attachments
+      internal static let authorize = Strings.tr("Localizable", "attachments.open.authorize", fallback: "Authorize access to attachments")
       /// Calendr needs permission to access your attachments
       internal static let message = Strings.tr("Localizable", "attachments.open.message", fallback: "Calendr needs permission to access your attachments")
     }

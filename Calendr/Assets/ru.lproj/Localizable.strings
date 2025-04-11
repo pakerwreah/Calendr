@@ -23,7 +23,7 @@
 "auto_update.replace.message" = "Подтвердите местоположение приложения, чтобы предоставить разрешение на его замену";
 
 //"attachments.open.message" = "Calendr needs permission to access your attachments";
-//"attachments.open.authorize" = "Authorize access to Attachments";
+//"attachments.open.authorize" = "Authorize access to attachments";
 
 "settings.title" = "Настройки";
 "settings.tab.general" = "Общее";

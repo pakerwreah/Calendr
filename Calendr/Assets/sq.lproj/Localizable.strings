@@ -22,7 +22,7 @@
 "auto_update.replace.message" = "Konfirmo vendndodhjen e aplikacionit në mënyrë që të kemi lejen për ta zëvendësuar atë";
 
 //"attachments.open.message" = "Calendr needs permission to access your attachments";
-//"attachments.open.authorize" = "Authorize access to Attachments";
+//"attachments.open.authorize" = "Authorize access to attachments";
 
 "settings.title" = "Preferencat";
 "settings.tab.general" = "Gjeneral";
