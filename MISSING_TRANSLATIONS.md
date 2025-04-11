@@ -9,7 +9,6 @@ Language|Count
 [Albanian - shqip - (sq)](Calendr/Assets/sq.lproj/Localizable.strings)|3
 [Ukrainian - українська - (uk)](Calendr/Assets/uk.lproj/Localizable.strings)|2
 [Spanish - español - (es)](Calendr/Assets/es.lproj/Localizable.strings)|3
-[Italian - italiano - (it)](Calendr/Assets/it.lproj/Localizable.strings)|2
 [Slovak - slovenčina - (sk)](Calendr/Assets/sk.lproj/Localizable.strings)|3
 [Swedish - svenska - (sv)](Calendr/Assets/sv.lproj/Localizable.strings)|3
 [Czech - čeština - (cs)](Calendr/Assets/cs.lproj/Localizable.strings)|3
