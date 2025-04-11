@@ -306,7 +306,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
                     return disposable
                 }
 
-                if event.status != new_status {
+                if event.participantStatus != new_status {
                     user.setValue(new_status.rawValue, forKey: "participantStatus")
                     try store.save(event, span: .thisEvent)
                 }
@@ -376,7 +376,7 @@ private extension Strings.AccessRequired {
 
 extension EKEvent {
 
-    var status: EKParticipantStatus {
+    var participantStatus: EKParticipantStatus {
         attendees?.first(where: \.isCurrentUser).map(\.participantStatus) ?? .unknown
     }
 
@@ -446,7 +446,7 @@ private extension CalendarModel {
 private extension EventType {
 
     init(from event: EKEvent) {
-        self = event.birthdayContactIdentifier.isNotNil ? .birthday : .event(.init(from: event.status))
+        self = event.birthdayContactIdentifier.isNotNil ? .birthday : .event(.init(from: event.participantStatus))
     }
 }
 
