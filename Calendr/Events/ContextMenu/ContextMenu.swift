@@ -68,8 +68,20 @@ class BaseContextMenuViewModel<Action: ContextMenuAction>: ContextMenuViewModel 
 
         onAction(action)
             .subscribe(
-                onCompleted: { callback.onNext(action) },
-                onError: callback.onError
+                onCompleted: {
+                    callback.onNext(action)
+                },
+                onError: { error in
+                    callback.onNext(action)
+
+                    DispatchQueue.main.async {
+                        let alert = NSAlert()
+                        alert.alertStyle = .critical
+                        alert.messageText = error.localizedDescription
+                        alert.informativeText = "Make sure Calendr has the right permissions."
+                        alert.runModal()
+                    }
+                }
             )
             .disposed(by: disposeBag)
     }

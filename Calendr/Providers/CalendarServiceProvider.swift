@@ -285,9 +285,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
                 return disposable
             }
 
-            guard
-                let user = event.attendees?.first(where: \.isCurrentUser)
-            else {
+            guard let user = event.currentUser else {
                 observer(.error(.unexpected("🔥 User not found")))
                 return disposable
             }
@@ -306,10 +304,29 @@ class CalendarServiceProvider: CalendarServiceProviding {
                     return disposable
                 }
 
-                if event.participantStatus != new_status {
-                    user.setValue(new_status.rawValue, forKey: "participantStatus")
-                    try store.save(event, span: .thisEvent)
+                guard user.participantStatus != new_status else {
+                    observer(.completed)
+                    return disposable
                 }
+
+                user.setParticipantStatus(new_status)
+
+                // Alarms prevent recurrent events from saving; we get an error saying "Access Denied".
+                // To fix that, we have to remove and re-add them after the event is detached ¯\_(ツ)_/¯
+
+                guard event.hasRecurrenceRules, !event.isDetached, let alarms = event.alarms, !alarms.isEmpty else {
+                    try store.save(event, span: .thisEvent)
+                    observer(.completed)
+                    return disposable
+                }
+
+                event.alarms?.forEach(event.removeAlarm)
+                try store.save(event, span: .thisEvent)
+
+                alarms.forEach {
+                    event.addAlarm(EKAlarm(relativeOffset: $0.relativeOffset))
+                }
+                try store.save(event, span: .thisEvent)
 
                 observer(.completed)
             } catch {
@@ -374,10 +391,17 @@ private extension Strings.AccessRequired {
     }
 }
 
+extension EKParticipant {
+
+    func setParticipantStatus(_ status: EKParticipantStatus) {
+        setValue(status.rawValue, forKey: "participantStatus")
+    }
+}
+
 extension EKEvent {
 
-    var participantStatus: EKParticipantStatus {
-        attendees?.first(where: \.isCurrentUser).map(\.participantStatus) ?? .unknown
+    var currentUser: EKParticipant? {
+        attendees?.first(where: \.isCurrentUser)
     }
 
     // Fix events that should be all-day but are not correctly reported as such (ex. Google's "Out of office")
@@ -402,7 +426,7 @@ private extension Participant {
 
 private extension EventStatus {
 
-    init(from status: EKParticipantStatus) {
+    init(from status: EKParticipantStatus?) {
         switch status {
         case .accepted:
             self = .accepted
@@ -446,7 +470,7 @@ private extension CalendarModel {
 private extension EventType {
 
     init(from event: EKEvent) {
-        self = event.birthdayContactIdentifier.isNotNil ? .birthday : .event(.init(from: event.participantStatus))
+        self = event.birthdayContactIdentifier.isNotNil ? .birthday : .event(.init(from: event.currentUser?.participantStatus))
     }
 }
 
