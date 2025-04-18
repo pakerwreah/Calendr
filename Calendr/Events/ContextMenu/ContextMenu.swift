@@ -78,7 +78,7 @@ class BaseContextMenuViewModel<Action: ContextMenuAction>: ContextMenuViewModel 
                         let alert = NSAlert()
                         alert.alertStyle = .critical
                         alert.messageText = error.localizedDescription
-                        alert.informativeText = "There is a known issue with trying to modify recurrent events.\n\nIf that's not the case, make sure Calendr has the right permissions."
+                        alert.informativeText = "Make sure Calendr has the right permissions."
                         alert.runModal()
                     }
                 }

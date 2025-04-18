@@ -304,10 +304,29 @@ class CalendarServiceProvider: CalendarServiceProviding {
                     return disposable
                 }
 
-                if user.participantStatus != new_status {
-                    user.setParticipantStatus(new_status)
-                    try store.save(event, span: .thisEvent)
+                guard user.participantStatus != new_status else {
+                    observer(.completed)
+                    return disposable
                 }
+
+                user.setParticipantStatus(new_status)
+
+                // Alarms prevent recurrent events from saving; we get an error saying "Access Denied".
+                // To fix that, we have to remove and re-add them after the event is detached ¯\_(ツ)_/¯
+
+                guard event.hasRecurrenceRules, !event.isDetached, let alarms = event.alarms, !alarms.isEmpty else {
+                    try store.save(event, span: .thisEvent)
+                    observer(.completed)
+                    return disposable
+                }
+
+                event.alarms?.forEach(event.removeAlarm)
+                try store.save(event, span: .thisEvent)
+
+                alarms.forEach {
+                    event.addAlarm(EKAlarm(relativeOffset: $0.relativeOffset))
+                }
+                try store.save(event, span: .thisEvent)
 
                 observer(.completed)
             } catch {
