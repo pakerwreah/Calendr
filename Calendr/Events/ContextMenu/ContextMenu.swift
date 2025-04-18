@@ -68,8 +68,20 @@ class BaseContextMenuViewModel<Action: ContextMenuAction>: ContextMenuViewModel 
 
         onAction(action)
             .subscribe(
-                onCompleted: { callback.onNext(action) },
-                onError: callback.onError
+                onCompleted: {
+                    callback.onNext(action)
+                },
+                onError: { error in
+                    callback.onNext(action)
+
+                    DispatchQueue.main.async {
+                        let alert = NSAlert()
+                        alert.alertStyle = .critical
+                        alert.messageText = error.localizedDescription
+                        alert.informativeText = "There is a known issue with trying to modify recurrent events.\n\nIf that's not the case, make sure Calendr has the right permissions."
+                        alert.runModal()
+                    }
+                }
             )
             .disposed(by: disposeBag)
     }
