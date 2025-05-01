@@ -363,7 +363,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         Observable.combineLatest(
             viewModel.dateFormatOptions, dateFormatControl.skip(1)
         )
-        .map { $0[$1].style }
+        .compactMap { $0[safe: $1]?.style }
         .bind(to: viewModel.statusItemDateStyleObserver)
         .disposed(by: disposeBag)
 

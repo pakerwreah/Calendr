@@ -196,6 +196,7 @@
 		34F4C47F2A6C57B300397C80 /* MockStatusItemSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F4C47E2A6C57B300397C80 /* MockStatusItemSettings.swift */; };
 		34F7E03A28427AC00028FF25 /* EventDetailsPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F7E03928427AC00028FF25 /* EventDetailsPreview.swift */; };
 		34F96CEE25B523ED0020DEEA /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F96CED25B523ED0020DEEA /* main.swift */; };
+		34FB352A2DC3D1DB007C5EAE /* Collection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34FB35292DC3D1D9007C5EAE /* Collection.swift */; };
 		34FD09D925AE269600AAAAE2 /* DateProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34FD09D825AE269600AAAAE2 /* DateProvider.swift */; };
 /* End PBXBuildFile section */
 
@@ -423,6 +424,7 @@
 		34F4C47E2A6C57B300397C80 /* MockStatusItemSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockStatusItemSettings.swift; sourceTree = "<group>"; };
 		34F7E03928427AC00028FF25 /* EventDetailsPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailsPreview.swift; sourceTree = "<group>"; };
 		34F96CED25B523ED0020DEEA /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		34FB35292DC3D1D9007C5EAE /* Collection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collection.swift; sourceTree = "<group>"; };
 		34FD09D825AE269600AAAAE2 /* DateProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateProvider.swift; sourceTree = "<group>"; };
 		555CD10C2D58C0FE00CE8EF7 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A122CF0E2CDDFD6100B95699 /* zh-Hant-TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant-TW"; path = "zh-Hant-TW.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -681,6 +683,7 @@
 			children = (
 				3453E6FC28386A84002DCC3C /* Bool.swift */,
 				34702167259E761100827AE7 /* Calendar.swift */,
+				34FB35292DC3D1D9007C5EAE /* Collection.swift */,
 				34924CED259FD064009C3450 /* DateFormatter.swift */,
 				34651F5325E22A3900518C5A /* DateIntervalFormatter.swift */,
 				34EDE71A2AC46515007C5854 /* Error.swift */,
@@ -964,7 +967,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1250;
-				LastUpgradeCheck = 1620;
+				LastUpgradeCheck = 1630;
 				TargetAttributes = {
 					34427696269B5CA4004CFE1C = {
 						CreatedOnToolsVersion = 12.5.1;
@@ -1246,6 +1249,7 @@
 				34ABB9E629A12B8A0021F3CF /* ReminderOptionsViewModel.swift in Sources */,
 				34305BCB25992A4E00AB381D /* Rx+Helpers.swift in Sources */,
 				345EAD4A2C8E26EE00D56857 /* MockWeatherServiceProvider.swift in Sources */,
+				34FB352A2DC3D1DB007C5EAE /* Collection.swift in Sources */,
 				347D0FE7259544B4002451EC /* NSView+Layout.swift in Sources */,
 				34B1C7C525EDA01F00E5CA80 /* EventIntervalView.swift in Sources */,
 				3408F17625FAAA4B00C1EAD4 /* EventDetailsViewController.swift in Sources */,
@@ -1385,7 +1389,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = 32973VC289;
 				INFOPLIST_FILE = CalendrUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1406,7 +1409,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = 32973VC289;
 				INFOPLIST_FILE = CalendrUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1458,6 +1460,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 32973VC289;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -1522,6 +1525,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 32973VC289;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -1554,14 +1558,13 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = 32973VC289;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = Calendr/Config/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.16.3;
+				MARKETING_VERSION = 1.16.4;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Config/Calendr-Bridging-Header.h";
@@ -1582,14 +1585,13 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = 32973VC289;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = Calendr/Config/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.16.3;
+				MARKETING_VERSION = 1.16.4;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Config/Calendr-Bridging-Header.h";
@@ -1606,7 +1608,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = 32973VC289;
 				INFOPLIST_FILE = CalendrTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1630,7 +1631,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = 32973VC289;
 				INFOPLIST_FILE = CalendrTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
