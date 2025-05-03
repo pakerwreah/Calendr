@@ -32,16 +32,31 @@ extension PopoverMaterial {
 }
 
 enum CalendarViewMode: String, CaseIterable {
-    case month
-    case week
-    case day
+    case month, week, day
 }
 
 enum StatusItemIconStyle: String, CaseIterable {
-    case calendar
-    case date
-    case dayOfWeek
+    case calendar, date, dayOfWeek
 }
+
+enum AppearanceMode: Int, CaseIterable {
+    case automatic, light, dark
+}
+
+extension AppearanceMode {
+
+    var appearance: NSAppearance? {
+        switch self {
+        case .automatic:
+            return nil
+        case .light:
+            return .init(named: .aqua)
+        case .dark:
+            return .init(named: .darkAqua)
+        }
+    }
+}
+
 
 protocol StatusItemSettings {
     var showStatusItemIcon: Observable<Bool> { get }
@@ -68,6 +83,7 @@ protocol CalendarSettings {
 }
 
 protocol AppearanceSettings {
+    var appearanceMode: Observable<AppearanceMode> { get }
     var popoverMaterial: Observable<PopoverMaterial> { get }
     var textScaling: Observable<Double> { get }
 }
@@ -146,6 +162,7 @@ class SettingsViewModel:
     let textScalingObserver: AnyObserver<Double>
     let calendarTextScalingObserver: AnyObserver<Double>
     let calendarAppViewModeObserver: AnyObserver<CalendarViewMode>
+    let appearanceModeObserver: AnyObserver<AppearanceMode>
 
     // Observables
     let autoLaunch: Observable<Bool>
@@ -185,6 +202,7 @@ class SettingsViewModel:
     let textScaling: Observable<Double>
     let calendarTextScaling: Observable<Double>
     let calendarAppViewMode: Observable<CalendarViewMode>
+    let appearanceMode: Observable<AppearanceMode>
 
     let isPresented = BehaviorSubject(value: false)
 
@@ -269,6 +287,7 @@ class SettingsViewModel:
         textScalingObserver = userDefaults.rx.observer(for: \.textScaling)
         calendarTextScalingObserver = userDefaults.rx.observer(for: \.calendarTextScaling)
         calendarAppViewModeObserver = userDefaults.rx.observer(for: \.calendarAppViewMode).mapObserver(\.rawValue)
+        appearanceModeObserver = userDefaults.rx.observer(for: \.appearanceMode).mapObserver(\.rawValue)
 
         // MARK: - Observables
 
@@ -315,6 +334,7 @@ class SettingsViewModel:
         textScaling = userDefaults.rx.observe(\.textScaling)
         calendarTextScaling = userDefaults.rx.observe(\.calendarTextScaling)
         calendarAppViewMode = userDefaults.rx.observe(\.calendarAppViewMode).map { .init(rawValue: $0) ?? .month }
+        appearanceMode = userDefaults.rx.observe(\.appearanceMode).map { .init(rawValue: $0) ?? .automatic }
 
         let localeChangeObservable = notificationCenter.rx
             .notification(NSLocale.currentLocaleDidChangeNotification)

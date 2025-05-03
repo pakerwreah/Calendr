@@ -367,6 +367,11 @@ class MainViewController: NSViewController {
 
     private func setUpBindings() {
 
+        settingsViewModel.appearanceMode
+            .map(\.appearance)
+            .bind(to: NSApp.rx.appearance)
+            .disposed(by: disposeBag)
+
         NSApp.rx.observe(\.isActive)
             .matching(false)
             .map([])

@@ -12,6 +12,7 @@ protocol DisposableWrapping {
     associatedtype Value
 
     func disposed(by bag: DisposeBag) -> Value
+    func unwrap() -> (value: Value, disposable: Disposable)
 }
 
 struct DisposableWrapper<T>: DisposableWrapping {
@@ -28,6 +29,10 @@ struct DisposableWrapper<T>: DisposableWrapping {
         bag.insert(disposable)
         return value
     }
+
+    func unwrap() -> (value: T, disposable: Disposable) {
+        return (value, disposable)
+    }
 }
 
 struct CompositeDisposableWrapper<Wrapped: DisposableWrapping>: DisposableWrapping {
@@ -41,5 +46,15 @@ struct CompositeDisposableWrapper<Wrapped: DisposableWrapping>: DisposableWrappi
     func disposed(by bag: DisposeBag) -> [Wrapped.Value] {
 
         wrappers.map { $0.disposed(by: bag) }
+    }
+
+    func unwrap() -> (value: [Wrapped.Value], disposable: Disposable) {
+
+        let unwrapped = wrappers.map { $0.unwrap() }
+
+        return (
+            value: unwrapped.map(\.value),
+            disposable: Disposables.create(unwrapped.map(\.disposable))
+        )
     }
 }

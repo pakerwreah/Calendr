@@ -49,6 +49,7 @@ enum Prefs {
     static let forceLocalTimeZone = "force_local_time_zone"
 
     // Appearance
+    static let appearanceMode = "appearance_mode"
     static let transparencyLevel = "transparency_level"
     static let textScaling = "text_scaling"
 
@@ -107,6 +108,7 @@ func registerDefaultPrefs(in userDefaults: UserDefaults, calendar: Calendar = .c
         Prefs.forceLocalTimeZone: false,
 
         // Appearance
+        Prefs.appearanceMode: 0,
         Prefs.transparencyLevel: 2,
         Prefs.textScaling: 1,
 
@@ -278,6 +280,11 @@ extension UserDefaults {
     }
 
     // Appearance
+
+    @objc dynamic var appearanceMode: Int {
+        get { integer(forKey: Prefs.appearanceMode) }
+        set { set(newValue, forKey: Prefs.appearanceMode) }
+    }
 
     @objc dynamic var transparencyLevel: Int {
         get { integer(forKey: Prefs.transparencyLevel) }
