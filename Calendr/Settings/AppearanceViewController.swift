@@ -61,6 +61,7 @@ class AppearanceViewController: NSViewController, SettingsUI {
                 makeSection(title: Strings.Settings.Appearance.menuBar, content: menuBarContent),
                 makeSection(title: Strings.Settings.Appearance.calendar, content: calendarContent),
                 makeSection(title: Strings.Settings.Appearance.nextEvent, content: nextEventContent),
+                makeThemeSection(),
             ])
             .disposed(by: disposeBag)
         )
@@ -73,6 +74,38 @@ class AppearanceViewController: NSViewController, SettingsUI {
         view.addSubview(stackView)
 
         stackView.edges(equalTo: view)
+    }
+
+    private func makeThemeSection() -> DisposableWrapper<NSView> {
+
+        let btnStack = NSStackView(.horizontal)
+        btnStack.addArrangedSubview(.spacer)
+
+        for mode in AppearanceMode.allCases {
+            let button = CursorButton(cursor: .pointingHand)
+            button.image = mode.icon
+            button.refusesFirstResponder = true
+            button.bezelStyle = .circular
+            button.setButtonType(.pushOnPushOff)
+            btnStack.addArrangedSubview(button)
+
+            button.rx.tap.map(mode)
+                .bind(to: viewModel.appearanceModeObserver)
+                .disposed(by: disposeBag)
+
+            viewModel.appearanceMode
+                .map { $0 == mode ? .on : .off }
+                .bind(to: button.rx.state)
+                .disposed(by: disposeBag)
+        }
+
+        let (divider, disposable) = makeDivider().unwrap()
+
+        let container = NSStackView(views: [divider, btnStack])
+            .with(orientation: .vertical)
+            .with(spacing: Constants.contentSpacing / 2)
+
+        return .init(value: container, disposable: disposable)
     }
 
     private lazy var transparencyContent: NSView = {
@@ -222,4 +255,18 @@ private extension Strings.Settings.Appearance {
     static let menuBar = Strings.Settings.menuBar
     static let calendar = Strings.Settings.calendar
     static let nextEvent = Strings.Settings.nextEvent
+}
+
+private extension AppearanceMode {
+
+    var icon: NSImage {
+        switch self {
+        case .automatic:
+            return Icons.Appearance.automatic
+        case .light:
+            return Icons.Appearance.light
+        case .dark:
+            return Icons.Appearance.dark
+        }
+    }
 }

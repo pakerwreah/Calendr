@@ -46,6 +46,7 @@ class SettingsViewModelTests: XCTestCase {
     var userDefaultsShowOverdueReminders: Bool? { userDefaults.object(forKey: Prefs.showOverdueReminders) as! Bool? }
     var userDefaultsShowRecurrenceIndicator: Bool? { userDefaults.object(forKey: Prefs.showRecurrenceIndicator) as! Bool? }
     var userDefaultsTransparency: Int? { userDefaults.object(forKey: Prefs.transparencyLevel) as! Int? }
+    var userDefaultsAppearanceMode: Int? { userDefaults.object(forKey: Prefs.appearanceMode) as! Int? }
 
     override func setUp() {
         userDefaults.setVolatileDomain([:], forName: UserDefaults.registrationDomain)
@@ -78,139 +79,29 @@ class SettingsViewModelTests: XCTestCase {
 
     func testDefaultSettings() {
 
-        var showStatusItemIcon: Bool?
-        var showStatusItemDate: Bool?
-        var showStatusItemBackground: Bool?
-        var statusItemDateStyle: StatusItemDateStyle?
-        var statusItemTextScaling: Double?
-        var showEventStatusItem: Bool?
-        var eventStatusItemTextScaling: Double?
-        var eventStatusItemCheckRange: Int?
-        var eventStatusItemLength: Int?
-        var eventStatusItemDetectNotch: Bool?
-        var calendarScaling: Double?
-        var firstWeekday: Int?
-        var highlightedWeekdays: [Int]?
-        var showWeekNumbers: Bool?
-        var showDeclinedEvents: Bool?
-        var preserveSelectedDate: Bool?
-        var showMap: Bool?
-        var showPastEvents: Bool?
-        var showOverdueReminders: Bool?
-        var showRecurrenceIndicator: Bool?
-        var popoverTransparency: Int?
-        var popoverMaterial: PopoverMaterial?
-
-        viewModel.showStatusItemIcon
-            .bind { showStatusItemIcon = $0 }
-            .disposed(by: disposeBag)
-
-        viewModel.showStatusItemDate
-            .bind { showStatusItemDate = $0 }
-            .disposed(by: disposeBag)
-
-        viewModel.showStatusItemBackground
-            .bind { showStatusItemBackground = $0 }
-            .disposed(by: disposeBag)
-
-        viewModel.statusItemDateStyle
-            .bind { statusItemDateStyle = $0 }
-            .disposed(by: disposeBag)
-
-        viewModel.statusItemTextScaling
-            .bind { statusItemTextScaling = $0 }
-            .disposed(by: disposeBag)
-
-        viewModel.showEventStatusItem
-            .bind { showEventStatusItem = $0 }
-            .disposed(by: disposeBag)
-
-        viewModel.eventStatusItemTextScaling
-            .bind { eventStatusItemTextScaling = $0 }
-            .disposed(by: disposeBag)
-
-        viewModel.eventStatusItemCheckRange
-            .bind { eventStatusItemCheckRange = $0 }
-            .disposed(by: disposeBag)
-
-        viewModel.eventStatusItemLength
-            .bind { eventStatusItemLength = $0 }
-            .disposed(by: disposeBag)
-
-        viewModel.eventStatusItemDetectNotch
-            .bind { eventStatusItemDetectNotch = $0 }
-            .disposed(by: disposeBag)
-
-        viewModel.calendarScaling
-            .bind { calendarScaling = $0 }
-            .disposed(by: disposeBag)
-
-        viewModel.firstWeekday
-            .bind { firstWeekday = $0 }
-            .disposed(by: disposeBag)
-
-        viewModel.highlightedWeekdays
-            .bind { highlightedWeekdays = $0 }
-            .disposed(by: disposeBag)
-
-        viewModel.showWeekNumbers
-            .bind { showWeekNumbers = $0 }
-            .disposed(by: disposeBag)
-
-        viewModel.showDeclinedEvents
-            .bind { showDeclinedEvents = $0 }
-            .disposed(by: disposeBag)
-
-        viewModel.preserveSelectedDate
-            .bind { preserveSelectedDate = $0 }
-            .disposed(by: disposeBag)
-
-        viewModel.showMap
-            .bind { showMap = $0 }
-            .disposed(by: disposeBag)
-
-        viewModel.showPastEvents
-            .bind { showPastEvents = $0 }
-            .disposed(by: disposeBag)
-
-        viewModel.showOverdueReminders
-            .bind { showOverdueReminders = $0 }
-            .disposed(by: disposeBag)
-
-        viewModel.showRecurrenceIndicator
-            .bind { showRecurrenceIndicator = $0 }
-            .disposed(by: disposeBag)
-
-        viewModel.popoverTransparency
-            .bind { popoverTransparency = $0 }
-            .disposed(by: disposeBag)
-
-        viewModel.popoverMaterial
-            .bind { popoverMaterial = $0 }
-            .disposed(by: disposeBag)
-
-        XCTAssertEqual(showStatusItemIcon, true)
-        XCTAssertEqual(showStatusItemDate, true)
-        XCTAssertEqual(showStatusItemBackground, false)
-        XCTAssertEqual(statusItemDateStyle, .short)
-        XCTAssertEqual(statusItemTextScaling, 1.2)
-        XCTAssertEqual(showEventStatusItem, false)
-        XCTAssertEqual(eventStatusItemTextScaling, 1.2)
-        XCTAssertEqual(eventStatusItemCheckRange, 6)
-        XCTAssertEqual(eventStatusItemLength, 18)
-        XCTAssertEqual(eventStatusItemDetectNotch, false)
-        XCTAssertEqual(calendarScaling, 1)
-        XCTAssertEqual(firstWeekday, 3)
-        XCTAssertEqual(highlightedWeekdays, [0, 6])
-        XCTAssertEqual(showWeekNumbers, false)
-        XCTAssertEqual(showDeclinedEvents, false)
-        XCTAssertEqual(preserveSelectedDate, false)
-        XCTAssertEqual(showMap, true)
-        XCTAssertEqual(showPastEvents, true)
-        XCTAssertEqual(showOverdueReminders, true)
-        XCTAssertEqual(showRecurrenceIndicator, true)
-        XCTAssertEqual(popoverTransparency, 2)
-        XCTAssertEqual(popoverMaterial, .headerView)
+        XCTAssertEqual(viewModel.showStatusItemIcon.lastValue(), true)
+        XCTAssertEqual(viewModel.showStatusItemDate.lastValue(), true)
+        XCTAssertEqual(viewModel.showStatusItemBackground.lastValue(), false)
+        XCTAssertEqual(viewModel.statusItemDateStyle.lastValue(), .short)
+        XCTAssertEqual(viewModel.statusItemTextScaling.lastValue(), 1.2)
+        XCTAssertEqual(viewModel.showEventStatusItem.lastValue(), false)
+        XCTAssertEqual(viewModel.eventStatusItemTextScaling.lastValue(), 1.2)
+        XCTAssertEqual(viewModel.eventStatusItemCheckRange.lastValue(), 6)
+        XCTAssertEqual(viewModel.eventStatusItemLength.lastValue(), 18)
+        XCTAssertEqual(viewModel.eventStatusItemDetectNotch.lastValue(), false)
+        XCTAssertEqual(viewModel.calendarScaling.lastValue(), 1)
+        XCTAssertEqual(viewModel.firstWeekday.lastValue(), 3)
+        XCTAssertEqual(viewModel.highlightedWeekdays.lastValue(), [0, 6])
+        XCTAssertEqual(viewModel.showWeekNumbers.lastValue(), false)
+        XCTAssertEqual(viewModel.showDeclinedEvents.lastValue(), false)
+        XCTAssertEqual(viewModel.preserveSelectedDate.lastValue(), false)
+        XCTAssertEqual(viewModel.showMap.lastValue(), true)
+        XCTAssertEqual(viewModel.showPastEvents.lastValue(), true)
+        XCTAssertEqual(viewModel.showOverdueReminders.lastValue(), true)
+        XCTAssertEqual(viewModel.showRecurrenceIndicator.lastValue(), true)
+        XCTAssertEqual(viewModel.popoverTransparency.lastValue(), 2)
+        XCTAssertEqual(viewModel.popoverMaterial.lastValue(), .headerView)
+        XCTAssertEqual(viewModel.appearanceMode.lastValue(), .automatic)
 
         XCTAssertEqual(userDefaultsStatusItemIconEnabled, true)
         XCTAssertEqual(userDefaultsStatusItemDateEnabled, true)
@@ -233,17 +124,14 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(userDefaultsShowOverdueReminders, true)
         XCTAssertEqual(userDefaultsShowRecurrenceIndicator, true)
         XCTAssertEqual(userDefaultsTransparency, 2)
+        XCTAssertEqual(userDefaultsAppearanceMode, 0)
     }
 
     func testDateFormatOptions() {
 
         dateProvider.m_calendar.locale = Locale(identifier: "en_US")
 
-        var options: [SettingsViewModel.DateFormatOption]?
-
-        viewModel.dateFormatOptions
-            .bind { options = $0 }
-            .disposed(by: disposeBag)
+        let options = viewModel.dateFormatOptions.lastValue()
 
         XCTAssertEqual(options, [
             .init(style: .short, title: "1/1/21"),
@@ -897,5 +785,15 @@ class SettingsViewModelTests: XCTestCase {
 
         XCTAssertEqual(showBackground, true)
         XCTAssertEqual(userDefaultsStatusItemBackgroundEnabled, true)
+    }
+
+    func testChangeAppearance() {
+
+        for mode in AppearanceMode.allCases {
+            viewModel.appearanceModeObserver.onNext(mode)
+
+            XCTAssertEqual(viewModel.appearanceMode.lastValue(), mode)
+            XCTAssertEqual(userDefaultsAppearanceMode, mode.rawValue)
+        }
     }
 }

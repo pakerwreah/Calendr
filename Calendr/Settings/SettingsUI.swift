@@ -15,10 +15,8 @@ protocol SettingsUI {
 }
 
 extension SettingsUI {
-    
-    func makeSection(title: String, content: NSView) -> DisposableWrapper<NSView> {
 
-        let label = Label(text: title, font: .systemFont(ofSize: 14, weight: .semibold))
+    func makeDivider() -> DisposableWrapper<NSView> {
 
         let divider: NSView = .spacer(height: 1)
         divider.wantsLayer = true
@@ -26,6 +24,15 @@ extension SettingsUI {
         let disposable = divider.rx.updateLayer
             .map { NSColor.tertiaryLabelColor.effectiveCGColor }
             .bind(to: divider.layer!.rx.backgroundColor)
+
+        return .init(value: divider, disposable: disposable)
+    }
+
+    func makeSection(title: String, content: NSView) -> DisposableWrapper<NSView> {
+
+        let label = Label(text: title, font: .systemFont(ofSize: 14, weight: .semibold))
+
+        let (divider, disposable) = makeDivider().unwrap()
 
         let stackView = NSStackView(views: [
             label,

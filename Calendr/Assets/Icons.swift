@@ -9,6 +9,12 @@ import AppKit
 
 enum Icons {
 
+    enum Appearance {
+        static let automatic = NSImage(systemName: "circle.lefthalf.fill")
+        static let light = NSImage(systemName: "sun.max.fill")
+        static let dark = NSImage(systemName: "moon.fill")
+    }
+
     enum Calendar {
         static let prev = NSImage(systemName: "chevron.backward")
         static let reset = NSImage(systemName: "circle")
