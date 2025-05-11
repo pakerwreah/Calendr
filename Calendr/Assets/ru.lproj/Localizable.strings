@@ -84,9 +84,9 @@
 "settings.keyboard.global_shortcuts.open_next_reminder_options" = "Открыть настройки следующего напоминания";
 
 "formatter.date.today" = "Сегодня";
-"formatter.date.relative.in" = "в %@";
+"formatter.date.relative.in" = "через %@";
 "formatter.date.relative.ago" = "%@ назад";
-"formatter.date.relative.left" = "%@ осталось";
+"formatter.date.relative.left" = "осталось %@";
 
 "reminder.status.overdue" = "Просрочено";
 
