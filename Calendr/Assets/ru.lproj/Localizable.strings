@@ -4,6 +4,7 @@
 
   Created by Petros Dhespollari on 08/02/2025.
   Updated by Pavel Bychko on 08/02/2025.
+  Updated by Roman Kolosov on 11/05/2025.
 */
 
 "quit" = "Выход";
@@ -22,8 +23,8 @@
 "auto_update.install" = "Установить";
 "auto_update.replace.message" = "Подтвердите местоположение приложения, чтобы предоставить разрешение на его замену";
 
-//"attachments.open.message" = "Calendr needs permission to access your attachments";
-//"attachments.open.authorize" = "Authorize access to attachments";
+"attachments.open.message" = "Приложению Calendr нужно разрешение на доступ к вложениям";
+"attachments.open.authorize" = "Разрешить доступ к вложениям";
 
 "settings.title" = "Настройки";
 "settings.tab.general" = "Общее";
@@ -83,11 +84,11 @@
 "settings.keyboard.global_shortcuts.open_next_reminder_options" = "Открыть настройки следующего напоминания";
 
 "formatter.date.today" = "Сегодня";
-"formatter.date.relative.in" = "в %@";
+"formatter.date.relative.in" = "через %@";
 "formatter.date.relative.ago" = "%@ назад";
-"formatter.date.relative.left" = "%@ осталось";
+"formatter.date.relative.left" = "осталось %@";
 
-//"reminder.status.overdue" = "Overdue";
+"reminder.status.overdue" = "Просрочено";
 
 "reminder.options.button" = "Опции";
 "reminder.options.complete" = "Полный";
