@@ -1,0 +1,121 @@
+/* 
+  Localizable.strings
+  Calendr
+
+  Created by Chaim-Chv on 27/05/2025
+*/
+
+"quit" = "סגור";
+"search" = "חיפוש";
+
+"access_required.calendars" = "ממתין להרשאת 'גישה מלאה' ללוחות שנה";
+"access_required.reminders" = "ממתין להרשאת גישה לתזכורות";
+"access_required.open_settings" = "פתיחת הגדרות";
+"access_required.cancel" = "ביטול";
+
+"auto_update.check_for_updates" = "בדוק עדכונים";
+"auto_update.fetching_releases" = "מקבל עדכונים";
+"auto_update.new_version" = "גרסה חדשה זמינה: %@";
+"auto_update.updated_to" = "עודכן לגרסה %@";
+"auto_update.downloading" = "מוריד גרסה %@";
+"auto_update.install" = "התקנה";
+"auto_update.replace.message" = "יש לאשר את מיקום האפליקציה כך שתהיה לנו הרשאה להחליף אותה";
+
+"attachments.open.message" = "‏Calendr זקוק להרשאה כדי לגשת לקבצים המצורפים שלך";
+"attachments.open.authorize" = "הענק הרשאה לקבצים מצורפים";
+
+"settings.title" = "הגדרות";
+"settings.tab.general" = "כללי";
+"settings.tab.appearance" = "מראה";
+"settings.tab.calendars" = "לוחות שנה";
+"settings.tab.keyboard" = "קיצורי דרך";
+"settings.tab.about" = "אודות";
+
+"settings.menu_bar" = "שורת התפריטים";
+"settings.menu_bar.auto_launch" = "הפעלה אוטומטית";
+"settings.menu_bar.show_icon" = "הצג סמל";
+"settings.menu_bar.show_date" = "הצג תאריך";
+"settings.menu_bar.show_background" = "הצג רקע אטום";
+"settings.menu_bar.date_format_custom" = "מותאם";
+
+"settings.next_event" = "אירוע הבא";
+"settings.next_event.show_next_event" = "הצג אירוע הבא";
+"settings.next_event.grab_attention" = "הסב תשומת לב כאשר האירוע קרוב";
+"settings.next_event.grab_attention.flashing" = "הבהוב";
+"settings.next_event.grab_attention.sound" = "ניגון צליל";
+"settings.next_event.detect_notch" = "מקוצר אם יש Notch";
+
+"settings.calendar" = "לוח שנה";
+"settings.calendar.show_week_numbers" = "הצגת מספרי שבועות";
+"settings.calendar.preserve_selected_date" = "שמור תאריך נבחר בהסתרה";
+"settings.calendar.show_declined_events" = "הצגת אירועים שנדחו";
+"settings.calendar.show_declined_events_tooltip" = "עובד רק אם הופעל גם באפליקציית לוח שנה המובנית.";
+"settings.calendar.date_hover_option" = "החזקת ⌥ כדי להציץ תוך כדי ריחוף בתאריכים";
+"settings.calendar.calendar_app_view_mode" = "מצב תצוגה באפליקציית לוח שנה";
+
+"settings.events" = "אירועים";
+"settings.events.show_map" = "הצג מפה ומזג אוויר";
+"settings.events.show_overdue_reminders" = "הצג תזכורות מאוחרות";
+"settings.events.show_finished_events" = "הצג אירועים שהסתיימו";
+"settings.events.show_recurrence_indicator" = "הצג מחוון על אירוע מחזורי";
+"settings.events.force_local_time_zone" = "הצג את כל האירועים באזור הזמן המקומי";
+
+"settings.appearance.transparency" = "שקיפות";
+"settings.appearance.accessibility" = "נגישות";
+
+"settings.keyboard.local_shortcuts.title" = "קיצורי דרך מקומיים";
+"settings.keyboard.local_shortcuts.prev_date" = "תאריך קודם";
+"settings.keyboard.local_shortcuts.next_date" = "תאריך הבא";
+"settings.keyboard.local_shortcuts.prev_week" = "שבוע קודם";
+"settings.keyboard.local_shortcuts.next_week" = "שבוע הבא";
+"settings.keyboard.local_shortcuts.prev_month" = "חודש קודם";
+"settings.keyboard.local_shortcuts.next_month" = "חודש הבא";
+"settings.keyboard.local_shortcuts.curr_date" = "תאריך נוכחי";
+"settings.keyboard.local_shortcuts.open_date" = "פתח תאריך נבחר";
+"settings.keyboard.local_shortcuts.pin_calendar" = "הצמד לוח שנה";
+
+"settings.keyboard.global_shortcuts.title" = "קיצורי דרך גלובליים";
+"settings.keyboard.global_shortcuts.open_calendar" = "פתח לוח שנה";
+"settings.keyboard.global_shortcuts.open_next_event" = "פתח אירוע הבא";
+"settings.keyboard.global_shortcuts.open_next_event_options" = "אפשרויות אירוע הבא";
+"settings.keyboard.global_shortcuts.open_next_reminder" = "פתח תזכורת הבאה";
+"settings.keyboard.global_shortcuts.open_next_reminder_options" = "אפשרויות תזכורת הבאה";
+
+"formatter.date.today" = "היום";
+"formatter.date.relative.in" = "בעוד %@";
+"formatter.date.relative.ago" = "לפני %@";
+"formatter.date.relative.left" = "‏%@ נותרו";
+
+"reminder.status.overdue" = "עבר זמן ביצוע";
+
+"reminder.options.button" = "אפשרויות";
+"reminder.options.complete" = "בצע";
+"reminder.options.remind" = "הזכר %@";
+
+"event.details.participant.organizer" = "מארגן";
+"event.details.participant.me" = "אני";
+
+"event.all_day" = "כל היום";
+
+"event.status.accepted" = "אושר";
+"event.status.maybe" = "אולי";
+"event.status.declined" = "נדחה";
+"event.status.pending" = "ממתין";
+
+"event.action.open" = "פתח";
+"event.action.join" = "הצטרף";
+"event.action.skip" = "דלג";
+"event.action.accept" = "אשר";
+"event.action.maybe" = "אולי";
+"event.action.decline" = "דחה";
+
+"tooltips.navigation.prev_month" = "חודש קודם";
+"tooltips.navigation.today" = "היום";
+"tooltips.navigation.next_month" = "חודש הבא";
+
+"tooltips.toolbar.stay_open" = "הישאר פתוח";
+"tooltips.toolbar.open_calendar" = "פתח לוח שנה";
+"tooltips.toolbar.open_reminders" = "פתח תזכורות";
+"tooltips.toolbar.open_menu" = "פתח תפריט";
+
+"calendars.source.others" = "אחרים";

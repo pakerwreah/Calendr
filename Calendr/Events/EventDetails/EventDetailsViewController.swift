@@ -23,7 +23,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
     private let linkBtn = ImageButton()
 
     private let titleLabel = Label()
-    private let urlLabel = Label()
+    private let urlLabel = Label(align: .left)
     private let locationLabel = Label()
     private let durationLabel = Label()
     private let notesTextView = NSTextView()
