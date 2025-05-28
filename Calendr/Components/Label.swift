@@ -40,7 +40,7 @@ class Label: NSTextField {
         text: String = "",
         font: NSFont? = nil,
         color: NSColor? = nil,
-        align: NSTextAlignment = .left,
+        align: NSTextAlignment = .natural,
         scaling: Observable<Double> = Scaling.observable
     ) {
         self.init(labelWithString: text)

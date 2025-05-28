@@ -21,7 +21,7 @@ class EventView: NSView {
     private let priority = Label()
     private let title = Label()
     private let subtitle = Label()
-    private let subtitleLink = Label()
+    private let subtitleLink = Label(align: .left)
     private let duration = Label()
     private let relativeDuration = Label()
     private let progress = NSView()

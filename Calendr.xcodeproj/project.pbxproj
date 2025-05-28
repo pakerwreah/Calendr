@@ -428,6 +428,7 @@
 		34FD09D825AE269600AAAAE2 /* DateProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateProvider.swift; sourceTree = "<group>"; };
 		555CD10C2D58C0FE00CE8EF7 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A122CF0E2CDDFD6100B95699 /* zh-Hant-TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant-TW"; path = "zh-Hant-TW.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		B61E607F2DE4BE59009C99D9 /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/Localizable.strings; sourceTree = "<group>"; };
 		BB2E33372D3EB62C000AF21D /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C492E3CD29FD64BA007C7DF3 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		EF3A22A62D394A2200752418 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1007,6 +1008,7 @@
 				ru,
 				tr,
 				uk,
+				he,
 			);
 			mainGroup = 347D0F8B25952F89002451EC;
 			packageReferences = (
@@ -1086,6 +1088,7 @@
 				"${SRCROOT}/${TARGET_NAME}/Assets/ru.lproj/Localizable.strings",
 				"${SRCROOT}/${TARGET_NAME}/Assets/tr.lproj/Localizable.strings",
 				"${SRCROOT}/${TARGET_NAME}/Assets/uk.lproj/Localizable.strings",
+				"${SRCROOT}/${TARGET_NAME}/Assets/he.lproj/Localizable.strings",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1376,6 +1379,7 @@
 				2CDDCF162D57AD36004BF510 /* ru */,
 				34CB48F12D57C20F005F63DB /* tr */,
 				555CD10C2D58C0FE00CE8EF7 /* uk */,
+				B61E607F2DE4BE59009C99D9 /* he */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -1564,7 +1568,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.16.5;
+				MARKETING_VERSION = 1.16.6;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Config/Calendr-Bridging-Header.h";
@@ -1591,7 +1595,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.16.5;
+				MARKETING_VERSION = 1.16.6;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Config/Calendr-Bridging-Header.h";
