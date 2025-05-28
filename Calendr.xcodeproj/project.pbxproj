@@ -1088,6 +1088,7 @@
 				"${SRCROOT}/${TARGET_NAME}/Assets/ru.lproj/Localizable.strings",
 				"${SRCROOT}/${TARGET_NAME}/Assets/tr.lproj/Localizable.strings",
 				"${SRCROOT}/${TARGET_NAME}/Assets/uk.lproj/Localizable.strings",
+				"${SRCROOT}/${TARGET_NAME}/Assets/he.lproj/Localizable.strings",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1567,7 +1568,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.16.5;
+				MARKETING_VERSION = 1.16.6;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Config/Calendr-Bridging-Header.h";
@@ -1594,7 +1595,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.16.5;
+				MARKETING_VERSION = 1.16.6;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Config/Calendr-Bridging-Header.h";
