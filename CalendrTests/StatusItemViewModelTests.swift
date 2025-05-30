@@ -53,6 +53,7 @@ class StatusItemViewModelTests: XCTestCase {
     func changeDate(_ date: Date) {
         dateProvider.now = date
         dateChanged.onNext(())
+        scheduler.advance(.seconds(1))
     }
 
     func setUp(showIcon: Bool, showDate: Bool, iconStyle: StatusItemIconStyle) {
