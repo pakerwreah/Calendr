@@ -21,8 +21,8 @@
 "auto_update.install" = "安装";
 "auto_update.replace.message" = "请确认应用程序的位置，以便获得权限来替换。";
 
-//"attachments.open.message" = "Calendr needs permission to access your attachments";
-//"attachments.open.authorize" = "Authorize access to attachments";
+"attachments.open.message" = "Calendr 需要权限才能访问您的附件";
+"attachments.open.authorize" = "授权以访问附件";
 
 "settings.title" = "设置";
 "settings.tab.general" = "通用";
@@ -40,9 +40,9 @@
 
 "settings.next_event" = "下一个日程";
 "settings.next_event.show_next_event" = "显示下一个日程";
-//"settings.next_event.grab_attention" = "Grab attention when event is close";
-//"settings.next_event.grab_attention.flashing" = "Flashing";
-//"settings.next_event.grab_attention.sound" = "Play sound";
+"settings.next_event.grab_attention" = "在日程临近时吸引注意";
+"settings.next_event.grab_attention.flashing" = "闪烁";
+"settings.next_event.grab_attention.sound" = "播放声音";
 "settings.next_event.detect_notch" = "为屏幕“刘海”缩短长度";
 
 "settings.calendar" = "日历";
@@ -58,7 +58,7 @@
 "settings.events.show_overdue_reminders" = "展示逾期日程";
 "settings.events.show_finished_events" = "展示已完成日程";
 "settings.events.show_recurrence_indicator" = "展示日程重复标识";
-//"settings.events.force_local_time_zone" = "Show all events in local time zone";
+"settings.events.force_local_time_zone" = "以本地时区显示所有事件";
 
 "settings.appearance.transparency" = "透明度";
 "settings.appearance.accessibility" = "无障碍";
@@ -86,7 +86,7 @@
 "formatter.date.relative.ago" = "%@ 之前";
 "formatter.date.relative.left" = "还剩 %@";
 
-//"reminder.status.overdue" = "Overdue";
+"reminder.status.overdue" = "逾期";
 
 "reminder.options.button" = "选项";
 "reminder.options.complete" = "完成";
@@ -118,4 +118,4 @@
 "tooltips.toolbar.open_reminders" = "打开提醒";
 "tooltips.toolbar.open_menu" = "打开菜单";
 
-//"calendars.source.others" = "Others";
+"calendars.source.others" = "其他";
