@@ -69,21 +69,15 @@ class StatusItemViewModel {
 
                 let formatter = DateFormatter(calendar: dateProvider.calendar)
 
-                let ticker: Observable<Void>
-
                 if style.isCustom {
                     formatter.dateFormat = format
-                    if dateFormatContainsTime(format) {
-                        ticker = Observable<Int>.interval(.seconds(1), scheduler: scheduler).void()
-                    } else {
-                        ticker = dateChanged
-                    }
                 } else {
                     formatter.dateStyle = style
-                    ticker = dateChanged
                 }
 
-                return ticker.startWith(()).map {
+                let ticker = Observable<Int>.interval(.seconds(1), scheduler: scheduler).void().startWith(())
+
+                return ticker.map {
                     let text = formatter.string(from: dateProvider.now)
                     return text.isEmpty ? "???" : text
                 }
