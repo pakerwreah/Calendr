@@ -409,7 +409,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
             locationLabel.stringValue = viewModel.location
             detailsStackView.addArrangedSubview(makeLine())
 
-            if viewModel.canShowMap.current {
+            if viewModel.canShowMap {
                 let weatherContainer = NSView().with(size: CGSize(width: 30, height: 26))
 
                 let locationStack = NSStackView(.horizontal).with(alignment: .centerY)

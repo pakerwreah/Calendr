@@ -9,7 +9,7 @@ import Foundation
 
 class MockGeocodeServiceProvider: GeocodeServiceProviding {
 
-    func geocodeAddressString(_ address: String) async -> Coordinates? {
+    func geocodeLocation(_ location: String) async -> Coordinates? {
         return nil
     }
 }

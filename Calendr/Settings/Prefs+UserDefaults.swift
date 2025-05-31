@@ -41,6 +41,7 @@ enum Prefs {
 
     // Event Details
     static let showMap = "show_map"
+    static let showMapBlacklistRegex = "show_map_blacklist_regex"
 
     // Events
     static let showPastEvents = "show_past_events"
@@ -255,6 +256,11 @@ extension UserDefaults {
     @objc dynamic var showMap: Bool {
         get { bool(forKey: Prefs.showMap) }
         set { set(newValue, forKey: Prefs.showMap) }
+    }
+
+    @objc dynamic var showMapBlacklistRegex: String? {
+        get { string(forKey: Prefs.showMapBlacklistRegex) }
+        set { set(newValue, forKey: Prefs.showMapBlacklistRegex) }
     }
 
     // Events
