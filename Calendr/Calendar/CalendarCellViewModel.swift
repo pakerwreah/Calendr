@@ -59,7 +59,9 @@ extension CalendarCellViewModel {
     }
 
     var dots: [NSColor] {
-        let colors = events.map(\.calendar)
+        let colors = events
+            .filter { $0.type != .reminder(completed: true) }
+            .map(\.calendar)
             .sorted {
                 ($0.account.localizedLowercase, $0.title.localizedLowercase)
                 <
