@@ -15,20 +15,20 @@ struct Coordinates: Hashable {
 
 extension Coordinates {
 
-    init(_ location: CLLocationCoordinate2D) {
-        self.init(latitude: location.latitude, longitude: location.longitude)
+    init(_ coordinates: CLLocationCoordinate2D) {
+        self.init(latitude: coordinates.latitude, longitude: coordinates.longitude)
     }
 }
 
 extension CLLocationCoordinate2D {
 
-    init(_ location: Coordinates) {
-        self.init(latitude: location.latitude, longitude: location.longitude)
+    init(_ coordinates: Coordinates) {
+        self.init(latitude: coordinates.latitude, longitude: coordinates.longitude)
     }
 }
 
 protocol GeocodeServiceProviding {
-    func geocodeAddressString(_ address: String) async -> Coordinates?
+    func geocodeLocation(_ location: String) async -> Coordinates?
 }
 
 class GeocodeServiceProvider<LocationCache: Cache>: GeocodeServiceProviding
@@ -41,28 +41,29 @@ where LocationCache.Key == String, LocationCache.Value == Coordinates? {
         self.cache = cache
     }
 
-    func geocodeAddressString(_ address: String) async -> Coordinates? {
+    func geocodeLocation(_ location: String) async -> Coordinates? {
 
-        if let location = cache.get(address) {
-            print("Cache hit for address: \"\(address)\"")
-            return location
+        if let coordinates = cache.get(location) {
+            print("Cache hit for location: \"\(location)\"")
+            return coordinates
         }
 
-        print("Geocoding \"\(address)\"")
+        print("Geocoding \"\(location)\"")
 
-        let sanitized = address.replacingOccurrences(of: ["(", ")"], with: " ")
+        let sanitized = location.replacingOccurrences(of: ["(", ")"], with: " ")
 
         do {
-            let geocoderLocation = try await geocoderLocation(for: sanitized)
-            let searchLocation = try await searchLocation(for: sanitized, in: geocoderLocation)
+            let geocoderLocation = try await geocodeAddressString(sanitized)
 
-            guard let location = searchLocation ?? geocoderLocation else {
-                cache.set(address, nil)
+            let searchLocation = try await naturalLanguageSearch(sanitized, in: geocoderLocation)
+
+            guard let result = searchLocation ?? geocoderLocation else {
+                cache.set(location, nil)
                 return nil
             }
 
-            let coordinates = Coordinates(location)
-            cache.set(address, coordinates)
+            let coordinates = Coordinates(result)
+            cache.set(location, coordinates)
             return coordinates
         } catch {
             print(error.localizedDescription)
@@ -70,7 +71,7 @@ where LocationCache.Key == String, LocationCache.Value == Coordinates? {
         }
     }
 
-    private func geocoderLocation(for address: String) async throws -> CLLocationCoordinate2D? {
+    private func geocodeAddressString(_ address: String) async throws -> CLLocationCoordinate2D? {
         do {
             let placemarks = try await geocoder.geocodeAddressString(address)
             return placemarks.first?.location?.coordinate
@@ -83,10 +84,10 @@ where LocationCache.Key == String, LocationCache.Value == Coordinates? {
         }
     }
 
-    private func searchLocation(for address: String, in geocoderLocation: CLLocationCoordinate2D?) async throws -> CLLocationCoordinate2D? {
+    private func naturalLanguageSearch(_ location: String, in geocoderLocation: CLLocationCoordinate2D?) async throws -> CLLocationCoordinate2D? {
         let searchDistance: CLLocationDistance = 10000
         let searchRequest = MKLocalSearch.Request()
-        searchRequest.naturalLanguageQuery = address
+        searchRequest.naturalLanguageQuery = location
 
         if let geocoderLocation {
             searchRequest.region = MKCoordinateRegion(
@@ -102,7 +103,7 @@ where LocationCache.Key == String, LocationCache.Value == Coordinates? {
             guard let error = error as? MKError, error.code == .placemarkNotFound else {
                 throw error
             }
-            print("Placemark not found for \"\(address)\"")
+            print("Placemark not found for \"\(location)\"")
             return nil
         }
     }

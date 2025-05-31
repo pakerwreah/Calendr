@@ -38,7 +38,7 @@ class EventDetailsViewModel {
     let optimisticLoadTime: DispatchTimeInterval
     let attachments: [Attachment]
 
-    let canShowMap = BehaviorSubject<Bool>(value: false)
+    let canShowMap: Bool
     let coordinates: Maybe<Coordinates>
     let weather: Maybe<(Weather, isAllDay: Bool)>
     let isInProgress: Observable<Bool>
@@ -193,26 +193,41 @@ class EventDetailsViewModel {
             workspace.open(event)
         }
 
-        let showMap = settings.showMap.take(1)
-
-        showMap.bind(to: canShowMap).disposed(by: disposeBag)
-
-        coordinates = showMap.asSingle().flatMapMaybe { showMap in
-            guard showMap, let address = event.location, !address.isEmpty else {
-                return .empty()
+        canShowMap = { [location] showMap in
+            guard showMap,
+                  !location.isEmpty,
+                  !location.contains("://"),
+                  !location.contains("www.")
+            else {
+                return false
             }
-            if let coordinates = event.coordinates {
-                return .just(coordinates)
-            }
-            return Maybe.create { observer in
-                Task {
-                    guard let coordinates = await geocoder.geocodeAddressString(address) else {
-                        return observer(.completed)
-                    }
-                    observer(.success(coordinates))
+            if let pattern = userDefaults.showMapBlacklistRegex, #available(macOS 13.0, *) {
+                do {
+                    return try Regex(pattern).wholeMatch(in: location) == nil
+                } catch {
+                    print(error.localizedDescription)
                 }
-                return Disposables.create()
             }
+            return true
+        }(settings.showMap.lastValue() ?? false)
+
+        coordinates = Maybe.create { [canShowMap, location] observer in
+            Task {
+                guard canShowMap else {
+                    observer(.completed)
+                    return
+                }
+                if let coordinates = event.coordinates {
+                    observer(.success(coordinates))
+                    return
+                }
+                if let coordinates = await geocoder.geocodeLocation(location) {
+                    observer(.success(coordinates))
+                    return
+                }
+                observer(.completed)
+            }
+            return Disposables.create()
         }
         .asObservable()
         .share(replay: 1, scope: .forever)
@@ -240,7 +255,7 @@ class EventDetailsViewModel {
         // trigger early fetch and keep value
         weather.subscribe().disposed(by: disposeBag)
 
-        optimisticLoadTime = .milliseconds(canShowMap.current && !event.location.isNilOrEmpty ? 50 : 0)
+        optimisticLoadTime = .milliseconds(canShowMap && !event.location.isNilOrEmpty ? 50 : 0)
 
         let defaultBrowserURL = workspace.urlForDefaultBrowserApplication()
 
