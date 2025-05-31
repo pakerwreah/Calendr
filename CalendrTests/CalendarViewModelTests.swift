@@ -454,6 +454,46 @@ class CalendarViewModelTests: XCTestCase {
         ])
     }
 
+    func testEventDotsPerDate_withPendingReminder() {
+
+        calendarService.m_events.append(
+            .make(
+                start: .make(year: 2021, month: 1, day: 1),
+                title: "Pending",
+                type: .reminder(completed: false),
+                calendar: .make(id: "X", account: "X", title: "Reminders", color: .red),
+            )
+        )
+
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+
+        assertExpectedEvents(\.dots, [
+            (.make(year: 2021, month: 1, day: 1), [.white, .red]),
+            (.make(year: 2021, month: 1, day: 2), [.white, .black]),
+            (.make(year: 2021, month: 1, day: 3), [.white, .clear]),
+        ])
+    }
+
+    func testEventDotsPerDate_withCompletedReminder() {
+
+        calendarService.m_events.append(
+            .make(
+                start: .make(year: 2021, month: 1, day: 1),
+                title: "Completed",
+                type: .reminder(completed: true),
+                calendar: .make(id: "X", account: "X", title: "Reminders", color: .red),
+            )
+        )
+
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+
+        assertExpectedEvents(\.dots, [
+            (.make(year: 2021, month: 1, day: 1), [.white]),
+            (.make(year: 2021, month: 1, day: 2), [.white, .black]),
+            (.make(year: 2021, month: 1, day: 3), [.white, .clear]),
+        ])
+    }
+
     func testEvents_withOverdueReminder_withSelectedDateToday() {
 
         calendarService.m_events.append(
