@@ -51,6 +51,7 @@
 "settings.calendar.show_declined_events" = "Εμφάνιση απορριφθέντων συμβάντων";
 "settings.calendar.show_declined_events_tooltip" = "Αυτό λειτουργεί μόνο εάν είναι επίσης ενεργοποιημένο στην εγγενή εφαρμογή Ημερολόγιο";
 "settings.calendar.date_hover_option" = "Κρατήστε πατημένο το ⌥ για να κοιτάξετε τις ημερομηνίες που βρίσκονται σε κατάσταση αιώρησης";
+//"settings.calendar.week_count" = "Visible weeks";
 "settings.calendar.calendar_app_view_mode" = "Προβολή εφαρμογής ημερολογίου";
 
 "settings.events" = "Εκδηλώσεις";

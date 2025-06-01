@@ -51,6 +51,7 @@
 "settings.calendar.show_declined_events" = "顯示已拒絕的事件";
 "settings.calendar.show_declined_events_tooltip" = "這僅在本機行事曆應用程式中也啟用時有效。";
 "settings.calendar.date_hover_option" = "按住 ⌥ 以預覽懸停日期";
+//"settings.calendar.week_count" = "Visible weeks";
 "settings.calendar.calendar_app_view_mode" = "行事曆應用程式檢視模式";
 
 "settings.events" = "事件";

@@ -159,7 +159,8 @@ class MainViewController: NSViewController {
             enabledCalendars: calendarPickerViewModel.enabledCalendars,
             calendarService: calendarService,
             dateProvider: dateProvider,
-            settings: settingsViewModel
+            settings: settingsViewModel,
+            scheduler: MainScheduler.instance
         )
 
         calendarView = CalendarView(

@@ -16,6 +16,9 @@ class MockCalendarSettings: CalendarSettings {
     let highlightedWeekdays: Observable<[Int]>
     let highlightedWeekdaysObserver: AnyObserver<[Int]>
 
+    let weekCount: Observable<Int>
+    let weekCountObserver: AnyObserver<Int>
+
     let showWeekNumbers: Observable<Bool>
     let toggleWeekNumbers: AnyObserver<Bool>
 
@@ -37,6 +40,7 @@ class MockCalendarSettings: CalendarSettings {
         (firstWeekday, firstWeekdayObserver) = BehaviorSubject.pipe(value: 1)
         (highlightedWeekdays, highlightedWeekdaysObserver) = BehaviorSubject.pipe(value: [0, 6])
         (showWeekNumbers, toggleWeekNumbers) = BehaviorSubject.pipe(value: false)
+        (weekCount, weekCountObserver) = BehaviorSubject.pipe(value: 6)
         (showDeclinedEvents, toggleDeclinedEvents) = BehaviorSubject.pipe(value: false)
         (dateHoverOption, toggleDateHoverOption) = BehaviorSubject.pipe(value: false)
         preserveSelectedDate = .just(false)

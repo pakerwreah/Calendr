@@ -51,6 +51,7 @@
 "settings.calendar.show_declined_events" = "Mostrar eventos recusados";
 "settings.calendar.show_declined_events_tooltip" = "Isso só funciona se também estiver ativado no aplicativo Calendário nativo.";
 "settings.calendar.date_hover_option" = "Segure ⌥ para espiar datas sob o cursor";
+"settings.calendar.week_count" = "Semanas visíveis";
 "settings.calendar.calendar_app_view_mode" = "Visualização do app Calendário";
 
 "settings.events" = "Eventos";

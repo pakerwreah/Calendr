@@ -53,6 +53,7 @@
 "settings.calendar.show_declined_events" = "Показывать отклоненные события";
 "settings.calendar.show_declined_events_tooltip" = "Это работает только в том случае, если он также включен в родном приложении Календарь.";
 "settings.calendar.date_hover_option" = "Удерживайте ⌥, чтобы просмотреть наведенные даты.";
+//"settings.calendar.week_count" = "Visible weeks";
 "settings.calendar.calendar_app_view_mode" = "Просмотр приложения «Календарь»";
 
 "settings.events" = "События";

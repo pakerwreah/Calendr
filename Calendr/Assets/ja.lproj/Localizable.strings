@@ -51,6 +51,7 @@
 "settings.calendar.show_declined_events" = "辞退した予定を表示";
 "settings.calendar.show_declined_events_tooltip" = "ネイティブのカレンダーアプリでもこの設定が有効になっている必要があります。";
 "settings.calendar.date_hover_option" = "⌥キーを押しながらホバーで予定を表示";
+//"settings.calendar.week_count" = "Visible weeks";
 "settings.calendar.calendar_app_view_mode" = "カレンダーの表示";
 
 "settings.events" = "予定";

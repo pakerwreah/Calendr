@@ -38,7 +38,8 @@ struct CalendarViewPreview: PreviewProvider {
                 enabledCalendars: .empty(),
                 calendarService: calendarService,
                 dateProvider: dateProvider,
-                settings: settings
+                settings: settings,
+                scheduler: MainScheduler.instance
             ),
             hoverObserver: hovered.asObserver(),
             clickObserver: selected.asObserver(),

@@ -51,6 +51,7 @@
 "settings.calendar.show_declined_events" = "Zobrazit odmítnuté události";
 "settings.calendar.show_declined_events_tooltip" = "Funguje pouze tehdy, pokud je také zapnuto v nativní aplikaci Kalendář.";
 "settings.calendar.date_hover_option" = "Podržením ⌥ se můžete podívat na data, na která se vznášíte";
+//"settings.calendar.week_count" = "Visible weeks";
 "settings.calendar.calendar_app_view_mode" = "Zobrazení aplikace Kalendář";
 
 "settings.events" = "Události";

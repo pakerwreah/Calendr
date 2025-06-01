@@ -14,6 +14,7 @@ class CalendarViewModel {
     let focusedDateEventsObservable: Observable<(Date, [EventModel])>
 
     let title: Observable<String>
+    let weekCount: Observable<Int>
     let weekDays: Observable<[WeekDay]>
     let weekNumbers: Observable<[Int]?>
     let calendarScaling: Observable<Double>
@@ -29,9 +30,9 @@ class CalendarViewModel {
         enabledCalendars: Observable<[String]>,
         calendarService: CalendarServiceProviding,
         dateProvider: DateProviding,
-        settings: CalendarSettings
+        settings: CalendarSettings,
+        scheduler: SchedulerType
     ) {
-
         let calendarUpdated = dateProvider.calendarUpdated
             .startWith(dateProvider.calendar)
             .share(replay: 1)
@@ -74,10 +75,12 @@ class CalendarViewModel {
             .distinctUntilChanged()
             .share(replay: 1)
 
+        let debouncedWeekCount = settings.weekCount.debounce(.milliseconds(300), scheduler: scheduler)
+
         // Create cells for current month
         let dateCellsObservable = Observable
-            .combineLatest(dateRangeObservable, calendarUpdated)
-            .map { month, calendar -> [CalendarCellViewModel] in
+            .combineLatest(debouncedWeekCount, dateRangeObservable, calendarUpdated)
+            .map { weeksCount, month, calendar -> [CalendarCellViewModel] in
 
                 let monthStartWeekDay = calendar.component(.weekday, from: month.start)
 
@@ -87,7 +90,7 @@ class CalendarViewModel {
                     to: month.start
                 )!
 
-                return (0..<42).map { day -> CalendarCellViewModel in
+                return (0..<weeksCount * 7).map { day -> CalendarCellViewModel in
                     let date = calendar.date(byAdding: .day, value: day, to: start)!
                     let inMonth = calendar.isDate(date, equalTo: month.start, toGranularity: .month)
 
@@ -108,7 +111,7 @@ class CalendarViewModel {
             settings.showWeekNumbers, dateCellsObservable
         )
         .map { showWeekNumbers, dateCells in
-            !showWeekNumbers ? nil : (0..<6).map {
+            !showWeekNumbers ? nil : (0..<dateCells.count / 7).map {
                 dateProvider.calendar.component(.weekOfYear, from: dateCells[7 * $0].date)
             }
         }
@@ -222,6 +225,8 @@ class CalendarViewModel {
         }
         .distinctUntilChanged()
         .share(replay: 1)
+
+        weekCount = cellViewModelsObservable.map { $0.count / 7 }.distinctUntilChanged()
 
         calendarScaling = settings.calendarScaling
         calendarTextScaling = settings.calendarTextScaling
