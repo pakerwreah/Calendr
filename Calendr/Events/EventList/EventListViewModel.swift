@@ -296,9 +296,18 @@ class EventListViewModel {
                 }
 
                 // show interval between events
+                let isUpcoming = dateProvider.calendar.isDate(
+                    dateProvider.now, in: (prev.end, curr.start),
+                    granularity: .second
+                )
+                let truncatedNow = Date(timeIntervalSince1970: floor(dateProvider.now.timeIntervalSince1970 / 60) * 60)
+
                 guard
                     prev.end.distance(to: curr.start) >= 60,
-                    let interval = dateComponentsFormatter.string(from: prev.end, to: curr.start)
+                    let interval = dateComponentsFormatter.string(
+                        from: isUpcoming ? truncatedNow : prev.end,
+                        to: curr.start
+                    )
                 else {
                     return [eventItem]
                 }

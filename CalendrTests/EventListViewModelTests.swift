@@ -537,6 +537,29 @@ class EventListViewModelTests: XCTestCase {
             today: .today([.red, .green], 3)
         ))
     }
+
+    func testEventList_withUpcomingEvent_shouldShowRelativeTime() {
+
+        let date = dateProvider.now
+
+        eventsSubject.onNext([
+            .make(start: date - 5 * 60, end: date - 4 * 60, title: "Event 1"),
+            .make(start: date - 2 * 60, end: date - 1 * 60, title: "Event 2"),
+            .make(start: date + 1 * 60, end: date + 2 * 60, title: "Event 3"),
+            .make(start: date + 5 * 60, end: date + 8 * 60, title: "Event 4"),
+        ])
+
+        XCTAssertEqual(eventListItems, [
+            .section("Today"),
+            .event("Event 1"),
+            .interval("2m"),
+            .event("Event 2"),
+            .interval("1m"),
+            .event("Event 3"),
+            .interval("3m"),
+            .event("Event 4"),
+        ])
+    }
 }
 
 private extension EventListSummaryItem {
