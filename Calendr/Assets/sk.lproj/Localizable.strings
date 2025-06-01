@@ -21,8 +21,8 @@
 "auto_update.install" = "Inštalovať";
 "auto_update.replace.message" = "Potvrď umiestnenie aplikácie pre povolenie ju nahradiť";
 
-//"attachments.open.message" = "Calendr needs permission to access your attachments";
-//"attachments.open.authorize" = "Authorize access to attachments";
+"attachments.open.message" = "Calendr potrebuje povolenie na prístup k tvojim prílohám";
+"attachments.open.authorize" = "Povoliť prístup k prílohám";
 
 "settings.title" = "Nastavenia";
 "settings.tab.general" = "Všeobecné";
@@ -86,7 +86,7 @@
 "formatter.date.relative.ago" = "pred %@";
 "formatter.date.relative.left" = "zostáva %@";
 
-//"reminder.status.overdue" = "Overdue";
+"reminder.status.overdue" = "Po termíne";
 
 "reminder.options.button" = "Možnosti";
 "reminder.options.complete" = "Dokončiť";
