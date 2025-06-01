@@ -51,6 +51,7 @@
 "settings.calendar.show_declined_events" = "הצגת אירועים שנדחו";
 "settings.calendar.show_declined_events_tooltip" = "עובד רק אם הופעל גם באפליקציית לוח שנה המובנית.";
 "settings.calendar.date_hover_option" = "החזקת ⌥ כדי להציץ תוך כדי ריחוף בתאריכים";
+//"settings.calendar.week_count" = "Visible weeks";
 "settings.calendar.calendar_app_view_mode" = "מצב תצוגה באפליקציית לוח שנה";
 
 "settings.events" = "אירועים";

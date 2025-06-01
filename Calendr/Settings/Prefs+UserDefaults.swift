@@ -32,6 +32,7 @@ enum Prefs {
     static let calendarScaling = "calendar_scaling"
     static let firstWeekday = "first_weekday"
     static let highlightedWeekdays = "highlighted_weekdays"
+    static let weekCount = "week_count"
     static let showWeekNumbers = "show_week_numbers"
     static let showDeclinedEvents = "show_declined_events"
     static let preserveSelectedDate = "preserve_selected_date"
@@ -92,6 +93,7 @@ func registerDefaultPrefs(in userDefaults: UserDefaults, calendar: Calendar = .c
         Prefs.calendarScaling: 1,
         Prefs.firstWeekday: calendar.firstWeekday,
         Prefs.highlightedWeekdays: [0, 6],
+        Prefs.weekCount: 6,
         Prefs.showWeekNumbers: false,
         Prefs.showDeclinedEvents: false,
         Prefs.preserveSelectedDate: false,
@@ -219,6 +221,11 @@ extension UserDefaults {
     @objc dynamic var highlightedWeekdays: [Int] {
         get { array(forKey: Prefs.highlightedWeekdays) as? [Int] ?? []  }
         set { set(newValue, forKey: Prefs.highlightedWeekdays) }
+    }
+
+    @objc dynamic var weekCount: Int {
+        get { integer(forKey: Prefs.weekCount) }
+        set { set(newValue, forKey: Prefs.weekCount) }
     }
 
     @objc dynamic var showWeekNumbers: Bool {

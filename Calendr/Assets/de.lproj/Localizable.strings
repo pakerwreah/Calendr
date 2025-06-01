@@ -51,6 +51,7 @@
 "settings.calendar.show_declined_events" = "Abgelehnte Ereignisse anzeigen";
 "settings.calendar.show_declined_events_tooltip" = "Dies funktioniert nur, wenn es auch in der nativen Kalender-App aktiviert ist.";
 "settings.calendar.date_hover_option" = "⌥ gedrückt halten, um die hervorgehobenen Daten zu sehen";
+//"settings.calendar.week_count" = "Visible weeks";
 "settings.calendar.calendar_app_view_mode" = "Kalender-App-Ansicht";
 
 "settings.events" = "Termine";

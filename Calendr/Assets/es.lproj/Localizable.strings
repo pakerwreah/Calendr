@@ -51,6 +51,7 @@
 "settings.calendar.show_declined_events" = "Mostrar eventos rechazados";
 "settings.calendar.show_declined_events_tooltip" = "Esto solo funciona si también está habilitado en la aplicación Calendario nativa.";
 "settings.calendar.date_hover_option" = "Mantén pulsado ⌥ para echar un vistazo a las fechas sobrevoladas";
+//"settings.calendar.week_count" = "Visible weeks";
 "settings.calendar.calendar_app_view_mode" = "Vista de la aplicación Calendario";
 
 "settings.events" = "Eventos";

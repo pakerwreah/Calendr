@@ -51,6 +51,7 @@
 "settings.calendar.show_declined_events" = "Visa avböjda händelser";
 "settings.calendar.show_declined_events_tooltip" = "Detta fungerar bara om det också är aktiverat i den inbyggda kalenderappen.";
 "settings.calendar.date_hover_option" = "Håll in ⌥ för att titta på datum i muspekaren";
+//"settings.calendar.week_count" = "Visible weeks";
 "settings.calendar.calendar_app_view_mode" = "Kalenderappens vy";
 
 "settings.events" = "Händelser";

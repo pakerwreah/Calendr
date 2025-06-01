@@ -74,6 +74,7 @@ protocol CalendarSettings {
     var textScaling: Observable<Double> { get }
     var calendarTextScaling: Observable<Double> { get }
     var firstWeekday: Observable<Int> { get }
+    var weekCount: Observable<Int> { get }
     var highlightedWeekdays: Observable<[Int]> { get }
     var showWeekNumbers: Observable<Bool> { get }
     var showDeclinedEvents: Observable<Bool> { get }
@@ -148,6 +149,7 @@ class SettingsViewModel:
     let calendarScalingObserver: AnyObserver<Double>
     let firstWeekdayPrevObserver: AnyObserver<Void>
     let firstWeekdayNextObserver: AnyObserver<Void>
+    let weekCountObserver: AnyObserver<Int>
     let toggleHighlightedWeekday: AnyObserver<Int>
     let toggleWeekNumbers: AnyObserver<Bool>
     let toggleDeclinedEvents: AnyObserver<Bool>
@@ -186,6 +188,7 @@ class SettingsViewModel:
     let eventStatusItemDetectNotch: Observable<Bool>
     let calendarScaling: Observable<Double>
     let firstWeekday: Observable<Int>
+    let weekCount: Observable<Int>
     let highlightedWeekdays: Observable<[Int]>
     let highlightedWeekdaysOptions: Observable<[WeekDay]>
     let showWeekNumbers: Observable<Bool>
@@ -274,6 +277,7 @@ class SettingsViewModel:
         firstWeekdayPrevObserver = userDefaults.rx.observer(for: \.firstWeekday).mapObserver { (1...7).circular(before: userDefaults.firstWeekday) }
         firstWeekdayNextObserver = userDefaults.rx.observer(for: \.firstWeekday).mapObserver { (1...7).circular(after: userDefaults.firstWeekday) }
         toggleHighlightedWeekday = userDefaults.rx.toggleObserver(for: \.highlightedWeekdays)
+        weekCountObserver = userDefaults.rx.observer(for: \.weekCount)
         toggleWeekNumbers = userDefaults.rx.observer(for: \.showWeekNumbers)
         toggleDeclinedEvents = userDefaults.rx.observer(for: \.showDeclinedEvents)
         togglePreserveSelectedDate = userDefaults.rx.observer(for: \.preserveSelectedDate)
@@ -321,6 +325,7 @@ class SettingsViewModel:
         calendarScaling = userDefaults.rx.observe(\.calendarScaling)
         firstWeekday = userDefaults.rx.observe(\.firstWeekday)
         highlightedWeekdays = userDefaults.rx.observe(\.highlightedWeekdays)
+        weekCount = userDefaults.rx.observe(\.weekCount)
         showWeekNumbers = userDefaults.rx.observe(\.showWeekNumbers)
         showDeclinedEvents = userDefaults.rx.observe(\.showDeclinedEvents)
         preserveSelectedDate = userDefaults.rx.observe(\.preserveSelectedDate)

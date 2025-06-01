@@ -51,6 +51,7 @@
 "settings.calendar.show_declined_events" = "Show declined events";
 "settings.calendar.show_declined_events_tooltip" = "This only works if it is also enabled in the native Calendar app.";
 "settings.calendar.date_hover_option" = "Hold ⌥ to peek at hovered dates";
+"settings.calendar.week_count" = "Visible weeks";
 "settings.calendar.calendar_app_view_mode" = "Calendar app view";
 
 "settings.events" = "Events";

@@ -35,6 +35,9 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     private let firstWeekdayPrev = ImageButton(image: Icons.Settings.prev)
     private let firstWeekdayNext = ImageButton(image: Icons.Settings.next)
     private let highlightedWeekdaysButtons = NSStackView()
+    private let weekCountLabel = Label(text: Strings.Settings.Calendar.weekCount)
+    private let weekCountStepperLabel = Label()
+    private let weekCountStepper = NSStepper()
     private let showWeekNumbersCheckbox = Checkbox(title: Strings.Settings.Calendar.showWeekNumbers)
     private let showDeclinedEventsCheckbox = Checkbox(title: Strings.Settings.Calendar.showDeclinedEvents)
     private let preserveSelectedDateCheckbox = Checkbox(title: Strings.Settings.Calendar.preserveSelectedDate)
@@ -204,6 +207,12 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         calendarAppViewModeDropdown.isBordered = false
         calendarAppViewModeDropdown.setContentHuggingPriority(.required, for: .horizontal)
 
+        weekCountStepper.minValue = 6
+        weekCountStepper.maxValue = 10
+        weekCountStepper.valueWraps = false
+        weekCountStepper.refusesFirstResponder = true
+        weekCountStepper.focusRingType = .none
+
         return NSStackView(views: [
             NSStackView(views: [firstWeekdayPrev, highlightedWeekdaysButtons, firstWeekdayNext])
                 .with(distribution: .fillProportionally),
@@ -212,7 +221,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             NSStackView(views: [showDeclinedEventsCheckbox, showDeclinedEventsTooltip]),
             preserveSelectedDateCheckbox,
             dateHoverOptionCheckbox,
-            .dummy,
+            NSStackView(views: [weekCountLabel, .spacer, weekCountStepperLabel, weekCountStepper]),
             NSStackView(views: [calendarAppViewModeLabel, calendarAppViewModeDropdown])
         ])
         .with(orientation: .vertical)
@@ -443,6 +452,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
 
         setUpfirstWeekday()
         setUpHighlightedWeekdays()
+        setUpWeekCountStepper()
 
         bind(
             control: showWeekNumbersCheckbox,
@@ -473,6 +483,26 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         .disposed(by: disposeBag)
 
         setUpCalendarAppViewMode()
+    }
+
+    private func setUpWeekCountStepper() {
+
+        let rangeStepperProperty = weekCountStepper.rx.controlProperty(
+            getter: \.integerValue,
+            setter: { $0.integerValue = $1 }
+        )
+
+        viewModel.weekCount
+            .bind(to: rangeStepperProperty)
+            .disposed(by: disposeBag)
+
+        rangeStepperProperty
+            .bind(to: viewModel.weekCountObserver)
+            .disposed(by: disposeBag)
+
+        viewModel.weekCount.map(\.description)
+            .bind(to: weekCountStepperLabel.rx.text)
+            .disposed(by: disposeBag)
     }
 
     private func setUpfirstWeekday() {

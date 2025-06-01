@@ -51,6 +51,7 @@
 "settings.calendar.show_declined_events" = "Reddedilen etkinlikleri göster";
 "settings.calendar.show_declined_events_tooltip" = "Bu, yalnızca yerel Takvim uygulamasında da etkinleştirilmişse çalışır.";
 "settings.calendar.date_hover_option" = "Üzerine gelinen tarihleri önizlemek için ⌥ tuşuna basılı tut";
+//"settings.calendar.week_count" = "Visible weeks";
 "settings.calendar.calendar_app_view_mode" = "Takvim uygulaması görünüm modu";
 
 "settings.events" = "Etkinlikler";

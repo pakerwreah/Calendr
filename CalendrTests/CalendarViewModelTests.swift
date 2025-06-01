@@ -23,6 +23,8 @@ class CalendarViewModelTests: XCTestCase {
     let settings = MockCalendarSettings()
     let dateProvider = MockDateProvider()
 
+    let scheduler = HistoricalScheduler()
+
     lazy var viewModel = CalendarViewModel(
         searchObservable: searchSubject,
         dateObservable: dateSubject,
@@ -31,7 +33,8 @@ class CalendarViewModelTests: XCTestCase {
         enabledCalendars: calendarsSubject,
         calendarService: calendarService,
         dateProvider: dateProvider,
-        settings: settings
+        settings: settings,
+        scheduler: scheduler
     )
 
     var lastValue: [CalendarCellViewModel]?
@@ -105,6 +108,8 @@ class CalendarViewModelTests: XCTestCase {
         calendarsSubject.onNext([])
 
         settings.toggleWeekNumbers.onNext(true)
+
+        scheduler.advance(.seconds(1))
     }
 
     func testTitle() {
@@ -137,6 +142,20 @@ class CalendarViewModelTests: XCTestCase {
         XCTAssertEqual(inMonth.count, 31)
         XCTAssertEqual(inMonth.first.map(\.date), .make(year: 2021, month: 1, day: 1))
         XCTAssertEqual(inMonth.last.map(\.date), .make(year: 2021, month: 1, day: 31))
+    }
+
+    func testDateSpan_weekCount7() throws {
+
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+
+        settings.weekCountObserver.onNext(7)
+        scheduler.advance(.milliseconds(300))
+
+        let cellViewModels = try XCTUnwrap(lastValue)
+
+        XCTAssertEqual(cellViewModels.count, 49)
+        XCTAssertEqual(cellViewModels.first.map(\.date), .make(year: 2020, month: 12, day: 27))
+        XCTAssertEqual(cellViewModels.last.map(\.date), .make(year: 2021, month: 2, day: 13))
     }
 
     func testDateSpan_firstWeekDaySunday() throws {

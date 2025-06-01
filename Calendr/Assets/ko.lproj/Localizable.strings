@@ -51,6 +51,7 @@
 "settings.calendar.show_declined_events" = "거절한 일정 표시";
 "settings.calendar.show_declined_events_tooltip" = "이 기능은 기본 캘린더 앱에서도 활성화해야 작동합니다. (메뉴바-보기-거부된 이벤트 보기)";
 "settings.calendar.date_hover_option" = "⌥ 키를 누르고 날짜 호버 시 미리보기";
+//"settings.calendar.week_count" = "Visible weeks";
 "settings.calendar.calendar_app_view_mode" = "캘린더 앱 보기 모드";
 
 "settings.events" = "일정";

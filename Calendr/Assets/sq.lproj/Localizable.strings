@@ -51,6 +51,7 @@
 "settings.calendar.show_declined_events" = "Shfaq ngjarjet e refuzuara";
 "settings.calendar.show_declined_events_tooltip" = "Kjo funksionon vetëm nëse aktivizohet edhe në aplikacionin vendas të Kalendarit.";
 "settings.calendar.date_hover_option" = "Mbajeni ⌥ për të parë datat e vendosura pezull";
+//"settings.calendar.week_count" = "Visible weeks";
 "settings.calendar.calendar_app_view_mode" = "Pamja e aplikacionit të kalendarit";
 
 "settings.events" = "Ngjarjet";
