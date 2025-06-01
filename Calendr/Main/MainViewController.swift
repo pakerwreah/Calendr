@@ -190,7 +190,10 @@ class MainViewController: NSViewController {
             eventsScheduler: WallTimeScheduler.instance
         )
 
-        eventListView = EventListView(viewModel: eventListViewModel)
+        eventListView = EventListView(
+            viewModel: eventListViewModel,
+            padding: .init(horizontal: Constants.MainStackView.margin)
+        )
 
         nextEventViewModel = NextEventViewModel(
             type: .event,
@@ -268,24 +271,32 @@ class MainViewController: NSViewController {
         let eventListSummary = makeEventListSummary()
         let eventListScroll = makeEventListScroll()
 
-        [header, searchInput, calendarView, toolBar, eventListSummary, eventListScroll].forEach(mainStackView.addArrangedSubview)
+        mainStackView.setHuggingPriority(.required, for: .horizontal)
 
-        // avoid collapsing because of content constraints
-        eventListSummary.width(equalTo: mainStackView)
-        eventListScroll.width(equalTo: mainStackView)
+        [header, searchInput, calendarView, toolBar, eventListSummary].forEach { (view: NSView) in
+            let container = NSView()
+            container.addSubview(view)
+
+            view.rx.observe(\.isHidden).bind(to: container.rx.isHidden).disposed(by: disposeBag)
+            view.edges(equalTo: container, margins: .init(horizontal: Constants.MainStackView.margin))
+
+            mainStackView.addArrangedSubview(container)
+        }
+
+        mainStackView.addArrangedSubview(eventListScroll)
 
         mainStackView.orientation = .vertical
         let mainStackSpacing: CGFloat = 4
         mainStackView.spacing = mainStackSpacing
 
-        mainStackView.setCustomSpacing(mainStackSpacing + 2, after: eventListSummary)
+        mainStackView.setCustomSpacing(mainStackSpacing + 2, after: eventListSummary.superview!)
 
         searchInput.isHidden = true
         searchInput.focusRingType = .none
 
         searchInput.rx.observe(\.isHidden)
             .bind { [mainStackView] in
-                mainStackView.setCustomSpacing($0 ? 0 : mainStackSpacing, after: header)
+                mainStackView.setCustomSpacing($0 ? 0 : mainStackSpacing, after: header.superview!)
             }
             .disposed(by: disposeBag)
 
@@ -296,10 +307,9 @@ class MainViewController: NSViewController {
         searchInputSuggestionView.leading(equalTo: searchInput, constant: 20)
         searchInputSuggestionView.isHidden = true
 
-        mainStackView.width(equalTo: calendarView)
         mainStackView.top(equalTo: view, constant: Constants.MainStackView.margin)
-        mainStackView.leading(equalTo: view, constant: Constants.MainStackView.margin)
-        mainStackView.trailing(equalTo: view, constant: -Constants.MainStackView.margin)
+        mainStackView.leading(equalTo: view)
+        mainStackView.trailing(equalTo: view)
 
         heightConstraint = view.height(equalTo: 0)
 

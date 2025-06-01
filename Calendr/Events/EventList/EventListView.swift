@@ -16,7 +16,7 @@ class EventListView: NSView {
 
     private let contentStackView = NSStackView(.vertical)
 
-    init(viewModel: EventListViewModel) {
+    init(viewModel: EventListViewModel, padding: NSEdgeInsets = .init(horizontal: 4)) {
 
         self.viewModel = viewModel
 
@@ -24,7 +24,7 @@ class EventListView: NSView {
 
         setUpAccessibility()
 
-        configureLayout()
+        configureLayout(padding)
 
         setUpBindings()
     }
@@ -46,7 +46,7 @@ class EventListView: NSView {
         setAccessibilityIdentifier(Accessibility.EventList.view)
     }
 
-    private func configureLayout() {
+    private func configureLayout(_ padding: NSEdgeInsets) {
 
         forAutoLayout()
 
@@ -54,7 +54,7 @@ class EventListView: NSView {
 
         contentStackView.setHuggingPriority(.required, for: .horizontal)
 
-        contentStackView.edges(equalTo: self)
+        contentStackView.edges(equalTo: self, margins: padding)
     }
 
     private func setUpBindings() {

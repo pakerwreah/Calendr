@@ -29,6 +29,7 @@ class EventView: NSView {
     private let completeBtn = ImageButton()
     private let hoverLayer = CALayer()
     private let colorBar = NSView()
+    private let progressBallSize: CGFloat = 9
 
     private lazy var progressTop = progress.top(equalTo: self)
 
@@ -188,14 +189,57 @@ class EventView: NSView {
         addSubview(contentStackView)
         contentStackView.edges(equalTo: self)
 
-        addSubview(progress, positioned: .below, relativeTo: nil)
+        configureProgress()
+    }
+
+    private func configureProgress() {
+
+        clipsToBounds = false
+
+        addSubview(progress)
+
+        let ringSize: CGFloat = 0.5
+
+        let ball = NSView()
+        ball.wantsLayer = true
+        ball.size(equalTo: progressBallSize - ringSize)
+
+        let ring = NSView()
+        ring.wantsLayer = true
+        ring.layer?.cornerRadius = progressBallSize / 2
+        ring.layer?.borderWidth = ringSize
+        ring.layer?.allowsEdgeAntialiasing = true
+        ring.addSubview(ball)
+        ring.size(equalTo: progressBallSize)
+
+        ball.center(in: ring)
+
+        let line = NSView()
+        line.wantsLayer = true
+        line.height(equalTo: 1.5)
+
+        rx.updateLayer
+            .startWith(())
+            .bind {
+                ring.layer?.borderColor = NSColor.windowBackgroundColor.effectiveCGColor
+                ball.layer?.backgroundColor = NSColor.systemRed.effectiveCGColor
+                line.layer?.backgroundColor = NSColor.systemRed.effectiveCGColor
+            }
+            .disposed(by: disposeBag)
 
         progress.isHidden = true
-        progress.wantsLayer = true
-        progress.layer?.backgroundColor = NSColor.red.cgColor.copy(alpha: 0.7)
-        progress.height(equalTo: 1)
-        progress.leading(equalTo: self)
+        progress.leading(equalTo: self, constant: -progressBallSize / 2)
         progress.trailing(equalTo: self)
+        progress.addSubview(line)
+        progress.addSubview(ring)
+
+        line.center(in: progress, orientation: .vertical)
+        line.leading(equalTo: progress)
+        line.trailing(equalTo: progress)
+
+        ball.leading(equalTo: progress)
+        ball.top(equalTo: progress)
+        ball.bottom(equalTo: progress)
     }
 
     private func setUpBindings() {
@@ -264,8 +308,8 @@ class EventView: NSView {
             Observable.combineLatest(
                 viewModel.progress, rx.observe(\.frame)
             )
-            .compactMap { progress, frame in
-                progress.map { max(1, $0 * frame.height - 0.5) }
+            .compactMap { [progressBallSize] progress, frame in
+                progress.map { max(1, $0 * frame.height - progressBallSize / 2) }
             }
             .bind(to: progressTop.rx.constant)
             .disposed(by: disposeBag)
