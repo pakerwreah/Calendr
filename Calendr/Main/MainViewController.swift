@@ -186,7 +186,8 @@ class MainViewController: NSViewController {
             workspace: workspace,
             userDefaults: userDefaults,
             settings: settingsViewModel,
-            scheduler: WallTimeScheduler.instance,
+            scheduler: MainScheduler.instance,
+            refreshScheduler: WallTimeScheduler.instance,
             eventsScheduler: WallTimeScheduler.instance
         )
 
