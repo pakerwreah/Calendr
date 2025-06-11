@@ -22,8 +22,10 @@ class EventListViewModelTests: XCTestCase {
     let weatherService = MockWeatherServiceProvider()
     let workspace = MockWorkspaceServiceProvider()
     let settings = MockEventListSettings()
-    lazy var scheduler = TrackedHistoricalScheduler(initialClock: dateProvider.now)
+
+    let scheduler = HistoricalScheduler()
     let eventsScheduler = HistoricalScheduler()
+    lazy var refreshScheduler = TrackedHistoricalScheduler(initialClock: dateProvider.now)
 
     lazy var viewModel = EventListViewModel(
         eventsObservable: Observable.combineLatest(dateSubject, eventsSubject),
@@ -36,6 +38,7 @@ class EventListViewModelTests: XCTestCase {
         userDefaults: .init(),
         settings: settings,
         scheduler: scheduler,
+        refreshScheduler: refreshScheduler,
         eventsScheduler: eventsScheduler
     )
 
@@ -75,7 +78,7 @@ class EventListViewModelTests: XCTestCase {
                         return .section(text)
 
                     case .interval(let text, _):
-                        return .interval(text)
+                        return .interval(text.lastValue() ?? "")
                     }
                 }
             }
@@ -207,7 +210,7 @@ class EventListViewModelTests: XCTestCase {
         settings.togglePastEvents.onNext(false)
 
         dateProvider.add(1, .minute)
-        scheduler.advance(1, .minute)
+        refreshScheduler.advance(1, .minute)
 
         XCTAssertEqual(eventListItems, [
             .section("All day"),
@@ -225,7 +228,7 @@ class EventListViewModelTests: XCTestCase {
         ))
 
         dateProvider.add(1, .minute)
-        scheduler.advance(1, .minute)
+        refreshScheduler.advance(1, .minute)
 
         XCTAssertEqual(eventListItems, [
             .section("All day"),
@@ -321,7 +324,7 @@ class EventListViewModelTests: XCTestCase {
 
         eventsSubject.onNext(testEvents())
 
-        XCTAssertTrue(scheduler.log.isEmpty)
+        XCTAssertTrue(refreshScheduler.log.isEmpty)
     }
 
     func testEventList_withHidePastEventsEnabled_isNotToday_shouldNotScheduleRefreshes() {
@@ -330,7 +333,7 @@ class EventListViewModelTests: XCTestCase {
         eventsSubject.onNext(testEvents())
         settings.togglePastEvents.onNext(false)
 
-        XCTAssertTrue(scheduler.log.isEmpty)
+        XCTAssertTrue(refreshScheduler.log.isEmpty)
     }
 
     func testEventList_withHidePastEventsEnabled_withExactSecond_shouldScheduleRefreshesCorrectly() {
@@ -339,8 +342,8 @@ class EventListViewModelTests: XCTestCase {
         eventsSubject.onNext(events)
         settings.togglePastEvents.onNext(false)
 
-        XCTAssertFalse(scheduler.log.isEmpty)
-        XCTAssertTrue(zip(scheduler.log, events.filter(\.isAllDay.isFalse).map(\.end)).allSatisfy(>))
+        XCTAssertFalse(refreshScheduler.log.isEmpty)
+        XCTAssertTrue(zip(refreshScheduler.log, events.filter(\.isAllDay.isFalse).map(\.end)).allSatisfy(>))
     }
 
     func testEventList_withHidePastEventsEnabled_withPartialSecond_shouldScheduleRefreshesCorrectly() {
@@ -348,14 +351,14 @@ class EventListViewModelTests: XCTestCase {
         let events = testEvents()
 
         dateProvider.now.addTimeInterval(0.1)
-        scheduler.advanceTo(dateProvider.now)
+        refreshScheduler.advanceTo(dateProvider.now)
 
         eventsSubject.onNext(events)
 
         settings.togglePastEvents.onNext(false)
 
-        XCTAssertFalse(scheduler.log.isEmpty)
-        XCTAssertTrue(zip(scheduler.log, events.filter(\.isAllDay.isFalse).map(\.end)).allSatisfy(>))
+        XCTAssertFalse(refreshScheduler.log.isEmpty)
+        XCTAssertTrue(zip(refreshScheduler.log, events.filter(\.isAllDay.isFalse).map(\.end)).allSatisfy(>))
     }
 
     func testEventList_withOverdueReminders_shouldShowInDedicatedSections() {

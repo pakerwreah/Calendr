@@ -60,6 +60,7 @@ struct EventListViewPreview: PreviewProvider {
                 userDefaults: .init(),
                 settings: settings,
                 scheduler: MainScheduler.instance,
+                refreshScheduler: MainScheduler.instance,
                 eventsScheduler: MainScheduler.instance
             )
         )

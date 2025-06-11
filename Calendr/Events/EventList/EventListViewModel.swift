@@ -10,7 +10,7 @@ import RxSwift
 
 enum EventListItem {
     case section(String)
-    case interval(String, Observable<Bool>)
+    case interval(Observable<String>, fade: Observable<Bool>)
     case event(EventViewModel)
 }
 
@@ -43,6 +43,7 @@ class EventListViewModel {
     private let userDefaults: UserDefaults
     private let settings: EventListSettings
     private let scheduler: SchedulerType
+    private let refreshScheduler: SchedulerType
     private let eventsScheduler: SchedulerType
 
     private let dateFormatter: DateFormatter
@@ -79,6 +80,7 @@ class EventListViewModel {
         userDefaults: UserDefaults,
         settings: EventListSettings,
         scheduler: SchedulerType,
+        refreshScheduler: SchedulerType,
         eventsScheduler: SchedulerType
     ) {
         self.isShowingDetails = isShowingDetails
@@ -90,6 +92,7 @@ class EventListViewModel {
         self.userDefaults = userDefaults
         self.settings = settings
         self.scheduler = scheduler
+        self.refreshScheduler = refreshScheduler
         self.eventsScheduler = eventsScheduler
 
         dateFormatter = DateFormatter(calendar: dateProvider.calendar)
@@ -186,7 +189,7 @@ class EventListViewModel {
                     }
                     .filter { $0 >= 0 }
                     .map {
-                        Observable<Int>.timer(.seconds($0), scheduler: scheduler)
+                        Observable<Int>.timer(.seconds($0), scheduler: refreshScheduler)
                     }
             )
             .void()
@@ -295,20 +298,7 @@ class EventListViewModel {
                     return [.section(title), eventItem]
                 }
 
-                // show interval between events
-                let isUpcoming = dateProvider.calendar.isDate(
-                    dateProvider.now, in: (prev.end, curr.start),
-                    granularity: .second
-                )
-                let truncatedNow = Date(timeIntervalSince1970: floor(dateProvider.now.timeIntervalSince1970 / 60) * 60)
-
-                guard
-                    prev.end.distance(to: curr.start) >= 60,
-                    let interval = dateComponentsFormatter.string(
-                        from: isUpcoming ? truncatedNow : prev.end,
-                        to: curr.start
-                    )
-                else {
+                guard prev.end.distance(to: curr.start) >= 60 else {
                     return [eventItem]
                 }
 
@@ -316,7 +306,24 @@ class EventListViewModel {
                     .merge(viewModel.isFaded, viewModel.isInProgress)
                     .take(until: \.isTrue, behavior: .inclusive)
 
-                return [.interval(interval, fade), eventItem]
+                let ticker = Observable<Int>.interval(.seconds(1), scheduler: scheduler).void().startWith(())
+
+                let interval = ticker.compactMap { [dateProvider, dateComponentsFormatter] in
+
+                    let isUpcoming = dateProvider.calendar.isDate(
+                        dateProvider.now, in: (prev.end, curr.start),
+                        granularity: .second
+                    )
+
+                    let truncatedNow = Date(timeIntervalSince1970: floor(dateProvider.now.timeIntervalSince1970 / 60) * 60)
+
+                    return dateComponentsFormatter.string(
+                        from: isUpcoming ? truncatedNow : prev.end,
+                        to: curr.start
+                    )
+                }
+
+                return [.interval(interval, fade: fade), eventItem]
             }
             .flatten()
     }
