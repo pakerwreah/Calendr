@@ -270,6 +270,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
             button.bezelStyle = .accessoryBar
             button.contentTintColor = .labelColor
             button.title = attachment.fileName
+            button.lineBreakMode = .byTruncatingTail
             button.image = Icons.Event.attachment.with(scale: .small)
             button.rx.tap.map(attachment)
                 .bind(to: viewModel.openAttachment)
@@ -285,6 +286,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
                     font: .systemFont(ofSize: 11)
                 )
                 sizeLabel.setContentHuggingPriority(.required, for: .horizontal)
+                sizeLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
                 stack.addArrangedSubview(sizeLabel)
             }
 
