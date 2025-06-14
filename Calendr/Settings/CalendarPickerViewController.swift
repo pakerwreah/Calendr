@@ -88,7 +88,7 @@ class CalendarPickerViewController: NSViewController {
                     account == Strings.Calendars.Source.others
                 }
 
-                return Dictionary(grouping: calendars, by: { $0.account })
+                return Dictionary(grouping: calendars, by: { $0.account.title })
                     .sorted {
                         if isOther($0.key) && !isOther($1.key) {
                             return false // $0 is Other, so it should go down

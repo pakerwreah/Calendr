@@ -116,6 +116,7 @@ class MainViewController: NSViewController {
         settingsViewModel = SettingsViewModel(
             autoLauncher: autoLauncher,
             dateProvider: dateProvider,
+            workspace: workspace,
             userDefaults: userDefaults,
             notificationCenter: notificationCenter
         )

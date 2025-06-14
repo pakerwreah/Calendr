@@ -39,6 +39,7 @@ enum Prefs {
     static let preserveSelectedDate = "preserve_selected_date"
     static let dateHoverOption = "date_hover_option"
     static let calendarAppViewMode = "calendar_app_view_mode"
+    static let defaultCalendarApp = "default_calendar_app"
     static let calendarTextScaling = "calendar_text_scaling"
 
     // Event Details
@@ -101,6 +102,7 @@ func registerDefaultPrefs(in userDefaults: UserDefaults, calendar: Calendar = .c
         Prefs.preserveSelectedDate: false,
         Prefs.dateHoverOption: false,
         Prefs.calendarAppViewMode: CalendarViewMode.month.rawValue,
+        Prefs.defaultCalendarApp: CalendarApp.calendar.rawValue,
         Prefs.calendarTextScaling: 1,
 
         // Event Details
@@ -258,6 +260,11 @@ extension UserDefaults {
     @objc dynamic var calendarAppViewMode: String {
         get { string(forKey: Prefs.calendarAppViewMode) ?? "" }
         set { set(newValue, forKey: Prefs.calendarAppViewMode) }
+    }
+
+    @objc dynamic var defaultCalendarApp: String {
+        get { string(forKey: Prefs.defaultCalendarApp) ?? "" }
+        set { set(newValue, forKey: Prefs.defaultCalendarApp) }
     }
 
     @objc dynamic var calendarTextScaling: Double {

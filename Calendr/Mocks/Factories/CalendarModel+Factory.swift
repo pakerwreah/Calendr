@@ -21,7 +21,7 @@ extension CalendarModel {
 
         .init(
             id: id,
-            account: account,
+            account: .init(title: account, email: nil),
             title: title,
             color: color,
             isSubscribed: isSubscribed

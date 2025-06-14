@@ -46,6 +46,18 @@ extension StringProtocol {
     var ucfirst: String {
         replacingCharacters(in: ...startIndex, with: prefix(1).uppercased())
     }
+
+    var urlEncodedQueryItem: String? {
+        addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)?
+            .replacingOccurrences(of: "+", with: "%2B")
+            .replacingOccurrences(of: "/", with: "%2F")
+            .replacingOccurrences(of: "=", with: "%3D")
+            .replacingOccurrences(of: ">", with: "%3E")
+            .replacingOccurrences(of: "<", with: "%3C")
+            .replacingOccurrences(of: "@", with: "%40")
+            .replacingOccurrences(of: "?", with: "%3F")
+            .replacingOccurrences(of: "&", with: "%26")
+    }
 }
 
 extension Optional where Wrapped: StringProtocol {

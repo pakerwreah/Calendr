@@ -54,6 +54,7 @@
 "settings.calendar.date_hover_option" = "⌥ 키를 누르고 날짜 호버 시 미리보기";
 //"settings.calendar.week_count" = "Visible weeks";
 "settings.calendar.calendar_app_view_mode" = "캘린더 앱 보기 모드";
+//"settings.calendar.default_calendar_app" = "Default calendar app";
 
 "settings.events" = "일정";
 "settings.events.show_map" = "지도 및 날씨 표시";

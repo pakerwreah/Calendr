@@ -54,6 +54,7 @@
 "settings.calendar.date_hover_option" = "Hold ⌥ to peek at hovered dates";
 "settings.calendar.week_count" = "Visible weeks";
 "settings.calendar.calendar_app_view_mode" = "Calendar app view";
+"settings.calendar.default_calendar_app" = "Default calendar app";
 
 "settings.events" = "Events";
 "settings.events.show_map" = "Show map and weather";

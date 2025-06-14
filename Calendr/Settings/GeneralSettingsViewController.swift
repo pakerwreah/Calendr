@@ -45,6 +45,8 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     private let dateHoverOptionCheckbox = Checkbox(title: Strings.Settings.Calendar.dateHoverOption)
     private let calendarAppViewModeLabel = Label(text: Strings.Settings.Calendar.calendarAppViewMode)
     private let calendarAppViewModeDropdown = Dropdown()
+    private let defaultCalendarAppLabel = Label(text: Strings.Settings.Calendar.defaultCalendarApp)
+    private let defaultCalendarAppDropdown = Dropdown()
 
     // Events
     private let showMapCheckbox = Checkbox(title: Strings.Settings.Events.showMap)
@@ -224,7 +226,8 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             preserveSelectedDateCheckbox,
             dateHoverOptionCheckbox,
             NSStackView(views: [weekCountLabel, .spacer, weekCountStepperLabel, weekCountStepper]),
-            NSStackView(views: [calendarAppViewModeLabel, calendarAppViewModeDropdown])
+            NSStackView(views: [calendarAppViewModeLabel, calendarAppViewModeDropdown]),
+            NSStackView(views: [defaultCalendarAppLabel, defaultCalendarAppDropdown])
         ])
         .with(orientation: .vertical)
     }()
@@ -457,6 +460,43 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             .disposed(by: disposeBag)
     }
 
+    private func setUpDefaultCalendarApp() {
+
+        defaultCalendarAppDropdown.isBordered = false
+        defaultCalendarAppDropdown.imagePosition = .imageOnly
+        defaultCalendarAppDropdown.setContentHuggingPriority(.required, for: .horizontal)
+
+        let options = viewModel.calendarAppOptions
+
+        let menu = NSMenu()
+
+        for (index, option) in options.enumerated() {
+            let item = NSMenuItem()
+            item.image = option.icon.with(size: .init(width: 16, height: 16))
+            item.title = option.name
+            item.tag = index
+            menu.addItem(item)
+        }
+
+        defaultCalendarAppDropdown.menu = menu
+
+        let defaultCalendarAppControl = defaultCalendarAppDropdown.rx.controlProperty(
+            getter: \.indexOfSelectedItem,
+            setter: { $0.selectItem(at: $1) }
+        )
+
+        defaultCalendarAppControl
+            .skip(1)
+            .map { options[$0].id }
+            .bind(to: viewModel.defaultCalendarAppObserver)
+            .disposed(by: disposeBag)
+
+        viewModel.defaultCalendarApp
+            .compactMap(options.map(\.id).firstIndex(of:))
+            .bind(to: defaultCalendarAppControl)
+            .disposed(by: disposeBag)
+    }
+
     private func setUpCalendar() {
 
         setUpfirstWeekday()
@@ -492,6 +532,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         .disposed(by: disposeBag)
 
         setUpCalendarAppViewMode()
+        setUpDefaultCalendarApp()
     }
 
     private func setUpWeekCountStepper() {
