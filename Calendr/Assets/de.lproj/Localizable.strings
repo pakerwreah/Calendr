@@ -37,6 +37,7 @@
 "settings.menu_bar.show_date" = "Zeige Datum";
 "settings.menu_bar.show_background" = "Opaken Hintergrund anzeigen";
 "settings.menu_bar.date_format_custom" = "Angepasst";
+//"settings.menu_bar.open_on_hover" = "Open on mouse hover";
 
 "settings.next_event" = "Nächstes Ereignis";
 "settings.next_event.show_next_event" = "Zeige nächstes Ereignis";

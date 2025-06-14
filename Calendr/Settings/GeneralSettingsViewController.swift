@@ -19,6 +19,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     private let showMenuBarIconCheckbox = Checkbox(title: Strings.Settings.MenuBar.showIcon)
     private let showMenuBarDateCheckbox = Checkbox(title: Strings.Settings.MenuBar.showDate)
     private let showMenuBarBackgroundCheckbox = Checkbox(title: Strings.Settings.MenuBar.showBackground)
+    private let openOnHoverCheckbox = Checkbox(title: Strings.Settings.MenuBar.openOnHover)
     private let iconStyleDropdown = Dropdown()
     private let dateFormatDropdown = Dropdown()
     private let dateFormatTextField = NSTextField()
@@ -143,7 +144,8 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             autoLaunchCheckbox,
             iconStyle,
             dateFormat,
-            showMenuBarBackgroundCheckbox
+            showMenuBarBackgroundCheckbox,
+            openOnHoverCheckbox
         ])
         .with(orientation: .vertical)
     }()
@@ -275,6 +277,13 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             control: showMenuBarBackgroundCheckbox,
             observable: viewModel.showStatusItemBackground,
             observer: viewModel.toggleStatusItemBackground
+        )
+        .disposed(by: disposeBag)
+
+        bind(
+            control: openOnHoverCheckbox,
+            observable: viewModel.openOnHover,
+            observer: viewModel.toggleOpenOnHover
         )
         .disposed(by: disposeBag)
     }

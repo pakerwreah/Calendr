@@ -20,6 +20,8 @@ class MockStatusItemSettings: StatusItemSettings {
     let showEventStatusItem: Observable<Bool>
     let statusItemTextScaling: Observable<Double>
 
+    let openOnHover: Observable<Bool> = .just(false)
+
     init(
         showIcon: Bool = true,
         showDate: Bool = true,

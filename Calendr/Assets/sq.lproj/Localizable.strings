@@ -37,6 +37,7 @@
 "settings.menu_bar.show_date" = "Shfaq datën";
 "settings.menu_bar.show_background" = "Shfaq sfondin e errët";
 "settings.menu_bar.date_format_custom" = "Zakon";
+//"settings.menu_bar.open_on_hover" = "Open on mouse hover";
 
 "settings.next_event" = "Ngjarja e Radhës";
 "settings.next_event.show_next_event" = "Shfaq ngjarjen e radhës";

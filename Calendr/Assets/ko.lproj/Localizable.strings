@@ -37,6 +37,7 @@
 "settings.menu_bar.show_date" = "날짜 표시";
 "settings.menu_bar.show_background" = "불투명한 배경 표시";
 "settings.menu_bar.date_format_custom" = "사용자 지정";
+//"settings.menu_bar.open_on_hover" = "Open on mouse hover";
 
 "settings.next_event" = "다음 일정";
 "settings.next_event.show_next_event" = "다음 일정 표시";

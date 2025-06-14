@@ -37,6 +37,7 @@
 "settings.menu_bar.show_date" = "Zobrazit datum";
 "settings.menu_bar.show_background" = "Zobrazit neprůhledné pozadí";
 "settings.menu_bar.date_format_custom" = "Vlastní";
+//"settings.menu_bar.open_on_hover" = "Open on mouse hover";
 
 "settings.next_event" = "Další událost";
 "settings.next_event.show_next_event" = "Zobrazit další událost";

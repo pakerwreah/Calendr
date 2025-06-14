@@ -37,6 +37,7 @@
 "settings.menu_bar.show_date" = "Показувати дату";
 "settings.menu_bar.show_background" = "Показувати непрозорий фон";
 "settings.menu_bar.date_format_custom" = "Задати формат";
+//"settings.menu_bar.open_on_hover" = "Open on mouse hover";
 
 "settings.next_event" = "Наступна подія";
 "settings.next_event.show_next_event" = "Показувати наступну подію";

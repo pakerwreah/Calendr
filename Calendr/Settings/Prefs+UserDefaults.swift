@@ -18,6 +18,7 @@ enum Prefs {
     static let statusItemDateFormat = "status_item_date_format"
     static let statusItemBackgroundEnabled = "status_item_background_enabled"
     static let statusItemTextScaling = "status_item_text_scaling"
+    static let statusItemOpenOnHover = "status_item_open_on_hover"
 
     // Next Event
     static let showEventStatusItem = "show_event_status_item"
@@ -79,6 +80,7 @@ func registerDefaultPrefs(in userDefaults: UserDefaults, calendar: Calendar = .c
         Prefs.statusItemDateFormat: AppConstants.defaultCustomDateFormat,
         Prefs.statusItemBackgroundEnabled: false,
         Prefs.statusItemTextScaling: 1.2,
+        Prefs.statusItemOpenOnHover: false,
 
         // Next Event
         Prefs.showEventStatusItem: false,
@@ -167,6 +169,11 @@ extension UserDefaults {
     @objc dynamic var statusItemTextScaling: Double {
         get { double(forKey: Prefs.statusItemTextScaling) }
         set { set(newValue, forKey: Prefs.statusItemTextScaling) }
+    }
+
+    @objc dynamic var statusItemOpenOnHover: Bool {
+        get { bool(forKey: Prefs.statusItemOpenOnHover) }
+        set { set(newValue, forKey: Prefs.statusItemOpenOnHover) }
     }
 
     // Next Event

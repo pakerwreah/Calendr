@@ -62,6 +62,7 @@ protocol StatusItemSettings {
     var showStatusItemIcon: Observable<Bool> { get }
     var showStatusItemDate: Observable<Bool> { get }
     var showStatusItemBackground: Observable<Bool> { get }
+    var openOnHover: Observable<Bool> { get }
     var statusItemIconStyle: Observable<StatusItemIconStyle> { get }
     var statusItemDateStyle: Observable<StatusItemDateStyle> { get }
     var statusItemDateFormat: Observable<String> { get }
@@ -135,6 +136,7 @@ class SettingsViewModel:
     let toggleStatusItemIcon: AnyObserver<Bool>
     let toggleStatusItemDate: AnyObserver<Bool>
     let toggleStatusItemBackground: AnyObserver<Bool>
+    let toggleOpenOnHover: AnyObserver<Bool>
     let statusItemTextScalingObserver: AnyObserver<Double>
     let statusItemIconStyleObserver: AnyObserver<StatusItemIconStyle>
     let statusItemDateStyleObserver: AnyObserver<StatusItemDateStyle>
@@ -171,6 +173,7 @@ class SettingsViewModel:
     let showStatusItemIcon: Observable<Bool>
     let showStatusItemDate: Observable<Bool>
     let showStatusItemBackground: Observable<Bool>
+    let openOnHover: Observable<Bool>
     let statusItemIconStyle: Observable<StatusItemIconStyle>
     let statusItemDateStyle: Observable<StatusItemDateStyle>
     let iconStyleOptions: Observable<[IconStyleOption]>
@@ -262,6 +265,7 @@ class SettingsViewModel:
         toggleStatusItemIcon = userDefaults.rx.observer(for: \.statusItemIconEnabled)
         toggleStatusItemDate = userDefaults.rx.observer(for: \.statusItemDateEnabled)
         toggleStatusItemBackground = userDefaults.rx.observer(for: \.statusItemBackgroundEnabled)
+        toggleOpenOnHover = userDefaults.rx.observer(for: \.statusItemOpenOnHover)
         statusItemIconStyleObserver = userDefaults.rx.observer(for: \.statusItemIconStyle).mapObserver(\.rawValue)
         statusItemDateStyleObserver = userDefaults.rx.observer(for: \.statusItemDateStyle).mapObserver(\.rawValue)
         statusItemDateFormatObserver = userDefaults.rx.observer(for: \.statusItemDateFormat)
@@ -310,6 +314,7 @@ class SettingsViewModel:
         showStatusItemDate = statusItemIconAndDate.map(\.1)
         /* ----------------------- */
 
+        openOnHover = userDefaults.rx.observe(\.statusItemOpenOnHover)
         showStatusItemBackground = userDefaults.rx.observe(\.statusItemBackgroundEnabled)
         statusItemIconStyle = userDefaults.rx.observe(\.statusItemIconStyle).map { .init(rawValue: $0) ?? .calendar }
         statusItemDateStyle = userDefaults.rx.observe(\.statusItemDateStyle).map { .init(rawValue: $0) ?? .none }

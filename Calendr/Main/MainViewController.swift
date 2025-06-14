@@ -603,7 +603,12 @@ class MainViewController: NSViewController {
 
         let clickHandler = mainStatusItemClickHandler
 
-        clickHandler.leftClick
+        let trackingView = TrackingView()
+        trackingView.add(to: statusBarButton)
+
+        let mouseEntered = trackingView.mouseEntered.withLatestFrom(settingsViewModel.openOnHover).matching(true).void()
+
+        Observable.merge(clickHandler.leftClick, mouseEntered)
             .flatMapFirst { [weak self] _ -> Observable<Void> in
                 guard let self else { return .empty() }
 
@@ -632,7 +637,7 @@ class MainViewController: NSViewController {
         }
         .disposed(by: disposeBag)
 
-        statusBarButton.setUpClickHandler(clickHandler)
+        clickHandler.add(to: statusBarButton)
 
         statusItemViewModel.image
             .bind(to: statusBarButton.rx.image)
@@ -712,7 +717,7 @@ class MainViewController: NSViewController {
             .subscribe()
             .disposed(by: disposeBag)
 
-        statusBarButton.setUpClickHandler(clickHandler)
+        clickHandler.add(to: statusBarButton)
     }
 
     private func setUpKeyboard() {
@@ -1074,37 +1079,5 @@ private extension NSMenu {
             // this is a blocking operation
             self.popUp(positioning: nil, at: .init(x: 0, y: offsetY), in: view)
         }
-    }
-}
-
-/**
- We trigger `left` click on mouse `down` and `right` click on mouse `up` on purpose.
- Mouse down feels faster, but NSMenu.popUp blocks the event chain and causes the button to be stuck in a weird state.
- It's not about the highlight effect, it really gets stuck and we have to click it twice for it to work again.
- **/
-private class StatusItemClickHandler {
-    let leftClick = PublishSubject<Void>()
-    let rightClick = PublishSubject<Void>()
-
-    @objc func action() {
-        guard let event = NSApp.currentEvent else { return }
-
-        switch event.type {
-        case .leftMouseDown:
-            self.leftClick.onNext(())
-        case .rightMouseUp:
-            self.rightClick.onNext(())
-        default:
-            break
-        }
-    }
-}
-
-private extension NSStatusBarButton {
-
-    func setUpClickHandler(_ handler: StatusItemClickHandler) {
-        sendAction(on: [.leftMouseDown, .rightMouseUp])
-        target = handler
-        action = #selector(StatusItemClickHandler.action)
     }
 }
