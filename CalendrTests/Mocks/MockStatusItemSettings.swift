@@ -27,6 +27,8 @@ class MockStatusItemSettings: StatusItemSettings {
     let showEventStatusItem: Observable<Bool>
     let statusItemTextScaling: Observable<Double>
 
+    let openOnHover: Observable<Bool> = .just(false)
+
     init() {
         (showStatusItemIcon, toggleIcon) = BehaviorSubject.pipe(value: true)
         (showStatusItemDate, toggleDate) = BehaviorSubject.pipe(value: true)

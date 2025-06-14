@@ -225,6 +225,8 @@ internal enum Strings {
       internal static let autoLaunch = Strings.tr("Localizable", "settings.menu_bar.auto_launch", fallback: "Launch at login")
       /// Custom
       internal static let dateFormatCustom = Strings.tr("Localizable", "settings.menu_bar.date_format_custom", fallback: "Custom")
+      /// Open on mouse hover
+      internal static let openOnHover = Strings.tr("Localizable", "settings.menu_bar.open_on_hover", fallback: "Open on mouse hover")
       /// Show opaque background
       internal static let showBackground = Strings.tr("Localizable", "settings.menu_bar.show_background", fallback: "Show opaque background")
       /// Show date

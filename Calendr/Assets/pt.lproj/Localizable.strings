@@ -37,6 +37,7 @@
 "settings.menu_bar.show_date" = "Mostrar data";
 "settings.menu_bar.show_background" = "Mostrar fundo opaco";
 "settings.menu_bar.date_format_custom" = "Personalizado";
+"settings.menu_bar.open_on_hover" = "Abrir ao passar o mouse";
 
 "settings.next_event" = "Próximo Evento";
 "settings.next_event.show_next_event" = "Mostrar próximo evento";

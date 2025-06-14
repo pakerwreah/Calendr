@@ -37,6 +37,7 @@
 "settings.menu_bar.show_date" = "Visa datum";
 "settings.menu_bar.show_background" = "Show ogenomskinlig bakgrund";
 "settings.menu_bar.date_format_custom" = "Anpassad";
+//"settings.menu_bar.open_on_hover" = "Open on mouse hover";
 
 "settings.next_event" = "Nästa händelse";
 "settings.next_event.show_next_event" = "Visa nästa händelse";

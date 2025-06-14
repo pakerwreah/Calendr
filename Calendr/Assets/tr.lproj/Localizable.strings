@@ -37,6 +37,7 @@
 "settings.menu_bar.show_date" = "Tarihi göster";
 "settings.menu_bar.show_background" = "Opak arka plan göster";
 "settings.menu_bar.date_format_custom" = "Özel";
+//"settings.menu_bar.open_on_hover" = "Open on mouse hover";
 
 "settings.next_event" = "Sonraki Etkinlik";
 "settings.next_event.show_next_event" = "Sonraki etkinliği göster";
