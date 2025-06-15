@@ -8,60 +8,6 @@
 import Cocoa
 import RxSwift
 
-typealias StatusItemDateStyle = DateFormatter.Style
-
-extension StatusItemDateStyle {
-    static let allCases: [Self] = [.short, .medium, .long, .full]
-    var isCustom: Bool { !Self.allCases.contains(self) }
-}
-
-typealias PopoverMaterial = NSVisualEffectView.Material
-
-extension PopoverMaterial {
-
-    init(transparency: Int) {
-        self = [
-            .contentBackground,
-            .sheet,
-            .headerView,
-            .menu,
-            .popover,
-            .hudWindow
-        ][transparency]
-    }
-}
-
-enum CalendarViewMode: String, CaseIterable {
-    case month, week, day
-}
-
-enum CalendarApp: String, CaseIterable {
-    case calendar, notion
-}
-
-enum StatusItemIconStyle: String, CaseIterable {
-    case calendar, date, dayOfWeek
-}
-
-enum AppearanceMode: Int, CaseIterable {
-    case automatic, light, dark
-}
-
-extension AppearanceMode {
-
-    var appearance: NSAppearance? {
-        switch self {
-        case .automatic:
-            return nil
-        case .light:
-            return .init(named: .aqua)
-        case .dark:
-            return .init(named: .darkAqua)
-        }
-    }
-}
-
-
 protocol StatusItemSettings {
     var showStatusItemIcon: Observable<Bool> { get }
     var showStatusItemDate: Observable<Bool> { get }

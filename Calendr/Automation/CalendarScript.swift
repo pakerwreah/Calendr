@@ -9,17 +9,20 @@ import Foundation
 
 class CalendarScript {
 
-    private let workspace: WorkspaceServiceProviding
-    private let formatter = DateFormatter().with(style: .full)
+    private let appleScriptRunner: ScriptRunner
+    private let dateProvider: DateProviding
 
-    init(workspace: WorkspaceServiceProviding) {
-        self.workspace = workspace
+    private lazy var formatter = DateFormatter(template: "ddMMYYYY", calendar: dateProvider.calendar)
+
+    init(appleScriptRunner: ScriptRunner, dateProvider: DateProviding) {
+        self.appleScriptRunner = appleScriptRunner
+        self.dateProvider = dateProvider
     }
 
     func openCalendar(at date: Date, mode: CalendarViewMode) async -> Bool {
         Popover.closeAll()
         do {
-            try await runScript("""
+            try await appleScriptRunner.run("""
                     tell application "Calendar"
                     switch view to \(mode) view
                     delay 0.3

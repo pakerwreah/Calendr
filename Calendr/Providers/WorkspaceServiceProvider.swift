@@ -12,6 +12,7 @@ protocol WorkspaceServiceProviding {
 
     var userDefaults: UserDefaults { get }
     var dateProvider: DateProviding { get }
+    var calendarAppProvider: CalendarAppProviding { get }
     var notificationCenter: NotificationCenter { get }
 
     func urlForApplication(toOpen url: URL) -> URL?
@@ -29,11 +30,22 @@ protocol WorkspaceServiceProviding {
     func open(_ link: EventLink)
 
     func open(_ event: EventModel)
+
+    func open(_ date: Date, mode: CalendarViewMode)
 }
 
 private let httpsSchemeURL = URL(string: "https:")!
+private let remindersSchemeURL = URL(string: "x-apple-reminderkit://")!
 
 extension WorkspaceServiceProviding {
+
+    private var calendarApp: CalendarApp {
+        CalendarApp(rawValue: userDefaults.defaultCalendarApp) ?? .calendar
+    }
+
+    private var calendarAppViewMode: CalendarViewMode {
+        CalendarViewMode(rawValue: userDefaults.calendarAppViewMode) ?? .month
+    }
 
     func supports(scheme: String) -> Bool {
         URL(string: scheme).flatMap(urlForApplication(toOpen:)) != nil
@@ -63,11 +75,15 @@ extension WorkspaceServiceProviding {
     }
 
     func open(_ event: EventModel) {
-        let provider = CalendarAppProvider(userDefaults: userDefaults, dateProvider: dateProvider, workspace: self)
+        calendarAppProvider.open(event, preferring: calendarApp, using: self)
+    }
 
-        if let url = provider.url(for: event) {
-            open(url)
-        }
+    func open(_ date: Date) {
+        open(date, mode: calendarAppViewMode)
+    }
+
+    func open(_ date: Date, mode: CalendarViewMode) {
+        calendarAppProvider.open(calendarApp, at: date, mode: mode, using: self)
     }
 
     func open(_ attachment: Attachment) {
@@ -138,6 +154,12 @@ extension WorkspaceServiceProviding {
         panel.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
     }
+
+    func openReminders() {
+        if let appUrl = urlForApplication(toOpen: remindersSchemeURL) {
+            open(appUrl)
+        }
+    }
 }
 
 class Workspace: WorkspaceServiceProviding {
@@ -146,11 +168,13 @@ class Workspace: WorkspaceServiceProviding {
 
     let userDefaults: UserDefaults
     let dateProvider: DateProviding
+    let calendarAppProvider: CalendarAppProviding
     let notificationCenter: NotificationCenter
 
-    init(userDefaults: UserDefaults, dateProvider: DateProviding) {
+    init(userDefaults: UserDefaults, dateProvider: DateProviding, calendarAppProvider: CalendarAppProviding) {
         self.userDefaults = userDefaults
         self.dateProvider = dateProvider
+        self.calendarAppProvider = calendarAppProvider
         self.notificationCenter = workspace.notificationCenter
     }
 

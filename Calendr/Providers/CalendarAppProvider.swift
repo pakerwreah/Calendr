@@ -5,64 +5,130 @@
 //  Created by Paker on 14/06/2025.
 //
 
+import Collections
+
 protocol CalendarAppProviding {
-    func url(for event: EventModel) -> URL?
+    var dateProvider: DateProviding { get }
+    var appleScriptRunner: ScriptRunner { get }
+
+    func open(_ app: CalendarApp, at date: Date, mode: CalendarViewMode, using workspace: WorkspaceServiceProviding) async
+    func open(_ event: EventModel, preferring app: CalendarApp, using workspace: WorkspaceServiceProviding) async
+}
+
+extension CalendarAppProviding {
+
+    func open(_ app: CalendarApp, at date: Date, mode: CalendarViewMode, using workspace: WorkspaceServiceProviding) {
+        Task {
+            await open(app, at: date, mode: mode, using: workspace)
+        }
+    }
+
+    func open(_ event: EventModel, preferring app: CalendarApp, using workspace: WorkspaceServiceProviding) {
+        Task {
+            await open(event, preferring: app, using: workspace)
+        }
+    }
 }
 
 class CalendarAppProvider: CalendarAppProviding {
 
-    private let userDefaults: UserDefaults
-    private let dateProvider: DateProviding
-    private let workspace: WorkspaceServiceProviding
+    let dateProvider: DateProviding
+    let appleScriptRunner: ScriptRunner
 
-    init(userDefaults: UserDefaults, dateProvider: DateProviding, workspace: WorkspaceServiceProviding) {
-        self.userDefaults = userDefaults
+    private lazy var calendarScript = CalendarScript(
+        appleScriptRunner: appleScriptRunner,
+        dateProvider: dateProvider
+    )
+
+    init(dateProvider: DateProviding, appleScriptRunner: ScriptRunner) {
         self.dateProvider = dateProvider
-        self.workspace = workspace
+        self.appleScriptRunner = appleScriptRunner
     }
 
-    func open(_ app: CalendarApp, at date: Date, mode: CalendarViewMode) {
+    func open(_ app: CalendarApp, at date: Date, mode: CalendarViewMode, using workspace: WorkspaceServiceProviding) async {
         switch app {
             case .calendar:
-                Task {
-                    let calendarScript = CalendarScript(workspace: workspace)
-                    let ok = await calendarScript.openCalendar(at: date, mode: mode)
-                    if !ok {
-                        // If the script fails, just open the calendar.
-                        // There's no url api we can use to jump to a date.
-                        workspace.open(app.baseURL)
-                    }
-                }
+                await openCalendarApp(at: date, mode: mode, using: workspace)
+
             case .notion:
-                let dateFormatter = DateFormatter(format: "yyyy/M/d", calendar: dateProvider.calendar)
-                let path = "\(mode)/\(dateFormatter.string(from: date))"
-
-                // Notion calendar handles deeplinks very poorly, specially on cold start.
-                // If it needs to reload to show the chosen date, it completely misses.
-                // We have to try a few of times to "guarantee" we end up in the right place.
-                for i in 0...3 {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(i)) { [workspace] in
-                        if let url = app.deeplink(path: "\(path)?t=\(Date.now.timeIntervalSince1970)") {
-                            workspace.open(url)
-                        }
-                    }
-                }
+                await openNotionApp(at: date, using: workspace, retries: 1)
         }
     }
 
-    func url(for event: EventModel) -> URL? {
-        let app = CalendarApp(rawValue: userDefaults.defaultCalendarApp) ?? .calendar
-
+    func open(_ event: EventModel, preferring app: CalendarApp, using workspace: WorkspaceServiceProviding) async {
         switch app {
-            case .notion where !event.type.isReminder:
-                return notionAppURL(for: event)
+            case .calendar,
+                 _ where !event.type.isEvent:
 
-            default:
-                return calendarAppURL(for: event)
+                await openCalendarApp(at: event, using: workspace)
+
+            case .notion:
+                await openNotionApp(at: event, using: workspace)
         }
     }
 
-    func calendarAppURL(for event: EventModel) -> URL? {
+    // MARK: - Date Openers
+
+    private func openCalendarApp(at date: Date, mode: CalendarViewMode, using workspace: WorkspaceServiceProviding) async {
+        var date = date
+        if mode == .week, let week = dateProvider.calendar.dateInterval(of: .weekOfYear, for: date) {
+            date = week.start
+        }
+        let ok = await calendarScript.openCalendar(at: date, mode: mode)
+        if !ok {
+            // If the script fails, just open the calendar.
+            // There's no url api we can use to jump to a date.
+            workspace.open(CalendarApp.calendar.baseURL)
+        }
+    }
+
+    @MainActor
+    private func openNotionApp(at date: Date, using workspace: WorkspaceServiceProviding, retries: Int = 0) async {
+
+        let dateFormatter = DateFormatter(format: "yyyy/M/d", calendar: dateProvider.calendar)
+        // We can change this '.' with the view mode, but it doesn't always work.
+        // When it fails, Notion gets confused about the dates and messes up everything.
+        let path = "./\(dateFormatter.string(from: date))"
+
+        // Notion calendar handles deeplinks very poorly, specially on cold start.
+        // If it needs to reload to show the chosen date, it completely misses.
+        // We have to try a few times to "guarantee" we end up in the right place.
+        for i in 0...retries {
+            if i > 0 {
+                await Task.sleep(seconds: 1)
+            }
+            if let url = CalendarApp.notion.deeplink(path: "\(path)?t=\(Date.now.timeIntervalSince1970)") {
+                workspace.open(url)
+            }
+        }
+    }
+
+    // MARK: - Event Openers
+
+    private func openCalendarApp(at event: EventModel, using workspace: WorkspaceServiceProviding) async {
+        if let url = calendarAppEventURL(for: event) {
+            workspace.open(url)
+        }
+    }
+
+    private func openNotionApp(at event: EventModel, using workspace: WorkspaceServiceProviding) async {
+
+        // if the event is not loaded, it will just fail, so we have to go to the date first
+        await openNotionApp(at: event.start, using: workspace)
+
+        // if the distance from the current date is too big, it will certainly try to load, so we wait a bit
+        if abs(dateProvider.now.distance(to: event.start)) > 7889400 /* 3 months */ {
+            await Task.sleep(seconds: 1)
+        }
+
+        if let url = notionAppEventURL(for: event) {
+            workspace.open(url)
+        }
+    }
+
+    // MARK: - Event URL builders
+
+    private func calendarAppEventURL(for event: EventModel) -> URL? {
         guard let id = event.id.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) else {
             return nil
         }
@@ -89,7 +155,7 @@ class CalendarAppProvider: CalendarAppProviding {
         return URL(string: "ical://ekevent\(date)/\(id)?method=show&options=more")
     }
 
-    func notionAppURL(for event: EventModel) -> URL? {
+    private func notionAppEventURL(for event: EventModel) -> URL? {
 
         let format = event.isAllDay ? "yyyy-MM-dd" : "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
         let dateFormatter = DateFormatter(format: format, calendar: dateProvider.calendar)
@@ -99,13 +165,13 @@ class CalendarAppProvider: CalendarAppProviding {
             let startDate = dateFormatter.string(for: event.start),
             let endDate = dateFormatter.string(for: event.end)
         else {
-            return calendarAppURL(for: event)
+            return nil
         }
 
         // remove recurrence identifier
         let iCalUID = event.externalId.replacingOccurrences(of: "/RID.+$", with: "", options: .regularExpression)
 
-        let queryItems: [String: String?] = [
+        let queryItems: OrderedDictionary<String, String?> = [
             "accountEmail": accountEmail,
             "iCalUID": iCalUID,
             "startDate": startDate,
@@ -122,23 +188,5 @@ class CalendarAppProvider: CalendarAppProviding {
         }.joined(separator: "&")
 
         return URL(string: "cron://showEvent?\(params)")
-    }
-}
-
-extension CalendarApp {
-
-    var scheme: String {
-        switch self {
-            case .calendar: "ical"
-            case .notion: "cron"
-        }
-    }
-
-    var baseURL: URL {
-        URL(string: "\(scheme)://")!
-    }
-
-    func deeplink(path: String) -> URL? {
-        URL(string: "\(scheme)://\(path)")
     }
 }

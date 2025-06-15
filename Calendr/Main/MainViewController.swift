@@ -414,39 +414,20 @@ class MainViewController: NSViewController {
             .disposed(by: disposeBag)
 
         remindersBtn.rx.tap.bind { [workspace] in
-            if let appUrl = workspace.urlForApplication(toOpen: URL(string: "x-apple-reminderkit://")!) {
-                workspace.open(appUrl)
-            }
+            workspace.openReminders()
         }
         .disposed(by: disposeBag)
 
-        let calendarAppProvider = CalendarAppProvider(
-            userDefaults: userDefaults,
-            dateProvider: dateProvider,
-            workspace: workspace
-        )
-
         dateDoubleClick
-            .withLatestFrom(settingsViewModel.defaultCalendarApp) { ($0, $1) }
-            .bind { date, app in
-                calendarAppProvider.open(app, at: date, mode: .day)
+            .bind { [workspace] date in
+                workspace.open(date, mode: .day)
             }
             .disposed(by: disposeBag)
 
         calendarBtn.rx.tap
-            .withLatestFrom(
-                Observable.combineLatest(
-                    selectedDate,
-                    settingsViewModel.calendarAppViewMode,
-                    settingsViewModel.defaultCalendarApp
-                )
-            )
-            .bind { [dateProvider] date, mode, app in
-                var date = date
-                if mode == .week, let week = dateProvider.calendar.dateInterval(of: .weekOfYear, for: date) {
-                    date = week.start
-                }
-                calendarAppProvider.open(app, at: date, mode: mode)
+            .withLatestFrom(selectedDate)
+            .bind { [workspace] date in
+                workspace.open(date)
             }
             .disposed(by: disposeBag)
 
