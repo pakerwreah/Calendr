@@ -194,8 +194,7 @@ class CalendarAppProviderTests: XCTestCase {
         openExpectation.assertForOverFulfill = false
 
         workspace.didOpenURL = { url in
-            // opens at the start of the week
-            XCTAssertEqual(url.absoluteString.components(separatedBy: "?t=").first, "cron://week/2024/12/29")
+            XCTAssertEqual(url.absoluteString.components(separatedBy: "?t=").first, "cron://week/2025/1/1")
             openExpectation.fulfill()
         }
 

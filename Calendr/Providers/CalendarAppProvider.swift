@@ -41,10 +41,6 @@ class CalendarAppProvider: CalendarAppProviding {
     }
 
     func open(_ app: CalendarApp, at date: Date, mode: CalendarViewMode, using workspace: WorkspaceServiceProviding) async {
-        var date = date
-        if mode == .week, let week = dateProvider.calendar.dateInterval(of: .weekOfYear, for: date) {
-            date = week.start
-        }
         switch app {
             case .calendar:
                 await openCalendarApp(at: date, mode: mode, using: workspace)
@@ -69,7 +65,10 @@ class CalendarAppProvider: CalendarAppProviding {
     // MARK: - Date Openers
 
     private func openCalendarApp(at date: Date, mode: CalendarViewMode, using workspace: WorkspaceServiceProviding) async {
-
+        var date = date
+        if mode == .week, let week = dateProvider.calendar.dateInterval(of: .weekOfYear, for: date) {
+            date = week.start
+        }
         let calendarScript = CalendarScript(appleScriptRunner: appleScriptRunner)
         let ok = await calendarScript.openCalendar(at: date, mode: mode)
         if !ok {
