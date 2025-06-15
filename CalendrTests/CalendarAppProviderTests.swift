@@ -113,7 +113,7 @@ class CalendarAppProviderTests: XCTestCase {
         let openEventExpectation = expectation(description: "Open Event")
 
         workspace.didOpenURL = { url in
-            XCTAssertEqual(url.absoluteString.components(separatedBy: "?t=").first, "cron://day/2025/1/1")
+            XCTAssertEqual(url.absoluteString.components(separatedBy: "?t=").first, "cron://./2025/1/1")
             openDateExpectation.fulfill()
         }
 
@@ -149,7 +149,7 @@ class CalendarAppProviderTests: XCTestCase {
 
         appleScriptRunner.didRunScript = { source in
             XCTAssert(source.contains("tell application \"Calendar\""))
-            XCTAssert(source.contains("1 January 2025"))
+            XCTAssert(source.contains("1 January 2025"), source)
             XCTAssert(source.contains("day view"))
             openExpectation.fulfill()
         }
@@ -165,7 +165,7 @@ class CalendarAppProviderTests: XCTestCase {
         appleScriptRunner.didRunScript = { source in
             // opens at the start of the week
             XCTAssert(source.contains("tell application \"Calendar\""))
-            XCTAssert(source.contains("29 December 2024"))
+            XCTAssert(source.contains("29 December 2024"), source)
             XCTAssert(source.contains("week view"))
             openExpectation.fulfill()
         }
@@ -175,30 +175,16 @@ class CalendarAppProviderTests: XCTestCase {
         waitForExpectations(timeout: 1)
     }
 
-    func testOpenDay_inNotionApp() {
+    func testOpenDate_inNotionApp() {
         let openExpectation = expectation(description: "Open")
         openExpectation.assertForOverFulfill = false
 
         workspace.didOpenURL = { url in
-            XCTAssertEqual(url.absoluteString.components(separatedBy: "?t=").first, "cron://day/2025/1/1")
+            XCTAssertEqual(url.absoluteString.components(separatedBy: "?t=").first, "cron://./2025/1/1")
             openExpectation.fulfill()
         }
 
         calendarAppProvider.open(.notion, at: .make(year: 2025, month: 1, day: 1), mode: .day, using: workspace)
-
-        waitForExpectations(timeout: 1)
-    }
-
-    func testOpenWeek_inNotionApp() {
-        let openExpectation = expectation(description: "Open")
-        openExpectation.assertForOverFulfill = false
-
-        workspace.didOpenURL = { url in
-            XCTAssertEqual(url.absoluteString.components(separatedBy: "?t=").first, "cron://week/2025/1/1")
-            openExpectation.fulfill()
-        }
-
-        calendarAppProvider.open(.notion, at: .make(year: 2025, month: 1, day: 1), mode: .week, using: workspace)
 
         waitForExpectations(timeout: 1)
     }

@@ -46,7 +46,7 @@ class CalendarAppProvider: CalendarAppProviding {
                 await openCalendarApp(at: date, mode: mode, using: workspace)
 
             case .notion:
-                await openNotionApp(at: date, mode: mode, using: workspace, retries: 1)
+                await openNotionApp(at: date, using: workspace, retries: 1)
         }
     }
 
@@ -79,10 +79,12 @@ class CalendarAppProvider: CalendarAppProviding {
     }
 
     @MainActor
-    private func openNotionApp(at date: Date, mode: CalendarViewMode, using workspace: WorkspaceServiceProviding, retries: Int = 0) async {
+    private func openNotionApp(at date: Date, using workspace: WorkspaceServiceProviding, retries: Int = 0) async {
 
         let dateFormatter = DateFormatter(format: "yyyy/M/d", calendar: dateProvider.calendar)
-        let path = "\(mode)/\(dateFormatter.string(from: date))"
+        // We can change this '.' with the view mode, but it doesn't always work.
+        // When it fails, Notion gets confused about the dates and messes up everything.
+        let path = "./\(dateFormatter.string(from: date))"
 
         // Notion calendar handles deeplinks very poorly, specially on cold start.
         // If it needs to reload to show the chosen date, it completely misses.
@@ -108,7 +110,7 @@ class CalendarAppProvider: CalendarAppProviding {
     private func openNotionApp(at event: EventModel, using workspace: WorkspaceServiceProviding) async {
 
         // if the event is not loaded, it will just fail, so we have to go to the date first
-        await openNotionApp(at: event.start, mode: .day, using: workspace)
+        await openNotionApp(at: event.start, using: workspace)
 
         // if the distance from the current date is too big, it will certainly try to load, so we wait a bit
         if abs(dateProvider.now.distance(to: event.start)) > 7889400 /* 3 months */ {
