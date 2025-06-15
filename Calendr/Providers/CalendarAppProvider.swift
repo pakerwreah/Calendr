@@ -6,6 +6,7 @@
 //
 
 protocol CalendarAppProviding {
+    func open(_ app: CalendarApp, at date: Date, mode: CalendarViewMode)
     func url(for event: EventModel) -> URL?
 }
 
@@ -21,7 +22,13 @@ class CalendarAppProvider: CalendarAppProviding {
         self.workspace = workspace
     }
 
+    // MARK: - Protocol
+
     func open(_ app: CalendarApp, at date: Date, mode: CalendarViewMode) {
+        var date = date
+        if mode == .week, let week = dateProvider.calendar.dateInterval(of: .weekOfYear, for: date) {
+            date = week.start
+        }
         switch app {
             case .calendar:
                 Task {
@@ -39,7 +46,7 @@ class CalendarAppProvider: CalendarAppProviding {
 
                 // Notion calendar handles deeplinks very poorly, specially on cold start.
                 // If it needs to reload to show the chosen date, it completely misses.
-                // We have to try a few of times to "guarantee" we end up in the right place.
+                // We have to try a few times to "guarantee" we end up in the right place.
                 for i in 0...3 {
                     DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(i)) { [workspace] in
                         if let url = app.deeplink(path: "\(path)?t=\(Date.now.timeIntervalSince1970)") {
@@ -62,7 +69,9 @@ class CalendarAppProvider: CalendarAppProviding {
         }
     }
 
-    func calendarAppURL(for event: EventModel) -> URL? {
+    // MARK: - URL builders
+
+    private func calendarAppURL(for event: EventModel) -> URL? {
         guard let id = event.id.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) else {
             return nil
         }
@@ -89,7 +98,7 @@ class CalendarAppProvider: CalendarAppProviding {
         return URL(string: "ical://ekevent\(date)/\(id)?method=show&options=more")
     }
 
-    func notionAppURL(for event: EventModel) -> URL? {
+    private func notionAppURL(for event: EventModel) -> URL? {
 
         let format = event.isAllDay ? "yyyy-MM-dd" : "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
         let dateFormatter = DateFormatter(format: format, calendar: dateProvider.calendar)
@@ -122,23 +131,5 @@ class CalendarAppProvider: CalendarAppProviding {
         }.joined(separator: "&")
 
         return URL(string: "cron://showEvent?\(params)")
-    }
-}
-
-extension CalendarApp {
-
-    var scheme: String {
-        switch self {
-            case .calendar: "ical"
-            case .notion: "cron"
-        }
-    }
-
-    var baseURL: URL {
-        URL(string: "\(scheme)://")!
-    }
-
-    func deeplink(path: String) -> URL? {
-        URL(string: "\(scheme)://\(path)")
     }
 }

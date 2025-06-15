@@ -48,6 +48,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 userDefaults: userDefaults,
                 notificationCenter: notificationCenter
             ),
+            calendarAppProvider: CalendarAppProvider(
+                userDefaults: userDefaults,
+                dateProvider: dateProvider,
+                workspace: workspace
+            ),
             geocoder: GeocodeServiceProvider(),
             weatherService: .make(dateProvider: dateProvider),
             dateProvider: dateProvider,

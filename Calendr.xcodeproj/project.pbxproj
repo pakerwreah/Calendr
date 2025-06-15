@@ -41,6 +41,7 @@
 		342AEE342DFF06B2008CBBE0 /* CalendarApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342AEE332DFF06B2008CBBE0 /* CalendarApp.swift */; };
 		342AEE362DFF06D8008CBBE0 /* StatusItemIconStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342AEE352DFF06D8008CBBE0 /* StatusItemIconStyle.swift */; };
 		342AEE382DFF06EC008CBBE0 /* AppearanceMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342AEE372DFF06EC008CBBE0 /* AppearanceMode.swift */; };
+		342AEE3A2DFF0968008CBBE0 /* MockCalendarAppProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342AEE392DFF0968008CBBE0 /* MockCalendarAppProvider.swift */; };
 		34305BCB25992A4E00AB381D /* Rx+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34305BCA25992A4E00AB381D /* Rx+Helpers.swift */; };
 		3430675E25F6BC15000D4003 /* HistoricalSchedulerTimeConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3430675D25F6BC15000D4003 /* HistoricalSchedulerTimeConverter.swift */; };
 		3430676325F6C130000D4003 /* TrackedHistoricalScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3430676225F6C130000D4003 /* TrackedHistoricalScheduler.swift */; };
@@ -262,6 +263,7 @@
 		342AEE332DFF06B2008CBBE0 /* CalendarApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarApp.swift; sourceTree = "<group>"; };
 		342AEE352DFF06D8008CBBE0 /* StatusItemIconStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemIconStyle.swift; sourceTree = "<group>"; };
 		342AEE372DFF06EC008CBBE0 /* AppearanceMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceMode.swift; sourceTree = "<group>"; };
+		342AEE392DFF0968008CBBE0 /* MockCalendarAppProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCalendarAppProvider.swift; sourceTree = "<group>"; };
 		34305BCA25992A4E00AB381D /* Rx+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Rx+Helpers.swift"; sourceTree = "<group>"; };
 		3430675D25F6BC15000D4003 /* HistoricalSchedulerTimeConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoricalSchedulerTimeConverter.swift; sourceTree = "<group>"; };
 		3430676225F6C130000D4003 /* TrackedHistoricalScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackedHistoricalScheduler.swift; sourceTree = "<group>"; };
@@ -488,6 +490,7 @@
 			children = (
 				3421DA192693F12400056837 /* Factories */,
 				34B1B3BC2CBC3762002AC38E /* MockAppearanceSettings.swift */,
+				342AEE392DFF0968008CBBE0 /* MockCalendarAppProvider.swift */,
 				3421DA132693E75A00056837 /* MockCalendarServiceProvider.swift */,
 				3421DA152693EDEB00056837 /* MockCalendarSettings.swift */,
 				3421DA172693EEBD00056837 /* MockDateProvider.swift */,
@@ -1320,6 +1323,7 @@
 				34702168259E761100827AE7 /* Calendar.swift in Sources */,
 				34F201332693F562006CE2FF /* MockEventListSettings.swift in Sources */,
 				3477E7102C67C15A008D3844 /* Environment.swift in Sources */,
+				342AEE3A2DFF0968008CBBE0 /* MockCalendarAppProvider.swift in Sources */,
 				34C4599C25DEFFDA00561C29 /* BuildConfig.m in Sources */,
 				34E8556A2C7115A100757B58 /* LocalNotificationProvider.swift in Sources */,
 				348393042C885CC00052C70A /* URL.swift in Sources */,
