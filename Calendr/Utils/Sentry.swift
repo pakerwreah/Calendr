@@ -40,5 +40,7 @@ private func configureSentry(_ dsn: String, _ options: Options) {
 }
 
 extension TransactionContext {
-    static func appLaunch() -> Self { .init(name: "app", operation: "launch", sampled: .yes) }
+    static func appLaunch() -> Self {
+        .init(name: "app", operation: "launch", sampled: .yes, sampleRate: nil, sampleRand: nil)
+    }
 }

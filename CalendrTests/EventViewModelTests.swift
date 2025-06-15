@@ -498,6 +498,15 @@ class EventViewModelTests: XCTestCase {
         XCTAssertEqual(showRecurrenceIndicator, false)
     }
 
+    func testOpenEventInDefaultCalendar() throws {
+        let viewModel = mock(
+            event: .make(title: "Title", type: .event(.pending), calendar: .make(color: .black))
+        )
+
+        let menu = try XCTUnwrap(viewModel.makeContextMenuViewModel() as? EventOptionsViewModel)
+        menu.triggerAction(.open)
+    }
+
     func mock(type: EventType) -> EventViewModel { mock(event: .make(type: type)) }
 
     func mock(event: EventModel) -> EventViewModel {

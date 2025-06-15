@@ -170,59 +170,8 @@ class EventOptionsViewModelTests: XCTestCase {
 
         let viewModel = mock(event: .make(id: "12345", type: .event(.pending)), source: .list)
 
-        workspace.didOpen = { url in
-            XCTAssertEqual(url.absoluteString, "ical://ekevent/12345?method=show&options=more")
-            openExpectation.fulfill()
-        }
-
-        viewModel.triggerAction(.open)
-        waitForExpectations(timeout: 1)
-    }
-
-    func testOptions_withRecurrenceRules_withOpenTriggered() {
-        let openExpectation = expectation(description: "Open")
-        let timeZone = TimeZone(abbreviation: "UTC+1")!
-
-        let viewModel = mock(
-            event: .make(
-                id: "12345",
-                start: .make(year: 2021, month: 1, day: 1),
-                type: .event(.pending),
-                hasRecurrenceRules: true
-            ),
-            source: .list
-        )
-
-        dateProvider.m_calendar.timeZone = timeZone
-
-        workspace.didOpen = { url in
-            XCTAssertEqual(url.absoluteString, "ical://ekevent/20210101T000000Z/12345?method=show&options=more")
-            openExpectation.fulfill()
-        }
-
-        viewModel.triggerAction(.open)
-        waitForExpectations(timeout: 1)
-    }
-
-    func testOptions_withRecurrenceRules_isAllDay_withOpenTriggered() {
-        let openExpectation = expectation(description: "Open")
-        let timeZone = TimeZone(abbreviation: "UTC+3")!
-
-        let viewModel = mock(
-            event: .make(
-                id: "12345",
-                start: .make(year: 2021, month: 1, day: 1),
-                isAllDay: true,
-                type: .event(.pending),
-                hasRecurrenceRules: true
-            ),
-            source: .list
-        )
-
-        dateProvider.m_calendar.timeZone = timeZone
-
-        workspace.didOpen = { url in
-            XCTAssertEqual(url.absoluteString, "ical://ekevent/20210101T030000Z/12345?method=show&options=more")
+        workspace.didOpenEvent = { event in
+            XCTAssertEqual(event.id, "12345")
             openExpectation.fulfill()
         }
 
