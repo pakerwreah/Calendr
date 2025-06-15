@@ -280,12 +280,12 @@ class EventDetailsViewModelTests: XCTestCase {
         let defaultBrowserExpectation = expectation(description: "Default")
         let selectedBrowserExpectation = expectation(description: "Selected")
 
-        workspace.didOpen = { url in
+        workspace.didOpenURL = { url in
             XCTAssertEqual(url.absoluteString, "https://example.com")
             defaultBrowserExpectation.fulfill()
         }
 
-        workspace.didOpenWithApplication = { url, appUrl in
+        workspace.didOpenURLWithApplication = { url, appUrl in
             XCTFail("No default browser selected")
             defaultBrowserExpectation.fulfill()
         }
@@ -302,7 +302,7 @@ class EventDetailsViewModelTests: XCTestCase {
 
         XCTAssertEqual(userDefaults.defaultBrowserPerCalendar, ["1": browser2Url])
 
-        workspace.didOpenWithApplication = { url, appUrl in
+        workspace.didOpenURLWithApplication = { url, appUrl in
             XCTAssertEqual(url.absoluteString, "https://example.com")
             XCTAssertEqual(appUrl?.absoluteString, browser2Url)
             selectedBrowserExpectation.fulfill()

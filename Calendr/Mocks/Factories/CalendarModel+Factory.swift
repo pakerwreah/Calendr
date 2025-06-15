@@ -14,6 +14,7 @@ extension CalendarModel {
     static func make(
         id: String = "",
         account: String = "",
+        email: String? = nil,
         title: String = "",
         color: NSColor = .clear,
         isSubscribed: Bool = false
@@ -21,7 +22,7 @@ extension CalendarModel {
 
         .init(
             id: id,
-            account: .init(title: account, email: nil),
+            account: .init(title: account, email: email),
             title: title,
             color: color,
             isSubscribed: isSubscribed

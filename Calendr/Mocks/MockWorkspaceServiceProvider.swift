@@ -11,13 +11,16 @@ import AppKit.NSWorkspace
 import UniformTypeIdentifiers
 
 class MockWorkspaceServiceProvider: WorkspaceServiceProviding {
+
     let userDefaults: UserDefaults
     let dateProvider: DateProviding
+    let calendarAppProvider: CalendarAppProviding
     let notificationCenter: NotificationCenter
 
     init() {
         userDefaults = .init(suiteName: String(describing: Self.self))!
         dateProvider = MockDateProvider()
+        calendarAppProvider = MockCalendarAppProvider()
         notificationCenter = .init()
     }
 

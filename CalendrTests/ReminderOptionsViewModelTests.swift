@@ -88,8 +88,8 @@ class ReminderOptionsViewModelTests: XCTestCase {
 
         let viewModel = try XCTUnwrap(mock(event: .make(id: "12345", type: .reminder(completed: false)), source: .list))
 
-        workspace.didOpen = { url in
-            XCTAssertEqual(url.absoluteString, "x-apple-reminderkit://remcdreminder/12345")
+        workspace.didOpenEvent = { event in
+            XCTAssertEqual(event.id, "12345")
             openExpectation.fulfill()
         }
 
