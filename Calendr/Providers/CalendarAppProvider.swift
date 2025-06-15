@@ -35,6 +35,11 @@ class CalendarAppProvider: CalendarAppProviding {
     let dateProvider: DateProviding
     let appleScriptRunner: ScriptRunner
 
+    private lazy var calendarScript = CalendarScript(
+        appleScriptRunner: appleScriptRunner,
+        dateProvider: dateProvider
+    )
+
     init(dateProvider: DateProviding, appleScriptRunner: ScriptRunner) {
         self.dateProvider = dateProvider
         self.appleScriptRunner = appleScriptRunner
@@ -69,7 +74,6 @@ class CalendarAppProvider: CalendarAppProviding {
         if mode == .week, let week = dateProvider.calendar.dateInterval(of: .weekOfYear, for: date) {
             date = week.start
         }
-        let calendarScript = CalendarScript(appleScriptRunner: appleScriptRunner)
         let ok = await calendarScript.openCalendar(at: date, mode: mode)
         if !ok {
             // If the script fails, just open the calendar.

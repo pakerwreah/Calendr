@@ -18,8 +18,8 @@ class CalendarAppProviderTests: XCTestCase {
     lazy var workspace = MockWorkspaceServiceProvider(dateProvider: dateProvider)
 
     override func setUp() {
-        dateProvider.m_calendar.locale = Locale(identifier: "en_US")
-        dateProvider.m_calendar.timeZone = .utc
+        dateProvider.m_calendar.locale = Locale(identifier: "en_GB")
+        dateProvider.m_calendar.firstWeekday = 1
     }
 
     // MARK: - Apple Calendar
@@ -150,7 +150,7 @@ class CalendarAppProviderTests: XCTestCase {
 
         appleScriptRunner.didRunScript = { source in
             XCTAssert(source.contains("tell application \"Calendar\""))
-            XCTAssert(source.contains("1 January 2025"), source)
+            XCTAssert(source.contains("01/01/2025"), source)
             XCTAssert(source.contains("day view"))
             openExpectation.fulfill()
         }
@@ -166,7 +166,7 @@ class CalendarAppProviderTests: XCTestCase {
         appleScriptRunner.didRunScript = { source in
             // opens at the start of the week
             XCTAssert(source.contains("tell application \"Calendar\""))
-            XCTAssert(source.contains("29 December 2024"), source)
+            XCTAssert(source.contains("29/12/2024"), source)
             XCTAssert(source.contains("week view"))
             openExpectation.fulfill()
         }
