@@ -17,6 +17,10 @@ class CalendarAppProviderTests: XCTestCase {
     lazy var calendarAppProvider = CalendarAppProvider(dateProvider: dateProvider, appleScriptRunner: appleScriptRunner)
     lazy var workspace = MockWorkspaceServiceProvider(dateProvider: dateProvider)
 
+    override func setUp() {
+        dateProvider.m_calendar.locale = Locale(identifier: "en_US")
+    }
+
     // MARK: - Apple Calendar
 
     func testOpenEvent_inCalendarApp() {
