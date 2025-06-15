@@ -116,6 +116,7 @@ class MainViewController: NSViewController {
         settingsViewModel = SettingsViewModel(
             autoLauncher: autoLauncher,
             dateProvider: dateProvider,
+            workspace: workspace,
             userDefaults: userDefaults,
             notificationCenter: notificationCenter
         )
@@ -419,24 +420,33 @@ class MainViewController: NSViewController {
         }
         .disposed(by: disposeBag)
 
-        let calendarScript = CalendarScript(workspace: workspace)
+        let calendarAppProvider = CalendarAppProvider(
+            userDefaults: userDefaults,
+            dateProvider: dateProvider,
+            workspace: workspace
+        )
 
         dateDoubleClick
-            .bind { date in
-                calendarScript.openCalendar(at: date, mode: .day)
+            .withLatestFrom(settingsViewModel.defaultCalendarApp) { ($0, $1) }
+            .bind { date, app in
+                calendarAppProvider.open(app, at: date, mode: .day)
             }
             .disposed(by: disposeBag)
 
         calendarBtn.rx.tap
             .withLatestFrom(
-                Observable.combineLatest(selectedDate, settingsViewModel.calendarAppViewMode)
+                Observable.combineLatest(
+                    selectedDate,
+                    settingsViewModel.calendarAppViewMode,
+                    settingsViewModel.defaultCalendarApp
+                )
             )
-            .bind { [dateProvider] date, mode in
+            .bind { [dateProvider] date, mode, app in
                 var date = date
                 if mode == .week, let week = dateProvider.calendar.dateInterval(of: .weekOfYear, for: date) {
                     date = week.start
                 }
-                calendarScript.openCalendar(at: date, mode: mode)
+                calendarAppProvider.open(app, at: date, mode: mode)
             }
             .disposed(by: disposeBag)
 

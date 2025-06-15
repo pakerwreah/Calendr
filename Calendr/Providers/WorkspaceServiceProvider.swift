@@ -63,7 +63,9 @@ extension WorkspaceServiceProviding {
     }
 
     func open(_ event: EventModel) {
-        if let url = event.calendarAppURL(using: dateProvider) {
+        let provider = CalendarAppProvider(userDefaults: userDefaults, dateProvider: dateProvider, workspace: self)
+
+        if let url = provider.url(for: event) {
             open(url)
         }
     }

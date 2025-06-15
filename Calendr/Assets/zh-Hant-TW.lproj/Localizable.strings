@@ -54,6 +54,7 @@
 "settings.calendar.date_hover_option" = "按住 ⌥ 以預覽懸停日期";
 //"settings.calendar.week_count" = "Visible weeks";
 "settings.calendar.calendar_app_view_mode" = "行事曆應用程式檢視模式";
+//"settings.calendar.default_calendar_app" = "Default calendar app";
 
 "settings.events" = "事件";
 "settings.events.show_map" = "顯示地圖和天氣";

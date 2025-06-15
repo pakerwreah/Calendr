@@ -35,6 +35,10 @@ enum CalendarViewMode: String, CaseIterable {
     case month, week, day
 }
 
+enum CalendarApp: String, CaseIterable {
+    case calendar, notion
+}
+
 enum StatusItemIconStyle: String, CaseIterable {
     case calendar, date, dayOfWeek
 }
@@ -82,6 +86,7 @@ protocol CalendarSettings {
     var preserveSelectedDate: Observable<Bool> { get }
     var dateHoverOption: Observable<Bool> { get }
     var calendarAppViewMode: Observable<CalendarViewMode> { get }
+    var defaultCalendarApp: Observable<CalendarApp> { get }
 }
 
 protocol AppearanceSettings {
@@ -131,6 +136,12 @@ class SettingsViewModel:
         let title: String
     }
 
+    struct CalendarAppOption: Equatable {
+        let id: CalendarApp
+        let icon: NSImage
+        let name: String
+    }
+
     // Observers
     let toggleAutoLaunch: AnyObserver<Bool>
     let toggleStatusItemIcon: AnyObserver<Bool>
@@ -166,6 +177,7 @@ class SettingsViewModel:
     let textScalingObserver: AnyObserver<Double>
     let calendarTextScalingObserver: AnyObserver<Double>
     let calendarAppViewModeObserver: AnyObserver<CalendarViewMode>
+    let defaultCalendarAppObserver: AnyObserver<CalendarApp>
     let appearanceModeObserver: AnyObserver<AppearanceMode>
 
     // Observables
@@ -208,6 +220,7 @@ class SettingsViewModel:
     let textScaling: Observable<Double>
     let calendarTextScaling: Observable<Double>
     let calendarAppViewMode: Observable<CalendarViewMode>
+    let defaultCalendarApp: Observable<CalendarApp>
     let appearanceMode: Observable<AppearanceMode>
 
     let isPresented = BehaviorSubject(value: false)
@@ -245,6 +258,8 @@ class SettingsViewModel:
         }
     }()
 
+    let calendarAppOptions: [CalendarAppOption]
+
     let dateFormatPlaceholder = AppConstants.defaultCustomDateFormat
 
     private let autoLauncher: AutoLauncher
@@ -253,6 +268,7 @@ class SettingsViewModel:
     init(
         autoLauncher: AutoLauncher,
         dateProvider: DateProviding,
+        workspace: WorkspaceServiceProviding,
         userDefaults: UserDefaults,
         notificationCenter: NotificationCenter
     ) {
@@ -295,6 +311,7 @@ class SettingsViewModel:
         textScalingObserver = userDefaults.rx.observer(for: \.textScaling)
         calendarTextScalingObserver = userDefaults.rx.observer(for: \.calendarTextScaling)
         calendarAppViewModeObserver = userDefaults.rx.observer(for: \.calendarAppViewMode).mapObserver(\.rawValue)
+        defaultCalendarAppObserver = userDefaults.rx.observer(for: \.defaultCalendarApp).mapObserver(\.rawValue)
         appearanceModeObserver = userDefaults.rx.observer(for: \.appearanceMode).mapObserver(\.rawValue)
 
         // MARK: - Observables
@@ -344,6 +361,7 @@ class SettingsViewModel:
         textScaling = userDefaults.rx.observe(\.textScaling)
         calendarTextScaling = userDefaults.rx.observe(\.calendarTextScaling)
         calendarAppViewMode = userDefaults.rx.observe(\.calendarAppViewMode).map { .init(rawValue: $0) ?? .month }
+        defaultCalendarApp = userDefaults.rx.observe(\.defaultCalendarApp).map { .init(rawValue: $0) ?? .calendar }
         appearanceMode = userDefaults.rx.observe(\.appearanceMode).map { .init(rawValue: $0) ?? .automatic }
 
         let localeChangeObservable = notificationCenter.rx
@@ -425,6 +443,24 @@ class SettingsViewModel:
             .share(replay: 1)
 
         popoverMaterial = popoverTransparency.map(PopoverMaterial.init(transparency:))
+
+        calendarAppOptions = CalendarApp.allCases.compactMap { app -> CalendarAppOption? in
+            guard
+                let url = workspace.urlForApplication(toOpen: app.baseURL),
+                url.lastPathComponent.hasSuffix(".app"),
+                url.deletingLastPathComponent().lastPathComponent == "Applications",
+                let res = try? url.resourceValues(forKeys: [.nameKey, .effectiveIconKey]),
+                let icon = res.effectiveIcon as? NSImage,
+                let name = res.name
+            else {
+                return nil
+            }
+            return .init(
+                id: app,
+                icon: icon,
+                name: String(name.dropLast(4))
+            )
+        }
     }
 
     func windowDidBecomeKey() {

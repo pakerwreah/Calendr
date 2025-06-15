@@ -54,6 +54,7 @@
 "settings.calendar.date_hover_option" = "Mantén pulsado ⌥ para echar un vistazo a las fechas sobrevoladas";
 //"settings.calendar.week_count" = "Visible weeks";
 "settings.calendar.calendar_app_view_mode" = "Vista de la aplicación Calendario";
+//"settings.calendar.default_calendar_app" = "Default calendar app";
 
 "settings.events" = "Eventos";
 "settings.events.show_map" = "Mostrar mapa y clima";

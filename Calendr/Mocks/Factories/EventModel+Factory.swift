@@ -13,6 +13,7 @@ extension EventModel {
 
     static func make(
         id: String = "",
+        externalId: String = "",
         start: Date = Date(),
         end: Date = Date(),
         title: String = "Title",
@@ -30,6 +31,7 @@ extension EventModel {
 
         .init(
             id: id,
+            externalId: externalId,
             start: start,
             end: type.isReminder ? Calendar.gregorian.endOfDay(for: start) : end,
             title: title,

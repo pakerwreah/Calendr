@@ -54,6 +54,7 @@
 "settings.calendar.date_hover_option" = "Mbajeni ⌥ për të parë datat e vendosura pezull";
 //"settings.calendar.week_count" = "Visible weeks";
 "settings.calendar.calendar_app_view_mode" = "Pamja e aplikacionit të kalendarit";
+//"settings.calendar.default_calendar_app" = "Default calendar app";
 
 "settings.events" = "Ngjarjet";
 "settings.events.show_map" = "Trego hartën dhe motin";

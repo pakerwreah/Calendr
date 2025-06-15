@@ -452,6 +452,18 @@ private extension EKCalendar {
             source.title
         }
     }
+
+    // this is only populated from events
+    var accountEmail: String? {
+        try? safeValue(forKey: "selfIdentityEmail")
+    }
+}
+
+private extension CalendarAccount {
+
+    init(from calendar: EKCalendar) {
+        self.init(title: calendar.accountTitle, email: calendar.accountEmail)
+    }
 }
 
 private extension CalendarModel {
@@ -459,7 +471,7 @@ private extension CalendarModel {
     init(from calendar: EKCalendar) {
         self.init(
             id: calendar.calendarIdentifier,
-            account: calendar.accountTitle,
+            account: .init(from: calendar),
             title: calendar.title,
             color: calendar.color,
             isSubscribed: calendar.isSubscribed || calendar.isDelegate
@@ -513,6 +525,7 @@ private extension EventModel {
 
         self.init(
             id: event.calendarItemIdentifier,
+            externalId: event.calendarItemExternalIdentifier,
             start: event.startDate,
             end: event.endDate,
             title: event.title,
@@ -540,6 +553,7 @@ private extension EventModel {
 
         self.init(
             id: reminder.calendarItemIdentifier,
+            externalId: reminder.calendarItemExternalIdentifier,
             start: date,
             end: dateProvider.calendar.endOfDay(for: date),
             title: reminder.title,

@@ -55,6 +55,7 @@
 "settings.calendar.date_hover_option" = "Tieni premuto ⌥ per dare un'occhiata alle date su cui passi il mouse";
 //"settings.calendar.week_count" = "Visible weeks";
 "settings.calendar.calendar_app_view_mode" = "Visualizzazione dell'app Calendario";
+//"settings.calendar.default_calendar_app" = "Default calendar app";
 
 "settings.events" = "Eventi";
 "settings.events.show_map" = "Mostra mappa e meteo";

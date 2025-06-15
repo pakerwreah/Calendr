@@ -54,6 +54,7 @@
 "settings.calendar.date_hover_option" = "Håll in ⌥ för att titta på datum i muspekaren";
 //"settings.calendar.week_count" = "Visible weeks";
 "settings.calendar.calendar_app_view_mode" = "Kalenderappens vy";
+//"settings.calendar.default_calendar_app" = "Default calendar app";
 
 "settings.events" = "Händelser";
 "settings.events.show_map" = "Visa karta och väder";

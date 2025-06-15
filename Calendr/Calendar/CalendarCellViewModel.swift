@@ -63,9 +63,9 @@ extension CalendarCellViewModel {
             .filter { $0.type != .reminder(completed: true) }
             .map(\.calendar)
             .sorted {
-                ($0.account.localizedLowercase, $0.title.localizedLowercase)
+                ($0.account.title.localizedLowercase, $0.title.localizedLowercase)
                 <
-                ($1.account.localizedLowercase, $1.title.localizedLowercase)
+                ($1.account.title.localizedLowercase, $1.title.localizedLowercase)
             }
             .map(\.color)
 

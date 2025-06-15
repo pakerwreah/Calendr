@@ -56,6 +56,7 @@
 "settings.calendar.date_hover_option" = "Удерживайте ⌥, чтобы просмотреть наведенные даты.";
 //"settings.calendar.week_count" = "Visible weeks";
 "settings.calendar.calendar_app_view_mode" = "Просмотр приложения «Календарь»";
+//"settings.calendar.default_calendar_app" = "Default calendar app";
 
 "settings.events" = "События";
 "settings.events.show_map" = "Показывать карту и погоду";

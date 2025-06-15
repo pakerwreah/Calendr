@@ -54,6 +54,7 @@
 "settings.calendar.date_hover_option" = "Segure ⌥ para espiar datas sob o cursor";
 "settings.calendar.week_count" = "Semanas visíveis";
 "settings.calendar.calendar_app_view_mode" = "Visualização do app Calendário";
+"settings.calendar.default_calendar_app" = "App de calendário padrão";
 
 "settings.events" = "Eventos";
 "settings.events.show_map" = "Mostrar mapa e clima";

@@ -9,6 +9,7 @@ import Foundation
 
 struct EventModel: Equatable {
     let id: String
+    let externalId: String
     let start: Date
     let end: Date
     let title: String
@@ -71,33 +72,6 @@ extension EventModel {
     var status: EventStatus { if case .event(let status) = type { return status } else { return .unknown } }
 
     var isMeeting: Bool { !participants.isEmpty }
-
-    func calendarAppURL(using dateProvider: DateProviding) -> URL? {
-
-        guard let id = id.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) else {
-            return nil
-        }
-
-        guard !type.isReminder else {
-            return URL(string: "x-apple-reminderkit://remcdreminder/\(id)")
-        }
-
-        let date: String
-        if hasRecurrenceRules {
-            let formatter = DateFormatter(format: "yyyyMMdd'T'HHmmss'Z'", calendar: dateProvider.calendar)
-            if !isAllDay {
-                formatter.timeZone = .init(secondsFromGMT: 0)
-            }
-            if let formattedDate = formatter.string(for: start) {
-                date = "/\(formattedDate)"
-            } else {
-                return nil
-            }
-        } else {
-            date =  ""
-        }
-        return URL(string: "ical://ekevent\(date)/\(id)?method=show&options=more")
-    }
 }
 
 struct Participant: Hashable {

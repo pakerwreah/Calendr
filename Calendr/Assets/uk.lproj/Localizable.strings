@@ -54,6 +54,7 @@
 "settings.calendar.date_hover_option" = "Утримуйте ⌥, щоб переглянути дати при наведенні.";
 //"settings.calendar.week_count" = "Visible weeks";
 "settings.calendar.calendar_app_view_mode" = "Режим перегляду програми «Календар»";
+//"settings.calendar.default_calendar_app" = "Default calendar app";
 
 "settings.events" = "Події";
 "settings.events.show_map" = "Показувати карту та погоду";

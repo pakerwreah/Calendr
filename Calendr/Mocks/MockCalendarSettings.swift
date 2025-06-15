@@ -22,6 +22,7 @@ class MockCalendarSettings: CalendarSettings {
     let preserveSelectedDate: Observable<Bool>
     let dateHoverOption: Observable<Bool>
     let calendarAppViewMode: Observable<CalendarViewMode>
+    let defaultCalendarApp: Observable<CalendarApp>
 
     init(
         calendarScaling: Double = 1,
@@ -43,6 +44,7 @@ class MockCalendarSettings: CalendarSettings {
         self.showDeclinedEvents = .just(false)
         self.dateHoverOption = .just(false)
         self.calendarAppViewMode = .just(.month)
+        self.defaultCalendarApp = .just(.calendar)
     }
 }
 

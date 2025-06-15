@@ -36,6 +36,8 @@ class MockCalendarSettings: CalendarSettings {
     let textScaling: Observable<Double>
     let calendarTextScaling: Observable<Double>
 
+    let defaultCalendarApp: Observable<CalendarApp>
+
     init() {
         (firstWeekday, firstWeekdayObserver) = BehaviorSubject.pipe(value: 1)
         (highlightedWeekdays, highlightedWeekdaysObserver) = BehaviorSubject.pipe(value: [0, 6])
@@ -48,5 +50,6 @@ class MockCalendarSettings: CalendarSettings {
         calendarScaling = .just(1)
         textScaling = .just(1)
         calendarTextScaling = .just(1)
+        defaultCalendarApp = .just(.calendar)
     }
 }

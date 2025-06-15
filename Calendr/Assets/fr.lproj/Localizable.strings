@@ -54,6 +54,7 @@
 "settings.calendar.date_hover_option" = "Maintenir ⌥ pour avoir un aperçu des dates survolées";
 //"settings.calendar.week_count" = "Visible weeks";
 "settings.calendar.calendar_app_view_mode" = "Vue de l'app Calendrier";
+//"settings.calendar.default_calendar_app" = "Default calendar app";
 
 "settings.events" = "Événements";
 "settings.events.show_map" = "Afficher la carte et la météo";

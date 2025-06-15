@@ -54,6 +54,7 @@
 "settings.calendar.date_hover_option" = "החזקת ⌥ כדי להציץ תוך כדי ריחוף בתאריכים";
 //"settings.calendar.week_count" = "Visible weeks";
 "settings.calendar.calendar_app_view_mode" = "מצב תצוגה באפליקציית לוח שנה";
+//"settings.calendar.default_calendar_app" = "Default calendar app";
 
 "settings.events" = "אירועים";
 "settings.events.show_map" = "הצג מפה ומזג אוויר";

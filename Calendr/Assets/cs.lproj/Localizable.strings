@@ -54,6 +54,7 @@
 "settings.calendar.date_hover_option" = "Podržením ⌥ se můžete podívat na data, na která se vznášíte";
 //"settings.calendar.week_count" = "Visible weeks";
 "settings.calendar.calendar_app_view_mode" = "Zobrazení aplikace Kalendář";
+//"settings.calendar.default_calendar_app" = "Default calendar app";
 
 "settings.events" = "Události";
 "settings.events.show_map" = "Zobrazit mapu a počasí";

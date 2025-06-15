@@ -54,6 +54,7 @@
 "settings.calendar.date_hover_option" = "⌥ gedrückt halten, um die hervorgehobenen Daten zu sehen";
 //"settings.calendar.week_count" = "Visible weeks";
 "settings.calendar.calendar_app_view_mode" = "Kalender-App-Ansicht";
+//"settings.calendar.default_calendar_app" = "Default calendar app";
 
 "settings.events" = "Termine";
 "settings.events.show_map" = "Karte und Wetter anzeigen";

@@ -99,6 +99,7 @@
 		347E6D3E25AA2811009A6716 /* CalendarViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 347E6D3D25AA2811009A6716 /* CalendarViewModelTests.swift */; };
 		347E816D2DFDC70F002A1DCB /* TrackingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 347E816C2DFDC70F002A1DCB /* TrackingView.swift */; };
 		347E816F2DFDC98C002A1DCB /* StatusItemClickHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 347E816E2DFDC98C002A1DCB /* StatusItemClickHandler.swift */; };
+		347E81712DFE09E4002A1DCB /* CalendarAppProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 347E81702DFE09E2002A1DCB /* CalendarAppProvider.swift */; };
 		347FF78F2BCB6A5500E5B63B /* Popover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 347FF78E2BCB6A5500E5B63B /* Popover.swift */; };
 		348393042C885CC00052C70A /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348393032C885CC00052C70A /* URL.swift */; };
 		348732292C8E057300B9B110 /* WeatherServiceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348732282C8E057300B9B110 /* WeatherServiceProvider.swift */; };
@@ -325,6 +326,7 @@
 		347E6D3D25AA2811009A6716 /* CalendarViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewModelTests.swift; sourceTree = "<group>"; };
 		347E816C2DFDC70F002A1DCB /* TrackingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackingView.swift; sourceTree = "<group>"; };
 		347E816E2DFDC98C002A1DCB /* StatusItemClickHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemClickHandler.swift; sourceTree = "<group>"; };
+		347E81702DFE09E2002A1DCB /* CalendarAppProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarAppProvider.swift; sourceTree = "<group>"; };
 		347FF78E2BCB6A5500E5B63B /* Popover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Popover.swift; sourceTree = "<group>"; };
 		348393032C885CC00052C70A /* URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
 		348732282C8E057300B9B110 /* WeatherServiceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherServiceProvider.swift; sourceTree = "<group>"; };
@@ -739,6 +741,7 @@
 		347E6D4125AA28FA009A6716 /* Providers */ = {
 			isa = PBXGroup;
 			children = (
+				347E81702DFE09E2002A1DCB /* CalendarAppProvider.swift */,
 				34702149259DFF3000827AE7 /* CalendarServiceProvider.swift */,
 				34FD09D825AE269600AAAAE2 /* DateProvider.swift */,
 				345CC36B2C8CCE5400B0DD1A /* GeocodeServiceProvider.swift */,
@@ -1221,6 +1224,7 @@
 				34934CD628E69520009635D4 /* Prefs+UserDefaults.swift in Sources */,
 				34FD09D925AE269600AAAAE2 /* DateProvider.swift in Sources */,
 				34D25E4A292F9E2100557E70 /* ImageButton.swift in Sources */,
+				347E81712DFE09E4002A1DCB /* CalendarAppProvider.swift in Sources */,
 				344A59DB29AEBBBF004F0452 /* EventUtils.swift in Sources */,
 				34AC60C626925FA5005312B6 /* PreviewExtensions.swift in Sources */,
 				3477F3CE25FAE56A008EA888 /* EventDetailsViewModel.swift in Sources */,
@@ -1576,7 +1580,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.16.10;
+				MARKETING_VERSION = 1.17.0;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Config/Calendr-Bridging-Header.h";
@@ -1603,7 +1607,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.16.10;
+				MARKETING_VERSION = 1.17.0;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Config/Calendr-Bridging-Header.h";
@@ -1704,15 +1708,15 @@
 			repositoryURL = "https://github.com/ReactiveX/RxSwift";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 6.6.0;
+				minimumVersion = 6.9.0;
 			};
 		};
 		3477E70A2C67A6A9008D3844 /* XCRemoteSwiftPackageReference "sentry-cocoa" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/getsentry/sentry-cocoa.git";
 			requirement = {
-				kind = upToNextMinorVersion;
-				minimumVersion = 8.41.0;
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.52.1;
 			};
 		};
 		34E259812B659B5600074D3A /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */ = {

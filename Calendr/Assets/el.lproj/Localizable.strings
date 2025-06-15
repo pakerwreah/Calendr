@@ -54,6 +54,7 @@
 "settings.calendar.date_hover_option" = "Κρατήστε πατημένο το ⌥ για να κοιτάξετε τις ημερομηνίες που βρίσκονται σε κατάσταση αιώρησης";
 //"settings.calendar.week_count" = "Visible weeks";
 "settings.calendar.calendar_app_view_mode" = "Προβολή εφαρμογής ημερολογίου";
+//"settings.calendar.default_calendar_app" = "Default calendar app";
 
 "settings.events" = "Εκδηλώσεις";
 "settings.events.show_map" = "Εμφάνιση χάρτη και καιρού";

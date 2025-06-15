@@ -15,12 +15,14 @@ class SettingsViewModelTests: XCTestCase {
 
     let autoLauncher = AutoLauncher()
     let dateProvider = MockDateProvider()
+    let workspace = MockWorkspaceServiceProvider()
     let userDefaults = UserDefaults(suiteName: className())!
     let notificationCenter = NotificationCenter()
 
     lazy var viewModel = SettingsViewModel(
         autoLauncher: autoLauncher,
         dateProvider: dateProvider,
+        workspace: workspace,
         userDefaults: userDefaults,
         notificationCenter: notificationCenter
     )
