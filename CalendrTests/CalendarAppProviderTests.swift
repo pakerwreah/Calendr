@@ -19,6 +19,7 @@ class CalendarAppProviderTests: XCTestCase {
 
     override func setUp() {
         dateProvider.m_calendar.locale = Locale(identifier: "en_US")
+        dateProvider.m_calendar.timeZone = .utc
     }
 
     // MARK: - Apple Calendar
