@@ -1708,15 +1708,15 @@
 			repositoryURL = "https://github.com/ReactiveX/RxSwift";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 6.6.0;
+				minimumVersion = 6.9.0;
 			};
 		};
 		3477E70A2C67A6A9008D3844 /* XCRemoteSwiftPackageReference "sentry-cocoa" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/getsentry/sentry-cocoa.git";
 			requirement = {
-				kind = upToNextMinorVersion;
-				minimumVersion = 8.41.0;
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.52.1;
 			};
 		};
 		34E259812B659B5600074D3A /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */ = {
