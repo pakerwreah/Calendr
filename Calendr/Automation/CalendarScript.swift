@@ -16,11 +16,10 @@ class CalendarScript {
         self.workspace = workspace
     }
 
-    func openCalendar(at date: Date, mode: CalendarViewMode) {
+    func openCalendar(at date: Date, mode: CalendarViewMode) async -> Bool {
         Popover.closeAll()
-        Task {
-            do {
-                try await runScript("""
+        do {
+            try await runScript("""
                     tell application "Calendar"
                     switch view to \(mode) view
                     delay 0.3
@@ -28,12 +27,10 @@ class CalendarScript {
                     activate
                     end tell
                 """)
-            } catch {
-                print("⚠️ Open Calendar script failed! Falling back to workspace open.")
-                if let appUrl = workspace.urlForApplication(toOpen: URL(string: "webcal://")!) {
-                    workspace.open(appUrl)
-                }
-            }
+            return true
+        } catch {
+            print("⚠️ Open Calendar script failed!")
+            return false
         }
     }
 }

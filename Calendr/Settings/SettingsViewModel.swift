@@ -444,13 +444,9 @@ class SettingsViewModel:
 
         popoverMaterial = popoverTransparency.map(PopoverMaterial.init(transparency:))
 
-        calendarAppOptions = CalendarApp.allCases.compactMap { id -> CalendarAppOption? in
-            let scheme = switch id {
-                case .calendar: "ical:"
-                case .notion: "cron:"
-            }
+        calendarAppOptions = CalendarApp.allCases.compactMap { app -> CalendarAppOption? in
             guard
-                let url = URL(string: scheme).flatMap(workspace.urlForApplication(toOpen:)),
+                let url = workspace.urlForApplication(toOpen: app.baseURL),
                 url.lastPathComponent.hasSuffix(".app"),
                 url.deletingLastPathComponent().lastPathComponent == "Applications",
                 let res = try? url.resourceValues(forKeys: [.nameKey, .effectiveIconKey]),
@@ -460,7 +456,7 @@ class SettingsViewModel:
                 return nil
             }
             return .init(
-                id: id,
+                id: app,
                 icon: icon,
                 name: String(name.dropLast(4))
             )
