@@ -105,16 +105,12 @@ class CalendarAppProviderTests: XCTestCase {
     // MARK: - Notion Calendar
 
     func testOpenEvent_inNotionApp() {
-        let openExpectation = expectation(description: "Open")
+        let openDateExpectation = expectation(description: "Open Date")
+        let openEventExpectation = expectation(description: "Open Event")
 
         workspace.didOpenURL = { url in
-            XCTAssertEqual(
-                url.absoluteString,
-                "cron://showEvent?accountEmail=test%40example.com&iCalUID=12345" +
-                "&startDate=2025-01-01T12:10:05.000Z&endDate=2025-01-01T15:25:55.000Z" +
-                "&title=Title&ref=br.paker.Calendr"
-            )
-            openExpectation.fulfill()
+            XCTAssertEqual(url.absoluteString.components(separatedBy: "?t=").first, "cron://day/2025/1/1")
+            openDateExpectation.fulfill()
         }
 
         calendarAppProvider.open(
@@ -129,7 +125,19 @@ class CalendarAppProviderTests: XCTestCase {
             using: workspace
         )
 
-        waitForExpectations(timeout: 1)
+        wait(for: [openDateExpectation])
+
+        workspace.didOpenURL = { url in
+            XCTAssertEqual(
+                url.absoluteString,
+                "cron://showEvent?accountEmail=test%40example.com&iCalUID=12345" +
+                "&startDate=2025-01-01T12:10:05.000Z&endDate=2025-01-01T15:25:55.000Z" +
+                "&title=Title&ref=br.paker.Calendr"
+            )
+            openEventExpectation.fulfill()
+        }
+
+        wait(for: [openEventExpectation])
     }
 
     func testOpenDay_inCalendarApp() {

@@ -50,7 +50,7 @@ class CalendarAppProvider: CalendarAppProviding {
                 await openCalendarApp(at: date, mode: mode, using: workspace)
 
             case .notion:
-                await openNotionApp(at: date, mode: mode, using: workspace)
+                await openNotionApp(at: date, mode: mode, using: workspace, retries: 1)
         }
     }
 
@@ -80,7 +80,7 @@ class CalendarAppProvider: CalendarAppProviding {
     }
 
     @MainActor
-    private func openNotionApp(at date: Date, mode: CalendarViewMode, using workspace: WorkspaceServiceProviding) async {
+    private func openNotionApp(at date: Date, mode: CalendarViewMode, using workspace: WorkspaceServiceProviding, retries: Int = 0) async {
 
         let dateFormatter = DateFormatter(format: "yyyy/M/d", calendar: dateProvider.calendar)
         let path = "\(mode)/\(dateFormatter.string(from: date))"
@@ -88,11 +88,12 @@ class CalendarAppProvider: CalendarAppProviding {
         // Notion calendar handles deeplinks very poorly, specially on cold start.
         // If it needs to reload to show the chosen date, it completely misses.
         // We have to try a few times to "guarantee" we end up in the right place.
-        for i in 0...3 {
-            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(i)) { [workspace] in
-                if let url = CalendarApp.notion.deeplink(path: "\(path)?t=\(Date.now.timeIntervalSince1970)") {
-                    workspace.open(url)
-                }
+        for i in 0...retries {
+            if i > 0 {
+                await Task.sleep(seconds: 1)
+            }
+            if let url = CalendarApp.notion.deeplink(path: "\(path)?t=\(Date.now.timeIntervalSince1970)") {
+                workspace.open(url)
             }
         }
     }
@@ -106,6 +107,15 @@ class CalendarAppProvider: CalendarAppProviding {
     }
 
     private func openNotionApp(at event: EventModel, using workspace: WorkspaceServiceProviding) async {
+
+        // if the event is not loaded, it will just fail, so we have to go to the date first
+        await openNotionApp(at: event.start, mode: .day, using: workspace)
+
+        // if the distance from the current date is too big, it will certainly try to load, so we wait a bit
+        if abs(dateProvider.now.distance(to: event.start)) > 7889400 /* 3 months */ {
+            await Task.sleep(seconds: 1)
+        }
+
         if let url = notionAppEventURL(for: event) {
             workspace.open(url)
         }
