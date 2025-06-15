@@ -225,9 +225,15 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             NSStackView(views: [showDeclinedEventsCheckbox, showDeclinedEventsTooltip]),
             preserveSelectedDateCheckbox,
             dateHoverOptionCheckbox,
-            NSStackView(views: [weekCountLabel, .spacer, weekCountStepperLabel, weekCountStepper]),
-            NSStackView(views: [calendarAppViewModeLabel, calendarAppViewModeDropdown]),
-            NSStackView(views: [defaultCalendarAppLabel, defaultCalendarAppDropdown])
+            .dummy,
+            NSStackView(views: [
+                NSStackView(views: [weekCountLabel, .spacer, weekCountStepperLabel, weekCountStepper]),
+                NSStackView(views: [calendarAppViewModeLabel, calendarAppViewModeDropdown]),
+                NSStackView(views: [defaultCalendarAppLabel, defaultCalendarAppDropdown])
+            ])
+            .with(spacing: 4)
+            .with(orientation: .vertical)
+            .with(distribution: .fillEqually)
         ])
         .with(orientation: .vertical)
     }()
