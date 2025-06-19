@@ -174,7 +174,7 @@ class NextEventViewModel {
                                 // check if there's another upcoming event that should override the current one
                                 !upcoming.contains(where: { next in
                                     guard next.id != event.id else { return false }
-                                    return Int(dateProvider.now.distance(to: next.start)) <= 60 * 15
+                                    return Int(dateProvider.now.distance(to: next.start)) <= 60 * 30
                                 })
                             })
                             .map { event -> NextEvent in
