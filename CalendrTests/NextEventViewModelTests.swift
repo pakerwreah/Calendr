@@ -616,7 +616,7 @@ class NextEventViewModelTests: XCTestCase {
 
         calendarService.changeEvents([
             .make(id: "1", start: now - 60 * 10, end: now + 3600, title: "Event 1"),
-            .make(id: "2", start: now + 60 * 15, end: now + 3600, title: "Event 2")
+            .make(id: "2", start: now + 60 * 30, end: now + 3600, title: "Event 2")
         ])
 
         XCTAssertEqual(viewModel.title.lastValue(), "Event 1")
@@ -627,11 +627,11 @@ class NextEventViewModelTests: XCTestCase {
 
         calendarService.changeEvents([
             .make(id: "1", start: now - 60 * 11, end: now + 3600, title: "Event 1"),
-            .make(id: "2", start: now + 60 * 15, end: now + 3600, title: "Event 2")
+            .make(id: "2", start: now + 60 * 30, end: now + 3600, title: "Event 2")
         ])
 
         XCTAssertEqual(viewModel.title.lastValue(), "Event 2")
-        XCTAssertEqual(viewModel.time.lastValue(), "in 15m")
+        XCTAssertEqual(viewModel.time.lastValue(), "in 30m")
     }
 
     func testNextEvent_isReminder() {
