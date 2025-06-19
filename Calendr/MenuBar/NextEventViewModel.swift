@@ -155,13 +155,27 @@ class NextEventViewModel {
                     .void()
                     .startWith(())
                     .map {
-                        events
-                            .first(where: { event in
+                        let upcoming = events
+                            .filter { event in
+                                // event has not ended
                                 dateProvider.calendar.isDate(
                                     dateProvider.now, lessThan: event.end, granularity: .second
                                 )
                                 &&
+                                // event is is the configured range to check
                                 Int(dateProvider.now.distance(to: event.start)) <= 3600 * hoursToCheck
+                            }
+
+                        return upcoming
+                            .first(where: { event in
+                                // always show for the first X minutes
+                                Int(event.start.distance(to: dateProvider.now)) <= 60 * 10
+                                ||
+                                // check if there's another upcoming event that should override the current one
+                                !upcoming.contains(where: { next in
+                                    guard next.id != event.id else { return false }
+                                    return Int(dateProvider.now.distance(to: next.start)) <= 60 * 15
+                                })
                             })
                             .map { event -> NextEvent in
                                 let isInProgress = dateProvider.calendar.isDate(
