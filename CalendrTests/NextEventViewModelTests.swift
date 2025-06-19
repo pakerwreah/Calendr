@@ -612,6 +612,28 @@ class NextEventViewModelTests: XCTestCase {
         XCTAssertEqual(time, "1h 39m left")
     }
 
+    func testNextEvent_isInProgress_hasJustStarted_hasUpcomingEvent_shouldNotShowUpcoming() {
+
+        calendarService.changeEvents([
+            .make(id: "1", start: now - 60 * 10, end: now + 3600, title: "Event 1"),
+            .make(id: "2", start: now + 60 * 15, end: now + 3600, title: "Event 2")
+        ])
+
+        XCTAssertEqual(viewModel.title.lastValue(), "Event 1")
+        XCTAssertEqual(viewModel.time.lastValue(), "1h left")
+    }
+
+    func testNextEvent_isInProgress_after10min_hasUpcomingEvent_shouldShowUpcoming() {
+
+        calendarService.changeEvents([
+            .make(id: "1", start: now - 60 * 11, end: now + 3600, title: "Event 1"),
+            .make(id: "2", start: now + 60 * 15, end: now + 3600, title: "Event 2")
+        ])
+
+        XCTAssertEqual(viewModel.title.lastValue(), "Event 2")
+        XCTAssertEqual(viewModel.time.lastValue(), "in 15m")
+    }
+
     func testNextEvent_isReminder() {
 
         viewModel = makeViewModel(type: .reminder)

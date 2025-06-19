@@ -666,6 +666,7 @@
 		347D0FA725952F8A002451EC /* CalendrTests */ = {
 			isa = PBXGroup;
 			children = (
+				347D0FAA25952F8A002451EC /* Info.plist */,
 				345CC3692C8CCB1C00B0DD1A /* CacheTests.swift */,
 				342AEE3B2DFF25D8008CBBE0 /* CalendarAppProviderTests.swift */,
 				34924CD5259FB814009C3450 /* CalendarExtensionTests.swift */,
@@ -681,14 +682,13 @@
 				34651F6D25E3171D00518C5A /* EventViewModelLinkTests.swift */,
 				348E703625C6173400B3B160 /* EventViewModelProgressTests.swift */,
 				34C2CF9025C2070400FC2CFF /* EventViewModelTests.swift */,
-				347D0FAA25952F8A002451EC /* Info.plist */,
-				348E703A25C617DD00B3B160 /* Mocks */,
 				34C72F7D25E844E500FD20FA /* NextEventViewModelTests.swift */,
 				34ABB9E929A158080021F3CF /* ReminderOptionsViewModelTests.swift */,
-				3430676125F6C117000D4003 /* Schedulers */,
 				3421AD3C25BA1D0800A4F468 /* SettingsViewModelTests.swift */,
 				341B2B4125D0B19500336342 /* StatusItemViewModelTests.swift */,
 				343B74C826D168A80081A440 /* UnitTests.xctestplan */,
+				348E703A25C617DD00B3B160 /* Mocks */,
+				3430676125F6C117000D4003 /* Schedulers */,
 			);
 			path = CalendrTests;
 			sourceTree = "<group>";
@@ -1632,7 +1632,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.17.1;
+				MARKETING_VERSION = 1.17.2;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Config/Calendr-Bridging-Header.h";
@@ -1659,7 +1659,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.17.1;
+				MARKETING_VERSION = 1.17.2;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Config/Calendr-Bridging-Header.h";
