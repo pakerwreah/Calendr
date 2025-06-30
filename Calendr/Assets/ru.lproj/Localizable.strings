@@ -4,7 +4,7 @@
 
   Created by Petros Dhespollari on 08/02/2025.
   Updated by Pavel Bychko on 08/02/2025.
-  Updated by Roman Kolosov on 11/05/2025.
+  Updated by Roman Kolosov on 28/06/2025.
 */
 
 "quit" = "Выход";
@@ -39,7 +39,7 @@
 "settings.menu_bar.show_date" = "Показывать дату";
 "settings.menu_bar.show_background" = "Показывать непрозрачный фон";
 "settings.menu_bar.date_format_custom" = "Задать формат";
-//"settings.menu_bar.open_on_hover" = "Open on mouse hover";
+"settings.menu_bar.open_on_hover" = "Открыть при наведении мыши";
 
 "settings.next_event" = "Следующее событие";
 "settings.next_event.show_next_event" = "Показывать следующее событие";
@@ -54,9 +54,9 @@
 "settings.calendar.show_declined_events" = "Показывать отклоненные события";
 "settings.calendar.show_declined_events_tooltip" = "Это работает только в том случае, если он также включен в родном приложении Календарь.";
 "settings.calendar.date_hover_option" = "Удерживайте ⌥, чтобы просмотреть наведенные даты.";
-//"settings.calendar.week_count" = "Visible weeks";
+"settings.calendar.week_count" = "Видимые недели";
 "settings.calendar.calendar_app_view_mode" = "Просмотр приложения «Календарь»";
-//"settings.calendar.default_calendar_app" = "Default calendar app";
+"settings.calendar.default_calendar_app" = "Приложение календаря по умолчанию";
 
 "settings.events" = "События";
 "settings.events.show_map" = "Показывать карту и погоду";
