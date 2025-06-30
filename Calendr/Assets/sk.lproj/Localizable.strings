@@ -37,7 +37,7 @@
 "settings.menu_bar.show_date" = "Zobraziť dátum";
 "settings.menu_bar.show_background" = "Zobraziť nepriehľadné pozadie";
 "settings.menu_bar.date_format_custom" = "Vlastný";
-//"settings.menu_bar.open_on_hover" = "Open on mouse hover";
+"settings.menu_bar.open_on_hover" = "Otvoriť pri prejdení kurzorom";
 
 "settings.next_event" = "Ďalšia udalosť";
 "settings.next_event.show_next_event" = "Zobraziť ďalšiu udalosť";
@@ -52,9 +52,9 @@
 "settings.calendar.show_declined_events" = "Zobraziť odmietnuté udalosti";
 "settings.calendar.show_declined_events_tooltip" = "Funguje, len ak je to povolené aj v natívnej aplikácii Kalendár.";
 "settings.calendar.date_hover_option" = "Podržaním ⌥ zobrazíš náhľad dátumov";
-//"settings.calendar.week_count" = "Visible weeks";
+"settings.calendar.week_count" = "Počet zobrazených týždňov";
 "settings.calendar.calendar_app_view_mode" = "Pohľad v kalendári";
-//"settings.calendar.default_calendar_app" = "Default calendar app";
+"settings.calendar.default_calendar_app" = "Predvolená apka kalendára";
 
 "settings.events" = "Udalosti";
 "settings.events.show_map" = "Zobraziť mapu a počasie";
