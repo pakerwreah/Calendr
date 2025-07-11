@@ -21,8 +21,8 @@
 "auto_update.install" = "Встановити";
 "auto_update.replace.message" = "Підтвердьте місцезнаходження програми, щоб надати дозвіл на її заміну";
 
-//"attachments.open.message" = "Calendr needs permission to access your attachments";
-//"attachments.open.authorize" = "Authorize access to attachments";
+"attachments.open.message" = "Calendr потребує дозволу на доступ до ваших вкладень";
+"attachments.open.authorize" = "Надати доступ до вкладень";
 
 "settings.title" = "Налаштування";
 "settings.tab.general" = "Загальні";
@@ -37,7 +37,7 @@
 "settings.menu_bar.show_date" = "Показувати дату";
 "settings.menu_bar.show_background" = "Показувати непрозорий фон";
 "settings.menu_bar.date_format_custom" = "Задати формат";
-//"settings.menu_bar.open_on_hover" = "Open on mouse hover";
+"settings.menu_bar.open_on_hover" = "Відкривати при наведенні курсора";
 
 "settings.next_event" = "Наступна подія";
 "settings.next_event.show_next_event" = "Показувати наступну подію";
@@ -52,9 +52,9 @@
 "settings.calendar.show_declined_events" = "Показувати відхилені події";
 "settings.calendar.show_declined_events_tooltip" = "Це працює лише у разі, якщо увімкнено в рідному додатку Календар.";
 "settings.calendar.date_hover_option" = "Утримуйте ⌥, щоб переглянути дати при наведенні.";
-//"settings.calendar.week_count" = "Visible weeks";
+"settings.calendar.week_count" = "Видимих тижнів";
 "settings.calendar.calendar_app_view_mode" = "Режим перегляду програми «Календар»";
-//"settings.calendar.default_calendar_app" = "Default calendar app";
+"settings.calendar.default_calendar_app" = "Програма календаря за замовчуванням";
 
 "settings.events" = "Події";
 "settings.events.show_map" = "Показувати карту та погоду";
