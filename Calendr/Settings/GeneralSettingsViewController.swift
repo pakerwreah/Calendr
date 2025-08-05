@@ -203,6 +203,13 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         return button
     }()
 
+    private lazy var calendarAppStack: NSView? = {
+        guard viewModel.calendarAppOptions.count > 1 else {
+            return nil
+        }
+        return NSStackView(views: [defaultCalendarAppLabel, defaultCalendarAppDropdown])
+    }()
+
     private lazy var calendarContent: NSView = {
 
         firstWeekdayPrev.setContentHuggingPriority(.fittingSizeCompression, for: .horizontal)
@@ -229,8 +236,8 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             NSStackView(views: [
                 NSStackView(views: [weekCountLabel, .spacer, weekCountStepperLabel, weekCountStepper]),
                 NSStackView(views: [calendarAppViewModeLabel, calendarAppViewModeDropdown]),
-                NSStackView(views: [defaultCalendarAppLabel, defaultCalendarAppDropdown])
-            ])
+                calendarAppStack
+            ].compact())
             .with(spacing: 4)
             .with(orientation: .vertical)
             .with(distribution: .fillEqually)
@@ -468,6 +475,9 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
 
     private func setUpDefaultCalendarApp() {
 
+        guard calendarAppStack != nil else {
+            return
+        }
         defaultCalendarAppDropdown.isBordered = false
         defaultCalendarAppDropdown.imagePosition = .imageOnly
         defaultCalendarAppDropdown.setContentHuggingPriority(.required, for: .horizontal)
