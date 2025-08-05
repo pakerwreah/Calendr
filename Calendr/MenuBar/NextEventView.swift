@@ -12,8 +12,6 @@ class NextEventView: NSView {
 
     private let disposeBag = DisposeBag()
 
-    let widthObservable: Observable<CGFloat>
-
     private let viewModel: NextEventViewModel
 
     private let colorBar = NSView()
@@ -24,13 +22,6 @@ class NextEventView: NSView {
     init(viewModel: NextEventViewModel) {
 
         self.viewModel = viewModel
-
-        widthObservable = Observable.combineLatest(
-            viewModel.hasEvent,
-            nextEventView.rx.observe(\.frame).map(\.width)
-        )
-        .map { $0 ? max($1 - 10, 0) : 0 }
-        .distinctUntilChanged()
 
         let font = NSFont.systemFont(ofSize: 10)
         nextEventTitle = Label(font: font, scaling: viewModel.textScaling)
@@ -61,12 +52,19 @@ class NextEventView: NSView {
         nextEventTitle.center(in: nextEventView, orientation: .vertical)
         nextEventTitle.textColor = .headerTextColor
         nextEventTitle.lineBreakMode = .byTruncatingTail
+        nextEventTitle.setContentCompressionResistancePriority(.required, for: .horizontal)
+        nextEventTitle.setContentHuggingPriority(.required, for: .horizontal)
 
         nextEventTime.center(in: nextEventTitle, orientation: .vertical)
         nextEventTime.textColor = .headerTextColor
         nextEventTime.setContentCompressionResistancePriority(.required, for: .horizontal)
+        nextEventTime.setContentHuggingPriority(.required, for: .horizontal)
 
         forAutoLayout()
+
+        setContentHuggingPriority(.required, for: .horizontal)
+        nextEventView.setContentHuggingPriority(.required, for: .horizontal)
+        nextEventView.setHuggingPriority(.required, for: .horizontal)
 
         addSubview(nextEventView)
 

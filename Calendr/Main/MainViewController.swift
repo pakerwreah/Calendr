@@ -645,20 +645,19 @@ class MainViewController: NSViewController {
 
     private func setUpEventStatusItem(item: NSStatusItem, view: NextEventView, viewModel: NextEventViewModel, clickHandler: StatusItemClickHandler) {
         guard
-            let statusBarButton = item.button,
-            let container = statusBarButton.superview?.superview
+            let statusBarButton = item.button
         else { return }
 
-        container.addSubview(view, positioned: .below, relativeTo: statusBarButton)
+        // uncomment this if we want the view to fade on inactive screens
+        // statusBarButton.image = NSImage()
 
-        view.leading(equalTo: statusBarButton, constant: -5)
+        statusBarButton.addSubview(view)
+
+        view.leading(equalTo: statusBarButton)
         view.top(equalTo: statusBarButton)
         view.bottom(equalTo: statusBarButton)
 
-        view.widthObservable
-            .observe(on: MainScheduler.asyncInstance)
-            .bind(to: item.rx.length)
-            .disposed(by: disposeBag)
+        statusBarButton.width(equalTo: view)
 
         Observable
             .combineLatest(
