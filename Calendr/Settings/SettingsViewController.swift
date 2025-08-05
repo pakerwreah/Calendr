@@ -10,6 +10,7 @@ import RxSwift
 
 enum SettingsTab: Int {
     case general
+    case appearance
     case calendars
     case keyboard
     case about
