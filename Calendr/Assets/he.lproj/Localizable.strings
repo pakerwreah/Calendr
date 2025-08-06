@@ -1,11 +1,11 @@
-/* 
+/*
   Localizable.strings
   Calendr
 
   Created by Chaim-Chv on 27/05/2025
 */
 
-"quit" = "סגור";
+"quit" = "יציאה";
 "search" = "חיפוש";
 
 "access_required.calendars" = "ממתין להרשאת 'גישה מלאה' ללוחות שנה";
