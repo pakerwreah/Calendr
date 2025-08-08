@@ -49,7 +49,7 @@
 "settings.calendar.preserve_selected_date" = "Geselecteerde datum behouden bij sluiten";
 "settings.calendar.show_declined_events" = "Afgewezen gebeurtenissen tonen";
 "settings.calendar.show_declined_events_tooltip" = "Dit werkt alleen als het ook ingeschakeld is in de Agenda-app.";
-+"settings.calendar.date_hover_option" = "Houd ⌥ vast om een voorvertoning van datums te zien";
+"settings.calendar.date_hover_option" = "Houd ⌥ vast om een voorvertoning van datums te zien";
 "settings.calendar.week_count" = "Zichtbare weken";
 "settings.calendar.calendar_app_view_mode" = "Weergave in Agenda-app";
 "settings.calendar.default_calendar_app" = "Standaard Agenda-app";
