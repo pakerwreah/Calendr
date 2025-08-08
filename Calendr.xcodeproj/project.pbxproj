@@ -278,6 +278,7 @@
 		3438AEED2C6192A9002BE3E1 /* XCTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCTest.swift; sourceTree = "<group>"; };
 		343B74C826D168A80081A440 /* UnitTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = UnitTests.xctestplan; path = CalendrTests/UnitTests.xctestplan; sourceTree = SOURCE_ROOT; };
 		343B74C926D169E80081A440 /* UITests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = UITests.xctestplan; sourceTree = "<group>"; };
+		343C42BF2E4640C0002A8114 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34427691269B5760004CFE1C /* MockMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockMainViewController.swift; sourceTree = "<group>"; };
 		34427697269B5CA4004CFE1C /* CalendrUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CalendrUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		34427699269B5CA4004CFE1C /* UITestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestCase.swift; sourceTree = "<group>"; };
@@ -1059,6 +1060,7 @@
 				tr,
 				uk,
 				he,
+				nl,
 			);
 			mainGroup = 347D0F8B25952F89002451EC;
 			packageReferences = (
@@ -1140,6 +1142,7 @@
 				"${SRCROOT}/${TARGET_NAME}/Assets/tr.lproj/Localizable.strings",
 				"${SRCROOT}/${TARGET_NAME}/Assets/uk.lproj/Localizable.strings",
 				"${SRCROOT}/${TARGET_NAME}/Assets/he.lproj/Localizable.strings",
+				"${SRCROOT}/${TARGET_NAME}/Assets/nl.lproj/Localizable.strings",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1444,6 +1447,7 @@
 				34CB48F12D57C20F005F63DB /* tr */,
 				555CD10C2D58C0FE00CE8EF7 /* uk */,
 				B61E607F2DE4BE59009C99D9 /* he */,
+				343C42BF2E4640C0002A8114 /* nl */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
