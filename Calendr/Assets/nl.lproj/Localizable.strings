@@ -1,0 +1,122 @@
+/* 
+  Localizable.strings
+  Calendr
+*/
+
+"quit" = "Afsluiten";
+"search" = "Zoeken";
+
+"access_required.calendars" = "Toestemming voor agenda vereist";
+"access_required.reminders" = "Toestemming voor herinneringen vereist";
+"access_required.open_settings" = "Instellingen openen";
+"access_required.cancel" = "Annuleren";
+
+"auto_update.check_for_updates" = "Controleren op updates";
+"auto_update.fetching_releases" = "Releases ophalen";
+"auto_update.new_version" = "Nieuwe versie beschikbaar: %@";
+"auto_update.updated_to" = "Bijgewerkt naar versie %@";
+"auto_update.downloading" = "Versie %@ downloaden";
+"auto_update.install" = "Installeren";
+"auto_update.replace.message" = "Bevestig de locatie van de app zodat we toestemming hebben om deze te vervangen";
+
+"attachments.open.message" = "Calendr heeft toestemming nodig om toegang te krijgen tot uw bijlagen";
+"attachments.open.authorize" = "Toegang tot bijlagen toestaan";
+
+"settings.title" = "Voorkeuren";
+"settings.tab.general" = "Algemeen";
+"settings.tab.appearance" = "Uiterlijk";
+"settings.tab.calendars" = "Agenda's";
+"settings.tab.keyboard" = "Snelkoppelingen";
+"settings.tab.about" = "Over";
+
+"settings.menu_bar" = "Menubalk";
+"settings.menu_bar.auto_launch" = "Starten bij inloggen";
+"settings.menu_bar.show_icon" = "Pictogram tonen";
+"settings.menu_bar.show_date" = "Datum tonen";
+"settings.menu_bar.show_background" = "Ondoorzichtige achtergrond tonen";
+"settings.menu_bar.date_format_custom" = "Aangepast";
+"settings.menu_bar.open_on_hover" = "Openen bij aanwijzen";
+
+"settings.next_event" = "Volgende gebeurtenis";
+"settings.next_event.show_next_event" = "Volgende gebeurtenis tonen";
+"settings.next_event.grab_attention" = "Aandacht trekken voor nabije gebeurtenis";
+"settings.next_event.grab_attention.flashing" = "Knipperen";
+"settings.next_event.grab_attention.sound" = "Geluid afspelen";
+"settings.next_event.detect_notch" = "Verkorten indien 'notch' aanwezig is";
+
+"settings.calendar" = "Agenda";
+"settings.calendar.show_week_numbers" = "Weeknummers tonen";
+"settings.calendar.preserve_selected_date" = "Geselecteerde datum behouden bij sluiten";
+"settings.calendar.show_declined_events" = "Afgewezen gebeurtenissen tonen";
+"settings.calendar.show_declined_events_tooltip" = "Dit werkt alleen als het ook ingeschakeld is in de Agenda-app.";
++"settings.calendar.date_hover_option" = "Houd ⌥ vast om een voorvertoning van datums te zien";
+"settings.calendar.week_count" = "Zichtbare weken";
+"settings.calendar.calendar_app_view_mode" = "Weergave in Agenda-app";
+"settings.calendar.default_calendar_app" = "Standaard Agenda-app";
+
+"settings.events" = "Gebeurtenissen";
+"settings.events.show_map" = "Kaart en weer tonen";
+"settings.events.show_overdue_reminders" = "Achterstallige herinneringen tonen";
+"settings.events.show_finished_events" = "Voltooide gebeurtenissen tonen";
+"settings.events.show_recurrence_indicator" = "Herhalingsindicator tonen";
+"settings.events.force_local_time_zone" = "Alle gebeurtenissen in lokale tijdzone tonen";
+
+"settings.appearance.transparency" = "Transparantie";
+"settings.appearance.accessibility" = "Toegankelijkheid";
+
+"settings.keyboard.local_shortcuts.title" = "Lokale snelkoppelingen";
+"settings.keyboard.local_shortcuts.prev_date" = "Vorige datum";
+"settings.keyboard.local_shortcuts.next_date" = "Volgende datum";
+"settings.keyboard.local_shortcuts.prev_week" = "Vorige week";
+"settings.keyboard.local_shortcuts.next_week" = "Volgende week";
+"settings.keyboard.local_shortcuts.prev_month" = "Vorige maand";
+"settings.keyboard.local_shortcuts.next_month" = "Volgende maand";
+"settings.keyboard.local_shortcuts.curr_date" = "Huidige datum";
+"settings.keyboard.local_shortcuts.open_date" = "Geselecteerde datum openen";
+"settings.keyboard.local_shortcuts.pin_calendar" = "Kalender vastmaken";
+
+"settings.keyboard.global_shortcuts.title" = "Globale snelkoppelingen";
+"settings.keyboard.global_shortcuts.open_calendar" = "Agenda openen";
+"settings.keyboard.global_shortcuts.open_next_event" = "Volgende gebeurtenis openen";
+"settings.keyboard.global_shortcuts.open_next_event_options" = "Opties volgende gebeurtenis";
+"settings.keyboard.global_shortcuts.open_next_reminder" = "Volgende herinnering openen";
+"settings.keyboard.global_shortcuts.open_next_reminder_options" = "Opties volgende herinnering";
+
+"formatter.date.today" = "Vandaag";
+"formatter.date.relative.in" = "over %@";
+"formatter.date.relative.ago" = "%@ geleden";
+"formatter.date.relative.left" = "%@ resterend";
+
+"reminder.status.overdue" = "Achterstallig";
+
+"reminder.options.button" = "Opties";
+"reminder.options.complete" = "Voltooien";
+"reminder.options.remind" = "Herinner over %@";
+
+"event.details.participant.organizer" = "organisator";
+"event.details.participant.me" = "ik";
+
+"event.all_day" = "Hele dag";
+
+"event.status.accepted" = "Geaccepteerd";
+"event.status.maybe" = "Misschien";
+"event.status.declined" = "Afgewezen";
+"event.status.pending" = "Wachtend";
+
+"event.action.open" = "Openen";
+"event.action.join" = "Deelnemen";
+"event.action.skip" = "Overslaan";
+"event.action.accept" = "Accepteren";
+"event.action.maybe" = "Misschien";
+"event.action.decline" = "Afwijzen";
+
+"tooltips.navigation.prev_month" = "Vorige maand";
+"tooltips.navigation.today" = "Vandaag";
+"tooltips.navigation.next_month" = "Volgende maand";
+
+"tooltips.toolbar.stay_open" = "Open houden";
+"tooltips.toolbar.open_calendar" = "Agenda openen";
+"tooltips.toolbar.open_reminders" = "Herinneringen openen";
+"tooltips.toolbar.open_menu" = "Menu openen";
+
+"calendars.source.others" = "Anderen";
