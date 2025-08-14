@@ -37,7 +37,7 @@
 "settings.menu_bar.show_date" = "הצג תאריך";
 "settings.menu_bar.show_background" = "הצג רקע אטום";
 "settings.menu_bar.date_format_custom" = "מותאם";
-//"settings.menu_bar.open_on_hover" = "Open on mouse hover";
+"settings.menu_bar.open_on_hover" = "פתיחה במעבר עם העכבר";
 
 "settings.next_event" = "אירוע הבא";
 "settings.next_event.show_next_event" = "הצג אירוע הבא";
@@ -52,9 +52,9 @@
 "settings.calendar.show_declined_events" = "הצגת אירועים שנדחו";
 "settings.calendar.show_declined_events_tooltip" = "עובד רק אם הופעל גם באפליקציית לוח שנה המובנית.";
 "settings.calendar.date_hover_option" = "החזקת ⌥ כדי להציץ תוך כדי ריחוף בתאריכים";
-//"settings.calendar.week_count" = "Visible weeks";
+"settings.calendar.week_count" = "שבועות מוצגים";
 "settings.calendar.calendar_app_view_mode" = "מצב תצוגה באפליקציית לוח שנה";
-//"settings.calendar.default_calendar_app" = "Default calendar app";
+"settings.calendar.default_calendar_app" = "ברירת מחדל לאפליקציית לוח שנה";
 
 "settings.events" = "אירועים";
 "settings.events.show_map" = "הצג מפה ומזג אוויר";
