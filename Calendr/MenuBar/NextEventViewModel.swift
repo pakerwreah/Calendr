@@ -97,19 +97,27 @@ class NextEventViewModel {
         self.isShowingDetails = isShowingDetails
         self.textScaling = settings.eventStatusItemTextScaling
 
+        let throttledHoursToCheck = settings.eventStatusItemCheckRange
+            .throttle(.seconds(2), scheduler: scheduler)
+
         let nextEvents = Observable
             .combineLatest(
                 settings.showEventStatusItem,
+                throttledHoursToCheck,
                 nextEventCalendars
             )
             .repeat(when: calendarService.changeObservable)
             .repeat(when: dateProvider.calendarUpdated.void())
-            .flatMapLatest { isEnabled, calendars -> Single<[EventModel]> in
+            .flatMapLatest { isEnabled, hoursToCheck, calendars -> Single<[EventModel]> in
 
                 guard isEnabled else { return .just([]) }
 
+                // `calendarUpdated` can take up to 24h to trigger (NSCalendarDayChanged)
+                // so we need to fetch ahead to cover the worst case scenario
+                let fetchAhead = 24
+
                 let start = dateProvider.calendar.startOfDay(for: dateProvider.now)
-                let end = dateProvider.calendar.date(byAdding: .hour, value: 48, to: start)!
+                let end = dateProvider.calendar.date(byAdding: .hour, value: hoursToCheck + fetchAhead, to: start)!
                 let events = calendarService.events(from: start, to: end, calendars: calendars)
 
                 return events
