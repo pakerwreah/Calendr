@@ -98,7 +98,7 @@ class NextEventViewModel {
         self.textScaling = settings.eventStatusItemTextScaling
 
         let throttledHoursToCheck = settings.eventStatusItemCheckRange
-            .throttle(.seconds(2), scheduler: scheduler)
+            .throttle(.seconds(1), scheduler: scheduler)
 
         let nextEvents = Observable
             .combineLatest(
