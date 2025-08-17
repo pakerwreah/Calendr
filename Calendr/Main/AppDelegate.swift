@@ -62,10 +62,38 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         setUpEditShortcuts()
         setUpResignFocus()
+
+        #if DEBUG
+        print(Bundle.main.bundlePath)
+        #endif
     }
 
     func application(_ application: NSApplication, open urls: [URL]) {
         guard let url = urls.first else { return }
         deeplink.onNext(url)
+    }
+
+    private let signal: DispatchSourceSignal = {
+        Darwin.signal(SIGTERM, SIG_IGN)
+
+        let signal = DispatchSource.makeSignalSource(signal: SIGTERM, queue: .main)
+        signal.setEventHandler(handler: showQuitConfirmation)
+        signal.activate()
+
+        return signal
+    }()
+}
+
+private func showQuitConfirmation() {
+    let alert = NSAlert()
+    alert.messageText = "Are you sure you want to quit?"
+    alert.informativeText = "This can happen due to low disk space, memory pressure, or \"cleaning\" apps."
+    alert.alertStyle = .warning
+
+    alert.addButton(withTitle: "Quit").hasDestructiveAction = true
+    alert.addButton(withTitle: "Keep Running")
+
+    if alert.runModal() == .alertFirstButtonReturn {
+        NSApp.terminate(nil)
     }
 }
