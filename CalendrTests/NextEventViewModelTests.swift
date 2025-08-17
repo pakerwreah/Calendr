@@ -233,7 +233,7 @@ class NextEventViewModelTests: XCTestCase {
         XCTAssertEqual(color, .white)
     }
 
-    func testNextEvent_isNotInProgress_backgroundColor() {
+    func testNextEvent_backgroundColor() {
 
         var color: EventBackground?
 
@@ -263,7 +263,7 @@ class NextEventViewModelTests: XCTestCase {
         XCTAssertEqual(color, .color(.white.withAlphaComponent(0.2)))
     }
 
-    func testNextEvent_isNotInProgress_isPending_backgroundColor() {
+    func testNextEvent_isPending_backgroundColor() {
 
         var color: EventBackground?
 
@@ -372,7 +372,7 @@ class NextEventViewModelTests: XCTestCase {
         XCTAssertEqual(title, "Event 2")
     }
 
-    func testNextEvent_isNotInProgress_startsIn30Seconds() {
+    func testNextEvent_startsIn30Seconds() {
 
         var time: String?
 
@@ -392,7 +392,7 @@ class NextEventViewModelTests: XCTestCase {
         XCTAssertEqual(time, "in 29s")
     }
 
-    func testNextEvent_isNotInProgress_startsInLessThan1Minute() {
+    func testNextEvent_startsInLessThan1Minute() {
 
         var time: String?
 
@@ -417,7 +417,7 @@ class NextEventViewModelTests: XCTestCase {
         XCTAssertEqual(time, "in 30s")
     }
 
-    func testNextEvent_isNotInProgress_startsIn1Minute() {
+    func testNextEvent_startsIn1Minute() {
 
         var time: String?
 
@@ -432,7 +432,7 @@ class NextEventViewModelTests: XCTestCase {
         XCTAssertEqual(time, "in 1m")
     }
 
-    func testNextEvent_isNotInProgress_startsInMoreThan1Minute() {
+    func testNextEvent_startsInMoreThan1Minute() {
 
         var time: String?
 
@@ -452,7 +452,7 @@ class NextEventViewModelTests: XCTestCase {
         XCTAssertEqual(time, "in 1m")
     }
 
-    func testNextEvent_isNotInProgress_startsIn1Hour() {
+    func testNextEvent_startsIn1Hour() {
 
         var time: String?
 
@@ -472,7 +472,7 @@ class NextEventViewModelTests: XCTestCase {
         XCTAssertEqual(time, "in 59m")
     }
 
-    func testNextEvent_isNotInProgress_startsInMoreThan1Hour() {
+    func testNextEvent_startsInMoreThan1Hour() {
 
         var time: String?
 
@@ -490,6 +490,35 @@ class NextEventViewModelTests: XCTestCase {
         scheduler.advance(.seconds(1))
 
         XCTAssertEqual(time, "in 1h 39m")
+    }
+
+    func testNextEvent_startsInMoreThan24Hours() {
+
+        var time: String?
+
+        viewModel.time
+            .bind { time = $0 }
+            .disposed(by: disposeBag)
+
+        calendarService.changeEvents([
+            .make(start: now + 24 * 3600 + 60, end: now + 24 * 3600 + 70)
+        ])
+
+        XCTAssertNil(time)
+
+        settings.eventStatusItemCheckRangeObserver.onNext(25)
+
+        XCTAssertEqual(time, "in 1d")
+
+        dateProvider.now.addTimeInterval(60)
+        scheduler.advance(.seconds(1))
+
+        XCTAssertEqual(time, "in 1d")
+
+        dateProvider.now.addTimeInterval(60)
+        scheduler.advance(.seconds(1))
+
+        XCTAssertEqual(time, "in 23h 59m")
     }
 
     func testNextEvent_isInProgress_endsIn30Seconds() {

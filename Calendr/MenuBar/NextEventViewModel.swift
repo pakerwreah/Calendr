@@ -284,13 +284,17 @@ class NextEventViewModel {
                 let event = nextEvent.event
                 let isInProgress = nextEvent.isInProgress
 
-                dateFormatter.allowedUnits = [.hour, .minute]
-
                 var date = isInProgress && !event.type.isReminder ? event.end : event.start
 
                 let diff = dateProvider.calendar.dateComponents([.minute, .second], from: dateProvider.now, to: date)
 
-                if diff.minute == 0, diff.second! <= 30 {
+                dateFormatter.allowedUnits = [.hour, .minute]
+
+                if diff.minute! >= 24 * 60 {
+                    dateFormatter.allowedUnits = [.day]
+                    date = dateProvider.calendar.endOfDay(for: date)
+                }
+                else if diff.minute == 0, diff.second! <= 30 {
                     dateFormatter.allowedUnits = [.second]
                 }
                 else if diff.second! > 0 {
