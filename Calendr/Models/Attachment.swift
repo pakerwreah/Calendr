@@ -11,8 +11,8 @@ import EventKit
 /// A wrapper around the private EKAttachment API
 struct Attachment: Equatable {
     let url: URL?
-    let fileName: String
     let localURL: URL?
+    let fileName: String
     let fileSize: NSNumber?
 
     init?(from attachment: Any) {
@@ -20,8 +20,19 @@ struct Attachment: Equatable {
 
         do {
             self.url = try attachment.safeValue(forKey: "URL")
-            self.fileName = try attachment.safeValue(forKey: "fileName")
             self.localURL = try attachment.safeValue(forKey: "localURL")
+
+            guard url != nil || localURL != nil else {
+                return nil
+            }
+
+            if localURL == nil {
+                guard let url, url.scheme?.hasPrefix("http") == true, url.domain != nil else {
+                    return nil
+                }
+            }
+
+            self.fileName = try attachment.safeValue(forKey: "fileName")
             self.fileSize = try attachment.safeValue(forKey: "fileSize")
         } catch {
             print("Could not decode attachment", error.localizedDescription)
