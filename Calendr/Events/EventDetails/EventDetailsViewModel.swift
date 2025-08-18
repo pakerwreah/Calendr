@@ -197,7 +197,12 @@ class EventDetailsViewModel {
             guard showMap,
                   !location.isEmpty,
                   !location.contains("://"),
-                  !location.contains("www.")
+                  !location.contains("www."),
+                  !location.localizedCaseInsensitiveContains("Microsoft Teams"),
+                  !location.localizedCaseInsensitiveContains("Google Meet"),
+                  !location.localizedCaseInsensitiveContains("Discord"),
+                  !location.localizedCaseInsensitiveContains("Slack"),
+                  !location.localizedCaseInsensitiveContains("Zoom")
             else {
                 return false
             }
