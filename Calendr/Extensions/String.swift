@@ -7,9 +7,15 @@
 
 import Cocoa
 
+private let invalidHtmlTags = try! NSRegularExpression(pattern: "<https?://[^>]+>")
+private let whitespacesBetweenHtmlLineBreaks = try! NSRegularExpression(pattern: "<br>\\s+<br>")
+private let threeOrMoreHtmlLineBreaks = try! NSRegularExpression(pattern: "(<br>){3,}")
+
 extension StringProtocol {
 
     static var uuid: String { UUID().uuidString }
+
+    var nsRange: NSRange { .init(startIndex..., in: self) }
 
     var trimmed: String {
         trimmingCharacters(in: .whitespacesAndNewlines)
@@ -20,10 +26,24 @@ extension StringProtocol {
         String(components(separatedBy: set).joined(separator: replacement))
     }
 
+    func replacingOccurrences(of regex: NSRegularExpression, with replacement: String) -> String {
+
+        regex.stringByReplacingMatches(
+            in: String(self),
+            range: nsRange,
+            withTemplate: replacement
+        )
+    }
+
     func html(font: NSFont, color: NSColor) -> NSAttributedString? {
 
         guard
-            let data = replacingOccurrences(of: .newlines, with: "<br>").data(using: .unicode),
+            let data = trimmingCharacters(in: .whitespacesAndNewlines)
+                .replacingOccurrences(of: .newlines, with: "<br>")
+                .replacingOccurrences(of: invalidHtmlTags, with: "")
+                .replacingOccurrences(of: whitespacesBetweenHtmlLineBreaks, with: "<br><br>")
+                .replacingOccurrences(of: threeOrMoreHtmlLineBreaks, with: "<br><br>")
+                .data(using: .unicode),
             let attribStr = NSMutableAttributedString(html: data, documentAttributes: nil)
         else { return nil }
 
