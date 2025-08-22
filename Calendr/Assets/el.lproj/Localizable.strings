@@ -106,6 +106,7 @@
 "event.status.pending" = "Εκκρεμεί";
 
 "event.action.open" = "Άνοιγμα";
+//"event.action.edit" = "Edit";
 "event.action.join" = "Συμμετοχή";
 "event.action.skip" = "Παράλειψη";
 "event.action.accept" = "Αποδοχή";

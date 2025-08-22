@@ -73,6 +73,8 @@ internal enum Strings {
       internal static let accept = Strings.tr("Localizable", "event.action.accept", fallback: "Accept")
       /// Decline
       internal static let decline = Strings.tr("Localizable", "event.action.decline", fallback: "Decline")
+      /// Edit
+      internal static let edit = Strings.tr("Localizable", "event.action.edit", fallback: "Edit")
       /// Join
       internal static let join = Strings.tr("Localizable", "event.action.join", fallback: "Join")
       /// Maybe

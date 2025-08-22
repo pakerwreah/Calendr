@@ -104,6 +104,7 @@
 "event.status.pending" = "Wachtend";
 
 "event.action.open" = "Openen";
+//"event.action.edit" = "Edit";
 "event.action.join" = "Deelnemen";
 "event.action.skip" = "Overslaan";
 "event.action.accept" = "Accepteren";

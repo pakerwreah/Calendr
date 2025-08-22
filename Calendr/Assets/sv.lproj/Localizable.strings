@@ -106,6 +106,7 @@
 "event.status.pending" = "Väntande";
 
 "event.action.open" = "Öppna";
+//"event.action.edit" = "Edit";
 "event.action.join" = "Gå med";
 "event.action.skip" = "Skippa";
 "event.action.accept" = "Tacka ja";

@@ -106,6 +106,7 @@
 "event.status.pending" = "待定";
 
 "event.action.open" = "打開";
+//"event.action.edit" = "Edit";
 "event.action.join" = "加入";
 "event.action.skip" = "跳過";
 "event.action.accept" = "接受";

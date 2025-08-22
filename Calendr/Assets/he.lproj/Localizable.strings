@@ -106,6 +106,7 @@
 "event.status.pending" = "ממתין";
 
 "event.action.open" = "פתח";
+//"event.action.edit" = "Edit";
 "event.action.join" = "הצטרף";
 "event.action.skip" = "דלג";
 "event.action.accept" = "אשר";

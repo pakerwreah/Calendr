@@ -10,6 +10,7 @@ import RxSwift
 
 enum EventAction: Equatable {
     case open
+    case edit
     case link(EventLink, isInProgress: Bool)
     case skip
     case status(EventStatusAction)
@@ -45,6 +46,8 @@ class EventOptionsViewModel: BaseContextMenuViewModel<EventAction> {
 
         if [.list, .menubar].contains(source) {
             addItem(.open)
+            addSeparator()
+            addItem(.edit)
 
             if let link = event.detectLink(using: workspace) {
                 addSeparator()
@@ -79,6 +82,16 @@ class EventOptionsViewModel: BaseContextMenuViewModel<EventAction> {
         switch action {
         case .open:
             workspace.open(event)
+        case .edit:
+            guard
+                let url = Bundle.main.url(forResource: "CalendrEditor", withExtension: "app"),
+                let eventId = event.id.urlEncodedQueryItem,
+                let eventURL = URL(string: "calendreditor://\(eventId)")
+            else {
+                break
+            }
+            workspace.open(eventURL, withApplicationAt: url)
+
         case .link(let link, _):
             workspace.open(link)
         case .skip:
@@ -114,6 +127,8 @@ extension EventAction: ContextMenuAction {
         switch self {
         case .open:
             return Icons.Calendar.calendar
+        case .edit:
+            return Icons.Event.edit
 
         case .link(let link, let isInProgress):
             let icon = if link.isMeeting {
@@ -138,6 +153,8 @@ extension EventAction: ContextMenuAction {
         switch self {
         case .open:
             return Strings.Event.Action.open
+        case .edit:
+            return Strings.Event.Action.edit
         case .link(let link, _):
             return link.isMeeting ? Strings.Event.Action.join : link.url.domain ?? "???"
         case .skip:

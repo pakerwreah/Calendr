@@ -106,6 +106,7 @@
 "event.status.pending" = "未回答";
 
 "event.action.open" = "開く";
+//"event.action.edit" = "Edit";
 "event.action.join" = "参加する";
 "event.action.skip" = "スキップ";
 "event.action.accept" = "出席";

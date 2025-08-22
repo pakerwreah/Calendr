@@ -106,6 +106,7 @@
 "event.status.pending" = "Në Pritje";
 
 "event.action.open" = "Hapur";
+//"event.action.edit" = "Edit";
 "event.action.join" = "Bashkohu";
 "event.action.skip" = "Kapërce";
 "event.action.accept" = "Pranoje";

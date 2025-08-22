@@ -59,6 +59,7 @@
 		344A59DB29AEBBBF004F0452 /* EventUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 344A59DA29AEBBBF004F0452 /* EventUtils.swift */; };
 		344D5EBC2CA0DAAF00523F9E /* NSImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 344D5EBB2CA0DAAF00523F9E /* NSImageView.swift */; };
 		344D5EBE2CA0E12B00523F9E /* Scaling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 344D5EBD2CA0E12B00523F9E /* Scaling.swift */; };
+		34533A952E57ECE5001FA432 /* CalendrEditor.app in Resources */ = {isa = PBXBuildFile; fileRef = 34533A942E57ECE5001FA432 /* CalendrEditor.app */; };
 		3453E6FD28386A84002DCC3C /* Bool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3453E6FC28386A84002DCC3C /* Bool.swift */; };
 		3453E6FF28393943002DCC3C /* ContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3453E6FE28393943002DCC3C /* ContextMenu.swift */; };
 		345A34972C4DADD000AF0002 /* TrackedMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345A34962C4DADD000AF0002 /* TrackedMenu.swift */; };
@@ -288,6 +289,7 @@
 		344A59DA29AEBBBF004F0452 /* EventUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventUtils.swift; sourceTree = "<group>"; };
 		344D5EBB2CA0DAAF00523F9E /* NSImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSImageView.swift; sourceTree = "<group>"; };
 		344D5EBD2CA0E12B00523F9E /* Scaling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scaling.swift; sourceTree = "<group>"; };
+		34533A942E57ECE5001FA432 /* CalendrEditor.app */ = {isa = PBXFileReference; lastKnownFileType = wrapper.application; path = CalendrEditor.app; sourceTree = "<group>"; };
 		3453E6FC28386A84002DCC3C /* Bool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bool.swift; sourceTree = "<group>"; };
 		3453E6FE28393943002DCC3C /* ContextMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextMenu.swift; sourceTree = "<group>"; };
 		345A34962C4DADD000AF0002 /* TrackedMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackedMenu.swift; sourceTree = "<group>"; };
@@ -620,6 +622,14 @@
 			path = EventUtils;
 			sourceTree = "<group>";
 		};
+		34533A962E57FF4A001FA432 /* Editor */ = {
+			isa = PBXGroup;
+			children = (
+				34533A942E57ECE5001FA432 /* CalendrEditor.app */,
+			);
+			path = Editor;
+			sourceTree = "<group>";
+		};
 		347D0F8B25952F89002451EC = {
 			isa = PBXGroup;
 			children = (
@@ -648,6 +658,7 @@
 				347D0FDD259532E7002451EC /* Calendar */,
 				347D0FE22595384E002451EC /* Components */,
 				34273BDC25E19B1000B35091 /* Config */,
+				34533A962E57FF4A001FA432 /* Editor */,
 				342AEE2C2DFF060D008CBBE0 /* Enums */,
 				34ABB9E429A12A720021F3CF /* Events */,
 				347D0FE525954481002451EC /* Extensions */,
@@ -1094,6 +1105,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				34651F2F25E1C99900518C5A /* Localizable.strings in Resources */,
+				34533A952E57ECE5001FA432 /* CalendrEditor.app in Resources */,
 				347D0F9A25952F8A002451EC /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

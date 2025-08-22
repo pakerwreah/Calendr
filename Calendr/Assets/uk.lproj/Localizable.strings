@@ -106,6 +106,7 @@
 "event.status.pending" = "Очікується";
 
 "event.action.open" = "Відкрити";
+//"event.action.edit" = "Edit";
 "event.action.join" = "Приєднатися";
 "event.action.skip" = "Пропустити";
 "event.action.accept" = "Прийняти";

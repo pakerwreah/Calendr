@@ -106,6 +106,7 @@
 "event.status.pending" = "Beklemede";
 
 "event.action.open" = "Aç";
+//"event.action.edit" = "Edit";
 "event.action.join" = "Katıl";
 "event.action.skip" = "Atla";
 "event.action.accept" = "Kabul et";

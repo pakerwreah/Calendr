@@ -106,6 +106,7 @@
 "event.status.pending" = "Čeká";
 
 "event.action.open" = "Otevřít";
+//"event.action.edit" = "Edit";
 "event.action.join" = "Připojit se";
 "event.action.skip" = "Přeskočit";
 "event.action.accept" = "Přijmout";

@@ -108,6 +108,7 @@
 "event.status.pending" = "В ожидании";
 
 "event.action.open" = "Открыть";
+//"event.action.edit" = "Edit";
 "event.action.join" = "Присоединиться";
 "event.action.skip" = "Пропустить";
 "event.action.accept" = "Принять";

@@ -106,6 +106,7 @@
 "event.status.pending" = "Pendiente";
 
 "event.action.open" = "Abrir";
+//"event.action.edit" = "Edit";
 "event.action.join" = "Unirse";
 "event.action.skip" = "Saltar";
 "event.action.accept" = "Aceptar";
