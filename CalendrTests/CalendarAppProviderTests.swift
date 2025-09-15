@@ -150,7 +150,9 @@ class CalendarAppProviderTests: XCTestCase {
 
         appleScriptRunner.didRunScript = { source in
             XCTAssert(source.contains("tell application \"Calendar\""))
-            XCTAssert(source.contains("01/01/2025"), source)
+            XCTAssert(source.contains("set day of theDate to 1"), source)
+            XCTAssert(source.contains("set month of theDate to 1"), source)
+            XCTAssert(source.contains("set year of theDate to 2025"), source)
             XCTAssert(source.contains("day view"))
             openExpectation.fulfill()
         }
@@ -166,7 +168,9 @@ class CalendarAppProviderTests: XCTestCase {
         appleScriptRunner.didRunScript = { source in
             // opens at the start of the week
             XCTAssert(source.contains("tell application \"Calendar\""))
-            XCTAssert(source.contains("29/12/2024"), source)
+            XCTAssert(source.contains("set day of theDate to 29"), source)
+            XCTAssert(source.contains("set month of theDate to 12"), source)
+            XCTAssert(source.contains("set year of theDate to 2024"), source)
             XCTAssert(source.contains("week view"))
             openExpectation.fulfill()
         }
