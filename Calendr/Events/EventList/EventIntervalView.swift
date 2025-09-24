@@ -12,7 +12,7 @@ class EventIntervalView: NSView {
 
     private let disposeBag = DisposeBag()
 
-    init(_ text: Observable<String>, _ fade: Observable<Bool>) {
+    init(viewModel: EventIntervalViewModel) {
 
         super.init(frame: .zero)
 
@@ -21,11 +21,11 @@ class EventIntervalView: NSView {
 
         let label = Label(font: .systemFont(ofSize: 10), color: .labelColor, align: .right)
 
-        text.bind(to: label.rx.text).disposed(by: disposeBag)
+        viewModel.text.bind(to: label.rx.text).disposed(by: disposeBag)
 
         let stack = NSStackView(views: [vdash, label, .dummy]).with(spacing: 4)
 
-        fade.map { $0 ? 0.5 : 1 }
+        viewModel.fade.map { $0 ? 0.5 : 1 }
             .bind(to: stack.rx.alphaValue)
             .disposed(by: disposeBag)
 

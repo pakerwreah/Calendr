@@ -248,7 +248,7 @@ class EventViewModelTests: XCTestCase {
 
     func testDuration_isMultiDay_isDifferentMonth_withTime() {
 
-        dateProvider.m_calendar = .iso8601
+        dateProvider.m_calendar = .gregorian.with(timeZone: .utc)
 
         let viewModel = mock(
             event: .make(
