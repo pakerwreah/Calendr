@@ -72,7 +72,7 @@ class EventListView: NSView {
                         return view.makeSection(text)
 
                     case .interval(let viewModel):
-                        return EventIntervalView(viewModel: viewModel)
+                        return EventIntervalView(viewModel: viewModel).nsView()
                     }
                 }
             }

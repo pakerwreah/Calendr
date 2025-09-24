@@ -176,6 +176,7 @@
 		34C72F9625E8A05700FD20FA /* MockNextEventSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C72F9525E8A05700FD20FA /* MockNextEventSettings.swift */; };
 		34C72F9C25E9847300FD20FA /* EventListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C72F9B25E9847300FD20FA /* EventListViewModel.swift */; };
 		34C72FA225E987F000FD20FA /* EventListViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C72FA125E987F000FD20FA /* EventListViewModelTests.swift */; };
+		34C90F492E845CCF0095A2D9 /* SwiftUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C90F482E845CCE0095A2D9 /* SwiftUI.swift */; };
 		34C90F4B2E8463290095A2D9 /* EventIntervalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C90F4A2E8463290095A2D9 /* EventIntervalViewModel.swift */; };
 		34CC382D25B636A6006CBD99 /* Checkbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34CC382C25B636A6006CBD99 /* Checkbox.swift */; };
 		34D19FC0262299D300B2732C /* NSEdgeInsets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D19FBF262299D300B2732C /* NSEdgeInsets.swift */; };
@@ -416,6 +417,7 @@
 		34C72F9525E8A05700FD20FA /* MockNextEventSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNextEventSettings.swift; sourceTree = "<group>"; };
 		34C72F9B25E9847300FD20FA /* EventListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventListViewModel.swift; sourceTree = "<group>"; };
 		34C72FA125E987F000FD20FA /* EventListViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventListViewModelTests.swift; sourceTree = "<group>"; };
+		34C90F482E845CCE0095A2D9 /* SwiftUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUI.swift; sourceTree = "<group>"; };
 		34C90F4A2E8463290095A2D9 /* EventIntervalViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventIntervalViewModel.swift; sourceTree = "<group>"; };
 		34CB48F12D57C20F005F63DB /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34CC382C25B636A6006CBD99 /* Checkbox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checkbox.swift; sourceTree = "<group>"; };
@@ -761,6 +763,7 @@
 				34305BCA25992A4E00AB381D /* Rx+Helpers.swift */,
 				34D55FE225F06669007F5C81 /* Sequence.swift */,
 				34651F5925E2F08500518C5A /* String.swift */,
+				34C90F482E845CCE0095A2D9 /* SwiftUI.swift */,
 				342AEE422DFF562C008CBBE0 /* Task.swift */,
 				348393032C885CC00052C70A /* URL.swift */,
 			);
@@ -1216,6 +1219,7 @@
 				345A34972C4DADD000AF0002 /* TrackedMenu.swift in Sources */,
 				347D0FDF259533C3002451EC /* CalendarView.swift in Sources */,
 				3421DA1F2693F12400056837 /* CalendarModel+Factory.swift in Sources */,
+				34C90F492E845CCF0095A2D9 /* SwiftUI.swift in Sources */,
 				34B5A09D25B118EC00F7F7ED /* CalendarPickerViewModel.swift in Sources */,
 				3421DA0E2693E35000056837 /* EventListViewPreview.swift in Sources */,
 				34651F5A25E2F08500518C5A /* String.swift in Sources */,
