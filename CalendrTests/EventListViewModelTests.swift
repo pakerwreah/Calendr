@@ -77,8 +77,8 @@ class EventListViewModelTests: XCTestCase {
                     case .section(let text):
                         return .section(text)
 
-                    case .interval(let text, _):
-                        return .interval(text.lastValue() ?? "")
+                    case .interval(let viewModel):
+                        return .interval(viewModel.text.lastValue() ?? "")
                     }
                 }
             }
@@ -276,8 +276,8 @@ class EventListViewModelTests: XCTestCase {
                 Observable.combineLatest(
                     $0.compactMap { item -> Observable<Bool>? in
                         switch item {
-                        case .interval(_, let fade):
-                            return fade
+                        case .interval(let viewModel):
+                            return viewModel.fade
                         default:
                             return nil
                         }

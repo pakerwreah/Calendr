@@ -176,6 +176,7 @@
 		34C72F9625E8A05700FD20FA /* MockNextEventSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C72F9525E8A05700FD20FA /* MockNextEventSettings.swift */; };
 		34C72F9C25E9847300FD20FA /* EventListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C72F9B25E9847300FD20FA /* EventListViewModel.swift */; };
 		34C72FA225E987F000FD20FA /* EventListViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C72FA125E987F000FD20FA /* EventListViewModelTests.swift */; };
+		34C90F4B2E8463290095A2D9 /* EventIntervalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C90F4A2E8463290095A2D9 /* EventIntervalViewModel.swift */; };
 		34CC382D25B636A6006CBD99 /* Checkbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34CC382C25B636A6006CBD99 /* Checkbox.swift */; };
 		34D19FC0262299D300B2732C /* NSEdgeInsets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D19FBF262299D300B2732C /* NSEdgeInsets.swift */; };
 		34D19FC62622A02C00B2732C /* EventDetailsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D19FC52622A02C00B2732C /* EventDetailsViewModelTests.swift */; };
@@ -415,6 +416,7 @@
 		34C72F9525E8A05700FD20FA /* MockNextEventSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNextEventSettings.swift; sourceTree = "<group>"; };
 		34C72F9B25E9847300FD20FA /* EventListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventListViewModel.swift; sourceTree = "<group>"; };
 		34C72FA125E987F000FD20FA /* EventListViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventListViewModelTests.swift; sourceTree = "<group>"; };
+		34C90F4A2E8463290095A2D9 /* EventIntervalViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventIntervalViewModel.swift; sourceTree = "<group>"; };
 		34CB48F12D57C20F005F63DB /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34CC382C25B636A6006CBD99 /* Checkbox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checkbox.swift; sourceTree = "<group>"; };
 		34D19FBF262299D300B2732C /* NSEdgeInsets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSEdgeInsets.swift; sourceTree = "<group>"; };
@@ -860,6 +862,7 @@
 			isa = PBXGroup;
 			children = (
 				34B1C7C425EDA01F00E5CA80 /* EventIntervalView.swift */,
+				34C90F4A2E8463290095A2D9 /* EventIntervalViewModel.swift */,
 				349355A525BCA8D400957945 /* EventListView.swift */,
 				34C72F9B25E9847300FD20FA /* EventListViewModel.swift */,
 				349355A925BCA8DF00957945 /* EventView.swift */,
@@ -1359,6 +1362,7 @@
 				34D88DCA2C4C687B0047D636 /* SettingsUI.swift in Sources */,
 				34924CEE259FD064009C3450 /* DateFormatter.swift in Sources */,
 				3468E651284BD3D600B21EC8 /* EventLink.swift in Sources */,
+				34C90F4B2E8463290095A2D9 /* EventIntervalViewModel.swift in Sources */,
 				34D88DC82C4C66F80047D636 /* KeyboardViewController.swift in Sources */,
 				34A591E62C175C0F00DE419D /* AppResignFocus.swift in Sources */,
 				3470214A259DFF3000827AE7 /* CalendarServiceProvider.swift in Sources */,

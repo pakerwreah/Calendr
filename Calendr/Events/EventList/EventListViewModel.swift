@@ -10,7 +10,7 @@ import RxSwift
 
 enum EventListItem {
     case section(String)
-    case interval(Observable<String>, fade: Observable<Bool>)
+    case interval(EventIntervalViewModel)
     case event(EventViewModel)
 }
 
@@ -323,7 +323,9 @@ class EventListViewModel {
                     )
                 }
 
-                return [.interval(interval, fade: fade), eventItem]
+                let intervalViewModel = EventIntervalViewModel(text: interval, fade: fade)
+
+                return [.interval(intervalViewModel), eventItem]
             }
             .flatten()
     }

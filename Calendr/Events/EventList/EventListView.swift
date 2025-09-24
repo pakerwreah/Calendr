@@ -71,8 +71,8 @@ class EventListView: NSView {
                     case .section(let text):
                         return view.makeSection(text)
 
-                    case .interval(let text, let fade):
-                        return EventIntervalView(text, fade)
+                    case .interval(let viewModel):
+                        return EventIntervalView(viewModel: viewModel)
                     }
                 }
             }
