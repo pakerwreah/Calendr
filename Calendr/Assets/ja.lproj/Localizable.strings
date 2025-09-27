@@ -21,8 +21,8 @@
 "auto_update.install" = "インストール";
 "auto_update.replace.message" = "アプリのインストール先を確認してください。古いバージョンと同じ場所を選ぶと、\n新しいバージョンのアプリに置き換えられます。";
 
-//"attachments.open.message" = "Calendr needs permission to access your attachments";
-//"attachments.open.authorize" = "Authorize access to attachments";
+"attachments.open.message" = "Calendrが添付ファイルを開く許可が必要です";
+"attachments.open.authorize" = "添付ファイルへのアクセスを許可";
 
 "settings.title" = "設定";
 "settings.tab.general" = "一般";
@@ -37,7 +37,7 @@
 "settings.menu_bar.show_date" = "日付を表示";
 "settings.menu_bar.show_background" = "不透明な背景";
 "settings.menu_bar.date_format_custom" = "カスタム";
-//"settings.menu_bar.open_on_hover" = "Open on mouse hover";
+"settings.menu_bar.open_on_hover" = "マウスホバーで開く";
 
 "settings.next_event" = "次の予定";
 "settings.next_event.show_next_event" = "次の予定をメニューバーに表示";
@@ -52,9 +52,9 @@
 "settings.calendar.show_declined_events" = "辞退した予定を表示";
 "settings.calendar.show_declined_events_tooltip" = "ネイティブのカレンダーアプリでもこの設定が有効になっている必要があります。";
 "settings.calendar.date_hover_option" = "⌥キーを押しながらホバーで予定を表示";
-//"settings.calendar.week_count" = "Visible weeks";
+"settings.calendar.week_count" = "週の数";
 "settings.calendar.calendar_app_view_mode" = "カレンダーの表示";
-//"settings.calendar.default_calendar_app" = "Default calendar app";
+"settings.calendar.default_calendar_app" = "使用するカレンダーアプリ";
 
 "settings.events" = "予定";
 "settings.events.show_map" = "地図と天気を表示";
@@ -89,7 +89,7 @@
 "formatter.date.relative.ago" = "%@前";
 "formatter.date.relative.left" = "残り%@";
 
-//"reminder.status.overdue" = "Overdue";
+"reminder.status.overdue" = "期限超過";
 
 "reminder.options.button" = "オプション";
 "reminder.options.complete" = "完了";
