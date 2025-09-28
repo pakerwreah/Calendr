@@ -21,8 +21,8 @@
 "auto_update.install" = "Installer";
 "auto_update.replace.message" = "Confirmer l'emplacement de l'app pour pouvoir la remplacer";
 
-//"attachments.open.message" = "Calendr needs permission to access your attachments";
-//"attachments.open.authorize" = "Authorize access to attachments";
+"attachments.open.message" = "Calendr a besoin de l'autorisation pour accéder à vos pièces jointes";
+"attachments.open.authorize" = "Autoriser l'accès aux pièces jointes";
 
 "settings.title" = "Préférences";
 "settings.tab.general" = "Général";
@@ -37,7 +37,7 @@
 "settings.menu_bar.show_date" = "Afficher la date";
 "settings.menu_bar.show_background" = "Afficher un fond opaque";
 "settings.menu_bar.date_format_custom" = "Personnalisé";
-//"settings.menu_bar.open_on_hover" = "Open on mouse hover";
+"settings.menu_bar.open_on_hover" = "Ouvrir au survol du curseur";
 
 "settings.next_event" = "Prochain événement";
 "settings.next_event.show_next_event" = "Afficher prochain événement";
@@ -52,9 +52,9 @@
 "settings.calendar.show_declined_events" = "Afficher les événements refusés";
 "settings.calendar.show_declined_events_tooltip" = "Cela ne fonctionne que s'il est également activé dans l'application Calendrier native.";
 "settings.calendar.date_hover_option" = "Maintenir ⌥ pour avoir un aperçu des dates survolées";
-//"settings.calendar.week_count" = "Visible weeks";
+"settings.calendar.week_count" = "Semaines visibles";
 "settings.calendar.calendar_app_view_mode" = "Vue de l'app Calendrier";
-//"settings.calendar.default_calendar_app" = "Default calendar app";
+"settings.calendar.default_calendar_app" = "Calendrier par défaut";
 
 "settings.events" = "Événements";
 "settings.events.show_map" = "Afficher la carte et la météo";
@@ -89,7 +89,7 @@
 "formatter.date.relative.ago" = "il y a %@";
 "formatter.date.relative.left" = "%@ rest.";
 
-//"reminder.status.overdue" = "Overdue";
+"reminder.status.overdue" = "En retard";
 
 "reminder.options.button" = "Options";
 "reminder.options.complete" = "Terminé";
