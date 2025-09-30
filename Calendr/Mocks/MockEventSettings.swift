@@ -14,15 +14,18 @@ class MockEventSettings: MockAppearanceSettings, EventSettings {
     let showRecurrenceIndicator: Observable<Bool>
     let forceLocalTimeZone: Observable<Bool>
     let showMap: Observable<Bool>
+    let showAllDayDetails: Observable<Bool>
 
     init(
         showRecurrenceIndicator: Bool = true,
         forceLocalTimeZone: Bool = false,
-        showMap: Bool = false
+        showMap: Bool = false,
+        showAllDayDetails: Bool = true,
     ) {
         self.showRecurrenceIndicator = .just(showRecurrenceIndicator)
         self.forceLocalTimeZone = .just(forceLocalTimeZone)
         self.showMap = .just(showMap)
+        self.showAllDayDetails = .just(showAllDayDetails)
     }
 }
 

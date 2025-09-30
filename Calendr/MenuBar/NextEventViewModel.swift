@@ -59,7 +59,7 @@ class NextEventViewModel {
     private let skippedEvents = BehaviorSubject<[Skipped]>(value: [])
     private let actionCallback = PublishSubject<ContextCallbackAction>()
 
-    private let isShowingDetails: AnyObserver<Bool>
+    private let isShowingDetailsModal: AnyObserver<Bool>
 
     private let type: NextEventType
     private let userDefaults: UserDefaults
@@ -81,7 +81,7 @@ class NextEventViewModel {
         weatherService: WeatherServiceProviding,
         workspace: WorkspaceServiceProviding,
         screenProvider: ScreenProviding,
-        isShowingDetails: AnyObserver<Bool>,
+        isShowingDetailsModal: AnyObserver<Bool>,
         scheduler: SchedulerType,
         soundPlayer: SoundPlaying
     ) {
@@ -94,7 +94,7 @@ class NextEventViewModel {
         self.weatherService = weatherService
         self.settings = settings
         self.workspace = workspace
-        self.isShowingDetails = isShowingDetails
+        self.isShowingDetailsModal = isShowingDetailsModal
         self.textScaling = settings.eventStatusItemTextScaling
 
         let throttledHoursToCheck = settings.eventStatusItemCheckRange
@@ -364,7 +364,7 @@ class NextEventViewModel {
             workspace: workspace,
             userDefaults: userDefaults,
             settings: settings,
-            isShowingObserver: isShowingDetails,
+            isShowingObserver: isShowingDetailsModal,
             isInProgress: isInProgress,
             source: .menubar,
             callback: actionCallback.asObserver()

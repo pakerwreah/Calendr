@@ -57,7 +57,7 @@ class MainViewController: NSViewController {
     private let refreshDate = PublishSubject<Void>()
     private let selectedDate: BehaviorSubject<Date>
     private let focusedDateObservable: Observable<Date>
-    private let isShowingDetails = BehaviorSubject<Bool>(value: false)
+    private let isShowingDetailsModal = BehaviorSubject<Bool>(value: false)
     private let searchInputText = BehaviorSubject<String>(value: "")
     private let searchInputSuggestionDate = BehaviorSubject<DateSuggestionResult?>(value: nil)
     private let navigationSubject = PublishSubject<Keyboard.Key>()
@@ -179,7 +179,7 @@ class MainViewController: NSViewController {
 
         eventListViewModel = EventListViewModel(
             eventsObservable: eventListEventsObservable,
-            isShowingDetails: isShowingDetails,
+            isShowingDetailsModal: isShowingDetailsModal,
             dateProvider: dateProvider,
             calendarService: calendarService,
             geocoder: geocoder,
@@ -208,7 +208,7 @@ class MainViewController: NSViewController {
             weatherService: weatherService,
             workspace: workspace,
             screenProvider: screenProvider,
-            isShowingDetails: isShowingDetails.asObserver(),
+            isShowingDetailsModal: isShowingDetailsModal.asObserver(),
             scheduler: MainScheduler.instance,
             soundPlayer: .shared
         )
@@ -224,7 +224,7 @@ class MainViewController: NSViewController {
             weatherService: weatherService,
             workspace: workspace,
             screenProvider: screenProvider,
-            isShowingDetails: isShowingDetails.asObserver(),
+            isShowingDetailsModal: isShowingDetailsModal.asObserver(),
             scheduler: MainScheduler.instance,
             soundPlayer: .shared
         )

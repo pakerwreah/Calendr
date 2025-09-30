@@ -59,6 +59,7 @@
 "settings.events" = "日程";
 "settings.events.show_map" = "展示地图和天气";
 "settings.events.show_overdue_reminders" = "展示逾期日程";
+//"settings.events.show_all_day_details" = "Show all-day events details";
 "settings.events.show_finished_events" = "展示已完成日程";
 "settings.events.show_recurrence_indicator" = "展示日程重复标识";
 "settings.events.force_local_time_zone" = "以本地时区显示所有事件";

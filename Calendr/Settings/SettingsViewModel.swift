@@ -45,6 +45,7 @@ protocol EventSettings: AppearanceSettings {
     var showRecurrenceIndicator: Observable<Bool> { get }
     var forceLocalTimeZone: Observable<Bool> { get }
     var showMap: Observable<Bool> { get }
+    var showAllDayDetails: Observable<Bool> { get }
 }
 
 protocol EventListSettings: EventSettings {
@@ -117,6 +118,7 @@ class SettingsViewModel:
     let toggleMap: AnyObserver<Bool>
     let togglePastEvents: AnyObserver<Bool>
     let toggleOverdueReminders: AnyObserver<Bool>
+    let toggleAllDayDetails: AnyObserver<Bool>
     let toggleRecurrenceIndicator: AnyObserver<Bool>
     let toggleForceLocalTimeZone: AnyObserver<Bool>
     let transparencyObserver: AnyObserver<Int>
@@ -159,6 +161,7 @@ class SettingsViewModel:
     let showMap: Observable<Bool>
     let showPastEvents: Observable<Bool>
     let showOverdueReminders: Observable<Bool>
+    let showAllDayDetails: Observable<Bool>
     let showRecurrenceIndicator: Observable<Bool>
     let forceLocalTimeZone: Observable<Bool>
     let popoverTransparency: Observable<Int>
@@ -251,6 +254,7 @@ class SettingsViewModel:
         toggleMap = userDefaults.rx.observer(for: \.showMap)
         togglePastEvents = userDefaults.rx.observer(for: \.showPastEvents)
         toggleOverdueReminders = userDefaults.rx.observer(for: \.showOverdueReminders)
+        toggleAllDayDetails = userDefaults.rx.observer(for: \.showAllDayDetails)
         toggleRecurrenceIndicator = userDefaults.rx.observer(for: \.showRecurrenceIndicator)
         toggleForceLocalTimeZone = userDefaults.rx.observer(for: \.forceLocalTimeZone)
         transparencyObserver = userDefaults.rx.observer(for: \.transparencyLevel)
@@ -301,6 +305,7 @@ class SettingsViewModel:
         showMap = userDefaults.rx.observe(\.showMap)
         showPastEvents = userDefaults.rx.observe(\.showPastEvents)
         showOverdueReminders = userDefaults.rx.observe(\.showOverdueReminders)
+        showAllDayDetails = userDefaults.rx.observe(\.showAllDayDetails)
         showRecurrenceIndicator = userDefaults.rx.observe(\.showRecurrenceIndicator)
         forceLocalTimeZone = userDefaults.rx.observe(\.forceLocalTimeZone)
         popoverTransparency = userDefaults.rx.observe(\.transparencyLevel)

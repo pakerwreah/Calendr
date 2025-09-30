@@ -59,6 +59,7 @@
 "settings.events" = "Etkinlikler";
 "settings.events.show_map" = "Harita ve hava durumunu göster";
 "settings.events.show_overdue_reminders" = "Gecikmiş hatırlatıcıları göster";
+//"settings.events.show_all_day_details" = "Show all-day events details";
 "settings.events.show_finished_events" = "Tamamlanmış etkinlikleri göster";
 "settings.events.show_recurrence_indicator" = "Tekrarlama göstergesini göster";
 "settings.events.force_local_time_zone" = "Tüm etkinlikleri yerel saat diliminde göster";

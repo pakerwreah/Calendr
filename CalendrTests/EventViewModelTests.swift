@@ -36,6 +36,32 @@ class EventViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.type, .event(.pending))
     }
 
+    func testShowAllDayDetails_isAllDay_withOptionDisabled_shouldNotShowDetails() {
+
+        let viewModel = mock(
+            event: .make(isAllDay: true)
+        )
+
+        XCTAssertEqual(viewModel.showDetails.lastValue(), true)
+
+        settings.toggleAllDayDetails.onNext(false)
+
+        XCTAssertEqual(viewModel.showDetails.lastValue(), false)
+    }
+
+    func testShowAllDayDetails_isNotAllDay_withOptionDisabled_shouldShowDetails() {
+
+        let viewModel = mock(
+            event: .make(isAllDay: false)
+        )
+
+        XCTAssertEqual(viewModel.showDetails.lastValue(), true)
+
+        settings.toggleAllDayDetails.onNext(false)
+
+        XCTAssertEqual(viewModel.showDetails.lastValue(), true)
+    }
+
     func testSubtitle_withURLInLocation_shouldShowURL() {
 
         let viewModel = mock(
@@ -520,7 +546,7 @@ class EventViewModelTests: XCTestCase {
             workspace: workspace,
             userDefaults: .init(),
             settings: settings,
-            isShowingDetails: .dummy(),
+            isShowingDetailsModal: .dummy(),
             isTodaySelected: true,
             scheduler: scheduler
         )

@@ -59,6 +59,7 @@
 "settings.events" = "Händelser";
 "settings.events.show_map" = "Visa karta och väder";
 "settings.events.show_overdue_reminders" = "Visa påminnelser om förseningar";
+//"settings.events.show_all_day_details" = "Show all-day events details";
 "settings.events.show_finished_events" = "Visa avslutade händelser";
 "settings.events.show_recurrence_indicator" = "Visa återfallsindikator";
 "settings.events.force_local_time_zone" = "Visa alla händelser i den lokala tidszonen";

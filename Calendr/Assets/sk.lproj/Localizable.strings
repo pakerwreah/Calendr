@@ -59,6 +59,7 @@
 "settings.events" = "Udalosti";
 "settings.events.show_map" = "Zobraziť mapu a počasie";
 "settings.events.show_overdue_reminders" = "Zobraziť pripomienky po termíne";
+//"settings.events.show_all_day_details" = "Show all-day events details";
 "settings.events.show_finished_events" = "Zobraziť ukončené udalosti";
 "settings.events.show_recurrence_indicator" = "Zobraziť indikátor opakovania";
 "settings.events.force_local_time_zone" = "Zobraziť všetky udalosti v miestnom čase";

@@ -51,7 +51,7 @@ struct EventListViewPreview: PreviewProvider {
                         calendar: .make(color: .systemOrange)
                     ),
                 ])),
-                isShowingDetails: .init(value: false),
+                isShowingDetailsModal: .init(value: false),
                 dateProvider: dateProvider,
                 calendarService: calendarService,
                 geocoder: geocoder,

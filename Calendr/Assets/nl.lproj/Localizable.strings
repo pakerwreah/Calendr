@@ -57,6 +57,7 @@
 "settings.events" = "Gebeurtenissen";
 "settings.events.show_map" = "Kaart en weer tonen";
 "settings.events.show_overdue_reminders" = "Achterstallige herinneringen tonen";
+//"settings.events.show_all_day_details" = "Show all-day events details";
 "settings.events.show_finished_events" = "Voltooide gebeurtenissen tonen";
 "settings.events.show_recurrence_indicator" = "Herhalingsindicator tonen";
 "settings.events.force_local_time_zone" = "Alle gebeurtenissen in lokale tijdzone tonen";

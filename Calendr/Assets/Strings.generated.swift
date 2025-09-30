@@ -175,6 +175,8 @@ internal enum Strings {
     internal enum Events {
       /// Show all events in local time zone
       internal static let forceLocalTimeZone = Strings.tr("Localizable", "settings.events.force_local_time_zone", fallback: "Show all events in local time zone")
+      /// Show all-day events details
+      internal static let showAllDayDetails = Strings.tr("Localizable", "settings.events.show_all_day_details", fallback: "Show all-day events details")
       /// Show finished events
       internal static let showFinishedEvents = Strings.tr("Localizable", "settings.events.show_finished_events", fallback: "Show finished events")
       /// Show map and weather

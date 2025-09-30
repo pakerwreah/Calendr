@@ -30,13 +30,14 @@ class EventViewModel {
     let isCompleted: Observable<Bool>
     let relativeDuration: Observable<String>
     let showRecurrenceIndicator: Observable<Bool>
+    let showDetails: Observable<Bool>
 
     let linkTapped: AnyObserver<Void>
 
     private let completeTappedObservable: Observable<Void>
     let completeTapped: AnyObserver<Void>
 
-    private let isShowingDetails: AnyObserver<Bool>
+    private let isShowingDetailsModal: AnyObserver<Bool>
 
     private let event: EventModel
     private let dateProvider: DateProviding
@@ -58,7 +59,7 @@ class EventViewModel {
         workspace: WorkspaceServiceProviding,
         userDefaults: UserDefaults,
         settings: EventSettings,
-        isShowingDetails: AnyObserver<Bool>,
+        isShowingDetailsModal: AnyObserver<Bool>,
         isTodaySelected: Bool,
         scheduler: SchedulerType
     ) {
@@ -71,7 +72,7 @@ class EventViewModel {
         self.userDefaults = userDefaults
         self.geocoder = geocoder
         self.weatherService = weatherService
-        self.isShowingDetails = isShowingDetails
+        self.isShowingDetailsModal = isShowingDetailsModal
 
         title = event.title
         color = event.calendar.color
@@ -287,6 +288,8 @@ class EventViewModel {
         }
 
         showRecurrenceIndicator = settings.showRecurrenceIndicator.map { $0 && event.hasRecurrenceRules }
+
+        showDetails = settings.showAllDayDetails.map { $0 || !event.isAllDay }
     }
 
     func makeDetailsViewModel() -> EventDetailsViewModel {
@@ -300,7 +303,7 @@ class EventViewModel {
             workspace: workspace,
             userDefaults: userDefaults,
             settings: settings,
-            isShowingObserver: isShowingDetails,
+            isShowingObserver: isShowingDetailsModal,
             isInProgress: isInProgress,
             source: .list,
             callback: .dummy()

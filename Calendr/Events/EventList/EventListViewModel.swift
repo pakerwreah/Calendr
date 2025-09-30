@@ -34,7 +34,7 @@ class EventListViewModel {
 
     private let disposeBag = DisposeBag()
 
-    private let isShowingDetails: BehaviorSubject<Bool>
+    private let isShowingDetailsModal: BehaviorSubject<Bool>
     private let dateProvider: DateProviding
     private let calendarService: CalendarServiceProviding
     private let geocoder: GeocodeServiceProviding
@@ -54,7 +54,7 @@ class EventListViewModel {
         var events: [EventModel]
         let date: Date
         let showPastEvents: Bool
-        let showOverdue: Bool
+        let showOverdueReminders: Bool
         let isTodaySelected: Bool
     }
 
@@ -71,7 +71,7 @@ class EventListViewModel {
 
     init(
         eventsObservable: Observable<(Date, [EventModel])>,
-        isShowingDetails: BehaviorSubject<Bool>,
+        isShowingDetailsModal: BehaviorSubject<Bool>,
         dateProvider: DateProviding,
         calendarService: CalendarServiceProviding,
         geocoder: GeocodeServiceProviding,
@@ -83,7 +83,7 @@ class EventListViewModel {
         refreshScheduler: SchedulerType,
         eventsScheduler: SchedulerType
     ) {
-        self.isShowingDetails = isShowingDetails
+        self.isShowingDetailsModal = isShowingDetailsModal
         self.dateProvider = dateProvider
         self.calendarService = calendarService
         self.geocoder = geocoder
@@ -156,10 +156,10 @@ class EventListViewModel {
             eventsObservable,
             settings.showPastEvents,
             settings.showOverdueReminders,
-            isShowingDetails
+            isShowingDetailsModal
         )
-        .compactMap { dateEvents, showPast, showOverdue, isShowingDetails -> EventListProps? in
-            guard !isShowingDetails else { return nil }
+        .compactMap { dateEvents, showPast, showOverdue, isShowingDetailsModal -> EventListProps? in
+            guard !isShowingDetailsModal else { return nil }
             let (date, events) = dateEvents
             let isTodaySelected = dateProvider.calendar.isDate(date, inSameDayAs: dateProvider.now)
 
@@ -167,7 +167,7 @@ class EventListViewModel {
                 events: events,
                 date: date,
                 showPastEvents: showPast,
-                showOverdue: showOverdue,
+                showOverdueReminders: showOverdue,
                 isTodaySelected: isTodaySelected
             )
         }
@@ -231,7 +231,7 @@ class EventListViewModel {
             workspace: workspace,
             userDefaults: userDefaults,
             settings: settings,
-            isShowingDetails: isShowingDetails.asObserver(),
+            isShowingDetailsModal: isShowingDetailsModal.asObserver(),
             isTodaySelected: isTodaySelected,
             scheduler: eventsScheduler
         )
@@ -244,7 +244,7 @@ class EventListViewModel {
 
     private func overdueViewModels(_ props: EventListProps) -> [EventListItem] {
 
-        guard props.showOverdue else { return [] }
+        guard props.showOverdueReminders else { return [] }
 
         return props.events
             .filter { isOverdue($0) && props.isTodaySelected }

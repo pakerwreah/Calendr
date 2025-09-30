@@ -29,7 +29,7 @@ class EventListViewModelTests: XCTestCase {
 
     lazy var viewModel = EventListViewModel(
         eventsObservable: Observable.combineLatest(dateSubject, eventsSubject),
-        isShowingDetails: .init(value: false),
+        isShowingDetailsModal: .init(value: false),
         dateProvider: dateProvider,
         calendarService: calendarService,
         geocoder: geocoder,

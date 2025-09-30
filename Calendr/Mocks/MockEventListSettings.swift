@@ -15,7 +15,7 @@ class MockEventListSettings: MockEventSettings, EventListSettings {
     let showPastEvents: Observable<Bool>
     let showOverdueReminders: Observable<Bool>
 
-    init(showPastEvents: Bool = true, showOverdueReminders: Bool = true, popoverMaterial: PopoverMaterial = .popover) {
+    init(showPastEvents: Bool = true, showOverdueReminders: Bool = true) {
         self.showPastEvents = .just(showPastEvents)
         self.showOverdueReminders = .just(showOverdueReminders)
     }

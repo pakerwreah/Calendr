@@ -59,6 +59,7 @@
 "settings.events" = "Ngjarjet";
 "settings.events.show_map" = "Trego hartën dhe motin";
 "settings.events.show_overdue_reminders" = "Shfaq alarmet rikujtuese të vonuara";
+//"settings.events.show_all_day_details" = "Show all-day events details";
 "settings.events.show_finished_events" = "Shfaq ngjarjet e përfunduara";
 "settings.events.show_recurrence_indicator" = "Trego treguesin e përsëritjes";
 "settings.events.force_local_time_zone" = "Shfaq të gjitha ngjarjet në zonën kohore lokale";

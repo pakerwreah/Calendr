@@ -99,7 +99,6 @@ class EventView: NSView {
         )
 
         subtitle.stringValue = viewModel.subtitle
-        subtitle.isHidden = subtitle.isEmpty
 
         if let link = viewModel.subtitleLink {
             subtitleLink.stringValue = link
@@ -166,15 +165,23 @@ class EventView: NSView {
             .with(spacing: 3)
             .with(alignment: .firstBaseline)
 
+        viewModel.showDetails
+            .map { [viewModel] in
+                !$0 || viewModel.subtitle.isEmpty
+            }
+            .bind(to: subtitle.rx.isHidden)
+            .disposed(by: disposeBag)
+
         let linkStackView = NSStackView(views: [subtitleLink, linkBtn]).with(spacing: 0)
+
+        Observable.combineLatest(viewModel.showDetails, linkStackView.rx.isContentHidden)
+            .map { !$0 || $1 }
+            .bind(to: linkStackView.rx.isHidden)
+            .disposed(by: disposeBag)
 
         let durationStackView = NSStackView(views: [duration, relativeDuration])
         duration.setContentHuggingPriority(.fittingSizeCompression, for: .horizontal)
         durationStackView.setHuggingPriority(.defaultHigh, for: .horizontal)
-
-        linkStackView.rx.isContentHidden
-            .bind(to: linkStackView.rx.isHidden)
-            .disposed(by: disposeBag)
 
         durationStackView.rx.isContentHidden
             .bind(to: durationStackView.rx.isHidden)
