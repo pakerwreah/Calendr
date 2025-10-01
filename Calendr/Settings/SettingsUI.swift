@@ -8,13 +8,19 @@
 import Cocoa
 import RxSwift
 
-protocol SettingsUI {
+protocol SettingsUI: NSViewController {
     typealias Constants = SettingsUIConstants
     typealias Slider = SettingsUISlider
     typealias Sections = CompositeDisposableWrapper
+
+    func fittingSize(minWidth: CGFloat) -> NSSize
 }
 
 extension SettingsUI {
+
+    func fittingSize(minWidth: CGFloat) -> NSSize {
+        view.fittingSize
+    }
 
     func makeDivider() -> DisposableWrapper<NSView> {
 

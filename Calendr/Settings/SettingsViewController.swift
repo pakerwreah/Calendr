@@ -23,8 +23,6 @@ class SettingsViewController: NSTabViewController, NSWindowDelegate {
     private let disposeBag = DisposeBag()
     private let keyboard = Keyboard()
 
-    private lazy var minWidth = calculateMinimumWidth(for: tabViewItems.map(\.label))
-
     init(
         settingsViewModel: SettingsViewModel,
         calendarsViewModel: CalendarPickerViewModel,
@@ -74,17 +72,6 @@ class SettingsViewController: NSTabViewController, NSWindowDelegate {
 
     deinit {
         tearDownAccessibility()
-    }
-
-    func calculateMinimumWidth(for tabTitles: [String], font: NSFont = NSFont.systemFont(ofSize: NSFont.systemFontSize)) -> CGFloat {
-        var totalWidth: CGFloat = 0
-
-        for title in tabTitles {
-            let titleSize = (title as NSString).size(withAttributes: [.font: font])
-            totalWidth += titleSize.width + 8
-        }
-
-        return totalWidth
     }
 
     override func loadView() {
@@ -148,13 +135,23 @@ class SettingsViewController: NSTabViewController, NSWindowDelegate {
 
         super.tabView(tabView, didSelect: tabViewItem)
 
-        guard let itemView = tabViewItem?.view, let window = view.window else { return }
+        guard
+            let tabViewItem,
+            let itemViewController = tabViewItem.viewController as? SettingsUI,
+            let itemView = tabViewItem.view,
+            let window = view.window
+        else { return }
 
         itemView.isHidden = true
 
         DispatchQueue.main.async {
 
-            self.preferredContentSize = sizeWithPadding(itemView.fittingSize, minWidth: self.minWidth)
+            let contentSize = sizeWithPadding(
+                itemViewController.fittingSize(minWidth: Constants.minWidth),
+                minWidth: Constants.minWidth
+            )
+
+            self.preferredContentSize = contentSize
 
             NSAnimationContext.runAnimationGroup({ context in
                 context.duration = 0.1
@@ -168,22 +165,23 @@ class SettingsViewController: NSTabViewController, NSWindowDelegate {
 
     private func setUpBindings() {
 
-        let minWidth = self.minWidth
-
         for (i, vc) in tabViewItems.compactMap(\.viewController).enumerated() {
 
+            guard let ui = vc as? SettingsUI else {
+                fatalError()
+            }
+
             Observable.merge(
-                notificationCenter.rx.notification(NSLocale.currentLocaleDidChangeNotification).void(),
                 vc.rx.viewDidLayout,
                 Scaling.observable.void()
             )
             .withLatestFrom(rx.observe(\.selectedTabViewItemIndex))
             .matching(i)
             .void()
-            .map { vc.view.fittingSize }
+            .map { ui.fittingSize(minWidth: Constants.minWidth) }
             .distinctUntilChanged()
             .skip(i > 0 ? 1 : 0)
-            .map { sizeWithPadding($0, minWidth: minWidth) }
+            .map { sizeWithPadding($0, minWidth: Constants.minWidth) }
             .bind(to: rx.preferredContentSize)
             .disposed(by: disposeBag)
         }
@@ -220,6 +218,7 @@ private func sizeWithPadding(_ size: NSSize, minWidth: CGFloat) -> NSSize {
 private enum Constants {
 
     static let padding: CGFloat = 24
+    static let minWidth: CGFloat = 500
 }
 
 // MARK: - Accessibility

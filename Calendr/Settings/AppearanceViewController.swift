@@ -50,6 +50,12 @@ class AppearanceViewController: NSViewController, SettingsUI {
         view.setAccessibilityIdentifier(Accessibility.Settings.Appearance.view)
     }
 
+    func fittingSize(minWidth: CGFloat) -> NSSize {
+        // FIXME: this is glitching like hell
+        // .init(width: minWidth, height: view.fittingSize.height)
+        view.fittingSize
+    }
+
     override func loadView() {
 
         view = NSView()

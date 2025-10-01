@@ -79,28 +79,40 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
 
         view = NSView()
 
-        let stackView = NSStackView(
-            views: Sections.create([
-                makeSection(title: Strings.Settings.menuBar, content: menuBarContent),
-                makeSection(title: Strings.Settings.nextEvent, content: nextEventContent),
-                makeSection(title: Strings.Settings.calendar, content: calendarContent),
-                makeSection(title: Strings.Settings.events, content: eventsContent),
-            ])
-            .disposed(by: disposeBag)
-        )
-        .with(spacing: Constants.contentSpacing)
-        .with(orientation: .vertical)
-
-        stackView.setHuggingPriority(.defaultHigh, for: .horizontal)
-        stackView.setHuggingPriority(.required, for: .vertical)
+        let stackView = NSStackView()
+            .with(spacing: Constants.contentSpacing)
+            .with(orientation: .horizontal)
+            .with(alignment: .top)
+            .with(distribution: .fillEqually)
+            .with(hugging: .defaultHigh, for: .horizontal)
+            .with(hugging: .required, for: .vertical)
 
         view.addSubview(stackView)
 
         stackView.edges(equalTo: view)
 
-        iconStyleDropdown.height(equalTo: showMenuBarIconCheckbox)
+        let columns = [
+            [
+                makeSection(title: Strings.Settings.menuBar, content: menuBarContent),
+                makeSection(title: Strings.Settings.events, content: eventsContent),
+            ],
+            [
+                makeSection(title: Strings.Settings.nextEvent, content: nextEventContent),
+                makeSection(title: Strings.Settings.calendar, content: calendarContent),
+            ]
+        ]
 
-        dateFormatDropdown.width(equalTo: 150)
+        for column in columns {
+            let sections = Sections.create(column).disposed(by: disposeBag)
+
+            let columnStack = NSStackView(views: sections)
+                .with(spacing: Constants.contentSpacing)
+                .with(orientation: .vertical)
+
+            stackView.addArrangedSubview(columnStack)
+        }
+
+        iconStyleDropdown.height(equalTo: showMenuBarIconCheckbox)
 
         if #unavailable(macOS 13.0) {
             autoLaunchCheckbox.isHidden = true
@@ -119,6 +131,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     private lazy var menuBarContent: NSView = {
 
         dateFormatDropdown.isBordered = false
+        dateFormatDropdown.alignment = .center
 
         dateFormatTextField.placeholderString = viewModel.dateFormatPlaceholder
         dateFormatTextField.refusesFirstResponder = true
@@ -132,20 +145,15 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             iconStyleDropdown
         ])
 
-        let dateFormat = NSStackView(
-            views: [
-                showMenuBarDateCheckbox,
-                NSStackView(views: [
-                    dateFormatDropdown,
-                    dateFormatTextField
-                ])
-                .with(orientation: .vertical),
-            ])
-            .with(alignment: .top)
+        let dateFormat = NSStackView(views: [
+            dateFormatDropdown,
+            dateFormatTextField
+        ])
 
         return NSStackView(views: [
             autoLaunchCheckbox,
             iconStyle,
+            showMenuBarDateCheckbox,
             dateFormat,
             showMenuBarBackgroundCheckbox,
             openOnHoverCheckbox
@@ -225,6 +233,8 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         weekCountStepper.refusesFirstResponder = true
         weekCountStepper.focusRingType = .none
 
+        let is26 = if #available(macOS 26.0, *) { true } else { false }
+
         return NSStackView(views: [
             NSStackView(views: [firstWeekdayPrev, highlightedWeekdaysButtons, firstWeekdayNext])
                 .with(distribution: .fillProportionally),
@@ -233,16 +243,18 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             NSStackView(views: [showDeclinedEventsCheckbox, showDeclinedEventsTooltip]),
             preserveSelectedDateCheckbox,
             dateHoverOptionCheckbox,
-            .dummy,
-            NSStackView(views: [
-                NSStackView(views: [weekCountLabel, .spacer, weekCountStepperLabel, weekCountStepper]),
-                NSStackView(views: [calendarAppViewModeLabel, calendarAppViewModeDropdown]),
-                calendarAppStack
-            ].compact())
-            .with(spacing: 4)
+            is26 ? nil : .dummy,
+            NSStackView(
+                views: [
+                    NSStackView(views: [weekCountLabel, .spacer, weekCountStepperLabel, weekCountStepper]),
+                    NSStackView(views: [calendarAppViewModeLabel, calendarAppViewModeDropdown]),
+                    calendarAppStack
+                ].compact()
+            )
+            .with(spacing: is26 ? 0 : 4)
             .with(orientation: .vertical)
             .with(distribution: .fillEqually)
-        ])
+        ].compact())
         .with(orientation: .vertical)
     }()
 
@@ -254,7 +266,9 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             showAllDayDetailsCheckbox,
             showRecurrenceCheckbox,
             forceLocalTimeZoneCheckbox
-        ]).with(orientation: .vertical)
+        ])
+        .with(orientation: .vertical)
+        .with(insets: .init(bottom: 4))
     }()
 
     private func setUpBindings() {
@@ -424,11 +438,6 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         viewModel.isDateFormatInputVisible
             .map(!)
             .bind(to: dateFormatTextField.rx.isHidden)
-            .disposed(by: disposeBag)
-
-        viewModel.isDateFormatInputVisible
-            .map { $0 ? .left : .right }
-            .bind(to: dateFormatDropdown.rx.alignment)
             .disposed(by: disposeBag)
 
         viewModel.isDateFormatInputVisible
