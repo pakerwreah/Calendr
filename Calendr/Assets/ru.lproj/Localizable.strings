@@ -61,6 +61,7 @@
 "settings.events" = "События";
 "settings.events.show_map" = "Показывать карту и погоду";
 "settings.events.show_overdue_reminders" = "Показывать просроченные напоминания";
+//"settings.events.show_all_day_details" = "Show all-day events details";
 "settings.events.show_finished_events" = "Показывать завершенные события";
 "settings.events.show_recurrence_indicator" = "Показывать индикатор повторения";
 "settings.events.force_local_time_zone" = "Показывать все события в местном часовом поясе";

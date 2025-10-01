@@ -59,6 +59,7 @@
 "settings.events" = "אירועים";
 "settings.events.show_map" = "הצג מפה ומזג אוויר";
 "settings.events.show_overdue_reminders" = "הצג תזכורות מאוחרות";
+//"settings.events.show_all_day_details" = "Show all-day events details";
 "settings.events.show_finished_events" = "הצג אירועים שהסתיימו";
 "settings.events.show_recurrence_indicator" = "הצג מחוון על אירוע מחזורי";
 "settings.events.force_local_time_zone" = "הצג את כל האירועים באזור הזמן המקומי";

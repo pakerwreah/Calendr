@@ -46,6 +46,7 @@ class SettingsViewModelTests: XCTestCase {
     var userDefaultsShowMap: Bool? { userDefaults.object(forKey: Prefs.showMap) as! Bool? }
     var userDefaultsShowPastEvents: Bool? { userDefaults.object(forKey: Prefs.showPastEvents) as! Bool? }
     var userDefaultsShowOverdueReminders: Bool? { userDefaults.object(forKey: Prefs.showOverdueReminders) as! Bool? }
+    var userDefaultsShowAllDayDetails: Bool? { userDefaults.object(forKey: Prefs.showAllDayDetails) as! Bool? }
     var userDefaultsShowRecurrenceIndicator: Bool? { userDefaults.object(forKey: Prefs.showRecurrenceIndicator) as! Bool? }
     var userDefaultsTransparency: Int? { userDefaults.object(forKey: Prefs.transparencyLevel) as! Int? }
     var userDefaultsAppearanceMode: Int? { userDefaults.object(forKey: Prefs.appearanceMode) as! Int? }
@@ -73,6 +74,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertNil(userDefaultsShowMap)
         XCTAssertNil(userDefaultsShowPastEvents)
         XCTAssertNil(userDefaultsShowOverdueReminders)
+        XCTAssertNil(userDefaultsShowAllDayDetails)
         XCTAssertNil(userDefaultsShowRecurrenceIndicator)
         XCTAssertNil(userDefaultsTransparency)
 
@@ -100,6 +102,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.showMap.lastValue(), true)
         XCTAssertEqual(viewModel.showPastEvents.lastValue(), true)
         XCTAssertEqual(viewModel.showOverdueReminders.lastValue(), true)
+        XCTAssertEqual(viewModel.showAllDayDetails.lastValue(), true)
         XCTAssertEqual(viewModel.showRecurrenceIndicator.lastValue(), true)
         XCTAssertEqual(viewModel.popoverTransparency.lastValue(), 2)
         XCTAssertEqual(viewModel.popoverMaterial.lastValue(), .headerView)
@@ -545,6 +548,30 @@ class SettingsViewModelTests: XCTestCase {
 
         XCTAssertEqual(showOverdueReminders, false)
         XCTAssertEqual(userDefaultsShowOverdueReminders, false)
+    }
+
+    func testToggleShowAllDayDetails() {
+
+        userDefaults.showAllDayDetails = false
+
+        var showAllDayDetails: Bool?
+
+        viewModel.showAllDayDetails
+            .bind { showAllDayDetails = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(showAllDayDetails, false)
+        XCTAssertEqual(userDefaultsShowAllDayDetails, false)
+
+        viewModel.toggleAllDayDetails.onNext(true)
+
+        XCTAssertEqual(showAllDayDetails, true)
+        XCTAssertEqual(userDefaultsShowAllDayDetails, true)
+
+        viewModel.toggleAllDayDetails.onNext(false)
+
+        XCTAssertEqual(showAllDayDetails, false)
+        XCTAssertEqual(userDefaultsShowAllDayDetails, false)
     }
 
     func testToggleShowRecurrenceIndicator() {

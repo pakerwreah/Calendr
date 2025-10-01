@@ -59,6 +59,7 @@
 "settings.events" = "Εκδηλώσεις";
 "settings.events.show_map" = "Εμφάνιση χάρτη και καιρού";
 "settings.events.show_overdue_reminders" = "Εμφάνιση ληξιπρόθεσμων υπενθυμίσεων";
+//"settings.events.show_all_day_details" = "Show all-day events details";
 "settings.events.show_finished_events" = "Εμφάνιση τελειωμένων συμβάντων";
 "settings.events.show_recurrence_indicator" = "Εμφάνιση δείκτη επανάληψης";
 "settings.events.force_local_time_zone" = "Εμφάνιση όλων των συμβάντων στην τοπική ζώνη ώρας";

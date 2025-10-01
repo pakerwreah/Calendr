@@ -40,7 +40,7 @@ class NextEventViewModelTests: XCTestCase {
             weatherService: weatherService,
             workspace: workspace,
             screenProvider: screenProvider,
-            isShowingDetails: .dummy(),
+            isShowingDetailsModal: .dummy(),
             scheduler: scheduler,
             soundPlayer: soundPlayer
         )

@@ -59,6 +59,7 @@
 "settings.events" = "Termine";
 "settings.events.show_map" = "Karte und Wetter anzeigen";
 "settings.events.show_overdue_reminders" = "Überfällige Erinnerungen anzeigen";
+//"settings.events.show_all_day_details" = "Show all-day events details";
 "settings.events.show_finished_events" = "Abgeschlossene Ereignisse anzeigen";
 "settings.events.show_recurrence_indicator" = "Wiederholungsindikator anzeigen";
 "settings.events.force_local_time_zone" = "Alle Ereignisse in der lokalen Zeitzone anzeigen";

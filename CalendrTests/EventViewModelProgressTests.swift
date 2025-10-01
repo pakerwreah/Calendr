@@ -287,7 +287,7 @@ class EventViewModelProgressTests: XCTestCase {
             workspace: workspace,
             userDefaults: .init(),
             settings: settings,
-            isShowingDetails: .dummy(),
+            isShowingDetailsModal: .dummy(),
             isTodaySelected: true,
             scheduler: scheduler
         )

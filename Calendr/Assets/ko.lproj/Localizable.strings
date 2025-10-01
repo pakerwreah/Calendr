@@ -59,6 +59,7 @@
 "settings.events" = "일정";
 "settings.events.show_map" = "지도 및 날씨 표시";
 "settings.events.show_overdue_reminders" = "기한이 지난 미리 알림 표시";
+//"settings.events.show_all_day_details" = "Show all-day events details";
 "settings.events.show_finished_events" = "완료된 일정 표시";
 "settings.events.show_recurrence_indicator" = "반복 일정 표시";
 "settings.events.force_local_time_zone" = "모든 일정을 로컬 시간대로 표시";
