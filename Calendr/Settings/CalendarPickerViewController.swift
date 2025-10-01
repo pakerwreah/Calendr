@@ -13,7 +13,7 @@ enum CalendarPickerConfiguration {
     case picker
 }
 
-class CalendarPickerViewController: NSViewController {
+class CalendarPickerViewController: NSViewController, SettingsUI {
 
     private let pickerDisposeBag = DisposeBag()
     private var itemsDisposeBag: DisposeBag!

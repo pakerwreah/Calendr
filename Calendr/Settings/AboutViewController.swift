@@ -8,7 +8,7 @@
 import Cocoa
 import RxSwift
 
-class AboutViewController: NSViewController {
+class AboutViewController: NSViewController, SettingsUI {
 
     private let quitButton: NSButton
     private let linkView: NSTextView

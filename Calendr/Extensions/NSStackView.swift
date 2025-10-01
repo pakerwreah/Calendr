@@ -43,4 +43,9 @@ extension NSStackView {
         self.edgeInsets = insets
         return self
     }
+
+    func with(hugging: NSLayoutConstraint.Priority, for orientation: NSLayoutConstraint.Orientation) -> Self {
+        self.setHuggingPriority(hugging, for: orientation)
+        return self
+    }
 }

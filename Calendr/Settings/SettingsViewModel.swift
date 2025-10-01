@@ -355,7 +355,7 @@ class SettingsViewModel:
                     options.append(.init(style: option, title: title))
                 }
 
-                options.append(.init(style: .none, title: "\(Strings.Settings.MenuBar.dateFormatCustom)..."))
+                options.append(.init(style: .none, title: Strings.Settings.MenuBar.dateFormatCustom))
 
                 return options
             }

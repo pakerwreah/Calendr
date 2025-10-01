@@ -143,7 +143,7 @@ class SettingsViewModelTests: XCTestCase {
             .init(style: .medium, title: "Jan 1, 2021"),
             .init(style: .long, title: "January 1, 2021"),
             .init(style: .full, title: "Friday, January 1, 2021"),
-            .init(style: .none, title: "Custom...")
+            .init(style: .none, title: "Custom")
         ])
     }
 
