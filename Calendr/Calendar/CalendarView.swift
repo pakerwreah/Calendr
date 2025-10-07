@@ -106,6 +106,7 @@ class CalendarView: NSView {
             viewModel.weekDays,
             viewModel.cellSize
         )
+        .repeat(when: rx.updateLayer)
         .map { offset, weekDays, cellSize -> [CALayer] in
 
             let weekends = weekDays
@@ -121,7 +122,7 @@ class CalendarView: NSView {
                     width: CGFloat(range.count) * cellSize,
                     height: CGFloat(weekCount) * cellSize
                 )
-                layer.backgroundColor = Constants.weekendBackgroundColor
+                layer.backgroundColor = Constants.weekendBackgroundColor.effectiveCGColor
                 layer.cornerRadius = Constants.cornerRadius
                 return layer
             }
@@ -215,5 +216,5 @@ class CalendarView: NSView {
 private enum Constants {
 
     static let cornerRadius: CGFloat = 5
-    static let weekendBackgroundColor = NSColor.gray.cgColor.copy(alpha: 0.2)
+    static let weekendBackgroundColor = NSColor.quaternaryLabelColor
 }
