@@ -67,8 +67,8 @@ extension CalendarCellViewModel {
 
         switch dotsStyle {
             case .none: return [.clear]
-            case .single_neutral: return [.highlightColor]
-            case .single_highlighted: return [.controlAccentColor]
+            case .single_neutral: return [EventDotsStyle.netralColor]
+            case .single_highlighted: return [EventDotsStyle.highlightColor]
             case .multiple: break
         }
 

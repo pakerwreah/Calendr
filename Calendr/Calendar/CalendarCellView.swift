@@ -141,6 +141,7 @@ class CalendarCellView: NSView {
             viewModel.map(\.dots).distinctUntilChanged(),
             combinedScaling
         )
+        .repeat(when: rx.updateLayer)
         .map { dots, scaling in
             if dots.count <= CalendarCellViewModel.maximumDotsCount {
                 dots.map {
@@ -256,7 +257,7 @@ private func makeEventDot(color: NSColor, scaling: Double) -> NSView {
     view.size(equalTo: size)
 
     view.wantsLayer = true
-    view.layer!.backgroundColor = color.cgColor
+    view.layer!.backgroundColor = color.effectiveCGColor
     view.layer!.cornerRadius = size / 2
 
     if BuildConfig.isUITesting {

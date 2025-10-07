@@ -29,6 +29,6 @@ extension EventDotsStyle {
         }
     }
 
-    static let netralColor: NSColor = .highlightColor
+    static let netralColor: NSColor = .secondaryLabelColor
     static let highlightColor: NSColor = .controlAccentColor
 }
