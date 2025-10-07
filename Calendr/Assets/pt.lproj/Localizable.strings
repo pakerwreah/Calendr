@@ -56,6 +56,12 @@
 "settings.calendar.calendar_app_view_mode" = "Visualização do app Calendário";
 "settings.calendar.default_calendar_app" = "App de calendário padrão";
 
+"settings.calendar.event_dots" = "Indicadores de eventos";
+"settings.calendar.event_dots.none" = "nenhum";
+"settings.calendar.event_dots.single_neutral" = "neutro";
+"settings.calendar.event_dots.single_highlighted" = "destacado";
+"settings.calendar.event_dots.multiple" = "vários";
+
 "settings.events" = "Eventos";
 "settings.events.show_map" = "Mostrar mapa e clima";
 "settings.events.show_overdue_reminders" = "Mostrar lembretes atrasados";

@@ -28,15 +28,16 @@ class MockCalendarSettings: CalendarSettings {
     let dateHoverOption: Observable<Bool>
     let toggleDateHoverOption: AnyObserver<Bool>
 
-    let preserveSelectedDate: Observable<Bool>
+    let eventDotsStyle: Observable<EventDotsStyle>
+    let eventDotsStyleObserver: AnyObserver<EventDotsStyle>
 
+    let preserveSelectedDate: Observable<Bool>
     let calendarAppViewMode: Observable<CalendarViewMode>
+    let defaultCalendarApp: Observable<CalendarApp>
 
     let calendarScaling: Observable<Double>
     let textScaling: Observable<Double>
     let calendarTextScaling: Observable<Double>
-
-    let defaultCalendarApp: Observable<CalendarApp>
 
     init() {
         (firstWeekday, firstWeekdayObserver) = BehaviorSubject.pipe(value: 1)
@@ -45,11 +46,14 @@ class MockCalendarSettings: CalendarSettings {
         (weekCount, weekCountObserver) = BehaviorSubject.pipe(value: 6)
         (showDeclinedEvents, toggleDeclinedEvents) = BehaviorSubject.pipe(value: false)
         (dateHoverOption, toggleDateHoverOption) = BehaviorSubject.pipe(value: false)
+        (eventDotsStyle, eventDotsStyleObserver) = BehaviorSubject.pipe(value: .multiple)
+
         preserveSelectedDate = .just(false)
         calendarAppViewMode = .just(.month)
+        defaultCalendarApp = .just(.calendar)
+
         calendarScaling = .just(1)
         textScaling = .just(1)
         calendarTextScaling = .just(1)
-        defaultCalendarApp = .just(.calendar)
     }
 }

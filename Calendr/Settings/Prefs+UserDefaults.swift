@@ -41,6 +41,7 @@ enum Prefs {
     static let calendarAppViewMode = "calendar_app_view_mode"
     static let defaultCalendarApp = "default_calendar_app"
     static let calendarTextScaling = "calendar_text_scaling"
+    static let eventDotsStyle = "event_dots_style"
 
     // Event Details
     static let showMap = "show_map"
@@ -102,6 +103,7 @@ func registerDefaultPrefs(in userDefaults: UserDefaults, calendar: Calendar = .c
         Prefs.showDeclinedEvents: false,
         Prefs.preserveSelectedDate: false,
         Prefs.dateHoverOption: false,
+        Prefs.eventDotsStyle: EventDotsStyle.multiple.rawValue,
         Prefs.calendarAppViewMode: CalendarViewMode.month.rawValue,
         Prefs.defaultCalendarApp: CalendarApp.calendar.rawValue,
         Prefs.calendarTextScaling: 1,
@@ -257,6 +259,11 @@ extension UserDefaults {
     @objc dynamic var dateHoverOption: Bool {
         get { bool(forKey: Prefs.dateHoverOption) }
         set { set(newValue, forKey: Prefs.dateHoverOption) }
+    }
+
+    @objc dynamic var eventDotsStyle: String {
+        get { string(forKey: Prefs.eventDotsStyle) ?? "" }
+        set { set(newValue, forKey: Prefs.eventDotsStyle) }
     }
 
     @objc dynamic var calendarAppViewMode: String {

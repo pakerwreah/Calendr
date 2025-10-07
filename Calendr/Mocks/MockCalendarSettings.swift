@@ -21,6 +21,7 @@ class MockCalendarSettings: CalendarSettings {
     let showDeclinedEvents: Observable<Bool>
     let preserveSelectedDate: Observable<Bool>
     let dateHoverOption: Observable<Bool>
+    let eventDotsStyle: Observable<EventDotsStyle>
     let calendarAppViewMode: Observable<CalendarViewMode>
     let defaultCalendarApp: Observable<CalendarApp>
 
@@ -31,7 +32,8 @@ class MockCalendarSettings: CalendarSettings {
         firstWeekday: Int = 1,
         highlightedWeekdays: [Int] = [0, 6],
         showWeekNumbers: Bool = true,
-        weekCount: Int = 6
+        weekCount: Int = 6,
+        eventDotsStyle: EventDotsStyle = .multiple,
     ) {
         self.calendarScaling = .just(calendarScaling)
         self.textScaling = .just(textScaling)
@@ -43,6 +45,7 @@ class MockCalendarSettings: CalendarSettings {
         self.preserveSelectedDate = .just(false)
         self.showDeclinedEvents = .just(false)
         self.dateHoverOption = .just(false)
+        self.eventDotsStyle = .just(eventDotsStyle)
         self.calendarAppViewMode = .just(.month)
         self.defaultCalendarApp = .just(.calendar)
     }

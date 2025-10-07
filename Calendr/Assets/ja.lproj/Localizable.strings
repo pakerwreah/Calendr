@@ -56,6 +56,12 @@
 "settings.calendar.calendar_app_view_mode" = "カレンダーの表示";
 "settings.calendar.default_calendar_app" = "使用するカレンダーアプリ";
 
+//"settings.calendar.event_dots" = "Event dots";
+//"settings.calendar.event_dots.none" = "none";
+//"settings.calendar.event_dots.single_neutral" = "neutral";
+//"settings.calendar.event_dots.single_highlighted" = "highlighted";
+//"settings.calendar.event_dots.multiple" = "multiple";
+
 "settings.events" = "予定";
 "settings.events.show_map" = "地図と天気を表示";
 "settings.events.show_overdue_reminders" = "期限が過ぎたリマインダーを表示";

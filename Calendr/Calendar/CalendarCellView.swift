@@ -142,8 +142,14 @@ class CalendarCellView: NSView {
             combinedScaling
         )
         .map { dots, scaling in
-            (dots.isEmpty ? [.clear] : dots).map {
-                makeEventDot(color: $0, scaling: scaling)
+            if dots.count <= CalendarCellViewModel.maximumDotsCount {
+                dots.map {
+                    makeEventDot(color: $0, scaling: scaling)
+                }
+            } else {
+                [
+                    makeEventsGradient(colors: dots, scaling: scaling)
+                ]
             }
         }
         .bind(to: eventsStackView.rx.arrangedSubviews)
@@ -223,6 +229,23 @@ class CalendarCellView: NSView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+}
+
+private func makeEventsGradient(colors: [NSColor], scaling: Double) -> NSView {
+    let view = NSView()
+    let size = Constants.eventDotSize * scaling
+    view.height(equalTo: size)
+    view.width(equalTo: 4 * size, priority: .defaultHigh)
+
+    let gradient = CAGradientLayer()
+    gradient.colors = colors.map(\.cgColor)
+    gradient.startPoint = CGPoint(x: 0, y: 0.5)
+    gradient.endPoint = CGPoint(x: 1, y: 0.5)
+    gradient.cornerRadius = size / 2
+
+    view.layer = gradient
+
+    return view
 }
 
 private func makeEventDot(color: NSColor, scaling: Double) -> NSView {

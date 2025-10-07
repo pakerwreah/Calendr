@@ -79,8 +79,13 @@ class CalendarViewModel {
 
         // Create cells for current month
         let dateCellsObservable = Observable
-            .combineLatest(debouncedWeekCount, dateRangeObservable, calendarUpdated)
-            .map { weeksCount, month, calendar -> [CalendarCellViewModel] in
+            .combineLatest(
+                debouncedWeekCount,
+                dateRangeObservable,
+                calendarUpdated,
+                settings.eventDotsStyle
+            )
+            .map { weeksCount, month, calendar, dotsStyle -> [CalendarCellViewModel] in
 
                 let monthStartWeekDay = calendar.component(.weekday, from: month.start)
 
@@ -101,6 +106,7 @@ class CalendarViewModel {
                         isSelected: false,
                         isHovered: false,
                         events: [],
+                        dotsStyle: dotsStyle,
                         calendar: calendar
                     )
                 }
@@ -279,6 +285,7 @@ private extension CalendarCellViewModel {
             isSelected: isSelected ?? self.isSelected,
             isHovered: isHovered ?? self.isHovered,
             events: events ?? self.events,
+            dotsStyle: dotsStyle,
             calendar: calendar
         )
     }
