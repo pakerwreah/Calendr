@@ -56,6 +56,12 @@
 "settings.calendar.calendar_app_view_mode" = "Vista de la aplicación Calendario";
 //"settings.calendar.default_calendar_app" = "Default calendar app";
 
+//"settings.calendar.event_dots" = "Event dots";
+//"settings.calendar.event_dots.none" = "none";
+//"settings.calendar.event_dots.single_neutral" = "neutral";
+//"settings.calendar.event_dots.single_highlighted" = "highlighted";
+//"settings.calendar.event_dots.multiple" = "multiple";
+
 "settings.events" = "Eventos";
 "settings.events.show_map" = "Mostrar mapa y clima";
 "settings.events.show_overdue_reminders" = "Mostrar recordatorios atrasados";

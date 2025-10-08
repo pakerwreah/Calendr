@@ -31,6 +31,7 @@ protocol CalendarSettings {
     var showDeclinedEvents: Observable<Bool> { get }
     var preserveSelectedDate: Observable<Bool> { get }
     var dateHoverOption: Observable<Bool> { get }
+    var eventDotsStyle: Observable<EventDotsStyle> { get }
     var calendarAppViewMode: Observable<CalendarViewMode> { get }
     var defaultCalendarApp: Observable<CalendarApp> { get }
 }
@@ -124,6 +125,7 @@ class SettingsViewModel:
     let transparencyObserver: AnyObserver<Int>
     let textScalingObserver: AnyObserver<Double>
     let calendarTextScalingObserver: AnyObserver<Double>
+    let eventDotsStyleObserver: AnyObserver<EventDotsStyle>
     let calendarAppViewModeObserver: AnyObserver<CalendarViewMode>
     let defaultCalendarAppObserver: AnyObserver<CalendarApp>
     let appearanceModeObserver: AnyObserver<AppearanceMode>
@@ -168,6 +170,7 @@ class SettingsViewModel:
     let popoverMaterial: Observable<PopoverMaterial>
     let textScaling: Observable<Double>
     let calendarTextScaling: Observable<Double>
+    let eventDotsStyle: Observable<EventDotsStyle>
     let calendarAppViewMode: Observable<CalendarViewMode>
     let defaultCalendarApp: Observable<CalendarApp>
     let appearanceMode: Observable<AppearanceMode>
@@ -260,6 +263,7 @@ class SettingsViewModel:
         transparencyObserver = userDefaults.rx.observer(for: \.transparencyLevel)
         textScalingObserver = userDefaults.rx.observer(for: \.textScaling)
         calendarTextScalingObserver = userDefaults.rx.observer(for: \.calendarTextScaling)
+        eventDotsStyleObserver = userDefaults.rx.observer(for: \.eventDotsStyle).mapObserver(\.rawValue)
         calendarAppViewModeObserver = userDefaults.rx.observer(for: \.calendarAppViewMode).mapObserver(\.rawValue)
         defaultCalendarAppObserver = userDefaults.rx.observer(for: \.defaultCalendarApp).mapObserver(\.rawValue)
         appearanceModeObserver = userDefaults.rx.observer(for: \.appearanceMode).mapObserver(\.rawValue)
@@ -311,6 +315,7 @@ class SettingsViewModel:
         popoverTransparency = userDefaults.rx.observe(\.transparencyLevel)
         textScaling = userDefaults.rx.observe(\.textScaling)
         calendarTextScaling = userDefaults.rx.observe(\.calendarTextScaling)
+        eventDotsStyle = userDefaults.rx.observe(\.eventDotsStyle).map { .init(rawValue: $0) ?? .none }
         calendarAppViewMode = userDefaults.rx.observe(\.calendarAppViewMode).map { .init(rawValue: $0) ?? .month }
         defaultCalendarApp = userDefaults.rx.observe(\.defaultCalendarApp).map { .init(rawValue: $0) ?? .calendar }
         appearanceMode = userDefaults.rx.observe(\.appearanceMode).map { .init(rawValue: $0) ?? .automatic }

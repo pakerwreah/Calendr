@@ -56,6 +56,12 @@
 "settings.calendar.calendar_app_view_mode" = "日历应用展示模式";
 //"settings.calendar.default_calendar_app" = "Default calendar app";
 
+//"settings.calendar.event_dots" = "Event dots";
+//"settings.calendar.event_dots.none" = "none";
+//"settings.calendar.event_dots.single_neutral" = "neutral";
+//"settings.calendar.event_dots.single_highlighted" = "highlighted";
+//"settings.calendar.event_dots.multiple" = "multiple";
+
 "settings.events" = "日程";
 "settings.events.show_map" = "展示地图和天气";
 "settings.events.show_overdue_reminders" = "展示逾期日程";

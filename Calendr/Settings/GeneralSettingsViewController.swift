@@ -43,6 +43,8 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     private let showDeclinedEventsCheckbox = Checkbox(title: Strings.Settings.Calendar.showDeclinedEvents)
     private let preserveSelectedDateCheckbox = Checkbox(title: Strings.Settings.Calendar.preserveSelectedDate)
     private let dateHoverOptionCheckbox = Checkbox(title: Strings.Settings.Calendar.dateHoverOption)
+    private let eventDotsLabel = Label(text: Strings.Settings.Calendar.eventDots)
+    private let eventDotsDropdown = Dropdown()
     private let calendarAppViewModeLabel = Label(text: Strings.Settings.Calendar.calendarAppViewMode)
     private let calendarAppViewModeDropdown = Dropdown()
     private let defaultCalendarAppLabel = Label(text: Strings.Settings.Calendar.defaultCalendarApp)
@@ -224,6 +226,9 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         firstWeekdayPrev.setContentHuggingPriority(.fittingSizeCompression, for: .horizontal)
         firstWeekdayNext.setContentHuggingPriority(.fittingSizeCompression, for: .horizontal)
 
+        eventDotsDropdown.isBordered = false
+        eventDotsDropdown.setContentHuggingPriority(.required, for: .horizontal)
+
         calendarAppViewModeDropdown.isBordered = false
         calendarAppViewModeDropdown.setContentHuggingPriority(.required, for: .horizontal)
 
@@ -247,6 +252,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             NSStackView(
                 views: [
                     NSStackView(views: [weekCountLabel, .spacer, weekCountStepperLabel, weekCountStepper]),
+                    NSStackView(views: [eventDotsLabel, eventDotsDropdown]),
                     NSStackView(views: [calendarAppViewModeLabel, calendarAppViewModeDropdown]),
                     calendarAppStack
                 ].compact()
@@ -462,6 +468,28 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             .disposed(by: disposeBag)
     }
 
+    private func setUpEventDots() {
+
+        let eventDotsControl = eventDotsDropdown.rx.controlProperty(
+            getter: \.indexOfSelectedItem,
+            setter: { $0.selectItem(at: $1) }
+        )
+
+        let options = EventDotsStyle.allCases
+        eventDotsDropdown.addItems(withTitles: options.map { "\($0.title) " })
+
+        eventDotsControl
+            .skip(1)
+            .map { options[$0] }
+            .bind(to: viewModel.eventDotsStyleObserver)
+            .disposed(by: disposeBag)
+
+        viewModel.eventDotsStyle
+            .compactMap(options.firstIndex(of:))
+            .bind(to: eventDotsControl)
+            .disposed(by: disposeBag)
+    }
+
     private func setUpCalendarAppViewMode() {
 
         let calendarAppViewModeControl = calendarAppViewModeDropdown.rx.controlProperty(
@@ -558,6 +586,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         )
         .disposed(by: disposeBag)
 
+        setUpEventDots()
         setUpCalendarAppViewMode()
         setUpDefaultCalendarApp()
     }

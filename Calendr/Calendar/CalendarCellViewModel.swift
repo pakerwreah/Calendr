@@ -14,6 +14,7 @@ struct CalendarCellViewModel: Equatable {
     let isSelected: Bool
     let isHovered: Bool
     let events: [EventModel]
+    let dotsStyle: EventDotsStyle
 
     private let calendar: Calendar
 
@@ -24,6 +25,7 @@ struct CalendarCellViewModel: Equatable {
         isSelected: Bool,
         isHovered: Bool,
         events: [EventModel],
+        dotsStyle: EventDotsStyle,
         calendar: Calendar
     ) {
         self.date = date
@@ -32,6 +34,7 @@ struct CalendarCellViewModel: Equatable {
         self.isSelected = isSelected
         self.isHovered = isHovered
         self.events = events
+        self.dotsStyle = dotsStyle
         self.calendar = calendar
     }
 }
@@ -59,6 +62,16 @@ extension CalendarCellViewModel {
     }
 
     var dots: [NSColor] {
+
+        guard !events.isEmpty else { return [.clear] }
+
+        switch dotsStyle {
+            case .none: return [.clear]
+            case .single_neutral: return [EventDotsStyle.netralColor]
+            case .single_highlighted: return [EventDotsStyle.highlightColor]
+            case .multiple: break
+        }
+
         let colors = events
             .filter { $0.type != .reminder(completed: true) }
             .map(\.calendar)
@@ -71,4 +84,6 @@ extension CalendarCellViewModel {
 
         return NSOrderedSet(array: colors).array as! [NSColor]
     }
+
+    static var maximumDotsCount: Int { 3 }
 }

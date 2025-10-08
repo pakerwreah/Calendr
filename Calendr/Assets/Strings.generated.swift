@@ -161,6 +161,8 @@ internal enum Strings {
       internal static let dateHoverOption = Strings.tr("Localizable", "settings.calendar.date_hover_option", fallback: "Hold ⌥ to peek at hovered dates")
       /// Default calendar app
       internal static let defaultCalendarApp = Strings.tr("Localizable", "settings.calendar.default_calendar_app", fallback: "Default calendar app")
+      /// Event dots
+      internal static let eventDots = Strings.tr("Localizable", "settings.calendar.event_dots", fallback: "Event dots")
       /// Preserve selected date on hide
       internal static let preserveSelectedDate = Strings.tr("Localizable", "settings.calendar.preserve_selected_date", fallback: "Preserve selected date on hide")
       /// Show declined events
@@ -171,6 +173,16 @@ internal enum Strings {
       internal static let showWeekNumbers = Strings.tr("Localizable", "settings.calendar.show_week_numbers", fallback: "Show week numbers")
       /// Visible weeks
       internal static let weekCount = Strings.tr("Localizable", "settings.calendar.week_count", fallback: "Visible weeks")
+      internal enum EventDots {
+        /// multiple
+        internal static let multiple = Strings.tr("Localizable", "settings.calendar.event_dots.multiple", fallback: "multiple")
+        /// none
+        internal static let `none` = Strings.tr("Localizable", "settings.calendar.event_dots.none", fallback: "none")
+        /// highlighted
+        internal static let singleHighlighted = Strings.tr("Localizable", "settings.calendar.event_dots.single_highlighted", fallback: "highlighted")
+        /// neutral
+        internal static let singleNeutral = Strings.tr("Localizable", "settings.calendar.event_dots.single_neutral", fallback: "neutral")
+      }
     }
     internal enum Events {
       /// Show all events in local time zone

@@ -54,6 +54,12 @@
 "settings.calendar.calendar_app_view_mode" = "Weergave in Agenda-app";
 "settings.calendar.default_calendar_app" = "Standaard Agenda-app";
 
+//"settings.calendar.event_dots" = "Event dots";
+//"settings.calendar.event_dots.none" = "none";
+//"settings.calendar.event_dots.single_neutral" = "neutral";
+//"settings.calendar.event_dots.single_highlighted" = "highlighted";
+//"settings.calendar.event_dots.multiple" = "multiple";
+
 "settings.events" = "Gebeurtenissen";
 "settings.events.show_map" = "Kaart en weer tonen";
 "settings.events.show_overdue_reminders" = "Achterstallige herinneringen tonen";

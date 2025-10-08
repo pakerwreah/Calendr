@@ -44,7 +44,7 @@ class CalendarViewModelTests: XCTestCase {
         calendarService.m_calendars = [
             .make(id: "1", account: "A1", title: "Calendar 1", color: .white),
             .make(id: "2", account: "A2", title: "Calendar 2", color: .black),
-            .make(id: "3", account: "A3", title: "Calendar 3", color: .clear)
+            .make(id: "3", account: "A3", title: "Calendar 3", color: .blue)
         ]
 
         calendarService.m_events = [
@@ -456,7 +456,7 @@ class CalendarViewModelTests: XCTestCase {
         assertExpectedEvents(\.dots, [
             (.make(year: 2021, month: 1, day: 1), [.white]),
             (.make(year: 2021, month: 1, day: 2), [.white, .black]),
-            (.make(year: 2021, month: 1, day: 3), [.white, .clear]),
+            (.make(year: 2021, month: 1, day: 3), [.white, .blue]),
         ])
     }
 
@@ -468,8 +468,8 @@ class CalendarViewModelTests: XCTestCase {
         assertExpectedEvents(\.dots, [
             (.make(year: 2021, month: 1, day: 1), [.white]),
             (.make(year: 2021, month: 1, day: 2), [.white, .black]),
-            (.make(year: 2021, month: 1, day: 3), [.white, .clear]),
-            (.make(year: 2021, month: 1, day: 4), [.clear]),
+            (.make(year: 2021, month: 1, day: 3), [.white, .blue]),
+            (.make(year: 2021, month: 1, day: 4), [.blue]),
         ])
     }
 
@@ -489,7 +489,7 @@ class CalendarViewModelTests: XCTestCase {
         assertExpectedEvents(\.dots, [
             (.make(year: 2021, month: 1, day: 1), [.white, .red]),
             (.make(year: 2021, month: 1, day: 2), [.white, .black]),
-            (.make(year: 2021, month: 1, day: 3), [.white, .clear]),
+            (.make(year: 2021, month: 1, day: 3), [.white, .blue]),
         ])
     }
 
@@ -509,7 +509,7 @@ class CalendarViewModelTests: XCTestCase {
         assertExpectedEvents(\.dots, [
             (.make(year: 2021, month: 1, day: 1), [.white]),
             (.make(year: 2021, month: 1, day: 2), [.white, .black]),
-            (.make(year: 2021, month: 1, day: 3), [.white, .clear]),
+            (.make(year: 2021, month: 1, day: 3), [.white, .blue]),
         ])
     }
 
@@ -567,9 +567,9 @@ class CalendarViewModelTests: XCTestCase {
 
         searchSubject.onNext("3")
         assertExpectedEvents(\.dots, [
-            (.make(year: 2021, month: 1, day: 1), []),
+            (.make(year: 2021, month: 1, day: 1), [.clear]),
             (.make(year: 2021, month: 1, day: 2), [.black]),
-            (.make(year: 2021, month: 1, day: 3), [])
+            (.make(year: 2021, month: 1, day: 3), [.clear])
         ])
 
         searchSubject.onNext("1")
@@ -583,7 +583,33 @@ class CalendarViewModelTests: XCTestCase {
         assertExpectedEvents(\.dots, [
             (.make(year: 2021, month: 1, day: 1), [.white]),
             (.make(year: 2021, month: 1, day: 2), [.white, .black]),
-            (.make(year: 2021, month: 1, day: 3), [.white, .clear]),
+            (.make(year: 2021, month: 1, day: 3), [.white, .blue]),
+        ])
+    }
+
+    func testEventDotsPerDate_withNeutralOption() {
+
+        settings.eventDotsStyleObserver.onNext(.single_neutral)
+
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+
+        assertExpectedEvents(\.dots, [
+            (.make(year: 2021, month: 1, day: 1), [EventDotsStyle.netralColor]),
+            (.make(year: 2021, month: 1, day: 2), [EventDotsStyle.netralColor]),
+            (.make(year: 2021, month: 1, day: 3), [EventDotsStyle.netralColor]),
+        ])
+    }
+
+    func testEventDotsPerDate_withHighlightedOption() {
+
+        settings.eventDotsStyleObserver.onNext(.single_highlighted)
+
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+
+        assertExpectedEvents(\.dots, [
+            (.make(year: 2021, month: 1, day: 1), [EventDotsStyle.highlightColor]),
+            (.make(year: 2021, month: 1, day: 2), [EventDotsStyle.highlightColor]),
+            (.make(year: 2021, month: 1, day: 3), [EventDotsStyle.highlightColor]),
         ])
     }
 

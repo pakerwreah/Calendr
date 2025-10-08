@@ -50,6 +50,7 @@ class SettingsViewModelTests: XCTestCase {
     var userDefaultsShowRecurrenceIndicator: Bool? { userDefaults.object(forKey: Prefs.showRecurrenceIndicator) as! Bool? }
     var userDefaultsTransparency: Int? { userDefaults.object(forKey: Prefs.transparencyLevel) as! Int? }
     var userDefaultsAppearanceMode: Int? { userDefaults.object(forKey: Prefs.appearanceMode) as! Int? }
+    var userDefaultsEventDotsStyle: String? { userDefaults.object(forKey: Prefs.eventDotsStyle) as! String? }
 
     override func setUp() {
         userDefaults.setVolatileDomain([:], forName: UserDefaults.registrationDomain)
@@ -77,6 +78,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertNil(userDefaultsShowAllDayDetails)
         XCTAssertNil(userDefaultsShowRecurrenceIndicator)
         XCTAssertNil(userDefaultsTransparency)
+        XCTAssertNil(userDefaultsEventDotsStyle)
 
         registerDefaultPrefs(in: userDefaults, calendar: .gregorian.with(firstWeekday: 3))
     }
@@ -107,6 +109,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.popoverTransparency.lastValue(), 2)
         XCTAssertEqual(viewModel.popoverMaterial.lastValue(), .headerView)
         XCTAssertEqual(viewModel.appearanceMode.lastValue(), .automatic)
+        XCTAssertEqual(viewModel.eventDotsStyle.lastValue(), .multiple)
 
         XCTAssertEqual(userDefaultsStatusItemIconEnabled, true)
         XCTAssertEqual(userDefaultsStatusItemDateEnabled, true)
@@ -130,6 +133,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(userDefaultsShowRecurrenceIndicator, true)
         XCTAssertEqual(userDefaultsTransparency, 2)
         XCTAssertEqual(userDefaultsAppearanceMode, 0)
+        XCTAssertEqual(userDefaultsEventDotsStyle, EventDotsStyle.multiple.rawValue)
     }
 
     func testDateFormatOptions() {
@@ -164,6 +168,24 @@ class SettingsViewModelTests: XCTestCase {
         notificationCenter.post(name: NSLocale.currentLocaleDidChangeNotification, object: nil)
 
         XCTAssertEqual(options?.first, .init(style: .short, title: "01/01/2021"))
+    }
+
+    func testEventDotsStyle() {
+        userDefaults.eventDotsStyle = EventDotsStyle.single_neutral.rawValue
+        XCTAssertEqual(userDefaultsEventDotsStyle, EventDotsStyle.single_neutral.rawValue)
+
+        var eventDotsStyle: EventDotsStyle?
+
+        viewModel.eventDotsStyle
+            .bind { eventDotsStyle = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(eventDotsStyle, .single_neutral)
+
+        viewModel.eventDotsStyleObserver.onNext(.single_highlighted)
+
+        XCTAssertEqual(eventDotsStyle, .single_highlighted)
+        XCTAssertEqual(userDefaultsEventDotsStyle, EventDotsStyle.single_highlighted.rawValue)
     }
 
     func testCalendarAppViewModeOptions_pt() {

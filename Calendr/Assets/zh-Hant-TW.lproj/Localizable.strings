@@ -56,6 +56,12 @@
 "settings.calendar.calendar_app_view_mode" = "行事曆應用程式檢視模式";
 //"settings.calendar.default_calendar_app" = "Default calendar app";
 
+//"settings.calendar.event_dots" = "Event dots";
+//"settings.calendar.event_dots.none" = "none";
+//"settings.calendar.event_dots.single_neutral" = "neutral";
+//"settings.calendar.event_dots.single_highlighted" = "highlighted";
+//"settings.calendar.event_dots.multiple" = "multiple";
+
 "settings.events" = "事件";
 "settings.events.show_map" = "顯示地圖和天氣";
 "settings.events.show_overdue_reminders" = "顯示逾期提醒";
