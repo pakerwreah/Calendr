@@ -26,8 +26,6 @@ class NextEventViewModelTests: XCTestCase {
     let scheduler = HistoricalScheduler()
     let soundPlayer = MockSoundPlayer()
 
-    lazy var viewModel = makeViewModel(type: .event)
-
     func makeViewModel(type: NextEventType) -> NextEventViewModel {
         .init(
             type: type,
@@ -59,22 +57,27 @@ class NextEventViewModelTests: XCTestCase {
 
     func testSaveStatusItemPreferredPosition() {
 
-        let key = "\(Prefs.statusItemPreferredPosition) \(StatusItemName.event)"
+        let viewModel = makeViewModel(type: .event)
+        let key = viewModel.preferredPositionKey
+
         userDefaults.set(123, forKey: key)
-        viewModel.saveStatusItemPreferredPosition()
         XCTAssertEqual(userDefaults.integer(forKey: "saved \(key)"), 123)
     }
 
     func testRestoreStatusItemPreferredPosition() {
 
+        let viewModel = makeViewModel(type: .event)
+
         let key = "\(Prefs.statusItemPreferredPosition) \(StatusItemName.event)"
         XCTAssertEqual(userDefaults.integer(forKey: key), 0)
         userDefaults.set(123, forKey: "saved \(key)")
-        viewModel.restoreStatusItemPreferredPosition()
+        viewModel.restorePreferredPosition()
         XCTAssertEqual(userDefaults.integer(forKey: key), 123)
     }
 
     func testNextEvent_noEvent() {
+
+        let viewModel = makeViewModel(type: .event)
 
         var hasEvent: Bool?
 
@@ -91,6 +94,8 @@ class NextEventViewModelTests: XCTestCase {
 
     func testNextEvent_hasEvent() {
 
+        let viewModel = makeViewModel(type: .event)
+
         var hasEvent: Bool?
 
         viewModel.hasEvent
@@ -105,6 +110,8 @@ class NextEventViewModelTests: XCTestCase {
     }
 
     func testNextEvent_isNotEnabled_noEvent() {
+
+        let viewModel = makeViewModel(type: .event)
 
         var hasEvent: Bool?
 
@@ -124,6 +131,8 @@ class NextEventViewModelTests: XCTestCase {
     }
 
     func testNextEvent_checkRange() {
+
+        let viewModel = makeViewModel(type: .event)
 
         var hasEvent: Bool?
 
@@ -155,6 +164,8 @@ class NextEventViewModelTests: XCTestCase {
 
     func testNextEventLength() {
 
+        let viewModel = makeViewModel(type: .event)
+
         var title: String?
 
         viewModel.title
@@ -175,6 +186,8 @@ class NextEventViewModelTests: XCTestCase {
     }
 
     func testNextEventLengthWithNotch() {
+
+        let viewModel = makeViewModel(type: .event)
 
         var title: String?
 
@@ -205,6 +218,8 @@ class NextEventViewModelTests: XCTestCase {
 
     func testNextEvent_barStyle() {
 
+        let viewModel = makeViewModel(type: .event)
+
         var style: EventBarStyle?
 
         viewModel.barStyle
@@ -219,6 +234,8 @@ class NextEventViewModelTests: XCTestCase {
     }
 
     func testNextEvent_barColor() {
+
+        let viewModel = makeViewModel(type: .event)
 
         var color: NSColor?
 
@@ -235,6 +252,8 @@ class NextEventViewModelTests: XCTestCase {
 
     func testNextEvent_backgroundColor() {
 
+        let viewModel = makeViewModel(type: .event)
+
         var color: EventBackground?
 
         viewModel.backgroundColor
@@ -249,6 +268,8 @@ class NextEventViewModelTests: XCTestCase {
     }
 
     func testNextEvent_isInProgress_backgroundColor() {
+
+        let viewModel = makeViewModel(type: .event)
 
         var color: EventBackground?
 
@@ -265,6 +286,8 @@ class NextEventViewModelTests: XCTestCase {
 
     func testNextEvent_isPending_backgroundColor() {
 
+        let viewModel = makeViewModel(type: .event)
+
         var color: EventBackground?
 
         viewModel.backgroundColor
@@ -280,6 +303,8 @@ class NextEventViewModelTests: XCTestCase {
 
     func testNextEvent_isInProgress_isPending_backgroundColor() {
 
+        let viewModel = makeViewModel(type: .event)
+
         var color: EventBackground?
 
         viewModel.backgroundColor
@@ -294,6 +319,8 @@ class NextEventViewModelTests: XCTestCase {
     }
 
     func testNextEvent_isAllDay_shouldNotAppear() {
+
+        let viewModel = makeViewModel(type: .event)
 
         var title: String?
 
@@ -311,6 +338,8 @@ class NextEventViewModelTests: XCTestCase {
 
     func testNextEvent_isPending_shouldAppear() {
 
+        let viewModel = makeViewModel(type: .event)
+
         var title: String?
 
         viewModel.title
@@ -325,6 +354,8 @@ class NextEventViewModelTests: XCTestCase {
     }
 
     func testNextEvent_isPending_withSameStart_shouldNotAppearOverAccepted() {
+
+        let viewModel = makeViewModel(type: .event)
 
         var title: String?
 
@@ -342,6 +373,8 @@ class NextEventViewModelTests: XCTestCase {
 
     func testNextEvent_isPending_withSameStart_shouldNotAppearOverMaybe() {
 
+        let viewModel = makeViewModel(type: .event)
+
         var title: String?
 
         viewModel.title
@@ -358,6 +391,8 @@ class NextEventViewModelTests: XCTestCase {
 
     func testNextEvent_isMaybe_withSameStart_shouldNotAppearOverAccepted() {
 
+        let viewModel = makeViewModel(type: .event)
+
         var title: String?
 
         viewModel.title
@@ -373,6 +408,8 @@ class NextEventViewModelTests: XCTestCase {
     }
 
     func testNextEvent_startsIn30Seconds() {
+
+        let viewModel = makeViewModel(type: .event)
 
         var time: String?
 
@@ -393,6 +430,8 @@ class NextEventViewModelTests: XCTestCase {
     }
 
     func testNextEvent_startsInLessThan1Minute() {
+
+        let viewModel = makeViewModel(type: .event)
 
         var time: String?
 
@@ -419,6 +458,8 @@ class NextEventViewModelTests: XCTestCase {
 
     func testNextEvent_startsIn1Minute() {
 
+        let viewModel = makeViewModel(type: .event)
+
         var time: String?
 
         viewModel.time
@@ -433,6 +474,8 @@ class NextEventViewModelTests: XCTestCase {
     }
 
     func testNextEvent_startsInMoreThan1Minute() {
+
+        let viewModel = makeViewModel(type: .event)
 
         var time: String?
 
@@ -454,6 +497,8 @@ class NextEventViewModelTests: XCTestCase {
 
     func testNextEvent_startsIn1Hour() {
 
+        let viewModel = makeViewModel(type: .event)
+
         var time: String?
 
         viewModel.time
@@ -474,6 +519,8 @@ class NextEventViewModelTests: XCTestCase {
 
     func testNextEvent_startsInMoreThan1Hour() {
 
+        let viewModel = makeViewModel(type: .event)
+
         var time: String?
 
         viewModel.time
@@ -493,6 +540,8 @@ class NextEventViewModelTests: XCTestCase {
     }
 
     func testNextEvent_startsInMoreThan24Hours() {
+
+        let viewModel = makeViewModel(type: .event)
 
         var time: String?
 
@@ -523,6 +572,8 @@ class NextEventViewModelTests: XCTestCase {
 
     func testNextEvent_isInProgress_endsIn30Seconds() {
 
+        let viewModel = makeViewModel(type: .event)
+
         var time: String?
 
         viewModel.time
@@ -542,6 +593,8 @@ class NextEventViewModelTests: XCTestCase {
     }
 
     func testNextEvent_isInProgress_endsInLessThan1Minute() {
+
+        let viewModel = makeViewModel(type: .event)
 
         var time: String?
 
@@ -568,6 +621,8 @@ class NextEventViewModelTests: XCTestCase {
 
     func testNextEvent_isInProgress_endsIn1Minute() {
 
+        let viewModel = makeViewModel(type: .event)
+
         var time: String?
 
         viewModel.time
@@ -582,6 +637,8 @@ class NextEventViewModelTests: XCTestCase {
     }
 
     func testNextEvent_isInProgress_endsInMoreThan1Minute() {
+
+        let viewModel = makeViewModel(type: .event)
 
         var time: String?
 
@@ -603,6 +660,8 @@ class NextEventViewModelTests: XCTestCase {
 
     func testNextEvent_isInProgress_endsIn1Hour() {
 
+        let viewModel = makeViewModel(type: .event)
+
         var time: String?
 
         viewModel.time
@@ -622,6 +681,8 @@ class NextEventViewModelTests: XCTestCase {
     }
 
     func testNextEvent_isInProgress_endsInMoreThan1Hour() {
+
+        let viewModel = makeViewModel(type: .event)
 
         var time: String?
 
@@ -643,6 +704,8 @@ class NextEventViewModelTests: XCTestCase {
 
     func testNextEvent_isInProgress_hasJustStarted_hasUpcomingEvent_shouldNotShowUpcoming() {
 
+        let viewModel = makeViewModel(type: .event)
+
         calendarService.changeEvents([
             .make(id: "1", start: now - 60 * 10, end: now + 3600, title: "Event 1"),
             .make(id: "2", start: now + 60 * 30, end: now + 3600, title: "Event 2")
@@ -653,6 +716,8 @@ class NextEventViewModelTests: XCTestCase {
     }
 
     func testNextEvent_isInProgress_after10min_hasUpcomingEvent_shouldShowUpcoming() {
+
+        let viewModel = makeViewModel(type: .event)
 
         calendarService.changeEvents([
             .make(id: "1", start: now - 60 * 11, end: now + 3600, title: "Event 1"),
@@ -665,7 +730,7 @@ class NextEventViewModelTests: XCTestCase {
 
     func testNextEvent_isReminder() {
 
-        viewModel = makeViewModel(type: .reminder)
+        let viewModel = makeViewModel(type: .reminder)
 
         var time: String?
 
@@ -687,7 +752,7 @@ class NextEventViewModelTests: XCTestCase {
 
     func testNextEvent_isPast_isReminder() {
 
-        viewModel = makeViewModel(type: .reminder)
+        let viewModel = makeViewModel(type: .reminder)
 
         var time: String?
 
@@ -713,7 +778,7 @@ class NextEventViewModelTests: XCTestCase {
 
     func testNextEvent_becomesPast_isReminder() {
 
-        viewModel = makeViewModel(type: .reminder)
+        let viewModel = makeViewModel(type: .reminder)
 
         var time: String?
 
@@ -735,7 +800,7 @@ class NextEventViewModelTests: XCTestCase {
 
     func testNextEvent_isSortedByDate_isReminder() {
 
-        viewModel = makeViewModel(type: .reminder)
+        let viewModel = makeViewModel(type: .reminder)
 
         var title: String?
 
@@ -753,7 +818,7 @@ class NextEventViewModelTests: XCTestCase {
 
     func testNextEvent_skipped_fromContextMenu() {
 
-        viewModel = makeViewModel(type: .event)
+        let viewModel = makeViewModel(type: .event)
 
         var title: String?
 
@@ -790,7 +855,7 @@ class NextEventViewModelTests: XCTestCase {
 
     func testNextEvent_skipped_fromEventDetails() {
 
-        viewModel = makeViewModel(type: .event)
+        let viewModel = makeViewModel(type: .event)
 
         var title: String?
 
@@ -809,18 +874,18 @@ class NextEventViewModelTests: XCTestCase {
             .make(start: now + 1, end: now + 2, title: "Event 2", type: .event(.accepted))
         ])
 
-        let viewModel = viewModel.makeDetailsViewModel()
-        XCTAssertNotNil(viewModel)
+        let detailsViewModel = viewModel.makeDetailsViewModel()
+        XCTAssertNotNil(detailsViewModel)
 
         XCTAssertEqual(title, "Event 1")
         XCTAssertEqual(hasEvent, true)
 
-        viewModel?.skipTapped.onNext(())
+        detailsViewModel?.skipTapped.onNext(())
 
         XCTAssertEqual(title, "Event 2")
         XCTAssertEqual(hasEvent, true)
 
-        viewModel?.skipTapped.onNext(())
+        detailsViewModel?.skipTapped.onNext(())
 
         XCTAssertEqual(hasEvent, false)
     }
