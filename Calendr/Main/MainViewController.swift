@@ -669,10 +669,9 @@ class MainViewController: NSViewController {
             .observe(on: MainScheduler.asyncInstance)
             .bind { showEvent in
                 if showEvent {
-                    viewModel.restoreStatusItemPreferredPosition()
+                    viewModel.restorePreferredPosition()
                     item.isVisible = true
-                } else if item.isVisible {
-                    viewModel.saveStatusItemPreferredPosition()
+                } else {
                     item.isVisible = false
                 }
             }

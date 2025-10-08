@@ -339,6 +339,31 @@ class NextEventViewModel {
             }
             .bind(to: skippedEvents)
             .disposed(by: disposeBag)
+
+        userDefaults.rx.observe(Int.self, preferredPositionKey, options: [.new])
+            .skipNil()
+            .filter { $0 > 0 }
+            .distinctUntilChanged()
+            .bind { [preferredPositionKey] in
+                userDefaults.set($0, forKey: "saved \(preferredPositionKey)")
+            }
+            .disposed(by: disposeBag)
+    }
+
+    var preferredPositionKey: String {
+        let name: String
+        switch type {
+        case .event:
+            name = StatusItemName.event
+        case .reminder:
+            name = StatusItemName.reminder
+        }
+        return "\(Prefs.statusItemPreferredPosition) \(name)"
+    }
+
+    func restorePreferredPosition() {
+        let position = userDefaults.integer(forKey: "saved \(preferredPositionKey)")
+        userDefaults.set(position, forKey: preferredPositionKey)
     }
 
     func makeContextMenuViewModel() -> (any ContextMenuViewModel)? {
@@ -369,27 +394,6 @@ class NextEventViewModel {
             source: .menubar,
             callback: actionCallback.asObserver()
         )
-    }
-
-    private var preferredPositionKey: String {
-        let name: String
-        switch type {
-        case .event:
-            name = StatusItemName.event
-        case .reminder:
-            name = StatusItemName.reminder
-        }
-        return "\(Prefs.statusItemPreferredPosition) \(name)"
-    }
-
-    func saveStatusItemPreferredPosition() {
-        let position = userDefaults.integer(forKey: preferredPositionKey)
-        userDefaults.set(position, forKey: "saved \(preferredPositionKey)")
-    }
-
-    func restoreStatusItemPreferredPosition() {
-        let position = userDefaults.integer(forKey: "saved \(preferredPositionKey)")
-        userDefaults.set(position, forKey: preferredPositionKey)
     }
 }
 
