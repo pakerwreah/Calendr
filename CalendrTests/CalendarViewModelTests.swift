@@ -457,6 +457,7 @@ class CalendarViewModelTests: XCTestCase {
             (.make(year: 2021, month: 1, day: 1), [.white]),
             (.make(year: 2021, month: 1, day: 2), [.white, .black]),
             (.make(year: 2021, month: 1, day: 3), [.white, .blue]),
+            (.make(year: 2021, month: 1, day: 4), [.clear]),
         ])
     }
 
@@ -490,6 +491,7 @@ class CalendarViewModelTests: XCTestCase {
             (.make(year: 2021, month: 1, day: 1), [.white, .red]),
             (.make(year: 2021, month: 1, day: 2), [.white, .black]),
             (.make(year: 2021, month: 1, day: 3), [.white, .blue]),
+            (.make(year: 2021, month: 1, day: 4), [.clear]),
         ])
     }
 
@@ -510,6 +512,58 @@ class CalendarViewModelTests: XCTestCase {
             (.make(year: 2021, month: 1, day: 1), [.white]),
             (.make(year: 2021, month: 1, day: 2), [.white, .black]),
             (.make(year: 2021, month: 1, day: 3), [.white, .blue]),
+            (.make(year: 2021, month: 1, day: 4), [.clear]),
+        ])
+    }
+
+    func testEventDotsPerDate_withHiddenItems() {
+
+        calendarService.m_events = [
+            .make(
+                start: .make(year: 2021, month: 1, day: 1, hour: 10),
+                end: .make(year: 2021, month: 1, day: 1, hour: 11),
+                title: "Declined",
+                type: .event(.declined),
+                calendar: .make(id: "E", account: "X", title: "Events", color: .blue)
+            ),
+            .make(
+                start: .make(year: 2021, month: 1, day: 1),
+                title: "Completed 1",
+                type: .reminder(completed: true),
+                calendar: .make(id: "R", account: "X", title: "Reminders", color: .red),
+            ),
+            .make(
+                start: .make(year: 2021, month: 1, day: 2),
+                title: "Completed 2",
+                type: .reminder(completed: true),
+                calendar: .make(id: "R", account: "X", title: "Reminders", color: .red),
+            )
+        ]
+
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+
+        settings.toggleDeclinedEvents.onNext(true)
+
+        assertExpectedEvents({ $0.events.map(\.title) }, [
+            (.make(year: 2021, month: 1, day: 1), ["Declined", "Completed 1"]),
+            (.make(year: 2021, month: 1, day: 2), ["Completed 2"]),
+        ])
+
+        assertExpectedEvents(\.dots, [
+            (.make(year: 2021, month: 1, day: 1), [.blue]),
+            (.make(year: 2021, month: 1, day: 2), [.clear]),
+        ])
+
+        settings.toggleDeclinedEvents.onNext(false)
+
+        assertExpectedEvents({ $0.events.map(\.title) }, [
+            (.make(year: 2021, month: 1, day: 1), ["Completed 1"]),
+            (.make(year: 2021, month: 1, day: 2), ["Completed 2"]),
+        ])
+
+        assertExpectedEvents(\.dots, [
+            (.make(year: 2021, month: 1, day: 1), [.clear]),
+            (.make(year: 2021, month: 1, day: 2), [.clear]),
         ])
     }
 
@@ -664,9 +718,10 @@ class CalendarViewModelTests: XCTestCase {
     ) {
 
         for (date, expected) in expectedEvents {
-            let events = lastValue?.first(where: { $0.date == date }).map(pick)
-
-            XCTAssertEqual(events?.count, expected.count, "\(date)", file: file, line: line)
+            guard let events = lastValue?.first(where: { $0.date == date }).map(pick) else {
+                XCTFail("\(date) not found")
+                return
+            }
             XCTAssertEqual(events, expected, "\(date)", file: file, line: line)
         }
     }
