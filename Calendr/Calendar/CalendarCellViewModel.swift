@@ -82,6 +82,8 @@ extension CalendarCellViewModel {
             }
             .map(\.color)
 
+        guard !colors.isEmpty else { return [.clear] }
+
         return NSOrderedSet(array: colors).array as! [NSColor]
     }
 
