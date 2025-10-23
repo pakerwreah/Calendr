@@ -28,7 +28,6 @@ struct Weather {
     fileprivate let expirationDate: Date
 }
 
-@available(macOS 13.0, *)
 private extension Weather.Day {
 
     init(_ day: DayWeather) {
@@ -41,7 +40,6 @@ private extension Weather.Day {
     }
 }
 
-@available(macOS 13.0, *)
 private extension Weather.Hour {
 
     init(_ hour: HourWeather) {
@@ -53,7 +51,6 @@ private extension Weather.Hour {
     }
 }
 
-@available(macOS 13.0, *)
 private extension Array where Element == Weather.Hour {
 
     init(_ hours: any Sequence<HourWeather>) {
@@ -64,11 +61,6 @@ private extension Array where Element == Weather.Hour {
 protocol WeatherServiceProviding {
 
     func weather(for coordinates: Coordinates, start: Date, end: Date) async -> Weather?
-}
-
-class WeatherServiceProvider: WeatherServiceProviding {
-
-    func weather(for coordinates: Coordinates, start: Date, end: Date) async -> Weather? { nil }
 }
 
 extension WeatherServiceProviding {
@@ -94,19 +86,16 @@ extension WeatherCacheKey: CustomStringConvertible {
     }
 }
 
-@available(macOS 13.0, *)
-private class AppWeatherServiceProvider<WeatherCache: Cache>: WeatherServiceProvider
-where WeatherCache.Key == WeatherCacheKey, WeatherCache.Value == Weather {
+class WeatherServiceProvider: WeatherServiceProviding {
 
     private let dateProvider: DateProviding
-    private let cache: WeatherCache
+    private let cache = LRUCache<WeatherCacheKey, Weather>(capacity: 50)
 
-    init(dateProvider: DateProviding, cache: WeatherCache = LRUCache(capacity: 50)) {
+    init(dateProvider: DateProviding) {
         self.dateProvider = dateProvider
-        self.cache = cache
     }
 
-    override func weather(for coordinates: Coordinates, start: Date, end: Date) async -> Weather? {
+    func weather(for coordinates: Coordinates, start: Date, end: Date) async -> Weather? {
 
         let cacheKey = WeatherCacheKey(coordinates: coordinates, start: start, end: end)
 
@@ -152,18 +141,6 @@ where WeatherCache.Key == WeatherCacheKey, WeatherCache.Value == Weather {
                 print("recoverySuggestion", recoverySuggestion)
             }
             return nil
-        }
-    }
-}
-
-extension WeatherServiceProviding where Self == WeatherServiceProvider {
-
-    static func make(dateProvider: DateProviding) -> Self {
-
-        if #available(macOS 13.0, *) {
-            return AppWeatherServiceProvider(dateProvider: dateProvider)
-        } else {
-            return WeatherServiceProvider()
         }
     }
 }

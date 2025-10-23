@@ -41,7 +41,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         viewController = MainViewController(
             deeplink: deeplink.skipNil(),
-            autoLauncher: .default,
+            autoLauncher: AutoLauncher(),
             workspace: workspace,
             calendarService: CalendarServiceProvider(
                 dateProvider: dateProvider,
@@ -50,7 +50,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 notificationCenter: notificationCenter
             ),
             geocoder: GeocodeServiceProvider(),
-            weatherService: .make(dateProvider: dateProvider),
+            weatherService: WeatherServiceProvider(dateProvider: dateProvider),
             dateProvider: dateProvider,
             screenProvider: ScreenProvider(notificationCenter: notificationCenter),
             notificationProvider: notificationProvider,

@@ -115,10 +115,6 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         }
 
         iconStyleDropdown.height(equalTo: showMenuBarIconCheckbox)
-
-        if #unavailable(macOS 13.0) {
-            autoLaunchCheckbox.isHidden = true
-        }
     }
 
     override func viewDidLoad() {

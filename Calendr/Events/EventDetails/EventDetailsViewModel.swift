@@ -206,7 +206,7 @@ class EventDetailsViewModel {
             else {
                 return false
             }
-            if let pattern = userDefaults.showMapBlacklistRegex, #available(macOS 13.0, *) {
+            if let pattern = userDefaults.showMapBlacklistRegex {
                 do {
                     return try Regex(pattern).wholeMatch(in: location) == nil
                 } catch {

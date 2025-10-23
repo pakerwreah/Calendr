@@ -118,7 +118,7 @@ class EventViewModel {
         }
 
         var subtitleText = event.location?.trimmed.replacingOccurrences(of: .newlines, with: " ") ?? ""
-        let linkText = link?.url.domain
+        let linkText = link?.url.host()
         let notes = event.notes?.trimmed ?? ""
 
         if let linkText, subtitleText.contains(linkText) {
