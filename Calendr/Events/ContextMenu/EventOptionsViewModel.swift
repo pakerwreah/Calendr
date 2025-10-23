@@ -139,7 +139,7 @@ extension EventAction: ContextMenuAction {
         case .open:
             return Strings.Event.Action.open
         case .link(let link, _):
-            return link.isMeeting ? Strings.Event.Action.join : link.url.domain ?? "???"
+            return link.isMeeting ? Strings.Event.Action.join : link.url.host() ?? "???"
         case .skip:
             return Strings.Event.Action.skip
         case .status(.accept):

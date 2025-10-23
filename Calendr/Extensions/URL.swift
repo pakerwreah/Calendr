@@ -8,14 +8,6 @@
 import Foundation
 
 extension URL {
-    var domain: String? {
-        if #available(macOS 13.0, *) {
-            host()
-        } else {
-            host
-        }
-    }
-
     /// Returns the relative path from the given base URL if the URL's path starts with the base URL's path.
     func relativePath(from base: URL) -> String? {
         // Ensure both URLs share the same scheme and host.

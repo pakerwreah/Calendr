@@ -27,7 +27,7 @@ struct Attachment: Equatable {
             }
 
             if localURL == nil {
-                guard let url, url.scheme?.hasPrefix("http") == true, url.domain != nil else {
+                guard let url, url.scheme?.hasPrefix("http") == true, url.host() != nil else {
                     return nil
                 }
             }
