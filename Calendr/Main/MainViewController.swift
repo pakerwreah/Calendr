@@ -8,6 +8,7 @@
 import Cocoa
 import RxSwift
 import KeyboardShortcuts
+import SwiftUI
 
 class MainViewController: NSViewController {
 
@@ -413,8 +414,9 @@ class MainViewController: NSViewController {
             .bind(to: titleLabel.rx.text)
             .disposed(by: disposeBag)
 
-        remindersBtn.rx.tap.bind { [workspace] in
-            workspace.openReminders()
+        remindersBtn.rx.tap.bind { [weak self] in
+//            workspace.openReminders()
+            self?.openReminderEditor()
         }
         .disposed(by: disposeBag)
 
@@ -532,6 +534,23 @@ class MainViewController: NSViewController {
             presentAsModalWindow(settingsViewController)
         }
         settingsViewController.selectedTabViewItemIndex = tab.rawValue
+    }
+
+    private func openReminderEditor() {
+        let viewModel = ReminderEditorViewModel()
+        let editorView = ReminderEditorView(viewModel: viewModel)
+        let viewController = HostingController(rootView: editorView)
+
+        viewController.isResizable = false
+        viewController.delegate = viewModel
+
+        viewModel.onCloseConfirmation = {
+            viewController.dismiss(nil)
+        }
+
+        NSApp.activate(ignoringOtherApps: true)
+
+        presentAsModalWindow(viewController)
     }
 
     @objc private func showSearchInput() {
