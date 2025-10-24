@@ -41,22 +41,44 @@ extension Reactive where Base: NSView {
 
         Observable.create { [weak base] observer in
 
-            let target = GestureProxy(observer)
+            let proxy = GestureProxy(observer)
 
             let click = T.init(
-                target: target,
+                target: proxy,
                 action: #selector(GestureProxy.recognized)
             )
+
+            click.strongProxyRef = proxy
 
             configure(click)
 
             base?.addGestureRecognizer(click)
 
             return Disposables.create {
-                _ = target // keep a strong reference
                 base?.removeGestureRecognizer(click)
             }
         }
         .share(replay: 1)
+    }
+}
+
+private extension NSGestureRecognizer {
+
+    private enum AssociatedKeys {
+        static var gestureProxyKey: UInt8 = 0
+    }
+
+    var strongProxyRef: GestureProxy? {
+        get {
+            objc_getAssociatedObject(self, &AssociatedKeys.gestureProxyKey) as? GestureProxy
+        }
+        set {
+            objc_setAssociatedObject(
+                self,
+                &AssociatedKeys.gestureProxyKey,
+                newValue,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
+        }
     }
 }
