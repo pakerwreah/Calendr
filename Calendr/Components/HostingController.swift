@@ -50,7 +50,8 @@ class HostingController<RootView: View>: NSHostingController<RootView>, NSWindow
             assertionFailure()
             return
         }
-        view.window?.center()
+        window.center()
+        window.becomeKey()
 
         if !isResizable {
             window.styleMask.remove(.resizable)
