@@ -8,7 +8,7 @@
 import Sentry
 
 func startSentry() -> Span? {
-    guard let dsn = Environment.SENTRY_DSN else { return nil }
+    guard let dsn = AppEnvironment.SENTRY_DSN else { return nil }
 
     SentrySDK.start { configureSentry(dsn, $0) }
 
