@@ -147,6 +147,8 @@
 		34A591E42C175BBD00DE419D /* AppEditShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A591E32C175BBD00DE419D /* AppEditShortcuts.swift */; };
 		34A591E62C175C0F00DE419D /* AppResignFocus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A591E52C175C0F00DE419D /* AppResignFocus.swift */; };
 		34A6434D25F42375000A0F08 /* EventViewPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A6434C25F42375000A0F08 /* EventViewPreview.swift */; };
+		34A6F5192EABCFAB003D4063 /* DueDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A6F5182EABCFAB003D4063 /* DueDate.swift */; };
+		34A6F51B2EABD303003D4063 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34A6F51A2EABD303003D4063 /* Date.swift */; };
 		34ABB9DD29A11C1B0021F3CF /* EventOptionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34ABB9DC29A11C1B0021F3CF /* EventOptionsViewModel.swift */; };
 		34ABB9E629A12B8A0021F3CF /* ReminderOptionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34ABB9E529A12B8A0021F3CF /* ReminderOptionsViewModel.swift */; };
 		34ABB9EA29A158080021F3CF /* ReminderOptionsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34ABB9E929A158080021F3CF /* ReminderOptionsViewModelTests.swift */; };
@@ -389,6 +391,8 @@
 		34A591E32C175BBD00DE419D /* AppEditShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEditShortcuts.swift; sourceTree = "<group>"; };
 		34A591E52C175C0F00DE419D /* AppResignFocus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppResignFocus.swift; sourceTree = "<group>"; };
 		34A6434C25F42375000A0F08 /* EventViewPreview.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventViewPreview.swift; sourceTree = "<group>"; };
+		34A6F5182EABCFAB003D4063 /* DueDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DueDate.swift; sourceTree = "<group>"; };
+		34A6F51A2EABD303003D4063 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		34ABB9DC29A11C1B0021F3CF /* EventOptionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventOptionsViewModel.swift; sourceTree = "<group>"; };
 		34ABB9E529A12B8A0021F3CF /* ReminderOptionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderOptionsViewModel.swift; sourceTree = "<group>"; };
 		34ABB9E929A158080021F3CF /* ReminderOptionsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderOptionsViewModelTests.swift; sourceTree = "<group>"; };
@@ -746,6 +750,7 @@
 				3453E6FC28386A84002DCC3C /* Bool.swift */,
 				34702167259E761100827AE7 /* Calendar.swift */,
 				34FB35292DC3D1D9007C5EAE /* Collection.swift */,
+				34A6F51A2EABD303003D4063 /* Date.swift */,
 				34924CED259FD064009C3450 /* DateFormatter.swift */,
 				34651F5325E22A3900518C5A /* DateIntervalFormatter.swift */,
 				34EDE71A2AC46515007C5854 /* Error.swift */,
@@ -784,6 +789,7 @@
 				34E0C4512DA2C5A100B33B27 /* Attachment.swift */,
 				3470214F259E163000827AE7 /* CalendarModel.swift */,
 				34D19FCB2622B9CC00B2732C /* DateRange.swift */,
+				34A6F5182EABCFAB003D4063 /* DueDate.swift */,
 				3468E652284BD44600B21EC8 /* EventBarStyle.swift */,
 				3468E650284BD3D600B21EC8 /* EventLink.swift */,
 				347D0FF125954920002451EC /* EventModel.swift */,
@@ -1352,6 +1358,7 @@
 				34B5A09725B0F8A500F7F7ED /* NSButton.swift in Sources */,
 				34CC382D25B636A6006CBD99 /* Checkbox.swift in Sources */,
 				3430ED03259634E00045DA53 /* NSStackView+Rx.swift in Sources */,
+				34A6F5192EABCFAB003D4063 /* DueDate.swift in Sources */,
 				34F4C47F2A6C57B300397C80 /* MockStatusItemSettings.swift in Sources */,
 				34F4C47B2A6C54A900397C80 /* StatusItemPreview.swift in Sources */,
 				346C5A4A2BC2D6F60007106C /* NextEventPreview.swift in Sources */,
@@ -1365,6 +1372,7 @@
 				34702168259E761100827AE7 /* Calendar.swift in Sources */,
 				34D5A79B2EAA7B1000A41E28 /* ReminderEditorView.swift in Sources */,
 				34F201332693F562006CE2FF /* MockEventListSettings.swift in Sources */,
+				34A6F51B2EABD303003D4063 /* Date.swift in Sources */,
 				3477E7102C67C15A008D3844 /* AppEnvironment.swift in Sources */,
 				342AEE3A2DFF0968008CBBE0 /* MockCalendarAppProvider.swift in Sources */,
 				34C4599C25DEFFDA00561C29 /* BuildConfig.m in Sources */,

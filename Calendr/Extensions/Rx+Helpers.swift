@@ -10,6 +10,13 @@ import RxSwift
 extension ObservableConvertibleType {
 
     static func void() -> Observable<Void> { .just(()) }
+
+    func bind<T: AnyObject>(to object: T, _ keyPath: ReferenceWritableKeyPath<T, Element>) -> Disposable {
+
+        asObservable().bind { [weak object] value in
+            object?[keyPath: keyPath] = value
+        }
+    }
 }
 
 extension ObservableType {
@@ -47,14 +54,14 @@ extension ObservableType {
 
 extension PublishSubject {
 
-    static func pipe(scheduler: ImmediateSchedulerType = CurrentThreadScheduler.instance) -> (output: Observable<Element>, input: AnyObserver<Element>) {
+    static func pipe(on scheduler: ImmediateSchedulerType = CurrentThreadScheduler.instance) -> (output: Observable<Element>, input: AnyObserver<Element>) {
         { ($0.asObservable().observe(on: scheduler), $0.asObserver()) }(Self.init())
     }
 }
 
 extension BehaviorSubject {
 
-    static func pipe(value: Element, scheduler: ImmediateSchedulerType = CurrentThreadScheduler.instance) -> (output: Observable<Element>, input: AnyObserver<Element>) {
+    static func pipe(value: Element, on scheduler: ImmediateSchedulerType = CurrentThreadScheduler.instance) -> (output: Observable<Element>, input: AnyObserver<Element>) {
         { ($0.asObservable().observe(on: scheduler), $0.asObserver()) }(Self.init(value: value))
     }
 
@@ -74,4 +81,20 @@ extension Optional {
 extension AnyObserver {
 
     static func dummy() -> Self { .init { _ in } }
+}
+
+extension PrimitiveSequence where Trait == CompletableTrait, Element == Never {
+
+    func mapError<T>(_ transform: @escaping (Error) -> T) -> Maybe<T> {
+
+        asObservable().materialize().flatMap { event -> Maybe<T> in
+            switch event {
+                case .error(let e):
+                    return .just(transform(e))
+                case .next, .completed:
+                    return .empty()
+            }
+        }
+        .asMaybe()
+    }
 }

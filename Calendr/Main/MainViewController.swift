@@ -537,15 +537,23 @@ class MainViewController: NSViewController {
     }
 
     private func openReminderEditor() {
-        let viewModel = ReminderEditorViewModel()
+
+        let viewModel = ReminderEditorViewModel(
+            dueDate: .withCurrentTime(
+                at: selectedDate.current,
+                adding: .init(hour: 1),
+                using: dateProvider
+            ),
+            calendarService: calendarService
+        )
         let editorView = ReminderEditorView(viewModel: viewModel)
         let viewController = HostingController(rootView: editorView)
 
         viewController.isResizable = false
         viewController.delegate = viewModel
 
-        viewModel.onCloseConfirmation = {
-            viewController.dismiss(nil)
+        viewModel.onCloseConfirmation = { [weak viewController] in
+            viewController?.dismiss(nil)
         }
 
         NSApp.activate(ignoringOtherApps: true)

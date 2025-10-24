@@ -35,23 +35,6 @@ struct ReminderEditorView: View {
                 .border(.clear)
                 .overlay { borderOverlay }
 
-            ZStack(alignment: .topLeading) {
-                TextEditor(text: $viewModel.notes)
-                    .font(font)
-                    .foregroundStyle(textColor)
-                    .frame(height: 60)
-                    .padding(.horizontal, 2)
-                    .padding(.vertical, 4)
-                    .overlay { borderOverlay }
-
-                if viewModel.notes.trimmed.isEmpty {
-                    Text("Notes")
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 4)
-                        .foregroundStyle(.secondary)
-                }
-            }
-
             HStack(spacing: 8) {
                 DatePicker("Date", selection: $viewModel.dueDate, displayedComponents: .date)
                     .datePickerStyle(.field)
@@ -67,9 +50,8 @@ struct ReminderEditorView: View {
                 Button("Save") {
                     viewModel.saveReminder()
                 }
-                .buttonStyle(.borderedProminent)
-                .tint(.accentColor)
                 .disabled(!viewModel.hasValidInput)
+                .keyboardShortcut(.defaultAction)
             }
         }
         .padding(20)
@@ -82,11 +64,20 @@ struct ReminderEditorView: View {
             Button("Continue editing", role: .cancel, action: {})
             Button("Discard all changes", role: .destructive, action: viewModel.confirmClose)
         }
+        .alert(isPresented: $viewModel.isErrorVisible, error: viewModel.error) {
+            Button("OK", role: .cancel, action: viewModel.dismissError)
+                .keyboardShortcut(.defaultAction)
+        }
     }
 }
 
 // MARK: - Preview
 
 #Preview {
-    ReminderEditorView(viewModel: .init())
+    ReminderEditorView(
+        viewModel: .init(
+            dueDate: .init(date: .now),
+            calendarService: MockCalendarServiceProvider()
+        )
+    )
 }

@@ -50,7 +50,7 @@ class LocalNotificationProvider: NSObject, LocalNotificationProviding, UNUserNot
 
     override init() {
 
-        (notificationTap, notificationTapObserver) = PublishSubject.pipe(scheduler: MainScheduler.instance)
+        (notificationTap, notificationTapObserver) = PublishSubject.pipe(on: MainScheduler.instance)
 
         super.init()
 

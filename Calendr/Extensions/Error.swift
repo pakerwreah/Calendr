@@ -18,3 +18,8 @@ extension Error where Self == UnexpectedError {
 
     static func unexpected(_ message: String) -> Self { .init(message: message) }
 }
+
+extension Error {
+
+    var unexpected: UnexpectedError { .unexpected(localizedDescription) }
+}
