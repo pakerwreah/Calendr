@@ -102,6 +102,10 @@
 "reminder.options.complete" = "Klar";
 "reminder.options.remind" = "Påminn %@";
 
+//"reminder.editor.headline" = "New Reminder";
+//"reminder.editor.title" = "Title";
+//"reminder.editor.save" = "Save";
+
 "event.details.participant.organizer" = "arrangören";
 "event.details.participant.me" = "jag";
 
@@ -124,6 +128,7 @@
 "tooltips.navigation.next_month" = "Nästa månad";
 
 "tooltips.toolbar.stay_open" = "Håll öppet";
+//"tooltips.toolbar.create" = "Create";
 "tooltips.toolbar.open_calendar" = "Öppen Kalender";
 "tooltips.toolbar.open_reminders" = "Öppna Påminnelser";
 "tooltips.toolbar.open_menu" = "Öppna menyn";

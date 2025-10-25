@@ -104,6 +104,10 @@
 "reminder.options.complete" = "Полный";
 "reminder.options.remind" = "Напомнить %@";
 
+//"reminder.editor.headline" = "New Reminder";
+//"reminder.editor.title" = "Title";
+//"reminder.editor.save" = "Save";
+
 "event.details.participant.organizer" = "организатор";
 "event.details.participant.me" = "я";
 
@@ -126,6 +130,7 @@
 "tooltips.navigation.next_month" = "Следующий месяц";
 
 "tooltips.toolbar.stay_open" = "Оставить открытым";
+//"tooltips.toolbar.create" = "Create";
 "tooltips.toolbar.open_calendar" = "Открыть календарь";
 "tooltips.toolbar.open_reminders" = "Открыть напоминания";
 "tooltips.toolbar.open_menu" = "Открыть меню";

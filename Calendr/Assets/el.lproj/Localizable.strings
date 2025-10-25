@@ -102,6 +102,10 @@
 "reminder.options.complete" = "Ολοκληρώθηκε";
 "reminder.options.remind" = "Υπενθύμιση %@";
 
+//"reminder.editor.headline" = "New Reminder";
+//"reminder.editor.title" = "Title";
+//"reminder.editor.save" = "Save";
+
 "event.details.participant.organizer" = "διοργανωτής";
 "event.details.participant.me" = "εγω";
 
@@ -124,6 +128,7 @@
 "tooltips.navigation.next_month" = "Επόμενος μήνας";
 
 "tooltips.toolbar.stay_open" = "Μείνετε ανοιχτοί";
+//"tooltips.toolbar.create" = "Create";
 "tooltips.toolbar.open_calendar" = "Άνοιγμα Ημερολογίου";
 "tooltips.toolbar.open_reminders" = "Άνοιγμα Υπενθυμίσεων";
 "tooltips.toolbar.open_menu" = "Άνοιγμα μενού";

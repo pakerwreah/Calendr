@@ -102,6 +102,10 @@
 "reminder.options.complete" = "完成";
 "reminder.options.remind" = "提醒 %@";
 
+//"reminder.editor.headline" = "New Reminder";
+//"reminder.editor.title" = "Title";
+//"reminder.editor.save" = "Save";
+
 "event.details.participant.organizer" = "組織者";
 "event.details.participant.me" = "我";
 
@@ -124,6 +128,7 @@
 "tooltips.navigation.next_month" = "後一個月";
 
 "tooltips.toolbar.stay_open" = "保持打開";
+//"tooltips.toolbar.create" = "Create";
 "tooltips.toolbar.open_calendar" = "打開行事曆";
 "tooltips.toolbar.open_reminders" = "打開提醒";
 "tooltips.toolbar.open_menu" = "打開選單";

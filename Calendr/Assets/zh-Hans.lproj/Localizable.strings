@@ -102,6 +102,10 @@
 "reminder.options.complete" = "完成";
 "reminder.options.remind" = "%@提醒";
 
+//"reminder.editor.headline" = "New Reminder";
+//"reminder.editor.title" = "Title";
+//"reminder.editor.save" = "Save";
+
 "event.details.participant.organizer" = "发起人";
 "event.details.participant.me" = "我";
 
@@ -124,6 +128,7 @@
 "tooltips.navigation.next_month" = "下个月";
 
 "tooltips.toolbar.stay_open" = "保持打开";
+//"tooltips.toolbar.create" = "Create";
 "tooltips.toolbar.open_calendar" = "打开日历";
 "tooltips.toolbar.open_reminders" = "打开提醒";
 "tooltips.toolbar.open_menu" = "打开菜单";

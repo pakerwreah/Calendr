@@ -102,6 +102,10 @@
 "reminder.options.complete" = "Dokončiť";
 "reminder.options.remind" = "Pripomenúť %@";
 
+//"reminder.editor.headline" = "New Reminder";
+//"reminder.editor.title" = "Title";
+//"reminder.editor.save" = "Save";
+
 "event.details.participant.organizer" = "organizátor";
 "event.details.participant.me" = "ja";
 
@@ -124,6 +128,7 @@
 "tooltips.navigation.next_month" = "Nasledujúci mesiac";
 
 "tooltips.toolbar.stay_open" = "Ponechať otvorené";
+//"tooltips.toolbar.create" = "Create";
 "tooltips.toolbar.open_calendar" = "Otvoriť Kalendár";
 "tooltips.toolbar.open_reminders" = "Otvoriť Pripomienky";
 "tooltips.toolbar.open_menu" = "Otvoriť menu";

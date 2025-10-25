@@ -102,6 +102,10 @@
 "reminder.options.complete" = "בצע";
 "reminder.options.remind" = "הזכר %@";
 
+//"reminder.editor.headline" = "New Reminder";
+//"reminder.editor.title" = "Title";
+//"reminder.editor.save" = "Save";
+
 "event.details.participant.organizer" = "מארגן";
 "event.details.participant.me" = "אני";
 
@@ -124,6 +128,7 @@
 "tooltips.navigation.next_month" = "חודש הבא";
 
 "tooltips.toolbar.stay_open" = "הישאר פתוח";
+//"tooltips.toolbar.create" = "Create";
 "tooltips.toolbar.open_calendar" = "פתח לוח שנה";
 "tooltips.toolbar.open_reminders" = "פתח תזכורות";
 "tooltips.toolbar.open_menu" = "פתח תפריט";

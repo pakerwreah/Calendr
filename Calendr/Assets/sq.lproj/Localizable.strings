@@ -102,6 +102,10 @@
 "reminder.options.complete" = "E Plotësuar";
 "reminder.options.remind" = "Kujto %@";
 
+//"reminder.editor.headline" = "New Reminder";
+//"reminder.editor.title" = "Title";
+//"reminder.editor.save" = "Save";
+
 "event.details.participant.organizer" = "organizator";
 "event.details.participant.me" = "unë";
 
@@ -124,6 +128,7 @@
 "tooltips.navigation.next_month" = "Muajin tjetër";
 
 "tooltips.toolbar.stay_open" = "Qëndroni të hapur";
+//"tooltips.toolbar.create" = "Create";
 "tooltips.toolbar.open_calendar" = "Hap Kalendarin";
 "tooltips.toolbar.open_reminders" = "Hapni Përkujtuesit";
 "tooltips.toolbar.open_menu" = "Hap menunë";

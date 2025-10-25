@@ -102,6 +102,10 @@
 "reminder.options.complete" = "Complete";
 "reminder.options.remind" = "Remind %@";
 
+"reminder.editor.headline" = "New Reminder";
+"reminder.editor.title" = "Title";
+"reminder.editor.save" = "Save";
+
 "event.details.participant.organizer" = "organizer";
 "event.details.participant.me" = "me";
 
@@ -124,6 +128,7 @@
 "tooltips.navigation.next_month" = "Next month";
 
 "tooltips.toolbar.stay_open" = "Stay open";
+"tooltips.toolbar.create" = "Create";
 "tooltips.toolbar.open_calendar" = "Open Calendar";
 "tooltips.toolbar.open_reminders" = "Open Reminders";
 "tooltips.toolbar.open_menu" = "Open menu";

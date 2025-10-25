@@ -16,8 +16,10 @@ struct ReminderEditorView: View {
     }
 
     var body: some View {
+
         VStack(alignment: .leading, spacing: 16) {
-            Text("New Reminder")
+
+            Text(Strings.Reminder.Editor.headline)
                 .font(.title2)
                 .bold()
 
@@ -28,7 +30,7 @@ struct ReminderEditorView: View {
 
             let font = Font.system(size: 13)
 
-            TextField("Title", text: $viewModel.title)
+            TextField(Strings.Reminder.Editor.title, text: $viewModel.title)
                 .focused($autoFocus)
                 .font(font)
                 .foregroundStyle(textColor)
@@ -47,7 +49,7 @@ struct ReminderEditorView: View {
 
             HStack {
                 Spacer()
-                Button("Save") {
+                Button(Strings.Reminder.Editor.save) {
                     viewModel.saveReminder()
                 }
                 .disabled(!viewModel.hasValidInput)

@@ -103,6 +103,10 @@
 "reminder.options.complete" = "Completato";
 "reminder.options.remind" = "Ricorda %@";
 
+//"reminder.editor.headline" = "New Reminder";
+//"reminder.editor.title" = "Title";
+//"reminder.editor.save" = "Save";
+
 "event.details.participant.organizer" = "Organizzatore";
 "event.details.participant.me" = "io";
 
@@ -125,6 +129,7 @@
 "tooltips.navigation.next_month" = "Mese prossimo";
 
 "tooltips.toolbar.stay_open" = "Fissa";
+//"tooltips.toolbar.create" = "Create";
 "tooltips.toolbar.open_calendar" = "Apri Calendario";
 "tooltips.toolbar.open_reminders" = "Apri Promemoria";
 "tooltips.toolbar.open_menu" = "Apri Menu";

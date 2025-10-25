@@ -23,6 +23,7 @@ enum Accessibility {
         static let calendarBtn = "main_calendar_button"
         static let settingsBtn = "main_settings_button"
         static let pinBtn = "main_pin_button"
+        static let createBtn = "main_create_button"
     }
 
     enum MenuBar {

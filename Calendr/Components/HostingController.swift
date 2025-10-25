@@ -34,8 +34,7 @@ class HostingController<RootView: View>: NSHostingController<RootView>, NSWindow
         super.viewDidLoad()
 
         guard let window = view.window else {
-            assertionFailure()
-            return
+            return assertionFailure()
         }
         window.delegate = self
     }
@@ -47,8 +46,7 @@ class HostingController<RootView: View>: NSHostingController<RootView>, NSWindow
         isFirstLayout = false
 
         guard let window = view.window else {
-            assertionFailure()
-            return
+            return assertionFailure()
         }
         window.center()
         window.becomeKey()

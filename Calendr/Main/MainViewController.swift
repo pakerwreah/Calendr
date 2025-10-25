@@ -36,6 +36,7 @@ class MainViewController: NSViewController {
     private let resetBtn = ImageButton()
     private let nextBtn = ImageButton()
     private let pinBtn = ImageButton()
+    private let createBtn = ImageButton()
     private let remindersBtn = ImageButton()
     private let calendarBtn = ImageButton()
     private let settingsBtn = ImageButton()
@@ -374,6 +375,7 @@ class MainViewController: NSViewController {
         resetBtn.setAccessibilityIdentifier(Accessibility.Main.resetBtn)
         nextBtn.setAccessibilityIdentifier(Accessibility.Main.nextBtn)
         pinBtn.setAccessibilityIdentifier(Accessibility.Main.pinBtn)
+        createBtn.setAccessibilityIdentifier(Accessibility.Main.createBtn)
         remindersBtn.setAccessibilityIdentifier(Accessibility.Main.remindersBtn)
         calendarBtn.setAccessibilityIdentifier(Accessibility.Main.calendarBtn)
         settingsBtn.setAccessibilityIdentifier(Accessibility.Main.settingsBtn)
@@ -410,21 +412,20 @@ class MainViewController: NSViewController {
             .bind(to: selectedDate)
             .disposed(by: disposeBag)
 
-        calendarViewModel.title
-            .bind(to: titleLabel.rx.text)
-            .disposed(by: disposeBag)
-
-        remindersBtn.rx.tap.bind { [weak self] in
-//            workspace.openReminders()
-            self?.openReminderEditor()
-        }
-        .disposed(by: disposeBag)
-
         dateDoubleClick
             .bind { [workspace] date in
                 workspace.open(date, mode: .day)
             }
             .disposed(by: disposeBag)
+
+        calendarViewModel.title
+            .bind(to: titleLabel.rx.text)
+            .disposed(by: disposeBag)
+
+        remindersBtn.rx.tap.bind { [workspace] in
+            workspace.openReminders()
+        }
+        .disposed(by: disposeBag)
 
         calendarBtn.rx.tap
             .withLatestFrom(selectedDate)
@@ -442,22 +443,40 @@ class MainViewController: NSViewController {
             .bind(to: searchInput.rx.stringValue)
             .disposed(by: disposeBag)
 
+        setUpCreateButton()
+
         setUpDateSuggestion()
 
-        autoUpdater.notificationTap.bind { [weak self] action in
-            guard let self else { return }
+        setUpAutoUpdater()
+    }
 
-            switch action {
-            case .newVersion(.default):
-                openSettingsTab(.about)
-            
-            case .newVersion(.install):
-                autoUpdater.downloadAndInstall()
+    private func setUpCreateButton() {
 
-            case .updated:
-                openReleasePage()
-            }
+        let createMenu = TrackedMenu()
 
+        let formatter = RelativeDateTimeFormatter()
+        formatter.dateTimeStyle = .named
+
+        let options: [DateComponents] = [
+            .init(minute: 5),
+            .init(minute: 15),
+            .init(minute: 30),
+            .init(hour: 1),
+            .init(day: 1)
+        ]
+
+        createMenu.items = options.map { option in
+            let title = Strings.Reminder.Options.remind(formatter.localizedString(from: option))
+            let item = NSMenuItem()
+            item.title = title
+            item.representedObject = option
+            item.target = self
+            item.action = #selector(MainViewController.openReminderEditor)
+            return item
+        }
+
+        createBtn.rx.tap.bind { [createBtn] in
+            createMenu.popUp(positioning: nil, at: .init(x: 0, y: createBtn.frame.height), in: createBtn)
         }
         .disposed(by: disposeBag)
     }
@@ -487,6 +506,26 @@ class MainViewController: NSViewController {
             .map(formatter.string(from:))
             .bind(to: searchInputSuggestionView.textField.rx.text)
             .disposed(by: disposeBag)
+    }
+
+    private func setUpAutoUpdater() {
+
+        autoUpdater.notificationTap.bind { [weak self] action in
+            guard let self else { return }
+
+            switch action {
+                case .newVersion(.default):
+                    openSettingsTab(.about)
+
+                case .newVersion(.install):
+                    autoUpdater.downloadAndInstall()
+
+                case .updated:
+                    openReleasePage()
+            }
+
+        }
+        .disposed(by: disposeBag)
     }
 
     private func openReleasePage() {
@@ -536,12 +575,16 @@ class MainViewController: NSViewController {
         settingsViewController.selectedTabViewItemIndex = tab.rawValue
     }
 
-    private func openReminderEditor() {
+    @objc private func openReminderEditor(_ sender: NSMenuItem) {
+
+        guard let dateComponents = sender.representedObject as? DateComponents else {
+            return assertionFailure()
+        }
 
         let viewModel = ReminderEditorViewModel(
             dueDate: .withCurrentTime(
                 at: selectedDate.current,
-                adding: .init(hour: 1),
+                adding: dateComponents,
                 using: dateProvider
             ),
             calendarService: calendarService
@@ -1029,6 +1072,9 @@ class MainViewController: NSViewController {
         pinBtn.alternateImage = Icons.Calendar.pinned
         pinBtn.toolTip = Strings.Tooltips.Toolbar.stayOpen
 
+        createBtn.image = Icons.Calendar.create.with(scale: .large)
+        createBtn.toolTip = Strings.Tooltips.Toolbar.create
+
         remindersBtn.image = Icons.Calendar.reminders.with(scale: .large)
         remindersBtn.toolTip = Strings.Tooltips.Toolbar.openReminders
 
@@ -1038,7 +1084,7 @@ class MainViewController: NSViewController {
         settingsBtn.image = Icons.Calendar.settings.with(scale: .large)
         settingsBtn.toolTip = Strings.Tooltips.Toolbar.openMenu
 
-        return NSStackView(views: [pinBtn, .spacer, remindersBtn, calendarBtn, settingsBtn])
+        return NSStackView(views: [pinBtn, createBtn, .spacer, remindersBtn, calendarBtn, settingsBtn])
     }
 
     private func makeDateSelector() -> DateSelector {
