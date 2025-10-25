@@ -106,6 +106,9 @@
 "reminder.editor.title" = "Título";
 "reminder.editor.save" = "Salvar";
 
+"reminder.editor.confirm.continue" = "Continuar editando";
+"reminder.editor.confirm.discard" = "Descartar todas as alterações";
+
 "event.details.participant.organizer" = "organizador";
 "event.details.participant.me" = "eu";
 
