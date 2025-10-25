@@ -63,8 +63,16 @@ struct ReminderEditorView: View {
             autoFocus = true
         }
         .confirmationDialog("", isPresented: $viewModel.isCloseConfirmationVisible) {
-            Button("Continue editing", role: .cancel, action: {})
-            Button("Discard all changes", role: .destructive, action: viewModel.confirmClose)
+            Button(
+                Strings.Reminder.Editor.Confirm.continue,
+                role: .cancel,
+                action: {}
+            )
+            Button(
+                Strings.Reminder.Editor.Confirm.discard,
+                role: .destructive,
+                action: viewModel.confirmClose
+            )
         }
         .alert(isPresented: $viewModel.isErrorVisible, error: viewModel.error) {
             Button("OK", role: .cancel, action: viewModel.dismissError)

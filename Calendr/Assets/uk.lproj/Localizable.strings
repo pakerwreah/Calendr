@@ -106,6 +106,9 @@
 //"reminder.editor.title" = "Title";
 //"reminder.editor.save" = "Save";
 
+//"reminder.editor.confirm.continue" = "Continue editing";
+//"reminder.editor.confirm.discard" = "Discard all changes";
+
 "event.details.participant.organizer" = "організатор";
 "event.details.participant.me" = "я";
 

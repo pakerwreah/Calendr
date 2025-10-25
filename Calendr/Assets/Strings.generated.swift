@@ -129,6 +129,12 @@ internal enum Strings {
       internal static let save = Strings.tr("Localizable", "reminder.editor.save", fallback: "Save")
       /// Title
       internal static let title = Strings.tr("Localizable", "reminder.editor.title", fallback: "Title")
+      internal enum Confirm {
+        /// Continue editing
+        internal static let `continue` = Strings.tr("Localizable", "reminder.editor.confirm.continue", fallback: "Continue editing")
+        /// Discard all changes
+        internal static let discard = Strings.tr("Localizable", "reminder.editor.confirm.discard", fallback: "Discard all changes")
+      }
     }
     internal enum Options {
       /// Options
