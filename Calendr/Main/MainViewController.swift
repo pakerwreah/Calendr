@@ -595,7 +595,7 @@ class MainViewController: NSViewController {
         viewController.isResizable = false
         viewController.delegate = viewModel
 
-        viewModel.onCloseConfirmation = { [weak viewController] in
+        viewModel.onCloseConfirmed = { [weak viewController] in
             viewController?.dismiss(nil)
         }
 

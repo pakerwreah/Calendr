@@ -30,13 +30,13 @@ class ReminderEditorViewModel: ObservableObject, HostingControllerDelegate {
         self.calendarService = calendarService
     }
 
-    var onCloseConfirmation: () -> Void = {
+    var onCloseConfirmed: () -> Void = {
         print("Close editor modal")
     }
 
     func confirmClose() {
         isCloseConfirmationVisible = false
-        onCloseConfirmation()
+        onCloseConfirmed()
     }
 
     func dismissError() {

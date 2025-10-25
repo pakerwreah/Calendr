@@ -108,7 +108,7 @@ class ReminderOptionsViewModelTests: XCTestCase {
 
         dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 12)
 
-        calendarService.spyRescheduleObservable
+        calendarService.spyRescheduleReminderObservable
             .bind { date = $0 }
             .disposed(by: disposeBag)
 
@@ -131,7 +131,7 @@ class ReminderOptionsViewModelTests: XCTestCase {
 
         dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 12)
 
-        calendarService.spyRescheduleObservable
+        calendarService.spyRescheduleReminderObservable
             .bind { date = $0 }
             .disposed(by: disposeBag)
 
@@ -152,7 +152,7 @@ class ReminderOptionsViewModelTests: XCTestCase {
             callback = $0
         })
 
-        calendarService.spyCompleteObservable
+        calendarService.spyCompleteReminderObservable
             .bind { complete = $0 }
             .disposed(by: disposeBag)
 

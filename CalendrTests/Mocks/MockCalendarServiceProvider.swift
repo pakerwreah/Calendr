@@ -9,14 +9,17 @@ import Foundation
 import RxSwift
 @testable import Calendr
 
+typealias CreateReminderArgs = (title: String, date: Date)
 typealias EventsArgs = (start: Date, end: Date, calendars: [String])
 
 class MockCalendarServiceProvider: CalendarServiceProviding {
 
     let (changeObservable, changeObserver) = PublishSubject<Void>.pipe()
+
     let (spyEventsObservable, spyEventsObserver) = PublishSubject<EventsArgs>.pipe()
-    let (spyCompleteObservable, spyCompleteObserver) = PublishSubject<Bool>.pipe()
-    let (spyRescheduleObservable, spyRescheduleObserver) = PublishSubject<Date>.pipe()
+    let (spyCreateReminderObservable, spyCreateReminderObserver) = PublishSubject<CreateReminderArgs>.pipe()
+    let (spyCompleteReminderObservable, spyCompleteReminderObserver) = PublishSubject<Bool>.pipe()
+    let (spyRescheduleReminderObservable, spyRescheduleReminderObserver) = PublishSubject<Date>.pipe()
     let (spyChangeEventStatusObservable, spyChangeEventStatusObserver) = PublishSubject<EventStatus>.pipe()
 
     var didRequestAccess: (() -> Void)?
@@ -29,22 +32,27 @@ class MockCalendarServiceProvider: CalendarServiceProviding {
     func calendars() -> Single<[CalendarModel]> { .just(m_calendars) }
 
     func events(from start: Date, to end: Date, calendars: [String]) -> Single<[EventModel]> {
-        spyEventsObserver.onNext((start: start, end: end, calendars: calendars))
+        spyEventsObserver.onNext((start, end, calendars))
         return .just(m_events)
     }
 
     func completeReminder(id: String, complete: Bool) -> Completable {
-        spyCompleteObserver.onNext(complete)
+        spyCompleteReminderObserver.onNext(complete)
         return .empty()
     }
 
     func rescheduleReminder(id: String, to date: Date) -> Completable {
-        spyRescheduleObserver.onNext(date)
+        spyRescheduleReminderObserver.onNext(date)
         return .empty()
     }
 
     func changeEventStatus(id: String, date: Date, to status: EventStatus) -> Completable {
         spyChangeEventStatusObserver.onNext(status)
+        return .empty()
+    }
+
+    func createReminder(title: String, date: Date) -> Completable {
+        spyCreateReminderObserver.onNext((title, date))
         return .empty()
     }
 }

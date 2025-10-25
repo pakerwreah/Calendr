@@ -157,6 +157,7 @@
 		34ABB9F029A166220021F3CF /* ContextMenuFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34ABB9EF29A166220021F3CF /* ContextMenuFactoryTests.swift */; };
 		34ABB9F229A2AFA30021F3CF /* CursorButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34ABB9F129A2AFA30021F3CF /* CursorButton.swift */; };
 		34AC60C626925FA5005312B6 /* PreviewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34AC60C526925FA5005312B6 /* PreviewExtensions.swift */; };
+		34B154BC2EAD2D1F006DF54A /* ReminderEditorViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B154BB2EAD2D11006DF54A /* ReminderEditorViewModelTests.swift */; };
 		34B1B3BB2CBC3730002AC38E /* MockEventSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B1B3BA2CBC3730002AC38E /* MockEventSettings.swift */; };
 		34B1B3BF2CBC3762002AC38E /* MockAppearanceSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B1B3BC2CBC3762002AC38E /* MockAppearanceSettings.swift */; };
 		34B1C7C525EDA01F00E5CA80 /* EventIntervalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B1C7C425EDA01F00E5CA80 /* EventIntervalView.swift */; };
@@ -401,6 +402,7 @@
 		34ABB9EF29A166220021F3CF /* ContextMenuFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextMenuFactoryTests.swift; sourceTree = "<group>"; };
 		34ABB9F129A2AFA30021F3CF /* CursorButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CursorButton.swift; sourceTree = "<group>"; };
 		34AC60C526925FA5005312B6 /* PreviewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewExtensions.swift; sourceTree = "<group>"; };
+		34B154BB2EAD2D11006DF54A /* ReminderEditorViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderEditorViewModelTests.swift; sourceTree = "<group>"; };
 		34B1B3BA2CBC3730002AC38E /* MockEventSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockEventSettings.swift; sourceTree = "<group>"; };
 		34B1B3BC2CBC3762002AC38E /* MockAppearanceSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAppearanceSettings.swift; sourceTree = "<group>"; };
 		34B1C7C425EDA01F00E5CA80 /* EventIntervalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventIntervalView.swift; sourceTree = "<group>"; };
@@ -700,6 +702,7 @@
 				348E703625C6173400B3B160 /* EventViewModelProgressTests.swift */,
 				34C2CF9025C2070400FC2CFF /* EventViewModelTests.swift */,
 				34C72F7D25E844E500FD20FA /* NextEventViewModelTests.swift */,
+				34B154BB2EAD2D11006DF54A /* ReminderEditorViewModelTests.swift */,
 				34ABB9E929A158080021F3CF /* ReminderOptionsViewModelTests.swift */,
 				3421AD3C25BA1D0800A4F468 /* SettingsViewModelTests.swift */,
 				341B2B4125D0B19500336342 /* StatusItemViewModelTests.swift */,
@@ -1428,6 +1431,7 @@
 				3477F3DA25FD44C1008EA888 /* MockEventListSettings.swift in Sources */,
 				346E70CB2802289F00A785FF /* MockScreenProvider.swift in Sources */,
 				3438AEEE2C6192A9002BE3E1 /* XCTest.swift in Sources */,
+				34B154BC2EAD2D1F006DF54A /* ReminderEditorViewModelTests.swift in Sources */,
 				342AEE3C2DFF25E3008CBBE0 /* CalendarAppProviderTests.swift in Sources */,
 				34C72F7E25E844E500FD20FA /* NextEventViewModelTests.swift in Sources */,
 				348E703725C6173400B3B160 /* EventViewModelProgressTests.swift in Sources */,
