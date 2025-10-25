@@ -75,6 +75,8 @@ struct ReminderEditorView: View {
 
 // MARK: - Preview
 
+#if DEBUG
+
 #Preview {
     ReminderEditorView(
         viewModel: .init(
@@ -83,3 +85,5 @@ struct ReminderEditorView: View {
         )
     )
 }
+
+#endif
