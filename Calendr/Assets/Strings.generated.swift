@@ -122,6 +122,14 @@ internal enum Strings {
     }
   }
   internal enum Reminder {
+    internal enum Editor {
+      /// New Reminder
+      internal static let headline = Strings.tr("Localizable", "reminder.editor.headline", fallback: "New Reminder")
+      /// Save
+      internal static let save = Strings.tr("Localizable", "reminder.editor.save", fallback: "Save")
+      /// Title
+      internal static let title = Strings.tr("Localizable", "reminder.editor.title", fallback: "Title")
+    }
     internal enum Options {
       /// Options
       internal static let button = Strings.tr("Localizable", "reminder.options.button", fallback: "Options")
@@ -287,6 +295,8 @@ internal enum Strings {
       internal static let today = Strings.tr("Localizable", "tooltips.navigation.today", fallback: "Today")
     }
     internal enum Toolbar {
+      /// Create
+      internal static let create = Strings.tr("Localizable", "tooltips.toolbar.create", fallback: "Create")
       /// Open Calendar
       internal static let openCalendar = Strings.tr("Localizable", "tooltips.toolbar.open_calendar", fallback: "Open Calendar")
       /// Open menu

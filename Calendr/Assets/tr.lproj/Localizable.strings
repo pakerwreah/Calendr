@@ -102,6 +102,10 @@
 "reminder.options.complete" = "Tamamlandı";
 "reminder.options.remind" = "%@ hatırlat";
 
+//"reminder.editor.headline" = "New Reminder";
+//"reminder.editor.title" = "Title";
+//"reminder.editor.save" = "Save";
+
 "event.details.participant.organizer" = "organizatör";
 "event.details.participant.me" = "ben";
 
@@ -124,6 +128,7 @@
 "tooltips.navigation.next_month" = "Sonraki ay";
 
 "tooltips.toolbar.stay_open" = "Açık kal";
+//"tooltips.toolbar.create" = "Create";
 "tooltips.toolbar.open_calendar" = "Takvimi aç";
 "tooltips.toolbar.open_reminders" = "Hatırlatıcıları aç";
 "tooltips.toolbar.open_menu" = "Menüyü aç";

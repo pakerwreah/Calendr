@@ -1,4 +1,6 @@
+.DS_Store
 xcuserdata
 Pods
-Environment.generated.swift
-.DS_Store
+
+*.generated.swift
+!Strings.generated.swift

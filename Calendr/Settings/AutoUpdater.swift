@@ -98,7 +98,7 @@ class AutoUpdater: AutoUpdating {
         self.networkProvider = networkProvider
         self.fileManager = fileManager
 
-        (newVersionAvailable, newVersionAvailableObserver) = BehaviorSubject.pipe(value: .initial, scheduler: MainScheduler.instance)
+        (newVersionAvailable, newVersionAvailableObserver) = BehaviorSubject.pipe(value: .initial, on: MainScheduler.instance)
 
         notificationTap = notificationProvider.notificationTap.map(NotificationAction.from)
 

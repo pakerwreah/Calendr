@@ -102,6 +102,10 @@
 "reminder.options.complete" = "완료";
 "reminder.options.remind" = "%@ 후 알림";
 
+//"reminder.editor.headline" = "New Reminder";
+//"reminder.editor.title" = "Title";
+//"reminder.editor.save" = "Save";
+
 "event.details.participant.organizer" = "주최자";
 "event.details.participant.me" = "나";
 
@@ -124,6 +128,7 @@
 "tooltips.navigation.next_month" = "다음 달";
 
 "tooltips.toolbar.stay_open" = "열어두기";
+//"tooltips.toolbar.create" = "Create";
 "tooltips.toolbar.open_calendar" = "캘린더 열기";
 "tooltips.toolbar.open_reminders" = "미리 알림 열기";
 "tooltips.toolbar.open_menu" = "메뉴 열기";

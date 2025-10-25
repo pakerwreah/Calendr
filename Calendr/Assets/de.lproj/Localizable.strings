@@ -102,6 +102,10 @@
 "reminder.options.complete" = "Erledigt";
 "reminder.options.remind" = "Erinnerung %@";
 
+//"reminder.editor.headline" = "New Reminder";
+//"reminder.editor.title" = "Title";
+//"reminder.editor.save" = "Save";
+
 "event.details.participant.organizer" = "Veranstaltende Person";
 "event.details.participant.me" = "Ich";
 
@@ -124,6 +128,7 @@
 "tooltips.navigation.next_month" = "Nächster Monat";
 
 "tooltips.toolbar.stay_open" = "Geöffnet lassen";
+//"tooltips.toolbar.create" = "Create";
 "tooltips.toolbar.open_calendar" = "Kalender öffnen";
 "tooltips.toolbar.open_reminders" = "Erinnerungen öffnen";
 "tooltips.toolbar.open_menu" = "Menü öffnen";

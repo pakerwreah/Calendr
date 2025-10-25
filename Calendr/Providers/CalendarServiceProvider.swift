@@ -15,8 +15,11 @@ protocol CalendarServiceProviding {
 
     func calendars() -> Single<[CalendarModel]>
     func events(from start: Date, to end: Date, calendars: [String]) -> Single<[EventModel]>
+
+    func createReminder(title: String, date: Date) -> Completable
     func completeReminder(id: String, complete: Bool) -> Completable
     func rescheduleReminder(id: String, to: Date) -> Completable
+
     func changeEventStatus(id: String, date: Date, to: EventStatus) -> Completable
 
     @MainActor func requestAccess()
@@ -47,7 +50,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
         self.userDefaults = userDefaults
         self.notificationCenter = notificationCenter
 
-        (changeObservable, changeObserver) = PublishSubject.pipe(scheduler: MainScheduler.instance)
+        (changeObservable, changeObserver) = PublishSubject.pipe(on: MainScheduler.instance)
     }
 
     private func listenToStoreChanges() {
@@ -221,18 +224,36 @@ class CalendarServiceProvider: CalendarServiceProviding {
         }
     }
 
+    func createReminder(title: String, date: Date) -> Completable {
+
+        Completable.create { [store, dateProvider] observer in
+            do {
+                guard let calendar = store.defaultCalendarForNewReminders() else {
+                    throw .unexpected("Missing default calendar for reminders")
+                }
+                let reminder = EKReminder(eventStore: store)
+                reminder.calendar = calendar
+                reminder.title = title
+                reminder.dueDateComponents = date.dateComponents(using: dateProvider)
+                reminder.addAlarm(EKAlarm(absoluteDate: date))
+                try store.save(reminder, commit: true)
+                observer(.completed)
+            } catch {
+                observer(.error(error))
+            }
+
+            return Disposables.create()
+        }
+        .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+    }
+
     func completeReminder(id: String, complete: Bool) -> Completable {
 
         Completable.create { [store] observer in
-
-            let disposable = Disposables.create()
-
-            guard let reminder = store.calendarItem(withIdentifier: id) as? EKReminder else {
-                observer(.error(.unexpected("🔥 Not a reminder")))
-                return disposable
-            }
-
             do {
+                guard let reminder = store.calendarItem(withIdentifier: id) as? EKReminder else {
+                    throw .unexpected("🔥 Not a reminder")
+                }
                 reminder.isCompleted = complete
                 try store.save(reminder, commit: true)
                 observer(.completed)
@@ -240,7 +261,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
                 observer(.error(error))
             }
 
-            return disposable
+            return Disposables.create()
         }
         .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
     }
@@ -248,17 +269,12 @@ class CalendarServiceProvider: CalendarServiceProviding {
     func rescheduleReminder(id: String, to date: Date) -> Completable {
 
         Completable.create { [store, dateProvider] observer in
-
-            let disposable = Disposables.create()
-
-            guard let reminder = store.calendarItem(withIdentifier: id) as? EKReminder else {
-                observer(.error(.unexpected("🔥 Not a reminder")))
-                return disposable
-            }
-
             do {
+                guard let reminder = store.calendarItem(withIdentifier: id) as? EKReminder else {
+                    throw .unexpected("🔥 Not a reminder")
+                }
                 reminder.isCompleted = false
-                reminder.dueDateComponents = date.dateComponents(dateProvider)
+                reminder.dueDateComponents = date.dateComponents(using: dateProvider)
                 reminder.alarms?.forEach(reminder.removeAlarm)
                 reminder.addAlarm(EKAlarm(absoluteDate: date))
                 try store.save(reminder, commit: true)
@@ -267,7 +283,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
                 observer(.error(error))
             }
 
-            return disposable
+            return Disposables.create()
         }
         .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
     }
@@ -278,19 +294,17 @@ class CalendarServiceProvider: CalendarServiceProviding {
 
             let disposable = Disposables.create()
 
-            let predicate = store.predicateForEvents(withStart: date, end: date + 1, calendars: nil)
-
-            guard let event = store.events(matching: predicate).first(where: { $0.calendarItemIdentifier == id }) else {
-                observer(.error(.unexpected("🔥 Event not found")))
-                return disposable
-            }
-
-            guard let user = event.currentUser else {
-                observer(.error(.unexpected("🔥 User not found")))
-                return disposable
-            }
-
             do {
+                let predicate = store.predicateForEvents(withStart: date, end: date + 1, calendars: nil)
+
+                guard let event = store.events(matching: predicate).first(where: { $0.calendarItemIdentifier == id }) else {
+                    throw .unexpected("🔥 Event not found")
+                }
+
+                guard let user = event.currentUser else {
+                    throw .unexpected("🔥 User not found")
+                }
+
                 let new_status: EKParticipantStatus
 
                 switch status {
@@ -591,12 +605,5 @@ extension EKEntityType: @retroactive CustomStringConvertible {
         @unknown default:
             return "unknown"
         }
-    }
-}
-
-private extension Date {
-
-    func dateComponents(_ dateProvider: DateProviding) -> DateComponents {
-        dateProvider.calendar.dateComponents(in: dateProvider.calendar.timeZone, from: self)
     }
 }

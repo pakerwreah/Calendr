@@ -102,6 +102,10 @@
 "reminder.options.complete" = "完了";
 "reminder.options.remind" = "%@ にリマインド";
 
+//"reminder.editor.headline" = "New Reminder";
+//"reminder.editor.title" = "Title";
+//"reminder.editor.save" = "Save";
+
 "event.details.participant.organizer" = "主催者";
 "event.details.participant.me" = "自分";
 
@@ -124,6 +128,7 @@
 "tooltips.navigation.next_month" = "翌月";
 
 "tooltips.toolbar.stay_open" = "前面に固定";
+//"tooltips.toolbar.create" = "Create";
 "tooltips.toolbar.open_calendar" = "カレンダーを開く";
 "tooltips.toolbar.open_reminders" = "リマインダーを開く";
 "tooltips.toolbar.open_menu" = "メニューを開く";

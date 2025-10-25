@@ -416,7 +416,7 @@ class EventViewModelTests: XCTestCase {
             .bind { isCompleted = $0 }
             .disposed(by: disposeBag)
 
-        calendarService.spyCompleteObservable
+        calendarService.spyCompleteReminderObservable
             .bind { serviceCompleted = $0 }
             .disposed(by: disposeBag)
 
@@ -444,7 +444,7 @@ class EventViewModelTests: XCTestCase {
             .bind { isCompleted = $0 }
             .disposed(by: disposeBag)
 
-        calendarService.spyCompleteObservable
+        calendarService.spyCompleteReminderObservable
             .bind { serviceCompleted = $0 }
             .disposed(by: disposeBag)
 
@@ -472,7 +472,7 @@ class EventViewModelTests: XCTestCase {
             .bind { isCompleted = $0 }
             .disposed(by: disposeBag)
 
-        calendarService.spyCompleteObservable
+        calendarService.spyCompleteReminderObservable
             .bind { serviceCompleted = $0 }
             .disposed(by: disposeBag)
 
