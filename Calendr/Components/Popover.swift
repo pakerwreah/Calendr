@@ -31,23 +31,23 @@ class Popover: NSObject, PopoverWindowDelegate {
     weak var delegate: PopoverDelegate?
     var behavior: Behavior = .transient
 
-    func show(from view: NSView) {
-        present(from: view, edge: .maxY, spacing: 0, single: true)
+    func show(from view: NSView, spacing: CGFloat = 0) {
+        present(from: view, edge: .maxY, spacing: spacing, single: true)
     }
 
-    func show(from view: NSView, after delay: DispatchTimeInterval) {
+    func show(from view: NSView, spacing: CGFloat = 0, delay: DispatchTimeInterval) {
         DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-            self.show(from: view)
+            self.show(from: view, spacing: spacing)
         }
     }
 
-    func push(from view: NSView) {
-        present(from: view, edge: .minX, spacing: 8, single: false)
+    func push(from view: NSView, spacing: CGFloat = 0) {
+        present(from: view, edge: .minX, spacing: spacing, single: false)
     }
 
-    func push(from view: NSView, after delay: DispatchTimeInterval) {
+    func push(from view: NSView, spacing: CGFloat = 0, delay: DispatchTimeInterval) {
         DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-            self.push(from: view)
+            self.push(from: view, spacing: spacing)
         }
     }
 
@@ -67,8 +67,11 @@ class Popover: NSObject, PopoverWindowDelegate {
 
         let contentView = contentViewController.view.forAutoLayout()
         let container = NSVisualEffectView()
-        container.maskImage = .mask(withCornerRadius: 12)
         container.state = .active
+        container.clipsToBounds = true
+        container.wantsLayer = true
+        container.layer?.cornerCurve = .continuous
+        container.layer?.cornerRadius = 12
         container.addSubview(contentView)
         container.edges(equalTo: contentView)
 
@@ -255,22 +258,5 @@ private class PopoverWindow: NSPanel {
         }
 
         return position
-    }
-}
-
-private extension NSImage {
-
-    static func mask(withCornerRadius radius: CGFloat) -> NSImage {
-        
-        let image = NSImage(size: NSSize(width: radius * 2, height: radius * 2), flipped: false) {
-            NSBezierPath(roundedRect: $0, xRadius: radius, yRadius: radius).fill()
-            NSColor.black.set()
-            return true
-        }
-
-        image.capInsets = NSEdgeInsets(top: radius, left: radius, bottom: radius, right: radius)
-        image.resizingMode = .stretch
-
-        return image
     }
 }

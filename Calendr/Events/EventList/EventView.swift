@@ -367,7 +367,7 @@ class EventView: NSView {
             popover.behavior = .transient
             popover.contentViewController = vc
             popover.delegate = vc
-            popover.push(from: view, after: vm.optimisticLoadTime)
+            popover.push(from: view, spacing: 4, delay: vm.optimisticLoadTime)
 
             return popover.rx.deallocated
                 // prevent reopening immediately after dismiss
