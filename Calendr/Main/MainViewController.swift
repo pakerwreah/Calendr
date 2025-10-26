@@ -196,7 +196,7 @@ class MainViewController: NSViewController {
 
         eventListView = EventListView(
             viewModel: eventListViewModel,
-            padding: .init(horizontal: Constants.MainStackView.margin)
+            padding: Constants.EventListView.padding
         )
 
         nextEventViewModel = NextEventViewModel(
@@ -652,7 +652,7 @@ class MainViewController: NSViewController {
 
     private var contentSize: CGSize {
         var size = view.frame.size
-        size.height = ceil(mainStackView.frame.height + 2 * Constants.MainStackView.margin)
+        size.height = ceil(mainStackView.frame.height + Constants.MainStackView.margin)
         return size
     }
 
@@ -1065,6 +1065,15 @@ private enum Constants {
 
     enum MainStackView {
         static let margin: CGFloat = 8
+    }
+
+    enum EventListView {
+
+        static let padding = NSEdgeInsets(
+            left: MainStackView.margin / 2,
+            bottom: MainStackView.margin / 2,
+            right: MainStackView.margin / 2
+        )
     }
 }
 

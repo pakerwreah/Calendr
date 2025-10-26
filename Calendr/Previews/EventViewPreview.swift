@@ -28,7 +28,7 @@ struct EventViewPreview: PreviewProvider {
                     title: "Test Event",
                     location: "Brasil",
                     notes: "Join at http://meet.google.com",
-                    type: .event(.pending),
+                    type: .event(.accepted),
                     calendar: .make(color: .systemYellow)
                 ),
                 dateProvider: dateProvider,
