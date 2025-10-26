@@ -29,7 +29,8 @@ class EventView: NSView {
     private let completeBtn = ImageButton()
     private let hoverLayer = CALayer()
     private let colorBar = NSView()
-    private let progressBallSize: CGFloat = 9
+    private let cornerRadius: CGFloat = 8
+    private let progressBallSize: CGFloat = 8
 
     private lazy var progressTop = progress.top(equalTo: self)
 
@@ -115,10 +116,11 @@ class EventView: NSView {
         forAutoLayout()
 
         wantsLayer = true
-        layer?.cornerRadius = 2
+        layer?.cornerRadius = cornerRadius
 
         hoverLayer.isHidden = true
         hoverLayer.backgroundColor = NSColor.gray.cgColor.copy(alpha: 0.2)
+        hoverLayer.cornerRadius = cornerRadius
         layer?.addSublayer(hoverLayer)
 
         [birthdayIcon, recurrenceIcon, completeBtn, priority, relativeDuration].forEach {
@@ -159,7 +161,13 @@ class EventView: NSView {
 
         colorBar.wantsLayer = true
         colorBar.layer?.cornerRadius = 2
-        colorBar.width(equalTo: 4)
+
+        let colorBarContainer = NSView()
+        colorBarContainer.addSubview(colorBar)
+        colorBarContainer.width(equalTo: 4)
+        colorBar.width(equalTo: colorBarContainer)
+        colorBar.center(in: colorBarContainer, orientation: .vertical)
+        colorBar.height(equalTo: colorBarContainer, constant: -(cornerRadius + 4))
 
         let titleStackView = NSStackView(views: [birthdayIcon, completeBtn, priority, title, recurrenceIcon])
             .with(spacing: 3)
@@ -190,11 +198,19 @@ class EventView: NSView {
         let eventStackView = NSStackView(views: [titleStackView, subtitle, linkStackView, durationStackView])
             .with(orientation: .vertical)
             .with(spacing: 3)
-            .with(insets: .init(vertical: 2))
+            .with(insets: .init(vertical: cornerRadius / 2))
 
-        let contentStackView = NSStackView(views: [colorBar, .dummy, eventStackView, .dummy]).with(spacing: 4)
+        let contentStackView = NSStackView(
+            views: [
+                .dummy, colorBarContainer, .dummy, eventStackView, .dummy
+            ]
+        ).with(spacing: 4)
+
         addSubview(contentStackView)
         contentStackView.edges(equalTo: self)
+
+        contentStackView.wantsLayer = true
+        contentStackView.layer?.cornerRadius = cornerRadius
 
         configureProgress()
     }
@@ -223,22 +239,30 @@ class EventView: NSView {
 
         let line = NSView()
         line.wantsLayer = true
-        line.height(equalTo: 1.5)
+        line.layer?.borderWidth = ringSize
+        line.height(equalTo: 1.5 + 2 * ringSize)
+
+        let glue = NSView()
+        glue.wantsLayer = true
+        glue.height(equalTo: 1.5)
 
         rx.updateLayer
             .startWith(())
             .bind {
                 ring.layer?.borderColor = NSColor.windowBackgroundColor.effectiveCGColor
+                line.layer?.borderColor = NSColor.windowBackgroundColor.effectiveCGColor
                 ball.layer?.backgroundColor = NSColor.systemRed.effectiveCGColor
                 line.layer?.backgroundColor = NSColor.systemRed.effectiveCGColor
+                glue.layer?.backgroundColor = NSColor.systemRed.effectiveCGColor
             }
             .disposed(by: disposeBag)
 
         progress.isHidden = true
-        progress.leading(equalTo: self, constant: -progressBallSize / 2)
+        progress.leading(equalTo: self, constant: -progressBallSize / 2 + 2)
         progress.trailing(equalTo: self)
         progress.addSubview(line)
         progress.addSubview(ring)
+        progress.addSubview(glue)
 
         line.center(in: progress, orientation: .vertical)
         line.leading(equalTo: progress)
@@ -247,6 +271,10 @@ class EventView: NSView {
         ball.leading(equalTo: progress)
         ball.top(equalTo: progress)
         ball.bottom(equalTo: progress)
+
+        glue.center(in: line, orientation: .vertical)
+        glue.leading(equalTo: ball.centerXAnchor)
+        glue.width(equalTo: progressBallSize)
     }
 
     private func setUpBindings() {
