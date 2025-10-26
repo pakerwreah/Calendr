@@ -918,66 +918,7 @@ class MainViewController: NSViewController {
 
     private func makeEventListSummary() -> NSView {
 
-        let stackView = NSStackView().with(distribution: .fillEqually).with(spacing: 4)
-
-        let container = NSVisualEffectView()
-        container.state = .active
-        container.blendingMode = .behindWindow
-
-        container.addSubview(stackView)
-        stackView.edges(equalTo: container)
-
-        settingsViewModel.popoverMaterial
-            .bind(to: container.rx.material)
-            .disposed(by: disposeBag)
-
-        func makeColorBar(_ color: NSColor) -> NSView {
-            let colorBar = NSView()
-            colorBar.wantsLayer = true
-            colorBar.layer?.cornerRadius = 1
-            colorBar.width(equalTo: 2)
-            colorBar.layer?.backgroundColor = color.cgColor
-            return colorBar
-        }
-
-        func makeColorBarStack(with colors: Set<NSColor>) -> NSStackView {
-            NSStackView(views: colors.map(makeColorBar)).with(spacing: 2)
-        }
-
-        func makeLabel(_ text: String) -> Label {
-            let label = Label(text: text, font: .systemFont(ofSize: 10))
-            label.lineBreakMode = .byWordWrapping
-            label.setContentHuggingPriority(.fittingSizeCompression, for: .vertical)
-            return label
-        }
-
-        func addItem(_ item: EventListSummaryItem, _ spacing: CGFloat) {
-            guard item.count > 0 else { return }
-            let stack = NSStackView().with(spacing: spacing)
-            let colorBars = makeColorBarStack(with: item.colors)
-            let label = makeLabel("\(item.label): \(item.count)")
-            stack.addArrangedSubview(colorBars)
-            stack.addArrangedSubview(label)
-            stackView.addArrangedSubview(stack)
-        }
-
-        eventListViewModel.summary
-            .observe(on: MainScheduler.instance)
-            .bind { info in
-                stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
-
-                let count = [info.overdue, info.allday, info.today].filter { $0.count > 0 }.count
-                let spacing: CGFloat = count > 2 ? 4 : 6
-
-                addItem(info.overdue, spacing)
-                addItem(info.allday, spacing)
-                addItem(info.today, spacing)
-
-                container.isHidden = stackView.arrangedSubviews.isEmpty
-            }
-            .disposed(by: disposeBag)
-
-        return container
+        EventListSummaryView(summary: eventListViewModel.summary)
     }
 
     private func makeEventListScroll() -> NSScrollView {
