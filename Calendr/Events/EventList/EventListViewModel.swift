@@ -20,7 +20,6 @@ private extension EventListItem {
 
 struct EventListSummaryItem: Equatable {
     let colors: Set<NSColor>
-    let label: String
     let count: Int
 }
 
@@ -136,17 +135,17 @@ class EventListViewModel {
                 }
             ).map { $0.compact() }
 
-            func makeItem(_ label: String, _ items: [EventViewModel]) -> EventListSummaryItem {
+            func makeItem(_ items: [EventViewModel]) -> EventListSummaryItem {
                 let r = Dictionary(grouping: items, by: \.color)
-                return .init(colors: Set(r.keys), label: label , count: r.values.map(\.count).reduce(0, +))
+                return .init(colors: Set(r.keys) , count: r.values.map(\.count).reduce(0, +))
             }
 
             return Observable.combineLatest(overduePast, overdueToday, allday, today)
                 .map { overduePast, overdueToday, allday, today in
                     EventListSummary(
-                        overdue: makeItem(Strings.Reminder.Status.overdue, overduePast + overdueToday),
-                        allday: makeItem(Strings.Event.allDay, allday),
-                        today: makeItem(Strings.Formatter.Date.today, today)
+                        overdue: makeItem(overduePast + overdueToday),
+                        allday: makeItem(allday),
+                        today: makeItem(today)
                     )
                 }
         }

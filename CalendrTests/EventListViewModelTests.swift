@@ -568,15 +568,15 @@ class EventListViewModelTests: XCTestCase {
 private extension EventListSummaryItem {
 
     static func overdue(_ colors: Set<NSColor>, _ count: Int) -> EventListSummaryItem {
-        .init(colors: colors, label: Strings.Reminder.Status.overdue, count: count)
+        .init(colors: colors, count: count)
     }
 
     static func allday(_ colors: Set<NSColor>, _ count: Int) -> EventListSummaryItem {
-        .init(colors: colors, label: Strings.Event.allDay, count: count)
+        .init(colors: colors, count: count)
     }
 
     static func today(_ colors: Set<NSColor>, _ count: Int) -> EventListSummaryItem {
-        .init(colors: colors, label: Strings.Formatter.Date.today, count: count)
+        .init(colors: colors, count: count)
     }
 }
 
