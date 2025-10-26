@@ -105,9 +105,9 @@ class EventListViewModelTests: XCTestCase {
         ])
 
         let summary = EventListSummary(
-            overdue: .overdue([], 0),
-            allday: .allday([.red, .yellow], 2),
-            today: .today([], 0)
+            overdue: .init(colors: [], count: 0),
+            allday: .init(colors: [.red, .yellow], count: 2),
+            today: .init(colors: [], count: 0)
         )
         XCTAssertEqual(viewModel.summary.lastValue(), summary)
     }
@@ -126,9 +126,9 @@ class EventListViewModelTests: XCTestCase {
         ])
 
         XCTAssertEqual(viewModel.summary.lastValue(), EventListSummary(
-            overdue: .overdue([], 0),
-            allday: .allday([], 0),
-            today: .today([.blue, .yellow, .red], 4)
+            overdue: .init(colors: [], count: 0),
+            allday: .init(colors: [], count: 0),
+            today: .init(colors: [.blue, .yellow, .red], count: 4)
         ))
     }
 
@@ -149,9 +149,9 @@ class EventListViewModelTests: XCTestCase {
         ])
 
         XCTAssertEqual(viewModel.summary.lastValue(), EventListSummary(
-            overdue: .overdue([], 0),
-            allday: .allday([.red, .yellow], 2),
-            today: .today([.blue, .yellow, .red], 4)
+            overdue: .init(colors: [], count: 0),
+            allday: .init(colors: [.red, .yellow], count: 2),
+            today: .init(colors: [.blue, .yellow, .red], count: 4)
         ))
     }
 
@@ -173,9 +173,9 @@ class EventListViewModelTests: XCTestCase {
         ])
 
         XCTAssertEqual(viewModel.summary.lastValue(), EventListSummary(
-            overdue: .overdue([], 0),
-            allday: .allday([.red, .yellow], 2),
-            today: .today([.blue, .yellow, .red], 4)
+            overdue: .init(colors: [], count: 0),
+            allday: .init(colors: [.red, .yellow], count: 2),
+            today: .init(colors: [.blue, .yellow, .red], count: 4)
         ))
     }
 
@@ -198,9 +198,9 @@ class EventListViewModelTests: XCTestCase {
         ])
 
         XCTAssertEqual(viewModel.summary.lastValue(), EventListSummary(
-            overdue: .overdue([], 0),
-            allday: .allday([.red, .yellow], 2),
-            today: .today([.blue, .yellow, .red], 4)
+            overdue: .init(colors: [], count: 0),
+            allday: .init(colors: [.red, .yellow], count: 2),
+            today: .init(colors: [.blue, .yellow, .red], count: 4)
         ))
     }
 
@@ -222,9 +222,9 @@ class EventListViewModelTests: XCTestCase {
         ])
 
         XCTAssertEqual(viewModel.summary.lastValue(), EventListSummary(
-            overdue: .overdue([], 0),
-            allday: .allday([.red, .yellow], 2),
-            today: .today([.red], 2)
+            overdue: .init(colors: [], count: 0),
+            allday: .init(colors: [.red, .yellow], count: 2),
+            today: .init(colors: [.red], count: 2)
         ))
 
         dateProvider.add(1, .minute)
@@ -239,9 +239,9 @@ class EventListViewModelTests: XCTestCase {
         ])
 
         XCTAssertEqual(viewModel.summary.lastValue(), EventListSummary(
-            overdue: .overdue([], 0),
-            allday: .allday([.red, .yellow], 2),
-            today: .today([.red], 1)
+            overdue: .init(colors: [], count: 0),
+            allday: .init(colors: [.red, .yellow], count: 2),
+            today: .init(colors: [.red], count: 1)
         ))
     }
 
@@ -292,9 +292,9 @@ class EventListViewModelTests: XCTestCase {
         XCTAssertEqual(sectionsFaded, [false, false])
 
         XCTAssertEqual(viewModel.summary.lastValue(), EventListSummary(
-            overdue: .overdue([], 0),
-            allday: .allday([.red, .yellow], 2),
-            today: .today([.blue, .yellow, .red, .clear], 5)
+            overdue: .init(colors: [], count: 0),
+            allday: .init(colors: [.red, .yellow], count: 2),
+            today: .init(colors: [.blue, .yellow, .red, .clear], count: 5)
         ))
 
         dateProvider.add(1, .hour)
@@ -303,9 +303,9 @@ class EventListViewModelTests: XCTestCase {
         XCTAssertEqual(sectionsFaded, [true, false])
 
         XCTAssertEqual(viewModel.summary.lastValue(), EventListSummary(
-            overdue: .overdue([], 0),
-            allday: .allday([.red, .yellow], 2),
-            today: .today([.clear], 1)
+            overdue: .init(colors: [], count: 0),
+            allday: .init(colors: [.red, .yellow], count: 2),
+            today: .init(colors: [.clear], count: 1)
         ))
 
         dateProvider.add(1, .hour)
@@ -314,9 +314,9 @@ class EventListViewModelTests: XCTestCase {
         XCTAssertEqual(sectionsFaded, [true, true])
 
         XCTAssertEqual(viewModel.summary.lastValue(), EventListSummary(
-            overdue: .overdue([], 0),
-            allday: .allday([.red, .yellow], 2),
-            today: .today([], 0)
+            overdue: .init(colors: [], count: 0),
+            allday: .init(colors: [.red, .yellow], count: 2),
+            today: .init(colors: [], count: 0)
         ))
     }
 
@@ -393,9 +393,9 @@ class EventListViewModelTests: XCTestCase {
         ])
 
         XCTAssertEqual(viewModel.summary.lastValue(), EventListSummary(
-            overdue: .overdue([.green, .purple], 3),
-            allday: .allday([.red, .yellow], 2),
-            today: .today([.blue, .yellow, .red], 4)
+            overdue: .init(colors: [.green, .purple], count: 3),
+            allday: .init(colors: [.red, .yellow], count: 2),
+            today: .init(colors: [.blue, .yellow, .red], count: 4)
         ))
     }
 
@@ -428,9 +428,9 @@ class EventListViewModelTests: XCTestCase {
         ])
 
         XCTAssertEqual(viewModel.summary.lastValue(), EventListSummary(
-            overdue: .overdue([], 0),
-            allday: .allday([.red, .yellow], 2),
-            today: .today([.blue, .yellow, .red], 4)
+            overdue: .init(colors: [], count: 0),
+            allday: .init(colors: [.red, .yellow], count: 2),
+            today: .init(colors: [.blue, .yellow, .red], count: 4)
         ))
     }
 
@@ -465,9 +465,9 @@ class EventListViewModelTests: XCTestCase {
         ])
 
         XCTAssertEqual(viewModel.summary.lastValue(), EventListSummary(
-            overdue: .overdue([], 0),
-            allday: .allday([.red], 2),
-            today: .today([.red, .yellow], 4)
+            overdue: .init(colors: [], count: 0),
+            allday: .init(colors: [.red], count: 2),
+            today: .init(colors: [.red, .yellow], count: 4)
         ))
     }
 
@@ -499,9 +499,9 @@ class EventListViewModelTests: XCTestCase {
         ])
 
         XCTAssertEqual(viewModel.summary.lastValue(), EventListSummary(
-            overdue: .overdue([], 0),
-            allday: .allday([.red, .yellow], 2),
-            today: .today([.red, .green], 3)
+            overdue: .init(colors: [], count: 0),
+            allday: .init(colors: [.red, .yellow], count: 2),
+            today: .init(colors: [.red, .green], count: 3)
         ))
     }
 
@@ -535,9 +535,9 @@ class EventListViewModelTests: XCTestCase {
         ])
 
         XCTAssertEqual(viewModel.summary.lastValue(), EventListSummary(
-            overdue: .overdue([], 0),
-            allday: .allday([.red, .yellow], 2),
-            today: .today([.red, .green], 3)
+            overdue: .init(colors: [], count: 0),
+            allday: .init(colors: [.red, .yellow], count: 2),
+            today: .init(colors: [.red, .green], count: 3)
         ))
     }
 
@@ -562,21 +562,6 @@ class EventListViewModelTests: XCTestCase {
             .interval("3m"),
             .event("Event 4"),
         ])
-    }
-}
-
-private extension EventListSummaryItem {
-
-    static func overdue(_ colors: Set<NSColor>, _ count: Int) -> EventListSummaryItem {
-        .init(colors: colors, count: count)
-    }
-
-    static func allday(_ colors: Set<NSColor>, _ count: Int) -> EventListSummaryItem {
-        .init(colors: colors, count: count)
-    }
-
-    static func today(_ colors: Set<NSColor>, _ count: Int) -> EventListSummaryItem {
-        .init(colors: colors, count: count)
     }
 }
 
