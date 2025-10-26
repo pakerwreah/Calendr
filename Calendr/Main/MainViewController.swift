@@ -755,7 +755,7 @@ class MainViewController: NSViewController {
                 popover.behavior = .transient
                 popover.contentViewController = vc
                 popover.delegate = vc
-                popover.show(from: statusBarButton, after: vm.optimisticLoadTime)
+                popover.show(from: statusBarButton, delay: vm.optimisticLoadTime)
 
                 let close = clickHandler.leftClick.bind {
                     vc.view.window?.performClose(nil)
