@@ -66,12 +66,10 @@ class Popover: NSObject, PopoverWindowDelegate {
         delegate?.popoverWillShow?()
 
         let contentView = contentViewController.view.forAutoLayout()
+
         let container = NSVisualEffectView()
         container.state = .active
-        container.clipsToBounds = true
-        container.wantsLayer = true
-        container.layer?.cornerCurve = .continuous
-        container.layer?.cornerRadius = 12
+        container.maskImage = .mask(withCornerRadius: 12)
         container.addSubview(contentView)
         container.edges(equalTo: contentView)
 
@@ -258,5 +256,22 @@ private class PopoverWindow: NSPanel {
         }
 
         return position
+    }
+}
+
+private extension NSImage {
+
+    static func mask(withCornerRadius radius: CGFloat) -> NSImage {
+
+        let image = NSImage(size: NSSize(width: radius * 2, height: radius * 2), flipped: false) {
+            NSBezierPath(roundedRect: $0, xRadius: radius, yRadius: radius).fill()
+            NSColor.black.set()
+            return true
+        }
+
+        image.capInsets = NSEdgeInsets(top: radius, left: radius, bottom: radius, right: radius)
+        image.resizingMode = .stretch
+
+        return image
     }
 }
