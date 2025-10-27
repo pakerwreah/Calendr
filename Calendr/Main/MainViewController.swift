@@ -681,6 +681,11 @@ class MainViewController: NSViewController {
         let mouseEntered = trackingView.mouseEntered.withLatestFrom(settingsViewModel.openOnHover).matching(true).void()
 
         Observable.merge(clickHandler.leftClick, mouseEntered)
+            .observe(
+                // make sure the popover is anchored to the correct view
+                // when clicking the menu bar on an inactive screen
+                on: MainScheduler.asyncInstance
+            )
             .flatMapFirst { [weak self] _ -> Observable<Void> in
                 guard let self else { return .empty() }
 
