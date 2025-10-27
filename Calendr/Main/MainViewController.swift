@@ -475,6 +475,12 @@ class MainViewController: NSViewController {
             return item
         }
 
+        selectedDate.map { [dateProvider] date in
+            dateProvider.calendar.isDate(date, lessThan: dateProvider.now, granularity: .day)
+        }
+        .bind(to: createBtn.rx.isHidden)
+        .disposed(by: disposeBag)
+
         createBtn.rx.tap.withLatestFrom(selectedDate).bind { [weak self] date in
 
             guard let self else { return }
