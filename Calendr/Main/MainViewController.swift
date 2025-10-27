@@ -475,7 +475,14 @@ class MainViewController: NSViewController {
             return item
         }
 
-        createBtn.rx.tap.bind { [createBtn] in
+        createBtn.rx.tap.withLatestFrom(selectedDate).bind { [weak self] date in
+
+            guard let self else { return }
+
+            guard dateProvider.calendar.isDateInToday(date) else {
+                return openReminderEditor()
+            }
+
             createMenu.popUp(positioning: nil, at: .init(x: 0, y: createBtn.frame.height), in: createBtn)
         }
         .disposed(by: disposeBag)
@@ -575,11 +582,9 @@ class MainViewController: NSViewController {
         settingsViewController.selectedTabViewItemIndex = tab.rawValue
     }
 
-    @objc private func openReminderEditor(_ sender: NSMenuItem) {
+    @objc private func openReminderEditor(_ sender: NSMenuItem? = nil) {
 
-        guard let dateComponents = sender.representedObject as? DateComponents else {
-            return assertionFailure()
-        }
+        let dateComponents = sender?.representedObject as? DateComponents ?? .init()
 
         let viewModel = ReminderEditorViewModel(
             dueDate: .withCurrentTime(
