@@ -16,19 +16,15 @@ class MockMainViewController: MainViewController {
 
         let dateProvider = MockDateProvider(start: .make(year: 2021, month: 1, day: 1, hour: 15, minute: 45))
 
-        let userDefaults = UserDefaults(suiteName: Self.className())!
-        userDefaults.setVolatileDomain([:], forName: UserDefaults.registrationDomain)
-        userDefaults.removePersistentDomain(forName: Self.className())
+        let localStorage = LocalStorageProvider.shared
 
-        registerDefaultPrefs(in: userDefaults)
+        registerDefaultPrefs(in: localStorage)
 
-        userDefaults.setValuesForKeys([
-            Prefs.firstWeekday: dateProvider.calendar.firstWeekday,
-            Prefs.statusItemDateStyle: DateFormatter.Style.full.rawValue,
-            Prefs.showWeekNumbers: true,
-            Prefs.showEventStatusItem: true,
-            Prefs.transparencyLevel: 5,
-        ])
+        localStorage.firstWeekday = dateProvider.calendar.firstWeekday
+        localStorage.statusItemDateStyle = DateFormatter.Style.full.rawValue
+        localStorage.showWeekNumbers = true
+        localStorage.showEventStatusItem = true
+        localStorage.transparencyLevel = 5
 
         let notificationCenter = NotificationCenter()
         let fileManager = FileManager.default
@@ -44,8 +40,8 @@ class MockMainViewController: MainViewController {
             screenProvider: ScreenProvider(notificationCenter: notificationCenter), 
             notificationProvider: MockLocalNotificationProvider(),
             networkProvider: MockNetworkServiceProvider(),
-            userDefaults: userDefaults,
-            notificationCenter: notificationCenter, 
+            localStorage: localStorage,
+            notificationCenter: notificationCenter,
             fileManager: fileManager
         )
     }

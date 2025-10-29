@@ -12,17 +12,10 @@ import UniformTypeIdentifiers
 
 class MockWorkspaceServiceProvider: WorkspaceServiceProviding {
 
-    let userDefaults: UserDefaults
-    let dateProvider: DateProviding
-    let calendarAppProvider: CalendarAppProviding
-    let notificationCenter: NotificationCenter
-
-    init() {
-        userDefaults = .init(suiteName: String(describing: Self.self))!
-        dateProvider = MockDateProvider()
-        calendarAppProvider = MockCalendarAppProvider()
-        notificationCenter = .init()
-    }
+    let localStorage: LocalStorageProvider = .shared
+    let dateProvider: DateProviding = MockDateProvider()
+    let calendarAppProvider: CalendarAppProviding = MockCalendarAppProvider()
+    let notificationCenter: NotificationCenter = .init()
 
     func urlForApplication(toOpen url: URL) -> URL? {
         return nil

@@ -82,18 +82,18 @@ class AutoUpdater: AutoUpdating {
 
     private var newRelease: Release?
 
-    private let userDefaults: UserDefaults
+    private let localStorage: LocalStorageProvider
     private(set) var notificationProvider: LocalNotificationProviding
     private let networkProvider: NetworkServiceProviding
     private let fileManager: FileManager
 
     init(
-        userDefaults: UserDefaults,
+        localStorage: LocalStorageProvider,
         notificationProvider: LocalNotificationProviding,
         networkProvider: NetworkServiceProviding,
         fileManager: FileManager
     ) {
-        self.userDefaults = userDefaults
+        self.localStorage = localStorage
         self.notificationProvider = notificationProvider
         self.networkProvider = networkProvider
         self.fileManager = fileManager
@@ -158,9 +158,9 @@ class AutoUpdater: AutoUpdating {
 
     private func sendUpdatedNotification()  {
 
-        guard let updated = userDefaults.updatedVersion else { return }
+        guard let updated = localStorage.updatedVersion else { return }
 
-        userDefaults.updatedVersion = nil
+        localStorage.updatedVersion = nil
 
         guard updated == BuildConfig.appVersion else { return }
 
@@ -184,7 +184,7 @@ class AutoUpdater: AutoUpdating {
 
         guard release.name != BuildConfig.appVersion else {
             newVersionAvailableObserver.onNext(.initial)
-            userDefaults.lastCheckedVersion = release.name
+            localStorage.lastCheckedVersion = release.name
             return
         }
 
@@ -192,11 +192,11 @@ class AutoUpdater: AutoUpdating {
         newVersionAvailableObserver.onNext(.newVersion(release.name))
 
         guard notify else {
-            userDefaults.lastCheckedVersion = release.name
+            localStorage.lastCheckedVersion = release.name
             return
         }
 
-        guard release.name != userDefaults.lastCheckedVersion else {
+        guard release.name != localStorage.lastCheckedVersion else {
             return // only notify each version once
         }
 
@@ -211,7 +211,7 @@ class AutoUpdater: AutoUpdating {
         content.categoryIdentifier = newVersionCategory.identifier
 
         if await notificationProvider.send(id: .uuid, content) {
-            userDefaults.lastCheckedVersion = version
+            localStorage.lastCheckedVersion = version
         }
     }
 
@@ -248,7 +248,7 @@ class AutoUpdater: AutoUpdating {
 
         try await replaceApp(url: selectedURL, archive: archiveURL)
 
-        userDefaults.updatedVersion = release.name
+        localStorage.updatedVersion = release.name
 
         try relaunchApp(url: selectedURL)
     }

@@ -10,18 +10,18 @@ import Foundation
 import UniformTypeIdentifiers
 
 class MockWorkspaceServiceProvider: WorkspaceServiceProviding {
-    let userDefaults: UserDefaults
+    let localStorage: LocalStorageProvider
     let dateProvider: DateProviding
     let calendarAppProvider: CalendarAppProviding
     let notificationCenter: NotificationCenter
 
     init (
-        userDefaults: UserDefaults? = nil,
+        localStorage: LocalStorageProvider? = nil,
         dateProvider: DateProviding? = nil,
         calendarAppProvider: CalendarAppProviding? = nil,
         notificationCenter: NotificationCenter? = nil
     ) {
-        self.userDefaults = userDefaults ?? .init(suiteName: String(describing: Self.self))!
+        self.localStorage = localStorage ?? MockLocalStorageProvider()
         self.dateProvider = dateProvider ?? MockDateProvider()
         self.calendarAppProvider = calendarAppProvider ?? MockCalendarAppProvider()
         self.notificationCenter = notificationCenter ?? .init()

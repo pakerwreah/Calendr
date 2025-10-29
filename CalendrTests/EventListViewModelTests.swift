@@ -22,6 +22,7 @@ class EventListViewModelTests: XCTestCase {
     let weatherService = MockWeatherServiceProvider()
     let workspace = MockWorkspaceServiceProvider()
     let settings = MockEventListSettings()
+    let localStorage = MockLocalStorageProvider()
 
     let scheduler = HistoricalScheduler()
     let eventsScheduler = HistoricalScheduler()
@@ -35,7 +36,7 @@ class EventListViewModelTests: XCTestCase {
         geocoder: geocoder,
         weatherService: weatherService,
         workspace: workspace,
-        userDefaults: .init(),
+        localStorage: localStorage,
         settings: settings,
         scheduler: scheduler,
         refreshScheduler: refreshScheduler,

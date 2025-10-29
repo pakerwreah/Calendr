@@ -56,6 +56,8 @@
 		3438AEEF2C6192A9002BE3E1 /* XCTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3438AEED2C6192A9002BE3E1 /* XCTest.swift */; };
 		34427692269B5760004CFE1C /* MockMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34427691269B5760004CFE1C /* MockMainViewController.swift */; };
 		3442769A269B5CA4004CFE1C /* UITestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34427699269B5CA4004CFE1C /* UITestCase.swift */; };
+		3443D9722EB0EED200476D4B /* MockLocalStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3443D9712EB0EED200476D4B /* MockLocalStorage.swift */; };
+		3443D9742EB0F01500476D4B /* LocalStorageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3443D9732EB0F01200476D4B /* LocalStorageProvider.swift */; };
 		3449402E25C348B20020E664 /* GeneralSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3449402D25C348B20020E664 /* GeneralSettingsViewController.swift */; };
 		3449403225C348C70020E664 /* CalendarPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3449403125C348C70020E664 /* CalendarPickerViewController.swift */; };
 		344A59DB29AEBBBF004F0452 /* EventUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 344A59DA29AEBBBF004F0452 /* EventUtils.swift */; };
@@ -136,7 +138,7 @@
 		3492C460269FCF5B009CFAD2 /* Accessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3492C45F269FCF5B009CFAD2 /* Accessibility.swift */; };
 		3492C464269FD64D009CFAD2 /* Accessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3492C45F269FCF5B009CFAD2 /* Accessibility.swift */; };
 		3492C466269FD6CE009CFAD2 /* MainViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3492C465269FD6CE009CFAD2 /* MainViewTests.swift */; };
-		34934CD628E69520009635D4 /* Prefs+UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34934CD528E69520009635D4 /* Prefs+UserDefaults.swift */; };
+		34934CD628E69520009635D4 /* LocalStoragePrefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34934CD528E69520009635D4 /* LocalStoragePrefs.swift */; };
 		34934CD828E71B0F009635D4 /* NSObject+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34934CD728E71B0F009635D4 /* NSObject+Rx.swift */; };
 		349355A625BCA8D400957945 /* EventListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349355A525BCA8D400957945 /* EventListView.swift */; };
 		349355AA25BCA8DF00957945 /* EventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349355A925BCA8DF00957945 /* EventView.swift */; };
@@ -295,6 +297,8 @@
 		34427697269B5CA4004CFE1C /* CalendrUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CalendrUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		34427699269B5CA4004CFE1C /* UITestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestCase.swift; sourceTree = "<group>"; };
 		3442769B269B5CA4004CFE1C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3443D9712EB0EED200476D4B /* MockLocalStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockLocalStorage.swift; sourceTree = "<group>"; };
+		3443D9732EB0F01200476D4B /* LocalStorageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalStorageProvider.swift; sourceTree = "<group>"; };
 		3449402D25C348B20020E664 /* GeneralSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsViewController.swift; sourceTree = "<group>"; };
 		3449403125C348C70020E664 /* CalendarPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPickerViewController.swift; sourceTree = "<group>"; };
 		344A59DA29AEBBBF004F0452 /* EventUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventUtils.swift; sourceTree = "<group>"; };
@@ -383,7 +387,7 @@
 		3492C45D269F7966009CFAD2 /* UITestCase+Queries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITestCase+Queries.swift"; sourceTree = "<group>"; };
 		3492C45F269FCF5B009CFAD2 /* Accessibility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Accessibility.swift; sourceTree = "<group>"; };
 		3492C465269FD6CE009CFAD2 /* MainViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewTests.swift; sourceTree = "<group>"; };
-		34934CD528E69520009635D4 /* Prefs+UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Prefs+UserDefaults.swift"; sourceTree = "<group>"; };
+		34934CD528E69520009635D4 /* LocalStoragePrefs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalStoragePrefs.swift; sourceTree = "<group>"; };
 		34934CD728E71B0F009635D4 /* NSObject+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+Rx.swift"; sourceTree = "<group>"; };
 		349355A525BCA8D400957945 /* EventListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventListView.swift; sourceTree = "<group>"; };
 		349355A925BCA8DF00957945 /* EventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventView.swift; sourceTree = "<group>"; };
@@ -527,6 +531,7 @@
 				3421DA112693E70E00056837 /* MockEventSettings.swift */,
 				345CC36D2C8CE13100B0DD1A /* MockGeocodeServiceProvider.swift */,
 				34299F742C72507100A0269B /* MockLocalNotificationProvider.swift */,
+				3443D9712EB0EED200476D4B /* MockLocalStorage.swift */,
 				34299F722C724FA000A0269B /* MockNetworkServiceProvider.swift */,
 				346C5A4B2BC2D87F0007106C /* MockNextEventSettings.swift */,
 				34F4C47C2A6C56AA00397C80 /* MockScreenProvider.swift */,
@@ -813,6 +818,7 @@
 				34FD09D825AE269600AAAAE2 /* DateProvider.swift */,
 				345CC36B2C8CCE5400B0DD1A /* GeocodeServiceProvider.swift */,
 				34E855692C7115A100757B58 /* LocalNotificationProvider.swift */,
+				3443D9732EB0F01200476D4B /* LocalStorageProvider.swift */,
 				34299F702C72289400A0269B /* NetworkServiceProvider.swift */,
 				346E70C82802278E00A785FF /* ScreenProvider.swift */,
 				34C39F6C2CD6A15000933E6D /* SoundPlayer.swift */,
@@ -971,7 +977,7 @@
 				34B5A09C25B118EC00F7F7ED /* CalendarPickerViewModel.swift */,
 				3449402D25C348B20020E664 /* GeneralSettingsViewController.swift */,
 				34D88DC72C4C66F80047D636 /* KeyboardViewController.swift */,
-				34934CD528E69520009635D4 /* Prefs+UserDefaults.swift */,
+				34934CD528E69520009635D4 /* LocalStoragePrefs.swift */,
 				34D88DC92C4C687B0047D636 /* SettingsUI.swift */,
 				34B5A09225B0CE6F00F7F7ED /* SettingsViewController.swift */,
 				348B8D0325B2925100E518FE /* SettingsViewModel.swift */,
@@ -1284,6 +1290,7 @@
 				34299F712C72289400A0269B /* NetworkServiceProvider.swift in Sources */,
 				34A0E12D2CDE9609005BF256 /* MockSoundPlayer.swift in Sources */,
 				346C5A4C2BC2D87F0007106C /* MockNextEventSettings.swift in Sources */,
+				3443D9742EB0F01500476D4B /* LocalStorageProvider.swift in Sources */,
 				349868E62C8D4E5E00DBFE8D /* HorizontalScrollView.swift in Sources */,
 				348E704B25C61B8D00B3B160 /* Radio.swift in Sources */,
 				347D0FF825954975002451EC /* CalendarCellViewModel.swift in Sources */,
@@ -1300,6 +1307,7 @@
 				347C04A32D136BF800F67E7C /* SearchSuggestionView.swift in Sources */,
 				34299F732C724FA000A0269B /* MockNetworkServiceProvider.swift in Sources */,
 				34B99FBB2D2C8605003D4EA4 /* EventBackground.swift in Sources */,
+				3443D9722EB0EED200476D4B /* MockLocalStorage.swift in Sources */,
 				3468E653284BD44600B21EC8 /* EventBarStyle.swift in Sources */,
 				34F128E12597B9C9007DF31C /* MainViewController.swift in Sources */,
 				342AEE322DFF069E008CBBE0 /* CalendarViewMode.swift in Sources */,
@@ -1310,7 +1318,7 @@
 				34D55FE325F06669007F5C81 /* Sequence.swift in Sources */,
 				347D0FED2595467A002451EC /* CalendarCellView.swift in Sources */,
 				3421DA212693F12400056837 /* Calendar+Factory.swift in Sources */,
-				34934CD628E69520009635D4 /* Prefs+UserDefaults.swift in Sources */,
+				34934CD628E69520009635D4 /* LocalStoragePrefs.swift in Sources */,
 				34FD09D925AE269600AAAAE2 /* DateProvider.swift in Sources */,
 				342AEE302DFF0686008CBBE0 /* PopoverMaterial.swift in Sources */,
 				34D25E4A292F9E2100557E70 /* ImageButton.swift in Sources */,

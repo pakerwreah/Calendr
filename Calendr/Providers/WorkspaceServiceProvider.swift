@@ -10,7 +10,7 @@ import UniformTypeIdentifiers
 
 protocol WorkspaceServiceProviding {
 
-    var userDefaults: UserDefaults { get }
+    var localStorage: LocalStorageProvider { get }
     var dateProvider: DateProviding { get }
     var calendarAppProvider: CalendarAppProviding { get }
     var notificationCenter: NotificationCenter { get }
@@ -40,11 +40,11 @@ private let remindersSchemeURL = URL(string: "x-apple-reminderkit://")!
 extension WorkspaceServiceProviding {
 
     private var calendarApp: CalendarApp {
-        CalendarApp(rawValue: userDefaults.defaultCalendarApp) ?? .calendar
+        CalendarApp(rawValue: localStorage.defaultCalendarApp) ?? .calendar
     }
 
     private var calendarAppViewMode: CalendarViewMode {
-        CalendarViewMode(rawValue: userDefaults.calendarAppViewMode) ?? .month
+        CalendarViewMode(rawValue: localStorage.calendarAppViewMode) ?? .month
     }
 
     func supports(scheme: String) -> Bool {
@@ -65,7 +65,7 @@ extension WorkspaceServiceProviding {
     func open(_ link: EventLink) {
         guard
             !link.isNative,
-            let browserPath = userDefaults.defaultBrowserPerCalendar[link.calendarId],
+            let browserPath = localStorage.defaultBrowserPerCalendar[link.calendarId],
             let browserUrl = URL(string: browserPath)
         else {
             open(link.url)
@@ -98,7 +98,7 @@ extension WorkspaceServiceProviding {
         var isStale = true
         var resolvedURL: URL?
 
-        if let bookmarkData = userDefaults.attachmentsBookmark {
+        if let bookmarkData = localStorage.attachmentsBookmark {
             resolvedURL = try? URL(
                 resolvingBookmarkData: bookmarkData,
                 options: .withSecurityScope,
@@ -113,7 +113,7 @@ extension WorkspaceServiceProviding {
                 let urlToOpen = resolvedURL.appendingPathComponent(relativePath)
 
                 if !open(urlToOpen) {
-                    userDefaults.attachmentsBookmark = nil
+                    localStorage.attachmentsBookmark = nil
                 }
             }
             return
@@ -131,7 +131,7 @@ extension WorkspaceServiceProviding {
         panel.message = Strings.Attachments.Open.message
         panel.prompt = Strings.Attachments.Open.authorize
 
-        panel.begin { [userDefaults] (result) in
+        panel.begin { [localStorage] (result) in
             guard
                 result == .OK, let url = panel.url,
                 url.startAccessingSecurityScopedResource()
@@ -139,7 +139,7 @@ extension WorkspaceServiceProviding {
             defer { url.stopAccessingSecurityScopedResource() }
 
             do {
-                userDefaults.attachmentsBookmark = try url.bookmarkData(
+                localStorage.attachmentsBookmark = try url.bookmarkData(
                     options: .withSecurityScope,
                     includingResourceValuesForKeys: nil,
                     relativeTo: nil
@@ -166,13 +166,13 @@ class Workspace: WorkspaceServiceProviding {
 
     private let workspace: NSWorkspace = .shared
 
-    let userDefaults: UserDefaults
+    let localStorage: LocalStorageProvider
     let dateProvider: DateProviding
     let calendarAppProvider: CalendarAppProviding
     let notificationCenter: NotificationCenter
 
-    init(userDefaults: UserDefaults, dateProvider: DateProviding, calendarAppProvider: CalendarAppProviding) {
-        self.userDefaults = userDefaults
+    init(localStorage: LocalStorageProvider, dateProvider: DateProviding, calendarAppProvider: CalendarAppProviding) {
+        self.localStorage = localStorage
         self.dateProvider = dateProvider
         self.calendarAppProvider = calendarAppProvider
         self.notificationCenter = workspace.notificationCenter

@@ -29,7 +29,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
 
     private let dateProvider: DateProviding
     private let workspace: WorkspaceServiceProviding
-    private let userDefaults: UserDefaults
+    private let localStorage: LocalStorageProvider
     private let notificationCenter: NotificationCenter
 
     private let store = EventStore()
@@ -42,12 +42,12 @@ class CalendarServiceProvider: CalendarServiceProviding {
     init(
         dateProvider: DateProviding,
         workspace: WorkspaceServiceProviding,
-        userDefaults: UserDefaults,
+        localStorage: LocalStorageProvider,
         notificationCenter: NotificationCenter
     ) {
         self.dateProvider = dateProvider
         self.workspace = workspace
-        self.userDefaults = userDefaults
+        self.localStorage = localStorage
         self.notificationCenter = notificationCenter
 
         (changeObservable, changeObserver) = PublishSubject.pipe(on: MainScheduler.instance)
@@ -65,7 +65,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
     @discardableResult
     private func openPrivacySettings(for entity: PrivacyEntity) -> Bool {
 
-        guard !userDefaults.permissionSuppressed.contains(entity.rawValue) else {
+        guard !localStorage.permissionSuppressed.contains(entity.rawValue) else {
             return false
         }
 
@@ -82,7 +82,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
         }
 
         if alert.suppressionButton?.state == .on {
-            userDefaults.permissionSuppressed.append(entity.rawValue)
+            localStorage.permissionSuppressed.append(entity.rawValue)
         }
 
         return false

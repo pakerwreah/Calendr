@@ -73,7 +73,7 @@ class MainViewController: NSViewController {
     private let dateProvider: DateProviding
     private let screenProvider: ScreenProviding
     private let autoUpdater: AutoUpdater
-    private let userDefaults: UserDefaults
+    private let localStorage: LocalStorageProvider
     private let notificationCenter: NotificationCenter
     private var heightConstraint: NSLayoutConstraint?
 
@@ -90,7 +90,7 @@ class MainViewController: NSViewController {
         screenProvider: ScreenProviding,
         notificationProvider: LocalNotificationProviding,
         networkProvider: NetworkServiceProviding,
-        userDefaults: UserDefaults,
+        localStorage: LocalStorageProvider,
         notificationCenter: NotificationCenter,
         fileManager: FileManager
     ) {
@@ -101,7 +101,7 @@ class MainViewController: NSViewController {
         self.dateProvider = dateProvider
         self.selectedDate = .init(value: dateProvider.now)
         self.screenProvider = screenProvider
-        self.userDefaults = userDefaults
+        self.localStorage = localStorage
         self.notificationCenter = notificationCenter
 
         mainStatusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
@@ -119,13 +119,13 @@ class MainViewController: NSViewController {
             autoLauncher: autoLauncher,
             dateProvider: dateProvider,
             workspace: workspace,
-            userDefaults: userDefaults,
+            localStorage: localStorage,
             notificationCenter: notificationCenter
         )
 
         calendarPickerViewModel = CalendarPickerViewModel(
             calendarService: calendarService,
-            userDefaults: userDefaults
+            localStorage: localStorage
         )
 
         let nextEventCalendars = Observable
@@ -148,7 +148,7 @@ class MainViewController: NSViewController {
         )
 
         autoUpdater = AutoUpdater(
-            userDefaults: userDefaults,
+            localStorage: localStorage,
             notificationProvider: notificationProvider,
             networkProvider: networkProvider,
             fileManager: fileManager
@@ -187,7 +187,7 @@ class MainViewController: NSViewController {
             geocoder: geocoder,
             weatherService: weatherService,
             workspace: workspace,
-            userDefaults: userDefaults,
+            localStorage: localStorage,
             settings: settingsViewModel,
             scheduler: MainScheduler.instance,
             refreshScheduler: WallTimeScheduler.instance,
@@ -201,7 +201,7 @@ class MainViewController: NSViewController {
 
         nextEventViewModel = NextEventViewModel(
             type: .event,
-            userDefaults: userDefaults,
+            localStorage: localStorage,
             settings: settingsViewModel,
             nextEventCalendars: nextEventCalendars,
             dateProvider: dateProvider,
@@ -217,7 +217,7 @@ class MainViewController: NSViewController {
 
         nextReminderViewModel = NextEventViewModel(
             type: .reminder,
-            userDefaults: userDefaults,
+            localStorage: localStorage,
             settings: settingsViewModel,
             nextEventCalendars: nextEventCalendars,
             dateProvider: dateProvider,
@@ -840,10 +840,10 @@ class MainViewController: NSViewController {
             // ↓ Search input not focused ↓ //
 
             case .option(.char("w")):
-                userDefaults.showWeekNumbers.toggle()
+                localStorage.showWeekNumbers.toggle()
 
             case .option(.char("d")):
-                userDefaults.showDeclinedEvents.toggle()
+                localStorage.showDeclinedEvents.toggle()
 
             case .arrow, .command(.arrow), .backspace:
                 navigationSubject.onNext(key)

@@ -21,14 +21,14 @@ class CalendarPickerViewModel {
     private(set) lazy var enabledCalendars = selectedObservable(notIn: \.disabledCalendars)
     private(set) lazy var nextEventCalendars = selectedObservable(notIn: \.silencedCalendars)
 
-    private let userDefaults: UserDefaults
+    private let localStorage: LocalStorageProvider
     private let toggleCalendarSubject = PublishSubject<String>()
     private let toggleNextEventSubject = PublishSubject<String>()
     private let disposeBag = DisposeBag()
 
     init(
         calendarService: CalendarServiceProviding,
-        userDefaults: UserDefaults
+        localStorage: LocalStorageProvider
     ) {
 
         self.calendars = calendarService.changeObservable
@@ -37,12 +37,12 @@ class CalendarPickerViewModel {
             .distinctUntilChanged()
             .share(replay: 1)
 
-        self.showNextEvent = userDefaults.rx.observe(\.showEventStatusItem)
+        self.showNextEvent = localStorage.rx.observe(\.showEventStatusItem)
 
         self.toggleCalendar = toggleCalendarSubject.asObserver()
         self.toggleNextEvent = toggleNextEventSubject.asObserver()
 
-        self.userDefaults = userDefaults
+        self.localStorage = localStorage
 
         setUpBindings()
     }
@@ -51,23 +51,23 @@ class CalendarPickerViewModel {
 
         setUpBinding(
             subject: toggleCalendarSubject,
-            current: userDefaults.rx.observe(\.disabledCalendars),
-            binder: userDefaults.rx.disabledCalendars
+            current: localStorage.rx.observe(\.disabledCalendars),
+            binder: localStorage.rx.disabledCalendars
         )
 
         setUpBinding(
             subject: toggleNextEventSubject,
-            current: userDefaults.rx.observe(\.silencedCalendars),
-            binder: userDefaults.rx.silencedCalendars
+            current: localStorage.rx.observe(\.silencedCalendars),
+            binder: localStorage.rx.silencedCalendars
         )
 
         calendars
             .filter(\.isEmpty.isFalse)
             .map { $0.map(\.id) }
-            .bind { [userDefaults] calendars in
+            .bind { [localStorage] calendars in
                 // clean up removed calendars
-                userDefaults.disabledCalendars = userDefaults.disabledCalendars.filter(calendars.contains)
-                userDefaults.silencedCalendars = userDefaults.silencedCalendars.filter(calendars.contains)
+                localStorage.disabledCalendars = localStorage.disabledCalendars.filter(calendars.contains)
+                localStorage.silencedCalendars = localStorage.silencedCalendars.filter(calendars.contains)
             }
             .disposed(by: disposeBag)
     }
@@ -88,10 +88,10 @@ class CalendarPickerViewModel {
             .disposed(by: disposeBag)
     }
 
-    private func selectedObservable(notIn keyPath: KeyPath<UserDefaults, [String]>) -> Observable<[String]> {
+    private func selectedObservable(notIn keyPath: KeyPath<LocalStorageProvider, [String]>) -> Observable<[String]> {
 
         Observable.combineLatest(
-            userDefaults.rx.observe(keyPath),
+            localStorage.rx.observe(keyPath),
             calendars.map { $0.map(\.id) }
         )
         .map { unselected, calendars in

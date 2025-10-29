@@ -36,7 +36,7 @@ struct EventViewPreview: PreviewProvider {
                 geocoder: geocoder,
                 weatherService: weatherService,
                 workspace: workspace,
-                userDefaults: .init(),
+                localStorage: .shared,
                 settings: settings,
                 isShowingDetailsModal: .dummy(),
                 isTodaySelected: true,

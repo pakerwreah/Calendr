@@ -15,7 +15,7 @@ class NextEventViewModelTests: XCTestCase {
 
     let calendarsSubject = BehaviorSubject<[String]>(value: [])
 
-    let userDefaults = UserDefaults(suiteName: className())!
+    let localStorage = MockLocalStorageProvider()
     let settings = MockNextEventSettings()
     let dateProvider = MockDateProvider()
     let calendarService = MockCalendarServiceProvider()
@@ -29,7 +29,7 @@ class NextEventViewModelTests: XCTestCase {
     func makeViewModel(type: NextEventType) -> NextEventViewModel {
         .init(
             type: type,
-            userDefaults: userDefaults,
+            localStorage: localStorage,
             settings: settings,
             nextEventCalendars: calendarsSubject,
             dateProvider: dateProvider,
@@ -49,8 +49,8 @@ class NextEventViewModelTests: XCTestCase {
     }
 
     override func setUp() {
-        userDefaults.setVolatileDomain([:], forName: UserDefaults.registrationDomain)
-        userDefaults.removePersistentDomain(forName: className)
+
+        localStorage.reset()
 
         dateProvider.m_calendar.locale = Locale(identifier: "en_US")
     }
@@ -60,8 +60,8 @@ class NextEventViewModelTests: XCTestCase {
         let viewModel = makeViewModel(type: .event)
         let key = viewModel.preferredPositionKey
 
-        userDefaults.set(123, forKey: key)
-        XCTAssertEqual(userDefaults.integer(forKey: "saved \(key)"), 123)
+        localStorage.set(123, forKey: key)
+        XCTAssertEqual(localStorage.integer(forKey: "saved \(key)"), 123)
     }
 
     func testRestoreStatusItemPreferredPosition() {
@@ -69,10 +69,10 @@ class NextEventViewModelTests: XCTestCase {
         let viewModel = makeViewModel(type: .event)
 
         let key = "\(Prefs.statusItemPreferredPosition) \(StatusItemName.event)"
-        XCTAssertEqual(userDefaults.integer(forKey: key), 0)
-        userDefaults.set(123, forKey: "saved \(key)")
+        XCTAssertEqual(localStorage.integer(forKey: key), 0)
+        localStorage.set(123, forKey: "saved \(key)")
         viewModel.restorePreferredPosition()
-        XCTAssertEqual(userDefaults.integer(forKey: key), 123)
+        XCTAssertEqual(localStorage.integer(forKey: key), 123)
     }
 
     func testNextEvent_noEvent() {

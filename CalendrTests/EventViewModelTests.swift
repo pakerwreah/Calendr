@@ -13,6 +13,7 @@ class EventViewModelTests: XCTestCase {
 
     let disposeBag = DisposeBag()
 
+    let localStorage = MockLocalStorageProvider()
     let dateProvider = MockDateProvider()
     let calendarService = MockCalendarServiceProvider()
     let geocoder = MockGeocodeServiceProvider()
@@ -544,7 +545,7 @@ class EventViewModelTests: XCTestCase {
             geocoder: geocoder,
             weatherService: weatherService,
             workspace: workspace,
-            userDefaults: .init(),
+            localStorage: localStorage,
             settings: settings,
             isShowingDetailsModal: .dummy(),
             isTodaySelected: true,

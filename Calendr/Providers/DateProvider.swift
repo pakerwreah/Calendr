@@ -23,16 +23,16 @@ class DateProvider: DateProviding {
 
     private let disposeBag = DisposeBag()
     private let notificationCenter: NotificationCenter
-    private let userDefaults: UserDefaults
+    private let localStorage: LocalStorageProvider
 
-    init(notificationCenter: NotificationCenter, userDefaults: UserDefaults) {
+    init(notificationCenter: NotificationCenter, localStorage: LocalStorageProvider) {
         self.notificationCenter = notificationCenter
-        self.userDefaults = userDefaults
+        self.localStorage = localStorage
 
         let calendarSubject = PublishSubject<Calendar>()
         calendarUpdated = calendarSubject.asObservable()
 
-        userDefaults.rx
+        localStorage.rx
             .observe(\.firstWeekday)
             .repeat(when: Observable.merge(
                 notificationCenter.rx.notification(NSLocale.currentLocaleDidChangeNotification).void(),

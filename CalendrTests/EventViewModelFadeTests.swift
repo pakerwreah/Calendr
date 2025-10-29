@@ -19,6 +19,7 @@ class EventViewModelFadeTests: XCTestCase {
     let weatherService = MockWeatherServiceProvider()
     let workspace = MockWorkspaceServiceProvider()
     let settings = MockEventSettings()
+    let localStorage = MockLocalStorageProvider()
 
     func testFade_isAllDay_shouldNotFade() {
 
@@ -257,7 +258,7 @@ class EventViewModelFadeTests: XCTestCase {
             geocoder: geocoder,
             weatherService: weatherService,
             workspace: workspace,
-            userDefaults: .init(),
+            localStorage: localStorage,
             settings: settings,
             isShowingDetailsModal: .dummy(),
             isTodaySelected: isTodaySelected,

@@ -81,7 +81,7 @@ class EventDetailsViewModel {
         geocoder: GeocodeServiceProviding,
         weatherService: WeatherServiceProviding,
         workspace: WorkspaceServiceProviding,
-        userDefaults: UserDefaults,
+        localStorage: LocalStorageProvider,
         settings: EventSettings,
         isShowingObserver: AnyObserver<Bool>,
         isInProgress: Observable<Bool>,
@@ -206,7 +206,7 @@ class EventDetailsViewModel {
             else {
                 return false
             }
-            if let pattern = userDefaults.showMapBlacklistRegex {
+            if let pattern = localStorage.showMapBlacklistRegex {
                 do {
                     return try Regex(pattern).wholeMatch(in: location) == nil
                 } catch {
@@ -291,7 +291,7 @@ class EventDetailsViewModel {
             return $0.name < $1.name // Otherwise, sort by name
         }
 
-        selectedBrowserIndex = userDefaults.rx.observe(\.defaultBrowserPerCalendar)
+        selectedBrowserIndex = localStorage.rx.observe(\.defaultBrowserPerCalendar)
             .map {
                 let url = if let path = $0[event.calendar.id], let pathUrl = URL(string: path) {
                     pathUrl
@@ -301,9 +301,9 @@ class EventDetailsViewModel {
                 return browserOptions.firstIndex { $0.url == url } ?? 0
             }
 
-        selectedBrowserObserver = userDefaults.rx.observer(for: \.defaultBrowserPerCalendar)
+        selectedBrowserObserver = localStorage.rx.observer(for: \.defaultBrowserPerCalendar)
             .mapObserver { index in
-                var mapping = userDefaults.defaultBrowserPerCalendar
+                var mapping = localStorage.defaultBrowserPerCalendar
                 if index > 0 {
                     mapping[event.calendar.id] = browserOptions[index].url.absoluteString
                 } else {
