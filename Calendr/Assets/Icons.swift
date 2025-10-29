@@ -35,6 +35,7 @@ enum Icons {
 
     enum Settings {
         static let general = NSImage(systemName: "gear")
+        static let blacklist = NSImage(systemName: "nosign")
         static let calendars = NSImage(systemName: "calendar.badge.plus")
         static let keyboard = NSImage(systemName: "keyboard")
         static let appearance = NSImage(systemName: "paintbrush")

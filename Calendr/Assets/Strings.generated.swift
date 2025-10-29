@@ -121,6 +121,10 @@ internal enum Strings {
       }
     }
   }
+  internal enum MapBlackList {
+    /// Hide map if location contains any of these words
+    internal static let headline = Strings.tr("Localizable", "map_black_list.headline", fallback: "Hide map if location contains any of these words")
+  }
   internal enum Reminder {
     internal enum Editor {
       /// New Reminder

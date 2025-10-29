@@ -193,19 +193,17 @@ class EventDetailsViewModel {
             workspace.open(event)
         }
 
-        canShowMap = { [location] showMap in
-            guard showMap,
-                  !location.isEmpty,
-                  !location.contains("://"),
-                  !location.contains("www."),
-                  !location.localizedCaseInsensitiveContains("Microsoft Teams"),
-                  !location.localizedCaseInsensitiveContains("Google Meet"),
-                  !location.localizedCaseInsensitiveContains("Discord"),
-                  !location.localizedCaseInsensitiveContains("Slack"),
-                  !location.localizedCaseInsensitiveContains("Zoom")
-            else {
-                return false
+        canShowMap = { [location] (showMap: Bool) in
+            guard showMap, !location.isEmpty else { return false }
+
+            let blacklist = ["://", "www."] + localStorage.showMapBlacklistItems
+
+            let isBlacklisted = blacklist.contains {
+                location.localizedCaseInsensitiveContains($0)
             }
+
+            guard !isBlacklisted else { return false }
+
             if let pattern = localStorage.showMapBlacklistRegex {
                 do {
                     return try Regex(pattern).wholeMatch(in: location) == nil

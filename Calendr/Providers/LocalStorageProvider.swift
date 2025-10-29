@@ -106,7 +106,7 @@ extension UserDefaults: LocalStorage {}
 private let _shared = LocalStorageProvider(
     storage: {
         #if DEBUG
-        guard !BuildConfig.isUITesting else {
+        guard !BuildConfig.isUITesting, !BuildConfig.isPreview else {
             return InMemoryStorage()
         }
         #endif
@@ -123,5 +123,10 @@ extension LocalStorageProvider {
         }
 
         return _shared
+    }
+
+    func withDefaults() -> Self {
+        registerDefaultPrefs(in: self)
+        return self
     }
 }

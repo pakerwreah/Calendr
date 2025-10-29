@@ -107,6 +107,8 @@
 //"reminder.editor.confirm.continue" = "Continue editing";
 //"reminder.editor.confirm.discard" = "Discard all changes";
 
+//"map_black_list.headline" = "Hide map if location contains any of these words";
+
 "event.details.participant.organizer" = "organisator";
 "event.details.participant.me" = "ik";
 

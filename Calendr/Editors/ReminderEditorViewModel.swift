@@ -7,11 +7,13 @@
 
 import RxSwift
 
-class ReminderEditorViewModel: ObservableObject, HostingControllerDelegate {
-    @Published var title = ""
-    @Published var dueDate: Date
-    @Published var isCloseConfirmationVisible = false
-    @Published var isErrorVisible = false
+@Observable
+class ReminderEditorViewModel: HostingWindowControllerDelegate {
+    
+    var title = ""
+    var dueDate: Date
+    var isCloseConfirmationVisible = false
+    var isErrorVisible = false
 
     private(set) var error: UnexpectedError? {
         didSet {

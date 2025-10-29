@@ -1,5 +1,5 @@
 //
-//  ReminderEditorView.swift
+//  ReminderEditorViewController.swift
 //  Calendr
 //
 //  Created by Paker on 23/10/2025.
@@ -7,9 +7,11 @@
 
 import SwiftUI
 
-struct ReminderEditorView: View {
+typealias ReminderEditorViewController = HostingViewModelController<ReminderEditorView>
+
+struct ReminderEditorView: ViewModelView {
     @FocusState private var autoFocus: Bool
-    @StateObject private var viewModel: ReminderEditorViewModel
+    @State private var viewModel: ReminderEditorViewModel
 
     init(viewModel: ReminderEditorViewModel) {
         self._viewModel = .init(wrappedValue: viewModel)
