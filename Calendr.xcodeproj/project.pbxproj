@@ -210,6 +210,8 @@
 		34E5F23C2C9F76EF0048E25D /* DisposableWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E5F23B2C9F76EF0048E25D /* DisposableWrapper.swift */; };
 		34E60D6126A0D6D6004DA082 /* NSAccessibilityProtocol+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E60D6026A0D6D6004DA082 /* NSAccessibilityProtocol+Rx.swift */; };
 		34E60D6326A0EA32004DA082 /* NSAccessibilityProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E60D6226A0EA32004DA082 /* NSAccessibilityProtocol.swift */; };
+		34E733E32EB274D100BFEDC7 /* MapBlackListViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E733E22EB274CB00BFEDC7 /* MapBlackListViewModelTests.swift */; };
+		34E733E52EB287FF00BFEDC7 /* IDProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E733E42EB287FD00BFEDC7 /* IDProvider.swift */; };
 		34E855682C70E92500757B58 /* AutoUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E855672C70E92500757B58 /* AutoUpdater.swift */; };
 		34E8556A2C7115A100757B58 /* LocalNotificationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E855692C7115A100757B58 /* LocalNotificationProvider.swift */; };
 		34E8556D2C711D1A00757B58 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 34E8556C2C711D1A00757B58 /* ZIPFoundation */; };
@@ -467,6 +469,8 @@
 		34E60D6026A0D6D6004DA082 /* NSAccessibilityProtocol+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAccessibilityProtocol+Rx.swift"; sourceTree = "<group>"; };
 		34E60D6226A0EA32004DA082 /* NSAccessibilityProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSAccessibilityProtocol.swift; sourceTree = "<group>"; };
 		34E66E2627C41B5C00A7A77A /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		34E733E22EB274CB00BFEDC7 /* MapBlackListViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapBlackListViewModelTests.swift; sourceTree = "<group>"; };
+		34E733E42EB287FD00BFEDC7 /* IDProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDProvider.swift; sourceTree = "<group>"; };
 		34E855672C70E92500757B58 /* AutoUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoUpdater.swift; sourceTree = "<group>"; };
 		34E855692C7115A100757B58 /* LocalNotificationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationProvider.swift; sourceTree = "<group>"; };
 		34EDE71A2AC46515007C5854 /* Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
@@ -716,6 +720,7 @@
 				34651F6D25E3171D00518C5A /* EventViewModelLinkTests.swift */,
 				348E703625C6173400B3B160 /* EventViewModelProgressTests.swift */,
 				34C2CF9025C2070400FC2CFF /* EventViewModelTests.swift */,
+				34E733E22EB274CB00BFEDC7 /* MapBlackListViewModelTests.swift */,
 				34C72F7D25E844E500FD20FA /* NextEventViewModelTests.swift */,
 				34B154BB2EAD2D11006DF54A /* ReminderEditorViewModelTests.swift */,
 				34ABB9E929A158080021F3CF /* ReminderOptionsViewModelTests.swift */,
@@ -824,6 +829,7 @@
 				34702149259DFF3000827AE7 /* CalendarServiceProvider.swift */,
 				34FD09D825AE269600AAAAE2 /* DateProvider.swift */,
 				345CC36B2C8CCE5400B0DD1A /* GeocodeServiceProvider.swift */,
+				34E733E42EB287FD00BFEDC7 /* IDProvider.swift */,
 				34E855692C7115A100757B58 /* LocalNotificationProvider.swift */,
 				3443D9732EB0F01200476D4B /* LocalStorageProvider.swift */,
 				34299F702C72289400A0269B /* NetworkServiceProvider.swift */,
@@ -1406,6 +1412,7 @@
 				3477E7102C67C15A008D3844 /* AppEnvironment.swift in Sources */,
 				342AEE3A2DFF0968008CBBE0 /* MockCalendarAppProvider.swift in Sources */,
 				34C4599C25DEFFDA00561C29 /* BuildConfig.m in Sources */,
+				34E733E52EB287FF00BFEDC7 /* IDProvider.swift in Sources */,
 				34E8556A2C7115A100757B58 /* LocalNotificationProvider.swift in Sources */,
 				348393042C885CC00052C70A /* URL.swift in Sources */,
 				345CC36C2C8CCE5400B0DD1A /* GeocodeServiceProvider.swift in Sources */,
@@ -1469,6 +1476,7 @@
 				348E702D25C6161900B3B160 /* EventViewModelFadeTests.swift in Sources */,
 				34D19FC62622A02C00B2732C /* EventDetailsViewModelTests.swift in Sources */,
 				348CF5032D1398FA00B9BFE0 /* DateSearchParserTests.swift in Sources */,
+				34E733E32EB274D100BFEDC7 /* MapBlackListViewModelTests.swift in Sources */,
 				34ABB9F029A166220021F3CF /* ContextMenuFactoryTests.swift in Sources */,
 				34C72FA225E987F000FD20FA /* EventListViewModelTests.swift in Sources */,
 				34C72F9625E8A05700FD20FA /* MockNextEventSettings.swift in Sources */,

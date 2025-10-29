@@ -110,6 +110,7 @@
 "reminder.editor.confirm.discard" = "Descartar todas as alterações";
 
 "map_black_list.headline" = "Ocultar mapa se o local contiver alguma destas palavras";
+"map_black_list.new_item_text" = "Novo Item";
 
 "event.details.participant.organizer" = "organizador";
 "event.details.participant.me" = "eu";

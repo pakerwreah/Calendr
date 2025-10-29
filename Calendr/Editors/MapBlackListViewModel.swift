@@ -7,26 +7,31 @@
 
 import SwiftUI
 
-@Observable
-class MapBlackListViewModel {
+typealias MapBlackListViewModel = GenericMapBlackListViewModel<UUIDProvider>
 
-    struct Item: Identifiable {
-        let id = UUID()
+@Observable
+class GenericMapBlackListViewModel<IDProvider: IDProviding> {
+
+    struct Item: Identifiable, Equatable {
+        let id: IDProvider.ID
         var text: String
     }
 
     var items: [Item]
     var selection: Set<Item.ID> = []
-
-    private let localStorage: LocalStorageProvider
-
     var canRemove: Bool { !selection.isEmpty }
 
-    init(localStorage: LocalStorageProvider) {
+    private let localStorage: LocalStorageProvider
+    private let idProvider: IDProvider
+
+    init(localStorage: LocalStorageProvider, idProvider: IDProvider = UUIDProvider()) {
 
         self.localStorage = localStorage
+        self.idProvider = idProvider
 
-        items = localStorage.showMapBlacklistItems.map(Item.init(text:))
+        items = localStorage.showMapBlacklistItems.map {
+            Item(id: idProvider.next(), text: $0)
+        }
     }
 
     func save() {
@@ -34,7 +39,7 @@ class MapBlackListViewModel {
     }
 
     func newItem() -> Item.ID {
-        let newItem = Item(text: "New Item")
+        let newItem = Item(id: idProvider.next(), text: Strings.MapBlackList.newItemText)
 
         items.append(newItem)
         selection = [newItem.id]

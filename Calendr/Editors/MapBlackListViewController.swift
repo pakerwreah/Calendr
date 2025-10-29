@@ -11,11 +11,13 @@ typealias MapBlackListViewController = HostingViewModelController<MapBlackListVi
 
 struct MapBlackListView: ViewModelView {
 
-    @State private var viewModel: MapBlackListViewModel
+    typealias ViewModel = MapBlackListViewModel
 
-    @FocusState private var focused: MapBlackListViewModel.Item.ID?
+    @State private var viewModel: ViewModel
 
-    init (viewModel: MapBlackListViewModel) {
+    @FocusState private var focused: ViewModel.Item.ID?
+
+    init (viewModel: ViewModel) {
         self._viewModel = .init(wrappedValue: viewModel)
     }
 

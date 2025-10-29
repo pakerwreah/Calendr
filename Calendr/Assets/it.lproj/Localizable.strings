@@ -111,6 +111,7 @@
 //"reminder.editor.confirm.discard" = "Discard all changes";
 
 //"map_black_list.headline" = "Hide map if location contains any of these words";
+//"map_black_list.new_item_text" = "New Item";
 
 "event.details.participant.organizer" = "Organizzatore";
 "event.details.participant.me" = "io";
