@@ -16,71 +16,71 @@ class SettingsViewModelTests: XCTestCase {
     let autoLauncher = AutoLauncher()
     let dateProvider = MockDateProvider()
     let workspace = MockWorkspaceServiceProvider()
-    let userDefaults = UserDefaults(suiteName: className())!
+    let localStorage = MockLocalStorageProvider()
     let notificationCenter = NotificationCenter()
 
     lazy var viewModel = SettingsViewModel(
         autoLauncher: autoLauncher,
         dateProvider: dateProvider,
         workspace: workspace,
-        userDefaults: userDefaults,
+        localStorage: localStorage,
         notificationCenter: notificationCenter
     )
 
-    var userDefaultsStatusItemIconEnabled: Bool? { userDefaults.object(forKey: Prefs.statusItemIconEnabled) as! Bool? }
-    var userDefaultsStatusItemDateEnabled: Bool? { userDefaults.object(forKey: Prefs.statusItemDateEnabled) as! Bool? }
-    var userDefaultsStatusItemBackgroundEnabled: Bool? { userDefaults.object(forKey: Prefs.statusItemBackgroundEnabled) as! Bool? }
-    var userDefaultsStatusItemDateStyle: Int? { userDefaults.object(forKey: Prefs.statusItemDateStyle) as! Int? }
-    var userDefaultsStatusItemTextScaling: Double? { userDefaults.object(forKey: Prefs.statusItemTextScaling) as! Double? }
-    var userDefaultsShowEventStatusItem: Bool? { userDefaults.object(forKey: Prefs.showEventStatusItem) as! Bool? }
-    var userDefaultsEventStatusItemCheckRange: Int? { userDefaults.object(forKey: Prefs.eventStatusItemCheckRange) as! Int? }
-    var userDefaultsEventStatusItemTextScaling: Double? { userDefaults.object(forKey: Prefs.eventStatusItemTextScaling) as! Double? }
-    var userDefaultsEventStatusItemLength: Int? { userDefaults.object(forKey: Prefs.eventStatusItemLength) as! Int? }
-    var userDefaultsEventStatusItemDetectNotch: Bool? { userDefaults.object(forKey: Prefs.eventStatusItemDetectNotch) as! Bool? }
-    var userDefaultsCalendarScaling: Double? { userDefaults.object(forKey: Prefs.calendarScaling) as! Double? }
-    var userDefaultsFirstWeekday: Int? { userDefaults.object(forKey: Prefs.firstWeekday) as! Int? }
-    var userDefaultsHighlightedWeekdays: [Int]? { userDefaults.object(forKey: Prefs.highlightedWeekdays) as! [Int]? }
-    var userDefaultsShowWeekNumbers: Bool? { userDefaults.object(forKey: Prefs.showWeekNumbers) as! Bool? }
-    var userDefaultsShowDeclinedEvents: Bool? { userDefaults.object(forKey: Prefs.showDeclinedEvents) as! Bool? }
-    var userDefaultsPreserveSelectedDate: Bool? { userDefaults.object(forKey: Prefs.preserveSelectedDate) as! Bool? }
-    var userDefaultsShowMap: Bool? { userDefaults.object(forKey: Prefs.showMap) as! Bool? }
-    var userDefaultsShowPastEvents: Bool? { userDefaults.object(forKey: Prefs.showPastEvents) as! Bool? }
-    var userDefaultsShowOverdueReminders: Bool? { userDefaults.object(forKey: Prefs.showOverdueReminders) as! Bool? }
-    var userDefaultsShowAllDayDetails: Bool? { userDefaults.object(forKey: Prefs.showAllDayDetails) as! Bool? }
-    var userDefaultsShowRecurrenceIndicator: Bool? { userDefaults.object(forKey: Prefs.showRecurrenceIndicator) as! Bool? }
-    var userDefaultsTransparency: Int? { userDefaults.object(forKey: Prefs.transparencyLevel) as! Int? }
-    var userDefaultsAppearanceMode: Int? { userDefaults.object(forKey: Prefs.appearanceMode) as! Int? }
-    var userDefaultsEventDotsStyle: String? { userDefaults.object(forKey: Prefs.eventDotsStyle) as! String? }
+    var localStorageStatusItemIconEnabled: Bool? { localStorage.object(forKey: Prefs.statusItemIconEnabled) as? Bool }
+    var localStorageStatusItemDateEnabled: Bool? { localStorage.object(forKey: Prefs.statusItemDateEnabled) as? Bool }
+    var localStorageStatusItemBackgroundEnabled: Bool? { localStorage.object(forKey: Prefs.statusItemBackgroundEnabled) as? Bool }
+    var localStorageStatusItemDateStyle: NSNumber? { localStorage.object(forKey: Prefs.statusItemDateStyle) as? NSNumber }
+    var localStorageStatusItemTextScaling: NSNumber? { localStorage.object(forKey: Prefs.statusItemTextScaling) as? NSNumber }
+    var localStorageShowEventStatusItem: Bool? { localStorage.object(forKey: Prefs.showEventStatusItem) as? Bool }
+    var localStorageEventStatusItemCheckRange: NSNumber? { localStorage.object(forKey: Prefs.eventStatusItemCheckRange) as? NSNumber }
+    var localStorageEventStatusItemTextScaling: NSNumber? { localStorage.object(forKey: Prefs.eventStatusItemTextScaling) as? NSNumber }
+    var localStorageEventStatusItemLength: NSNumber? { localStorage.object(forKey: Prefs.eventStatusItemLength) as? NSNumber }
+    var localStorageEventStatusItemDetectNotch: Bool? { localStorage.object(forKey: Prefs.eventStatusItemDetectNotch) as? Bool }
+    var localStorageCalendarScaling: NSNumber? { localStorage.object(forKey: Prefs.calendarScaling) as? NSNumber }
+    var localStorageFirstWeekday: NSNumber? { localStorage.object(forKey: Prefs.firstWeekday) as? NSNumber }
+    var localStorageHighlightedWeekdays: [Int]? { localStorage.object(forKey: Prefs.highlightedWeekdays) as? [Int] }
+    var localStorageShowWeekNumbers: Bool? { localStorage.object(forKey: Prefs.showWeekNumbers) as? Bool }
+    var localStorageShowDeclinedEvents: Bool? { localStorage.object(forKey: Prefs.showDeclinedEvents) as? Bool }
+    var localStoragePreserveSelectedDate: Bool? { localStorage.object(forKey: Prefs.preserveSelectedDate) as? Bool }
+    var localStorageShowMap: Bool? { localStorage.object(forKey: Prefs.showMap) as? Bool }
+    var localStorageShowPastEvents: Bool? { localStorage.object(forKey: Prefs.showPastEvents) as? Bool }
+    var localStorageShowOverdueReminders: Bool? { localStorage.object(forKey: Prefs.showOverdueReminders) as? Bool }
+    var localStorageShowAllDayDetails: Bool? { localStorage.object(forKey: Prefs.showAllDayDetails) as? Bool }
+    var localStorageShowRecurrenceIndicator: Bool? { localStorage.object(forKey: Prefs.showRecurrenceIndicator) as? Bool }
+    var localStorageTransparency: NSNumber? { localStorage.object(forKey: Prefs.transparencyLevel) as? NSNumber }
+    var localStorageAppearanceMode: NSNumber? { localStorage.object(forKey: Prefs.appearanceMode) as? NSNumber }
+    var localStorageEventDotsStyle: String? { localStorage.object(forKey: Prefs.eventDotsStyle) as! String? }
 
     override func setUp() {
-        userDefaults.setVolatileDomain([:], forName: UserDefaults.registrationDomain)
-        userDefaults.removePersistentDomain(forName: className)
 
-        XCTAssertNil(userDefaultsStatusItemIconEnabled)
-        XCTAssertNil(userDefaultsStatusItemDateEnabled)
-        XCTAssertNil(userDefaultsStatusItemBackgroundEnabled)
-        XCTAssertNil(userDefaultsStatusItemDateStyle)
-        XCTAssertNil(userDefaultsStatusItemTextScaling)
-        XCTAssertNil(userDefaultsShowEventStatusItem)
-        XCTAssertNil(userDefaultsEventStatusItemCheckRange)
-        XCTAssertNil(userDefaultsEventStatusItemTextScaling)
-        XCTAssertNil(userDefaultsEventStatusItemLength)
-        XCTAssertNil(userDefaultsEventStatusItemDetectNotch)
-        XCTAssertNil(userDefaultsCalendarScaling)
-        XCTAssertNil(userDefaultsFirstWeekday)
-        XCTAssertNil(userDefaultsHighlightedWeekdays)
-        XCTAssertNil(userDefaultsShowWeekNumbers)
-        XCTAssertNil(userDefaultsShowDeclinedEvents)
-        XCTAssertNil(userDefaultsPreserveSelectedDate)
-        XCTAssertNil(userDefaultsShowMap)
-        XCTAssertNil(userDefaultsShowPastEvents)
-        XCTAssertNil(userDefaultsShowOverdueReminders)
-        XCTAssertNil(userDefaultsShowAllDayDetails)
-        XCTAssertNil(userDefaultsShowRecurrenceIndicator)
-        XCTAssertNil(userDefaultsTransparency)
-        XCTAssertNil(userDefaultsEventDotsStyle)
+        localStorage.reset()
 
-        registerDefaultPrefs(in: userDefaults, calendar: .gregorian.with(firstWeekday: 3))
+        XCTAssertNil(localStorageStatusItemIconEnabled)
+        XCTAssertNil(localStorageStatusItemDateEnabled)
+        XCTAssertNil(localStorageStatusItemBackgroundEnabled)
+        XCTAssertNil(localStorageStatusItemDateStyle)
+        XCTAssertNil(localStorageStatusItemTextScaling)
+        XCTAssertNil(localStorageShowEventStatusItem)
+        XCTAssertNil(localStorageEventStatusItemCheckRange)
+        XCTAssertNil(localStorageEventStatusItemTextScaling)
+        XCTAssertNil(localStorageEventStatusItemLength)
+        XCTAssertNil(localStorageEventStatusItemDetectNotch)
+        XCTAssertNil(localStorageCalendarScaling)
+        XCTAssertNil(localStorageFirstWeekday)
+        XCTAssertNil(localStorageHighlightedWeekdays)
+        XCTAssertNil(localStorageShowWeekNumbers)
+        XCTAssertNil(localStorageShowDeclinedEvents)
+        XCTAssertNil(localStoragePreserveSelectedDate)
+        XCTAssertNil(localStorageShowMap)
+        XCTAssertNil(localStorageShowPastEvents)
+        XCTAssertNil(localStorageShowOverdueReminders)
+        XCTAssertNil(localStorageShowAllDayDetails)
+        XCTAssertNil(localStorageShowRecurrenceIndicator)
+        XCTAssertNil(localStorageTransparency)
+        XCTAssertNil(localStorageEventDotsStyle)
+
+        registerDefaultPrefs(in: localStorage, calendar: .gregorian.with(firstWeekday: 3))
     }
 
     func testDefaultSettings() {
@@ -111,29 +111,29 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.appearanceMode.lastValue(), .automatic)
         XCTAssertEqual(viewModel.eventDotsStyle.lastValue(), .multiple)
 
-        XCTAssertEqual(userDefaultsStatusItemIconEnabled, true)
-        XCTAssertEqual(userDefaultsStatusItemDateEnabled, true)
-        XCTAssertEqual(userDefaultsStatusItemBackgroundEnabled, false)
-        XCTAssertEqual(userDefaultsStatusItemTextScaling, 1.2)
-        XCTAssertEqual(userDefaultsStatusItemDateStyle, 1)
-        XCTAssertEqual(userDefaultsShowEventStatusItem, false)
-        XCTAssertEqual(userDefaultsEventStatusItemTextScaling, 1.2)
-        XCTAssertEqual(userDefaultsEventStatusItemCheckRange, 6)
-        XCTAssertEqual(userDefaultsEventStatusItemLength, 18)
-        XCTAssertEqual(userDefaultsEventStatusItemDetectNotch, false)
-        XCTAssertEqual(userDefaultsCalendarScaling, 1)
-        XCTAssertEqual(userDefaultsFirstWeekday, 3)
-        XCTAssertEqual(userDefaultsHighlightedWeekdays, [0, 6])
-        XCTAssertEqual(userDefaultsShowWeekNumbers, false)
-        XCTAssertEqual(userDefaultsShowDeclinedEvents, false)
-        XCTAssertEqual(userDefaultsPreserveSelectedDate, false)
-        XCTAssertEqual(userDefaultsShowMap, true)
-        XCTAssertEqual(userDefaultsShowPastEvents, true)
-        XCTAssertEqual(userDefaultsShowOverdueReminders, true)
-        XCTAssertEqual(userDefaultsShowRecurrenceIndicator, true)
-        XCTAssertEqual(userDefaultsTransparency, 2)
-        XCTAssertEqual(userDefaultsAppearanceMode, 0)
-        XCTAssertEqual(userDefaultsEventDotsStyle, EventDotsStyle.multiple.rawValue)
+        XCTAssertEqual(localStorageStatusItemIconEnabled, true)
+        XCTAssertEqual(localStorageStatusItemDateEnabled, true)
+        XCTAssertEqual(localStorageStatusItemBackgroundEnabled, false)
+        XCTAssertEqual(localStorageStatusItemTextScaling, 1.2)
+        XCTAssertEqual(localStorageStatusItemDateStyle, 1)
+        XCTAssertEqual(localStorageShowEventStatusItem, false)
+        XCTAssertEqual(localStorageEventStatusItemTextScaling, 1.2)
+        XCTAssertEqual(localStorageEventStatusItemCheckRange, 6)
+        XCTAssertEqual(localStorageEventStatusItemLength, 18)
+        XCTAssertEqual(localStorageEventStatusItemDetectNotch, false)
+        XCTAssertEqual(localStorageCalendarScaling, 1)
+        XCTAssertEqual(localStorageFirstWeekday, 3)
+        XCTAssertEqual(localStorageHighlightedWeekdays, [0, 6])
+        XCTAssertEqual(localStorageShowWeekNumbers, false)
+        XCTAssertEqual(localStorageShowDeclinedEvents, false)
+        XCTAssertEqual(localStoragePreserveSelectedDate, false)
+        XCTAssertEqual(localStorageShowMap, true)
+        XCTAssertEqual(localStorageShowPastEvents, true)
+        XCTAssertEqual(localStorageShowOverdueReminders, true)
+        XCTAssertEqual(localStorageShowRecurrenceIndicator, true)
+        XCTAssertEqual(localStorageTransparency, 2)
+        XCTAssertEqual(localStorageAppearanceMode, 0)
+        XCTAssertEqual(localStorageEventDotsStyle, EventDotsStyle.multiple.rawValue)
     }
 
     func testDateFormatOptions() {
@@ -171,8 +171,8 @@ class SettingsViewModelTests: XCTestCase {
     }
 
     func testEventDotsStyle() {
-        userDefaults.eventDotsStyle = EventDotsStyle.single_neutral.rawValue
-        XCTAssertEqual(userDefaultsEventDotsStyle, EventDotsStyle.single_neutral.rawValue)
+        localStorage.eventDotsStyle = EventDotsStyle.single_neutral.rawValue
+        XCTAssertEqual(localStorageEventDotsStyle, EventDotsStyle.single_neutral.rawValue)
 
         var eventDotsStyle: EventDotsStyle?
 
@@ -185,7 +185,7 @@ class SettingsViewModelTests: XCTestCase {
         viewModel.eventDotsStyleObserver.onNext(.single_highlighted)
 
         XCTAssertEqual(eventDotsStyle, .single_highlighted)
-        XCTAssertEqual(userDefaultsEventDotsStyle, EventDotsStyle.single_highlighted.rawValue)
+        XCTAssertEqual(localStorageEventDotsStyle, EventDotsStyle.single_highlighted.rawValue)
     }
 
     func testCalendarAppViewModeOptions_pt() {
@@ -204,8 +204,8 @@ class SettingsViewModelTests: XCTestCase {
 
     func testDateStyleSelected() {
 
-        userDefaults.statusItemDateStyle = 1
-        XCTAssertEqual(userDefaultsStatusItemDateStyle, 1)
+        localStorage.statusItemDateStyle = 1
+        XCTAssertEqual(localStorageStatusItemDateStyle, 1)
 
         var statusItemDateStyle: StatusItemDateStyle?
 
@@ -216,13 +216,13 @@ class SettingsViewModelTests: XCTestCase {
         viewModel.statusItemDateStyleObserver.onNext(.medium)
 
         XCTAssertEqual(statusItemDateStyle, .medium)
-        XCTAssertEqual(userDefaultsStatusItemDateStyle, 2)
+        XCTAssertEqual(localStorageStatusItemDateStyle, 2)
     }
 
     func testCustomDateStyleSelected() throws {
 
-        userDefaults.statusItemDateStyle = 0
-        XCTAssertEqual(userDefaultsStatusItemDateStyle, 0)
+        localStorage.statusItemDateStyle = 0
+        XCTAssertEqual(localStorageStatusItemDateStyle, 0)
 
         var isDateFormatInputVisible: Bool?
 
@@ -265,7 +265,7 @@ class SettingsViewModelTests: XCTestCase {
 
     func testToggleShowEventStatusItem() {
 
-        userDefaults.showEventStatusItem = true
+        localStorage.showEventStatusItem = true
 
         var showEventStatusItem: Bool?
 
@@ -274,22 +274,22 @@ class SettingsViewModelTests: XCTestCase {
             .disposed(by: disposeBag)
 
         XCTAssertEqual(showEventStatusItem, true)
-        XCTAssertEqual(userDefaultsShowEventStatusItem, true)
+        XCTAssertEqual(localStorageShowEventStatusItem, true)
 
         viewModel.toggleEventStatusItem.onNext(false)
 
         XCTAssertEqual(showEventStatusItem, false)
-        XCTAssertEqual(userDefaultsShowEventStatusItem, false)
+        XCTAssertEqual(localStorageShowEventStatusItem, false)
 
         viewModel.toggleEventStatusItem.onNext(true)
 
         XCTAssertEqual(showEventStatusItem, true)
-        XCTAssertEqual(userDefaultsShowEventStatusItem, true)
+        XCTAssertEqual(localStorageShowEventStatusItem, true)
     }
 
     func testChangeEventStatusItemLength() {
 
-        userDefaults.eventStatusItemLength = 20
+        localStorage.eventStatusItemLength = 20
 
         var eventStatusItemLength: Int?
 
@@ -298,17 +298,17 @@ class SettingsViewModelTests: XCTestCase {
             .disposed(by: disposeBag)
 
         XCTAssertEqual(eventStatusItemLength, 20)
-        XCTAssertEqual(userDefaultsEventStatusItemLength, 20)
+        XCTAssertEqual(localStorageEventStatusItemLength, 20)
 
         viewModel.eventStatusItemLengthObserver.onNext(30)
 
         XCTAssertEqual(eventStatusItemLength, 30)
-        XCTAssertEqual(userDefaultsEventStatusItemLength, 30)
+        XCTAssertEqual(localStorageEventStatusItemLength, 30)
     }
 
     func testChangeEventStatusItemCheckRange() {
 
-        userDefaults.eventStatusItemCheckRange = 12
+        localStorage.eventStatusItemCheckRange = 12
 
         var eventStatusItemCheckRange: Int?
 
@@ -317,17 +317,17 @@ class SettingsViewModelTests: XCTestCase {
             .disposed(by: disposeBag)
 
         XCTAssertEqual(eventStatusItemCheckRange, 12)
-        XCTAssertEqual(userDefaultsEventStatusItemCheckRange, 12)
+        XCTAssertEqual(localStorageEventStatusItemCheckRange, 12)
 
         viewModel.eventStatusItemCheckRangeObserver.onNext(18)
 
         XCTAssertEqual(eventStatusItemCheckRange, 18)
-        XCTAssertEqual(userDefaultsEventStatusItemCheckRange, 18)
+        XCTAssertEqual(localStorageEventStatusItemCheckRange, 18)
     }
 
     func testToggleEventStatusItemDetectNotch() {
 
-        userDefaults.eventStatusItemDetectNotch = true
+        localStorage.eventStatusItemDetectNotch = true
 
         var eventStatusItemDetectNotch: Bool?
 
@@ -336,22 +336,22 @@ class SettingsViewModelTests: XCTestCase {
             .disposed(by: disposeBag)
 
         XCTAssertEqual(eventStatusItemDetectNotch, true)
-        XCTAssertEqual(userDefaultsEventStatusItemDetectNotch, true)
+        XCTAssertEqual(localStorageEventStatusItemDetectNotch, true)
 
         viewModel.toggleEventStatusItemDetectNotch.onNext(false)
 
         XCTAssertEqual(eventStatusItemDetectNotch, false)
-        XCTAssertEqual(userDefaultsEventStatusItemDetectNotch, false)
+        XCTAssertEqual(localStorageEventStatusItemDetectNotch, false)
 
         viewModel.toggleEventStatusItemDetectNotch.onNext(true)
 
         XCTAssertEqual(eventStatusItemDetectNotch, true)
-        XCTAssertEqual(userDefaultsEventStatusItemDetectNotch, true)
+        XCTAssertEqual(localStorageEventStatusItemDetectNotch, true)
     }
 
     func testChangeCalendarScaling() {
 
-        userDefaults.calendarScaling = 1.2
+        localStorage.calendarScaling = 1.2
 
         var calendarScaling: Double?
 
@@ -360,17 +360,17 @@ class SettingsViewModelTests: XCTestCase {
             .disposed(by: disposeBag)
 
         XCTAssertEqual(calendarScaling, 1.2)
-        XCTAssertEqual(userDefaultsCalendarScaling, 1.2)
+        XCTAssertEqual(localStorageCalendarScaling, 1.2)
 
         viewModel.calendarScalingObserver.onNext(1.1)
 
         XCTAssertEqual(calendarScaling, 1.1)
-        XCTAssertEqual(userDefaultsCalendarScaling, 1.1)
+        XCTAssertEqual(localStorageCalendarScaling, 1.1)
     }
 
     func testChangeFirstWeekday() {
 
-        userDefaults.firstWeekday = 1
+        localStorage.firstWeekday = 1
 
         var firstWeekday: Int?
 
@@ -379,29 +379,29 @@ class SettingsViewModelTests: XCTestCase {
             .disposed(by: disposeBag)
 
         XCTAssertEqual(firstWeekday, 1)
-        XCTAssertEqual(userDefaultsFirstWeekday, 1)
+        XCTAssertEqual(localStorageFirstWeekday, 1)
 
         viewModel.firstWeekdayNextObserver.onNext(())
 
         XCTAssertEqual(firstWeekday, 2)
-        XCTAssertEqual(userDefaultsFirstWeekday, 2)
+        XCTAssertEqual(localStorageFirstWeekday, 2)
 
-        userDefaults.firstWeekday = 7
+        localStorage.firstWeekday = 7
 
         viewModel.firstWeekdayNextObserver.onNext(())
 
         XCTAssertEqual(firstWeekday, 1)
-        XCTAssertEqual(userDefaultsFirstWeekday, 1)
+        XCTAssertEqual(localStorageFirstWeekday, 1)
 
         viewModel.firstWeekdayPrevObserver.onNext(())
 
         XCTAssertEqual(firstWeekday, 7)
-        XCTAssertEqual(userDefaultsFirstWeekday, 7)
+        XCTAssertEqual(localStorageFirstWeekday, 7)
     }
 
     func testChangeHighlightedWeekdays() {
 
-        userDefaults.highlightedWeekdays = []
+        localStorage.highlightedWeekdays = []
 
         var highlightedWeekdays: [Int]?
 
@@ -410,27 +410,27 @@ class SettingsViewModelTests: XCTestCase {
             .disposed(by: disposeBag)
 
         XCTAssertEqual(highlightedWeekdays, [])
-        XCTAssertEqual(userDefaultsHighlightedWeekdays, [])
+        XCTAssertEqual(localStorageHighlightedWeekdays, [])
 
         viewModel.toggleHighlightedWeekday.onNext(1)
 
         XCTAssertEqual(highlightedWeekdays, [1])
-        XCTAssertEqual(userDefaultsHighlightedWeekdays, [1])
+        XCTAssertEqual(localStorageHighlightedWeekdays, [1])
 
         viewModel.toggleHighlightedWeekday.onNext(2)
 
         XCTAssertEqual(highlightedWeekdays, [1, 2])
-        XCTAssertEqual(userDefaultsHighlightedWeekdays, [1, 2])
+        XCTAssertEqual(localStorageHighlightedWeekdays, [1, 2])
 
         viewModel.toggleHighlightedWeekday.onNext(2)
 
         XCTAssertEqual(highlightedWeekdays, [1])
-        XCTAssertEqual(userDefaultsHighlightedWeekdays, [1])
+        XCTAssertEqual(localStorageHighlightedWeekdays, [1])
     }
 
     func testToggleShowWeekNumbers() {
 
-        userDefaults.showWeekNumbers = true
+        localStorage.showWeekNumbers = true
 
         var showWeekNumbers: Bool?
 
@@ -439,22 +439,22 @@ class SettingsViewModelTests: XCTestCase {
             .disposed(by: disposeBag)
 
         XCTAssertEqual(showWeekNumbers, true)
-        XCTAssertEqual(userDefaultsShowWeekNumbers, true)
+        XCTAssertEqual(localStorageShowWeekNumbers, true)
 
         viewModel.toggleWeekNumbers.onNext(false)
 
         XCTAssertEqual(showWeekNumbers, false)
-        XCTAssertEqual(userDefaultsShowWeekNumbers, false)
+        XCTAssertEqual(localStorageShowWeekNumbers, false)
 
         viewModel.toggleWeekNumbers.onNext(true)
 
         XCTAssertEqual(showWeekNumbers, true)
-        XCTAssertEqual(userDefaultsShowWeekNumbers, true)
+        XCTAssertEqual(localStorageShowWeekNumbers, true)
     }
 
     func testToggleShowDeclinedEvents() {
 
-        userDefaults.showDeclinedEvents = true
+        localStorage.showDeclinedEvents = true
 
         var showDeclinedEvents: Bool?
 
@@ -463,22 +463,22 @@ class SettingsViewModelTests: XCTestCase {
             .disposed(by: disposeBag)
 
         XCTAssertEqual(showDeclinedEvents, true)
-        XCTAssertEqual(userDefaultsShowDeclinedEvents, true)
+        XCTAssertEqual(localStorageShowDeclinedEvents, true)
 
         viewModel.toggleDeclinedEvents.onNext(false)
 
         XCTAssertEqual(showDeclinedEvents, false)
-        XCTAssertEqual(userDefaultsShowDeclinedEvents, false)
+        XCTAssertEqual(localStorageShowDeclinedEvents, false)
 
         viewModel.toggleDeclinedEvents.onNext(true)
 
         XCTAssertEqual(showDeclinedEvents, true)
-        XCTAssertEqual(userDefaultsShowDeclinedEvents, true)
+        XCTAssertEqual(localStorageShowDeclinedEvents, true)
     }
 
     func testTogglePreserveSelectedDate() {
 
-        userDefaults.preserveSelectedDate = true
+        localStorage.preserveSelectedDate = true
 
         var preserveSelectedDate: Bool?
 
@@ -487,22 +487,22 @@ class SettingsViewModelTests: XCTestCase {
             .disposed(by: disposeBag)
 
         XCTAssertEqual(preserveSelectedDate, true)
-        XCTAssertEqual(userDefaultsPreserveSelectedDate, true)
+        XCTAssertEqual(localStoragePreserveSelectedDate, true)
 
         viewModel.togglePreserveSelectedDate.onNext(false)
 
         XCTAssertEqual(preserveSelectedDate, false)
-        XCTAssertEqual(userDefaultsPreserveSelectedDate, false)
+        XCTAssertEqual(localStoragePreserveSelectedDate, false)
 
         viewModel.togglePreserveSelectedDate.onNext(true)
 
         XCTAssertEqual(preserveSelectedDate, true)
-        XCTAssertEqual(userDefaultsPreserveSelectedDate, true)
+        XCTAssertEqual(localStoragePreserveSelectedDate, true)
     }
 
     func testToggleShowMap() {
 
-        userDefaults.showMap = false
+        localStorage.showMap = false
 
         var showMap: Bool?
 
@@ -511,22 +511,22 @@ class SettingsViewModelTests: XCTestCase {
             .disposed(by: disposeBag)
 
         XCTAssertEqual(showMap, false)
-        XCTAssertEqual(userDefaultsShowMap, false)
+        XCTAssertEqual(localStorageShowMap, false)
 
         viewModel.toggleMap.onNext(true)
 
         XCTAssertEqual(showMap, true)
-        XCTAssertEqual(userDefaultsShowMap, true)
+        XCTAssertEqual(localStorageShowMap, true)
 
         viewModel.toggleMap.onNext(false)
 
         XCTAssertEqual(showMap, false)
-        XCTAssertEqual(userDefaultsShowMap, false)
+        XCTAssertEqual(localStorageShowMap, false)
     }
 
     func testToggleShowPastEvents() {
 
-        userDefaults.showPastEvents = false
+        localStorage.showPastEvents = false
 
         var showPastEvents: Bool?
 
@@ -535,22 +535,22 @@ class SettingsViewModelTests: XCTestCase {
             .disposed(by: disposeBag)
 
         XCTAssertEqual(showPastEvents, false)
-        XCTAssertEqual(userDefaultsShowPastEvents, false)
+        XCTAssertEqual(localStorageShowPastEvents, false)
 
         viewModel.togglePastEvents.onNext(true)
 
         XCTAssertEqual(showPastEvents, true)
-        XCTAssertEqual(userDefaultsShowPastEvents, true)
+        XCTAssertEqual(localStorageShowPastEvents, true)
 
         viewModel.togglePastEvents.onNext(false)
 
         XCTAssertEqual(showPastEvents, false)
-        XCTAssertEqual(userDefaultsShowPastEvents, false)
+        XCTAssertEqual(localStorageShowPastEvents, false)
     }
 
     func testToggleShowOverdueReminders() {
 
-        userDefaults.showOverdueReminders = false
+        localStorage.showOverdueReminders = false
 
         var showOverdueReminders: Bool?
 
@@ -559,22 +559,22 @@ class SettingsViewModelTests: XCTestCase {
             .disposed(by: disposeBag)
 
         XCTAssertEqual(showOverdueReminders, false)
-        XCTAssertEqual(userDefaultsShowOverdueReminders, false)
+        XCTAssertEqual(localStorageShowOverdueReminders, false)
 
         viewModel.toggleOverdueReminders.onNext(true)
 
         XCTAssertEqual(showOverdueReminders, true)
-        XCTAssertEqual(userDefaultsShowOverdueReminders, true)
+        XCTAssertEqual(localStorageShowOverdueReminders, true)
 
         viewModel.toggleOverdueReminders.onNext(false)
 
         XCTAssertEqual(showOverdueReminders, false)
-        XCTAssertEqual(userDefaultsShowOverdueReminders, false)
+        XCTAssertEqual(localStorageShowOverdueReminders, false)
     }
 
     func testToggleShowAllDayDetails() {
 
-        userDefaults.showAllDayDetails = false
+        localStorage.showAllDayDetails = false
 
         var showAllDayDetails: Bool?
 
@@ -583,22 +583,22 @@ class SettingsViewModelTests: XCTestCase {
             .disposed(by: disposeBag)
 
         XCTAssertEqual(showAllDayDetails, false)
-        XCTAssertEqual(userDefaultsShowAllDayDetails, false)
+        XCTAssertEqual(localStorageShowAllDayDetails, false)
 
         viewModel.toggleAllDayDetails.onNext(true)
 
         XCTAssertEqual(showAllDayDetails, true)
-        XCTAssertEqual(userDefaultsShowAllDayDetails, true)
+        XCTAssertEqual(localStorageShowAllDayDetails, true)
 
         viewModel.toggleAllDayDetails.onNext(false)
 
         XCTAssertEqual(showAllDayDetails, false)
-        XCTAssertEqual(userDefaultsShowAllDayDetails, false)
+        XCTAssertEqual(localStorageShowAllDayDetails, false)
     }
 
     func testToggleShowRecurrenceIndicator() {
 
-        userDefaults.showRecurrenceIndicator = false
+        localStorage.showRecurrenceIndicator = false
 
         var showRecurrenceIndicator: Bool?
 
@@ -607,22 +607,22 @@ class SettingsViewModelTests: XCTestCase {
             .disposed(by: disposeBag)
 
         XCTAssertEqual(showRecurrenceIndicator, false)
-        XCTAssertEqual(userDefaultsShowRecurrenceIndicator, false)
+        XCTAssertEqual(localStorageShowRecurrenceIndicator, false)
 
         viewModel.toggleRecurrenceIndicator.onNext(true)
 
         XCTAssertEqual(showRecurrenceIndicator, true)
-        XCTAssertEqual(userDefaultsShowRecurrenceIndicator, true)
+        XCTAssertEqual(localStorageShowRecurrenceIndicator, true)
 
         viewModel.toggleRecurrenceIndicator.onNext(false)
 
         XCTAssertEqual(showRecurrenceIndicator, false)
-        XCTAssertEqual(userDefaultsShowRecurrenceIndicator, false)
+        XCTAssertEqual(localStorageShowRecurrenceIndicator, false)
     }
 
     func testChangeTransparency() {
 
-        userDefaults.transparencyLevel = 5
+        localStorage.transparencyLevel = 5
 
         var popoverTransparency: Int?
         var popoverMaterial: PopoverMaterial?
@@ -645,7 +645,7 @@ class SettingsViewModelTests: XCTestCase {
         ]
 
         XCTAssertEqual(popoverTransparency, 5)
-        XCTAssertEqual(userDefaultsTransparency, 5)
+        XCTAssertEqual(localStorageTransparency, 5)
         XCTAssertEqual(popoverMaterial, expected[5])
 
         for level in 0..<expected.count {
@@ -653,7 +653,7 @@ class SettingsViewModelTests: XCTestCase {
             viewModel.transparencyObserver.onNext(level)
 
             XCTAssertEqual(popoverTransparency, level)
-            XCTAssertEqual(userDefaultsTransparency, level)
+            XCTAssertEqual(localStorageTransparency?.intValue, level)
             XCTAssertEqual(popoverMaterial, expected[level])
         }
     }
@@ -661,8 +661,8 @@ class SettingsViewModelTests: XCTestCase {
     /// [] icon [✓] date  =  [✓] icon [✓] date
     func testToggleIconOn_withDateOn_shouldToggleIconOn() {
 
-        userDefaults.statusItemIconEnabled = false
-        userDefaults.statusItemDateEnabled = true
+        localStorage.statusItemIconEnabled = false
+        localStorage.statusItemDateEnabled = true
 
         var showStatusItemIcon: Bool?
         var showStatusItemDate: Bool?
@@ -680,15 +680,15 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(showStatusItemIcon, true)
         XCTAssertEqual(showStatusItemDate, true)
 
-        XCTAssertEqual(userDefaultsStatusItemIconEnabled, true)
-        XCTAssertEqual(userDefaultsStatusItemDateEnabled, true)
+        XCTAssertEqual(localStorageStatusItemIconEnabled, true)
+        XCTAssertEqual(localStorageStatusItemDateEnabled, true)
     }
 
     /// [✓] icon [✓] date  =  [] icon [✓] date
     func testToggleIconOff_withDateOn_shouldToggleIconOff() {
 
-        userDefaults.statusItemIconEnabled = true
-        userDefaults.statusItemDateEnabled = true
+        localStorage.statusItemIconEnabled = true
+        localStorage.statusItemDateEnabled = true
 
         var showStatusItemIcon: Bool?
         var showStatusItemDate: Bool?
@@ -706,15 +706,15 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(showStatusItemIcon, false)
         XCTAssertEqual(showStatusItemDate, true)
 
-        XCTAssertEqual(userDefaultsStatusItemIconEnabled, false)
-        XCTAssertEqual(userDefaultsStatusItemDateEnabled, true)
+        XCTAssertEqual(localStorageStatusItemIconEnabled, false)
+        XCTAssertEqual(localStorageStatusItemDateEnabled, true)
     }
 
     /// [✓] icon [] date  =  [✓] icon [] date
     func testToggleIconOff_withDateOff_shouldDoNothing() {
 
-        userDefaults.statusItemIconEnabled = true
-        userDefaults.statusItemDateEnabled = false
+        localStorage.statusItemIconEnabled = true
+        localStorage.statusItemDateEnabled = false
 
         var showStatusItemIcon: Bool?
         var showStatusItemDate: Bool?
@@ -732,15 +732,15 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(showStatusItemIcon, true)
         XCTAssertEqual(showStatusItemDate, false)
 
-        XCTAssertEqual(userDefaultsStatusItemIconEnabled, false)
-        XCTAssertEqual(userDefaultsStatusItemDateEnabled, false)
+        XCTAssertEqual(localStorageStatusItemIconEnabled, false)
+        XCTAssertEqual(localStorageStatusItemDateEnabled, false)
     }
 
     /// [✓] icon [] date  =  [✓] icon [✓] date
     func testToggleDateOn_withIconOn_shouldToggleDateOn() {
 
-        userDefaults.statusItemIconEnabled = true
-        userDefaults.statusItemDateEnabled = false
+        localStorage.statusItemIconEnabled = true
+        localStorage.statusItemDateEnabled = false
 
         var showStatusItemIcon: Bool?
         var showStatusItemDate: Bool?
@@ -758,15 +758,15 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(showStatusItemIcon, true)
         XCTAssertEqual(showStatusItemDate, true)
 
-        XCTAssertEqual(userDefaultsStatusItemIconEnabled, true)
-        XCTAssertEqual(userDefaultsStatusItemDateEnabled, true)
+        XCTAssertEqual(localStorageStatusItemIconEnabled, true)
+        XCTAssertEqual(localStorageStatusItemDateEnabled, true)
     }
 
     /// [✓] icon [✓] date  =  [✓] icon [] date
     func testToggleDateOff_withIconOn_shouldToggleDateOff() {
 
-        userDefaults.statusItemIconEnabled = true
-        userDefaults.statusItemDateEnabled = true
+        localStorage.statusItemIconEnabled = true
+        localStorage.statusItemDateEnabled = true
 
         var showStatusItemIcon: Bool?
         var showStatusItemDate: Bool?
@@ -784,15 +784,15 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(showStatusItemIcon, true)
         XCTAssertEqual(showStatusItemDate, false)
 
-        XCTAssertEqual(userDefaultsStatusItemIconEnabled, true)
-        XCTAssertEqual(userDefaultsStatusItemDateEnabled, false)
+        XCTAssertEqual(localStorageStatusItemIconEnabled, true)
+        XCTAssertEqual(localStorageStatusItemDateEnabled, false)
     }
 
     /// [] icon [✓] date  =  [✓] icon [] date
     func testToggleDateOff_withIconOff_shouldToggleIconOn() {
 
-        userDefaults.statusItemIconEnabled = false
-        userDefaults.statusItemDateEnabled = true
+        localStorage.statusItemIconEnabled = false
+        localStorage.statusItemDateEnabled = true
 
         var showStatusItemIcon: Bool?
         var showStatusItemDate: Bool?
@@ -810,13 +810,13 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(showStatusItemIcon, true)
         XCTAssertEqual(showStatusItemDate, false)
 
-        XCTAssertEqual(userDefaultsStatusItemIconEnabled, false)
-        XCTAssertEqual(userDefaultsStatusItemDateEnabled, false)
+        XCTAssertEqual(localStorageStatusItemIconEnabled, false)
+        XCTAssertEqual(localStorageStatusItemDateEnabled, false)
     }
 
     func testToggleShowStatusItemBackground() {
 
-        userDefaults.statusItemBackgroundEnabled = true
+        localStorage.statusItemBackgroundEnabled = true
 
         var showBackground: Bool?
 
@@ -825,17 +825,17 @@ class SettingsViewModelTests: XCTestCase {
             .disposed(by: disposeBag)
 
         XCTAssertEqual(showBackground, true)
-        XCTAssertEqual(userDefaultsStatusItemBackgroundEnabled, true)
+        XCTAssertEqual(localStorageStatusItemBackgroundEnabled, true)
 
         viewModel.toggleStatusItemBackground.onNext(false)
 
         XCTAssertEqual(showBackground, false)
-        XCTAssertEqual(userDefaultsStatusItemBackgroundEnabled, false)
+        XCTAssertEqual(localStorageStatusItemBackgroundEnabled, false)
 
         viewModel.toggleStatusItemBackground.onNext(true)
 
         XCTAssertEqual(showBackground, true)
-        XCTAssertEqual(userDefaultsStatusItemBackgroundEnabled, true)
+        XCTAssertEqual(localStorageStatusItemBackgroundEnabled, true)
     }
 
     func testChangeAppearance() {
@@ -844,7 +844,7 @@ class SettingsViewModelTests: XCTestCase {
             viewModel.appearanceModeObserver.onNext(mode)
 
             XCTAssertEqual(viewModel.appearanceMode.lastValue(), mode)
-            XCTAssertEqual(userDefaultsAppearanceMode, mode.rawValue)
+            XCTAssertEqual(localStorageAppearanceMode?.intValue, mode.rawValue)
         }
     }
 }

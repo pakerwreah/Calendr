@@ -46,7 +46,7 @@ class EventViewModel {
     private let weatherService: WeatherServiceProviding
     private let settings: EventSettings
     private let workspace: WorkspaceServiceProviding
-    private let userDefaults: UserDefaults
+    private let localStorage: LocalStorageProvider
 
     private let disposeBag = DisposeBag()
 
@@ -57,7 +57,7 @@ class EventViewModel {
         geocoder: GeocodeServiceProviding,
         weatherService: WeatherServiceProviding,
         workspace: WorkspaceServiceProviding,
-        userDefaults: UserDefaults,
+        localStorage: LocalStorageProvider,
         settings: EventSettings,
         isShowingDetailsModal: AnyObserver<Bool>,
         isTodaySelected: Bool,
@@ -69,7 +69,7 @@ class EventViewModel {
         self.dateProvider = dateProvider
         self.calendarService = calendarService
         self.workspace = workspace
-        self.userDefaults = userDefaults
+        self.localStorage = localStorage
         self.geocoder = geocoder
         self.weatherService = weatherService
         self.isShowingDetailsModal = isShowingDetailsModal
@@ -301,7 +301,7 @@ class EventViewModel {
             geocoder: geocoder,
             weatherService: weatherService,
             workspace: workspace,
-            userDefaults: userDefaults,
+            localStorage: localStorage,
             settings: settings,
             isShowingObserver: isShowingDetailsModal,
             isInProgress: isInProgress,

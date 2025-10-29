@@ -62,7 +62,7 @@ class NextEventViewModel {
     private let isShowingDetailsModal: AnyObserver<Bool>
 
     private let type: NextEventType
-    private let userDefaults: UserDefaults
+    private let localStorage: LocalStorageProvider
     private let settings: EventSettings
     private let dateProvider: DateProviding
     private let calendarService: CalendarServiceProviding
@@ -72,7 +72,7 @@ class NextEventViewModel {
 
     init(
         type: NextEventType,
-        userDefaults: UserDefaults,
+        localStorage: LocalStorageProvider,
         settings: NextEventSettings,
         nextEventCalendars: Observable<[String]>,
         dateProvider: DateProviding,
@@ -87,7 +87,7 @@ class NextEventViewModel {
     ) {
 
         self.type = type
-        self.userDefaults = userDefaults
+        self.localStorage = localStorage
         self.dateProvider = dateProvider
         self.calendarService = calendarService
         self.geocoder = geocoder
@@ -340,12 +340,12 @@ class NextEventViewModel {
             .bind(to: skippedEvents)
             .disposed(by: disposeBag)
 
-        userDefaults.rx.observe(Int.self, preferredPositionKey, options: [.new])
+        localStorage.rx.observe(Int.self, preferredPositionKey, options: [.new])
             .skipNil()
             .filter { $0 > 0 }
             .distinctUntilChanged()
             .bind { [preferredPositionKey] in
-                userDefaults.set($0, forKey: "saved \(preferredPositionKey)")
+                localStorage.set($0, forKey: "saved \(preferredPositionKey)")
             }
             .disposed(by: disposeBag)
     }
@@ -362,8 +362,8 @@ class NextEventViewModel {
     }
 
     func restorePreferredPosition() {
-        let position = userDefaults.integer(forKey: "saved \(preferredPositionKey)")
-        userDefaults.set(position, forKey: preferredPositionKey)
+        let position = localStorage.integer(forKey: "saved \(preferredPositionKey)")
+        localStorage.set(position, forKey: preferredPositionKey)
     }
 
     func makeContextMenuViewModel() -> (any ContextMenuViewModel)? {
@@ -387,7 +387,7 @@ class NextEventViewModel {
             geocoder: geocoder,
             weatherService: weatherService,
             workspace: workspace,
-            userDefaults: userDefaults,
+            localStorage: localStorage,
             settings: settings,
             isShowingObserver: isShowingDetailsModal,
             isInProgress: isInProgress,

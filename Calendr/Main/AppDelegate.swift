@@ -28,15 +28,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         defer { appLaunch?.finish() }
         #endif
 
-        let userDefaults = UserDefaults.standard
+        let localStorage = LocalStorageProvider.shared
         let notificationCenter = NotificationCenter.default
         let fileManager = FileManager.default
 
-        registerDefaultPrefs(in: userDefaults)
+        registerDefaultPrefs(in: localStorage)
 
-        let dateProvider = DateProvider(notificationCenter: notificationCenter, userDefaults: userDefaults)
+        let dateProvider = DateProvider(notificationCenter: notificationCenter, localStorage: localStorage)
         let calendarAppProvider = CalendarAppProvider(dateProvider: dateProvider, appleScriptRunner: AppleScriptRunner())
-        let workspace = Workspace(userDefaults: userDefaults, dateProvider: dateProvider, calendarAppProvider: calendarAppProvider)
+        let workspace = Workspace(localStorage: localStorage, dateProvider: dateProvider, calendarAppProvider: calendarAppProvider)
         let notificationProvider = LocalNotificationProvider()
 
         viewController = MainViewController(
@@ -46,7 +46,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             calendarService: CalendarServiceProvider(
                 dateProvider: dateProvider,
                 workspace: workspace,
-                userDefaults: userDefaults,
+                localStorage: localStorage,
                 notificationCenter: notificationCenter
             ),
             geocoder: GeocodeServiceProvider(),
@@ -55,7 +55,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             screenProvider: ScreenProvider(notificationCenter: notificationCenter),
             notificationProvider: notificationProvider,
             networkProvider: NetworkServiceProvider(),
-            userDefaults: userDefaults,
+            localStorage: localStorage,
             notificationCenter: notificationCenter,
             fileManager: fileManager
         )

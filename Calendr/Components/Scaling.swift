@@ -9,7 +9,7 @@ import Foundation
 import RxSwift
 
 enum Scaling {
-    static let observable = UserDefaults.standard.rx.observe(\.textScaling).share(replay: 1)
+    static let observable = LocalStorageProvider.shared.rx.observe(\.textScaling).share(replay: 1)
 
     static var current: Double {
         var value: Double = 1

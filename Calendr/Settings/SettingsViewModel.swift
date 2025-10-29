@@ -216,57 +216,59 @@ class SettingsViewModel:
 
     private let autoLauncher: AutoLauncher
     private let dateProvider: DateProviding
+    private let localStorage: LocalStorageProvider
 
     init(
         autoLauncher: AutoLauncher,
         dateProvider: DateProviding,
         workspace: WorkspaceServiceProviding,
-        userDefaults: UserDefaults,
+        localStorage: LocalStorageProvider,
         notificationCenter: NotificationCenter
     ) {
         self.autoLauncher = autoLauncher
         self.dateProvider = dateProvider
+        self.localStorage = localStorage
 
         // MARK: - Observers
 
         toggleAutoLaunch = autoLauncher.rx.observer(for: \.isEnabled)
-        toggleStatusItemIcon = userDefaults.rx.observer(for: \.statusItemIconEnabled)
-        toggleStatusItemDate = userDefaults.rx.observer(for: \.statusItemDateEnabled)
-        toggleStatusItemBackground = userDefaults.rx.observer(for: \.statusItemBackgroundEnabled)
-        toggleOpenOnHover = userDefaults.rx.observer(for: \.statusItemOpenOnHover)
-        statusItemIconStyleObserver = userDefaults.rx.observer(for: \.statusItemIconStyle).mapObserver(\.rawValue)
-        statusItemDateStyleObserver = userDefaults.rx.observer(for: \.statusItemDateStyle).mapObserver(\.rawValue)
-        statusItemDateFormatObserver = userDefaults.rx.observer(for: \.statusItemDateFormat)
-        toggleEventStatusItem = userDefaults.rx.observer(for: \.showEventStatusItem)
-        statusItemTextScalingObserver = userDefaults.rx.observer(for: \.statusItemTextScaling)
-        eventStatusItemCheckRangeObserver = userDefaults.rx.observer(for: \.eventStatusItemCheckRange)
-        toggleEventStatusItemFlashing = userDefaults.rx.observer(for: \.eventStatusItemFlashing)
-        toggleEventStatusItemSound = userDefaults.rx.observer(for: \.eventStatusItemSound)
-        eventStatusItemTextScalingObserver = userDefaults.rx.observer(for: \.eventStatusItemTextScaling)
-        eventStatusItemLengthObserver = userDefaults.rx.observer(for: \.eventStatusItemLength)
-        toggleEventStatusItemDetectNotch = userDefaults.rx.observer(for: \.eventStatusItemDetectNotch)
-        calendarScalingObserver = userDefaults.rx.observer(for: \.calendarScaling)
-        firstWeekdayPrevObserver = userDefaults.rx.observer(for: \.firstWeekday).mapObserver { (1...7).circular(before: userDefaults.firstWeekday) }
-        firstWeekdayNextObserver = userDefaults.rx.observer(for: \.firstWeekday).mapObserver { (1...7).circular(after: userDefaults.firstWeekday) }
-        toggleHighlightedWeekday = userDefaults.rx.toggleObserver(for: \.highlightedWeekdays)
-        weekCountObserver = userDefaults.rx.observer(for: \.weekCount)
-        toggleWeekNumbers = userDefaults.rx.observer(for: \.showWeekNumbers)
-        toggleDeclinedEvents = userDefaults.rx.observer(for: \.showDeclinedEvents)
-        togglePreserveSelectedDate = userDefaults.rx.observer(for: \.preserveSelectedDate)
-        toggleDateHoverOption = userDefaults.rx.observer(for: \.dateHoverOption)
-        toggleMap = userDefaults.rx.observer(for: \.showMap)
-        togglePastEvents = userDefaults.rx.observer(for: \.showPastEvents)
-        toggleOverdueReminders = userDefaults.rx.observer(for: \.showOverdueReminders)
-        toggleAllDayDetails = userDefaults.rx.observer(for: \.showAllDayDetails)
-        toggleRecurrenceIndicator = userDefaults.rx.observer(for: \.showRecurrenceIndicator)
-        toggleForceLocalTimeZone = userDefaults.rx.observer(for: \.forceLocalTimeZone)
-        transparencyObserver = userDefaults.rx.observer(for: \.transparencyLevel)
-        textScalingObserver = userDefaults.rx.observer(for: \.textScaling)
-        calendarTextScalingObserver = userDefaults.rx.observer(for: \.calendarTextScaling)
-        eventDotsStyleObserver = userDefaults.rx.observer(for: \.eventDotsStyle).mapObserver(\.rawValue)
-        calendarAppViewModeObserver = userDefaults.rx.observer(for: \.calendarAppViewMode).mapObserver(\.rawValue)
-        defaultCalendarAppObserver = userDefaults.rx.observer(for: \.defaultCalendarApp).mapObserver(\.rawValue)
-        appearanceModeObserver = userDefaults.rx.observer(for: \.appearanceMode).mapObserver(\.rawValue)
+        toggleStatusItemIcon = localStorage.rx.observer(for: \.statusItemIconEnabled)
+        toggleStatusItemDate = localStorage.rx.observer(for: \.statusItemDateEnabled)
+        toggleStatusItemBackground = localStorage.rx.observer(for: \.statusItemBackgroundEnabled)
+        toggleOpenOnHover = localStorage.rx.observer(for: \.statusItemOpenOnHover)
+        statusItemIconStyleObserver = localStorage.rx.observer(for: \.statusItemIconStyle).mapObserver(\.rawValue)
+        statusItemDateStyleObserver = localStorage.rx.observer(for: \.statusItemDateStyle).mapObserver(\.rawValue)
+        statusItemDateFormatObserver = localStorage.rx.observer(for: \.statusItemDateFormat)
+        toggleEventStatusItem = localStorage.rx.observer(for: \.showEventStatusItem)
+        statusItemTextScalingObserver = localStorage.rx.observer(for: \.statusItemTextScaling)
+        eventStatusItemCheckRangeObserver = localStorage.rx.observer(for: \.eventStatusItemCheckRange)
+        toggleEventStatusItemFlashing = localStorage.rx.observer(for: \.eventStatusItemFlashing)
+        toggleEventStatusItemSound = localStorage.rx.observer(for: \.eventStatusItemSound)
+        eventStatusItemTextScalingObserver = localStorage.rx.observer(for: \.eventStatusItemTextScaling)
+        eventStatusItemLengthObserver = localStorage.rx.observer(for: \.eventStatusItemLength)
+        toggleEventStatusItemDetectNotch = localStorage.rx.observer(for: \.eventStatusItemDetectNotch)
+        calendarScalingObserver = localStorage.rx.observer(for: \.calendarScaling)
+        firstWeekdayPrevObserver = localStorage.rx.observer(for: \.firstWeekday).mapObserver { (1...7).circular(before: localStorage.firstWeekday) }
+        firstWeekdayNextObserver = localStorage.rx.observer(for: \.firstWeekday).mapObserver { (1...7).circular(after: localStorage.firstWeekday) }
+        toggleHighlightedWeekday = localStorage.rx.toggleObserver(for: \.highlightedWeekdays)
+        weekCountObserver = localStorage.rx.observer(for: \.weekCount)
+        toggleWeekNumbers = localStorage.rx.observer(for: \.showWeekNumbers)
+        toggleDeclinedEvents = localStorage.rx.observer(for: \.showDeclinedEvents)
+        togglePreserveSelectedDate = localStorage.rx.observer(for: \.preserveSelectedDate)
+        toggleDateHoverOption = localStorage.rx.observer(for: \.dateHoverOption)
+        toggleMap = localStorage.rx.observer(for: \.showMap)
+        togglePastEvents = localStorage.rx.observer(for: \.showPastEvents)
+        toggleOverdueReminders = localStorage.rx.observer(for: \.showOverdueReminders)
+        toggleAllDayDetails = localStorage.rx.observer(for: \.showAllDayDetails)
+        toggleRecurrenceIndicator = localStorage.rx.observer(for: \.showRecurrenceIndicator)
+        toggleForceLocalTimeZone = localStorage.rx.observer(for: \.forceLocalTimeZone)
+        transparencyObserver = localStorage.rx.observer(for: \.transparencyLevel)
+        textScalingObserver = localStorage.rx.observer(for: \.textScaling)
+        calendarTextScalingObserver = localStorage.rx.observer(for: \.calendarTextScaling)
+        eventDotsStyleObserver = localStorage.rx.observer(for: \.eventDotsStyle).mapObserver(\.rawValue)
+        calendarAppViewModeObserver = localStorage.rx.observer(for: \.calendarAppViewMode).mapObserver(\.rawValue)
+        defaultCalendarAppObserver = localStorage.rx.observer(for: \.defaultCalendarApp).mapObserver(\.rawValue)
+        appearanceModeObserver = localStorage.rx.observer(for: \.appearanceMode).mapObserver(\.rawValue)
 
         // MARK: - Observables
 
@@ -274,8 +276,8 @@ class SettingsViewModel:
 
         /* ----- Icon and Date ----- */
         let statusItemIconAndDate = Observable.combineLatest(
-            userDefaults.rx.observe(\.statusItemIconEnabled),
-            userDefaults.rx.observe(\.statusItemDateEnabled)
+            localStorage.rx.observe(\.statusItemIconEnabled),
+            localStorage.rx.observe(\.statusItemDateEnabled)
         )
         .map { iconEnabled, dateEnabled in
             (iconEnabled || !dateEnabled, dateEnabled)
@@ -285,40 +287,40 @@ class SettingsViewModel:
         showStatusItemDate = statusItemIconAndDate.map(\.1)
         /* ----------------------- */
 
-        openOnHover = userDefaults.rx.observe(\.statusItemOpenOnHover)
-        showStatusItemBackground = userDefaults.rx.observe(\.statusItemBackgroundEnabled)
-        statusItemIconStyle = userDefaults.rx.observe(\.statusItemIconStyle).map { .init(rawValue: $0) ?? .calendar }
-        statusItemDateStyle = userDefaults.rx.observe(\.statusItemDateStyle).map { .init(rawValue: $0) ?? .none }
-        statusItemDateFormat = userDefaults.rx.observe(\.statusItemDateFormat)
-        showEventStatusItem = userDefaults.rx.observe(\.showEventStatusItem)
-        statusItemTextScaling = userDefaults.rx.observe(\.statusItemTextScaling)
-        eventStatusItemCheckRange = userDefaults.rx.observe(\.eventStatusItemCheckRange)
-        eventStatusItemFlashing = userDefaults.rx.observe(\.eventStatusItemFlashing)
-        eventStatusItemSound = userDefaults.rx.observe(\.eventStatusItemSound)
-        eventStatusItemTextScaling = userDefaults.rx.observe(\.eventStatusItemTextScaling)
-        eventStatusItemLength = userDefaults.rx.observe(\.eventStatusItemLength)
-        eventStatusItemDetectNotch = userDefaults.rx.observe(\.eventStatusItemDetectNotch)
-        calendarScaling = userDefaults.rx.observe(\.calendarScaling)
-        firstWeekday = userDefaults.rx.observe(\.firstWeekday)
-        highlightedWeekdays = userDefaults.rx.observe(\.highlightedWeekdays)
-        weekCount = userDefaults.rx.observe(\.weekCount)
-        showWeekNumbers = userDefaults.rx.observe(\.showWeekNumbers)
-        showDeclinedEvents = userDefaults.rx.observe(\.showDeclinedEvents)
-        preserveSelectedDate = userDefaults.rx.observe(\.preserveSelectedDate)
-        dateHoverOption = userDefaults.rx.observe(\.dateHoverOption)
-        showMap = userDefaults.rx.observe(\.showMap)
-        showPastEvents = userDefaults.rx.observe(\.showPastEvents)
-        showOverdueReminders = userDefaults.rx.observe(\.showOverdueReminders)
-        showAllDayDetails = userDefaults.rx.observe(\.showAllDayDetails)
-        showRecurrenceIndicator = userDefaults.rx.observe(\.showRecurrenceIndicator)
-        forceLocalTimeZone = userDefaults.rx.observe(\.forceLocalTimeZone)
-        popoverTransparency = userDefaults.rx.observe(\.transparencyLevel)
-        textScaling = userDefaults.rx.observe(\.textScaling)
-        calendarTextScaling = userDefaults.rx.observe(\.calendarTextScaling)
-        eventDotsStyle = userDefaults.rx.observe(\.eventDotsStyle).map { .init(rawValue: $0) ?? .none }
-        calendarAppViewMode = userDefaults.rx.observe(\.calendarAppViewMode).map { .init(rawValue: $0) ?? .month }
-        defaultCalendarApp = userDefaults.rx.observe(\.defaultCalendarApp).map { .init(rawValue: $0) ?? .calendar }
-        appearanceMode = userDefaults.rx.observe(\.appearanceMode).map { .init(rawValue: $0) ?? .automatic }
+        openOnHover = localStorage.rx.observe(\.statusItemOpenOnHover)
+        showStatusItemBackground = localStorage.rx.observe(\.statusItemBackgroundEnabled)
+        statusItemIconStyle = localStorage.rx.observe(\.statusItemIconStyle).map { .init(rawValue: $0) ?? .calendar }
+        statusItemDateStyle = localStorage.rx.observe(\.statusItemDateStyle).map { .init(rawValue: $0) ?? .none }
+        statusItemDateFormat = localStorage.rx.observe(\.statusItemDateFormat)
+        showEventStatusItem = localStorage.rx.observe(\.showEventStatusItem)
+        statusItemTextScaling = localStorage.rx.observe(\.statusItemTextScaling)
+        eventStatusItemCheckRange = localStorage.rx.observe(\.eventStatusItemCheckRange)
+        eventStatusItemFlashing = localStorage.rx.observe(\.eventStatusItemFlashing)
+        eventStatusItemSound = localStorage.rx.observe(\.eventStatusItemSound)
+        eventStatusItemTextScaling = localStorage.rx.observe(\.eventStatusItemTextScaling)
+        eventStatusItemLength = localStorage.rx.observe(\.eventStatusItemLength)
+        eventStatusItemDetectNotch = localStorage.rx.observe(\.eventStatusItemDetectNotch)
+        calendarScaling = localStorage.rx.observe(\.calendarScaling)
+        firstWeekday = localStorage.rx.observe(\.firstWeekday)
+        highlightedWeekdays = localStorage.rx.observe(\.highlightedWeekdays)
+        weekCount = localStorage.rx.observe(\.weekCount)
+        showWeekNumbers = localStorage.rx.observe(\.showWeekNumbers)
+        showDeclinedEvents = localStorage.rx.observe(\.showDeclinedEvents)
+        preserveSelectedDate = localStorage.rx.observe(\.preserveSelectedDate)
+        dateHoverOption = localStorage.rx.observe(\.dateHoverOption)
+        showMap = localStorage.rx.observe(\.showMap)
+        showPastEvents = localStorage.rx.observe(\.showPastEvents)
+        showOverdueReminders = localStorage.rx.observe(\.showOverdueReminders)
+        showAllDayDetails = localStorage.rx.observe(\.showAllDayDetails)
+        showRecurrenceIndicator = localStorage.rx.observe(\.showRecurrenceIndicator)
+        forceLocalTimeZone = localStorage.rx.observe(\.forceLocalTimeZone)
+        popoverTransparency = localStorage.rx.observe(\.transparencyLevel)
+        textScaling = localStorage.rx.observe(\.textScaling)
+        calendarTextScaling = localStorage.rx.observe(\.calendarTextScaling)
+        eventDotsStyle = localStorage.rx.observe(\.eventDotsStyle).map { .init(rawValue: $0) ?? .none }
+        calendarAppViewMode = localStorage.rx.observe(\.calendarAppViewMode).map { .init(rawValue: $0) ?? .month }
+        defaultCalendarApp = localStorage.rx.observe(\.defaultCalendarApp).map { .init(rawValue: $0) ?? .calendar }
+        appearanceMode = localStorage.rx.observe(\.appearanceMode).map { .init(rawValue: $0) ?? .automatic }
 
         let localeChangeObservable = notificationCenter.rx
             .notification(NSLocale.currentLocaleDidChangeNotification)

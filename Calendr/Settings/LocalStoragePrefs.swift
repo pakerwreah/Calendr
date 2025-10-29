@@ -1,5 +1,5 @@
 //
-//  Prefs+UserDefaults.swift
+//  LocalStoragePrefs.swift
 //  Calendr
 //
 //  Created by Paker on 30/09/22.
@@ -72,9 +72,9 @@ enum Prefs {
     static let statusItemPreferredPosition = "NSStatusItem Preferred Position"
 }
 
-func registerDefaultPrefs(in userDefaults: UserDefaults, calendar: Calendar = .current) {
+func registerDefaultPrefs(in localStorage: LocalStorageProvider, calendar: Calendar = .current) {
 
-    userDefaults.register(defaults: [
+    localStorage.register(defaults: [
         // Menu Bar
         Prefs.statusItemIconEnabled: true,
         Prefs.statusItemIconStyle: StatusItemIconStyle.calendar.rawValue,
@@ -128,7 +128,7 @@ func registerDefaultPrefs(in userDefaults: UserDefaults, calendar: Calendar = .c
     ])
 }
 
-extension UserDefaults {
+extension LocalStorageProvider {
 
     // Menu Bar
 
@@ -350,7 +350,7 @@ extension UserDefaults {
     }
 
     @objc dynamic var permissionSuppressed: [String] {
-        get { array(forKey: Prefs.permissionSuppressed) as? [String] ?? [] }
+        get { stringArray(forKey: Prefs.permissionSuppressed) ?? [] }
         set { set(newValue, forKey: Prefs.permissionSuppressed) }
     }
 

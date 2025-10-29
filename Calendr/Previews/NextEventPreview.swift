@@ -36,7 +36,7 @@ struct NextEventPreview: PreviewProvider {
         NextEventView(
             viewModel: NextEventViewModel(
                 type: .event,
-                userDefaults: .init(),
+                localStorage: .shared,
                 settings: settings,
                 nextEventCalendars: .just([]),
                 dateProvider: dateProvider,

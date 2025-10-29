@@ -11,16 +11,16 @@ import SwiftUI
 
 struct CalendarPickerPreview: PreviewProvider {
 
-    static let userDefaults = {
-        let userDefaults = UserDefaults(suiteName: String(describing: Self.self))!
+    static let localStorage = {
+        let localStorage: LocalStorageProvider = .shared
 
-        userDefaults.showEventStatusItem = true
-        userDefaults.silencedCalendars = [CalendarModel].mock
+        localStorage.showEventStatusItem = true
+        localStorage.silencedCalendars = [CalendarModel].mock
             .enumerated()
             .filter { $0.offset % 3 == 0 }
             .map(\.element.id)
 
-        return userDefaults
+        return localStorage
     }()
 
     static let calendarService = MockCalendarServiceProvider(calendars: .mock)
@@ -29,7 +29,7 @@ struct CalendarPickerPreview: PreviewProvider {
         CalendarPickerViewController(
             viewModel: CalendarPickerViewModel(
                 calendarService: calendarService,
-                userDefaults: userDefaults
+                localStorage: localStorage
             ),
             configuration: .picker
         )

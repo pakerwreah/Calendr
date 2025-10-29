@@ -13,18 +13,17 @@ class EventDetailsViewModelTests: XCTestCase {
 
     let disposeBag = DisposeBag()
 
-    let userDefaults = UserDefaults(suiteName: className())!
-
+    let localStorage = MockLocalStorageProvider()
     let dateProvider = MockDateProvider()
     let calendarService = MockCalendarServiceProvider()
     let geocoder = MockGeocodeServiceProvider()
     let weatherService = MockWeatherServiceProvider()
-    lazy var workspace = MockWorkspaceServiceProvider(userDefaults: userDefaults)
+    lazy var workspace = MockWorkspaceServiceProvider(localStorage: localStorage)
     let settings = MockEventSettings()
 
     override func setUp() {
-        userDefaults.setVolatileDomain([:], forName: UserDefaults.registrationDomain)
-        userDefaults.removePersistentDomain(forName: className)
+
+        localStorage.reset()
 
         dateProvider.m_calendar.locale = Locale(identifier: "en_US")
     }
@@ -286,13 +285,13 @@ class EventDetailsViewModelTests: XCTestCase {
 
         wait(for: [defaultBrowserExpectation], timeout: 1)
 
-        XCTAssertEqual(userDefaults.defaultBrowserPerCalendar, [:])
+        XCTAssertEqual(localStorage.defaultBrowserPerCalendar, [:])
 
         viewModel.selectedBrowserObserver.onNext(2)
 
         let browser2Url = makeUrl("Browser 2").absoluteString
 
-        XCTAssertEqual(userDefaults.defaultBrowserPerCalendar, ["1": browser2Url])
+        XCTAssertEqual(localStorage.defaultBrowserPerCalendar, ["1": browser2Url])
 
         workspace.didOpenURLWithApplication = { url, appUrl in
             XCTAssertEqual(url.absoluteString, "https://example.com")
@@ -322,7 +321,7 @@ class EventDetailsViewModelTests: XCTestCase {
             geocoder: geocoder,
             weatherService: weatherService,
             workspace: workspace,
-            userDefaults: userDefaults,
+            localStorage: localStorage,
             settings: settings,
             isShowingObserver: .dummy(),
             isInProgress: .just(false),
