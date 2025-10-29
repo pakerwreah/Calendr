@@ -600,8 +600,7 @@ class MainViewController: NSViewController {
             ),
             calendarService: calendarService
         )
-        let editorView = ReminderEditorView(viewModel: viewModel)
-        let viewController = HostingController(rootView: editorView)
+        let viewController = ReminderEditorViewController(viewModel: viewModel)
 
         viewController.isResizable = false
         viewController.delegate = viewModel
@@ -609,8 +608,6 @@ class MainViewController: NSViewController {
         viewModel.onCloseConfirmed = { [weak viewController] in
             viewController?.dismiss(nil)
         }
-
-        NSApp.activate(ignoringOtherApps: true)
 
         presentAsModalWindow(viewController)
     }

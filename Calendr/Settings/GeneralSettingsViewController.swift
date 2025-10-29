@@ -52,6 +52,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
 
     // Events
     private let showMapCheckbox = Checkbox(title: Strings.Settings.Events.showMap)
+    private let mapBlacklistButton = ImageButton(image: Icons.Settings.blacklist)
     private let showFinishedEventsCheckbox = Checkbox(title: Strings.Settings.Events.showFinishedEvents)
     private let showOverdueCheckbox = Checkbox(title: Strings.Settings.Events.showOverdueReminders)
     private let showAllDayDetailsCheckbox = Checkbox(title: Strings.Settings.Events.showAllDayDetails)
@@ -261,8 +262,8 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     }()
 
     private lazy var eventsContent: NSView = {
-        NSStackView(views: [
-            showMapCheckbox,
+        return NSStackView(views: [
+            NSStackView(views: [showMapCheckbox, mapBlacklistButton]),
             showFinishedEventsCheckbox,
             showOverdueCheckbox,
             showAllDayDetailsCheckbox,
@@ -653,6 +654,17 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     }
 
     private func setUpEvents() {
+
+        mapBlacklistButton.rx.tap.bind { [weak self] in
+            guard let self else { return }
+
+            presentAsModalWindow(
+                MapBlackListViewController(
+                    viewModel: viewModel.mapBlackListViewModel()
+                )
+            )
+        }
+        .disposed(by: disposeBag)
 
         bind(
             control: showMapCheckbox,

@@ -357,10 +357,6 @@ private class EventStore: EKEventStore {
 
     override func requestAccess(to entityType: EKEntityType) async throws -> Bool {
 
-        guard #available(macOS 14.0, *) else {
-            return try await super.requestAccess(to: entityType)
-        }
-
         switch entityType {
         case .event:
             return try await requestFullAccessToEvents()
@@ -372,12 +368,7 @@ private class EventStore: EKEventStore {
     }
 
     func hasAccess(to entityType: EKEntityType) -> Bool {
-        let status = EventStore.authorizationStatus(for: entityType)
-        if #available(macOS 14.0, *) {
-            return status == .fullAccess
-        } else {
-            return status == .authorized
-        }
+        EventStore.authorizationStatus(for: entityType) == .fullAccess
     }
 }
 

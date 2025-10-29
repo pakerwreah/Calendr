@@ -429,4 +429,8 @@ class SettingsViewModel:
     func windowDidBecomeKey() {
         autoLauncher.syncStatus()
     }
+
+    func mapBlackListViewModel() -> MapBlackListViewModel {
+        MapBlackListViewModel(localStorage: localStorage)
+    }
 }

@@ -1,5 +1,5 @@
 //
-//  HostingController.swift
+//  HostingWindowController.swift
 //  Calendr
 //
 //  Created by Paker on 23/10/2025.
@@ -7,14 +7,14 @@
 
 import SwiftUI
 
-protocol HostingControllerDelegate: AnyObject {
+protocol HostingWindowControllerDelegate: AnyObject {
 
     func requestWindowClose() -> Bool
 }
 
-class HostingController<RootView: View>: NSHostingController<RootView>, NSWindowDelegate {
+class HostingWindowController<RootView: View>: NSHostingController<RootView>, NSWindowDelegate {
 
-    weak var delegate: HostingControllerDelegate?
+    weak var delegate: HostingWindowControllerDelegate?
 
     var isResizable = true
 
@@ -37,6 +37,8 @@ class HostingController<RootView: View>: NSHostingController<RootView>, NSWindow
             return assertionFailure()
         }
         window.delegate = self
+
+        NSApp.activate(ignoringOtherApps: true)
     }
 
     func windowDidResize(_ notification: Notification) {
@@ -61,6 +63,6 @@ class HostingController<RootView: View>: NSHostingController<RootView>, NSWindow
     }
 
     func windowShouldClose(_ sender: NSWindow) -> Bool {
-        delegate?.requestWindowClose() == true
+        delegate?.requestWindowClose() != false
     }
 }

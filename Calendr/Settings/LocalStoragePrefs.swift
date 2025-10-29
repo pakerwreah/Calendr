@@ -46,6 +46,7 @@ enum Prefs {
     // Event Details
     static let showMap = "show_map"
     static let showMapBlacklistRegex = "show_map_blacklist_regex"
+    static let showMapBlacklistItems = "show_map_blacklist_items"
 
     // Events
     static let showPastEvents = "show_past_events"
@@ -110,6 +111,13 @@ func registerDefaultPrefs(in localStorage: LocalStorageProvider, calendar: Calen
 
         // Event Details
         Prefs.showMap: true,
+        Prefs.showMapBlacklistItems: [
+            "Microsoft Teams",
+            "Google Meet",
+            "Discord",
+            "Slack",
+            "Zoom",
+        ],
 
         // Events
         Prefs.showPastEvents: true,
@@ -291,6 +299,11 @@ extension LocalStorageProvider {
     @objc dynamic var showMapBlacklistRegex: String? {
         get { string(forKey: Prefs.showMapBlacklistRegex) }
         set { set(newValue, forKey: Prefs.showMapBlacklistRegex) }
+    }
+
+    @objc dynamic var showMapBlacklistItems: [String] {
+        get { stringArray(forKey: Prefs.showMapBlacklistItems) ?? [] }
+        set { set(newValue, forKey: Prefs.showMapBlacklistItems) }
     }
 
     // Events
