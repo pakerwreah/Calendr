@@ -102,9 +102,9 @@
 "reminder.options.complete" = "Terminé";
 "reminder.options.remind" = "Rappel %@";
 
-//"reminder.editor.headline" = "New Reminder";
-//"reminder.editor.title" = "Title";
-//"reminder.editor.save" = "Save";
+"reminder.editor.headline" = "Nouveau Rappel";
+"reminder.editor.title" = "Titre";
+"reminder.editor.save" = "Sauvegarder";
 
 //"reminder.editor.confirm.continue" = "Continue editing";
 //"reminder.editor.confirm.discard" = "Discard all changes";
@@ -134,7 +134,7 @@
 "tooltips.navigation.next_month" = "Mois suivant";
 
 "tooltips.toolbar.stay_open" = "Maintenir ouvert";
-//"tooltips.toolbar.create" = "Create";
+"tooltips.toolbar.create" = "Créer";
 "tooltips.toolbar.open_calendar" = "Ouvrir Calendrier";
 "tooltips.toolbar.open_reminders" = "Ouvrir Rappels";
 "tooltips.toolbar.open_menu" = "Ouvrir le menu";
