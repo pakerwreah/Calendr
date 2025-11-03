@@ -55,9 +55,10 @@ class CalendarServiceProvider: CalendarServiceProviding {
 
     private func listenToStoreChanges() {
 
-        notificationCenter.rx
-            .notification(.EKEventStoreChanged, object: store)
-            .void()
+        let interval = Observable<Int>.interval(.seconds(60), scheduler: MainScheduler.instance).void()
+        let eventStoreChanged = notificationCenter.rx.notification(.EKEventStoreChanged, object: store).void()
+
+        Observable.merge(interval, eventStoreChanged)
             .bind(to: changeObserver)
             .disposed(by: disposeBag)
     }
