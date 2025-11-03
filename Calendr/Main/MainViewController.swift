@@ -741,6 +741,7 @@ class MainViewController: NSViewController {
                 viewModel.hasEvent
             )
             .map { $0 && $1 }
+            .startWith(false)
             .distinctUntilChanged()
             .observe(on: MainScheduler.asyncInstance)
             .bind { showEvent in
