@@ -37,6 +37,10 @@ class HostingWindowController<RootView: View>: NSHostingController<RootView>, NS
             return assertionFailure()
         }
         window.delegate = self
+    }
+
+    override func viewWillAppear() {
+        super.viewWillAppear()
 
         NSApp.activate(ignoringOtherApps: true)
     }
