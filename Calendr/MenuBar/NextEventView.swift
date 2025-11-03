@@ -12,6 +12,9 @@ class NextEventView: NSView {
 
     private let disposeBag = DisposeBag()
 
+    private let updateSubject = PublishSubject<Void>()
+    let viewSnapshot = BehaviorSubject<NSImage?>(value: nil)
+
     private let viewModel: NextEventViewModel
 
     private let colorBar = NSView()
@@ -73,34 +76,54 @@ class NextEventView: NSView {
 
     private func setUpBindings() {
 
+        updateSubject
+            .debounce(.milliseconds(50), scheduler: MainScheduler.instance)
+            .map { [weak self] in self?.asImage() }
+            .bind(to: viewSnapshot)
+            .disposed(by: disposeBag)
+
         Observable.combineLatest(
             viewModel.barStyle,
             viewModel.barColor.map(\.cgColor)
         )
+        .track(with: updateSubject)
         .bind(to: colorBar.layer!.rx.eventBarStyle)
         .disposed(by: disposeBag)
 
         viewModel.backgroundColor
             .map(\.cgColor)
+            .track(with: updateSubject)
             .bind(to: nextEventView.layer!.rx.backgroundColor)
             .disposed(by: disposeBag)
 
         viewModel.title
+            .track(with: updateSubject)
             .bind(to: nextEventTitle.rx.stringValue)
             .disposed(by: disposeBag)
 
         viewModel.time
+            .track(with: updateSubject)
             .bind(to: nextEventTime.rx.stringValue)
             .disposed(by: disposeBag)
 
         viewModel.hasEvent
             .map(!)
+            .track(with: updateSubject)
             .bind(to: rx.isHidden)
             .disposed(by: disposeBag)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+private extension ObservableType {
+
+    func track<Observer: ObserverType>(with observer: Observer) -> Observable<Element> where Observer.Element == Void {
+        self.do(afterNext: { _ in
+            observer.onNext(())
+        })
     }
 }
 

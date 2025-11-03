@@ -50,6 +50,7 @@
 		3430675E25F6BC15000D4003 /* HistoricalSchedulerTimeConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3430675D25F6BC15000D4003 /* HistoricalSchedulerTimeConverter.swift */; };
 		3430676325F6C130000D4003 /* TrackedHistoricalScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3430676225F6C130000D4003 /* TrackedHistoricalScheduler.swift */; };
 		3430ED03259634E00045DA53 /* NSStackView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3430ED02259634E00045DA53 /* NSStackView+Rx.swift */; };
+		34337A4B2EB933EC001D4AA2 /* NSView+Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34337A4A2EB933E7001D4AA2 /* NSView+Image.swift */; };
 		3437687A2EAEC3B0004224D0 /* EventListSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 343768792EAEC3AE004224D0 /* EventListSummaryView.swift */; };
 		3437687C2EAEDCA4004224D0 /* EventListSummaryPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3437687B2EAEDC9E004224D0 /* EventListSummaryPreview.swift */; };
 		3438AEEE2C6192A9002BE3E1 /* XCTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3438AEED2C6192A9002BE3E1 /* XCTest.swift */; };
@@ -292,6 +293,7 @@
 		3430675D25F6BC15000D4003 /* HistoricalSchedulerTimeConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoricalSchedulerTimeConverter.swift; sourceTree = "<group>"; };
 		3430676225F6C130000D4003 /* TrackedHistoricalScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackedHistoricalScheduler.swift; sourceTree = "<group>"; };
 		3430ED02259634E00045DA53 /* NSStackView+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSStackView+Rx.swift"; sourceTree = "<group>"; };
+		34337A4A2EB933E7001D4AA2 /* NSView+Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSView+Image.swift"; sourceTree = "<group>"; };
 		343768792EAEC3AE004224D0 /* EventListSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventListSummaryView.swift; sourceTree = "<group>"; };
 		3437687B2EAEDC9E004224D0 /* EventListSummaryPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventListSummaryPreview.swift; sourceTree = "<group>"; };
 		3438AEED2C6192A9002BE3E1 /* XCTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCTest.swift; sourceTree = "<group>"; };
@@ -793,6 +795,7 @@
 				3430ED02259634E00045DA53 /* NSStackView+Rx.swift */,
 				3470654A292EFCF90079C68A /* NSTextView.swift */,
 				341B2B4725D0C9A600336342 /* NSView.swift */,
+				34337A4A2EB933E7001D4AA2 /* NSView+Image.swift */,
 				347D0FE6259544B4002451EC /* NSView+Layout.swift */,
 				3477F3E325FD5285008EA888 /* NSView+Rx.swift */,
 				3477F3E725FD52AA008EA888 /* NSViewController+Rx.swift */,
@@ -1314,6 +1317,7 @@
 				349355AA25BCA8DF00957945 /* EventView.swift in Sources */,
 				3409173B267E90210023B76D /* Icons.swift in Sources */,
 				3421DA182693EEBD00056837 /* MockDateProvider.swift in Sources */,
+				34337A4B2EB933EC001D4AA2 /* NSView+Image.swift in Sources */,
 				34E855682C70E92500757B58 /* AutoUpdater.swift in Sources */,
 				348E701F25C43C5200B3B160 /* WeekDay.swift in Sources */,
 				34D5A7A72EAB12DF00A41E28 /* AppEnvironment.generated.swift in Sources */,
