@@ -728,25 +728,12 @@ class MainViewController: NSViewController {
 
     private func setUpEventStatusItem(item: NSStatusItem, view: NextEventView, viewModel: NextEventViewModel, clickHandler: StatusItemClickHandler) {
         guard
-            let statusBarButton = item.button,
-            // ⚠️ There's a bug in macOS 26.1 that causes CPU usage to spike when using multiple displays.
-            //    When we attach the event view to superview?.superview, we make it disappear on inactive screens.
-            //    Unfortunately, if Apple doesn't fix this issue, we can't show it, because the app becomes unusable.
-
-            /// When that happens, Console.app starts spamming:
-            /// ```
-            /// [com.apple.controlcenter:...] Sending action(s) in update: NSSceneFenceAction
-            /// ```
-            let statusBarContainer = if #available(macOS 26.1, *) { statusBarButton.superview?.superview } else { statusBarButton }
+            let statusBarButton = item.button
         else { return }
 
-        statusBarContainer.addSubview(view)
-
-        view.leading(equalTo: statusBarButton)
-        view.top(equalTo: statusBarButton)
-        view.bottom(equalTo: statusBarButton)
-
-        statusBarButton.width(equalTo: view)
+        view.viewSnapshot
+            .bind(to: statusBarButton.rx.image)
+            .disposed(by: disposeBag)
 
         Observable
             .combineLatest(
