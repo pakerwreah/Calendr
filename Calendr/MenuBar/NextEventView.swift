@@ -26,9 +26,11 @@ class NextEventView: NSView {
 
         self.viewModel = viewModel
 
+        let scaling = viewModel.textScaling.track(with: updateSubject)
+
         let font = NSFont.systemFont(ofSize: 10)
-        nextEventTitle = Label(font: font, scaling: viewModel.textScaling)
-        nextEventTime = Label(font: font, scaling: viewModel.textScaling)
+        nextEventTitle = Label(font: font, scaling: scaling)
+        nextEventTime = Label(font: font, scaling: scaling)
 
         super.init(frame: .zero)
 
