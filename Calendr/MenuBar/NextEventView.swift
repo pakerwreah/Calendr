@@ -13,7 +13,7 @@ class NextEventView: NSView {
     private let disposeBag = DisposeBag()
 
     private let updateSubject = PublishSubject<Void>()
-    let viewSnapshot = BehaviorSubject<NSImage?>(value: nil)
+    let viewUpdated: Observable<Void>
 
     private let viewModel: NextEventViewModel
 
@@ -25,6 +25,10 @@ class NextEventView: NSView {
     init(viewModel: NextEventViewModel) {
 
         self.viewModel = viewModel
+
+        viewUpdated = updateSubject
+            .debounce(.milliseconds(50), scheduler: MainScheduler.instance)
+            .startWith(())
 
         let scaling = viewModel.textScaling.track(with: updateSubject)
 
@@ -77,12 +81,6 @@ class NextEventView: NSView {
     }
 
     private func setUpBindings() {
-
-        updateSubject
-            .debounce(.milliseconds(50), scheduler: MainScheduler.instance)
-            .map { [weak self] in self?.asImage() }
-            .bind(to: viewSnapshot)
-            .disposed(by: disposeBag)
 
         Observable.combineLatest(
             viewModel.barStyle,

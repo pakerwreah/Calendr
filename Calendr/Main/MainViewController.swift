@@ -731,16 +731,38 @@ class MainViewController: NSViewController {
             let statusBarButton = item.button
         else { return }
 
-        view.viewSnapshot
-            .bind(to: statusBarButton.rx.image)
-            .disposed(by: disposeBag)
-
-        Observable
+        let itemVisible = Observable
             .combineLatest(
                 settingsViewModel.showEventStatusItem,
                 viewModel.hasEvent
             )
             .map { $0 && $1 }
+            .share(replay: 1)
+
+        let appearanceObservable = statusBarButton.rx.observe(\.effectiveAppearance)
+            .compactMap {
+                $0.bestMatch(from: [.vibrantDark, .vibrantLight])
+            }
+            .distinctUntilChanged()
+            .map(NSAppearance.init(named:))
+
+        Observable
+            .combineLatest(
+                itemVisible,
+                appearanceObservable,
+                view.viewUpdated
+            )
+            .filter(\.0)
+            .map(\.1)
+            .observe(on: MainScheduler.asyncInstance)
+            .map { appearance in
+                view.appearance = appearance
+                return view.asImage()
+            }
+            .bind(to: statusBarButton.rx.image)
+            .disposed(by: disposeBag)
+
+        itemVisible
             .startWith(false)
             .distinctUntilChanged()
             .observe(on: MainScheduler.asyncInstance)
