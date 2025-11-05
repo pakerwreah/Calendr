@@ -254,7 +254,7 @@ class NextEventViewModelTests: XCTestCase {
 
         let viewModel = makeViewModel(type: .event)
 
-        var color: EventBackground?
+        var color: NSColor?
 
         viewModel.backgroundColor
             .bind { color = $0 }
@@ -271,7 +271,7 @@ class NextEventViewModelTests: XCTestCase {
 
         let viewModel = makeViewModel(type: .event)
 
-        var color: EventBackground?
+        var color: NSColor?
 
         viewModel.backgroundColor
             .bind { color = $0 }
@@ -281,14 +281,14 @@ class NextEventViewModelTests: XCTestCase {
             .make(start: now - 1, end: now + 1, calendar: .make(color: .white))
         ])
 
-        XCTAssertEqual(color, .color(.white.withAlphaComponent(0.2)))
+        XCTAssertEqual(color, .white.withAlphaComponent(0.3))
     }
 
     func testNextEvent_isPending_backgroundColor() {
 
         let viewModel = makeViewModel(type: .event)
 
-        var color: EventBackground?
+        var color: NSColor?
 
         viewModel.backgroundColor
             .bind { color = $0 }
@@ -298,14 +298,14 @@ class NextEventViewModelTests: XCTestCase {
             .make(start: now + 1, end: now + 2, type: .event(.pending), calendar: .make(color: .white))
         ])
 
-        XCTAssertEqual(color, .pending)
+        XCTAssertEqual(color, .clear)
     }
 
     func testNextEvent_isInProgress_isPending_backgroundColor() {
 
         let viewModel = makeViewModel(type: .event)
 
-        var color: EventBackground?
+        var color: NSColor?
 
         viewModel.backgroundColor
             .bind { color = $0 }
@@ -315,7 +315,7 @@ class NextEventViewModelTests: XCTestCase {
             .make(start: now - 1, end: now + 1, type: .event(.pending), calendar: .make(color: .white))
         ])
 
-        XCTAssertEqual(color, .pending)
+        XCTAssertEqual(color, .clear)
     }
 
     func testNextEvent_isAllDay_shouldNotAppear() {

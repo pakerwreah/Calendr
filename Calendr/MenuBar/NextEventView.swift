@@ -20,7 +20,6 @@ class NextEventView: NSView {
     private let colorBar = NSView()
     private let nextEventTitle: Label
     private let nextEventTime: Label
-    private let nextEventView = NSStackView()
 
     init(viewModel: NextEventViewModel) {
 
@@ -45,26 +44,24 @@ class NextEventView: NSView {
 
     private func configureLayout() {
 
-        nextEventView.spacing = 4
-        nextEventView.height(equalTo: Constants.height)
-        nextEventView.wantsLayer = true
-        nextEventView.layer?.cornerRadius = 4
-        nextEventTitle.forceVibrancy = false
+        wantsLayer = true
+        layer?.cornerRadius = 4
+        height(equalTo: Constants.height)
 
-        [.dummy, colorBar, nextEventTitle, nextEventTime, .dummy].forEach(nextEventView.addArrangedSubview)
+        let stackView = NSStackView().with(spacing: 4)
+
+        [.dummy, colorBar, nextEventTitle, nextEventTime, .dummy].forEach(stackView.addArrangedSubview)
 
         colorBar.wantsLayer = true
         colorBar.layer?.cornerRadius = 1.5
         colorBar.width(equalTo: 3)
-        colorBar.height(equalTo: nextEventView, constant: -4)
+        colorBar.height(equalTo: Constants.height - 6)
 
-        nextEventTitle.center(in: nextEventView, orientation: .vertical)
         nextEventTitle.textColor = .headerTextColor
         nextEventTitle.lineBreakMode = .byTruncatingTail
         nextEventTitle.setContentCompressionResistancePriority(.required, for: .horizontal)
         nextEventTitle.setContentHuggingPriority(.required, for: .horizontal)
 
-        nextEventTime.center(in: nextEventTitle, orientation: .vertical)
         nextEventTime.textColor = .headerTextColor
         nextEventTime.setContentCompressionResistancePriority(.required, for: .horizontal)
         nextEventTime.setContentHuggingPriority(.required, for: .horizontal)
@@ -72,12 +69,12 @@ class NextEventView: NSView {
         forAutoLayout()
 
         setContentHuggingPriority(.required, for: .horizontal)
-        nextEventView.setContentHuggingPriority(.required, for: .horizontal)
-        nextEventView.setHuggingPriority(.required, for: .horizontal)
+        stackView.setContentHuggingPriority(.required, for: .horizontal)
+        stackView.setHuggingPriority(.required, for: .horizontal)
 
-        addSubview(nextEventView)
+        addSubview(stackView)
 
-        nextEventView.edges(equalTo: self)
+        stackView.edges(equalTo: self)
     }
 
     private func setUpBindings() {
@@ -93,7 +90,16 @@ class NextEventView: NSView {
         viewModel.backgroundColor
             .map(\.cgColor)
             .track(with: updateSubject)
-            .bind(to: nextEventView.layer!.rx.backgroundColor)
+            .bind(to: layer!.rx.backgroundColor)
+            .disposed(by: disposeBag)
+
+        viewModel.isPending
+            .track(with: updateSubject)
+            .wait(for: rx.updateLayer)
+            .bind { [layer] isPending in
+                layer?.borderWidth = isPending ? 1 : 0
+                layer?.borderColor = isPending ? NSColor.textColor.striped(alpha: 0.5).cgColor : nil
+            }
             .disposed(by: disposeBag)
 
         viewModel.title
@@ -120,10 +126,16 @@ class NextEventView: NSView {
 
 private extension ObservableType {
 
-    func track<Observer: ObserverType>(with observer: Observer) -> Observable<Element> where Observer.Element == Void {
+    func track<T: ObserverType>(with observer: T) -> Observable<Element> where T.Element == Void {
+
         self.do(afterNext: { _ in
             observer.onNext(())
         })
+    }
+
+    func wait<T: ObservableType>(for observable: T) -> Observable<Element> where T.Element == Void {
+
+        self.flatMapLatest(observable.map)
     }
 }
 

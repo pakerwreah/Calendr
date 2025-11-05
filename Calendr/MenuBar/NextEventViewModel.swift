@@ -49,9 +49,10 @@ class NextEventViewModel {
     let time: Observable<String>
     let barStyle: Observable<EventBarStyle>
     let barColor: Observable<NSColor>
-    let backgroundColor: Observable<EventBackground>
+    let backgroundColor: Observable<NSColor>
     let hasEvent: Observable<Bool>
     var isVisible: Observable<Bool> { hasEvent }
+    var isPending: Observable<Bool>
     let isInProgress: Observable<Bool>
     let textScaling: Observable<Double>
 
@@ -203,6 +204,11 @@ class NextEventViewModel {
 
         isInProgress = nextEventObservable.map { $0?.isInProgress ?? false }
 
+        isPending = event
+            .skipNil()
+            .map { $0.status == .pending }
+            .distinctUntilChanged()
+
         barColor = event
             .skipNil()
             .map(\.calendar.color)
@@ -220,10 +226,10 @@ class NextEventViewModel {
             ) { ($0, $1.0, $1.1) }
             .map { [dateProvider] nextEvent, flashing, sound in
 
-                guard nextEvent.event.status != .pending else { return .pending }
+                guard nextEvent.event.status != .pending else { return .clear }
 
                 guard !nextEvent.isInProgress else {
-                    return .color(nextEvent.event.calendar.color.withAlphaComponent(0.2))
+                    return nextEvent.event.calendar.color.withAlphaComponent(0.3)
                 }
 
                 let diff = dateProvider.calendar.dateComponents([.minute, .second], from: dateProvider.now, to: nextEvent.event.start)
@@ -245,12 +251,12 @@ class NextEventViewModel {
                 if flashing {
                     // flash continuously under 30 seconds to start
                     if minutes == 0 && seconds <= 30 {
-                        return seconds % 2 == 0 ? .color(.systemRed) : .clear
+                        return seconds % 2 == 0 ? .systemRed : .clear
                     }
 
                     // flash 5x every minute
                     if minutes <= 5 {
-                        return seconds > 50 && seconds % 2 == 1 ? .color(.systemRed) : .clear
+                        return seconds > 50 && seconds % 2 == 1 ? .systemRed : .clear
                     }
                 }
 
