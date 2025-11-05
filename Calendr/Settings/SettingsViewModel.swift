@@ -274,20 +274,9 @@ class SettingsViewModel:
 
         autoLaunch = autoLauncher.rx.observe(\.isEnabled)
 
-        /* ----- Icon and Date ----- */
-        let statusItemIconAndDate = Observable.combineLatest(
-            localStorage.rx.observe(\.statusItemIconEnabled),
-            localStorage.rx.observe(\.statusItemDateEnabled)
-        )
-        .map { iconEnabled, dateEnabled in
-            (iconEnabled || !dateEnabled, dateEnabled)
-        }
-
-        showStatusItemIcon = statusItemIconAndDate.map(\.0)
-        showStatusItemDate = statusItemIconAndDate.map(\.1)
-        /* ----------------------- */
-
         openOnHover = localStorage.rx.observe(\.statusItemOpenOnHover)
+        showStatusItemIcon = localStorage.rx.observe(\.statusItemIconEnabled)
+        showStatusItemDate = localStorage.rx.observe(\.statusItemDateEnabled)
         showStatusItemBackground = localStorage.rx.observe(\.statusItemBackgroundEnabled)
         statusItemIconStyle = localStorage.rx.observe(\.statusItemIconStyle).map { .init(rawValue: $0) ?? .calendar }
         statusItemDateStyle = localStorage.rx.observe(\.statusItemDateStyle).map { .init(rawValue: $0) ?? .none }

@@ -51,6 +51,7 @@ class NextEventViewModel {
     let barColor: Observable<NSColor>
     let backgroundColor: Observable<EventBackground>
     let hasEvent: Observable<Bool>
+    var isVisible: Observable<Bool> { hasEvent }
     let isInProgress: Observable<Bool>
     let textScaling: Observable<Double>
 

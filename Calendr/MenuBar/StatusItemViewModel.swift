@@ -23,7 +23,7 @@ class StatusItemViewModel {
 
     // only for unit tests
     let iconsAndText: Observable<IconsAndText>
-
+    let isVisible: Observable<Bool>
     let image: Observable<NSImage>
 
     init(
@@ -205,6 +205,11 @@ class StatusItemViewModel {
 
             return image
         }
+
+        self.isVisible = Observable.combineLatest(
+            settings.showStatusItemIcon,
+            settings.showStatusItemDate
+        ).map { $0 || $1 }
     }
 }
 
