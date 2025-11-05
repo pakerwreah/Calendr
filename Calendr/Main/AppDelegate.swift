@@ -10,7 +10,7 @@ import RxSwift
 
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-    private var viewController: NSViewController?
+    private var viewController: MainViewController?
 
     private let deeplink = BehaviorSubject<URL?>(value: nil)
 
@@ -71,6 +71,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func application(_ application: NSApplication, open urls: [URL]) {
         guard let url = urls.first else { return }
         deeplink.onNext(url)
+    }
+
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows: Bool) -> Bool {
+        guard let viewController, !hasVisibleWindows else { return false }
+        viewController.openSettings()
+        return true
     }
 
     private let signal: DispatchSourceSignal = {

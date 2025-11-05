@@ -658,159 +658,51 @@ class SettingsViewModelTests: XCTestCase {
         }
     }
 
-    /// [] icon [✓] date  =  [✓] icon [✓] date
-    func testToggleIconOn_withDateOn_shouldToggleIconOn() {
+    func testToggleStatusItemIcon() {
 
         localStorage.statusItemIconEnabled = false
-        localStorage.statusItemDateEnabled = true
 
-        var showStatusItemIcon: Bool?
-        var showStatusItemDate: Bool?
+        var statusItemIconEnabled: Bool?
 
         viewModel.showStatusItemIcon
-            .bind { showStatusItemIcon = $0 }
+            .bind { statusItemIconEnabled = $0 }
             .disposed(by: disposeBag)
 
-        viewModel.showStatusItemDate
-            .bind { showStatusItemDate = $0 }
-            .disposed(by: disposeBag)
+        XCTAssertEqual(statusItemIconEnabled, false)
+        XCTAssertEqual(localStorageStatusItemIconEnabled, false)
 
         viewModel.toggleStatusItemIcon.onNext(true)
 
-        XCTAssertEqual(showStatusItemIcon, true)
-        XCTAssertEqual(showStatusItemDate, true)
-
+        XCTAssertEqual(statusItemIconEnabled, true)
         XCTAssertEqual(localStorageStatusItemIconEnabled, true)
-        XCTAssertEqual(localStorageStatusItemDateEnabled, true)
-    }
-
-    /// [✓] icon [✓] date  =  [] icon [✓] date
-    func testToggleIconOff_withDateOn_shouldToggleIconOff() {
-
-        localStorage.statusItemIconEnabled = true
-        localStorage.statusItemDateEnabled = true
-
-        var showStatusItemIcon: Bool?
-        var showStatusItemDate: Bool?
-
-        viewModel.showStatusItemIcon
-            .bind { showStatusItemIcon = $0 }
-            .disposed(by: disposeBag)
-
-        viewModel.showStatusItemDate
-            .bind { showStatusItemDate = $0 }
-            .disposed(by: disposeBag)
 
         viewModel.toggleStatusItemIcon.onNext(false)
 
-        XCTAssertEqual(showStatusItemIcon, false)
-        XCTAssertEqual(showStatusItemDate, true)
-
+        XCTAssertEqual(statusItemIconEnabled, false)
         XCTAssertEqual(localStorageStatusItemIconEnabled, false)
-        XCTAssertEqual(localStorageStatusItemDateEnabled, true)
     }
 
-    /// [✓] icon [] date  =  [✓] icon [] date
-    func testToggleIconOff_withDateOff_shouldDoNothing() {
+    func testToggleStatusItemDate() {
 
-        localStorage.statusItemIconEnabled = true
         localStorage.statusItemDateEnabled = false
 
-        var showStatusItemIcon: Bool?
-        var showStatusItemDate: Bool?
-
-        viewModel.showStatusItemIcon
-            .bind { showStatusItemIcon = $0 }
-            .disposed(by: disposeBag)
+        var statusItemDateEnabled: Bool?
 
         viewModel.showStatusItemDate
-            .bind { showStatusItemDate = $0 }
+            .bind { statusItemDateEnabled = $0 }
             .disposed(by: disposeBag)
 
-        viewModel.toggleStatusItemIcon.onNext(false)
-
-        XCTAssertEqual(showStatusItemIcon, true)
-        XCTAssertEqual(showStatusItemDate, false)
-
-        XCTAssertEqual(localStorageStatusItemIconEnabled, false)
+        XCTAssertEqual(statusItemDateEnabled, false)
         XCTAssertEqual(localStorageStatusItemDateEnabled, false)
-    }
-
-    /// [✓] icon [] date  =  [✓] icon [✓] date
-    func testToggleDateOn_withIconOn_shouldToggleDateOn() {
-
-        localStorage.statusItemIconEnabled = true
-        localStorage.statusItemDateEnabled = false
-
-        var showStatusItemIcon: Bool?
-        var showStatusItemDate: Bool?
-
-        viewModel.showStatusItemIcon
-            .bind { showStatusItemIcon = $0 }
-            .disposed(by: disposeBag)
-
-        viewModel.showStatusItemDate
-            .bind { showStatusItemDate = $0 }
-            .disposed(by: disposeBag)
 
         viewModel.toggleStatusItemDate.onNext(true)
 
-        XCTAssertEqual(showStatusItemIcon, true)
-        XCTAssertEqual(showStatusItemDate, true)
-
-        XCTAssertEqual(localStorageStatusItemIconEnabled, true)
+        XCTAssertEqual(statusItemDateEnabled, true)
         XCTAssertEqual(localStorageStatusItemDateEnabled, true)
-    }
-
-    /// [✓] icon [✓] date  =  [✓] icon [] date
-    func testToggleDateOff_withIconOn_shouldToggleDateOff() {
-
-        localStorage.statusItemIconEnabled = true
-        localStorage.statusItemDateEnabled = true
-
-        var showStatusItemIcon: Bool?
-        var showStatusItemDate: Bool?
-
-        viewModel.showStatusItemIcon
-            .bind { showStatusItemIcon = $0 }
-            .disposed(by: disposeBag)
-
-        viewModel.showStatusItemDate
-            .bind { showStatusItemDate = $0 }
-            .disposed(by: disposeBag)
 
         viewModel.toggleStatusItemDate.onNext(false)
 
-        XCTAssertEqual(showStatusItemIcon, true)
-        XCTAssertEqual(showStatusItemDate, false)
-
-        XCTAssertEqual(localStorageStatusItemIconEnabled, true)
-        XCTAssertEqual(localStorageStatusItemDateEnabled, false)
-    }
-
-    /// [] icon [✓] date  =  [✓] icon [] date
-    func testToggleDateOff_withIconOff_shouldToggleIconOn() {
-
-        localStorage.statusItemIconEnabled = false
-        localStorage.statusItemDateEnabled = true
-
-        var showStatusItemIcon: Bool?
-        var showStatusItemDate: Bool?
-
-        viewModel.showStatusItemIcon
-            .bind { showStatusItemIcon = $0 }
-            .disposed(by: disposeBag)
-
-        viewModel.showStatusItemDate
-            .bind { showStatusItemDate = $0 }
-            .disposed(by: disposeBag)
-
-        viewModel.toggleStatusItemDate.onNext(false)
-
-        XCTAssertEqual(showStatusItemIcon, true)
-        XCTAssertEqual(showStatusItemDate, false)
-
-        XCTAssertEqual(localStorageStatusItemIconEnabled, false)
+        XCTAssertEqual(statusItemDateEnabled, false)
         XCTAssertEqual(localStorageStatusItemDateEnabled, false)
     }
 

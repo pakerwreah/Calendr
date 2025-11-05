@@ -37,12 +37,19 @@ class StatusItemViewModelTests: XCTestCase {
 
     var iconsAndText: StatusItemViewModel.IconsAndText?
     var lastText: String? { iconsAndText?.text }
+    var isVisible: Bool?
 
     override func setUp() {
 
         viewModel.iconsAndText
             .bind { [weak self] in
                 self?.iconsAndText = $0
+            }
+            .disposed(by: disposeBag)
+
+        viewModel.isVisible
+            .bind { [weak self] in
+                self?.isVisible = $0
             }
             .disposed(by: disposeBag)
 
@@ -56,9 +63,13 @@ class StatusItemViewModelTests: XCTestCase {
         scheduler.advance(.seconds(1))
     }
 
-    func setUp(showIcon: Bool, showDate: Bool, iconStyle: StatusItemIconStyle) {
+    func setUp(showIcon: Bool, showDate: Bool) {
         settings.toggleIcon.onNext(showIcon)
         settings.toggleDate.onNext(showDate)
+    }
+
+    func setUp(showIcon: Bool, showDate: Bool, iconStyle: StatusItemIconStyle) {
+        setUp(showIcon: showIcon, showDate: showDate)
         settings.statusItemIconStyleObserver.onNext(iconStyle)
     }
 
@@ -85,6 +96,21 @@ class StatusItemViewModelTests: XCTestCase {
         notificationCenter.post(name: NSLocale.currentLocaleDidChangeNotification, object: nil)
 
         XCTAssertEqual(lastText, "1/1/21")
+    }
+
+    func testStatusItemVisibility() {
+
+        setUp(showIcon: true, showDate: true)
+        XCTAssertEqual(isVisible, true)
+
+        setUp(showIcon: true, showDate: false)
+        XCTAssertEqual(isVisible, true)
+
+        setUp(showIcon: false, showDate: true)
+        XCTAssertEqual(isVisible, true)
+
+        setUp(showIcon: false, showDate: false)
+        XCTAssertEqual(isVisible, false)
     }
 
     func testIconVisibility() {

@@ -155,7 +155,8 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             showMenuBarDateCheckbox,
             dateFormat,
             showMenuBarBackgroundCheckbox,
-            openOnHoverCheckbox
+            openOnHoverCheckbox,
+            .spacer
         ])
         .with(orientation: .vertical)
     }()

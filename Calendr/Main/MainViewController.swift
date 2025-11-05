@@ -106,8 +106,6 @@ class MainViewController: NSViewController {
 
         mainStatusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         mainStatusItem.autosaveName = StatusItemName.main
-        mainStatusItem.behavior = .terminationOnRemoval
-        mainStatusItem.isVisible = true
 
         eventStatusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         eventStatusItem.autosaveName = StatusItemName.event
@@ -575,7 +573,7 @@ class MainViewController: NSViewController {
         .disposed(by: disposeBag)
     }
 
-    @objc private func openSettings() {
+    @objc func openSettings() {
         openSettingsTab(.general)
     }
 
@@ -716,6 +714,10 @@ class MainViewController: NSViewController {
         statusItemViewModel.image
             .bind(to: statusBarButton.rx.image)
             .disposed(by: disposeBag)
+
+        statusItemViewModel.isVisible
+            .bind(to: mainStatusItem.rx.isVisible)
+            .disposed(by: disposeBag)
     }
 
     private let eventStatusItemClickHandler = StatusItemClickHandler()
@@ -731,16 +733,8 @@ class MainViewController: NSViewController {
             let statusBarButton = item.button
         else { return }
 
-        let itemVisible = Observable
-            .combineLatest(
-                settingsViewModel.showEventStatusItem,
-                viewModel.hasEvent
-            )
-            .map { $0 && $1 }
-            .share(replay: 1)
-
         view.viewUpdated
-            .withLatestFrom(itemVisible)
+            .withLatestFrom(viewModel.isVisible)
             .bind(to: statusBarButton.rx.needsDisplay)
             .disposed(by: disposeBag)
 
@@ -749,7 +743,7 @@ class MainViewController: NSViewController {
             .bind(to: statusBarButton.rx.image)
             .disposed(by: disposeBag)
 
-        itemVisible
+        viewModel.isVisible
             .startWith(false)
             .distinctUntilChanged()
             .observe(on: MainScheduler.asyncInstance)
