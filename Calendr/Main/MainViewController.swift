@@ -264,9 +264,9 @@ class MainViewController: NSViewController {
 
     // MARK: - Lifecycle
 
-    override func loadView() {
+    override func viewDidLoad() {
 
-        view = NSView()
+        super.viewDidLoad()
 
         let header = makeHeader()
         let toolBar = makeToolBar()

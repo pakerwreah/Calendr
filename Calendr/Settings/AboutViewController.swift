@@ -45,9 +45,11 @@ class AboutViewController: NSViewController, SettingsUI {
         setUpBindings()
     }
 
-    override func loadView() {
+    override func viewDidLoad() {
 
-        view = NSStackView(views: [
+        super.viewDidLoad()
+
+        let stackView = NSStackView(views: [
             Label(text: "Calendr", font: .systemFont(ofSize: 16, weight: .semibold), align: .center),
             .spacer(height: 0),
             Label(text: BuildConfig.appVersion, font: .systemFont(ofSize: 13), align: .center),
@@ -64,6 +66,10 @@ class AboutViewController: NSViewController, SettingsUI {
         ])
         .with(insets: .init(bottom: 8))
         .with(orientation: .vertical)
+
+        view.addSubview(stackView)
+
+        stackView.edges(equalTo: view)
     }
 
     private func setUpAccessibility() {

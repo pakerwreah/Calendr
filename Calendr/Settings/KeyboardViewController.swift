@@ -32,9 +32,9 @@ class KeyboardViewController: NSViewController, SettingsUI {
         view.setAccessibilityIdentifier(Accessibility.Settings.Keyboard.view)
     }
 
-    override func loadView() {
+    override func viewDidLoad() {
 
-        view = NSView()
+        super.viewDidLoad()
 
         view.addLayoutGuide(commandCharWidth)
 

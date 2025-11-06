@@ -56,9 +56,9 @@ class AppearanceViewController: NSViewController, SettingsUI {
         view.fittingSize
     }
 
-    override func loadView() {
+    override func viewDidLoad() {
 
-        view = NSView()
+        super.viewDidLoad()
 
         let stackView = NSStackView(
             views: Sections.create([

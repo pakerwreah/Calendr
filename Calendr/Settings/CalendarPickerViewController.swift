@@ -44,9 +44,9 @@ class CalendarPickerViewController: NSViewController, SettingsUI {
         view.setAccessibilityIdentifier(configuration.accessibilityIdentifier)
     }
 
-    override func loadView() {
+    override func viewDidLoad() {
 
-        view = NSView()
+        super.viewDidLoad()
 
         let scrollView = NSScrollView()
 

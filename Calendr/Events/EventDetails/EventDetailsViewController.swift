@@ -66,9 +66,9 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         NSApp.removeAccessibilityChild(view)
     }
 
-    override func loadView() {
+    override func viewDidLoad() {
 
-        view = NSView()
+        super.viewDidLoad()
 
         view.width(lessThanOrEqualTo: 400 * Scaling.current)
         view.width(greaterThanOrEqualTo: 250 * Scaling.current)

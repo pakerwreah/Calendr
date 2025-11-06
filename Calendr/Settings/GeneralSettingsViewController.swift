@@ -64,6 +64,10 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         self.viewModel = viewModel
 
         super.init(nibName: nil, bundle: nil)
+
+        setUpAccessibility()
+
+        setUpBindings()
     }
 
     private func setUpAccessibility() {
@@ -78,9 +82,9 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         dateFormatTextField.setAccessibilityIdentifier(Accessibility.Settings.General.dateFormatInput)
     }
 
-    override func loadView() {
+    override func viewDidLoad() {
 
-        view = NSView()
+        super.viewDidLoad()
 
         let stackView = NSStackView()
             .with(spacing: Constants.contentSpacing)
@@ -116,15 +120,6 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         }
 
         iconStyleDropdown.height(equalTo: showMenuBarIconCheckbox)
-    }
-
-    override func viewDidLoad() {
-
-        super.viewDidLoad()
-
-        setUpAccessibility()
-
-        setUpBindings()
     }
 
     private lazy var menuBarContent: NSView = {
