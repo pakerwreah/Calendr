@@ -10,7 +10,7 @@ import MapKit
 import WeatherKit
 import RxSwift
 
-class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDelegate {
+class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDelegate, NSTextViewDelegate {
 
     private let disposeBag = DisposeBag()
 
@@ -555,6 +555,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         }
         textView.checkTextInDocument(nil)
         textView.isEditable = false // has to be after check text
+        textView.delegate = self
 
         detailsStackView.addArrangedSubview(makeLine())
         if let scrollView {
@@ -693,6 +694,12 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
     func popoverDidClose() {
 
         viewModel.isShowingObserver.onNext(false)
+    }
+
+    func textView(_ textView: NSTextView, clickedOnLink link: Any, at charIndex: Int) -> Bool {
+
+        Popover.closeAll()
+        return false
     }
 
     private func makeLine() -> NSView {
