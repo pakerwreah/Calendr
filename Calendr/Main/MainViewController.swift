@@ -734,11 +734,15 @@ class MainViewController: NSViewController {
         else { return }
 
         view.viewUpdated
-            .withLatestFrom(viewModel.isVisible)
+            .map(true)
             .bind(to: statusBarButton.rx.needsDisplay)
             .disposed(by: disposeBag)
 
-        statusBarButton.rx.observe(\.effectiveAppearance)
+        view.viewUpdated
+            .flatMapLatest {
+                // this will produce a value for each screen
+                statusBarButton.rx.observe(\.effectiveAppearance)
+            }
             .map(view.asImage)
             .bind(to: statusBarButton.rx.image)
             .disposed(by: disposeBag)

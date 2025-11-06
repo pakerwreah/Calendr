@@ -27,6 +27,7 @@ class NextEventView: NSView {
 
         viewUpdated = updateSubject
             .debounce(.milliseconds(50), scheduler: MainScheduler.instance)
+            .share()
             .startWith(())
 
         let scaling = viewModel.textScaling.track(with: updateSubject)
