@@ -20,6 +20,11 @@
 "auto_update.downloading" = "Sťahovanie verzie %@";
 "auto_update.install" = "Inštalovať";
 "auto_update.replace.message" = "Potvrď umiestnenie aplikácie pre povolenie ju nahradiť";
+//"auto_update.replace.error" = "You must not change the installation directory";
+
+//"auto_update.failed.check" = "Failed to check for update";
+//"auto_update.failed.download" = "Failed to download update";
+//"auto_update.failed.install" = "Failed to install update";
 
 "attachments.open.message" = "Calendr potrebuje povolenie na prístup k tvojim prílohám";
 "attachments.open.authorize" = "Povoliť prístup k prílohám";

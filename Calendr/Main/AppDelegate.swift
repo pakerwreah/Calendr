@@ -14,6 +14,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     private let deeplink = BehaviorSubject<URL?>(value: nil)
 
+    private let disposeBag = DisposeBag()
+
+    private let skipReopen = BehaviorSubject(value: false)
+
     func applicationDidFinishLaunching(_ notification: Notification) {
 
         guard !BuildConfig.isTesting, !BuildConfig.isPreview else { return }
@@ -63,6 +67,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         setUpEditShortcuts()
         setUpResignFocus()
 
+        notificationProvider.notificationTap
+            .map(true)
+            .bind(to: skipReopen)
+            .disposed(by: disposeBag)
+
         #if DEBUG
         print(Bundle.main.bundlePath)
         #endif
@@ -73,10 +82,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         deeplink.onNext(url)
     }
 
+
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows: Bool) -> Bool {
-        guard let viewController, !hasVisibleWindows else { return false }
-        viewController.openSettings()
-        return true
+        if let viewController, !hasVisibleWindows, !skipReopen.current {
+            viewController.openSettings()
+        }
+        skipReopen.onNext(false)
+        return false
     }
 
     private let signal: DispatchSourceSignal = {

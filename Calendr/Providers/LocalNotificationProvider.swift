@@ -100,7 +100,6 @@ class LocalNotificationProvider: NSObject, LocalNotificationProviding, UNUserNot
 
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
         guard
-            response.actionIdentifier != UNNotificationDismissActionIdentifier,
             let category = NotificationCategory(rawValue: response.notification.request.content.categoryIdentifier)
         else { return }
 

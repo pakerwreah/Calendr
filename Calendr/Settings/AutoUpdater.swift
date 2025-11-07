@@ -11,20 +11,44 @@ import RxSwift
 import ZIPFoundation
 import Sentry
 
+enum UpdateStatus {
+    case initial
+    case fetching
+    case newVersion(String)
+    case downloading(String)
+}
+
+enum UpdateError {
+    case check(Error)
+    case download(Error)
+    case install(Error)
+
+    var title: String {
+        switch self {
+            case .check: Strings.AutoUpdate.Failed.check
+            case .download: Strings.AutoUpdate.Failed.download
+            case .install: Strings.AutoUpdate.Failed.install
+        }
+    }
+
+    var message: String {
+        switch self {
+            case .check(let error), .download(let error), .install(let error):
+                error.localizedDescription
+        }
+    }
+}
+
 protocol AutoUpdating {
+    var status: Observable<UpdateStatus> { get }
+    var error: Observable<UpdateError> { get }
+
     @MainActor func start()
-    func checkRelease(notify: Bool)
+    func checkRelease()
     func downloadAndInstall()
 }
 
 class AutoUpdater: AutoUpdating {
-
-    enum CheckUpdateStatus {
-        case initial
-        case fetching
-        case newVersion(String)
-        case downloading(String)
-    }
 
     enum NotificationAction {
 
@@ -77,8 +101,11 @@ class AutoUpdater: AutoUpdating {
 
     let notificationTap: Observable<NotificationAction>
 
-    private let newVersionAvailableObserver: AnyObserver<CheckUpdateStatus>
-    let newVersionAvailable: Observable<CheckUpdateStatus>
+    private let statusObserver: AnyObserver<UpdateStatus>
+    let status: Observable<UpdateStatus>
+
+    private let errorObserver: AnyObserver<UpdateError>
+    let error: Observable<UpdateError>
 
     private var newRelease: Release?
 
@@ -98,7 +125,8 @@ class AutoUpdater: AutoUpdating {
         self.networkProvider = networkProvider
         self.fileManager = fileManager
 
-        (newVersionAvailable, newVersionAvailableObserver) = BehaviorSubject.pipe(value: .initial, on: MainScheduler.instance)
+        (status, statusObserver) = BehaviorSubject.pipe(value: .initial)
+        (error, errorObserver) = PublishSubject.pipe()
 
         notificationTap = notificationProvider.notificationTap.map(NotificationAction.from)
 
@@ -127,13 +155,18 @@ class AutoUpdater: AutoUpdating {
         }
     }
 
-    func checkRelease(notify: Bool) {
+    func checkRelease() {
+        checkRelease(notify: false)
+    }
+
+    private func checkRelease(notify: Bool) {
         Task {
             do {
                 try await checkReleaseAsync(notify: notify)
             } catch {
-                newVersionAvailableObserver.onNext(.initial)
-                print(error.localizedDescription)
+                print(error)
+                errorObserver.onNext(.check(error))
+                statusObserver.onNext(.initial)
             }
         }
     }
@@ -141,12 +174,41 @@ class AutoUpdater: AutoUpdating {
     func downloadAndInstall() {
         Task {
             do {
-                try await downloadAndInstall()
+                try await downloadAndInstallAsync()
             } catch {
-                newVersionAvailableObserver.onNext(.initial)
-                print("Failed to update the app: \(error.localizedDescription)")
+                SentrySDK.capture(error: error)
+                statusObserver.onNext(.initial)
             }
         }
+    }
+
+    private func downloadAndInstallAsync() async throws {
+        guard
+            let release = newRelease,
+            let url = release.assets.first(where: { $0.name == "Calendr.zip" })?.browser_download_url
+        else {
+            throw .unexpected("Missing release asset")
+        }
+
+        statusObserver.onNext(.downloading(release.name))
+
+        let archiveURL: URL
+        do {
+            archiveURL = try await networkProvider.download(from: url)
+        } catch {
+            errorObserver.onNext(.download(error))
+            throw error
+        }
+
+        do {
+            try await install(version: release.name, archiveUrl: archiveURL)
+        } catch {
+            errorObserver.onNext(.install(error))
+            throw error
+        }
+
+        // if there's no error, the user just cancelled
+        statusObserver.onNext(.newVersion(release.name))
     }
 
     private func setUpNotifications() {
@@ -176,20 +238,20 @@ class AutoUpdater: AutoUpdating {
 
         guard !BuildConfig.isUITesting else { return }
 
-        newVersionAvailableObserver.onNext(.fetching)
+        statusObserver.onNext(.fetching)
 
         let url = "https://api.github.com/repos/pakerwreah/Calendr/releases/latest"
         let data = try await networkProvider.data(from: URL(string: url)!)
         let release = try JSONDecoder().decode(Release.self, from: data)
 
         guard release.name != BuildConfig.appVersion else {
-            newVersionAvailableObserver.onNext(.initial)
+            statusObserver.onNext(.initial)
             localStorage.lastCheckedVersion = release.name
             return
         }
 
         newRelease = release
-        newVersionAvailableObserver.onNext(.newVersion(release.name))
+        statusObserver.onNext(.newVersion(release.name))
 
         guard notify else {
             localStorage.lastCheckedVersion = release.name
@@ -219,87 +281,149 @@ class AutoUpdater: AutoUpdating {
         try? fileManager.url(for: .applicationDirectory, in: .localDomainMask, appropriateFor: nil, create: false)
     }
 
-    private func getAppUrl() -> URL {
+    private func getAppContainerUrl() -> URL {
         let appUrl = Bundle.main.bundleURL
         /// gatekeeper might go nuts if you restore the app from the trash 🔮
-        guard appUrl.pathComponents.contains("AppTranslocation"), let applications = getApplicationsUrl() else {
-            return appUrl
+        if appUrl.pathComponents.contains("AppTranslocation"), let applications = getApplicationsUrl() {
+            return applications
         }
-        return applications.appendingPathComponent("Calendr.app", conformingTo: .directory)
+        return appUrl.deletingLastPathComponent()
     }
 
-    private func downloadAndInstall() async throws {
-        guard
-            let release = newRelease,
-            let url = newRelease?.assets.first(where: { $0.name == "Calendr.zip" })?.browser_download_url
-        else {
-            throw UnexpectedError(message: "Missing asset url?")
+    private func install(version: String, archiveUrl: URL) async throws {
+
+        let containerUrl = getAppContainerUrl()
+
+        defer { try? fileManager.removeItem(at: archiveUrl) }
+
+        try await withSecurityScope(for: containerUrl) { secureUrl in
+            let appUrl = secureUrl.withAppComponent()
+            try replaceApp(url: appUrl, archive: archiveUrl)
         }
 
-        newVersionAvailableObserver.onNext(.downloading(release.name))
+        localStorage.updatedVersion = version
 
-        let appUrl = getAppUrl()
-
-        let archiveURL = try await networkProvider.download(from: url)
-
-        defer { try? fileManager.removeItem(at: archiveURL) }
-
-        let selectedURL = try await savePanel(for: appUrl)
-
-        try await replaceApp(url: selectedURL, archive: archiveURL)
-
-        localStorage.updatedVersion = release.name
-
-        try relaunchApp(url: selectedURL)
+        let appUrl = containerUrl.withAppComponent()
+        try await relaunchApp(url: appUrl)
     }
 
-    private func savePanel(for appUrl: URL) async throws -> URL {
+    private func withSecurityScope(for appContainerUrl: URL, _ task: (URL) async throws -> Void) async throws {
 
-        let selectedURL = try await withCheckedThrowingContinuation { continuation in
-            DispatchQueue.main.async {
-                NSApp.modalWindow?.close()
-                let dialog = NSSavePanel()
-                dialog.directoryURL = appUrl.deletingLastPathComponent()
-                dialog.nameFieldStringValue = appUrl.lastPathComponent
-                dialog.nameFieldLabel = "Calendr.app"
-                dialog.prompt = Strings.AutoUpdate.install
-                dialog.message = Strings.AutoUpdate.Replace.message
-                dialog.begin { result in
-                    continuation.resume(returning: result == .cancel ? nil : dialog.url)
-                }
-            }
+        var isStale = true
+        var resolvedURL: URL?
+
+        if let bookmarkData = localStorage.installationBookmark {
+            resolvedURL = try? URL(
+                resolvingBookmarkData: bookmarkData,
+                options: .withSecurityScope,
+                relativeTo: nil,
+                bookmarkDataIsStale: &isStale
+            )
         }
-        guard let selectedURL else {
-            throw UnexpectedError(message: "User canceled the save panel")
+
+        if let resolvedURL, !isStale, resolvedURL == appContainerUrl, resolvedURL.startAccessingSecurityScopedResource() {
+            defer { resolvedURL.stopAccessingSecurityScopedResource() }
+            return try await task(resolvedURL)
         }
-        return selectedURL
+
+        // if we can't access the secure bookmark, ask the user for permission
+        guard try await savePanel(for: appContainerUrl) else {
+            return // user cancelled
+        }
+
+        do {
+            localStorage.installationBookmark = try appContainerUrl.bookmarkData(
+                options: .withSecurityScope,
+                includingResourceValuesForKeys: nil,
+                relativeTo: nil
+            )
+        } catch {
+            SentrySDK.capture(error: error)
+            print("Failed to create bookmark: \(error)")
+        }
+
+        try await task(appContainerUrl)
     }
 
-    private func replaceApp(url appUrl: URL, archive archiveURL: URL) async throws {
+    @MainActor
+    private func savePanel(for appContainerUrl: URL) async throws -> Bool {
+        NSApp.modalWindow?.close()
+
+        let panel = NSOpenPanel()
+        panel.canChooseFiles = false
+        panel.canChooseDirectories = true
+        panel.canCreateDirectories = false
+        panel.allowsMultipleSelection = false
+        panel.directoryURL = appContainerUrl
+        panel.prompt = Strings.AutoUpdate.install
+        panel.message = Strings.AutoUpdate.Replace.message
+
+        guard await panel.begin() == .OK, let url = panel.url else {
+            return false
+        }
+
+        guard url == appContainerUrl else {
+            errorObserver.onNext(.install(.unexpected(Strings.AutoUpdate.Replace.error)))
+            return false
+        }
+
+        return true
+    }
+
+    private func replaceApp(url appUrl: URL, archive archiveURL: URL) throws {
+
+        guard appUrl.lastPathComponent == "Calendr.app" else {
+            throw .unexpected("This is not the app we want to replace: \(appUrl)")
+        }
 
         try fileManager.trashItem(at: appUrl, resultingItemURL: nil)
 
-        let archive = try Archive(url: archiveURL, accessMode: .read)
+        let archive: Archive
+        do {
+            archive = try Archive(url: archiveURL, accessMode: .read)
+        } catch {
+            throw .unexpected("[Archive] \(error)")
+        }
 
-        for entry in archive where entry.path.starts(with: "Calendr.app/") {
-            let entryURL = appUrl.deletingLastPathComponent().appendingPathComponent(entry.path)
-            _ = try archive.extract(entry, to: entryURL)
+        do {
+            for entry in archive where entry.path.starts(with: "Calendr.app/") {
+                let entryURL = appUrl.deletingLastPathComponent().appendingPathComponent(entry.path)
+                _ = try archive.extract(entry, to: entryURL)
+            }
+        } catch {
+            throw .unexpected("[Extract] \(error)")
         }
     }
 
     private func cleanUpDownloads() {
-        try? fileManager.removeItem(at: fileManager.temporaryDirectory)
+        let tmp = fileManager.temporaryDirectory
+        guard
+            let bundleID = Bundle.main.bundleIdentifier,
+            // make sure we are sandboxed
+            tmp.absoluteString.contains(bundleID)
+        else {
+            return
+        }
+        try? fileManager.removeItem(at: tmp)
     }
 
+    @MainActor
     private func relaunchApp(url: URL) throws {
 
         let task = Process()
         task.launchPath = "/usr/bin/open"
-        task.arguments = [url.path]
+        task.arguments = ["-n", url.path]
         try task.run()
 
-        DispatchQueue.main.async {
-            NSApp.terminate(nil)
-        }
+        task.waitUntilExit()
+
+        NSApp.terminate(nil)
+    }
+}
+
+private extension URL {
+
+    func withAppComponent() -> URL {
+        appending(component: "Calendr.app", directoryHint: .isDirectory)
     }
 }

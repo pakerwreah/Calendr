@@ -20,6 +20,11 @@
 "auto_update.downloading" = "Downloading version %@";
 "auto_update.install" = "Install";
 "auto_update.replace.message" = "Confirm the app location so we have permission to replace it";
+"auto_update.replace.error" = "You must not change the installation directory";
+
+"auto_update.failed.check" = "Failed to check for update";
+"auto_update.failed.download" = "Failed to download update";
+"auto_update.failed.install" = "Failed to install update";
 
 "attachments.open.message" = "Calendr needs permission to access your attachments";
 "attachments.open.authorize" = "Authorize access to attachments";

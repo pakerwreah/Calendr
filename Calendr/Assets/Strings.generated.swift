@@ -54,7 +54,17 @@ internal enum Strings {
     internal static func updatedTo(_ p1: Any) -> String {
       return Strings.tr("Localizable", "auto_update.updated_to", String(describing: p1), fallback: "Updated to version %@")
     }
+    internal enum Failed {
+      /// Failed to check for update
+      internal static let check = Strings.tr("Localizable", "auto_update.failed.check", fallback: "Failed to check for update")
+      /// Failed to download update
+      internal static let download = Strings.tr("Localizable", "auto_update.failed.download", fallback: "Failed to download update")
+      /// Failed to install update
+      internal static let install = Strings.tr("Localizable", "auto_update.failed.install", fallback: "Failed to install update")
+    }
     internal enum Replace {
+      /// You must not change the installation directory
+      internal static let error = Strings.tr("Localizable", "auto_update.replace.error", fallback: "You must not change the installation directory")
       /// Confirm the app location so we have permission to replace it
       internal static let message = Strings.tr("Localizable", "auto_update.replace.message", fallback: "Confirm the app location so we have permission to replace it")
     }
