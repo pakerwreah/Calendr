@@ -18,9 +18,8 @@ jobs:
 
       - name: Build
         run: |
-          COMPILER_INDEX_STORE_ENABLE=NO \
-          CODE_SIGNING_ALLOWED=NO \
-          xcodebuild build-for-testing -scheme "$scheme"
+          xcodebuild build-for-testing -scheme "$scheme" \
+          COMPILER_INDEX_STORE_ENABLE=NO CODE_SIGNING_ALLOWED=NO
 
       - name: Test
         run: |
