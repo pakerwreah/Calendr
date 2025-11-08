@@ -86,7 +86,17 @@ class AboutViewController: NSViewController, SettingsUI {
 
     private func setUpBindings() {
 
-        autoUpdater.newVersionAvailable.bind { [weak self] status in
+        autoUpdater.error.observe(on: MainScheduler.instance).bind { error in
+            let alert = NSAlert()
+            alert.alertStyle = .warning
+            alert.icon = NSImage(named: NSImage.cautionName)
+            alert.messageText = error.title
+            alert.informativeText = error.message
+            alert.runModal()
+        }
+        .disposed(by: disposeBag)
+
+        autoUpdater.status.observe(on: MainScheduler.instance).bind { [weak self] status in
             guard let self else { return }
             switch status {
             case .initial:
@@ -112,7 +122,7 @@ class AboutViewController: NSViewController, SettingsUI {
     }
 
     @objc private func checkForUpdates() {
-        autoUpdater.checkRelease(notify: false)
+        autoUpdater.checkRelease()
     }
 
     @objc private func installUpdates() {

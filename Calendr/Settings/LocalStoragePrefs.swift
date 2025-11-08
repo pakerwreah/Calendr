@@ -68,6 +68,7 @@ enum Prefs {
 
     // Security Scope Bookmarks
     static let attachmentsBookmark = "attachments_folder_bookmark"
+    static let installationBookmark = "installation_bookmark"
 
     // System
     static let statusItemPreferredPosition = "NSStatusItem Preferred Position"
@@ -376,5 +377,10 @@ extension LocalStorageProvider {
     @objc dynamic var attachmentsBookmark: Data? {
         get { data(forKey: Prefs.attachmentsBookmark) }
         set { set(newValue, forKey: Prefs.attachmentsBookmark) }
+    }
+
+    @objc dynamic var installationBookmark: Data? {
+        get { data(forKey: Prefs.installationBookmark) }
+        set { set(newValue, forKey: Prefs.installationBookmark) }
     }
 }

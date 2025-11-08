@@ -20,6 +20,11 @@
 "auto_update.downloading" = "Versioni po shkarkohet %@";
 "auto_update.install" = "Instaloni";
 "auto_update.replace.message" = "Konfirmo vendndodhjen e aplikacionit në mënyrë që të kemi lejen për ta zëvendësuar atë";
+//"auto_update.replace.error" = "You must not change the installation directory";
+
+//"auto_update.failed.check" = "Failed to check for update";
+//"auto_update.failed.download" = "Failed to download update";
+//"auto_update.failed.install" = "Failed to install update";
 
 //"attachments.open.message" = "Calendr needs permission to access your attachments";
 //"attachments.open.authorize" = "Authorize access to attachments";

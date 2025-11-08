@@ -20,6 +20,11 @@
 "auto_update.downloading" = "バージョン %@ をダウンロード中";
 "auto_update.install" = "インストール";
 "auto_update.replace.message" = "アプリのインストール先を確認してください。古いバージョンと同じ場所を選ぶと、\n新しいバージョンのアプリに置き換えられます。";
+//"auto_update.replace.error" = "You must not change the installation directory";
+
+//"auto_update.failed.check" = "Failed to check for update";
+//"auto_update.failed.download" = "Failed to download update";
+//"auto_update.failed.install" = "Failed to install update";
 
 "attachments.open.message" = "Calendrが添付ファイルを開く許可が必要です";
 "attachments.open.authorize" = "添付ファイルへのアクセスを許可";

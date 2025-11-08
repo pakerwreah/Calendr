@@ -20,6 +20,11 @@
 "auto_update.downloading" = "下载版本 %@";
 "auto_update.install" = "安装";
 "auto_update.replace.message" = "请确认应用程序的位置，以便获得权限来替换。";
+//"auto_update.replace.error" = "You must not change the installation directory";
+
+//"auto_update.failed.check" = "Failed to check for update";
+//"auto_update.failed.download" = "Failed to download update";
+//"auto_update.failed.install" = "Failed to install update";
 
 "attachments.open.message" = "Calendr 需要权限才能访问您的附件";
 "attachments.open.authorize" = "授权以访问附件";

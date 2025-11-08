@@ -20,6 +20,11 @@
 "auto_update.downloading" = "Λήψη της έκδοσης %@";
 "auto_update.install" = "Εγκατάσταση";
 "auto_update.replace.message" = "Επιβεβαιώστε τη θέση της εφαρμογής ώστε να έχουμε την άδεια να την αντικαταστήσουμε";
+//"auto_update.replace.error" = "You must not change the installation directory";
+
+//"auto_update.failed.check" = "Failed to check for update";
+//"auto_update.failed.download" = "Failed to download update";
+//"auto_update.failed.install" = "Failed to install update";
 
 //"attachments.open.message" = "Calendr needs permission to access your attachments";
 //"attachments.open.authorize" = "Authorize access to attachments";

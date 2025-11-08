@@ -18,6 +18,11 @@
 "auto_update.downloading" = "Versie %@ downloaden";
 "auto_update.install" = "Installeren";
 "auto_update.replace.message" = "Bevestig de locatie van de app zodat we toestemming hebben om deze te vervangen";
+//"auto_update.replace.error" = "You must not change the installation directory";
+
+//"auto_update.failed.check" = "Failed to check for update";
+//"auto_update.failed.download" = "Failed to download update";
+//"auto_update.failed.install" = "Failed to install update";
 
 "attachments.open.message" = "Calendr heeft toestemming nodig om toegang te krijgen tot uw bijlagen";
 "attachments.open.authorize" = "Toegang tot bijlagen toestaan";

@@ -20,6 +20,11 @@
 "auto_update.downloading" = "正在下載版本 %@";
 "auto_update.install" = "安裝";
 "auto_update.replace.message" = "確認應用程式位置以便我們有權限替換它";
+//"auto_update.replace.error" = "You must not change the installation directory";
+
+//"auto_update.failed.check" = "Failed to check for update";
+//"auto_update.failed.download" = "Failed to download update";
+//"auto_update.failed.install" = "Failed to install update";
 
 "attachments.open.message" = "需要取得您附件的存取權限";
 "attachments.open.authorize" = "授權以存取附件";
