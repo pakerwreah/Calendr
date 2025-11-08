@@ -16,9 +16,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Dependencies
-        run: brew install xcbeautify
-
       - name: Build
         run: |
           COMPILER_INDEX_STORE_ENABLE=NO \
