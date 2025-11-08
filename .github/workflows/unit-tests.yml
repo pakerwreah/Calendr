@@ -2,26 +2,24 @@ name: Unit Tests
 
 on:
   push:
-    branches: [ master-disabled ]
+    branches: [ master ]
   pull_request:
-    branches: [ master-disabled ]
+    branches: [ master, macos-13 ]
 
 jobs:
   build:
-    runs-on: macos-11
+    runs-on: macos-latest
     env:
       scheme: Calendr
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Dependencies
-        run: brew install xcbeautify
+        uses: actions/checkout@v4
 
       - name: Build
         run: |
-          xcodebuild build-for-testing -scheme "$scheme"
+          xcodebuild build-for-testing -scheme "$scheme" \
+          COMPILER_INDEX_STORE_ENABLE=NO CODE_SIGNING_ALLOWED=NO
 
       - name: Test
         run: |

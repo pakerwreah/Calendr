@@ -2,6 +2,7 @@
 [![download](https://img.shields.io/badge/Download-gray?logo=github)](https://github.com/pakerwreah/Calendr/issues/217)
 [![homebrew](https://img.shields.io/badge/Homebrew-gray?logo=homebrew&logoColor=FBB040)](https://github.com/pakerwreah/Calendr/issues/217)
 [![release](https://img.shields.io/github/v/release/pakerwreah/Calendr)](https://github.com/pakerwreah/Calendr/releases/latest)
+[![ci](https://github.com/pakerwreah/Calendr/workflows/Unit%20Tests/badge.svg)](https://github.com/pakerwreah/Calendr/actions)
 [![bitrise](https://img.shields.io/bitrise/9fa2e96dc9458fbb?label=Unit%20Tests&logo=bitrise&token=iAJgn0FMJzmMP4ALCi0KdQ)](https://app.bitrise.io/app/9fa2e96dc9458fbb)
 [![sentry](https://img.shields.io/badge/Sentry-purple?logo=sentry&logoColor=white)](https://github.com/pakerwreah/Calendr/issues/183)
 [![buy-me-a-coffee](https://img.shields.io/badge/Buy_Me_a_Coffee-ffdd00?logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/pakerwreah)
