@@ -2,19 +2,19 @@ name: Unit Tests
 
 on:
   push:
-    branches: [ master-disabled ]
+    branches: [ master ]
   pull_request:
-    branches: [ master-disabled ]
+    branches: [ master, macos-13 ]
 
 jobs:
   build:
-    runs-on: macos-11
+    runs-on: macos-latest
     env:
       scheme: Calendr
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Dependencies
         run: brew install xcbeautify
