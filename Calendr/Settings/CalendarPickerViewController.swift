@@ -63,9 +63,14 @@ class CalendarPickerViewController: NSViewController, SettingsUI {
         scrollView.contentView.trailing(equalTo: contentStackView)
         let height = scrollView.contentView.height(equalTo: contentStackView)
 
-        if configuration ~= .settings {
-            height.priority = .dragThatCanResizeWindow
-            scrollView.contentView.height(lessThanOrEqualTo: 600)
+        switch configuration {
+
+            case .settings:
+                height.priority = .dragThatCanResizeWindow
+                scrollView.contentView.height(lessThanOrEqualTo: 600)
+
+            case .picker:
+                view.width(equalTo: 250)
         }
 
         contentStackView.spacing = 16
@@ -131,7 +136,7 @@ class CalendarPickerViewController: NSViewController, SettingsUI {
                         .compact()
                     )
                     .with(alignment: .centerY)
-                    .with(spacing: 0, after: calendarItem)
+                    .with(spacing: 4, after: calendarItem)
                 }
             ].flatten()
         ).with(orientation: .vertical)
