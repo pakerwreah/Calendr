@@ -1,16 +1,19 @@
 # Calendr
-[![download](https://img.shields.io/badge/Download-gray?logo=github)](https://github.com/pakerwreah/Calendr/issues/217)
-[![homebrew](https://img.shields.io/badge/Homebrew-gray?logo=homebrew&logoColor=FBB040)](https://github.com/pakerwreah/Calendr/issues/217)
-[![release](https://img.shields.io/github/v/release/pakerwreah/Calendr)](https://github.com/pakerwreah/Calendr/releases/latest)
-[![ci](https://github.com/pakerwreah/Calendr/workflows/Unit%20Tests/badge.svg)](https://github.com/pakerwreah/Calendr/actions)
-[![bitrise](https://img.shields.io/bitrise/9fa2e96dc9458fbb?label=Unit%20Tests&logo=bitrise&token=iAJgn0FMJzmMP4ALCi0KdQ)](https://app.bitrise.io/app/9fa2e96dc9458fbb)
 
+[![install](https://img.shields.io/badge/How_to_install-gray?label=📥)](https://github.com/pakerwreah/Calendr/issues/217)
+[![homebrew](https://img.shields.io/badge/Homebrew_cask-gray?logo=homebrew&logoColor=ffdd00)](https://github.com/pakerwreah/homebrew-calendr)
+[![release](https://img.shields.io/github/v/release/pakerwreah/Calendr?label=Latest%20release)](https://github.com/pakerwreah/Calendr/releases/latest)
+[![downloads-latest](https://img.shields.io/github/downloads/pakerwreah/Calendr/latest/Calendr.zip?displayAssetName=false&logo=github&label=Downloads)](https://github.com/pakerwreah/Calendr/releases/latest)
+[![downloads-all](https://img.shields.io/github/downloads/pakerwreah/Calendr/Calendr.zip?displayAssetName=false&logo=github&label=All%20downloads)](https://github.com/pakerwreah/Calendr/releases/latest)
+
+[![ci-github](https://img.shields.io/github/check-runs/pakerwreah/Calendr/master?nameFilter=Unit%20Tests&logo=github&label=Unit%20Tests)](https://github.com/pakerwreah/Calendr/actions)
+[![ci-bitrise](https://img.shields.io/bitrise/9fa2e96dc9458fbb?label=Unit%20Tests&logo=bitrise&token=iAJgn0FMJzmMP4ALCi0KdQ)](https://app.bitrise.io/app/9fa2e96dc9458fbb)
 [![sentry](https://img.shields.io/badge/Sentry-purple?logo=sentry&logoColor=white)](https://github.com/pakerwreah/Calendr/issues)
 [![linkedin](https://img.shields.io/badge/LinkedIn-blue?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/carlosenumo)
 [![buy-me-a-coffee](https://img.shields.io/badge/Buy_Me_a_Coffee-ffdd00?logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/pakerwreah)
 [![reddit](https://img.shields.io/reddit/subreddit-subscribers/Calendr)](https://www.reddit.com/r/Calendr)
 
-Menu bar calendar for macOS
+### Menu bar calendar for macOS
 
 <table>
 <tr>
@@ -38,8 +41,9 @@ Hey 🙋🏻‍♂️ if you like my app, please consider buying me a coffee to 
   </td>
 </tr>
 </table>
+<br>
 
-# Hidden features
+### Hidden features 🔍
 ## Open date with a URL scheme https://github.com/pakerwreah/Calendr/issues/314
 date|encoded
 --|--
