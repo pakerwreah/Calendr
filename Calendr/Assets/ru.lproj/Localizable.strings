@@ -10,29 +10,29 @@
 "quit" = "Выход";
 "search" = "Поиск";
 
-"access_required.calendars" = "Календарь, ожидающий авторизации 'Полный доступ'";
-"access_required.reminders" = "Напоминания, ожидающие авторизации";
+"access_required.calendars" = "Требуется доступ к Календарю (полный доступ)";
+"access_required.reminders" = "Требуется доступ к Напоминаниям";
 "access_required.open_settings" = "Открыть настройки";
 "access_required.cancel" = "Отмена";
 
 "auto_update.check_for_updates" = "Проверить наличие обновлений";
-"auto_update.fetching_releases" = "Получение релизов";
+"auto_update.fetching_releases" = "Получение сведений о версиях";
 "auto_update.new_version" = "Доступна новая версия: %@";
 "auto_update.updated_to" = "Обновлено до версии %@";
-"auto_update.downloading" = "Версия для скачивания %@";
+"auto_update.downloading" = "Загрузка версии %@";
 "auto_update.install" = "Установить";
-"auto_update.replace.message" = "Подтвердите местоположение приложения, чтобы предоставить разрешение на его замену";
-//"auto_update.replace.error" = "You must not change the installation directory";
+"auto_update.replace.message" = "Подтвердите расположение приложения, чтобы получить разрешение на его замену";
+"auto_update.replace.error" = "Не изменяйте каталог установки";
 
-//"auto_update.failed.check" = "Failed to check for update";
-//"auto_update.failed.download" = "Failed to download update";
-//"auto_update.failed.install" = "Failed to install update";
+"auto_update.failed.check" = "Не удалось проверить наличие обновлений";
+"auto_update.failed.download" = "Не удалось загрузить обновление";
+"auto_update.failed.install" = "Не удалось установить обновление";
 
 "attachments.open.message" = "Приложению Calendr нужно разрешение на доступ к вложениям";
 "attachments.open.authorize" = "Разрешить доступ к вложениям";
 
 "settings.title" = "Настройки";
-"settings.tab.general" = "Общее";
+"settings.tab.general" = "Общие";
 "settings.tab.appearance" = "Внешний вид";
 "settings.tab.calendars" = "Календари";
 "settings.tab.keyboard" = "Горячие клавиши";
@@ -51,7 +51,7 @@
 "settings.next_event.grab_attention" = "Оповещать о приближающемся событии";
 "settings.next_event.grab_attention.flashing" = "Миганием";
 "settings.next_event.grab_attention.sound" = "Звуком";
-"settings.next_event.detect_notch" = "Укоротите, если присутствует 'насечка'";
+"settings.next_event.detect_notch" = "Сокращать, если есть вырез (notch)";
 
 "settings.calendar" = "Календарь";
 "settings.calendar.show_week_numbers" = "Показывать номер недели";
@@ -63,16 +63,16 @@
 "settings.calendar.calendar_app_view_mode" = "Просмотр приложения «Календарь»";
 "settings.calendar.default_calendar_app" = "Приложение календаря по умолчанию";
 
-//"settings.calendar.event_dots" = "Event dots";
-//"settings.calendar.event_dots.none" = "none";
-//"settings.calendar.event_dots.single_neutral" = "neutral";
-//"settings.calendar.event_dots.single_highlighted" = "highlighted";
-//"settings.calendar.event_dots.multiple" = "multiple";
+"settings.calendar.event_dots" = "Индикаторы событий";
+"settings.calendar.event_dots.none" = "отключены";
+"settings.calendar.event_dots.single_neutral" = "обычные";
+"settings.calendar.event_dots.single_highlighted" = "акцентные";
+"settings.calendar.event_dots.multiple" = "многоцветные";
 
 "settings.events" = "События";
 "settings.events.show_map" = "Показывать карту и погоду";
 "settings.events.show_overdue_reminders" = "Показывать просроченные напоминания";
-//"settings.events.show_all_day_details" = "Show all-day events details";
+"settings.events.show_all_day_details" = "Показать подробности событий на весь день";
 "settings.events.show_finished_events" = "Показывать завершенные события";
 "settings.events.show_recurrence_indicator" = "Показывать индикатор повторения";
 "settings.events.force_local_time_zone" = "Показывать все события в местном часовом поясе";
@@ -106,18 +106,18 @@
 "reminder.status.overdue" = "Просрочено";
 
 "reminder.options.button" = "Опции";
-"reminder.options.complete" = "Полный";
+"reminder.options.complete" = "Выполнено";
 "reminder.options.remind" = "Напомнить %@";
 
-//"reminder.editor.headline" = "New Reminder";
-//"reminder.editor.title" = "Title";
-//"reminder.editor.save" = "Save";
+"reminder.editor.headline" = "Новое Напоминание";
+"reminder.editor.title" = "Название";
+"reminder.editor.save" = "Сохранить";
 
-//"reminder.editor.confirm.continue" = "Continue editing";
-//"reminder.editor.confirm.discard" = "Discard all changes";
+"reminder.editor.confirm.continue" = "Продолжить редактирование";
+"reminder.editor.confirm.discard" = "Отменить все изменения";
 
-//"map_black_list.headline" = "Hide map if location contains any of these words";
-//"map_black_list.new_item_text" = "New Item";
+"map_black_list.headline" = "Скрывать карту, если в названии места есть одно из этих слов";
+"map_black_list.new_item_text" = "Новый элемент";
 
 "event.details.participant.organizer" = "организатор";
 "event.details.participant.me" = "я";
@@ -141,7 +141,7 @@
 "tooltips.navigation.next_month" = "Следующий месяц";
 
 "tooltips.toolbar.stay_open" = "Оставить открытым";
-//"tooltips.toolbar.create" = "Create";
+"tooltips.toolbar.create" = "Создать";
 "tooltips.toolbar.open_calendar" = "Открыть календарь";
 "tooltips.toolbar.open_reminders" = "Открыть напоминания";
 "tooltips.toolbar.open_menu" = "Открыть меню";
