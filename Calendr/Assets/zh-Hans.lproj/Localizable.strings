@@ -20,11 +20,11 @@
 "auto_update.downloading" = "下载版本 %@";
 "auto_update.install" = "安装";
 "auto_update.replace.message" = "请确认应用程序的位置，以便获得权限来替换。";
-//"auto_update.replace.error" = "You must not change the installation directory";
+"auto_update.replace.error" = "请勿更改安装目录。";
 
-//"auto_update.failed.check" = "Failed to check for update";
-//"auto_update.failed.download" = "Failed to download update";
-//"auto_update.failed.install" = "Failed to install update";
+"auto_update.failed.check" = "检查更新失败";
+"auto_update.failed.download" = "下载更新失败";
+"auto_update.failed.install" = "安装更新失败";
 
 "attachments.open.message" = "Calendr 需要权限才能访问您的附件";
 "attachments.open.authorize" = "授权以访问附件";
@@ -42,7 +42,7 @@
 "settings.menu_bar.show_date" = "显示日期";
 "settings.menu_bar.show_background" = "启用不透明背景";
 "settings.menu_bar.date_format_custom" = "自定义";
-//"settings.menu_bar.open_on_hover" = "Open on mouse hover";
+"settings.menu_bar.open_on_hover" = "当鼠标悬停时打开";
 
 "settings.next_event" = "下一个日程";
 "settings.next_event.show_next_event" = "显示下一个日程";
@@ -57,20 +57,20 @@
 "settings.calendar.show_declined_events" = "显示拒绝的日程";
 "settings.calendar.show_declined_events_tooltip" = "此功能需在原生日历应用中同样启用。";
 "settings.calendar.date_hover_option" = "按住 ⌥ 键预览悬停日期详情";
-//"settings.calendar.week_count" = "Visible weeks";
+"settings.calendar.week_count" = "可见周数";
 "settings.calendar.calendar_app_view_mode" = "日历应用展示模式";
-//"settings.calendar.default_calendar_app" = "Default calendar app";
+"settings.calendar.default_calendar_app" = "默认日历应用";
 
-//"settings.calendar.event_dots" = "Event dots";
-//"settings.calendar.event_dots.none" = "none";
-//"settings.calendar.event_dots.single_neutral" = "neutral";
-//"settings.calendar.event_dots.single_highlighted" = "highlighted";
-//"settings.calendar.event_dots.multiple" = "multiple";
+"settings.calendar.event_dots" = "日程标记";
+"settings.calendar.event_dots.none" = "不显示";
+"settings.calendar.event_dots.single_neutral" = "单点普通";
+"settings.calendar.event_dots.single_highlighted" = "单点高亮";
+"settings.calendar.event_dots.multiple" = "多点标记";
 
 "settings.events" = "日程";
 "settings.events.show_map" = "展示地图和天气";
 "settings.events.show_overdue_reminders" = "展示逾期日程";
-//"settings.events.show_all_day_details" = "Show all-day events details";
+"settings.events.show_all_day_details" = "展示全天日程的详细信息";
 "settings.events.show_finished_events" = "展示已完成日程";
 "settings.events.show_recurrence_indicator" = "展示日程重复标识";
 "settings.events.force_local_time_zone" = "以本地时区显示所有事件";
@@ -107,15 +107,15 @@
 "reminder.options.complete" = "完成";
 "reminder.options.remind" = "%@提醒";
 
-//"reminder.editor.headline" = "New Reminder";
-//"reminder.editor.title" = "Title";
-//"reminder.editor.save" = "Save";
+"reminder.editor.headline" = "新的提醒事项";
+"reminder.editor.title" = "提醒事项";
+"reminder.editor.save" = "保存";
 
-//"reminder.editor.confirm.continue" = "Continue editing";
-//"reminder.editor.confirm.discard" = "Discard all changes";
+"reminder.editor.confirm.continue" = "继续编辑";
+"reminder.editor.confirm.discard" = "放弃所有更改";
 
-//"map_black_list.headline" = "Hide map if location contains any of these words";
-//"map_black_list.new_item_text" = "New Item";
+"map_black_list.headline" = "当地点包含以下词语时不显示地图";
+"map_black_list.new_item_text" = "新增项";
 
 "event.details.participant.organizer" = "发起人";
 "event.details.participant.me" = "我";
@@ -139,7 +139,7 @@
 "tooltips.navigation.next_month" = "下个月";
 
 "tooltips.toolbar.stay_open" = "保持打开";
-//"tooltips.toolbar.create" = "Create";
+"tooltips.toolbar.create" = "创建";
 "tooltips.toolbar.open_calendar" = "打开日历";
 "tooltips.toolbar.open_reminders" = "打开提醒";
 "tooltips.toolbar.open_menu" = "打开菜单";
