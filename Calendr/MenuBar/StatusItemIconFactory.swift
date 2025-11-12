@@ -20,7 +20,7 @@ enum StatusItemIconFactory {
         case .calendar, .date:
             rect.size
         case .dayOfWeek:
-            rect.insetBy(dx: -insetX, dy: -1).size
+            rect.insetBy(dx: -insetX, dy: -0.5).size
         }
 
         let image = NSImage(size: size, flipped: true) { _ in
@@ -115,7 +115,6 @@ enum StatusItemIconFactory {
 
         let fontSize = (0.6 * rect.height).rounded(to: 0.5)
         let middleY = rect.height / 2
-        let spacing: CGFloat = 0.5
 
         run {
             formatter.dateFormat = "E"
@@ -125,7 +124,7 @@ enum StatusItemIconFactory {
                 .foregroundColor: NSColor.red,
                 .paragraphStyle: paragraph
             ])
-            .draw(in: rect.offsetBy(dx: insetX, dy: -spacing).insetBy(dx: -insetX, dy: 0))
+            .draw(in: rect.offsetBy(dx: insetX, dy: 0).insetBy(dx: -insetX, dy: -1))
         }
 
         run {
@@ -136,7 +135,7 @@ enum StatusItemIconFactory {
                 .foregroundColor: NSColor.red,
                 .paragraphStyle: paragraph
             ])
-            .draw(in: rect.offsetBy(dx: insetX, dy: middleY + spacing).insetBy(dx: 0, dy: -1))
+            .draw(in: rect.offsetBy(dx: insetX, dy: middleY + 1).insetBy(dx: 0, dy: -2))
         }
     }
 }
