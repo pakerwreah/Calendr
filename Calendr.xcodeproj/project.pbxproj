@@ -96,6 +96,7 @@
 		34702150259E163000827AE7 /* CalendarModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3470214F259E163000827AE7 /* CalendarModel.swift */; };
 		34702168259E761100827AE7 /* Calendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34702167259E761100827AE7 /* Calendar.swift */; };
 		3470654B292EFCF90079C68A /* NSTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3470654A292EFCF90079C68A /* NSTextView.swift */; };
+		347098972EC4099D004A3D5E /* FloatingPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 347098962EC4099C004A3D5E /* FloatingPoint.swift */; };
 		34711F6F2D16261800A89C72 /* MockWorkspaceServiceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34711F6E2D16261400A89C72 /* MockWorkspaceServiceProvider.swift */; };
 		3477E70C2C67A6A9008D3844 /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = 3477E70B2C67A6A9008D3844 /* Sentry */; };
 		3477E7102C67C15A008D3844 /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3477E70F2C67C15A008D3844 /* AppEnvironment.swift */; };
@@ -348,6 +349,7 @@
 		3470214F259E163000827AE7 /* CalendarModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarModel.swift; sourceTree = "<group>"; };
 		34702167259E761100827AE7 /* Calendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Calendar.swift; sourceTree = "<group>"; };
 		3470654A292EFCF90079C68A /* NSTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSTextView.swift; sourceTree = "<group>"; };
+		347098962EC4099C004A3D5E /* FloatingPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingPoint.swift; sourceTree = "<group>"; };
 		34711F6E2D16261400A89C72 /* MockWorkspaceServiceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockWorkspaceServiceProvider.swift; sourceTree = "<group>"; };
 		3477E70F2C67C15A008D3844 /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
 		3477F3CD25FAE56A008EA888 /* EventDetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailsViewModel.swift; sourceTree = "<group>"; };
@@ -780,6 +782,7 @@
 				34924CED259FD064009C3450 /* DateFormatter.swift */,
 				34651F5325E22A3900518C5A /* DateIntervalFormatter.swift */,
 				34EDE71A2AC46515007C5854 /* Error.swift */,
+				347098962EC4099C004A3D5E /* FloatingPoint.swift */,
 				34E60D6226A0EA32004DA082 /* NSAccessibilityProtocol.swift */,
 				34E60D6026A0D6D6004DA082 /* NSAccessibilityProtocol+Rx.swift */,
 				34B5A09625B0F8A500F7F7ED /* NSButton.swift */,
@@ -1393,6 +1396,7 @@
 				3408F17625FAAA4B00C1EAD4 /* EventDetailsViewController.swift in Sources */,
 				3470654B292EFCF90079C68A /* NSTextView.swift in Sources */,
 				34F24D242C64F335001F99A9 /* AppConstants.swift in Sources */,
+				347098972EC4099D004A3D5E /* FloatingPoint.swift in Sources */,
 				341692C225F1AA570019E8A8 /* WallTimeScheduler.swift in Sources */,
 				34B5A09725B0F8A500F7F7ED /* NSButton.swift in Sources */,
 				3443D9782EB1241E00476D4B /* MapBlackListViewModel.swift in Sources */,

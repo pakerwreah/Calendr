@@ -14,7 +14,7 @@ enum StatusItemIconFactory {
         let borderWidth: CGFloat = 2
         let radius: CGFloat = 2.5
         let rect = CGRect(x: 0, y: 0, width: size + borderWidth, height: size)
-        let insetX = 2.5 * textScaling
+        let insetX = (2.5 * textScaling).rounded(to: 0.5)
 
         let size = switch style {
         case .calendar, .date:
@@ -96,12 +96,13 @@ enum StatusItemIconFactory {
         let date = formatter.string(from: dateProvider.now)
         let paragraph = NSMutableParagraphStyle()
         paragraph.alignment = .center
-        let fontSize = 0.6 * rect.height
+        let fontSize = (0.6 * rect.height).rounded(to: 0.5)
+        let middleY = rect.height / 2 - fontSize / 2
         NSAttributedString(string: date, attributes: [
             .font: NSFont.systemFont(ofSize: fontSize, weight: .medium),
             .foregroundColor: NSColor.red,
             .paragraphStyle: paragraph
-        ]).draw(in: rect.offsetBy(dx: 0, dy: rect.height / 2 - fontSize / 2))
+        ]).draw(in: rect.offsetBy(dx: 0, dy: middleY))
     }
 
     static func drawDayOfWeekAndDate(rect: CGRect, insetX: CGFloat, textScaling: Double, dateProvider: DateProviding) {
@@ -112,19 +113,19 @@ enum StatusItemIconFactory {
         let paragraph = NSMutableParagraphStyle()
         paragraph.alignment = .center
 
-        let fontSize = 0.6 * rect.height
-        let middleY = rect.height / 2 - fontSize / 2 + 1
-        let middleYSpread = fontSize / 2.5 + 1
+        let fontSize = (0.6 * rect.height).rounded(to: 0.5)
+        let middleY = rect.height / 2
+        let spacing: CGFloat = 0.5
 
         run {
             formatter.dateFormat = "E"
             let date = formatter.string(from: dateProvider.now).uppercased().trimmingCharacters(in: ["."])
             NSAttributedString(string: date, attributes: [
-                .font: NSFont.systemFont(ofSize: fontSize, weight: .bold),
+                .font: NSFont.systemFont(ofSize: fontSize, weight: .semibold),
                 .foregroundColor: NSColor.red,
                 .paragraphStyle: paragraph
             ])
-            .draw(in: rect.offsetBy(dx: insetX, dy: middleY - middleYSpread).insetBy(dx: -insetX, dy: 0))
+            .draw(in: rect.offsetBy(dx: insetX, dy: -spacing).insetBy(dx: -insetX, dy: 0))
         }
 
         run {
@@ -135,7 +136,7 @@ enum StatusItemIconFactory {
                 .foregroundColor: NSColor.red,
                 .paragraphStyle: paragraph
             ])
-            .draw(in: rect.offsetBy(dx: insetX, dy: middleY + middleYSpread).insetBy(dx: 0, dy: -1))
+            .draw(in: rect.offsetBy(dx: insetX, dy: middleY + spacing).insetBy(dx: 0, dy: -1))
         }
     }
 }

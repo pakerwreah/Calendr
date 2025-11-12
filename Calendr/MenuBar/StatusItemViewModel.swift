@@ -99,7 +99,7 @@ class StatusItemViewModel {
 
             let showDate = !title.isEmpty
 
-            let iconSize: CGFloat = 12 * textScaling
+            let iconSize: CGFloat = (12 * textScaling).rounded(to: 0.5)
 
             if hasBirthdays {
                 birthdayIcon = .init(size: iconSize - 2)
@@ -146,7 +146,7 @@ class StatusItemViewModel {
             }
 
             let title = text.isEmpty ? nil : NSAttributedString(string: text, attributes: [
-                .font: NSFont.systemFont(ofSize: 10 * textScaling, weight: .medium)
+                .font: NSFont.systemFont(ofSize: (10 * textScaling).rounded(to: 0.5), weight: .medium)
             ])
 
             if let title {
