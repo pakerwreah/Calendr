@@ -91,27 +91,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return false
     }
 
-    private let signal: DispatchSourceSignal = {
-        Darwin.signal(SIGTERM, SIG_IGN)
-
-        let signal = DispatchSource.makeSignalSource(signal: SIGTERM, queue: .main)
-        signal.setEventHandler(handler: showQuitConfirmation)
-        signal.activate()
-
-        return signal
+    private let activity = {
+        ProcessInfo.processInfo.beginActivity(
+            options: [
+                .userInitiatedAllowingIdleSystemSleep,
+                .automaticTerminationDisabled,
+                .suddenTerminationDisabled
+            ],
+            reason: "Stop killing my app!"
+        )
     }()
-}
-
-private func showQuitConfirmation() {
-    let alert = NSAlert()
-    alert.messageText = "Are you sure you want to quit?"
-    alert.informativeText = "This can happen due to low disk space, memory pressure, or \"cleaning\" apps."
-    alert.alertStyle = .warning
-
-    alert.addButton(withTitle: "Quit").hasDestructiveAction = true
-    alert.addButton(withTitle: "Keep Running")
-
-    if alert.runModal() == .alertFirstButtonReturn {
-        NSApp.terminate(nil)
-    }
 }
