@@ -204,8 +204,6 @@
 		34D88DCA2C4C687B0047D636 /* SettingsUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D88DC92C4C687B0047D636 /* SettingsUI.swift */; };
 		34E004A725B61D5200241419 /* StatusItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E004A625B61D5200241419 /* StatusItemViewModel.swift */; };
 		34E0C4522DA2C5A100B33B27 /* Attachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E0C4512DA2C5A100B33B27 /* Attachment.swift */; };
-		34E0C4572DA2D23B00B33B27 /* KVCError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E0C4562DA2D23B00B33B27 /* KVCError.swift */; };
-		34E0C4592DA2D27100B33B27 /* ExceptionCatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E0C4582DA2D27100B33B27 /* ExceptionCatcher.m */; };
 		34E1902325B76CFE00E9491B /* CalendarPickerViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E1902225B76CFE00E9491B /* CalendarPickerViewModelTests.swift */; };
 		34E259832B659B5600074D3A /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 34E259822B659B5600074D3A /* KeyboardShortcuts */; };
 		34E5F2382C9F309E0048E25D /* AppearanceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E5F2372C9F309E0048E25D /* AppearanceViewController.swift */; };
@@ -217,6 +215,9 @@
 		34E855682C70E92500757B58 /* AutoUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E855672C70E92500757B58 /* AutoUpdater.swift */; };
 		34E8556A2C7115A100757B58 /* LocalNotificationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E855692C7115A100757B58 /* LocalNotificationProvider.swift */; };
 		34E8556D2C711D1A00757B58 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 34E8556C2C711D1A00757B58 /* ZIPFoundation */; };
+		34E9BC842ECE43EF00E0A359 /* NSObject+KVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E9BC832ECE43EF00E0A359 /* NSObject+KVC.swift */; };
+		34E9BC862ECE442B00E0A359 /* KVCTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E9BC852ECE442B00E0A359 /* KVCTests.swift */; };
+		34E9BC8A2ECE5A1500E0A359 /* ExceptionCatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E9BC892ECE5A1500E0A359 /* ExceptionCatcher.m */; };
 		34EDE71B2AC46515007C5854 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34EDE71A2AC46515007C5854 /* Error.swift */; };
 		34F128D125968044007DF31C /* Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F128D025968044007DF31C /* Label.swift */; };
 		34F128E12597B9C9007DF31C /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F128E02597B9C9007DF31C /* MainViewController.swift */; };
@@ -464,9 +465,6 @@
 		34D88DC92C4C687B0047D636 /* SettingsUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsUI.swift; sourceTree = "<group>"; };
 		34E004A625B61D5200241419 /* StatusItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemViewModel.swift; sourceTree = "<group>"; };
 		34E0C4512DA2C5A100B33B27 /* Attachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Attachment.swift; sourceTree = "<group>"; };
-		34E0C4552DA2D23500B33B27 /* ExceptionCatcher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExceptionCatcher.h; sourceTree = "<group>"; };
-		34E0C4562DA2D23B00B33B27 /* KVCError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KVCError.swift; sourceTree = "<group>"; };
-		34E0C4582DA2D27100B33B27 /* ExceptionCatcher.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExceptionCatcher.m; sourceTree = "<group>"; };
 		34E1902225B76CFE00E9491B /* CalendarPickerViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPickerViewModelTests.swift; sourceTree = "<group>"; };
 		34E5F2372C9F309E0048E25D /* AppearanceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceViewController.swift; sourceTree = "<group>"; };
 		34E5F23B2C9F76EF0048E25D /* DisposableWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisposableWrapper.swift; sourceTree = "<group>"; };
@@ -477,6 +475,11 @@
 		34E733E42EB287FD00BFEDC7 /* IDProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDProvider.swift; sourceTree = "<group>"; };
 		34E855672C70E92500757B58 /* AutoUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoUpdater.swift; sourceTree = "<group>"; };
 		34E855692C7115A100757B58 /* LocalNotificationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationProvider.swift; sourceTree = "<group>"; };
+		34E9BC832ECE43EF00E0A359 /* NSObject+KVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+KVC.swift"; sourceTree = "<group>"; };
+		34E9BC852ECE442B00E0A359 /* KVCTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KVCTests.swift; sourceTree = "<group>"; };
+		34E9BC872ECE467100E0A359 /* BuildConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BuildConfig.h; sourceTree = "<group>"; };
+		34E9BC882ECE5A1500E0A359 /* ExceptionCatcher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExceptionCatcher.h; sourceTree = "<group>"; };
+		34E9BC892ECE5A1500E0A359 /* ExceptionCatcher.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExceptionCatcher.m; sourceTree = "<group>"; };
 		34EDE71A2AC46515007C5854 /* Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
 		34F128D025968044007DF31C /* Label.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Label.swift; sourceTree = "<group>"; };
 		34F128E02597B9C9007DF31C /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -575,6 +578,7 @@
 			children = (
 				3477E70F2C67C15A008D3844 /* AppEnvironment.swift */,
 				34D5A7A62EAB12DF00A41E28 /* AppEnvironment.generated.swift */,
+				34E9BC872ECE467100E0A359 /* BuildConfig.h */,
 				34C4599B25DEFFDA00561C29 /* BuildConfig.m */,
 				34C459A325DF030000561C29 /* BuildConfig.swift */,
 				347D0F9F25952F8A002451EC /* Calendr.entitlements */,
@@ -724,6 +728,7 @@
 				34651F6D25E3171D00518C5A /* EventViewModelLinkTests.swift */,
 				348E703625C6173400B3B160 /* EventViewModelProgressTests.swift */,
 				34C2CF9025C2070400FC2CFF /* EventViewModelTests.swift */,
+				34E9BC852ECE442B00E0A359 /* KVCTests.swift */,
 				34E733E22EB274CB00BFEDC7 /* MapBlackListViewModelTests.swift */,
 				34C72F7D25E844E500FD20FA /* NextEventViewModelTests.swift */,
 				34B154BB2EAD2D11006DF54A /* ReminderEditorViewModelTests.swift */,
@@ -793,6 +798,7 @@
 				34B2C59D279FFF0600B52BF3 /* NSGestureRecognizer+Rx.swift */,
 				34091736267E81870023B76D /* NSImage.swift */,
 				344D5EBB2CA0DAAF00523F9E /* NSImageView.swift */,
+				34E9BC832ECE43EF00E0A359 /* NSObject+KVC.swift */,
 				34934CD728E71B0F009635D4 /* NSObject+Rx.swift */,
 				34A4C3E825963FB200D0F949 /* NSStackView.swift */,
 				3430ED02259634E00045DA53 /* NSStackView+Rx.swift */,
@@ -948,9 +954,8 @@
 				345CC3672C8CC93B00B0DD1A /* Cache.swift */,
 				348CF5002D13970600B9BFE0 /* DateSearchParser.swift */,
 				34E5F23B2C9F76EF0048E25D /* DisposableWrapper.swift */,
-				34E0C4552DA2D23500B33B27 /* ExceptionCatcher.h */,
-				34E0C4582DA2D27100B33B27 /* ExceptionCatcher.m */,
-				34E0C4562DA2D23B00B33B27 /* KVCError.swift */,
+				34E9BC882ECE5A1500E0A359 /* ExceptionCatcher.h */,
+				34E9BC892ECE5A1500E0A359 /* ExceptionCatcher.m */,
 				34C1D4202C6E632F00295E5E /* Sentry.swift */,
 				3438AEED2C6192A9002BE3E1 /* XCTest.swift */,
 			);
@@ -1282,7 +1287,7 @@
 				3421DA0E2693E35000056837 /* EventListViewPreview.swift in Sources */,
 				34651F5A25E2F08500518C5A /* String.swift in Sources */,
 				347E816F2DFDC98C002A1DCB /* StatusItemClickHandler.swift in Sources */,
-				34E0C4592DA2D27100B33B27 /* ExceptionCatcher.m in Sources */,
+				34E9BC842ECE43EF00E0A359 /* NSObject+KVC.swift in Sources */,
 				34651F7425E3207200518C5A /* WorkspaceServiceProvider.swift in Sources */,
 				34286E4625D5CD9C0097EC5D /* WeekNumberCellView.swift in Sources */,
 				34711F6F2D16261800A89C72 /* MockWorkspaceServiceProvider.swift in Sources */,
@@ -1302,7 +1307,6 @@
 				3421930827999FB7002BCD36 /* TimeZone+Factory.swift in Sources */,
 				3417A40A2A702643005C77E4 /* StatusItemIconFactory.swift in Sources */,
 				344D5EBC2CA0DAAF00523F9E /* NSImageView.swift in Sources */,
-				34E0C4572DA2D23B00B33B27 /* KVCError.swift in Sources */,
 				342AEE3E2DFF307B008CBBE0 /* MockScriptRunner.swift in Sources */,
 				34EDE71B2AC46515007C5854 /* Error.swift in Sources */,
 				347C04A12D13691100F67E7C /* NSControl+Rx.swift in Sources */,
@@ -1336,6 +1340,7 @@
 				34E0C4522DA2C5A100B33B27 /* Attachment.swift in Sources */,
 				34934CD828E71B0F009635D4 /* NSObject+Rx.swift in Sources */,
 				3477F3E425FD5285008EA888 /* NSView+Rx.swift in Sources */,
+				34E9BC8A2ECE5A1500E0A359 /* ExceptionCatcher.m in Sources */,
 				347E816D2DFDC70F002A1DCB /* TrackingView.swift in Sources */,
 				34D55FE325F06669007F5C81 /* Sequence.swift in Sources */,
 				347D0FED2595467A002451EC /* CalendarCellView.swift in Sources */,
@@ -1483,6 +1488,7 @@
 				347E6D3E25AA2811009A6716 /* CalendarViewModelTests.swift in Sources */,
 				348E702D25C6161900B3B160 /* EventViewModelFadeTests.swift in Sources */,
 				34D19FC62622A02C00B2732C /* EventDetailsViewModelTests.swift in Sources */,
+				34E9BC862ECE442B00E0A359 /* KVCTests.swift in Sources */,
 				348CF5032D1398FA00B9BFE0 /* DateSearchParserTests.swift in Sources */,
 				34E733E32EB274D100BFEDC7 /* MapBlackListViewModelTests.swift in Sources */,
 				34ABB9F029A166220021F3CF /* ContextMenuFactoryTests.swift in Sources */,

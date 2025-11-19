@@ -5,7 +5,7 @@
 //  Created by Paker on 18/02/2021.
 //
 
-const char* BUILD_DATE;
-const char* BUILD_TIME;
+#import <Foundation/Foundation.h>
 
+#import "BuildConfig.h"
 #import "ExceptionCatcher.h"

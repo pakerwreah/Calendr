@@ -459,9 +459,12 @@ private extension EKCalendar {
         }
     }
 
-    // this is only populated from events
     var accountEmail: String? {
-        try? safeValue(forKey: "selfIdentityEmail")
+        // do not proceed for reminders, it will cause a memory leak
+        guard allowedEntityTypes == .event else {
+            return nil
+        }
+        return try? safeValue(forKey: "selfIdentityEmail")
     }
 }
 
