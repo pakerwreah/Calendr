@@ -447,8 +447,16 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
     }
 
     func mapView(_ mapView: MKMapView, viewFor annotation: any MKAnnotation) -> MKAnnotationView? {
-        let pin = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: nil)
-        pin.animatesWhenAdded = true
+
+        var symbolConfig = NSImage.SymbolConfiguration(scale: .large).applying(.preferringMulticolor())
+
+        if #available(macOS 26.0, *) {
+            symbolConfig = symbolConfig.applying(.init(colorRenderingMode: .gradient))
+        }
+
+        let pin = MKAnnotationView(annotation: annotation, reuseIdentifier: nil)
+        pin.image = NSImage(systemName: "mappin.circle.fill").withSymbolConfiguration(symbolConfig)
+        pin.frame.size = .init(width: 30, height: 30)
         return pin
     }
 

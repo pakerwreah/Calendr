@@ -5,10 +5,11 @@
 //  Created by Paker on 06/04/2025.
 //
 
-
-// ExceptionCatcher.h
 #import <Foundation/Foundation.h>
 
 @interface ExceptionCatcher : NSObject
-+ (void)tryBlock:(void (^)(void))tryBlock catchBlock:(void (^)(NSException *exception))catchBlock;
+
++ (void)tryBlock:(void (^_Nonnull)(void))tryBlock
+      catchBlock:(void (^_Nonnull)(NSException * _Nullable exception))catchBlock;
+
 @end

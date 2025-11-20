@@ -1,14 +1,14 @@
 //
-//  KVCError.swift
+//  NSObject+KVC.swift
 //  Calendr
 //
-//  Created by Paker on 06/04/2025.
+//  Created by Paker on 19/11/2025.
 //
 
 import Foundation
 
 enum KVCError: LocalizedError {
-    case unknownKey(key: String, type: String)
+    case unknownKey(key: String, in: String)
     case typeMismatch(key: String, source: String, target: String)
 
     var errorDescription: String? {
@@ -25,22 +25,27 @@ extension NSObject {
 
     func safeValue<T>(forKey key: String) throws -> T {
         var result: Any?
-        var caughtException: NSException?
+        var exception: NSException?
 
-        ExceptionCatcher.try({
+        ExceptionCatcher.try {
             result = self.value(forKey: key)
-        }) { exception in
-            caughtException = exception
+        } catch: { ex in
+            exception = ex
         }
 
-        if caughtException != nil {
-            throw KVCError.unknownKey(key: key, type: "\(className)")
+        guard exception == nil else {
+            throw KVCError.unknownKey(key: key, in: typeName(self))
         }
 
         guard let result = result as? T else {
-            throw KVCError.typeMismatch(key: key, source: "\(object_getClass(result)?.description() ?? "Unknown") ", target: "\(T.self)")
+            throw KVCError.typeMismatch(key: key, source: typeName(result), target: "\(T.self)")
         }
 
         return result
     }
+}
+
+private func typeName(_ object: Any?) -> String {
+    guard let object else { return "Unknown" }
+    return String(describing: type(of: object))
 }
