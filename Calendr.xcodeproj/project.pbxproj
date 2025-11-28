@@ -45,7 +45,6 @@
 		342AEE3C2DFF25E3008CBBE0 /* CalendarAppProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342AEE3B2DFF25D8008CBBE0 /* CalendarAppProviderTests.swift */; };
 		342AEE3E2DFF307B008CBBE0 /* MockScriptRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342AEE3D2DFF3071008CBBE0 /* MockScriptRunner.swift */; };
 		342AEE412DFF35F2008CBBE0 /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = 342AEE402DFF35F2008CBBE0 /* Collections */; };
-		342AEE432DFF562C008CBBE0 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342AEE422DFF562C008CBBE0 /* Task.swift */; };
 		34305BCB25992A4E00AB381D /* Rx+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34305BCA25992A4E00AB381D /* Rx+Helpers.swift */; };
 		3430675E25F6BC15000D4003 /* HistoricalSchedulerTimeConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3430675D25F6BC15000D4003 /* HistoricalSchedulerTimeConverter.swift */; };
 		3430676325F6C130000D4003 /* TrackedHistoricalScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3430676225F6C130000D4003 /* TrackedHistoricalScheduler.swift */; };
@@ -202,6 +201,8 @@
 		34D5A7A72EAB12DF00A41E28 /* AppEnvironment.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D5A7A62EAB12DF00A41E28 /* AppEnvironment.generated.swift */; };
 		34D88DC82C4C66F80047D636 /* KeyboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D88DC72C4C66F80047D636 /* KeyboardViewController.swift */; };
 		34D88DCA2C4C687B0047D636 /* SettingsUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D88DC92C4C687B0047D636 /* SettingsUI.swift */; };
+		34DA13C52EDA20480031F8FF /* Clocks in Frameworks */ = {isa = PBXBuildFile; productRef = 34DA13C42EDA20480031F8FF /* Clocks */; };
+		34DA13C92EDA31060031F8FF /* ClockProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34DA13C82EDA31040031F8FF /* ClockProvider.swift */; };
 		34E004A725B61D5200241419 /* StatusItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E004A625B61D5200241419 /* StatusItemViewModel.swift */; };
 		34E0C4522DA2C5A100B33B27 /* Attachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E0C4512DA2C5A100B33B27 /* Attachment.swift */; };
 		34E1902325B76CFE00E9491B /* CalendarPickerViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E1902225B76CFE00E9491B /* CalendarPickerViewModelTests.swift */; };
@@ -290,7 +291,6 @@
 		342AEE392DFF0968008CBBE0 /* MockCalendarAppProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCalendarAppProvider.swift; sourceTree = "<group>"; };
 		342AEE3B2DFF25D8008CBBE0 /* CalendarAppProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarAppProviderTests.swift; sourceTree = "<group>"; };
 		342AEE3D2DFF3071008CBBE0 /* MockScriptRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockScriptRunner.swift; sourceTree = "<group>"; };
-		342AEE422DFF562C008CBBE0 /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
 		34305BCA25992A4E00AB381D /* Rx+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Rx+Helpers.swift"; sourceTree = "<group>"; };
 		3430675D25F6BC15000D4003 /* HistoricalSchedulerTimeConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoricalSchedulerTimeConverter.swift; sourceTree = "<group>"; };
 		3430676225F6C130000D4003 /* TrackedHistoricalScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackedHistoricalScheduler.swift; sourceTree = "<group>"; };
@@ -463,6 +463,7 @@
 		34D88DC62C4C3D1A0047D636 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34D88DC72C4C66F80047D636 /* KeyboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardViewController.swift; sourceTree = "<group>"; };
 		34D88DC92C4C687B0047D636 /* SettingsUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsUI.swift; sourceTree = "<group>"; };
+		34DA13C82EDA31040031F8FF /* ClockProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClockProvider.swift; sourceTree = "<group>"; };
 		34E004A625B61D5200241419 /* StatusItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemViewModel.swift; sourceTree = "<group>"; };
 		34E0C4512DA2C5A100B33B27 /* Attachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Attachment.swift; sourceTree = "<group>"; };
 		34E1902225B76CFE00E9491B /* CalendarPickerViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPickerViewModelTests.swift; sourceTree = "<group>"; };
@@ -519,6 +520,7 @@
 				3418208426755CC80075B3DC /* RxCocoa in Frameworks */,
 				3418207E26755CC80075B3DC /* RxSwift in Frameworks */,
 				34E259832B659B5600074D3A /* KeyboardShortcuts in Frameworks */,
+				34DA13C52EDA20480031F8FF /* Clocks in Frameworks */,
 				3477E70C2C67A6A9008D3844 /* Sentry in Frameworks */,
 				34E8556D2C711D1A00757B58 /* ZIPFoundation in Frameworks */,
 			);
@@ -813,7 +815,6 @@
 				34305BCA25992A4E00AB381D /* Rx+Helpers.swift */,
 				34D55FE225F06669007F5C81 /* Sequence.swift */,
 				34651F5925E2F08500518C5A /* String.swift */,
-				342AEE422DFF562C008CBBE0 /* Task.swift */,
 				348393032C885CC00052C70A /* URL.swift */,
 			);
 			path = Extensions;
@@ -837,6 +838,7 @@
 		347E6D4125AA28FA009A6716 /* Providers */ = {
 			isa = PBXGroup;
 			children = (
+				34DA13C82EDA31040031F8FF /* ClockProvider.swift */,
 				347E81702DFE09E2002A1DCB /* CalendarAppProvider.swift */,
 				34702149259DFF3000827AE7 /* CalendarServiceProvider.swift */,
 				34FD09D825AE269600AAAAE2 /* DateProvider.swift */,
@@ -1055,6 +1057,7 @@
 				3477E70B2C67A6A9008D3844 /* Sentry */,
 				34E8556C2C711D1A00757B58 /* ZIPFoundation */,
 				342AEE402DFF35F2008CBBE0 /* Collections */,
+				34DA13C42EDA20480031F8FF /* Clocks */,
 			);
 			productName = Calendr;
 			productReference = 347D0F9425952F89002451EC /* Calendr.app */;
@@ -1139,6 +1142,7 @@
 				3477E70A2C67A6A9008D3844 /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
 				34E8556B2C711D1A00757B58 /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
 				342AEE3F2DFF35F2008CBBE0 /* XCRemoteSwiftPackageReference "swift-collections" */,
+				34DA13C32EDA20480031F8FF /* XCRemoteSwiftPackageReference "swift-clocks" */,
 			);
 			productRefGroup = 347D0F9525952F89002451EC /* Products */;
 			projectDirPath = "";
@@ -1350,7 +1354,6 @@
 				342AEE302DFF0686008CBBE0 /* PopoverMaterial.swift in Sources */,
 				34D25E4A292F9E2100557E70 /* ImageButton.swift in Sources */,
 				347E81712DFE09E4002A1DCB /* CalendarAppProvider.swift in Sources */,
-				342AEE432DFF562C008CBBE0 /* Task.swift in Sources */,
 				3443D9702EB0E13600476D4B /* MapBlackListViewController.swift in Sources */,
 				344A59DB29AEBBBF004F0452 /* EventUtils.swift in Sources */,
 				34AC60C626925FA5005312B6 /* PreviewExtensions.swift in Sources */,
@@ -1378,6 +1381,7 @@
 				3421DA202693F12400056837 /* EventModel+Factory.swift in Sources */,
 				34427692269B5760004CFE1C /* MockMainViewController.swift in Sources */,
 				34E60D6326A0EA32004DA082 /* NSAccessibilityProtocol.swift in Sources */,
+				34DA13C92EDA31060031F8FF /* ClockProvider.swift in Sources */,
 				34F7E03A28427AC00028FF25 /* EventDetailsPreview.swift in Sources */,
 				34F4C47D2A6C56AA00397C80 /* MockScreenProvider.swift in Sources */,
 				346CB088295E209600E018EF /* AutoLauncher.swift in Sources */,
@@ -1881,6 +1885,14 @@
 				minimumVersion = 8.52.1;
 			};
 		};
+		34DA13C32EDA20480031F8FF /* XCRemoteSwiftPackageReference "swift-clocks" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-clocks";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.6;
+			};
+		};
 		34E259812B659B5600074D3A /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sindresorhus/KeyboardShortcuts";
@@ -1924,6 +1936,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3477E70A2C67A6A9008D3844 /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
 			productName = Sentry;
+		};
+		34DA13C42EDA20480031F8FF /* Clocks */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 34DA13C32EDA20480031F8FF /* XCRemoteSwiftPackageReference "swift-clocks" */;
+			productName = Clocks;
 		};
 		34E259822B659B5600074D3A /* KeyboardShortcuts */ = {
 			isa = XCSwiftPackageProductDependency;
