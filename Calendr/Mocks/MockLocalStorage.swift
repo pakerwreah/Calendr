@@ -9,7 +9,7 @@ import Foundation
 
 #if DEBUG
 
-class InMemoryStorage: LocalStorage {
+class InMemoryStorage: NSObject, LocalStorage {
     private var storage: [String: Any] = [:]
     private var registeredDefaults: [String: Any] = [:]
 
@@ -23,12 +23,20 @@ class InMemoryStorage: LocalStorage {
         }
     }
 
+    override func value(forKey name: String) -> Any? {
+        object(forKey: name)
+    }
+
     func set(_ value: Any?, forKey name: String) {
+        willChangeValue(forKey: name)
         storage[name] = value
+        didChangeValue(forKey: name)
     }
 
     func removeObject(forKey name: String) {
+        willChangeValue(forKey: name)
         storage.removeValue(forKey: name)
+        didChangeValue(forKey: name)
     }
 
     func object(forKey name: String) -> Any? {

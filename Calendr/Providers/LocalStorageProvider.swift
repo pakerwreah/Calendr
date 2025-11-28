@@ -6,8 +6,9 @@
 //
 
 import RxSwift
+import RxCocoa
 
-protocol LocalStorage {
+protocol LocalStorage: NSObject {
 
     func register(defaults: [String : Any])
 
@@ -38,7 +39,7 @@ protocol LocalStorage {
 /// If we add this constraint directly to the protocol, we have to deal with "existential types" which are absolute nightmares
 class LocalStorageProvider: NSObject, LocalStorage {
 
-    private let storage: LocalStorage
+    fileprivate let storage: LocalStorage
 
     init(storage: LocalStorage) {
         self.storage = storage
@@ -128,5 +129,13 @@ extension LocalStorageProvider {
     func withDefaults() -> Self {
         registerDefaultPrefs(in: self)
         return self
+    }
+}
+
+extension Reactive where Base: LocalStorageProvider {
+
+    func observe<Element: KVORepresentable>(_ type: Element.Type, _ keyPath: String, options: KeyValueObservingOptions = [.new, .initial]) -> Observable<Element?> {
+
+        (base.storage as NSObject).rx.observe(type, keyPath, options: options)
     }
 }
