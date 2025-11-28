@@ -177,16 +177,10 @@ class NextEventViewModel {
                             }
 
                         return upcoming
-                            .first(where: { event in
-                                // always show for the first X minutes
-                                Int(event.start.distance(to: dateProvider.now)) <= 60 * 10
-                                ||
-                                // check if there's another upcoming event that should override the current one
-                                !upcoming.contains(where: { next in
-                                    guard next.id != event.id else { return false }
-                                    return Int(dateProvider.now.distance(to: next.start)) <= 60 * 30
-                                })
-                            })
+                            .sorted {
+                                abs($0.start.distance(to: dateProvider.now))
+                            }
+                            .first
                             .map { event -> NextEvent in
                                 let isInProgress = dateProvider.calendar.isDate(
                                     dateProvider.now, greaterThanOrEqualTo: event.start, granularity: .second
