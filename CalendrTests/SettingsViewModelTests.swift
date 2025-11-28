@@ -311,18 +311,34 @@ class SettingsViewModelTests: XCTestCase {
         localStorage.eventStatusItemCheckRange = 12
 
         var eventStatusItemCheckRange: Int?
+        var eventStatusItemCheckRangeLabel: String?
 
         viewModel.eventStatusItemCheckRange
             .bind { eventStatusItemCheckRange = $0 }
             .disposed(by: disposeBag)
 
+        viewModel.eventStatusItemCheckRangeLabel
+            .bind { eventStatusItemCheckRangeLabel = $0 }
+            .disposed(by: disposeBag)
+
         XCTAssertEqual(eventStatusItemCheckRange, 12)
+        XCTAssertEqual(eventStatusItemCheckRangeLabel, "in 12h")
         XCTAssertEqual(localStorageEventStatusItemCheckRange, 12)
 
         viewModel.eventStatusItemCheckRangeObserver.onNext(18)
 
         XCTAssertEqual(eventStatusItemCheckRange, 18)
+        XCTAssertEqual(eventStatusItemCheckRangeLabel, "in 18h")
         XCTAssertEqual(localStorageEventStatusItemCheckRange, 18)
+    }
+
+    func testEventStatusItemCheckRangeZero_shouldDisplay30min() {
+
+        viewModel.eventStatusItemCheckRangeObserver.onNext(0)
+
+        XCTAssertEqual(viewModel.eventStatusItemCheckRange.lastValue(), 0)
+        XCTAssertEqual(viewModel.eventStatusItemCheckRangeLabel.lastValue(), "in 30m")
+        XCTAssertEqual(localStorageEventStatusItemCheckRange, 0)
     }
 
     func testToggleEventStatusItemDetectNotch() {

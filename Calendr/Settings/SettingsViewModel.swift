@@ -361,13 +361,15 @@ class SettingsViewModel:
 
         eventStatusItemCheckRangeLabel = eventStatusItemCheckRange
             .repeat(when: calendarChangeObservable)
-            .map { range in
+            .map { hours in
                 let dateFormatter = DateComponentsFormatter()
                 dateFormatter.calendar = dateProvider.calendar
                 dateFormatter.unitsStyle = .abbreviated
 
                 return Strings.Formatter.Date.Relative.in(
-                    dateFormatter.string(from: DateComponents(hour: range))!
+                    dateFormatter.string(
+                        from: hours > 0 ? DateComponents(hour: hours) : DateComponents(minute: 30)
+                    )!
                 )
             }
             .share(replay: 1)
