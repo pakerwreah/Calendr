@@ -173,7 +173,7 @@ class NextEventViewModel {
                                 )
                                 &&
                                 // event is in the configured range to check
-                                Int(dateProvider.now.distance(to: event.start)) <= 3600 * hoursToCheck
+                                dateProvider.now.distance(to: event.start) <= 3600 * max(0.5, Double(hoursToCheck))
                             }
 
                         return upcoming

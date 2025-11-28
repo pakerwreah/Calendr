@@ -162,6 +162,38 @@ class NextEventViewModelTests: XCTestCase {
         XCTAssertEqual(hasEvent, false)
     }
 
+    func testNextEvent_checkRangeZero_shouldCheck30min() {
+
+        let viewModel = makeViewModel(type: .event)
+
+        var hasEvent: Bool?
+
+        viewModel.hasEvent
+            .bind { hasEvent = $0 }
+            .disposed(by: disposeBag)
+
+        dateProvider.now = .make(year: 2021, month: 1, day: 1, at: .end)
+
+        let hoursToCheck = 0
+        var start = now + 30 * 60
+
+        settings.eventStatusItemCheckRangeObserver.onNext(hoursToCheck)
+
+        calendarService.changeEvents([
+            .make(start: start, end: start + 1)
+        ])
+
+        XCTAssertEqual(hasEvent, true)
+
+        start += 1
+
+        calendarService.changeEvents([
+            .make(start: start, end: start + 1)
+        ])
+
+        XCTAssertEqual(hasEvent, false)
+    }
+
     func testNextEventLength() {
 
         let viewModel = makeViewModel(type: .event)

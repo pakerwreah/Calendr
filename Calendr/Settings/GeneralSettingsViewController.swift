@@ -160,7 +160,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
 
         // Next event range
 
-        nextEventRangeStepper.minValue = 1
+        nextEventRangeStepper.minValue = 0
         nextEventRangeStepper.maxValue = 24 * 60
         nextEventRangeStepper.valueWraps = false
         nextEventRangeStepper.refusesFirstResponder = true
