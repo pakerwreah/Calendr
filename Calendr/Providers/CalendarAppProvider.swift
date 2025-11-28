@@ -34,15 +34,18 @@ class CalendarAppProvider: CalendarAppProviding {
 
     let dateProvider: DateProviding
     let appleScriptRunner: ScriptRunner
+    let clock: ClockProviding
 
     private lazy var calendarScript = CalendarScript(
         appleScriptRunner: appleScriptRunner,
-        dateProvider: dateProvider
+        dateProvider: dateProvider,
+        clock: clock
     )
 
-    init(dateProvider: DateProviding, appleScriptRunner: ScriptRunner) {
+    init(dateProvider: DateProviding, appleScriptRunner: ScriptRunner, clock: ClockProviding) {
         self.dateProvider = dateProvider
         self.appleScriptRunner = appleScriptRunner
+        self.clock = clock
     }
 
     func open(_ app: CalendarApp, at date: Date, mode: CalendarViewMode, using workspace: WorkspaceServiceProviding) async {
@@ -95,7 +98,7 @@ class CalendarAppProvider: CalendarAppProviding {
         // We have to try a few times to "guarantee" we end up in the right place.
         for i in 0...retries {
             if i > 0 {
-                await Task.sleep(seconds: 1)
+                try? await clock.sleep(for: .seconds(1))
             }
             if let url = CalendarApp.notion.deeplink(path: "\(path)?t=\(Date.now.timeIntervalSince1970)") {
                 workspace.open(url)
@@ -118,7 +121,7 @@ class CalendarAppProvider: CalendarAppProviding {
 
         // if the distance from the current date is too big, it will certainly try to load, so we wait a bit
         if abs(dateProvider.now.distance(to: event.start)) > 7889400 /* 3 months */ {
-            await Task.sleep(seconds: 1)
+            try? await clock.sleep(for: .seconds(1))
         }
 
         if let url = notionAppEventURL(for: event) {

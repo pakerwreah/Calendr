@@ -29,6 +29,8 @@ protocol ScriptRunner {
 class AppleScriptRunner: ScriptRunner {
 
     func run(_ source: String) async throws {
+        assert(!source.contains("delay "), "Don't use 'delay', it causes memory leak.")
+
         var errorInfo: NSDictionary?
         guard let script = NSAppleScript(source: source) else {
             throw ScriptError.source

@@ -11,10 +11,12 @@ class CalendarScript {
 
     private let appleScriptRunner: ScriptRunner
     private let dateProvider: DateProviding
+    private let clock: ClockProviding
 
-    init(appleScriptRunner: ScriptRunner, dateProvider: DateProviding) {
+    init(appleScriptRunner: ScriptRunner, dateProvider: DateProviding, clock: ClockProviding) {
         self.appleScriptRunner = appleScriptRunner
         self.dateProvider = dateProvider
+        self.clock = clock
     }
 
     func openCalendar(at date: Date, mode: CalendarViewMode) async -> Bool {
@@ -23,13 +25,20 @@ class CalendarScript {
             let c = dateProvider.calendar.dateComponents([.day, .month, .year], from: date)
 
             try await appleScriptRunner.run("""
+                    tell application "Calendar"
+                    switch view to \(mode) view
+                    end tell
+                """)
+
+            // `delay` inside the script causes memory leak, so we have to do it here.
+            try? await clock.sleep(for: .seconds(0.3))
+
+            try await appleScriptRunner.run("""
                     set theDate to current date
                     set day of theDate to \(c.day!)
                     set month of theDate to \(c.month!)
                     set year of theDate to \(c.year!)
                     tell application "Calendar"
-                    switch view to \(mode) view
-                    delay 0.3
                     view calendar at theDate
                     activate
                     end tell

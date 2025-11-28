@@ -7,6 +7,7 @@
 
 import XCTest
 import RxSwift
+import Clocks
 @testable import Calendr
 
 class CalendarAppProviderTests: XCTestCase {
@@ -14,7 +15,14 @@ class CalendarAppProviderTests: XCTestCase {
     let dateProvider = MockDateProvider()
     let appleScriptRunner = MockScriptRunner()
 
-    lazy var calendarAppProvider = CalendarAppProvider(dateProvider: dateProvider, appleScriptRunner: appleScriptRunner)
+    func makeCalendarAppProvider(clock: ClockProviding) -> CalendarAppProviding {
+        CalendarAppProvider(
+            dateProvider: dateProvider,
+            appleScriptRunner: appleScriptRunner,
+            clock: clock
+        )
+    }
+    lazy var calendarAppProvider = makeCalendarAppProvider(clock: .immediate)
     lazy var workspace = MockWorkspaceServiceProvider(dateProvider: dateProvider)
 
     override func setUp() {
@@ -24,7 +32,7 @@ class CalendarAppProviderTests: XCTestCase {
 
     // MARK: - Apple Calendar
 
-    func testOpenEvent_inCalendarApp() {
+    func testOpenEvent_inCalendarApp() async {
         let openExpectation = expectation(description: "Open")
 
         workspace.didOpenURL = { url in
@@ -32,12 +40,12 @@ class CalendarAppProviderTests: XCTestCase {
             openExpectation.fulfill()
         }
 
-        calendarAppProvider.open(.make(id: "12345"), preferring: .calendar, using: workspace)
+        await calendarAppProvider.open(.make(id: "12345"), preferring: .calendar, using: workspace)
 
-        waitForExpectations(timeout: 1)
+        await fulfillment(of: [openExpectation], timeout: 1)
     }
 
-    func testOpenEvent_withRecurrenceRules_inCalendarApp() {
+    func testOpenEvent_withRecurrenceRules_inCalendarApp() async {
         let openExpectation = expectation(description: "Open")
         let timeZone = TimeZone(abbreviation: "UTC+3")!
 
@@ -48,7 +56,7 @@ class CalendarAppProviderTests: XCTestCase {
             openExpectation.fulfill()
         }
 
-        calendarAppProvider.open(
+        await calendarAppProvider.open(
             .make(
                 id: "12345",
                 start: .make(year: 2021, month: 1, day: 1),
@@ -58,10 +66,10 @@ class CalendarAppProviderTests: XCTestCase {
             using: workspace
         )
 
-        waitForExpectations(timeout: 1)
+        await fulfillment(of: [openExpectation], timeout: 1)
     }
 
-    func testOpenAllDayEvent_withRecurrenceRules_inCalendarApp_shouldUseTimeZone() {
+    func testOpenAllDayEvent_withRecurrenceRules_inCalendarApp_shouldUseTimeZone() async {
         let openExpectation = expectation(description: "Open")
         let timeZone = TimeZone(abbreviation: "UTC+3")!
 
@@ -72,7 +80,7 @@ class CalendarAppProviderTests: XCTestCase {
             openExpectation.fulfill()
         }
 
-        calendarAppProvider.open(
+        await calendarAppProvider.open(
             .make(
                 id: "12345",
                 start: .make(year: 2021, month: 1, day: 1),
@@ -83,10 +91,10 @@ class CalendarAppProviderTests: XCTestCase {
             using: workspace
         )
 
-        waitForExpectations(timeout: 1)
+        await fulfillment(of: [openExpectation], timeout: 1)
     }
 
-    func testOpenReminder_inCalendarApp() {
+    func testOpenReminder_inCalendarApp() async {
         let openExpectation = expectation(description: "Open")
 
         workspace.didOpenURL = { url in
@@ -94,7 +102,7 @@ class CalendarAppProviderTests: XCTestCase {
             openExpectation.fulfill()
         }
 
-        calendarAppProvider.open(
+        await calendarAppProvider.open(
             .make(
                 id: "12345",
                 start: .make(year: 2021, month: 1, day: 1),
@@ -104,21 +112,24 @@ class CalendarAppProviderTests: XCTestCase {
             using: workspace
         )
 
-        waitForExpectations(timeout: 1)
+        await fulfillment(of: [openExpectation], timeout: 1)
     }
 
     // MARK: - Notion Calendar
 
-    func testOpenEvent_inNotionApp() {
+    func testOpenEvent_inNotionApp() async {
         let openDateExpectation = expectation(description: "Open Date")
         let openEventExpectation = expectation(description: "Open Event")
+
+        let clock = TestClock()
+        let calendarAppProvider = makeCalendarAppProvider(clock: clock)
 
         workspace.didOpenURL = { url in
             XCTAssertEqual(url.absoluteString.components(separatedBy: "?t=").first, "cron://./2025/1/1")
             openDateExpectation.fulfill()
         }
 
-        calendarAppProvider.open(
+        async let _ = calendarAppProvider.open(
             .make(
                 id: "nope!",
                 externalId: "12345",
@@ -130,7 +141,7 @@ class CalendarAppProviderTests: XCTestCase {
             using: workspace
         )
 
-        wait(for: [openDateExpectation])
+        await fulfillment(of: [openDateExpectation], timeout: 1)
 
         workspace.didOpenURL = { url in
             XCTAssertEqual(
@@ -142,45 +153,90 @@ class CalendarAppProviderTests: XCTestCase {
             openEventExpectation.fulfill()
         }
 
-        wait(for: [openEventExpectation])
+        await clock.advance(by: .seconds(1))
+
+        await fulfillment(of: [openEventExpectation], timeout: 1)
     }
 
-    func testOpenDay_inCalendarApp() {
+    func testOpenDay_inCalendarApp() async {
         let openExpectation = expectation(description: "Open")
+        let dateExpectation = expectation(description: "Date")
+
+        let clock = TestClock()
+        let calendarAppProvider = makeCalendarAppProvider(clock: clock)
 
         appleScriptRunner.didRunScript = { source in
-            XCTAssert(source.contains("tell application \"Calendar\""))
-            XCTAssert(source.contains("set day of theDate to 1"), source)
-            XCTAssert(source.contains("set month of theDate to 1"), source)
-            XCTAssert(source.contains("set year of theDate to 2025"), source)
-            XCTAssert(source.contains("day view"))
+            XCTAssertEqual(source, """
+                tell application "Calendar"
+                switch view to day view
+                end tell
+            """)
             openExpectation.fulfill()
         }
 
-        calendarAppProvider.open(.calendar, at: .make(year: 2025, month: 1, day: 1), mode: .day, using: workspace)
+        async let _ = calendarAppProvider.open(.calendar, at: .make(year: 2025, month: 1, day: 1), mode: .day, using: workspace)
 
-        waitForExpectations(timeout: 1)
-    }
-
-    func testOpenWeek_inCalendarApp() {
-        let openExpectation = expectation(description: "Open")
+        await fulfillment(of: [openExpectation], timeout: 1)
 
         appleScriptRunner.didRunScript = { source in
-            // opens at the start of the week
-            XCTAssert(source.contains("tell application \"Calendar\""))
-            XCTAssert(source.contains("set day of theDate to 29"), source)
-            XCTAssert(source.contains("set month of theDate to 12"), source)
-            XCTAssert(source.contains("set year of theDate to 2024"), source)
-            XCTAssert(source.contains("week view"))
+            XCTAssertEqual(source, """
+                set theDate to current date
+                set day of theDate to 1
+                set month of theDate to 1
+                set year of theDate to 2025
+                tell application "Calendar"
+                view calendar at theDate
+                activate
+                end tell
+            """)
+            dateExpectation.fulfill()
+        }
+
+        await clock.advance(by: .seconds(0.3))
+
+        await fulfillment(of: [dateExpectation], timeout: 1)
+    }
+
+    func testOpenWeek_inCalendarApp() async {
+        let openExpectation = expectation(description: "Open")
+        let dateExpectation = expectation(description: "Date")
+
+        let clock = TestClock()
+        let calendarAppProvider = makeCalendarAppProvider(clock: clock)
+
+        appleScriptRunner.didRunScript = { source in
+            XCTAssertEqual(source, """
+                tell application "Calendar"
+                switch view to week view
+                end tell
+            """)
             openExpectation.fulfill()
         }
 
-        calendarAppProvider.open(.calendar, at: .make(year: 2025, month: 1, day: 1), mode: .week, using: workspace)
+        async let _ = calendarAppProvider.open(.calendar, at: .make(year: 2025, month: 1, day: 1), mode: .week, using: workspace)
 
-        waitForExpectations(timeout: 1)
+        await fulfillment(of: [openExpectation], timeout: 1)
+
+        appleScriptRunner.didRunScript = { source in
+            XCTAssertEqual(source, """
+                set theDate to current date
+                set day of theDate to 29
+                set month of theDate to 12
+                set year of theDate to 2024
+                tell application "Calendar"
+                view calendar at theDate
+                activate
+                end tell
+            """)
+            dateExpectation.fulfill()
+        }
+
+        await clock.advance(by: .seconds(0.3))
+
+        await fulfillment(of: [dateExpectation], timeout: 1)
     }
 
-    func testOpenDate_inNotionApp() {
+    func testOpenDate_inNotionApp() async {
         let openExpectation = expectation(description: "Open")
         openExpectation.assertForOverFulfill = false
 
@@ -189,12 +245,12 @@ class CalendarAppProviderTests: XCTestCase {
             openExpectation.fulfill()
         }
 
-        calendarAppProvider.open(.notion, at: .make(year: 2025, month: 1, day: 1), mode: .day, using: workspace)
+        async let _ = calendarAppProvider.open(.notion, at: .make(year: 2025, month: 1, day: 1), mode: .day, using: workspace)
 
-        waitForExpectations(timeout: 1)
+        await fulfillment(of: [openExpectation], timeout: 1)
     }
 
-    func testOpenReminder_inNotionApp_shouldFallbackToCalendarApp() {
+    func testOpenReminder_inNotionApp_shouldFallbackToCalendarApp() async  {
         let openExpectation = expectation(description: "Open")
 
         workspace.didOpenURL = { url in
@@ -202,7 +258,7 @@ class CalendarAppProviderTests: XCTestCase {
             openExpectation.fulfill()
         }
 
-        calendarAppProvider.open(
+        async let _ = calendarAppProvider.open(
             .make(
                 id: "12345",
                 start: .make(year: 2021, month: 1, day: 1),
@@ -212,6 +268,6 @@ class CalendarAppProviderTests: XCTestCase {
             using: workspace
         )
 
-        waitForExpectations(timeout: 1)
+        await fulfillment(of: [openExpectation], timeout: 1)
     }
 }
