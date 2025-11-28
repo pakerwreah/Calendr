@@ -25,8 +25,8 @@ extension Sequence {
         flatMap { $0 }
     }
 
-    func sorted<T: Comparable>(by keyPath: KeyPath<Element, T>) -> [Element] {
-        sorted { $0[keyPath: keyPath] < $1[keyPath: keyPath] }
+    func sorted<T: Comparable>(by getter: (Element) -> T) -> [Element] {
+        sorted { getter($0) < getter($1) }
     }
 }
 
