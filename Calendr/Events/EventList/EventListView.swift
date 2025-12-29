@@ -92,7 +92,7 @@ class EventListView: NSView {
         line.wantsLayer = true
 
         line.rx.updateLayer
-            .map { NSColor.tertiaryLabelColor.effectiveCGColor }
+            .map { NSColor.secondaryLabelColor.effectiveCGColor }
             .bind(to: line.layer!.rx.backgroundColor)
             .disposed(by: disposeBag)
 
@@ -108,9 +108,11 @@ class EventListView: NSView {
             line2.width(equalTo: line1)
         }
 
-        let label = Label(text: text, font: .systemFont(ofSize: 10), color: .secondaryLabelColor)
+        let label = Label(text: text, font: .systemFont(ofSize: 11), color: .headerTextColor)
 
-        return NSStackView(views: [.dummy, line1, label, line2, .dummy]).with(alignment: .centerY)
+        let stack = NSStackView(views: [.dummy, line1, label, line2, .dummy]).with(alignment: .centerY)
+
+        return NSStackView(views: [.dummy, stack]).with(orientation: .vertical)
     }
 
     required init?(coder: NSCoder) {

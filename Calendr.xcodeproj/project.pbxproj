@@ -1092,7 +1092,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1250;
-				LastUpgradeCheck = 2610;
+				LastUpgradeCheck = 2620;
 				TargetAttributes = {
 					34427696269B5CA4004CFE1C = {
 						CreatedOnToolsVersion = 12.5.1;
@@ -1733,7 +1733,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.19.6;
+				MARKETING_VERSION = 1.20.0;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Config/Calendr-Bridging-Header.h";
@@ -1765,7 +1765,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.19.6;
+				MARKETING_VERSION = 1.20.0;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/Config/Calendr-Bridging-Header.h";

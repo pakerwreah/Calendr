@@ -74,6 +74,7 @@
 "settings.events.show_finished_events" = "Εμφάνιση τελειωμένων συμβάντων";
 "settings.events.show_recurrence_indicator" = "Εμφάνιση δείκτη επανάληψης";
 "settings.events.force_local_time_zone" = "Εμφάνιση όλων των συμβάντων στην τοπική ζώνη ώρας";
+//"settings.events.show_future_events" = "Show future events";
 
 "settings.appearance.transparency" = "Διαφάνεια";
 "settings.appearance.accessibility" = "Προσβασιμότητα";

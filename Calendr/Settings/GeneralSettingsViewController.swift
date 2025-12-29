@@ -58,6 +58,9 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     private let showAllDayDetailsCheckbox = Checkbox(title: Strings.Settings.Events.showAllDayDetails)
     private let showRecurrenceCheckbox = Checkbox(title: Strings.Settings.Events.showRecurrenceIndicator)
     private let forceLocalTimeZoneCheckbox = Checkbox(title: Strings.Settings.Events.forceLocalTimeZone)
+    private let futureEventsLabel = Label(text: Strings.Settings.Events.showFutureEvents)
+    private let futureEventsStepperLabel = Label()
+    private let futureEventsStepper = NSStepper()
 
     init(viewModel: SettingsViewModel) {
 
@@ -258,13 +261,28 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     }()
 
     private lazy var eventsContent: NSView = {
+
+        // Future events range
+
+        futureEventsStepper.minValue = 0
+        futureEventsStepper.maxValue = 31
+        futureEventsStepper.valueWraps = false
+        futureEventsStepper.refusesFirstResponder = true
+        futureEventsStepper.focusRingType = .none
+
+        futureEventsStepperLabel.font = .systemFont(ofSize: 13)
+
+        // Future events stack view
+        let futureEventsStack = NSStackView(views: [futureEventsLabel, .spacer, futureEventsStepperLabel, futureEventsStepper])
+
         return NSStackView(views: [
             NSStackView(views: [showMapCheckbox, mapBlacklistButton]),
             showFinishedEventsCheckbox,
             showOverdueCheckbox,
             showAllDayDetailsCheckbox,
             showRecurrenceCheckbox,
-            forceLocalTimeZoneCheckbox
+            forceLocalTimeZoneCheckbox,
+            futureEventsStack
         ])
         .with(orientation: .vertical)
         .with(insets: .init(bottom: 4))
@@ -651,6 +669,8 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
 
     private func setUpEvents() {
 
+        setUpFutureEventsStepper()
+
         mapBlacklistButton.rx.tap.bind { [weak self] in
             guard let self else { return }
 
@@ -703,6 +723,26 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             observer: viewModel.toggleForceLocalTimeZone
         )
         .disposed(by: disposeBag)
+    }
+
+    private func setUpFutureEventsStepper() {
+
+        let rangeStepperProperty = futureEventsStepper.rx.controlProperty(
+            getter: \.integerValue,
+            setter: { $0.integerValue = $1 }
+        )
+
+        viewModel.futureEventsDays
+            .bind(to: rangeStepperProperty)
+            .disposed(by: disposeBag)
+
+        rangeStepperProperty
+            .bind(to: viewModel.futureEventsDaysObserver)
+            .disposed(by: disposeBag)
+
+        viewModel.futureEventsStepperLabel
+            .bind(to: futureEventsStepperLabel.rx.text)
+            .disposed(by: disposeBag)
     }
 
     required init?(coder: NSCoder) {

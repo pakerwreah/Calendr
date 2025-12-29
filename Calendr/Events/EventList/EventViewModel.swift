@@ -19,6 +19,7 @@ class EventViewModel {
     let isDeclined: Bool
     let isAllDay: Bool
     let start: Date
+    let end: Date
     let link: EventLink?
     let priority: String?
 
@@ -80,6 +81,7 @@ class EventViewModel {
         isDeclined = event.status ~= .declined
         isAllDay = event.isAllDay
         start = event.start
+        end = event.end
         barStyle = event.status ~= .maybe ? .bordered : .filled
         link = event.detectLink(using: workspace)
 

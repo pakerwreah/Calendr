@@ -578,16 +578,16 @@ class CalendarViewModelTests: XCTestCase {
             )
         )
 
-        var events: (Date, [EventModel])?
+        var events: [EventModel]?
 
         viewModel
             .focusedDateEventsObservable
-            .bind { events = $0 }
+            .bind { events = $0.events }
             .disposed(by: disposeBag)
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
 
-        XCTAssertEqual(events?.1.map(\.title), ["Overdue" ,"Event 1"])
+        XCTAssertEqual(events?.map(\.title), ["Overdue" ,"Event 1"])
     }
 
     func testEvents_withOverdueReminder_withSelectedDateNotToday() {
@@ -603,16 +603,16 @@ class CalendarViewModelTests: XCTestCase {
             )
         )
 
-        var events: (Date, [EventModel])?
+        var events: [EventModel]?
 
         viewModel
             .focusedDateEventsObservable
-            .bind { events = $0 }
+            .bind { events = $0.events }
             .disposed(by: disposeBag)
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
 
-        XCTAssertEqual(events?.1.map(\.title), ["Event 1"])
+        XCTAssertEqual(events?.map(\.title), ["Event 1"])
     }
 
     func testEventDotsPerDate_withSearch() {

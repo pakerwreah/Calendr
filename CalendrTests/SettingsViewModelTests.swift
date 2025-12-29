@@ -322,13 +322,13 @@ class SettingsViewModelTests: XCTestCase {
             .disposed(by: disposeBag)
 
         XCTAssertEqual(eventStatusItemCheckRange, 12)
-        XCTAssertEqual(eventStatusItemCheckRangeLabel, "in 12h")
+        XCTAssertEqual(eventStatusItemCheckRangeLabel, "in 12 hours")
         XCTAssertEqual(localStorageEventStatusItemCheckRange, 12)
 
         viewModel.eventStatusItemCheckRangeObserver.onNext(18)
 
         XCTAssertEqual(eventStatusItemCheckRange, 18)
-        XCTAssertEqual(eventStatusItemCheckRangeLabel, "in 18h")
+        XCTAssertEqual(eventStatusItemCheckRangeLabel, "in 18 hours")
         XCTAssertEqual(localStorageEventStatusItemCheckRange, 18)
     }
 
@@ -337,7 +337,7 @@ class SettingsViewModelTests: XCTestCase {
         viewModel.eventStatusItemCheckRangeObserver.onNext(0)
 
         XCTAssertEqual(viewModel.eventStatusItemCheckRange.lastValue(), 0)
-        XCTAssertEqual(viewModel.eventStatusItemCheckRangeLabel.lastValue(), "in 30m")
+        XCTAssertEqual(viewModel.eventStatusItemCheckRangeLabel.lastValue(), "in 30 minutes")
         XCTAssertEqual(localStorageEventStatusItemCheckRange, 0)
     }
 

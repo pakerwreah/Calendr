@@ -15,6 +15,13 @@ protocol DateProviding: AnyObject {
     var calendarUpdated: Observable<Calendar> { get }
 }
 
+extension DateProviding {
+    // use this instead of `calendar.isDateInToday`, which is unmockable
+    func isDateInToday(_ date: Date) -> Bool {
+        calendar.isDate(date, inSameDayAs: now)
+    }
+}
+
 class DateProvider: DateProviding {
     private(set) var calendar: Calendar = .current
     var now: Date { Date() }

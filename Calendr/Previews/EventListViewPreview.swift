@@ -24,39 +24,41 @@ struct EventListViewPreview: PreviewProvider {
     static var previews: some View {
         EventListView(
             viewModel: EventListViewModel(
-                eventsObservable: .just((now, [
-                    .make(
-                        title: "Deserved holidays 🌴",
-                        location: "Barcelona",
-                        isAllDay: true,
-                        calendar: .make(color: .systemGreen),
-                    ),
-                    .make(
-                        start: .make(hour: 15, minute: 30),
-                        end: .make(hour: 15, minute: 50),
-                        title: "Drink some tea 🫖",
-                        calendar: .make(color: .systemBlue)
-                    ),
-                    .make(
-                        start: .make(hour: 16, minute: 00),
-                        end: .make(hour: 17, minute: 00),
-                        title: "Update Calendr screenshot 📷",
-                        calendar: .make(color: .systemYellow)
-                    ),
-                    .make(
-                        start: .make(hour: 17, minute: 00),
-                        end: .make(hour: 18, minute: 00),
-                        title: "Some meeting 👔",
-                        location: "zoom.us/j/9999999999",
-                        calendar: .make(color: .systemRed)
-                    ),
-                    .make(
-                        start: .make(hour: 19, minute: 00),
-                        title: "Take the trash out",
-                        type: .reminder(completed: false),
-                        calendar: .make(color: .systemPurple)
-                    ),
-                ])),
+                eventsObservable: .just(
+                    DateEvents(date: now, events: [
+                        .make(
+                            title: "Deserved holidays 🌴",
+                            location: "Barcelona",
+                            isAllDay: true,
+                            calendar: .make(color: .systemGreen),
+                        ),
+                        .make(
+                            start: .make(hour: 15, minute: 30),
+                            end: .make(hour: 15, minute: 50),
+                            title: "Drink some tea 🫖",
+                            calendar: .make(color: .systemBlue)
+                        ),
+                        .make(
+                            start: .make(hour: 16, minute: 00),
+                            end: .make(hour: 17, minute: 00),
+                            title: "Update Calendr screenshot 📷",
+                            calendar: .make(color: .systemYellow)
+                        ),
+                        .make(
+                            start: .make(hour: 17, minute: 00),
+                            end: .make(hour: 18, minute: 00),
+                            title: "Some meeting 👔",
+                            location: "zoom.us/j/9999999999",
+                            calendar: .make(color: .systemRed)
+                        ),
+                        .make(
+                            start: .make(hour: 19, minute: 00),
+                            title: "Take the trash out",
+                            type: .reminder(completed: false),
+                            calendar: .make(color: .systemPurple)
+                        ),
+                    ])
+                ),
                 isShowingDetailsModal: .init(value: false),
                 dateProvider: dateProvider,
                 calendarService: calendarService,

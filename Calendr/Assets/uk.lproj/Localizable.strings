@@ -74,6 +74,7 @@
 "settings.events.show_finished_events" = "Показувати завершені події";
 "settings.events.show_recurrence_indicator" = "Показувати індикатор повторення";
 "settings.events.force_local_time_zone" = "Показувати всі події в місцевому часовому поясі";
+//"settings.events.show_future_events" = "Show future events";
 
 "settings.appearance.transparency" = "Прозорість";
 "settings.appearance.accessibility" = "Доступність";

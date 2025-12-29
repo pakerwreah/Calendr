@@ -24,6 +24,7 @@ class MockCalendarSettings: CalendarSettings {
     let eventDotsStyle: Observable<EventDotsStyle>
     let calendarAppViewMode: Observable<CalendarViewMode>
     let defaultCalendarApp: Observable<CalendarApp>
+    let futureEventsDays: Observable<Int>
 
     init(
         calendarScaling: Double = 1,
@@ -48,6 +49,7 @@ class MockCalendarSettings: CalendarSettings {
         self.eventDotsStyle = .just(eventDotsStyle)
         self.calendarAppViewMode = .just(.month)
         self.defaultCalendarApp = .just(.calendar)
+        self.futureEventsDays = .just(0)
     }
 }
 

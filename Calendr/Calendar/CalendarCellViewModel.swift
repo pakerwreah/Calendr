@@ -7,6 +7,11 @@
 
 import Cocoa
 
+struct DateEvents: Equatable {
+    let date: Date
+    let events: [EventModel]
+}
+
 struct CalendarCellViewModel: Equatable {
     let date: Date
     let inMonth: Bool
@@ -15,28 +20,7 @@ struct CalendarCellViewModel: Equatable {
     let isHovered: Bool
     let events: [EventModel]
     let dotsStyle: EventDotsStyle
-
-    private let calendar: Calendar
-
-    init(
-        date: Date,
-        inMonth: Bool,
-        isToday: Bool,
-        isSelected: Bool,
-        isHovered: Bool,
-        events: [EventModel],
-        dotsStyle: EventDotsStyle,
-        calendar: Calendar
-    ) {
-        self.date = date
-        self.inMonth = inMonth
-        self.isToday = isToday
-        self.isSelected = isSelected
-        self.isHovered = isHovered
-        self.events = events
-        self.dotsStyle = dotsStyle
-        self.calendar = calendar
-    }
+    let calendar: Calendar
 }
 
 extension CalendarCellViewModel {
@@ -62,6 +46,8 @@ extension CalendarCellViewModel {
     }
 
     var dots: [NSColor] {
+
+        let events = events.filter { calendar.isDate($0.start, lessThanOrEqualTo: date, granularity: .day) }
 
         guard !events.isEmpty else { return [.clear] }
 

@@ -34,7 +34,11 @@ class MockCalendarServiceProvider: CalendarServiceProviding {
         .just(
             m_events
                 .filter { $0.calendar.id.isEmpty || calendars.contains($0.calendar.id) }
-                .filter { calendar.isDay($0.start, inDays: (start, end)) || calendar.isDay($0.end, inDays: (start, end)) }
+                .filter {
+                    calendar.isDay($0.start, inDays: (start, end))
+                    ||
+                    calendar.isDay($0.end, inDays: (start, end))
+                }
         )
     }
 
