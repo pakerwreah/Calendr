@@ -54,6 +54,7 @@ enum Prefs {
     static let showAllDayDetails = "show_all_day_details"
     static let showRecurrenceIndicator = "show_recurrence_indicator"
     static let forceLocalTimeZone = "force_local_time_zone"
+    static let futureEventsDays = "future_events_days"
 
     // Appearance
     static let appearanceMode = "appearance_mode"
@@ -126,6 +127,7 @@ func registerDefaultPrefs(in localStorage: LocalStorageProvider, calendar: Calen
         Prefs.showAllDayDetails: true,
         Prefs.showRecurrenceIndicator: true,
         Prefs.forceLocalTimeZone: false,
+        Prefs.futureEventsDays: 0,
 
         // Appearance
         Prefs.appearanceMode: 0,
@@ -332,6 +334,11 @@ extension LocalStorageProvider {
     @objc dynamic var forceLocalTimeZone: Bool {
         get { bool(forKey: Prefs.forceLocalTimeZone) }
         set { set(newValue, forKey: Prefs.forceLocalTimeZone) }
+    }
+
+    @objc dynamic var futureEventsDays: Int {
+        get { integer(forKey: Prefs.futureEventsDays) }
+        set { set(newValue, forKey: Prefs.futureEventsDays) }
     }
 
     // Appearance

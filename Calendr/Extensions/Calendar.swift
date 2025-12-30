@@ -9,7 +9,8 @@ import Foundation
 
 extension Calendar {
 
-    func isDay(_ date: Date, inDays range: (start: Date, end: Date)) -> Bool {
+    /// - midnightFix: fix range ending at 00:00 of the next day
+    func isDay(_ date: Date, inDays range: (start: Date, end: Date), midnightFix: Bool = true) -> Bool {
 
         let (start, end) = range
 
@@ -21,7 +22,7 @@ extension Calendar {
         let gte = isDate(date, greaterThanOrEqualTo: start, granularity: .day)
 
         // fix range ending at 00:00 of the next day
-        let fixedEnd = start == end ? end : self.date(byAdding: .second, value: -1, to: end)!
+        let fixedEnd = !midnightFix || start == end ? end : self.date(byAdding: .second, value: -1, to: end)!
 
         // date <= end
         let lte = isDate(date, lessThanOrEqualTo: fixedEnd, granularity: .day)

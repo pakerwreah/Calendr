@@ -175,7 +175,7 @@ class MainViewController: NSViewController {
             .debounce(.milliseconds(50), scheduler: MainScheduler.instance)
             .share(replay: 1)
 
-        focusedDateObservable = eventListEventsObservable.map(\.0)
+        focusedDateObservable = eventListEventsObservable.map(\.date)
 
         eventListViewModel = EventListViewModel(
             eventsObservable: eventListEventsObservable,
@@ -483,7 +483,7 @@ class MainViewController: NSViewController {
 
             guard let self else { return }
 
-            guard dateProvider.calendar.isDateInToday(date) else {
+            guard dateProvider.isDateInToday(date) else {
                 return openReminderEditor()
             }
 
@@ -962,7 +962,7 @@ class MainViewController: NSViewController {
                 return
             }
 
-            let isToday = dateProvider.calendar.isDateInToday(date)
+            let isToday = dateProvider.isDateInToday(date)
 
             guard isToday else {
                 eventListView.scrollTop()
@@ -973,7 +973,7 @@ class MainViewController: NSViewController {
                 guard
                     case .event(let event) = $0,
                     !event.isAllDay,
-                    dateProvider.calendar.isDateInToday(event.start),
+                    dateProvider.isDateInToday(event.start),
                     let isFinished = event.isFaded.lastValue()
                 else {
                     return false

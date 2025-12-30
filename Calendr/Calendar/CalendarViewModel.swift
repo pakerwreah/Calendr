@@ -11,7 +11,7 @@ import RxSwift
 class CalendarViewModel {
 
     let cellViewModelsObservable: Observable<[CalendarCellViewModel]>
-    let focusedDateEventsObservable: Observable<(Date, [EventModel])>
+    let focusedDateEventsObservable: Observable<DateEvents>
 
     let title: Observable<String>
     let weekCount: Observable<Int>
@@ -123,17 +123,35 @@ class CalendarViewModel {
         }
         .share(replay: 1)
 
+        let dateRange = Observable
+            .combineLatest(dateCellsObservable, settings.futureEventsDays)
+            .compactMap { cells, futureEventsDays -> (start: Date, end: Date)? in
+                guard
+                    let firstVisibleDate = cells.first?.date,
+                    let lastVisibleDate = cells.last?.date,
+                    let endDate = dateProvider.calendar.date(
+                        byAdding: DateComponents(day: futureEventsDays),
+                        to: lastVisibleDate
+                    )
+                else {
+                    return nil
+                }
+                return (firstVisibleDate, endDate)
+            }
+            .distinctUntilChanged(==)
+            .share(replay: 1)
+
         // Get events for current dates
         let eventsObservable = Observable.combineLatest(
-            dateCellsObservable,
+            dateRange,
             enabledCalendars.startWith([])
         )
         .repeat(when: calendarService.changeObservable)
-        .flatMapLatest { cellViewModels, calendars -> Single<[EventModel]> in
+        .flatMapLatest { range, calendars -> Single<[EventModel]> in
 
             calendarService.events(
-                from: dateProvider.calendar.startOfDay(for: cellViewModels.first!.date),
-                to: dateProvider.calendar.endOfDay(for: cellViewModels.last!.date),
+                from: dateProvider.calendar.startOfDay(for: range.start),
+                to: dateProvider.calendar.endOfDay(for: range.end),
                 calendars: calendars
             )
         }
@@ -157,6 +175,46 @@ class CalendarViewModel {
         .distinctUntilChanged()
         .share(replay: 1)
 
+        // Assign events to their respective cells
+        let cellsWithEvents = Observable.combineLatest(
+            dateCellsObservable, filteredEventsObservable, settings.futureEventsDays
+        )
+        .map { cellViewModels, events, futureEventsDays -> [CalendarCellViewModel] in
+
+            guard let events else { return cellViewModels }
+
+            return cellViewModels.map { vm in
+
+                let eventsWithFuture = events.filter { event in
+
+                    // check if cell date intersects event
+                    if dateProvider.calendar.isDay(vm.date, inDays: (event.start, event.end)) {
+                        return true
+                    }
+
+                    // check if event starts in the future
+                    guard
+                        futureEventsDays > 0,
+                        let futureStart = dateProvider.calendar.date(
+                            byAdding: DateComponents(day: 1),
+                            to: vm.date
+                        ),
+                        let futureEnd = dateProvider.calendar.date(
+                            byAdding: DateComponents(day: futureEventsDays),
+                            to: futureStart
+                        )
+                    else {
+                        return false
+                    }
+                    return dateProvider.calendar.isDay(event.start, inDays: (futureStart, futureEnd))
+                }
+
+                return vm.with(events: eventsWithFuture)
+            }
+        }
+        .distinctUntilChanged()
+        .share(replay: 1)
+
         var timeZone = dateProvider.calendar.timeZone
 
         // Check if today has changed
@@ -172,33 +230,28 @@ class CalendarViewModel {
             .share(replay: 1)
 
         // Check which cell is today
-        let isTodayObservable = Observable.combineLatest(
-            dateCellsObservable, filteredEventsObservable, todayObservable
+        let cellsWithIsToday = Observable.combineLatest(
+            cellsWithEvents, todayObservable
         )
-        .map { cellViewModels, events, today -> [CalendarCellViewModel] in
+        .map { cellViewModels, today -> [CalendarCellViewModel] in
 
             cellViewModels.map { vm in
                 vm.with(
-                    isToday: dateProvider.calendar.isDate(vm.date, inSameDayAs: today),
-                    events: events?.filter { event in
-                        dateProvider.calendar.isDay(vm.date, inDays: (event.start, event.end))
-                    },
-                    calendar: dateProvider.calendar
+                    isToday: dateProvider.calendar.isDate(vm.date, inSameDayAs: today)
                 )
             }
         }
         .share(replay: 1)
 
         // Check which cell is selected
-        let isSelectedObservable = Observable.combineLatest(
-            isTodayObservable, dateObservable
+        let cellsWithIsSelected = Observable.combineLatest(
+            cellsWithIsToday, dateObservable
         )
         .map { cellViewModels, selectedDate -> [CalendarCellViewModel] in
 
             cellViewModels.map {
                 $0.with(
-                    isSelected: dateProvider.calendar.isDate($0.date, inSameDayAs: selectedDate),
-                    calendar: dateProvider.calendar
+                    isSelected: dateProvider.calendar.isDate($0.date, inSameDayAs: selectedDate)
                 )
             }
         }
@@ -212,20 +265,19 @@ class CalendarViewModel {
 
         // Check which cell is hovered
         cellViewModelsObservable = Observable.combineLatest(
-            isSelectedObservable, hoverObservable, keyboardModifiers, settings.dateHoverOption
+            cellsWithIsSelected, hoverObservable, keyboardModifiers, settings.dateHoverOption
         )
         .map { cellViewModels, hoveredDate, keyboardModifiers, dateHoverOption -> [CalendarCellViewModel] in
 
             if let hoveredDate, !dateHoverOption || keyboardModifiers.contains(.option) {
                 return cellViewModels.map {
                     $0.with(
-                        isHovered: dateProvider.calendar.isDate($0.date, inSameDayAs: hoveredDate),
-                        calendar: dateProvider.calendar
+                        isHovered: dateProvider.calendar.isDate($0.date, inSameDayAs: hoveredDate)
                     )
                 }
             } else {
                 return cellViewModels.map {
-                    $0.with(isHovered: false, calendar: dateProvider.calendar)
+                    $0.with(isHovered: false)
                 }
             }
         }
@@ -249,21 +301,30 @@ class CalendarViewModel {
             .share(replay: 1)
 
         focusedDateEventsObservable = cellViewModelsObservable
-            .compactMap { dates in
+            .compactMap { cellViewModels in
                 guard
-                    let focused = dates.first(where: \.isHovered) ?? dates.first(where: \.isSelected)
+                    let focused = cellViewModels.first(where: \.isHovered) ?? cellViewModels.first(where: \.isSelected)
                 else { return nil }
 
-                guard focused.isToday else { return (focused.date, focused.events) }
+                guard focused.isToday else {
+                    return DateEvents(date: focused.date, events: focused.events)
+                }
 
-                let overdue = dates
-                    .filter { dateProvider.calendar.isDate($0.date, lessThan: dateProvider.now, granularity: .day) }
-                    .flatMap(\.events)
-                    .filter { $0.type == .reminder(completed: false) }
+                let overdue = cellViewModels
+                    .flatMap { vm -> [EventModel] in
+                        guard dateProvider.calendar.isDate(vm.date, lessThan: focused.date, granularity: .day) else {
+                            return []
+                        }
+                        return vm.events.filter {
+                            // get only events starting on the focused date, to avoid duplicates
+                            dateProvider.calendar.isDate($0.start, inSameDayAs: vm.date)
+                            && $0.type == .reminder(completed: false)
+                        }
+                    }
 
-                return (focused.date, overdue + focused.events)
+                return DateEvents(date: focused.date, events: overdue + focused.events)
             }
-            .distinctUntilChanged(==)
+            .distinctUntilChanged()
             .share(replay: 1)
     }
 }
@@ -275,7 +336,7 @@ private extension CalendarCellViewModel {
         isSelected: Bool? = nil,
         isHovered: Bool? = nil,
         events: [EventModel]? = nil,
-        calendar: Calendar
+        calendar: Calendar? = nil
     ) -> Self {
 
         CalendarCellViewModel(
@@ -286,7 +347,7 @@ private extension CalendarCellViewModel {
             isHovered: isHovered ?? self.isHovered,
             events: events ?? self.events,
             dotsStyle: dotsStyle,
-            calendar: calendar
+            calendar: calendar ?? self.calendar
         )
     }
 }

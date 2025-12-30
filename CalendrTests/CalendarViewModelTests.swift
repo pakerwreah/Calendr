@@ -433,6 +433,7 @@ class CalendarViewModelTests: XCTestCase {
             (.make(year: 2021, month: 1, day: 1), ["Event 1"]),
             (.make(year: 2021, month: 1, day: 2), ["Event 1", "Event 2", "Event 3"]),
             (.make(year: 2021, month: 1, day: 3), ["Event 1", "Event 4"]),
+            (.make(year: 2021, month: 1, day: 4), []),
         ])
     }
 
@@ -449,8 +450,66 @@ class CalendarViewModelTests: XCTestCase {
         ])
     }
 
+    func testEventsPerDate_withFutureEvents() {
+
+        settings.futureEventsDaysObserver.onNext(1)
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+
+        assertExpectedEvents({ $0.events.map(\.title) }, [
+            (.make(year: 2021, month: 1, day: 1), ["Event 1", "Event 2", "Event 3"]),
+            (.make(year: 2021, month: 1, day: 2), ["Event 1", "Event 2", "Event 3", "Event 4"]),
+            (.make(year: 2021, month: 1, day: 3), ["Event 1", "Event 4"]),
+            (.make(year: 2021, month: 1, day: 4), []),
+        ])
+
+        settings.futureEventsDaysObserver.onNext(2)
+
+        assertExpectedEvents({ $0.events.map(\.title) }, [
+            (.make(year: 2021, month: 1, day: 1), ["Event 1", "Event 2", "Event 3", "Event 4"]),
+            (.make(year: 2021, month: 1, day: 2), ["Event 1", "Event 2", "Event 3", "Event 4"]),
+            (.make(year: 2021, month: 1, day: 3), ["Event 1", "Event 4"]),
+            (.make(year: 2021, month: 1, day: 4), []),
+        ])
+    }
+
+    func testEventsPerDate_withFutureEvents_withDeclinedEvents() {
+
+        settings.toggleDeclinedEvents.onNext(true)
+        settings.futureEventsDaysObserver.onNext(1)
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+
+        assertExpectedEvents({ $0.events.map(\.title) }, [
+            (.make(year: 2021, month: 1, day: 1), ["Event 1", "Event 2", "Event 3"]),
+            (.make(year: 2021, month: 1, day: 2), ["Event 1", "Event 2", "Event 3", "Event 4", "Event 5"]),
+            (.make(year: 2021, month: 1, day: 3), ["Event 1", "Event 4", "Event 5", "Event 6"]),
+            (.make(year: 2021, month: 1, day: 4), ["Event 6"]),
+        ])
+
+        settings.futureEventsDaysObserver.onNext(2)
+
+        assertExpectedEvents({ $0.events.map(\.title) }, [
+            (.make(year: 2021, month: 1, day: 1), ["Event 1", "Event 2", "Event 3", "Event 4", "Event 5"]),
+            (.make(year: 2021, month: 1, day: 2), ["Event 1", "Event 2", "Event 3", "Event 4", "Event 5", "Event 6"]),
+            (.make(year: 2021, month: 1, day: 3), ["Event 1", "Event 4", "Event 5", "Event 6"]),
+            (.make(year: 2021, month: 1, day: 4), ["Event 6"]),
+        ])
+    }
+
     func testEventDotsPerDate() {
 
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+
+        assertExpectedEvents(\.dots, [
+            (.make(year: 2021, month: 1, day: 1), [.white]),
+            (.make(year: 2021, month: 1, day: 2), [.white, .black]),
+            (.make(year: 2021, month: 1, day: 3), [.white, .blue]),
+            (.make(year: 2021, month: 1, day: 4), [.clear]),
+        ])
+    }
+
+    func testEventDotsPerDate_shouldNotShowFutureEvents() {
+
+        settings.futureEventsDaysObserver.onNext(5)
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
 
         assertExpectedEvents(\.dots, [
@@ -569,50 +628,96 @@ class CalendarViewModelTests: XCTestCase {
 
     func testEvents_withOverdueReminder_withSelectedDateToday() {
 
-        calendarService.m_events.append(
+        calendarService.m_events.append(contentsOf: [
+            .make(
+                start: .make(year: 2020, month: 12, day: 30),
+                title: "Overdue 1",
+                type: .reminder(completed: false),
+                calendar: calendarService.m_calendars[0]
+            ),
             .make(
                 start: .make(year: 2020, month: 12, day: 31),
-                title: "Overdue",
+                title: "Overdue 2",
                 type: .reminder(completed: false),
                 calendar: calendarService.m_calendars[0]
             )
-        )
+        ])
 
-        var events: (Date, [EventModel])?
+        var events: [EventModel]?
 
         viewModel
             .focusedDateEventsObservable
-            .bind { events = $0 }
+            .bind { events = $0.events }
             .disposed(by: disposeBag)
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
 
-        XCTAssertEqual(events?.1.map(\.title), ["Overdue" ,"Event 1"])
+        XCTAssertEqual(events?.map(\.title), ["Overdue 1", "Overdue 2" ,"Event 1"])
     }
 
     func testEvents_withOverdueReminder_withSelectedDateNotToday() {
 
         dateProvider.now = .make(year: 2021, month: 1, day: 2)
 
-        calendarService.m_events.append(
+        calendarService.m_events.append(contentsOf: [
+            .make(
+                start: .make(year: 2020, month: 12, day: 30),
+                title: "Overdue 1",
+                type: .reminder(completed: false),
+                calendar: calendarService.m_calendars[0]
+            ),
             .make(
                 start: .make(year: 2020, month: 12, day: 31),
-                title: "Overdue",
+                title: "Overdue 2",
                 type: .reminder(completed: false),
                 calendar: calendarService.m_calendars[0]
             )
-        )
+        ])
 
-        var events: (Date, [EventModel])?
+        var events: [EventModel]?
 
         viewModel
             .focusedDateEventsObservable
-            .bind { events = $0 }
+            .bind { events = $0.events }
             .disposed(by: disposeBag)
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
 
-        XCTAssertEqual(events?.1.map(\.title), ["Event 1"])
+        XCTAssertEqual(events?.map(\.title), ["Event 1"])
+    }
+
+    // Ensure overdues are not duplicated when future events are enabled,
+    // because the same future event can be shared by multiple cells,
+    // and the overdues are built from the previous cells data.
+    func testEvents_withOverdueReminder_withSelectedDateToday_withFutureEvents() {
+
+        settings.futureEventsDaysObserver.onNext(2)
+
+        calendarService.m_events.append(contentsOf: [
+            .make(
+                start: .make(year: 2020, month: 12, day: 30),
+                title: "Overdue 1",
+                type: .reminder(completed: false),
+                calendar: calendarService.m_calendars[0]
+            ),
+            .make(
+                start: .make(year: 2020, month: 12, day: 31),
+                title: "Overdue 2",
+                type: .reminder(completed: false),
+                calendar: calendarService.m_calendars[0]
+            )
+        ])
+
+        var events: [EventModel]?
+
+        viewModel
+            .focusedDateEventsObservable
+            .bind { events = $0.events }
+            .disposed(by: disposeBag)
+
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+
+        XCTAssertEqual(events?.map(\.title), ["Overdue 1", "Overdue 2" ,"Event 1", "Event 2", "Event 3", "Event 4"])
     }
 
     func testEventDotsPerDate_withSearch() {
@@ -712,17 +817,39 @@ class CalendarViewModelTests: XCTestCase {
 
     private func assertExpectedEvents<T, U: Collection<T> & Equatable>(
         _ pick: (CalendarCellViewModel) -> U,
-        _ expectedEvents: [(date: Date, events: U)],
+        _ expectedItems: [(Date, U)],
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
+        func named<V>(_ value: V) -> String {
+            if let color = value as? NSColor {
+                color.name
+            } else {
+                "\(value)"
+            }
+        }
 
-        for (date, expected) in expectedEvents {
-            guard let events = lastValue?.first(where: { $0.date == date }).map(pick) else {
+        for (date, expected) in expectedItems {
+            guard let actual = lastValue?.first(where: { $0.date == date }).map(pick) else {
                 XCTFail("\(date) not found")
                 return
             }
-            XCTAssertEqual(events, expected, "\(date)", file: file, line: line)
+            XCTAssertEqual(actual.map(named), expected.map(named), "\(date)", file: file, line: line)
+        }
+    }
+}
+
+private extension NSColor {
+
+    var name: String {
+        switch self {
+            case .white: ".white"
+            case .black: ".black"
+            case .clear: ".clear"
+            case .red: ".red"
+            case .green: ".green"
+            case .blue: ".blue"
+            default: self.description
         }
     }
 }

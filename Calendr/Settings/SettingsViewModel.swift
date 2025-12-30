@@ -34,6 +34,7 @@ protocol CalendarSettings {
     var eventDotsStyle: Observable<EventDotsStyle> { get }
     var calendarAppViewMode: Observable<CalendarViewMode> { get }
     var defaultCalendarApp: Observable<CalendarApp> { get }
+    var futureEventsDays: Observable<Int> { get }
 }
 
 protocol AppearanceSettings {
@@ -119,6 +120,7 @@ class SettingsViewModel:
     let toggleMap: AnyObserver<Bool>
     let togglePastEvents: AnyObserver<Bool>
     let toggleOverdueReminders: AnyObserver<Bool>
+    let futureEventsDaysObserver: AnyObserver<Int>
     let toggleAllDayDetails: AnyObserver<Bool>
     let toggleRecurrenceIndicator: AnyObserver<Bool>
     let toggleForceLocalTimeZone: AnyObserver<Bool>
@@ -163,6 +165,8 @@ class SettingsViewModel:
     let showMap: Observable<Bool>
     let showPastEvents: Observable<Bool>
     let showOverdueReminders: Observable<Bool>
+    let futureEventsDays: Observable<Int>
+    let futureEventsStepperLabel: Observable<String>
     let showAllDayDetails: Observable<Bool>
     let showRecurrenceIndicator: Observable<Bool>
     let forceLocalTimeZone: Observable<Bool>
@@ -259,6 +263,7 @@ class SettingsViewModel:
         toggleMap = localStorage.rx.observer(for: \.showMap)
         togglePastEvents = localStorage.rx.observer(for: \.showPastEvents)
         toggleOverdueReminders = localStorage.rx.observer(for: \.showOverdueReminders)
+        futureEventsDaysObserver = localStorage.rx.observer(for: \.futureEventsDays)
         toggleAllDayDetails = localStorage.rx.observer(for: \.showAllDayDetails)
         toggleRecurrenceIndicator = localStorage.rx.observer(for: \.showRecurrenceIndicator)
         toggleForceLocalTimeZone = localStorage.rx.observer(for: \.forceLocalTimeZone)
@@ -300,6 +305,7 @@ class SettingsViewModel:
         showMap = localStorage.rx.observe(\.showMap)
         showPastEvents = localStorage.rx.observe(\.showPastEvents)
         showOverdueReminders = localStorage.rx.observe(\.showOverdueReminders)
+        futureEventsDays = localStorage.rx.observe(\.futureEventsDays)
         showAllDayDetails = localStorage.rx.observe(\.showAllDayDetails)
         showRecurrenceIndicator = localStorage.rx.observe(\.showRecurrenceIndicator)
         forceLocalTimeZone = localStorage.rx.observe(\.forceLocalTimeZone)
@@ -364,7 +370,7 @@ class SettingsViewModel:
             .map { hours in
                 let dateFormatter = DateComponentsFormatter()
                 dateFormatter.calendar = dateProvider.calendar
-                dateFormatter.unitsStyle = .abbreviated
+                dateFormatter.unitsStyle = .full
 
                 return Strings.Formatter.Date.Relative.in(
                     dateFormatter.string(
@@ -388,6 +394,21 @@ class SettingsViewModel:
                             index: weekDay
                         )
                     }
+            }
+            .share(replay: 1)
+
+        futureEventsStepperLabel = futureEventsDays
+            .repeat(when: calendarChangeObservable)
+            .map { days in
+                let dateFormatter = DateComponentsFormatter()
+                dateFormatter.calendar = dateProvider.calendar
+                dateFormatter.unitsStyle = .full
+
+                return Strings.Formatter.Date.Relative.in(
+                    dateFormatter.string(
+                        from: DateComponents(day: days)
+                    )!
+                )
             }
             .share(replay: 1)
 

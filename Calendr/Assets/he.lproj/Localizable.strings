@@ -74,6 +74,7 @@
 "settings.events.show_finished_events" = "הצג אירועים שהסתיימו";
 "settings.events.show_recurrence_indicator" = "הצג מחוון על אירוע מחזורי";
 "settings.events.force_local_time_zone" = "הצג את כל האירועים באזור הזמן המקומי";
+//"settings.events.show_future_events" = "Show future events";
 
 "settings.appearance.transparency" = "שקיפות";
 "settings.appearance.accessibility" = "נגישות";

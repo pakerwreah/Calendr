@@ -29,7 +29,9 @@ class EventListViewModelTests: XCTestCase {
     lazy var refreshScheduler = TrackedHistoricalScheduler(initialClock: dateProvider.now)
 
     lazy var viewModel = EventListViewModel(
-        eventsObservable: Observable.combineLatest(dateSubject, eventsSubject),
+        eventsObservable: Observable.combineLatest(dateSubject, eventsSubject).map { date, events in
+            DateEvents(date: date, events: events)
+        },
         isShowingDetailsModal: .init(value: false),
         dateProvider: dateProvider,
         calendarService: calendarService,
@@ -51,9 +53,9 @@ class EventListViewModelTests: XCTestCase {
 
     var eventListItems: [EventListItemTest]?
 
-    func testEvents() -> [EventModel] {
+    func testEvents(baseDate: Date? = nil) -> [EventModel] {
 
-        let date = dateProvider.now
+        let date = baseDate ?? dateProvider.now
         let yesterday = dateProvider.calendar.date(byAdding: .day, value: -1, to: date)!
 
         return [
@@ -67,6 +69,8 @@ class EventListViewModelTests: XCTestCase {
     }
 
     override func setUp() {
+
+        dateProvider.m_calendar.locale = Locale(identifier: "en_US")
 
         viewModel.items
             .bind { [weak self] in
@@ -118,8 +122,9 @@ class EventListViewModelTests: XCTestCase {
         eventsSubject.onNext(testEvents().filter(\.isAllDay.isFalse))
 
         XCTAssertEqual(eventListItems, [
-            .section("Today"),
+            .section("Thursday, Dec 31"),
             .event("Multi day"),
+            .section("Today"),
             .event("Event 3"),
             .interval("1m"),
             .event("Event 2"),
@@ -141,8 +146,9 @@ class EventListViewModelTests: XCTestCase {
             .section("All day"),
             .event("All day 1"),
             .event("All day 2"),
-            .section("Today"),
+            .section("Thursday, Dec 31"),
             .event("Multi day"),
+            .section("Today"),
             .event("Event 3"),
             .interval("1m"),
             .event("Event 2"),
@@ -165,8 +171,9 @@ class EventListViewModelTests: XCTestCase {
             .section("All day"),
             .event("All day 1"),
             .event("All day 2"),
-            .section("2021-01-02"),
+            .section("Thursday, Dec 31"),
             .event("Multi day"),
+            .section("Friday, Jan 1"),
             .event("Event 3"),
             .interval("1m"),
             .event("Event 2"),
@@ -182,16 +189,18 @@ class EventListViewModelTests: XCTestCase {
 
     func testEventList_withHidePastEventsEnabled_isNotToday_shouldNotHideEvents() {
 
-        dateSubject.onNext(.make(year: 2020, month: 12, day: 31))
-        eventsSubject.onNext(testEvents())
+        let selectedDate: Date = .make(year: 2020, month: 12, day: 31)
+        dateSubject.onNext(selectedDate)
+        eventsSubject.onNext(testEvents(baseDate: selectedDate))
         settings.togglePastEvents.onNext(false)
 
         XCTAssertEqual(eventListItems, [
             .section("All day"),
             .event("All day 1"),
             .event("All day 2"),
-            .section("2020-12-31"),
+            .section("Wednesday, Dec 30"),
             .event("Multi day"),
+            .section("Thursday, Dec 31"),
             .event("Event 3"),
             .interval("1m"),
             .event("Event 2"),
@@ -260,8 +269,9 @@ class EventListViewModelTests: XCTestCase {
             .section("All day"),
             .event("All day 1"),
             .event("All day 2"),
-            .section("Today"),
+            .section("Thursday, Dec 31"),
             .event("Multi day"),
+            .section("Today"),
             .event("Event 3"),
             .interval("1m"),
             .event("Event 2"),
@@ -385,8 +395,9 @@ class EventListViewModelTests: XCTestCase {
             .section("All day"),
             .event("All day 1"),
             .event("All day 2"),
-            .section("Today"),
+            .section("Thursday, Dec 31"),
             .event("Multi day"),
+            .section("Today"),
             .event("Event 3"),
             .interval("1m"),
             .event("Event 2"),
@@ -420,8 +431,9 @@ class EventListViewModelTests: XCTestCase {
             .section("All day"),
             .event("All day 1"),
             .event("All day 2"),
-            .section("Today"),
+            .section("Thursday, Dec 31"),
             .event("Multi day"),
+            .section("Today"),
             .event("Event 3"),
             .interval("1m"),
             .event("Event 2"),
@@ -457,7 +469,7 @@ class EventListViewModelTests: XCTestCase {
             .section("All day"),
             .event("All day event"),
             .event("All day overdue"),
-            .section("2020-12-31"),
+            .section("Thursday, Dec 31"),
             .event("Event 1"),
             .event("Event 2"),
             .interval("1m"),
@@ -554,11 +566,11 @@ class EventListViewModelTests: XCTestCase {
         ])
 
         XCTAssertEqual(eventListItems, [
-            .section("Today"),
+            .section("Thursday, Dec 31"),
             .event("Event 1"),
             .interval("2m"),
             .event("Event 2"),
-            .interval("1m"),
+            .section("Today"),
             .event("Event 3"),
             .interval("3m"),
             .event("Event 4"),

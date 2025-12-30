@@ -28,6 +28,18 @@ extension Sequence {
     func sorted<T: Comparable>(by getter: (Element) -> T) -> [Element] {
         sorted { getter($0) < getter($1) }
     }
+
+    func distinct<T: Hashable>(by selector: (Element) -> T) -> [Element] {
+        var seen: Set<T> = []
+        var result: [Element] = []
+        for element in self {
+            let property = selector(element)
+            if seen.insert(property).inserted {
+                result.append(element)
+            }
+        }
+        return result
+    }
 }
 
 extension LazySequenceProtocol {

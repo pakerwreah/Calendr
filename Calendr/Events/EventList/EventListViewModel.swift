@@ -61,15 +61,16 @@ class EventListViewModel {
         let overdue: [EventListItem]
         let allday: [EventListItem]
         let today: [EventListItem]
+        let future: [EventListItem]
     }
 
-    private let groups = BehaviorSubject<EventListGroups>(value: .init(overdue: [], allday: [], today: []))
+    private let groups = BehaviorSubject<EventListGroups>(value: .init(overdue: [], allday: [], today: [], future: []))
 
     let items: Observable<[EventListItem]>
     let summary: Observable<EventListSummary>
 
     init(
-        eventsObservable: Observable<(Date, [EventModel])>,
+        eventsObservable: Observable<DateEvents>,
         isShowingDetailsModal: BehaviorSubject<Bool>,
         dateProvider: DateProviding,
         calendarService: CalendarServiceProviding,
@@ -94,8 +95,7 @@ class EventListViewModel {
         self.refreshScheduler = refreshScheduler
         self.eventsScheduler = eventsScheduler
 
-        dateFormatter = DateFormatter(calendar: dateProvider.calendar)
-        dateFormatter.dateStyle = .short
+        dateFormatter = DateFormatter(template: "EEEE d MMM", calendar: dateProvider.calendar)
 
         relativeFormatter = RelativeDateTimeFormatter()
         relativeFormatter.dateTimeStyle = .named
@@ -106,7 +106,7 @@ class EventListViewModel {
         dateComponentsFormatter.allowedUnits = [.hour, .minute]
 
         items = groups.map {
-            $0.overdue + $0.allday + $0.today
+            $0.overdue + $0.allday + $0.today + $0.future
         }.share(replay: 1)
 
         summary = groups.flatMapLatest { groups in
@@ -151,7 +151,7 @@ class EventListViewModel {
         }
         .share(replay: 1)
 
-        Observable.combineLatest(
+        let listProps = Observable.combineLatest(
             eventsObservable,
             settings.showPastEvents,
             settings.showOverdueReminders,
@@ -159,26 +159,27 @@ class EventListViewModel {
         )
         .compactMap { dateEvents, showPast, showOverdue, isShowingDetailsModal -> EventListProps? in
             guard !isShowingDetailsModal else { return nil }
-            let (date, events) = dateEvents
-            let isTodaySelected = dateProvider.calendar.isDate(date, inSameDayAs: dateProvider.now)
+
+            let isTodaySelected = dateProvider.calendar.isDate(dateEvents.date, inSameDayAs: dateProvider.now)
 
             return .init(
-                events: events,
-                date: date,
+                events: dateEvents.events,
+                date: dateEvents.date,
                 showPastEvents: showPast,
                 showOverdueReminders: showOverdue,
                 isTodaySelected: isTodaySelected
             )
         }
         .distinctUntilChanged()
-        .flatMapLatest { props -> Observable<EventListProps> in
 
-            guard props.isTodaySelected && !props.showPastEvents else {
+        let propsWithRefresh = listProps.flatMapLatest { props -> Observable<EventListProps> in
+
+            guard props.isTodaySelected && !props.showPastEvents, !props.events.isEmpty else {
                 return .just(props)
             }
 
             // schedule refresh for every event end to hide past events
-            return Observable.merge(
+            let ticker = Observable.merge(
                 props.events
                     .filter {
                         !$0.isAllDay && !$0.type.isReminder && $0.range(using: dateProvider).endsToday
@@ -193,7 +194,8 @@ class EventListViewModel {
             )
             .void()
             .startWith(())
-            .map {
+
+            return ticker.map {
                 var props = props
                 props.events = props.events.filter {
                     if case .reminder(let completed) = $0.type {
@@ -204,15 +206,17 @@ class EventListViewModel {
                 return props
             }
         }
+
         // build event list
-        .compactMap { [weak self] props -> EventListGroups? in
+        propsWithRefresh.compactMap { [weak self] props -> EventListGroups? in
             guard let self else { return nil }
 
             let overdue = overdueViewModels(props)
             let allday = allDayViewModels(props)
-            let today = todayViewModels(props)
+            let today = todayViewModels(props, withFuture: false)
+            let future = todayViewModels(props, withFuture: true)
 
-            return EventListGroups(overdue: overdue, allday: allday, today: today)
+            return EventListGroups(overdue: overdue, allday: allday, today: today, future: future)
         }
         .bind(to: groups)
         .disposed(by: disposeBag)
@@ -236,9 +240,14 @@ class EventListViewModel {
         )
     }
 
-    private func isOverdue(_ event: EventModel) -> Bool {
-        event.type.isReminder
-        && dateProvider.calendar.isDate(event.start, lessThan: dateProvider.now, granularity: .day)
+    private func isOverdue(_ event: EventModel, _ isTodaySelected: Bool) -> Bool {
+        isTodaySelected &&
+        event.type == .reminder(completed: false) &&
+        dateProvider.calendar.isDate(event.start, lessThan: dateProvider.now, granularity: .day)
+    }
+
+    private func isFuture(_ event: EventModel, from date: Date) -> Bool {
+        dateProvider.calendar.isDate(event.start, greaterThan: date, granularity: .day)
     }
 
     private func overdueViewModels(_ props: EventListProps) -> [EventListItem] {
@@ -246,7 +255,7 @@ class EventListViewModel {
         guard props.showOverdueReminders else { return [] }
 
         return props.events
-            .filter { isOverdue($0) && props.isTodaySelected }
+            .filter { isOverdue($0, props.isTodaySelected) }
             .sorted(by: \.start)
             .prevMap { prev, curr -> [EventListItem] in
 
@@ -266,8 +275,13 @@ class EventListViewModel {
     }
 
     private func allDayViewModels(_ props: EventListProps) -> [EventListItem] {
+
         var viewModels: [EventListItem] = props.events
-            .filter { $0.isAllDay && (!isOverdue($0) || !props.isTodaySelected) }
+            .filter {
+                $0.isAllDay &&
+                !isFuture($0, from: props.date) &&
+                !isOverdue($0, props.isTodaySelected)
+            }
             .sorted(by: \.calendar.color.hashValue)
             .map { .event(makeEventViewModel($0, props.isTodaySelected)) }
 
@@ -277,22 +291,30 @@ class EventListViewModel {
         return viewModels
     }
 
-    private func todayViewModels(_ props: EventListProps) -> [EventListItem] {
-        props.events
-            .filter { !$0.isAllDay && (!isOverdue($0) || !props.isTodaySelected) }
+    private func todayViewModels(_ props: EventListProps, withFuture: Bool) -> [EventListItem] {
+
+        return props.events
+            .filter {
+                let isFuture = isFuture($0, from: props.date)
+                return (
+                    isFuture == withFuture &&
+                    (!$0.isAllDay || isFuture) &&
+                    !isOverdue($0, props.isTodaySelected)
+                )
+            }
             .sorted {
-                ($0.start, $0.end) < ($1.start, $1.end)
+                ($0.start, $0.end, $0.isAllDay) < ($1.start, $1.end, $1.isAllDay)
             }
             .prevMap { prev, curr -> [EventListItem] in
 
                 let viewModel = makeEventViewModel(curr, props.isTodaySelected)
                 let eventItem: EventListItem = .event(viewModel)
 
-                guard let prev else {
-                    // if first event, show today section
-                    let title = props.isTodaySelected
-                        ? Strings.Formatter.Date.today
-                        : dateFormatter.string(from: props.date)
+                // if first event or different date, show date section
+                guard let prev, dateProvider.calendar.isDate(prev.start, inSameDayAs: curr.start) else {
+                    let isToday = props.isTodaySelected && dateProvider.isDateInToday(curr.start)
+
+                    let title = isToday ? Strings.Formatter.Date.today : dateFormatter.string(from: curr.start)
 
                     return [.section(title), eventItem]
                 }

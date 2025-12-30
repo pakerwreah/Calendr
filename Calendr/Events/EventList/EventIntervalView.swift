@@ -23,7 +23,7 @@ class EventIntervalView: NSView {
 
         viewModel.text.bind(to: label.rx.text).disposed(by: disposeBag)
 
-        let stack = NSStackView(views: [vdash, label, .dummy]).with(spacing: 4)
+        let stack = NSStackView(views: [.dummy, vdash, label, .dummy]).with(spacing: 4)
 
         viewModel.fade.map { $0 ? 0.5 : 1 }
             .bind(to: stack.rx.alphaValue)

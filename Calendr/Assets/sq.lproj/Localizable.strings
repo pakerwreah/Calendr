@@ -74,6 +74,7 @@
 "settings.events.show_finished_events" = "Shfaq ngjarjet e përfunduara";
 "settings.events.show_recurrence_indicator" = "Trego treguesin e përsëritjes";
 "settings.events.force_local_time_zone" = "Shfaq të gjitha ngjarjet në zonën kohore lokale";
+//"settings.events.show_future_events" = "Show future events";
 
 "settings.appearance.transparency" = "Transparenca";
 "settings.appearance.accessibility" = "Aksesueshmëria";

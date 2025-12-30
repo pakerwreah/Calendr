@@ -76,6 +76,7 @@
 "settings.events.show_finished_events" = "Показывать завершенные события";
 "settings.events.show_recurrence_indicator" = "Показывать индикатор повторения";
 "settings.events.force_local_time_zone" = "Показывать все события в местном часовом поясе";
+//"settings.events.show_future_events" = "Show future events";
 
 "settings.appearance.transparency" = "Прозрачность";
 "settings.appearance.accessibility" = "Доступность";

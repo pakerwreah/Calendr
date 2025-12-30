@@ -221,6 +221,8 @@ internal enum Strings {
       internal static let showAllDayDetails = Strings.tr("Localizable", "settings.events.show_all_day_details", fallback: "Show all-day events details")
       /// Show finished events
       internal static let showFinishedEvents = Strings.tr("Localizable", "settings.events.show_finished_events", fallback: "Show finished events")
+      /// Show future events
+      internal static let showFutureEvents = Strings.tr("Localizable", "settings.events.show_future_events", fallback: "Show future events")
       /// Show map and weather
       internal static let showMap = Strings.tr("Localizable", "settings.events.show_map", fallback: "Show map and weather")
       /// Show overdue reminders

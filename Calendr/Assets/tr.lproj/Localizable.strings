@@ -74,6 +74,7 @@
 "settings.events.show_finished_events" = "Tamamlanmış etkinlikleri göster";
 "settings.events.show_recurrence_indicator" = "Tekrarlama göstergesini göster";
 "settings.events.force_local_time_zone" = "Tüm etkinlikleri yerel saat diliminde göster";
+//"settings.events.show_future_events" = "Show future events";
 
 "settings.appearance.transparency" = "Şeffaflık";
 "settings.appearance.accessibility" = "Erişilebilirlik";

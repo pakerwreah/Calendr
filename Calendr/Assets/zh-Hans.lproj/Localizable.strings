@@ -74,6 +74,7 @@
 "settings.events.show_finished_events" = "展示已完成日程";
 "settings.events.show_recurrence_indicator" = "展示日程重复标识";
 "settings.events.force_local_time_zone" = "以本地时区显示所有事件";
+//"settings.events.show_future_events" = "Show future events";
 
 "settings.appearance.transparency" = "透明度";
 "settings.appearance.accessibility" = "无障碍";
