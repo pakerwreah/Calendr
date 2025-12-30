@@ -867,7 +867,13 @@ class MainViewController: NSViewController {
     private func setUpGlobalShortcuts() {
 
         KeyboardShortcuts.onKeyUp(for: .showMainPopover) { [weak self] in
+            // Triggering the click action for the same popover/menu would normally be blocked,
+            // but for the main popover we have a small delay so it correctly attaches to the focused screen.
+            // That, however, causes the popover to open again immediately after closing.
+            let isVisible = self?.view.window != nil
+
             self?.closeModals {
+                guard !isVisible else { return }
                 self?.mainStatusItemClickHandler.leftClick.onNext(())
             }
         }
