@@ -52,6 +52,7 @@
 "settings.next_event.detect_notch" = "Μείωση αν υπάρχει 'εγκοπή'";
 
 "settings.calendar" = "Ημερολόγιο";
+//"settings.calendar.show_month_outline" = "Show month outline";
 "settings.calendar.show_week_numbers" = "Εμφάνιση αριθμών εβδομάδας";
 "settings.calendar.preserve_selected_date" = "Διατήρηση της επιλεγμένης ημερομηνίας κατά την απόκρυψη";
 "settings.calendar.show_declined_events" = "Εμφάνιση απορριφθέντων συμβάντων";

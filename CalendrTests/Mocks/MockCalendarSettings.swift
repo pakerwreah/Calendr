@@ -38,6 +38,7 @@ class MockCalendarSettings: CalendarSettings {
     let calendarAppViewMode: Observable<CalendarViewMode>
     let defaultCalendarApp: Observable<CalendarApp>
 
+    let showMonthOutline: Observable<Bool>
     let calendarScaling: Observable<Double>
     let textScaling: Observable<Double>
     let calendarTextScaling: Observable<Double>
@@ -52,6 +53,7 @@ class MockCalendarSettings: CalendarSettings {
         (dateHoverOption, toggleDateHoverOption) = BehaviorSubject.pipe(value: false)
         (eventDotsStyle, eventDotsStyleObserver) = BehaviorSubject.pipe(value: .multiple)
 
+        showMonthOutline = .just(false)
         preserveSelectedDate = .just(false)
         calendarAppViewMode = .just(.month)
         defaultCalendarApp = .just(.calendar)

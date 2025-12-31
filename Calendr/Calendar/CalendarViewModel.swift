@@ -21,6 +21,7 @@ class CalendarViewModel {
     let calendarTextScaling: Observable<Double>
     let cellSize: Observable<Double>
     let weekNumbersWidth: Observable<Double>
+    let showMonthOutline: Observable<Bool>
 
     init(
         searchObservable: Observable<String>,
@@ -326,6 +327,8 @@ class CalendarViewModel {
             }
             .distinctUntilChanged()
             .share(replay: 1)
+
+        showMonthOutline = settings.showMonthOutline
     }
 }
 

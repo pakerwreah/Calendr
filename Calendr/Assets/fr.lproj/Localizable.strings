@@ -52,6 +52,7 @@
 "settings.next_event.detect_notch" = "Raccourcir si 'notch' est présent";
 
 "settings.calendar" = "Calendrier";
+//"settings.calendar.show_month_outline" = "Show month outline";
 "settings.calendar.show_week_numbers" = "Afficher les numéros des semaines";
 "settings.calendar.preserve_selected_date" = "Conserver la date sélectionnée lors du masquage";
 "settings.calendar.show_declined_events" = "Afficher les événements refusés";

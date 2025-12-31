@@ -52,6 +52,7 @@
 "settings.next_event.detect_notch" = "Shkurtojeni nëse 'notch' është i pranishëm";
 
 "settings.calendar" = "Kalendari";
+//"settings.calendar.show_month_outline" = "Show month outline";
 "settings.calendar.show_week_numbers" = "Shfaq numrat e javëve";
 "settings.calendar.preserve_selected_date" = "Ruaje datën e zgjedhur në fshehje";
 "settings.calendar.show_declined_events" = "Shfaq ngjarjet e refuzuara";

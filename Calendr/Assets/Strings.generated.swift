@@ -199,6 +199,8 @@ internal enum Strings {
       internal static let showDeclinedEvents = Strings.tr("Localizable", "settings.calendar.show_declined_events", fallback: "Show declined events")
       /// This only works if it is also enabled in the native Calendar app.
       internal static let showDeclinedEventsTooltip = Strings.tr("Localizable", "settings.calendar.show_declined_events_tooltip", fallback: "This only works if it is also enabled in the native Calendar app.")
+      /// Show month outline
+      internal static let showMonthOutline = Strings.tr("Localizable", "settings.calendar.show_month_outline", fallback: "Show month outline")
       /// Show week numbers
       internal static let showWeekNumbers = Strings.tr("Localizable", "settings.calendar.show_week_numbers", fallback: "Show week numbers")
       /// Visible weeks

@@ -52,6 +52,7 @@
 "settings.next_event.detect_notch" = "Zkrátit, pokud je 'výřez' přítomen";
 
 "settings.calendar" = "Kalendář";
+//"settings.calendar.show_month_outline" = "Show month outline";
 "settings.calendar.show_week_numbers" = "Zobrazit čísla týdnů";
 "settings.calendar.preserve_selected_date" = "Zachovat vybrané datum při skrytí";
 "settings.calendar.show_declined_events" = "Zobrazit odmítnuté události";

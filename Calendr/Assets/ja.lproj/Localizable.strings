@@ -52,6 +52,7 @@
 "settings.next_event.detect_notch" = "ノッチがある場合に短くする";
 
 "settings.calendar" = "カレンダー";
+//"settings.calendar.show_month_outline" = "Show month outline";
 "settings.calendar.show_week_numbers" = "週番号を表示";
 "settings.calendar.preserve_selected_date" = "選択した日付を保持";
 "settings.calendar.show_declined_events" = "辞退した予定を表示";

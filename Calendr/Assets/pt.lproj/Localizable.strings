@@ -52,6 +52,7 @@
 "settings.next_event.detect_notch" = "Encurtar se 'notch' estiver presente";
 
 "settings.calendar" = "Calendário";
+"settings.calendar.show_month_outline" = "Mostrar contorno do mês";
 "settings.calendar.show_week_numbers" = "Mostrar números das semanas";
 "settings.calendar.preserve_selected_date" = "Preservar a data selecionada ao ocultar";
 "settings.calendar.show_declined_events" = "Mostrar eventos recusados";

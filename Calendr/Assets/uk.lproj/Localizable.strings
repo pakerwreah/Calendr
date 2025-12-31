@@ -52,6 +52,7 @@
 "settings.next_event.detect_notch" = "Вкоротити, якщо присутній 'виріз'";
 
 "settings.calendar" = "Календар";
+//"settings.calendar.show_month_outline" = "Show month outline";
 "settings.calendar.show_week_numbers" = "Показувати номер тижня";
 "settings.calendar.preserve_selected_date" = "Зберігати вибрану дату при приховуванні";
 "settings.calendar.show_declined_events" = "Показувати відхилені події";

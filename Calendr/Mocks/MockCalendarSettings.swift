@@ -17,6 +17,7 @@ class MockCalendarSettings: CalendarSettings {
     let firstWeekday: Observable<Int>
     let highlightedWeekdays: Observable<[Int]>
     let weekCount: Observable<Int>
+    let showMonthOutline: Observable<Bool>
     let showWeekNumbers: Observable<Bool>
     let showDeclinedEvents: Observable<Bool>
     let preserveSelectedDate: Observable<Bool>
@@ -32,6 +33,7 @@ class MockCalendarSettings: CalendarSettings {
         calendarTextScaling: Double = 1,
         firstWeekday: Int = 1,
         highlightedWeekdays: [Int] = [0, 6],
+        showMonthOutline: Bool = true,
         showWeekNumbers: Bool = true,
         weekCount: Int = 6,
         eventDotsStyle: EventDotsStyle = .multiple,
@@ -42,6 +44,7 @@ class MockCalendarSettings: CalendarSettings {
         self.firstWeekday = .just(firstWeekday)
         self.highlightedWeekdays = .just(highlightedWeekdays)
         self.weekCount = .just(weekCount)
+        self.showMonthOutline = .just(showMonthOutline)
         self.showWeekNumbers = .just(showWeekNumbers)
         self.preserveSelectedDate = .just(false)
         self.showDeclinedEvents = .just(false)

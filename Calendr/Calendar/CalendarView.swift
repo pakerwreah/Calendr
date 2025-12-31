@@ -20,6 +20,8 @@ class CalendarView: NSView {
 
     private var gridView: NSGridView?
 
+    private let outlineLayer = CAShapeLayer()
+
     init(
         viewModel: CalendarViewModel,
         hoverObserver: AnyObserver<Date?>,
@@ -36,15 +38,24 @@ class CalendarView: NSView {
 
         setUpAccessibility()
 
+        setUpOutline()
+
+        setUpBindings()
+
         viewModel.weekCount.bind { [weak self] weekCount in
             guard let self else { return }
 
             gridDisposeBag = DisposeBag()
 
-            configureLayout(weekCount)
-            setUpBindings(weekCount)
+            setUpGridLayout(weekCount)
+            setUpGridBindings(weekCount)
         }
         .disposed(by: disposeBag)
+    }
+
+    override func updateLayer() {
+        super.updateLayer()
+        outlineLayer.strokeColor = Colors.outlineBackground
     }
 
     private func setUpAccessibility() {
@@ -55,7 +66,28 @@ class CalendarView: NSView {
         setAccessibilityIdentifier(Accessibility.Calendar.view)
     }
 
-    private func configureLayout(_ weekCount: Int) {
+    private func setUpOutline() {
+
+        outlineLayer.fillColor = nil
+        outlineLayer.lineWidth = Constants.outlineWidth
+
+        wantsLayer = true
+        layer!.addSublayer(outlineLayer)
+    }
+
+    private func setUpBindings() {
+
+        viewModel.showMonthOutline.map(!)
+            .bind(to: outlineLayer.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        rx.mouseExited
+            .map(nil)
+            .bind(to: hoverObserver)
+            .disposed(by: disposeBag)
+    }
+
+    private func setUpGridLayout(_ weekCount: Int) {
 
         gridView?.removeFromSuperview()
         gridView = NSGridView(numberOfColumns: 8, rows: weekCount + 1)
@@ -73,7 +105,7 @@ class CalendarView: NSView {
         gridView.edges(equalTo: self)
     }
 
-    private func setUpBindings(_ weekCount: Int) {
+    private func setUpGridBindings(_ weekCount: Int) {
 
         guard let gridView else { return }
 
@@ -122,7 +154,7 @@ class CalendarView: NSView {
                     width: CGFloat(range.count) * cellSize,
                     height: CGFloat(weekCount) * cellSize
                 )
-                layer.backgroundColor = Constants.weekendBackgroundColor.effectiveCGColor
+                layer.backgroundColor = Colors.weekendBackground
                 layer.cornerRadius = Constants.cornerRadius
                 return layer
             }
@@ -161,6 +193,8 @@ class CalendarView: NSView {
             gridView.cell(atColumnIndex: 0, rowIndex: 1 + i).contentView = cellView
         }
 
+        var dateViews: [NSView] = []
+
         for day in 0..<weekCount * 7 {
             let cellViewModel = viewModel
                 .cellViewModelsObservable
@@ -177,12 +211,31 @@ class CalendarView: NSView {
                 calendarScaling: viewModel.calendarScaling,
                 calendarTextScaling: viewModel.calendarTextScaling
             )
+
+            dateViews.append(cellView)
+
             gridView.cell(atColumnIndex: 1 + day % 7, rowIndex: 1 + day / 7).contentView = cellView
         }
 
-        rx.mouseExited
-            .map(nil)
-            .bind(to: hoverObserver)
+        let updateSize = rx.observe(\.frame).distinctUntilChanged(\.size).void()
+
+        viewModel.cellViewModelsObservable
+            .repeat(when: updateSize)
+            .observe(on: MainScheduler.instance)
+            .compactMap {
+                let inset = Constants.outlineInset
+
+                let frames = $0.enumerated().compactMap { day, vm -> NSRect? in
+                    guard vm.inMonth, let view = dateViews[safe: day] else { return nil }
+                    view.layoutSubtreeIfNeeded()
+                    return view.frame.insetBy(dx: -inset, dy: -inset)
+                }
+
+                guard let points = CGPath.union(from: frames)?.points() else { return nil }
+
+                return CGPath.rounded(from: points, radius: Constants.cornerRadius)
+            }
+            .bind(to: outlineLayer.rx.path)
             .disposed(by: gridDisposeBag)
     }
 
@@ -214,7 +267,94 @@ class CalendarView: NSView {
 }
 
 private enum Constants {
+    static let cornerRadius: CGFloat = 6
+    static let outlineWidth: CGFloat = 1.5
+    static let outlineInset: CGFloat = 1
+}
 
-    static let cornerRadius: CGFloat = 5
-    static let weekendBackgroundColor = NSColor.quaternaryLabelColor
+private enum Colors {
+    static var outlineBackground: CGColor { NSColor.secondaryLabelColor.effectiveCGColor }
+    static var weekendBackground: CGColor { NSColor.quaternaryLabelColor.effectiveCGColor }
+}
+
+private extension CGPath {
+
+    static func union(from rects: [CGRect]) -> CGPath? {
+
+        guard let firstFrame = rects.first else { return nil }
+
+        var combined = CGPath(rect: firstFrame, transform: nil)
+        for frame in rects.dropFirst() {
+            combined = combined.union(CGPath(rect: frame, transform: nil))
+        }
+
+        return combined
+    }
+
+    func points() -> [CGPoint] {
+        var points: [CGPoint] = []
+
+        applyWithBlock { element in
+            switch element.pointee.type {
+                case .moveToPoint, .addLineToPoint:
+                    points.append(element.pointee.points[0])
+                default:
+                    break
+            }
+        }
+
+        return points
+    }
+
+    static func rounded(
+        from points: [CGPoint],
+        radius: CGFloat
+    ) -> CGPath {
+        guard points.count >= 3 else { return CGPath(rect: .zero, transform: nil) }
+
+        let path = CGMutablePath()
+
+        let count = points.count
+
+        func normalize(_ v: CGVector) -> CGVector {
+            let len = sqrt(v.dx * v.dx + v.dy * v.dy)
+            return CGVector(dx: v.dx / len, dy: v.dy / len)
+        }
+
+        for i in 0..<count {
+            let prev = points[(i - 1 + count) % count]
+            let curr = points[i]
+            let next = points[(i + 1) % count]
+
+            let vIn = normalize(CGVector(dx: curr.x - prev.x, dy: curr.y - prev.y))
+            let vOut = normalize(CGVector(dx: next.x - curr.x, dy: next.y - curr.y))
+
+            let start = curr - CGVector(dx: vIn.dx * radius, dy: vIn.dy * radius)
+            let end = curr + CGVector(dx: vOut.dx * radius, dy: vOut.dy * radius)
+
+            if i == 0 {
+                path.move(to: start)
+            } else {
+                path.addLine(to: start)
+            }
+
+            path.addArc(
+                tangent1End: curr,
+                tangent2End: end,
+                radius: radius
+            )
+        }
+
+        path.closeSubpath()
+        return path
+    }
+
+}
+
+private func + (p: CGPoint, v: CGVector) -> CGPoint {
+    CGPoint(x: p.x + v.dx, y: p.y + v.dy)
+}
+
+private func - (p: CGPoint, v: CGVector) -> CGPoint {
+    CGPoint(x: p.x - v.dx, y: p.y - v.dy)
 }
