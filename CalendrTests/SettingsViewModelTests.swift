@@ -52,6 +52,7 @@ class SettingsViewModelTests: XCTestCase {
     var localStorageAppearanceMode: NSNumber? { localStorage.object(forKey: Prefs.appearanceMode) as? NSNumber }
     var localStorageEventDotsStyle: String? { localStorage.object(forKey: Prefs.eventDotsStyle) as! String? }
     var localStorageFutureEventsDays: NSNumber? { localStorage.object(forKey: Prefs.futureEventsDays) as? NSNumber }
+    var localStorageShowMonthOutline: Bool? { localStorage.object(forKey: Prefs.showMonthOutline) as? Bool }
 
     override func setUp() {
 
@@ -81,6 +82,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertNil(localStorageTransparency)
         XCTAssertNil(localStorageEventDotsStyle)
         XCTAssertNil(localStorageFutureEventsDays)
+        XCTAssertNil(localStorageShowMonthOutline)
 
         registerDefaultPrefs(in: localStorage, calendar: .gregorian.with(firstWeekday: 3))
     }
@@ -113,6 +115,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.appearanceMode.lastValue(), .automatic)
         XCTAssertEqual(viewModel.eventDotsStyle.lastValue(), .multiple)
         XCTAssertEqual(viewModel.futureEventsDays.lastValue(), 0)
+        XCTAssertEqual(viewModel.showMonthOutline.lastValue(), true)
 
         XCTAssertEqual(localStorageStatusItemIconEnabled, true)
         XCTAssertEqual(localStorageStatusItemDateEnabled, true)
@@ -138,6 +141,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(localStorageAppearanceMode, 0)
         XCTAssertEqual(localStorageEventDotsStyle, EventDotsStyle.multiple.rawValue)
         XCTAssertEqual(localStorageFutureEventsDays, 0)
+        XCTAssertEqual(localStorageShowMonthOutline, true)
     }
 
     func testDateFormatOptions() {
@@ -784,5 +788,29 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(futureEventsDays, 5)
         XCTAssertEqual(futureEventsStepperLabel, "in 5 days")
         XCTAssertEqual(localStorageFutureEventsDays, 5)
+    }
+
+    func testToggleShowMonthOutline() {
+
+        localStorage.showMonthOutline = true
+
+        var showMonthOutline: Bool?
+
+        viewModel.showMonthOutline
+            .bind { showMonthOutline = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(showMonthOutline, true)
+        XCTAssertEqual(localStorageShowMonthOutline, true)
+
+        viewModel.toggleMonthOutline.onNext(false)
+
+        XCTAssertEqual(showMonthOutline, false)
+        XCTAssertEqual(localStorageShowMonthOutline, false)
+
+        viewModel.toggleMonthOutline.onNext(true)
+
+        XCTAssertEqual(showMonthOutline, true)
+        XCTAssertEqual(localStorageShowMonthOutline, true)
     }
 }

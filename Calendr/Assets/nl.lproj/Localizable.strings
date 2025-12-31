@@ -50,6 +50,7 @@
 "settings.next_event.detect_notch" = "Verkorten indien 'notch' aanwezig is";
 
 "settings.calendar" = "Agenda";
+//"settings.calendar.show_month_outline" = "Show month outline";
 "settings.calendar.show_week_numbers" = "Weeknummers tonen";
 "settings.calendar.preserve_selected_date" = "Geselecteerde datum behouden bij sluiten";
 "settings.calendar.show_declined_events" = "Afgewezen gebeurtenissen tonen";

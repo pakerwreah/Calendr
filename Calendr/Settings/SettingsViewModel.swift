@@ -27,6 +27,7 @@ protocol CalendarSettings {
     var firstWeekday: Observable<Int> { get }
     var weekCount: Observable<Int> { get }
     var highlightedWeekdays: Observable<[Int]> { get }
+    var showMonthOutline: Observable<Bool> { get }
     var showWeekNumbers: Observable<Bool> { get }
     var showDeclinedEvents: Observable<Bool> { get }
     var preserveSelectedDate: Observable<Bool> { get }
@@ -113,6 +114,7 @@ class SettingsViewModel:
     let firstWeekdayNextObserver: AnyObserver<Void>
     let weekCountObserver: AnyObserver<Int>
     let toggleHighlightedWeekday: AnyObserver<Int>
+    let toggleMonthOutline: AnyObserver<Bool>
     let toggleWeekNumbers: AnyObserver<Bool>
     let toggleDeclinedEvents: AnyObserver<Bool>
     let togglePreserveSelectedDate: AnyObserver<Bool>
@@ -158,6 +160,7 @@ class SettingsViewModel:
     let weekCount: Observable<Int>
     let highlightedWeekdays: Observable<[Int]>
     let highlightedWeekdaysOptions: Observable<[WeekDay]>
+    let showMonthOutline: Observable<Bool>
     let showWeekNumbers: Observable<Bool>
     let showDeclinedEvents: Observable<Bool>
     let preserveSelectedDate: Observable<Bool>
@@ -256,6 +259,7 @@ class SettingsViewModel:
         firstWeekdayNextObserver = localStorage.rx.observer(for: \.firstWeekday).mapObserver { (1...7).circular(after: localStorage.firstWeekday) }
         toggleHighlightedWeekday = localStorage.rx.toggleObserver(for: \.highlightedWeekdays)
         weekCountObserver = localStorage.rx.observer(for: \.weekCount)
+        toggleMonthOutline = localStorage.rx.observer(for: \.showMonthOutline)
         toggleWeekNumbers = localStorage.rx.observer(for: \.showWeekNumbers)
         toggleDeclinedEvents = localStorage.rx.observer(for: \.showDeclinedEvents)
         togglePreserveSelectedDate = localStorage.rx.observer(for: \.preserveSelectedDate)
@@ -298,6 +302,7 @@ class SettingsViewModel:
         firstWeekday = localStorage.rx.observe(\.firstWeekday)
         highlightedWeekdays = localStorage.rx.observe(\.highlightedWeekdays)
         weekCount = localStorage.rx.observe(\.weekCount)
+        showMonthOutline = localStorage.rx.observe(\.showMonthOutline)
         showWeekNumbers = localStorage.rx.observe(\.showWeekNumbers)
         showDeclinedEvents = localStorage.rx.observe(\.showDeclinedEvents)
         preserveSelectedDate = localStorage.rx.observe(\.preserveSelectedDate)

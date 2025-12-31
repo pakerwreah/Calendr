@@ -52,6 +52,7 @@
 "settings.next_event.detect_notch" = "Korta om 'notch' finns";
 
 "settings.calendar" = "Kalender";
+//"settings.calendar.show_month_outline" = "Show month outline";
 "settings.calendar.show_week_numbers" = "Visa veckonummer";
 "settings.calendar.preserve_selected_date" = "Bevara valt datum när gömd";
 "settings.calendar.show_declined_events" = "Visa avböjda händelser";

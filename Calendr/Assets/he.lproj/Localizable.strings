@@ -52,6 +52,7 @@
 "settings.next_event.detect_notch" = "מקוצר אם יש Notch";
 
 "settings.calendar" = "לוח שנה";
+//"settings.calendar.show_month_outline" = "Show month outline";
 "settings.calendar.show_week_numbers" = "הצגת מספרי שבועות";
 "settings.calendar.preserve_selected_date" = "שמור תאריך נבחר בהסתרה";
 "settings.calendar.show_declined_events" = "הצגת אירועים שנדחו";

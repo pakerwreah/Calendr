@@ -54,6 +54,7 @@
 "settings.next_event.detect_notch" = "Сокращать, если есть вырез (notch)";
 
 "settings.calendar" = "Календарь";
+//"settings.calendar.show_month_outline" = "Show month outline";
 "settings.calendar.show_week_numbers" = "Показывать номер недели";
 "settings.calendar.preserve_selected_date" = "Сохранять выбранную дату при скрытии";
 "settings.calendar.show_declined_events" = "Показывать отклоненные события";

@@ -52,6 +52,7 @@
 "settings.next_event.detect_notch" = "노치 디스플레이에서 길이 조정";
 
 "settings.calendar" = "캘린더";
+//"settings.calendar.show_month_outline" = "Show month outline";
 "settings.calendar.show_week_numbers" = "주 번호 표시";
 "settings.calendar.preserve_selected_date" = "숨길 때 선택한 날짜 유지";
 "settings.calendar.show_declined_events" = "거절한 일정 표시";

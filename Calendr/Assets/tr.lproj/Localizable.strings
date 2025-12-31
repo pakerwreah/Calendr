@@ -52,6 +52,7 @@
 "settings.next_event.detect_notch" = "'Çentik' varsa kısalt";
 
 "settings.calendar" = "Takvim";
+//"settings.calendar.show_month_outline" = "Show month outline";
 "settings.calendar.show_week_numbers" = "Hafta numaralarını göster";
 "settings.calendar.preserve_selected_date" = "Gizlendiğinde seçili tarihi koru";
 "settings.calendar.show_declined_events" = "Reddedilen etkinlikleri göster";
