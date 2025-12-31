@@ -51,6 +51,7 @@ class SettingsViewModelTests: XCTestCase {
     var localStorageTransparency: NSNumber? { localStorage.object(forKey: Prefs.transparencyLevel) as? NSNumber }
     var localStorageAppearanceMode: NSNumber? { localStorage.object(forKey: Prefs.appearanceMode) as? NSNumber }
     var localStorageEventDotsStyle: String? { localStorage.object(forKey: Prefs.eventDotsStyle) as! String? }
+    var localStorageFutureEventsDays: NSNumber? { localStorage.object(forKey: Prefs.futureEventsDays) as? NSNumber }
 
     override func setUp() {
 
@@ -79,6 +80,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertNil(localStorageShowRecurrenceIndicator)
         XCTAssertNil(localStorageTransparency)
         XCTAssertNil(localStorageEventDotsStyle)
+        XCTAssertNil(localStorageFutureEventsDays)
 
         registerDefaultPrefs(in: localStorage, calendar: .gregorian.with(firstWeekday: 3))
     }
@@ -110,6 +112,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.popoverMaterial.lastValue(), .headerView)
         XCTAssertEqual(viewModel.appearanceMode.lastValue(), .automatic)
         XCTAssertEqual(viewModel.eventDotsStyle.lastValue(), .multiple)
+        XCTAssertEqual(viewModel.futureEventsDays.lastValue(), 0)
 
         XCTAssertEqual(localStorageStatusItemIconEnabled, true)
         XCTAssertEqual(localStorageStatusItemDateEnabled, true)
@@ -134,6 +137,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(localStorageTransparency, 2)
         XCTAssertEqual(localStorageAppearanceMode, 0)
         XCTAssertEqual(localStorageEventDotsStyle, EventDotsStyle.multiple.rawValue)
+        XCTAssertEqual(localStorageFutureEventsDays, 0)
     }
 
     func testDateFormatOptions() {
@@ -754,5 +758,31 @@ class SettingsViewModelTests: XCTestCase {
             XCTAssertEqual(viewModel.appearanceMode.lastValue(), mode)
             XCTAssertEqual(localStorageAppearanceMode?.intValue, mode.rawValue)
         }
+    }
+
+    func testChangeFutureEventsDays() {
+
+        localStorage.futureEventsDays = 1
+
+        var futureEventsDays: Int?
+        var futureEventsStepperLabel: String?
+
+        viewModel.futureEventsDays
+            .bind { futureEventsDays = $0 }
+            .disposed(by: disposeBag)
+
+        viewModel.futureEventsStepperLabel
+            .bind { futureEventsStepperLabel = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(futureEventsDays, 1)
+        XCTAssertEqual(futureEventsStepperLabel, "in 1 day")
+        XCTAssertEqual(localStorageFutureEventsDays, 1)
+
+        viewModel.futureEventsDaysObserver.onNext(5)
+
+        XCTAssertEqual(futureEventsDays, 5)
+        XCTAssertEqual(futureEventsStepperLabel, "in 5 days")
+        XCTAssertEqual(localStorageFutureEventsDays, 5)
     }
 }
