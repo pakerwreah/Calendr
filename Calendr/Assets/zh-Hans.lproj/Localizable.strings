@@ -52,7 +52,7 @@
 "settings.next_event.detect_notch" = "为屏幕“刘海”缩短长度";
 
 "settings.calendar" = "日历";
-//"settings.calendar.show_month_outline" = "Show month outline";
+"settings.calendar.show_month_outline" = "显示月份轮廓";
 "settings.calendar.show_week_numbers" = "显示周数";
 "settings.calendar.preserve_selected_date" = "隐藏时保留所选日期";
 "settings.calendar.show_declined_events" = "显示拒绝的日程";
@@ -75,7 +75,7 @@
 "settings.events.show_finished_events" = "展示已完成日程";
 "settings.events.show_recurrence_indicator" = "展示日程重复标识";
 "settings.events.force_local_time_zone" = "以本地时区显示所有事件";
-//"settings.events.show_future_events" = "Show future events";
+"settings.events.show_future_events" = "展示未来事件";
 
 "settings.appearance.transparency" = "透明度";
 "settings.appearance.accessibility" = "无障碍";
