@@ -5,7 +5,6 @@ Language|Count
 [Hebrew - עברית - (he)](Calendr/Assets/he.lproj/Localizable.strings)|20
 [Chinese - 中文 - (zh-Hant-TW)](Calendr/Assets/zh-Hant-TW.lproj/Localizable.strings)|23
 [Greek - Ελληνικά - (el)](Calendr/Assets/el.lproj/Localizable.strings)|26
-[Chinese - 中文 - (zh-Hans)](Calendr/Assets/zh-Hans.lproj/Localizable.strings)|2
 [Japanese - 日本語 - (ja)](Calendr/Assets/ja.lproj/Localizable.strings)|20
 [Albanian - shqip - (sq)](Calendr/Assets/sq.lproj/Localizable.strings)|26
 [Ukrainian - українська - (uk)](Calendr/Assets/uk.lproj/Localizable.strings)|20
