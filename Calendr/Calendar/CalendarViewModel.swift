@@ -176,9 +176,37 @@ class CalendarViewModel {
         .distinctUntilChanged()
         .share(replay: 1)
 
+        var timeZone = dateProvider.calendar.timeZone
+
+        // Check if today has changed
+        let todayObservable = dateObservable
+            .void()
+            .map { dateProvider.now }
+            .distinctUntilChanged { a, b in
+                timeZone == dateProvider.calendar.timeZone && dateProvider.calendar.isDate(a, inSameDayAs: b)
+            }
+            .do(afterNext: { _ in
+                timeZone = dateProvider.calendar.timeZone
+            })
+            .share(replay: 1)
+
+        // Check which cell is today
+        let cellsWithIsToday = Observable.combineLatest(
+            dateCellsObservable, todayObservable
+        )
+        .map { cellViewModels, today -> [CalendarCellViewModel] in
+
+            cellViewModels.map { vm in
+                vm.with(
+                    isToday: dateProvider.calendar.isDate(vm.date, inSameDayAs: today)
+                )
+            }
+        }
+        .share(replay: 1)
+
         // Assign events to their respective cells
         let cellsWithEvents = Observable.combineLatest(
-            dateCellsObservable, filteredEventsObservable, settings.futureEventsDays
+            cellsWithIsToday, filteredEventsObservable, settings.futureEventsDays
         )
         .map { cellViewModels, events, futureEventsDays -> [CalendarCellViewModel] in
 
@@ -195,7 +223,7 @@ class CalendarViewModel {
 
                     // check if event starts in the future
                     guard
-                        futureEventsDays > 0,
+                        vm.isToday, futureEventsDays > 0,
                         let futureStart = dateProvider.calendar.date(
                             byAdding: DateComponents(day: 1),
                             to: vm.date
@@ -216,37 +244,9 @@ class CalendarViewModel {
         .distinctUntilChanged()
         .share(replay: 1)
 
-        var timeZone = dateProvider.calendar.timeZone
-
-        // Check if today has changed
-        let todayObservable = dateObservable
-            .void()
-            .map { dateProvider.now }
-            .distinctUntilChanged { a, b in
-                timeZone == dateProvider.calendar.timeZone && dateProvider.calendar.isDate(a, inSameDayAs: b)
-            }
-            .do(afterNext: { _ in
-                timeZone = dateProvider.calendar.timeZone
-            })
-            .share(replay: 1)
-
-        // Check which cell is today
-        let cellsWithIsToday = Observable.combineLatest(
-            cellsWithEvents, todayObservable
-        )
-        .map { cellViewModels, today -> [CalendarCellViewModel] in
-
-            cellViewModels.map { vm in
-                vm.with(
-                    isToday: dateProvider.calendar.isDate(vm.date, inSameDayAs: today)
-                )
-            }
-        }
-        .share(replay: 1)
-
         // Check which cell is selected
         let cellsWithIsSelected = Observable.combineLatest(
-            cellsWithIsToday, dateObservable
+            cellsWithEvents, dateObservable
         )
         .map { cellViewModels, selectedDate -> [CalendarCellViewModel] in
 
@@ -317,9 +317,7 @@ class CalendarViewModel {
                             return []
                         }
                         return vm.events.filter {
-                            // get only events starting on the focused date, to avoid duplicates
-                            dateProvider.calendar.isDate($0.start, inSameDayAs: vm.date)
-                            && $0.type == .reminder(completed: false)
+                            $0.type == .reminder(completed: false)
                         }
                     }
 
