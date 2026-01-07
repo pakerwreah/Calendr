@@ -450,14 +450,14 @@ class CalendarViewModelTests: XCTestCase {
         ])
     }
 
-    func testEventsPerDate_withFutureEvents() {
+    func testEventsPerDate_withFutureEvents_shouldOnlyShowFutureEventsInCurrentDate() {
 
         settings.futureEventsDaysObserver.onNext(1)
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
 
         assertExpectedEvents({ $0.events.map(\.title) }, [
             (.make(year: 2021, month: 1, day: 1), ["Event 1", "Event 2", "Event 3"]),
-            (.make(year: 2021, month: 1, day: 2), ["Event 1", "Event 2", "Event 3", "Event 4"]),
+            (.make(year: 2021, month: 1, day: 2), ["Event 1", "Event 2", "Event 3"]),
             (.make(year: 2021, month: 1, day: 3), ["Event 1", "Event 4"]),
             (.make(year: 2021, month: 1, day: 4), []),
         ])
@@ -466,13 +466,13 @@ class CalendarViewModelTests: XCTestCase {
 
         assertExpectedEvents({ $0.events.map(\.title) }, [
             (.make(year: 2021, month: 1, day: 1), ["Event 1", "Event 2", "Event 3", "Event 4"]),
-            (.make(year: 2021, month: 1, day: 2), ["Event 1", "Event 2", "Event 3", "Event 4"]),
+            (.make(year: 2021, month: 1, day: 2), ["Event 1", "Event 2", "Event 3"]),
             (.make(year: 2021, month: 1, day: 3), ["Event 1", "Event 4"]),
             (.make(year: 2021, month: 1, day: 4), []),
         ])
     }
 
-    func testEventsPerDate_withFutureEvents_withDeclinedEvents() {
+    func testEventsPerDate_withFutureEvents_withDeclinedEvents_shouldOnlyShowFutureEventsInCurrentDate() {
 
         settings.toggleDeclinedEvents.onNext(true)
         settings.futureEventsDaysObserver.onNext(1)
@@ -480,8 +480,8 @@ class CalendarViewModelTests: XCTestCase {
 
         assertExpectedEvents({ $0.events.map(\.title) }, [
             (.make(year: 2021, month: 1, day: 1), ["Event 1", "Event 2", "Event 3"]),
-            (.make(year: 2021, month: 1, day: 2), ["Event 1", "Event 2", "Event 3", "Event 4", "Event 5"]),
-            (.make(year: 2021, month: 1, day: 3), ["Event 1", "Event 4", "Event 5", "Event 6"]),
+            (.make(year: 2021, month: 1, day: 2), ["Event 1", "Event 2", "Event 3"]),
+            (.make(year: 2021, month: 1, day: 3), ["Event 1", "Event 4", "Event 5"]),
             (.make(year: 2021, month: 1, day: 4), ["Event 6"]),
         ])
 
@@ -489,10 +489,63 @@ class CalendarViewModelTests: XCTestCase {
 
         assertExpectedEvents({ $0.events.map(\.title) }, [
             (.make(year: 2021, month: 1, day: 1), ["Event 1", "Event 2", "Event 3", "Event 4", "Event 5"]),
-            (.make(year: 2021, month: 1, day: 2), ["Event 1", "Event 2", "Event 3", "Event 4", "Event 5", "Event 6"]),
-            (.make(year: 2021, month: 1, day: 3), ["Event 1", "Event 4", "Event 5", "Event 6"]),
+            (.make(year: 2021, month: 1, day: 2), ["Event 1", "Event 2", "Event 3"]),
+            (.make(year: 2021, month: 1, day: 3), ["Event 1", "Event 4", "Event 5"]),
             (.make(year: 2021, month: 1, day: 4), ["Event 6"]),
         ])
+    }
+
+    func testFutureEventsInSelectedDate_withSelectedDateToday() {
+
+        var events: [EventModel]?
+
+        viewModel
+            .focusedDateEventsObservable
+            .bind { events = $0.events }
+            .disposed(by: disposeBag)
+
+        settings.toggleDeclinedEvents.onNext(true) // just to show more events
+        settings.futureEventsDaysObserver.onNext(1)
+
+        dateProvider.now = .make(year: 2021, month: 1, day: 2)
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 2))
+
+        XCTAssertEqual(events?.map(\.title), ["Event 1", "Event 2", "Event 3", "Event 4", "Event 5"])
+
+        dateProvider.now = .make(year: 2021, month: 1, day: 3)
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 3))
+
+        XCTAssertEqual(events?.map(\.title), ["Event 1", "Event 4", "Event 5", "Event 6"])
+
+        dateProvider.now = .make(year: 2021, month: 1, day: 4)
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 4))
+
+        XCTAssertEqual(events?.map(\.title), ["Event 6"])
+    }
+
+    func testFutureEventsInSelectedDate_withSelectedDateNotToday() {
+
+        var events: [EventModel]?
+
+        viewModel
+            .focusedDateEventsObservable
+            .bind { events = $0.events }
+            .disposed(by: disposeBag)
+
+        settings.toggleDeclinedEvents.onNext(true) // just to show more events
+        settings.futureEventsDaysObserver.onNext(1)
+
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 2))
+
+        XCTAssertEqual(events?.map(\.title), ["Event 1", "Event 2", "Event 3"])
+
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 3))
+
+        XCTAssertEqual(events?.map(\.title), ["Event 1", "Event 4", "Event 5"])
+
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 4))
+
+        XCTAssertEqual(events?.map(\.title), ["Event 6"])
     }
 
     func testEventDotsPerDate() {
@@ -686,9 +739,11 @@ class CalendarViewModelTests: XCTestCase {
         XCTAssertEqual(events?.map(\.title), ["Event 1"])
     }
 
-    // Ensure overdues are not duplicated when future events are enabled,
-    // because the same future event can be shared by multiple cells,
-    // and the overdues are built from the previous cells data.
+    /// Ensure overdues are not affected when future events are enabled.
+    ///
+    /// This used to be a problem, because the same future event could be shared by multiple cells.
+    /// It should be fine now, since future events are only fetched for the current date.
+    /// I kept the test because it doesn't hurt to make sure it still works properly.
     func testEvents_withOverdueReminder_withSelectedDateToday_withFutureEvents() {
 
         settings.futureEventsDaysObserver.onNext(2)
