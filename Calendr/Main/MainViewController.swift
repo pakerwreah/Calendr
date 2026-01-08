@@ -647,7 +647,12 @@ class MainViewController: NSViewController {
             .bind(to: popover.rx.behavior)
             .disposed(by: popoverDisposeBag)
 
-        popover.show(from: button)
+        popover.show(
+            from: button,
+            // make sure the popover is anchored correctly when clicking
+            // the menu bar button on an inactive screen (macOS < 26)
+            delay: .milliseconds(1)
+        )
     }
 
     override func viewDidLayout() {
@@ -676,11 +681,6 @@ class MainViewController: NSViewController {
         let mouseEntered = trackingView.mouseEntered.withLatestFrom(settingsViewModel.openOnHover).matching(true).void()
 
         Observable.merge(clickHandler.leftClick, mouseEntered)
-            .observe(
-                // make sure the popover is anchored to the correct view
-                // when clicking the menu bar on an inactive screen
-                on: MainScheduler.asyncInstance
-            )
             .flatMapFirst { [weak self] _ -> Observable<Void> in
                 guard let self else { return .empty() }
 
@@ -867,13 +867,7 @@ class MainViewController: NSViewController {
     private func setUpGlobalShortcuts() {
 
         KeyboardShortcuts.onKeyUp(for: .showMainPopover) { [weak self] in
-            // Triggering the click action for the same popover/menu would normally be blocked,
-            // but for the main popover we have a small delay so it correctly attaches to the focused screen.
-            // That, however, causes the popover to open again immediately after closing.
-            let isVisible = self?.view.window != nil
-
             self?.closeModals {
-                guard !isVisible else { return }
                 self?.mainStatusItemClickHandler.leftClick.onNext(())
             }
         }
