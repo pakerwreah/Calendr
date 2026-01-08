@@ -20,11 +20,11 @@
 "auto_update.downloading" = "מוריד גרסה %@";
 "auto_update.install" = "התקנה";
 "auto_update.replace.message" = "יש לאשר את מיקום האפליקציה כך שתהיה לנו הרשאה להחליף אותה";
-//"auto_update.replace.error" = "You must not change the installation directory";
+"auto_update.replace.error" = "אין לשנות את תיקיית ההתקנה";
 
-//"auto_update.failed.check" = "Failed to check for update";
-//"auto_update.failed.download" = "Failed to download update";
-//"auto_update.failed.install" = "Failed to install update";
+"auto_update.failed.check" = "בדיקת עדכון נכשלה";
+"auto_update.failed.download" = "הורדת העדכון נכשלה";
+"auto_update.failed.install" = "התקנת העדכון נכשלה";
 
 "attachments.open.message" = "‏Calendr זקוק להרשאה כדי לגשת לקבצים המצורפים שלך";
 "attachments.open.authorize" = "הענק הרשאה לקבצים מצורפים";
@@ -42,7 +42,7 @@
 "settings.menu_bar.show_date" = "הצג תאריך";
 "settings.menu_bar.show_background" = "הצג רקע אטום";
 "settings.menu_bar.date_format_custom" = "מותאם";
-"settings.menu_bar.open_on_hover" = "פתיחה במעבר עם העכבר";
+"settings.menu_bar.open_on_hover" = "פתיחה בריחוף עם העכבר";
 
 "settings.next_event" = "אירוע הבא";
 "settings.next_event.show_next_event" = "הצג אירוע הבא";
@@ -52,7 +52,7 @@
 "settings.next_event.detect_notch" = "מקוצר אם יש Notch";
 
 "settings.calendar" = "לוח שנה";
-//"settings.calendar.show_month_outline" = "Show month outline";
+"settings.calendar.show_month_outline" = "הצגת מסגרת לחודש";
 "settings.calendar.show_week_numbers" = "הצגת מספרי שבועות";
 "settings.calendar.preserve_selected_date" = "שמור תאריך נבחר בהסתרה";
 "settings.calendar.show_declined_events" = "הצגת אירועים שנדחו";
@@ -62,20 +62,20 @@
 "settings.calendar.calendar_app_view_mode" = "מצב תצוגה באפליקציית לוח שנה";
 "settings.calendar.default_calendar_app" = "ברירת מחדל לאפליקציית לוח שנה";
 
-//"settings.calendar.event_dots" = "Event dots";
-//"settings.calendar.event_dots.none" = "none";
-//"settings.calendar.event_dots.single_neutral" = "neutral";
-//"settings.calendar.event_dots.single_highlighted" = "highlighted";
-//"settings.calendar.event_dots.multiple" = "multiple";
+"settings.calendar.event_dots" = "נקודות אירועים";
+"settings.calendar.event_dots.none" = "ללא";
+"settings.calendar.event_dots.single_neutral" = "רגיל";
+"settings.calendar.event_dots.single_highlighted" = "מרובה";
+"settings.calendar.event_dots.multiple" = "מרובים";
 
 "settings.events" = "אירועים";
 "settings.events.show_map" = "הצג מפה ומזג אוויר";
 "settings.events.show_overdue_reminders" = "הצג תזכורות מאוחרות";
-//"settings.events.show_all_day_details" = "Show all-day events details";
+"settings.events.show_all_day_details" = "הצג פרטים של אירועי יום שלם";
 "settings.events.show_finished_events" = "הצג אירועים שהסתיימו";
 "settings.events.show_recurrence_indicator" = "הצג מחוון על אירוע מחזורי";
 "settings.events.force_local_time_zone" = "הצג את כל האירועים באזור הזמן המקומי";
-//"settings.events.show_future_events" = "Show future events";
+"settings.events.show_future_events" = "הצג אירועים עתידיים";
 
 "settings.appearance.transparency" = "שקיפות";
 "settings.appearance.accessibility" = "נגישות";
@@ -109,15 +109,15 @@
 "reminder.options.complete" = "בצע";
 "reminder.options.remind" = "הזכר %@";
 
-//"reminder.editor.headline" = "New Reminder";
-//"reminder.editor.title" = "Title";
-//"reminder.editor.save" = "Save";
+"reminder.editor.headline" = "תזכורת חדשה";
+"reminder.editor.title" = "כותרת";
+"reminder.editor.save" = "שמור";
 
-//"reminder.editor.confirm.continue" = "Continue editing";
-//"reminder.editor.confirm.discard" = "Discard all changes";
+"reminder.editor.confirm.continue" = "המשך עריכה";
+"reminder.editor.confirm.discard" = "ביטול כל השינויים";
 
-//"map_black_list.headline" = "Hide map if location contains any of these words";
-//"map_black_list.new_item_text" = "New Item";
+"map_black_list.headline" = "הסתר מפה אם המיקום מכיל אחת מהמילים האלה";
+"map_black_list.new_item_text" = "פריט חדש";
 
 "event.details.participant.organizer" = "מארגן";
 "event.details.participant.me" = "אני";
@@ -141,7 +141,7 @@
 "tooltips.navigation.next_month" = "חודש הבא";
 
 "tooltips.toolbar.stay_open" = "הישאר פתוח";
-//"tooltips.toolbar.create" = "Create";
+"tooltips.toolbar.create" = "צור";
 "tooltips.toolbar.open_calendar" = "פתח לוח שנה";
 "tooltips.toolbar.open_reminders" = "פתח תזכורות";
 "tooltips.toolbar.open_menu" = "פתח תפריט";
