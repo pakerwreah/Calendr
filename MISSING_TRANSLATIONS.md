@@ -2,7 +2,6 @@
 Language|Count
 -|-
 [German - Deutsch - (de)](Calendr/Assets/de.lproj/Localizable.strings)|25
-[Hebrew - עברית - (he)](Calendr/Assets/he.lproj/Localizable.strings)|20
 [Chinese - 中文 - (zh-Hant-TW)](Calendr/Assets/zh-Hant-TW.lproj/Localizable.strings)|23
 [Greek - Ελληνικά - (el)](Calendr/Assets/el.lproj/Localizable.strings)|26
 [Japanese - 日本語 - (ja)](Calendr/Assets/ja.lproj/Localizable.strings)|20
