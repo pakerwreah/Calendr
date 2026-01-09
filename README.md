@@ -6,7 +6,7 @@
 [![downloads-latest](https://img.shields.io/github/downloads/pakerwreah/Calendr/latest/Calendr.zip?displayAssetName=false&logo=github&label=Downloads)](https://github.com/pakerwreah/Calendr/releases/latest)
 [![downloads-all](https://img.shields.io/github/downloads/pakerwreah/Calendr/Calendr.zip?displayAssetName=false&logo=github&label=All%20downloads)](https://github.com/pakerwreah/Calendr/releases/latest)
 
-[![ci-github](https://img.shields.io/github/check-runs/pakerwreah/Calendr/master?nameFilter=Unit%20Tests&logo=github&label=Unit%20Tests)](https://github.com/pakerwreah/Calendr/actions)
+[![ci-github](https://github.com/pakerwreah/Calendr/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/pakerwreah/Calendr/actions)
 [![ci-bitrise](https://img.shields.io/bitrise/9fa2e96dc9458fbb?label=Unit%20Tests&logo=bitrise&token=iAJgn0FMJzmMP4ALCi0KdQ)](https://app.bitrise.io/app/9fa2e96dc9458fbb)
 [![sentry](https://img.shields.io/badge/Sentry-purple?logo=sentry&logoColor=white)](https://github.com/pakerwreah/Calendr/issues)
 [![linkedin](https://img.shields.io/badge/LinkedIn-blue?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/carlosenumo)
