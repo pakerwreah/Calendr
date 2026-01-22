@@ -1,4 +1,4 @@
-/* 
+/*
   Localizable.strings
   Calendr
 
@@ -20,14 +20,14 @@
 "auto_update.downloading" = "%@ sürümü indiriliyor";
 "auto_update.install" = "Yükle";
 "auto_update.replace.message" = "Uygulamanın konumunu onaylayın, böylece değiştirme iznine sahip olabiliriz";
-//"auto_update.replace.error" = "You must not change the installation directory";
+//"auto_update.replace.error" = "Yükleme konumu değiştirilemez.";
 
-//"auto_update.failed.check" = "Failed to check for update";
-//"auto_update.failed.download" = "Failed to download update";
-//"auto_update.failed.install" = "Failed to install update";
+//"auto_update.failed.check" = "Güncellemeler kontrol edilemedi";
+//"auto_update.failed.download" = "Güncellemeler indirilemedi";
+//"auto_update.failed.install" = "Güncellemeler yüklenemedi";
 
-//"attachments.open.message" = "Calendr needs permission to access your attachments";
-//"attachments.open.authorize" = "Authorize access to attachments";
+//"attachments.open.message" = "Calendr, eklerinize erişmek için izin istiyor.";
+//"attachments.open.authorize" = "Eklere erişime izni ver";
 
 "settings.title" = "Tercihler";
 "settings.tab.general" = "Genel";
@@ -42,7 +42,7 @@
 "settings.menu_bar.show_date" = "Tarihi göster";
 "settings.menu_bar.show_background" = "Opak arka plan göster";
 "settings.menu_bar.date_format_custom" = "Özel";
-//"settings.menu_bar.open_on_hover" = "Open on mouse hover";
+//"settings.menu_bar.open_on_hover" = "Fare ile üzerine gelince aç";
 
 "settings.next_event" = "Sonraki Etkinlik";
 "settings.next_event.show_next_event" = "Sonraki etkinliği göster";
@@ -52,30 +52,30 @@
 "settings.next_event.detect_notch" = "'Çentik' varsa kısalt";
 
 "settings.calendar" = "Takvim";
-//"settings.calendar.show_month_outline" = "Show month outline";
+//"settings.calendar.show_month_outline" = "Ay sınırlarını göster";
 "settings.calendar.show_week_numbers" = "Hafta numaralarını göster";
 "settings.calendar.preserve_selected_date" = "Gizlendiğinde seçili tarihi koru";
 "settings.calendar.show_declined_events" = "Reddedilen etkinlikleri göster";
 "settings.calendar.show_declined_events_tooltip" = "Bu, yalnızca yerel Takvim uygulamasında da etkinleştirilmişse çalışır.";
 "settings.calendar.date_hover_option" = "Üzerine gelinen tarihleri önizlemek için ⌥ tuşuna basılı tut";
-//"settings.calendar.week_count" = "Visible weeks";
+//"settings.calendar.week_count" = "Görünür hafta sayısı";
 "settings.calendar.calendar_app_view_mode" = "Takvim uygulaması görünüm modu";
-//"settings.calendar.default_calendar_app" = "Default calendar app";
+//"settings.calendar.default_calendar_app" = "Varsayılan takvim uygulaması";
 
-//"settings.calendar.event_dots" = "Event dots";
-//"settings.calendar.event_dots.none" = "none";
-//"settings.calendar.event_dots.single_neutral" = "neutral";
-//"settings.calendar.event_dots.single_highlighted" = "highlighted";
-//"settings.calendar.event_dots.multiple" = "multiple";
+//"settings.calendar.event_dots" = "Etkinlik göstergeleri";
+//"settings.calendar.event_dots.none" = "yok";
+//"settings.calendar.event_dots.single_neutral" = "nötr";
+//"settings.calendar.event_dots.single_highlighted" = "vurgulu";
+//"settings.calendar.event_dots.multiple" = "birden fazla";
 
 "settings.events" = "Etkinlikler";
 "settings.events.show_map" = "Harita ve hava durumunu göster";
 "settings.events.show_overdue_reminders" = "Gecikmiş hatırlatıcıları göster";
-//"settings.events.show_all_day_details" = "Show all-day events details";
+//"settings.events.show_all_day_details" = "Tüm gün süren etkinliklerin ayrıntılarını göster";
 "settings.events.show_finished_events" = "Tamamlanmış etkinlikleri göster";
 "settings.events.show_recurrence_indicator" = "Tekrarlama göstergesini göster";
 "settings.events.force_local_time_zone" = "Tüm etkinlikleri yerel saat diliminde göster";
-//"settings.events.show_future_events" = "Show future events";
+//"settings.events.show_future_events" = "Gelecekteki etkinlikleri göster";
 
 "settings.appearance.transparency" = "Şeffaflık";
 "settings.appearance.accessibility" = "Erişilebilirlik";
@@ -103,21 +103,21 @@
 "formatter.date.relative.ago" = "%@ önce";
 "formatter.date.relative.left" = "%@ kaldı";
 
-//"reminder.status.overdue" = "Overdue";
+//"reminder.status.overdue" = "Süresi geçmiş";
 
 "reminder.options.button" = "Seçenekler";
 "reminder.options.complete" = "Tamamlandı";
 "reminder.options.remind" = "%@ hatırlat";
 
-//"reminder.editor.headline" = "New Reminder";
-//"reminder.editor.title" = "Title";
-//"reminder.editor.save" = "Save";
+//"reminder.editor.headline" = "Yeni hatırlatıcı";
+//"reminder.editor.title" = "Başlık";
+//"reminder.editor.save" = "Kaydet";
 
-//"reminder.editor.confirm.continue" = "Continue editing";
-//"reminder.editor.confirm.discard" = "Discard all changes";
+//"reminder.editor.confirm.continue" = "Düzenlemeye devam et";
+//"reminder.editor.confirm.discard" = "Tüm değişiklikleri iptal et";
 
-//"map_black_list.headline" = "Hide map if location contains any of these words";
-//"map_black_list.new_item_text" = "New Item";
+//"map_black_list.headline" = "Konum şu kelimelerden birini içeriyorsa haritayı gizle";
+//"map_black_list.new_item_text" = "Yeni öğe";
 
 "event.details.participant.organizer" = "organizatör";
 "event.details.participant.me" = "ben";
@@ -141,7 +141,7 @@
 "tooltips.navigation.next_month" = "Sonraki ay";
 
 "tooltips.toolbar.stay_open" = "Açık kal";
-//"tooltips.toolbar.create" = "Create";
+//"tooltips.toolbar.create" = "Oluştur";
 "tooltips.toolbar.open_calendar" = "Takvimi aç";
 "tooltips.toolbar.open_reminders" = "Hatırlatıcıları aç";
 "tooltips.toolbar.open_menu" = "Menüyü aç";
