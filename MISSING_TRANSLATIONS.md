@@ -13,7 +13,6 @@ Language|Count
 [Swedish - svenska - (sv)](Calendr/Assets/sv.lproj/Localizable.strings)|26
 [Czech - čeština - (cs)](Calendr/Assets/cs.lproj/Localizable.strings)|26
 [Korean - 한국어 - (ko)](Calendr/Assets/ko.lproj/Localizable.strings)|26
-[Turkish - Türkçe - (tr)](Calendr/Assets/tr.lproj/Localizable.strings)|26
 [Russian - русский - (ru)](Calendr/Assets/ru.lproj/Localizable.strings)|2
 [French - français - (fr)](Calendr/Assets/fr.lproj/Localizable.strings)|16
 [Dutch - Nederlands - (nl)](Calendr/Assets/nl.lproj/Localizable.strings)|20
