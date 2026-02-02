@@ -11,7 +11,6 @@
 [![sentry](https://img.shields.io/badge/Sentry-purple?logo=sentry&logoColor=white)](https://github.com/pakerwreah/Calendr/issues)
 [![linkedin](https://img.shields.io/badge/LinkedIn-blue?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/carlosenumo)
 [![buy-me-a-coffee](https://img.shields.io/badge/Buy_Me_a_Coffee-ffdd00?logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/pakerwreah)
-[![pix](https://img.shields.io/badge/Pix-white?logo=pix)](https://nubank.com.br/cobrar/3gkjs/691cc802-1bb3-4b2e-b269-9b5f8ecbc806)
 [![reddit](https://img.shields.io/badge/Follow%20r%2FCalendr--black?style=social&logo=reddit)](https://www.reddit.com/r/Calendr)
 
 ### Menu bar calendar for macOS
