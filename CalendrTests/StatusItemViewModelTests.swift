@@ -292,6 +292,36 @@ class StatusItemViewModelTests: XCTestCase {
         XCTAssertEqual(lastText, "02:00:01 | 21:00:01")
     }
 
+    func testDateFormatWithTimeZonesHalfHourOffset() {
+
+        setUp(showIcon: false, showDate: true, iconStyle: .calendar)
+
+        settings.statusItemDateStyleObserver.onNext(.none)
+        settings.statusItemDateFormatObserver.onNext("HH:mm@GMT+5:30 | HH:mm@GMT+9:30")
+
+        XCTAssertEqual(lastText, "05:30 | 09:30")
+    }
+
+    func testDateFormatWithTimeZonesQuarterHourOffset() {
+
+        setUp(showIcon: false, showDate: true, iconStyle: .calendar)
+
+        settings.statusItemDateStyleObserver.onNext(.none)
+        settings.statusItemDateFormatObserver.onNext("HH:mm@GMT+5:45 | HH:mm@GMT-3:15")
+
+        XCTAssertEqual(lastText, "05:45 | 20:45")
+    }
+
+    func testDateFormatWithMixedTimeZoneOffsets() {
+
+        setUp(showIcon: false, showDate: true, iconStyle: .calendar)
+
+        settings.statusItemDateStyleObserver.onNext(.none)
+        settings.statusItemDateFormatObserver.onNext("HH:mm@GMT+2 | HH:mm@GMT+5:30 | HH:mm@GMT-3")
+
+        XCTAssertEqual(lastText, "02:00 | 05:30 | 21:00")
+    }
+
     func testBackground() {
 
         var image: NSImage?
