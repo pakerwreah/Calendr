@@ -217,26 +217,42 @@ class CalendarView: NSView {
             gridView.cell(atColumnIndex: 1 + day % 7, rowIndex: 1 + day / 7).contentView = cellView
         }
 
-        let updateSize = rx.observe(\.frame).distinctUntilChanged(\.size).void()
+        let resizeObservable = rx.observe(\.frame)
+            .distinctUntilChanged(\.size)
+            .void()
+            .startWith(())
 
-        viewModel.cellViewModelsObservable
-            .repeat(when: updateSize)
-            .observe(on: MainScheduler.instance)
-            .compactMap {
-                let inset = Constants.outlineInset
+        let backingScaleObservable = gridView.rx.observe(\.window)
+            .compactMap(\.?.backingScaleFactor)
+            .distinctUntilChanged()
 
-                let frames = $0.enumerated().compactMap { day, vm -> NSRect? in
-                    guard vm.inMonth, let view = dateViews[safe: day] else { return nil }
-                    view.layoutSubtreeIfNeeded()
-                    return view.frame.insetBy(dx: -inset, dy: -inset)
-                }
+        Observable.combineLatest(
+            viewModel.cellViewModelsObservable,
+            backingScaleObservable,
+            resizeObservable
+        )
+        .observe(on: MainScheduler.instance)
+        .compactMap { cellViewModels, backingScale, _ in
+            let inset = Constants.outlineInset
 
-                guard let points = CGPath.union(from: frames)?.points() else { return nil }
-
-                return CGPath.rounded(from: points, radius: Constants.cornerRadius)
+            let frames = cellViewModels.enumerated().compactMap { day, viewModel -> NSRect? in
+                guard viewModel.inMonth, let view = dateViews[safe: day] else { return nil }
+                view.layoutSubtreeIfNeeded()
+                return view.frame
+                    .insetBy(dx: -inset, dy: -inset)
+                    .expandedToPixelGrid(scale: backingScale)
             }
-            .bind(to: outlineLayer.rx.path)
-            .disposed(by: gridDisposeBag)
+
+            guard let points = CGPath.union(from: frames)?.points() else { return nil }
+
+            return CGPath.rounded(
+                from: points,
+                radius: Constants.cornerRadius,
+                tolerance: Constants.outlinePointTolerance / backingScale
+            )
+        }
+        .bind(to: outlineLayer.rx.path)
+        .disposed(by: gridDisposeBag)
     }
 
     override func updateTrackingAreas() {
@@ -270,6 +286,7 @@ private enum Constants {
     static let cornerRadius: CGFloat = 6
     static let outlineWidth: CGFloat = 1.5
     static let outlineInset: CGFloat = 1
+    static let outlinePointTolerance: CGFloat = 0.5
 }
 
 private enum Colors {
@@ -308,26 +325,38 @@ private extension CGPath {
 
     static func rounded(
         from points: [CGPoint],
-        radius: CGFloat
+        radius: CGFloat,
+        tolerance: CGFloat
     ) -> CGPath {
-        guard points.count >= 3 else { return CGPath(rect: .zero, transform: nil) }
+        let sanitizedPoints = sanitized(points, tolerance: tolerance)
+        guard sanitizedPoints.count >= 3 else { return CGPath(rect: .zero, transform: nil) }
 
         let path = CGMutablePath()
 
-        let count = points.count
+        let count = sanitizedPoints.count
 
-        func normalize(_ v: CGVector) -> CGVector {
-            let len = sqrt(v.dx * v.dx + v.dy * v.dy)
-            return CGVector(dx: v.dx / len, dy: v.dy / len)
+        func normalize(_ vector: CGVector) -> CGVector? {
+            let length = sqrt(vector.dx * vector.dx + vector.dy * vector.dy)
+            guard length > 0 else { return nil }
+            return CGVector(dx: vector.dx / length, dy: vector.dy / length)
         }
 
         for i in 0..<count {
-            let prev = points[(i - 1 + count) % count]
-            let curr = points[i]
-            let next = points[(i + 1) % count]
+            let prev = sanitizedPoints[(i - 1 + count) % count]
+            let curr = sanitizedPoints[i]
+            let next = sanitizedPoints[(i + 1) % count]
 
-            let vIn = normalize(CGVector(dx: curr.x - prev.x, dy: curr.y - prev.y))
-            let vOut = normalize(CGVector(dx: next.x - curr.x, dy: next.y - curr.y))
+            guard
+                let vIn = normalize(CGVector(dx: curr.x - prev.x, dy: curr.y - prev.y)),
+                let vOut = normalize(CGVector(dx: next.x - curr.x, dy: next.y - curr.y))
+            else {
+                if i == 0 {
+                    path.move(to: curr)
+                } else {
+                    path.addLine(to: curr)
+                }
+                continue
+            }
 
             let start = curr - CGVector(dx: vIn.dx * radius, dy: vIn.dy * radius)
             let end = curr + CGVector(dx: vOut.dx * radius, dy: vOut.dy * radius)
@@ -349,6 +378,46 @@ private extension CGPath {
         return path
     }
 
+    private static func sanitized(_ points: [CGPoint], tolerance: CGFloat) -> [CGPoint] {
+        guard points.count > 1 else { return points }
+
+        var sanitizedPoints: [CGPoint] = []
+        for point in points {
+            guard let lastPoint = sanitizedPoints.last else {
+                sanitizedPoints.append(point)
+                continue
+            }
+            if lastPoint.distance(to: point) > tolerance {
+                sanitizedPoints.append(point)
+            }
+        }
+
+        if let firstPoint = sanitizedPoints.first,
+           let lastPoint = sanitizedPoints.last,
+           firstPoint.distance(to: lastPoint) <= tolerance {
+            sanitizedPoints.removeLast()
+        }
+
+        return sanitizedPoints
+    }
+}
+
+private extension CGRect {
+    /// Expands to pixel-aligned edges to avoid fractional gaps at non-integer zoom levels.
+    func expandedToPixelGrid(scale: CGFloat) -> CGRect {
+        guard scale > 0 else { return self }
+        let minX = floor(self.minX * scale) / scale
+        let minY = floor(self.minY * scale) / scale
+        let maxX = ceil(self.maxX * scale) / scale
+        let maxY = ceil(self.maxY * scale) / scale
+        return CGRect(x: minX, y: minY, width: maxX - minX, height: maxY - minY)
+    }
+}
+
+private extension CGPoint {
+    func distance(to other: CGPoint) -> CGFloat {
+        hypot(x - other.x, y - other.y)
+    }
 }
 
 private func + (p: CGPoint, v: CGVector) -> CGPoint {
