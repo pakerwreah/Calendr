@@ -81,7 +81,7 @@ enum DateFormatRenderer {
         let offsetStart = value.index(after: signIndex)
         let offsetText = String(value[offsetStart...])
 
-        // Parse offset as H:MM or H
+        // Parse offset as H or H:MM
         let components = offsetText.split(separator: ":")
         guard let hours = Int(components[0]) else { return nil }
         let minutes = components.count == 2 ? Int(components[1]) : 0
