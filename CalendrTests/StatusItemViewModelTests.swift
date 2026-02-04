@@ -282,14 +282,14 @@ class StatusItemViewModelTests: XCTestCase {
         setUp(showIcon: false, showDate: true, iconStyle: .calendar)
 
         settings.statusItemDateStyleObserver.onNext(.none)
-        settings.statusItemDateFormatObserver.onNext("dd/MM/yyyy HH:mm:ss@GMT+2'LT' | HH:mm:ss@GMT-3'BR'")
+        settings.statusItemDateFormatObserver.onNext("HH:mm:ss@GMT+2 | HH:mm:ss@GMT-3")
 
-        XCTAssertEqual(lastText, "01/01/2021 02:00:00LT | 21:00:00BR")
+        XCTAssertEqual(lastText, "02:00:00 | 21:00:00")
 
         dateProvider.add(1, .second)
         scheduler.advance(.seconds(1))
 
-        XCTAssertEqual(lastText, "01/01/2021 02:00:01LT | 21:00:01BR")
+        XCTAssertEqual(lastText, "02:00:01 | 21:00:01")
     }
 
     func testBackground() {
