@@ -10,7 +10,7 @@ import Foundation
 enum DateFormatRenderer {
 
     private static let timeZoneTokenRegex = try? NSRegularExpression(
-        pattern: #"([^\s]+)@(GMT[+-]\d{1,2})"#,
+        pattern: #"([^\s]+)@(GMT[+-]\d{1,2}(?::\d{2})?)"#,
         options: []
     )
 
@@ -78,10 +78,26 @@ enum DateFormatRenderer {
         guard signIndex < value.endIndex else { return nil }
 
         let sign = value[signIndex]
-        let hourStart = value.index(after: signIndex)
-        let hourText = String(value[hourStart...])
+        let offsetStart = value.index(after: signIndex)
+        let offsetText = String(value[offsetStart...])
 
-        guard let hours = Int(hourText) else { return nil }
+        let hours: Int
+        let minutes: Int
+        
+        if offsetText.contains(":") {
+            let components = offsetText.split(separator: ":")
+            guard components.count == 2,
+                  let h = Int(components[0]),
+                  let m = Int(components[1]) else { return nil }
+            hours = h
+            minutes = m
+            guard (0...59).contains(minutes) else { return nil }
+        } else {
+            guard let h = Int(offsetText) else { return nil }
+            hours = h
+            minutes = 0
+        }
+        
         guard (0...14).contains(hours) else { return nil }
 
         let multiplier: Int
@@ -94,7 +110,7 @@ enum DateFormatRenderer {
             return nil
         }
 
-        let offsetSeconds = hours * 3600 * multiplier
+        let offsetSeconds = (hours * 3600 + minutes * 60) * multiplier
         return TimeZone(secondsFromGMT: offsetSeconds)
     }
 
