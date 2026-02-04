@@ -35,6 +35,9 @@ enum DateFormatRenderer {
         )
         guard !matches.isEmpty else { return format }
 
+        // Get all quoted literal ranges to exclude from processing
+        let quotedRanges = findQuotedLiteralRanges(in: format)
+
         var updatedFormat = format
 
         for match in matches.reversed() {
@@ -43,6 +46,12 @@ enum DateFormatRenderer {
                 let formatRange = Range(match.range(at: 1), in: updatedFormat),
                 let timeZoneRange = Range(match.range(at: 2), in: updatedFormat)
             else {
+                continue
+            }
+
+            // Skip matches that fall within quoted literals
+            let matchNSRange = match.range
+            if quotedRanges.contains(where: { NSIntersectionRange($0, matchNSRange).length > 0 }) {
                 continue
             }
 
@@ -101,6 +110,45 @@ enum DateFormatRenderer {
     private static func literalDateFormat(for value: String) -> String {
         let escaped = value.replacingOccurrences(of: "'", with: "''")
         return "'\(escaped)'"
+    }
+
+    // Finds all quoted literal ranges in a date format string, handling escaped quotes ('').
+    private static func findQuotedLiteralRanges(in format: String) -> [NSRange] {
+        var ranges: [NSRange] = []
+        var index = format.startIndex
+        let nsString = format as NSString
+
+        while index < format.endIndex {
+            guard format[index] == "'" else {
+                index = format.index(after: index)
+                continue
+            }
+
+            let startIndex = index
+            index = format.index(after: index)
+
+            // Find the closing quote, handling escaped quotes ('')
+            while index < format.endIndex {
+                if format[index] == "'" {
+                    let nextIndex = format.index(after: index)
+                    if nextIndex < format.endIndex, format[nextIndex] == "'" {
+                        // Escaped quote '', skip both
+                        index = format.index(after: nextIndex)
+                        continue
+                    }
+                    // Found closing quote
+                    index = format.index(after: index)
+                    break
+                }
+                index = format.index(after: index)
+            }
+
+            let startOffset = format.distance(from: format.startIndex, to: startIndex)
+            let endOffset = format.distance(from: format.startIndex, to: index)
+            ranges.append(NSRange(location: startOffset, length: endOffset - startOffset))
+        }
+
+        return ranges
     }
 
     // If a quoted literal immediately follows, merge it to avoid `''` producing a literal quote.
