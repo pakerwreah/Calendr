@@ -268,13 +268,13 @@ class StatusItemViewModelTests: XCTestCase {
         setUp(showIcon: false, showDate: true, iconStyle: .calendar)
 
         settings.statusItemDateStyleObserver.onNext(.none)
-        settings.statusItemDateFormatObserver.onNext("dd/MM/yyyy HH:mm@GMT+2'LT' | HH:mm@GMT-3'BR'")
+        settings.statusItemDateFormatObserver.onNext("dd/MM/yyyy HH:mm@GMT+2'LT' | 'BR'HH:mm@GMT-3")
 
-        XCTAssertEqual(lastText, "01/01/2021 02:00LT | 21:00BR")
+        XCTAssertEqual(lastText, "01/01/2021 02:00LT | BR21:00")
 
-        settings.statusItemDateFormatObserver.onNext("dd/MM/yyyy HH:mm@GMT+2 'LT' | HH:mm@GMT-3 'BR'")
+        settings.statusItemDateFormatObserver.onNext("dd/MM/yyyy HH:mm@GMT+2 'LT' | 'BR' HH:mm@GMT-3")
 
-        XCTAssertEqual(lastText, "01/01/2021 02:00 LT | 21:00 BR")
+        XCTAssertEqual(lastText, "01/01/2021 02:00 LT | BR 21:00")
     }
 
     func testDateFormatWithTimeZonesWithSeconds() {
