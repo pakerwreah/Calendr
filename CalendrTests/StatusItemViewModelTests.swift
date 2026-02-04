@@ -263,6 +263,65 @@ class StatusItemViewModelTests: XCTestCase {
         XCTAssertEqual(lastText, "01:15 PM")
     }
 
+    func testDateFormatWithTimeZones() {
+
+        setUp(showIcon: false, showDate: true, iconStyle: .calendar)
+
+        settings.statusItemDateStyleObserver.onNext(.none)
+        settings.statusItemDateFormatObserver.onNext("dd/MM/yyyy HH:mm@GMT+2'LT' | 'BR'HH:mm@GMT-3")
+
+        XCTAssertEqual(lastText, "01/01/2021 02:00LT | BR21:00")
+
+        settings.statusItemDateFormatObserver.onNext("dd/MM/yyyy HH:mm@GMT+2 'LT' | 'BR' HH:mm@GMT-3")
+
+        XCTAssertEqual(lastText, "01/01/2021 02:00 LT | BR 21:00")
+    }
+
+    func testDateFormatWithTimeZonesWithSeconds() {
+
+        setUp(showIcon: false, showDate: true, iconStyle: .calendar)
+
+        settings.statusItemDateStyleObserver.onNext(.none)
+        settings.statusItemDateFormatObserver.onNext("HH:mm:ss@GMT+2 | HH:mm:ss@GMT-3")
+
+        XCTAssertEqual(lastText, "02:00:00 | 21:00:00")
+
+        dateProvider.add(1, .second)
+        scheduler.advance(.seconds(1))
+
+        XCTAssertEqual(lastText, "02:00:01 | 21:00:01")
+    }
+
+    func testDateFormatWithTimeZonesHalfHourOffset() {
+
+        setUp(showIcon: false, showDate: true, iconStyle: .calendar)
+
+        settings.statusItemDateStyleObserver.onNext(.none)
+        settings.statusItemDateFormatObserver.onNext("HH:mm@GMT+5:30 | HH:mm@GMT+9:30")
+
+        XCTAssertEqual(lastText, "05:30 | 09:30")
+    }
+
+    func testDateFormatWithTimeZonesQuarterHourOffset() {
+
+        setUp(showIcon: false, showDate: true, iconStyle: .calendar)
+
+        settings.statusItemDateStyleObserver.onNext(.none)
+        settings.statusItemDateFormatObserver.onNext("HH:mm@GMT+5:45 | HH:mm@GMT-3:15")
+
+        XCTAssertEqual(lastText, "05:45 | 20:45")
+    }
+
+    func testDateFormatWithMixedTimeZoneOffsets() {
+
+        setUp(showIcon: false, showDate: true, iconStyle: .calendar)
+
+        settings.statusItemDateStyleObserver.onNext(.none)
+        settings.statusItemDateFormatObserver.onNext("HH:mm@GMT+2 | HH:mm@GMT+5:30 | HH:mm@GMT-3")
+
+        XCTAssertEqual(lastText, "02:00 | 05:30 | 21:00")
+    }
+
     func testBackground() {
 
         var image: NSImage?

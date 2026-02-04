@@ -44,6 +44,13 @@ Hey 🙋🏻‍♂️ if you like my app, please consider buying me a coffee to 
 <br>
 
 ### Hidden features 🔍
+
+## Display multiple timezones in the menu bar
+- Format
+`HH:mm | HH:mm@GMT+2 'LT' | HH:mm@GMT-3 'BR'`
+- Result
+`15:00 | 17:00 LT | 12:00 BR`
+
 ## Open date with a URL scheme https://github.com/pakerwreah/Calendr/issues/314
 date|encoded
 --|--
