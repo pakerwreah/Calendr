@@ -263,6 +263,35 @@ class StatusItemViewModelTests: XCTestCase {
         XCTAssertEqual(lastText, "01:15 PM")
     }
 
+    func testDateFormatWithTimeZones() {
+
+        setUp(showIcon: false, showDate: true, iconStyle: .calendar)
+
+        settings.statusItemDateStyleObserver.onNext(.none)
+        settings.statusItemDateFormatObserver.onNext("dd/MM/yyyy HH:mm@GMT+2'LT' | HH:mm@GMT-3'BR'")
+
+        XCTAssertEqual(lastText, "01/01/2021 02:00LT | 21:00BR")
+
+        settings.statusItemDateFormatObserver.onNext("dd/MM/yyyy HH:mm@GMT+2 'LT' | HH:mm@GMT-3 'BR'")
+
+        XCTAssertEqual(lastText, "01/01/2021 02:00 LT | 21:00 BR")
+    }
+
+    func testDateFormatWithTimeZonesWithSeconds() {
+
+        setUp(showIcon: false, showDate: true, iconStyle: .calendar)
+
+        settings.statusItemDateStyleObserver.onNext(.none)
+        settings.statusItemDateFormatObserver.onNext("dd/MM/yyyy HH:mm:ss@GMT+2'LT' | HH:mm:ss@GMT-3'BR'")
+
+        XCTAssertEqual(lastText, "01/01/2021 02:00:00LT | 21:00:00BR")
+
+        dateProvider.add(1, .second)
+        scheduler.advance(.seconds(1))
+
+        XCTAssertEqual(lastText, "01/01/2021 02:00:01LT | 21:00:01BR")
+    }
+
     func testBackground() {
 
         var image: NSImage?

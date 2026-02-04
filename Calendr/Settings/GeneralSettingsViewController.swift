@@ -134,6 +134,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         dateFormatTextField.placeholderString = viewModel.dateFormatPlaceholder
         dateFormatTextField.refusesFirstResponder = true
         dateFormatTextField.focusRingType = .none
+        dateFormatTextField.cell?.isScrollable = true
 
         iconStyleDropdown.isBordered = false
         iconStyleDropdown.setContentHuggingPriority(.required, for: .horizontal)

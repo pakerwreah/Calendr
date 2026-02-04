@@ -68,17 +68,20 @@ class StatusItemViewModel {
                 guard showDate else { return .just("") }
 
                 let formatter = DateFormatter(calendar: dateProvider.calendar)
-
-                if style.isCustom {
-                    formatter.dateFormat = format
-                } else {
-                    formatter.dateStyle = style
-                }
+                formatter.dateStyle = style
 
                 let ticker = Observable<Int>.interval(.seconds(1), scheduler: scheduler).void().startWith(())
 
                 return ticker.map {
-                    let text = formatter.string(from: dateProvider.now)
+                    let text = if style.isCustom {
+                        DateFormatRenderer.render(
+                            format: format,
+                            date: dateProvider.now,
+                            calendar: dateProvider.calendar
+                        )
+                    } else {
+                        formatter.string(from: dateProvider.now)
+                    }
                     return text.isEmpty ? "???" : text
                 }
             }
