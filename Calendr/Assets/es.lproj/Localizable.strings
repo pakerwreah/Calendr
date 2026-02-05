@@ -75,6 +75,7 @@
 "settings.events.show_finished_events" = "Mostrar eventos finalizados";
 "settings.events.show_recurrence_indicator" = "Mostrar indicador de recurrencia";
 "settings.events.force_local_time_zone" = "Mostrar todos los eventos en la zona horaria local";
+//"settings.events.show_event_list_summary" = "Show event list summary";
 //"settings.events.show_future_events" = "Show future events";
 
 "settings.appearance.transparency" = "Transparencia";

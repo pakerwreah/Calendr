@@ -75,6 +75,7 @@
 "settings.events.show_finished_events" = "顯示已完成的事件";
 "settings.events.show_recurrence_indicator" = "顯示重複指示器";
 "settings.events.force_local_time_zone" = "以當地時區顯示所有活動";
+//"settings.events.show_event_list_summary" = "Show event list summary";
 //"settings.events.show_future_events" = "Show future events";
 
 "settings.appearance.transparency" = "透明度";

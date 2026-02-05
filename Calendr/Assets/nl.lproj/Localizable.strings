@@ -73,6 +73,7 @@
 "settings.events.show_finished_events" = "Voltooide gebeurtenissen tonen";
 "settings.events.show_recurrence_indicator" = "Herhalingsindicator tonen";
 "settings.events.force_local_time_zone" = "Alle gebeurtenissen in lokale tijdzone tonen";
+//"settings.events.show_event_list_summary" = "Show event list summary";
 //"settings.events.show_future_events" = "Show future events";
 
 "settings.appearance.transparency" = "Transparantie";

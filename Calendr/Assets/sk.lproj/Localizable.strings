@@ -75,6 +75,7 @@
 "settings.events.show_finished_events" = "Zobraziť ukončené udalosti";
 "settings.events.show_recurrence_indicator" = "Zobraziť indikátor opakovania";
 "settings.events.force_local_time_zone" = "Zobraziť všetky udalosti v miestnom čase";
+//"settings.events.show_event_list_summary" = "Show event list summary";
 //"settings.events.show_future_events" = "Show future events";
 
 "settings.appearance.transparency" = "Priehľadnosť";

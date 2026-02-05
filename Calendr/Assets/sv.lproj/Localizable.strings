@@ -75,6 +75,7 @@
 "settings.events.show_finished_events" = "Visa avslutade händelser";
 "settings.events.show_recurrence_indicator" = "Visa återfallsindikator";
 "settings.events.force_local_time_zone" = "Visa alla händelser i den lokala tidszonen";
+//"settings.events.show_event_list_summary" = "Show event list summary";
 //"settings.events.show_future_events" = "Show future events";
 
 "settings.appearance.transparency" = "Transparens";
