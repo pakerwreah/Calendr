@@ -136,6 +136,8 @@
 "event.action.maybe" = "Ndoshta";
 "event.action.decline" = "Rënia";
 
+"event_list.summary.agenda" = "Sot";
+
 "tooltips.navigation.prev_month" = "Muajin e kaluar";
 "tooltips.navigation.today" = "Sot";
 "tooltips.navigation.next_month" = "Muajin tjetër";

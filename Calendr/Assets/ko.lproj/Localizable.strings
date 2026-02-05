@@ -136,6 +136,8 @@
 "event.action.maybe" = "미정";
 "event.action.decline" = "거절";
 
+"event_list.summary.agenda" = "오늘";
+
 "tooltips.navigation.prev_month" = "이전 달";
 "tooltips.navigation.today" = "오늘";
 "tooltips.navigation.next_month" = "다음 달";

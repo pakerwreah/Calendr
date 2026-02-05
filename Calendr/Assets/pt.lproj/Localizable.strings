@@ -136,6 +136,8 @@
 "event.action.maybe" = "Talvez";
 "event.action.decline" = "Recusar";
 
+"event_list.summary.agenda" = "Agenda";
+
 "tooltips.navigation.prev_month" = "Mês anterior";
 "tooltips.navigation.today" = "Hoje";
 "tooltips.navigation.next_month" = "Próximo mês";

@@ -136,6 +136,8 @@
 "event.action.maybe" = "也许";
 "event.action.decline" = "拒绝";
 
+"event_list.summary.agenda" = "今日";
+
 "tooltips.navigation.prev_month" = "上个月";
 "tooltips.navigation.today" = "今天";
 "tooltips.navigation.next_month" = "下个月";

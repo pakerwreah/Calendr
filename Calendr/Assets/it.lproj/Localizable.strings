@@ -137,6 +137,8 @@
 "event.action.maybe" = "Forse";
 "event.action.decline" = "Rifiuta";
 
+"event_list.summary.agenda" = "Oggi";
+
 "tooltips.navigation.prev_month" = "Mese precedente";
 "tooltips.navigation.today" = "Oggi";
 "tooltips.navigation.next_month" = "Mese prossimo";

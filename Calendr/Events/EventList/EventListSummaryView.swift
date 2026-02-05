@@ -85,7 +85,7 @@ private enum EventListSummaryType {
         switch self {
             case .overdue: Strings.Reminder.Status.overdue
             case .allday: Strings.Event.allDay
-            case .today: Strings.Formatter.Date.today
+            case .today: Strings.EventList.Summary.agenda
         }
     }
 }

@@ -136,6 +136,8 @@
 "event.action.maybe" = "Belki";
 "event.action.decline" = "Reddet";
 
+"event_list.summary.agenda" = "Bugün";
+
 "tooltips.navigation.prev_month" = "Önceki ay";
 "tooltips.navigation.today" = "Bugün";
 "tooltips.navigation.next_month" = "Sonraki ay";

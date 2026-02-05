@@ -136,6 +136,8 @@
 "event.action.maybe" = "אולי";
 "event.action.decline" = "דחה";
 
+"event_list.summary.agenda" = "היום";
+
 "tooltips.navigation.prev_month" = "חודש קודם";
 "tooltips.navigation.today" = "היום";
 "tooltips.navigation.next_month" = "חודש הבא";
