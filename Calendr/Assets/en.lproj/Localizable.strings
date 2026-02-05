@@ -98,7 +98,7 @@
 "settings.keyboard.global_shortcuts.open_next_reminder" = "Open next reminder";
 "settings.keyboard.global_shortcuts.open_next_reminder_options" = "Next reminder options";
 
-"formatter.date.today" = "Today";
+"formatter.date.today" = "Agenda";
 "formatter.date.relative.in" = "in %@";
 "formatter.date.relative.ago" = "%@ ago";
 "formatter.date.relative.left" = "%@ left";

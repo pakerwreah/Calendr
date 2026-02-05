@@ -114,7 +114,7 @@ internal enum Strings {
   internal enum Formatter {
     internal enum Date {
       /// Today
-      internal static let today = Strings.tr("Localizable", "formatter.date.today", fallback: "Today")
+      internal static let today = Strings.tr("Localizable", "formatter.date.today", fallback: "Agenda")
       internal enum Relative {
         /// %@ ago
         internal static func ago(_ p1: Any) -> String {
