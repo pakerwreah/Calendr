@@ -48,6 +48,7 @@ class SettingsViewModelTests: XCTestCase {
     var localStorageShowOverdueReminders: Bool? { localStorage.object(forKey: Prefs.showOverdueReminders) as? Bool }
     var localStorageShowAllDayDetails: Bool? { localStorage.object(forKey: Prefs.showAllDayDetails) as? Bool }
     var localStorageShowRecurrenceIndicator: Bool? { localStorage.object(forKey: Prefs.showRecurrenceIndicator) as? Bool }
+    var localStorageShowEventListSummary: Bool? { localStorage.object(forKey: Prefs.showEventListSummary) as? Bool }
     var localStorageTransparency: NSNumber? { localStorage.object(forKey: Prefs.transparencyLevel) as? NSNumber }
     var localStorageAppearanceMode: NSNumber? { localStorage.object(forKey: Prefs.appearanceMode) as? NSNumber }
     var localStorageEventDotsStyle: String? { localStorage.object(forKey: Prefs.eventDotsStyle) as! String? }
@@ -79,6 +80,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertNil(localStorageShowOverdueReminders)
         XCTAssertNil(localStorageShowAllDayDetails)
         XCTAssertNil(localStorageShowRecurrenceIndicator)
+        XCTAssertNil(localStorageShowEventListSummary)
         XCTAssertNil(localStorageTransparency)
         XCTAssertNil(localStorageEventDotsStyle)
         XCTAssertNil(localStorageFutureEventsDays)
@@ -110,6 +112,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.showOverdueReminders.lastValue(), true)
         XCTAssertEqual(viewModel.showAllDayDetails.lastValue(), true)
         XCTAssertEqual(viewModel.showRecurrenceIndicator.lastValue(), true)
+        XCTAssertEqual(viewModel.showEventListSummary.lastValue(), true)
         XCTAssertEqual(viewModel.popoverTransparency.lastValue(), 2)
         XCTAssertEqual(viewModel.popoverMaterial.lastValue(), .headerView)
         XCTAssertEqual(viewModel.appearanceMode.lastValue(), .automatic)
@@ -137,6 +140,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(localStorageShowPastEvents, true)
         XCTAssertEqual(localStorageShowOverdueReminders, true)
         XCTAssertEqual(localStorageShowRecurrenceIndicator, true)
+        XCTAssertEqual(localStorageShowEventListSummary, true)
         XCTAssertEqual(localStorageTransparency, 2)
         XCTAssertEqual(localStorageAppearanceMode, 0)
         XCTAssertEqual(localStorageEventDotsStyle, EventDotsStyle.multiple.rawValue)
@@ -642,6 +646,30 @@ class SettingsViewModelTests: XCTestCase {
 
         XCTAssertEqual(showRecurrenceIndicator, false)
         XCTAssertEqual(localStorageShowRecurrenceIndicator, false)
+    }
+
+    func testToggleShowEventListSummary() {
+
+        localStorage.showEventListSummary = false
+
+        var showEventListSummary: Bool?
+
+        viewModel.showEventListSummary
+            .bind { showEventListSummary = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(showEventListSummary, false)
+        XCTAssertEqual(localStorageShowEventListSummary, false)
+
+        viewModel.toggleEventListSummary.onNext(true)
+
+        XCTAssertEqual(showEventListSummary, true)
+        XCTAssertEqual(localStorageShowEventListSummary, true)
+
+        viewModel.toggleEventListSummary.onNext(false)
+
+        XCTAssertEqual(showEventListSummary, false)
+        XCTAssertEqual(localStorageShowEventListSummary, false)
     }
 
     func testChangeTransparency() {

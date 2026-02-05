@@ -12,8 +12,11 @@ class EventListSummaryView: NSView {
 
     private let disposeBag = DisposeBag()
 
-    init(summary: Observable<EventListSummary>, scaling: Observable<Double> = Scaling.observable) {
-
+    init(
+        summary: Observable<EventListSummary>,
+        showSummary: Observable<Bool> = .just(true),
+        scaling: Observable<Double> = Scaling.observable
+    ) {
         super.init(frame: .zero)
 
         let stackView = NSStackView()
@@ -51,9 +54,9 @@ class EventListSummaryView: NSView {
             stackView.addArrangedSubview(stack)
         }
 
-        summary
+        Observable.combineLatest(summary, showSummary)
             .observe(on: MainScheduler.instance)
-            .bind { [weak self] info in
+            .bind { [weak self] info, isVisible in
                 stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
 
                 let count = [info.overdue, info.allday, info.today].filter { $0.count > 0 }.count
@@ -63,7 +66,7 @@ class EventListSummaryView: NSView {
                 addItem(.allday, info.allday, spacing)
                 addItem(.today, info.today, spacing)
 
-                self?.isHidden = stackView.arrangedSubviews.isEmpty
+                self?.isHidden = !isVisible || stackView.arrangedSubviews.isEmpty
             }
             .disposed(by: disposeBag)
 

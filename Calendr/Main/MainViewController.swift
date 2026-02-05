@@ -932,7 +932,7 @@ class MainViewController: NSViewController {
 
     private func makeEventListSummary() -> NSView {
 
-        EventListSummaryView(summary: eventListViewModel.summary)
+        EventListSummaryView(summary: eventListViewModel.summary, showSummary: settingsViewModel.showEventListSummary)
     }
 
     private func makeEventListScroll() -> NSScrollView {

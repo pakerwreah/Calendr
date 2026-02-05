@@ -59,6 +59,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     private let showAllDayDetailsCheckbox = Checkbox(title: Strings.Settings.Events.showAllDayDetails)
     private let showRecurrenceCheckbox = Checkbox(title: Strings.Settings.Events.showRecurrenceIndicator)
     private let forceLocalTimeZoneCheckbox = Checkbox(title: Strings.Settings.Events.forceLocalTimeZone)
+    private let showEventListSummaryCheckbox = Checkbox(title: Strings.Settings.Events.showEventListSummary)
     private let futureEventsLabel = Label(text: Strings.Settings.Events.showFutureEvents)
     private let futureEventsStepperLabel = Label()
     private let futureEventsStepper = NSStepper()
@@ -285,6 +286,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             showAllDayDetailsCheckbox,
             showRecurrenceCheckbox,
             forceLocalTimeZoneCheckbox,
+            showEventListSummaryCheckbox,
             futureEventsStack
         ])
         .with(orientation: .vertical)
@@ -731,6 +733,13 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             control: forceLocalTimeZoneCheckbox,
             observable: viewModel.forceLocalTimeZone,
             observer: viewModel.toggleForceLocalTimeZone
+        )
+        .disposed(by: disposeBag)
+
+        bind(
+            control: showEventListSummaryCheckbox,
+            observable: viewModel.showEventListSummary,
+            observer: viewModel.toggleEventListSummary
         )
         .disposed(by: disposeBag)
     }

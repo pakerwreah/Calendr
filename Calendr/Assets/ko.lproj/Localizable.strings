@@ -75,6 +75,7 @@
 "settings.events.show_finished_events" = "완료된 일정 표시";
 "settings.events.show_recurrence_indicator" = "반복 일정 표시";
 "settings.events.force_local_time_zone" = "모든 일정을 로컬 시간대로 표시";
+//"settings.events.show_event_list_summary" = "Show event list summary";
 //"settings.events.show_future_events" = "Show future events";
 
 "settings.appearance.transparency" = "투명도";
