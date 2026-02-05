@@ -12,8 +12,11 @@ class EventListSummaryView: NSView {
 
     private let disposeBag = DisposeBag()
 
-    init(summary: Observable<EventListSummary>, showSummary: Observable<Bool> = .just(true), scaling: Observable<Double> = Scaling.observable) {
-
+    init(
+        summary: Observable<EventListSummary>,
+        showSummary: Observable<Bool> = .just(true),
+        scaling: Observable<Double> = Scaling.observable
+    ) {
         super.init(frame: .zero)
 
         let stackView = NSStackView()
