@@ -98,7 +98,7 @@
 "settings.keyboard.global_shortcuts.open_next_reminder" = "Abrir próximo recordatorio";
 "settings.keyboard.global_shortcuts.open_next_reminder_options" = "Opciones del próximo recordatorio";
 
-"formatter.date.today" = "Agenda";
+"formatter.date.today" = "Hoy";
 "formatter.date.relative.in" = "en %@";
 "formatter.date.relative.ago" = "hace %@";
 "formatter.date.relative.left" = "%@ rest.";
@@ -135,6 +135,8 @@
 "event.action.accept" = "Aceptar";
 "event.action.maybe" = "Quizá";
 "event.action.decline" = "Rechazar";
+
+"event_list.summary.agenda" = "Agenda";
 
 "tooltips.navigation.prev_month" = "Mes anterior";
 "tooltips.navigation.today" = "Hoy";

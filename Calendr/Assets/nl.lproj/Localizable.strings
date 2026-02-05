@@ -134,6 +134,8 @@
 "event.action.maybe" = "Misschien";
 "event.action.decline" = "Afwijzen";
 
+"event_list.summary.agenda" = "Vandaag";
+
 "tooltips.navigation.prev_month" = "Vorige maand";
 "tooltips.navigation.today" = "Vandaag";
 "tooltips.navigation.next_month" = "Volgende maand";

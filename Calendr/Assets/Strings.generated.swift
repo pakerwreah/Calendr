@@ -111,10 +111,16 @@ internal enum Strings {
       internal static let pending = Strings.tr("Localizable", "event.status.pending", fallback: "Pending")
     }
   }
+  internal enum EventList {
+    internal enum Summary {
+      /// Agenda
+      internal static let agenda = Strings.tr("Localizable", "event_list.summary.agenda", fallback: "Agenda")
+    }
+  }
   internal enum Formatter {
     internal enum Date {
-      /// Agenda
-      internal static let today = Strings.tr("Localizable", "formatter.date.today", fallback: "Agenda")
+      /// Today
+      internal static let today = Strings.tr("Localizable", "formatter.date.today", fallback: "Today")
       internal enum Relative {
         /// %@ ago
         internal static func ago(_ p1: Any) -> String {

@@ -136,6 +136,8 @@
 "event.action.maybe" = "Можливо";
 "event.action.decline" = "Відхилити";
 
+"event_list.summary.agenda" = "Сьогодні";
+
 "tooltips.navigation.prev_month" = "Попередній місяць";
 "tooltips.navigation.today" = "Сьогодні";
 "tooltips.navigation.next_month" = "Наступний місяць";

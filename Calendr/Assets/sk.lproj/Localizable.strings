@@ -136,6 +136,8 @@
 "event.action.maybe" = "Možno";
 "event.action.decline" = "Odmietnuť";
 
+"event_list.summary.agenda" = "Dnes";
+
 "tooltips.navigation.prev_month" = "Predchádzajúci mesiac";
 "tooltips.navigation.today" = "Dnes";
 "tooltips.navigation.next_month" = "Nasledujúci mesiac";

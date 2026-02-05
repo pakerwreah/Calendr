@@ -136,6 +136,8 @@
 "event.action.maybe" = "Kanske";
 "event.action.decline" = "Avböj";
 
+"event_list.summary.agenda" = "Idag";
+
 "tooltips.navigation.prev_month" = "Föregående månad";
 "tooltips.navigation.today" = "Idag";
 "tooltips.navigation.next_month" = "Nästa månad";

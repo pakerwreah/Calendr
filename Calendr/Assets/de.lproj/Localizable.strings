@@ -136,6 +136,8 @@
 "event.action.maybe" = "Vielleicht";
 "event.action.decline" = "Ablehnen";
 
+"event_list.summary.agenda" = "Heute";
+
 "tooltips.navigation.prev_month" = "Vorheriger Monat";
 "tooltips.navigation.today" = "Heute";
 "tooltips.navigation.next_month" = "Nächster Monat";

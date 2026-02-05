@@ -138,6 +138,8 @@
 "event.action.maybe" = "Возможно";
 "event.action.decline" = "Отклонить";
 
+"event_list.summary.agenda" = "Сегодня";
+
 "tooltips.navigation.prev_month" = "Предыдущий месяц";
 "tooltips.navigation.today" = "Сегодня";
 "tooltips.navigation.next_month" = "Следующий месяц";

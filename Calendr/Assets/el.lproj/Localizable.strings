@@ -136,6 +136,8 @@
 "event.action.maybe" = "Ίσως";
 "event.action.decline" = "Απορρίπτεται";
 
+"event_list.summary.agenda" = "Σήμερα";
+
 "tooltips.navigation.prev_month" = "Προηγούμενος μήνας";
 "tooltips.navigation.today" = "Σήμερα";
 "tooltips.navigation.next_month" = "Επόμενος μήνας";
