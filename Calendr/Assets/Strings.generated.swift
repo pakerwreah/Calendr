@@ -227,6 +227,8 @@ internal enum Strings {
       internal static let forceLocalTimeZone = Strings.tr("Localizable", "settings.events.force_local_time_zone", fallback: "Show all events in local time zone")
       /// Show all-day events details
       internal static let showAllDayDetails = Strings.tr("Localizable", "settings.events.show_all_day_details", fallback: "Show all-day events details")
+      /// Show event list summary
+      internal static let showEventListSummary = Strings.tr("Localizable", "settings.events.show_event_list_summary", fallback: "Show event list summary")
       /// Show finished events
       internal static let showFinishedEvents = Strings.tr("Localizable", "settings.events.show_finished_events", fallback: "Show finished events")
       /// Show future events
@@ -237,8 +239,6 @@ internal enum Strings {
       internal static let showOverdueReminders = Strings.tr("Localizable", "settings.events.show_overdue_reminders", fallback: "Show overdue reminders")
       /// Show recurrence indicator
       internal static let showRecurrenceIndicator = Strings.tr("Localizable", "settings.events.show_recurrence_indicator", fallback: "Show recurrence indicator")
-      /// Show event list summary
-      internal static let showEventListSummary = Strings.tr("Localizable", "settings.events.show_event_list_summary", fallback: "Show event list summary")
     }
     internal enum Keyboard {
       internal enum GlobalShortcuts {
