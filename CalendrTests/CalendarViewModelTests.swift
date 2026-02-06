@@ -44,7 +44,8 @@ class CalendarViewModelTests: XCTestCase {
         calendarService.m_calendars = [
             .make(id: "1", account: "A1", title: "Calendar 1", color: .white),
             .make(id: "2", account: "A2", title: "Calendar 2", color: .black),
-            .make(id: "3", account: "A3", title: "Calendar 3", color: .blue)
+            .make(id: "3", account: "A3", title: "Calendar 3", color: .blue),
+            .make(id: "4", account: "A4", title: "Reminders", color: .yellow),
         ]
 
         calendarService.m_events = [
@@ -68,7 +69,6 @@ class CalendarViewModelTests: XCTestCase {
                 start: .make(year: 2021, month: 1, day: 2, hour: 8),
                 end: .make(year: 2021, month: 1, day: 2, hour: 9),
                 title: "Event 3",
-                isAllDay: false,
                 type: .event(.pending),
                 calendar: calendarService.m_calendars[1]
             ),
@@ -76,7 +76,6 @@ class CalendarViewModelTests: XCTestCase {
                 start: .make(year: 2021, month: 1, day: 3, hour: 14),
                 end: .make(year: 2021, month: 1, day: 3, hour: 15),
                 title: "Event 4",
-                isAllDay: false,
                 type: .event(.unknown),
                 calendar: calendarService.m_calendars[2]
             ),
@@ -84,7 +83,6 @@ class CalendarViewModelTests: XCTestCase {
                 start: .make(year: 2021, month: 1, day: 3, hour: 15),
                 end: .make(year: 2021, month: 1, day: 3, hour: 16),
                 title: "Event 5",
-                isAllDay: false,
                 type: .event(.declined),
                 calendar: calendarService.m_calendars[2]
             ),
@@ -92,9 +90,14 @@ class CalendarViewModelTests: XCTestCase {
                 start: .make(year: 2021, month: 1, day: 4, hour: 10),
                 end: .make(year: 2021, month: 1, day: 4, hour: 11),
                 title: "Event 6",
-                isAllDay: false,
                 type: .event(.declined),
                 calendar: calendarService.m_calendars[2]
+            ),
+            .make(
+                start: .make(year: 2021, month: 1, day: 5),
+                title: "Completed",
+                type: .reminder(completed: true),
+                calendar: calendarService.m_calendars[3],
             )
         ]
 
@@ -520,7 +523,7 @@ class CalendarViewModelTests: XCTestCase {
         dateProvider.now = .make(year: 2021, month: 1, day: 4)
         dateSubject.onNext(.make(year: 2021, month: 1, day: 4))
 
-        XCTAssertEqual(events?.map(\.title), ["Event 6"])
+        XCTAssertEqual(events?.map(\.title), ["Event 6", "Completed"])
     }
 
     func testFutureEventsInSelectedDate_withSelectedDateNotToday() {
@@ -811,6 +814,8 @@ class CalendarViewModelTests: XCTestCase {
             (.make(year: 2021, month: 1, day: 1), [EventDotsStyle.netralColor]),
             (.make(year: 2021, month: 1, day: 2), [EventDotsStyle.netralColor]),
             (.make(year: 2021, month: 1, day: 3), [EventDotsStyle.netralColor]),
+            (.make(year: 2021, month: 1, day: 4), [.clear]),
+            (.make(year: 2021, month: 1, day: 5), [.clear]),
         ])
     }
 
@@ -824,6 +829,8 @@ class CalendarViewModelTests: XCTestCase {
             (.make(year: 2021, month: 1, day: 1), [EventDotsStyle.highlightColor]),
             (.make(year: 2021, month: 1, day: 2), [EventDotsStyle.highlightColor]),
             (.make(year: 2021, month: 1, day: 3), [EventDotsStyle.highlightColor]),
+            (.make(year: 2021, month: 1, day: 4), [.clear]),
+            (.make(year: 2021, month: 1, day: 5), [.clear]),
         ])
     }
 

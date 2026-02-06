@@ -47,7 +47,11 @@ extension CalendarCellViewModel {
 
     var dots: [NSColor] {
 
-        let events = events.filter { calendar.isDate($0.start, lessThanOrEqualTo: date, granularity: .day) }
+        let events = events
+            .filter {
+                calendar.isDate($0.start, lessThanOrEqualTo: date, granularity: .day)
+                && $0.type != .reminder(completed: true)
+            }
 
         guard !events.isEmpty else { return [.clear] }
 
@@ -59,7 +63,6 @@ extension CalendarCellViewModel {
         }
 
         let colors = events
-            .filter { $0.type != .reminder(completed: true) }
             .map(\.calendar)
             .sorted {
                 ($0.account.title.localizedLowercase, $0.title.localizedLowercase)
@@ -67,8 +70,6 @@ extension CalendarCellViewModel {
                 ($1.account.title.localizedLowercase, $1.title.localizedLowercase)
             }
             .map(\.color)
-
-        guard !colors.isEmpty else { return [.clear] }
 
         return NSOrderedSet(array: colors).array as! [NSColor]
     }
