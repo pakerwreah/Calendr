@@ -20,11 +20,11 @@
 "auto_update.downloading" = "Sťahovanie verzie %@";
 "auto_update.install" = "Inštalovať";
 "auto_update.replace.message" = "Potvrď umiestnenie aplikácie pre povolenie ju nahradiť";
-//"auto_update.replace.error" = "You must not change the installation directory";
+"auto_update.replace.error" = "Nemôžeš zmeniť adresár inštalácie";
 
-//"auto_update.failed.check" = "Failed to check for update";
-//"auto_update.failed.download" = "Failed to download update";
-//"auto_update.failed.install" = "Failed to install update";
+"auto_update.failed.check" = "Kontrola aktualizácie zlyhala";
+"auto_update.failed.download" = "Stiahnutie aktualizácie zlyhalo";
+"auto_update.failed.install" = "Inštalácia aktualizácie zlyhala";
 
 "attachments.open.message" = "Calendr potrebuje povolenie na prístup k tvojim prílohám";
 "attachments.open.authorize" = "Povoliť prístup k prílohám";
@@ -52,7 +52,7 @@
 "settings.next_event.detect_notch" = "Skrátiť, ak je prítomný 'výrez'";
 
 "settings.calendar" = "Kalendár";
-//"settings.calendar.show_month_outline" = "Show month outline";
+"settings.calendar.show_month_outline" = "Orámovať aktuálny mesiac";
 "settings.calendar.show_week_numbers" = "Zobraziť čísla týždňov";
 "settings.calendar.preserve_selected_date" = "Zachovať vybraný dátum pri skrytí";
 "settings.calendar.show_declined_events" = "Zobraziť odmietnuté udalosti";
@@ -62,21 +62,21 @@
 "settings.calendar.calendar_app_view_mode" = "Pohľad v kalendári";
 "settings.calendar.default_calendar_app" = "Predvolená apka kalendára";
 
-//"settings.calendar.event_dots" = "Event dots";
-//"settings.calendar.event_dots.none" = "none";
-//"settings.calendar.event_dots.single_neutral" = "neutral";
-//"settings.calendar.event_dots.single_highlighted" = "highlighted";
-//"settings.calendar.event_dots.multiple" = "multiple";
+"settings.calendar.event_dots" = "Bodky udalostí";
+"settings.calendar.event_dots.none" = "žiadne";
+"settings.calendar.event_dots.single_neutral" = "neutrálne";
+"settings.calendar.event_dots.single_highlighted" = "zvýraznené";
+"settings.calendar.event_dots.multiple" = "viaceré";
 
 "settings.events" = "Udalosti";
 "settings.events.show_map" = "Zobraziť mapu a počasie";
 "settings.events.show_overdue_reminders" = "Zobraziť pripomienky po termíne";
-//"settings.events.show_all_day_details" = "Show all-day events details";
+"settings.events.show_all_day_details" = "Zobraziť podrobnosti celodenných udalostí";
 "settings.events.show_finished_events" = "Zobraziť ukončené udalosti";
 "settings.events.show_recurrence_indicator" = "Zobraziť indikátor opakovania";
 "settings.events.force_local_time_zone" = "Zobraziť všetky udalosti v miestnom čase";
-//"settings.events.show_event_list_summary" = "Show event list summary";
-//"settings.events.show_future_events" = "Show future events";
+"settings.events.show_event_list_summary" = "Zobraziť súhrn zoznamu udalostí";
+"settings.events.show_future_events" = "Zobraziť budúce udalosti";
 
 "settings.appearance.transparency" = "Priehľadnosť";
 "settings.appearance.accessibility" = "Prístupnosť";
@@ -110,15 +110,15 @@
 "reminder.options.complete" = "Dokončiť";
 "reminder.options.remind" = "Pripomenúť %@";
 
-//"reminder.editor.headline" = "New Reminder";
-//"reminder.editor.title" = "Title";
-//"reminder.editor.save" = "Save";
+"reminder.editor.headline" = "Nová pripomienka";
+"reminder.editor.title" = "Názov";
+"reminder.editor.save" = "Uložiť";
 
-//"reminder.editor.confirm.continue" = "Continue editing";
-//"reminder.editor.confirm.discard" = "Discard all changes";
+"reminder.editor.confirm.continue" = "Pokračovať v úprave";
+"reminder.editor.confirm.discard" = "Zahodiť všetky zmeny";
 
-//"map_black_list.headline" = "Hide map if location contains any of these words";
-//"map_black_list.new_item_text" = "New Item";
+"map_black_list.headline" = "Skryť mapu, ak lokalita obsahuje niektoré z týchto slov";
+"map_black_list.new_item_text" = "Nová položka";
 
 "event.details.participant.organizer" = "organizátor";
 "event.details.participant.me" = "ja";
@@ -144,7 +144,7 @@
 "tooltips.navigation.next_month" = "Nasledujúci mesiac";
 
 "tooltips.toolbar.stay_open" = "Ponechať otvorené";
-//"tooltips.toolbar.create" = "Create";
+"tooltips.toolbar.create" = "Vytvoriť";
 "tooltips.toolbar.open_calendar" = "Otvoriť Kalendár";
 "tooltips.toolbar.open_reminders" = "Otvoriť Pripomienky";
 "tooltips.toolbar.open_menu" = "Otvoriť menu";
