@@ -333,6 +333,7 @@
 		34651F1425E1BB8400518C5A /* Strings.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Strings.generated.swift; sourceTree = "<group>"; };
 		34651F2D25E1C99900518C5A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34651F2E25E1C99900518C5A /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/Localizable.strings; sourceTree = "<group>"; };
+		34F53D432F1B2F9A00A4C1D1 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34651F4E25E1EAFB00518C5A /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34651F5325E22A3900518C5A /* DateIntervalFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateIntervalFormatter.swift; sourceTree = "<group>"; };
 		34651F5925E2F08500518C5A /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
@@ -1118,6 +1119,7 @@
 			knownRegions = (
 				en,
 				pt,
+				pl,
 				fr,
 				Base,
 				es,
@@ -1211,6 +1213,7 @@
 				"${SRCROOT}/${TARGET_NAME}/Assets/cs.lproj/Localizable.strings",
 				"${SRCROOT}/${TARGET_NAME}/Assets/fr.lproj/Localizable.strings",
 				"${SRCROOT}/${TARGET_NAME}/Assets/pt.lproj/Localizable.strings",
+				"${SRCROOT}/${TARGET_NAME}/Assets/pl.lproj/Localizable.strings",
 				"${SRCROOT}/${TARGET_NAME}/Assets/ja.lproj/Localizable.strings",
 				"${SRCROOT}/${TARGET_NAME}/Assets/ko.lproj/Localizable.strings",
 				"${SRCROOT}/${TARGET_NAME}/Assets/el.lproj/Localizable.strings",
@@ -1528,6 +1531,7 @@
 			children = (
 				34651F2D25E1C99900518C5A /* en */,
 				34651F2E25E1C99900518C5A /* pt */,
+				34F53D432F1B2F9A00A4C1D1 /* pl */,
 				34651F4E25E1EAFB00518C5A /* fr */,
 				34651F8925E4099700518C5A /* es */,
 				34E66E2627C41B5C00A7A77A /* de */,
