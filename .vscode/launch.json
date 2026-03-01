@@ -1,0 +1,12 @@
+{
+    "configurations": [
+        {
+            "type": "swift",
+            "request": "launch",
+            "name": "Debug Calendr",
+            "cwd": "${workspaceFolder}/.build/Calendr.app/Contents/MacOS",
+            "program": "Calendr",
+            "preLaunchTask": "Assemble Debug Calendr",
+        }
+    ]
+}

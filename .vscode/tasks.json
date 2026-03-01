@@ -1,0 +1,50 @@
+{
+    "version": "2.0.0",
+    "options": {
+        "env": {
+            "SRCROOT": "${workspaceFolder}",
+            "PROJECT_DIR": "${workspaceFolder}",
+            "TARGET_NAME": "Calendr"
+        },
+    },
+    "tasks": [
+        {
+            "label": "Sync Localizations",
+            "type": "shell",
+            "options": {
+                "cwd": "Calendr/Tools",
+            },
+            "command": "swift",
+            "args": [
+                "SyncLocalizations.swift"
+            ]
+        },
+        {
+            "label": "Generate Strings",
+            "type": "shell",
+            "command": "swiftgen",
+            "options": {
+                "cwd": "Calendr/Config",
+            },
+            "args": [
+                "--config",
+                "swiftgen.yml"
+            ]
+        },
+        {
+            "label": "Assemble Debug Calendr",
+            "type": "shell",
+            "command": "./assemble.sh",
+            "group": {
+                "kind": "build"
+            },
+            "args": [
+                "debug"
+            ],
+            "dependsOn": [
+                "Sync Localizations",
+                "Generate Strings"
+            ]
+        }
+    ]
+}

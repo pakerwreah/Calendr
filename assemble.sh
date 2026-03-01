@@ -2,17 +2,24 @@
 set -e
 shopt -s extglob
 
+MODE=$1
+
+if [[ $MODE != "release" && $MODE != "debug" ]]; then
+    echo "❌ Invalid mode. Must be 'release' or 'debug'"
+    exit 1
+fi
+
 if [[ ! -e "Package.swift" || ! -e "Calendr.xcodeproj" ]]; then
     echo "❌ This script must be run from the project root directory"
     exit 1
 fi
 
 # Build the Binary
-swift build -c release
+swift build -c $MODE
 
 # Configuration
 CONFIG_DIR="Calendr/Config"
-BUILD_DIR="$(swift build -c release --show-bin-path)"
+BUILD_DIR="$(swift build -c $MODE --show-bin-path)"
 APP_BUNDLE=".build/Calendr.app"
 CONTENTS="$APP_BUNDLE/Contents"
 
