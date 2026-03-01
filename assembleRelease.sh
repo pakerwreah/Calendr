@@ -76,6 +76,11 @@ if xcrun actool --version &>/dev/null; then
         --output-partial-info-plist ".build/asset-info.plist" \
         --output-format human-readable-text \
         > /dev/null
+
+    # Merge asset catalog–generated Info.plist entries (e.g. app icon) into the main Info.plist
+    if [[ -f ".build/asset-info.plist" ]]; then
+        /usr/libexec/PlistBuddy -c "Merge .build/asset-info.plist" "$PLIST"
+    fi
 else
     echo -e "⚠️  actool not available (full Xcode required), skipping assets compilation.\n"
 fi
