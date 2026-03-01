@@ -64,7 +64,8 @@ plutil -replace LSMinimumSystemVersion -string "$MIN_OS" "$PLIST"
 plutil -replace CFBundleExecutable -string "Calendr" "$PLIST"
 plutil -replace CFBundleName -string "Calendr" "$PLIST"
 plutil -replace CFBundlePackageType -string "APPL" "$PLIST"
-
+plutil -replace CFBundleIconFile -string "AppIcon" "$PLIST"
+plutil -replace CFBundleIconName -string "AppIcon" "$PLIST"
 
 # Compile Assets (only if Xcode is installed)
 if xcrun actool --version &>/dev/null; then
