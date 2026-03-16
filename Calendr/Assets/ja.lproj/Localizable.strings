@@ -20,11 +20,11 @@
 "auto_update.downloading" = "バージョン %@ をダウンロード中";
 "auto_update.install" = "インストール";
 "auto_update.replace.message" = "アプリのインストール先を確認してください。\n古いバージョンと同じ場所を選ぶと、新しいバージョンのアプリに置き換えられます。";
-//"auto_update.replace.error" = "You must not change the installation directory";
+"auto_update.replace.error" = "インストール先を変更しないでください";
 
-//"auto_update.failed.check" = "Failed to check for update";
-//"auto_update.failed.download" = "Failed to download update";
-//"auto_update.failed.install" = "Failed to install update";
+"auto_update.failed.check" = "更新データの取得に失敗しました";
+"auto_update.failed.download" = "更新データのダウンロードに失敗しました";
+"auto_update.failed.install" = "更新データのインストールに失敗しました";
 
 "attachments.open.message" = "Calendrが添付ファイルを開く許可が必要です";
 "attachments.open.authorize" = "添付ファイルへのアクセスを許可";
@@ -52,7 +52,7 @@
 "settings.next_event.detect_notch" = "ノッチがある場合に短くする";
 
 "settings.calendar" = "カレンダー";
-//"settings.calendar.show_month_outline" = "Show month outline";
+"settings.calendar.show_month_outline" = "枠線を表示";
 "settings.calendar.show_week_numbers" = "週番号を表示";
 "settings.calendar.preserve_selected_date" = "選択した日付を保持";
 "settings.calendar.show_declined_events" = "辞退した予定を表示";
@@ -62,21 +62,21 @@
 "settings.calendar.calendar_app_view_mode" = "カレンダーの表示";
 "settings.calendar.default_calendar_app" = "使用するカレンダーアプリ";
 
-//"settings.calendar.event_dots" = "Event dots";
-//"settings.calendar.event_dots.none" = "none";
-//"settings.calendar.event_dots.single_neutral" = "neutral";
-//"settings.calendar.event_dots.single_highlighted" = "highlighted";
-//"settings.calendar.event_dots.multiple" = "multiple";
+"settings.calendar.event_dots" = "予定のドット";
+"settings.calendar.event_dots.none" = "なし";
+"settings.calendar.event_dots.single_neutral" = "ナチュラル";
+"settings.calendar.event_dots.single_highlighted" = "ハイライト";
+"settings.calendar.event_dots.multiple" = "カラフル";
 
 "settings.events" = "予定";
 "settings.events.show_map" = "地図と天気を表示";
 "settings.events.show_overdue_reminders" = "期限が過ぎたリマインダーを表示";
-//"settings.events.show_all_day_details" = "Show all-day events details";
+"settings.events.show_all_day_details" = "終日の予定の詳細を表示";
 "settings.events.show_finished_events" = "終了した予定を表示";
 "settings.events.show_recurrence_indicator" = "繰り返しの予定にマークを表示";
 "settings.events.force_local_time_zone" = "すべての予定を端末のタイムゾーンで表示";
-//"settings.events.show_event_list_summary" = "Show event list summary";
-//"settings.events.show_future_events" = "Show future events";
+"settings.events.show_event_list_summary" = "件数の概要を表示";
+"settings.events.show_future_events" = "未来の予定を表示";
 
 "settings.appearance.transparency" = "透明度";
 "settings.appearance.accessibility" = "アクセシビリティ";
@@ -110,15 +110,15 @@
 "reminder.options.complete" = "完了";
 "reminder.options.remind" = "%@ にリマインド";
 
-//"reminder.editor.headline" = "New Reminder";
-//"reminder.editor.title" = "Title";
-//"reminder.editor.save" = "Save";
+"reminder.editor.headline" = "新しいリマインダー";
+"reminder.editor.title" = "タイトル";
+"reminder.editor.save" = "保存";
 
-//"reminder.editor.confirm.continue" = "Continue editing";
-//"reminder.editor.confirm.discard" = "Discard all changes";
+"reminder.editor.confirm.continue" = "作成を続ける";
+"reminder.editor.confirm.discard" = "変更を破棄";
 
-//"map_black_list.headline" = "Hide map if location contains any of these words";
-//"map_black_list.new_item_text" = "New Item";
+"map_black_list.headline" = "以下の語が含まれる場合に地図を非表示にする";
+"map_black_list.new_item_text" = "新しい除外ワード";
 
 "event.details.participant.organizer" = "主催者";
 "event.details.participant.me" = "自分";
@@ -144,7 +144,7 @@
 "tooltips.navigation.next_month" = "翌月";
 
 "tooltips.toolbar.stay_open" = "前面に固定";
-//"tooltips.toolbar.create" = "Create";
+"tooltips.toolbar.create" = "作成";
 "tooltips.toolbar.open_calendar" = "カレンダーを開く";
 "tooltips.toolbar.open_reminders" = "リマインダーを開く";
 "tooltips.toolbar.open_menu" = "メニューを開く";
