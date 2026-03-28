@@ -11,11 +11,14 @@ extension Date {
 
     func dateComponents(using dateProvider: DateProviding, calendar identifier: Calendar.Identifier? = nil) -> DateComponents {
 
-        var components = dateProvider.calendar.dateComponents(in: dateProvider.calendar.timeZone, from: self)
+        let calendarToUse: Calendar
 
         if let identifier {
-            components.calendar = Calendar(identifier: identifier).with(timeZone: dateProvider.calendar.timeZone)
+            calendarToUse = Calendar(identifier: identifier).with(timeZone: dateProvider.calendar.timeZone)
+        } else {
+            calendarToUse = dateProvider.calendar
         }
-        return components
+
+        return calendarToUse.dateComponents(in: calendarToUse.timeZone, from: self)
     }
 }

@@ -235,7 +235,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
                 let reminder = EKReminder(eventStore: store)
                 reminder.calendar = calendar
                 reminder.title = title
-                // The components calendar must be gregorian, otherwise an exception is raised.
+                // The components calendar must be nil or Gregorian, otherwise an exception is raised.
                 reminder.dueDateComponents = date.dateComponents(using: dateProvider, calendar: .gregorian)
                 reminder.addAlarm(EKAlarm(absoluteDate: date))
                 try store.save(reminder, commit: true)
@@ -276,7 +276,8 @@ class CalendarServiceProvider: CalendarServiceProviding {
                     throw .unexpected("🔥 Not a reminder")
                 }
                 reminder.isCompleted = false
-                reminder.dueDateComponents = date.dateComponents(using: dateProvider)
+                // The components calendar must be nil or Gregorian, otherwise an exception is raised.
+                reminder.dueDateComponents = date.dateComponents(using: dateProvider, calendar: .gregorian)
                 reminder.alarms?.forEach(reminder.removeAlarm)
                 reminder.addAlarm(EKAlarm(absoluteDate: date))
                 try store.save(reminder, commit: true)
