@@ -14,6 +14,7 @@ class ReminderEditorViewModel: HostingWindowControllerDelegate {
     
     var title = ""
     var dueDate: Date
+    var isAllDay = false
     var isCloseConfirmationVisible = false
     var isErrorVisible = false
 
@@ -53,7 +54,7 @@ class ReminderEditorViewModel: HostingWindowControllerDelegate {
     func saveReminder() {
         guard hasValidInput else { return }
 
-        calendarService.createReminder(title: title, date: dueDate)
+        calendarService.createReminder(title: title, date: dueDate, isAllDay: isAllDay)
             .observe(on: MainScheduler.instance)
             .subscribe(onCompleted: { [weak self] in
                 self?.confirmClose()

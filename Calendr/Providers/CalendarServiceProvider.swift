@@ -16,9 +16,9 @@ protocol CalendarServiceProviding {
     func calendars() -> Single<[CalendarModel]>
     func events(from start: Date, to end: Date, calendars: [String]) -> Single<[EventModel]>
 
-    func createReminder(title: String, date: Date) -> Completable
+    func createReminder(title: String, date: Date, isAllDay: Bool) -> Completable
     func completeReminder(id: String, complete: Bool) -> Completable
-    func rescheduleReminder(id: String, to: Date) -> Completable
+    func rescheduleReminder(id: String, to: Date, isAllDay: Bool) -> Completable
 
     func changeEventStatus(id: String, date: Date, to: EventStatus) -> Completable
 
@@ -225,9 +225,11 @@ class CalendarServiceProvider: CalendarServiceProviding {
         }
     }
 
-    func createReminder(title: String, date: Date) -> Completable {
+    func createReminder(title: String, date: Date, isAllDay: Bool) -> Completable {
 
-        Completable.create { [store, dateProvider] observer in
+        let dateComponents = dueDateComponents(for: date, isAllDay: isAllDay)
+
+        return Completable.create { [store] observer in
             do {
                 guard let calendar = store.defaultCalendarForNewReminders() else {
                     throw .unexpected("Missing default calendar for reminders")
@@ -235,9 +237,10 @@ class CalendarServiceProvider: CalendarServiceProviding {
                 let reminder = EKReminder(eventStore: store)
                 reminder.calendar = calendar
                 reminder.title = title
-                // The components calendar must be Gregorian, otherwise an exception is raised.
-                reminder.dueDateComponents = date.dateComponents(using: dateProvider, calendar: .gregorian)
-                reminder.addAlarm(EKAlarm(absoluteDate: date))
+                reminder.dueDateComponents = dateComponents
+                if !isAllDay {
+                    reminder.addAlarm(EKAlarm(absoluteDate: date))
+                }
                 try store.save(reminder, commit: true)
                 observer(.completed)
             } catch {
@@ -268,18 +271,21 @@ class CalendarServiceProvider: CalendarServiceProviding {
         .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
     }
 
-    func rescheduleReminder(id: String, to date: Date) -> Completable {
+    func rescheduleReminder(id: String, to date: Date, isAllDay: Bool) -> Completable {
 
-        Completable.create { [store, dateProvider] observer in
+        let dateComponents = dueDateComponents(for: date, isAllDay: isAllDay)
+
+        return Completable.create { [store] observer in
             do {
                 guard let reminder = store.calendarItem(withIdentifier: id) as? EKReminder else {
                     throw .unexpected("🔥 Not a reminder")
                 }
                 reminder.isCompleted = false
-                // The components calendar must be Gregorian, otherwise an exception is raised.
-                reminder.dueDateComponents = date.dateComponents(using: dateProvider, calendar: .gregorian)
                 reminder.alarms?.forEach(reminder.removeAlarm)
-                reminder.addAlarm(EKAlarm(absoluteDate: date))
+                reminder.dueDateComponents = dateComponents
+                if !isAllDay {
+                    reminder.addAlarm(EKAlarm(absoluteDate: date))
+                }
                 try store.save(reminder, commit: true)
                 observer(.completed)
             } catch {
@@ -353,6 +359,18 @@ class CalendarServiceProvider: CalendarServiceProviding {
             return disposable
         }
         .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+    }
+
+    private func dueDateComponents(for date: Date, isAllDay: Bool) -> DateComponents {
+        // The components calendar must be Gregorian, otherwise an exception is raised.
+        var components = date.dateComponents(using: dateProvider, calendar: .gregorian)
+        if isAllDay {
+            components.hour = nil
+            components.minute = nil
+            components.second = nil
+            components.nanosecond = nil
+        }
+        return components
     }
 }
 

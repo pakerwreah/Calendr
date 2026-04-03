@@ -56,8 +56,36 @@ class ReminderOptionsViewModel: BaseContextMenuViewModel<ReminderAction> {
             .remind(.init(minute: 15)),
             .remind(.init(minute: 30)),
             .remind(.init(hour: 1)),
-            .remind(.init(day: 1))
         )
+        addRemindInDaysItem(days: 1)
+    }
+
+    private func addRemindInDaysItem(days: Int) {
+        guard
+            let target = targetDate(byAdding: .init(day: days)),
+            !dateProvider.calendar.isDate(event.start, inSameDayAs: target)
+        else { return }
+
+        addItem(.remind(.init(day: days)))
+    }
+
+    private func targetDate(byAdding dateComponents: DateComponents) -> Date? {
+        let now = dateProvider.now
+        let isDayChange = dateComponents.day != nil
+        guard
+            let baseDate = isDayChange ? combine(date: now, time: event.start) : now,
+            let truncated = dateProvider.calendar.dateInterval(of: .minute, for: baseDate)?.start,
+            let date = dateProvider.calendar.date(byAdding: dateComponents, to: truncated)
+        else { return nil }
+        return date
+    }
+
+    private func combine(date: Date, time: Date) -> Date? {
+        let c = time.dateComponents(using: dateProvider)
+        guard let hour = c.hour, let minute = c.minute else {
+            return nil
+        }
+        return dateProvider.calendar.date(bySettingHour: hour, minute: minute, second: .zero, of: date)
     }
 
     override func onAction( _ action: Action) -> Completable {
@@ -71,13 +99,14 @@ class ReminderOptionsViewModel: BaseContextMenuViewModel<ReminderAction> {
             return calendarService.completeReminder(id: event.id, complete: true)
 
         case .remind(let dateComponents):
+            let isDayChange = dateComponents.day != nil
             guard
-                let truncated = dateProvider.calendar.dateInterval(of: .minute, for: dateProvider.now)?.start,
-                let date = dateProvider.calendar.date(byAdding: dateComponents, to: truncated)
+                let date = targetDate(byAdding: dateComponents)
             else {
                 return .empty()
             }
-            return calendarService.rescheduleReminder(id: event.id, to: date)
+            let isAllDay = event.isAllDay && isDayChange
+            return calendarService.rescheduleReminder(id: event.id, to: date, isAllDay: isAllDay)
         }
     }
 }
