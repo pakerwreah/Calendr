@@ -44,9 +44,16 @@ struct ReminderEditorView: ViewModelView {
                     .datePickerStyle(.field)
                     .labelsHidden()
 
-                DatePicker("Time", selection: $viewModel.dueDate, displayedComponents: .hourAndMinute)
-                    .datePickerStyle(.field)
-                    .labelsHidden()
+                if !viewModel.isAllDay {
+                    DatePicker("Time", selection: $viewModel.dueDate, displayedComponents: .hourAndMinute)
+                        .datePickerStyle(.field)
+                        .labelsHidden()
+                }
+
+                Spacer()
+
+                Toggle(Strings.Event.allDay, isOn: $viewModel.isAllDay)
+                    .toggleStyle(.checkbox)
             }
 
             HStack {

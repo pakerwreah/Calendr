@@ -77,6 +77,26 @@ class ReminderEditorViewModelTests: XCTestCase {
 
         XCTAssertEqual(lastValue?.title, "valid")
         XCTAssertEqual(lastValue?.date, dueDate)
+        XCTAssertEqual(lastValue?.isAllDay, false)
+    }
+
+    func testViewModel_saveReminder_allDay() {
+
+        let calendarService = MockCalendarServiceProvider()
+        let dueDate = Date()
+
+        let viewModel = ReminderEditorViewModel(dueDate: .init(date: dueDate), calendarService: calendarService)
+
+        var lastValue: CreateReminderArgs?
+        _ = calendarService.spyCreateReminderObservable.bind { lastValue = $0 }
+
+        viewModel.title = "valid"
+        viewModel.isAllDay = true
+        viewModel.saveReminder()
+
+        XCTAssertEqual(lastValue?.title, "valid")
+        XCTAssertEqual(lastValue?.date, dueDate)
+        XCTAssertEqual(lastValue?.isAllDay, true)
     }
 
     func testViewModel_saveReminder_withError() {
@@ -178,7 +198,7 @@ class ReminderEditorViewModelTests: XCTestCase {
 
 private class FailingCalendarService: MockCalendarServiceProvider {
 
-    override func createReminder(title: String, date: Date) -> Completable {
+    override func createReminder(title: String, date: Date, isAllDay: Bool) -> Completable {
         return .error(.unexpected("Creation failed"))
     }
 }

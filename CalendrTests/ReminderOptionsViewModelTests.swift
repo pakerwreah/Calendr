@@ -66,6 +66,25 @@ class ReminderOptionsViewModelTests: XCTestCase {
         ])
     }
 
+    func testOptions_isTomorrow_shouldHideTomorrowOption() throws {
+
+        dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 12)
+
+        let viewModel = try XCTUnwrap(mock(event: .make(
+            start: .make(year: 2021, month: 1, day: 2, hour: 10),
+            type: .reminder(completed: false),
+        )))
+
+        XCTAssertEqual(viewModel.items, [
+            .action(.complete(.clear)),
+            .separator,
+            .action(.remind(.init(minute: 5))),
+            .action(.remind(.init(minute: 15))),
+            .action(.remind(.init(minute: 30))),
+            .action(.remind(.init(hour: 1)))
+        ])
+    }
+
     func testOptions_isCompleted_fromDetails() {
 
         XCTAssertNil(mock(event: .make(type: .reminder(completed: true)), source: .details))
@@ -99,7 +118,7 @@ class ReminderOptionsViewModelTests: XCTestCase {
 
     func testReminder_rescheduleBy1Hour() throws {
 
-        var date: Date?
+        var args: RescheduleReminderArgs?
         var callback: ReminderAction?
 
         let viewModel = try XCTUnwrap(mock(event: .make(type: .reminder(completed: false))) {
@@ -109,37 +128,148 @@ class ReminderOptionsViewModelTests: XCTestCase {
         dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 12)
 
         calendarService.spyRescheduleReminderObservable
-            .bind { date = $0 }
+            .bind { args = $0 }
             .disposed(by: disposeBag)
 
         let action: ReminderAction = .remind(.init(hour: 1))
 
         viewModel.triggerAction(action)
 
-        XCTAssertEqual(date, .make(year: 2021, month: 1, day: 1, hour: 13))
+        XCTAssertEqual(args?.date, .make(year: 2021, month: 1, day: 1, hour: 13))
+        XCTAssertEqual(args?.isAllDay, false)
         XCTAssertEqual(callback, action)
     }
 
-    func testReminder_rescheduleTomorrow() throws {
+    func testReminder_rescheduleBy1Hour_allDay() throws {
 
-        var date: Date?
+        var args: RescheduleReminderArgs?
         var callback: ReminderAction?
 
-        let viewModel = try XCTUnwrap(mock(event: .make(type: .reminder(completed: false))) {
+        let viewModel = try XCTUnwrap(mock(event: .make(isAllDay: true, type: .reminder(completed: false))) {
             callback = $0
         })
 
         dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 12)
 
         calendarService.spyRescheduleReminderObservable
-            .bind { date = $0 }
+            .bind { args = $0 }
+            .disposed(by: disposeBag)
+
+        let action: ReminderAction = .remind(.init(hour: 1))
+
+        viewModel.triggerAction(action)
+
+        XCTAssertEqual(args?.date, .make(year: 2021, month: 1, day: 1, hour: 13))
+        XCTAssertEqual(args?.isAllDay, false)
+        XCTAssertEqual(callback, action)
+    }
+
+    func testReminder_rescheduleTomorrow() throws {
+
+        var args: RescheduleReminderArgs?
+        var callback: ReminderAction?
+
+        let viewModel = try XCTUnwrap(mock(event: .make(
+            start: .make(year: 2021, month: 1, day: 1, hour: 10),
+            type: .reminder(completed: false))
+        ) {
+            callback = $0
+        })
+
+        dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 12)
+
+        calendarService.spyRescheduleReminderObservable
+            .bind { args = $0 }
             .disposed(by: disposeBag)
 
         let action: ReminderAction = .remind(.init(day: 1))
 
         viewModel.triggerAction(action)
 
-        XCTAssertEqual(date, .make(year: 2021, month: 1, day: 2, hour: 12))
+        XCTAssertEqual(args?.date, .make(year: 2021, month: 1, day: 2, hour: 10))
+        XCTAssertEqual(args?.isAllDay, false)
+        XCTAssertEqual(callback, action)
+    }
+
+    func testReminder_rescheduleTomorrow_allDay() throws {
+
+        var args: RescheduleReminderArgs?
+        var callback: ReminderAction?
+
+        let viewModel = try XCTUnwrap(mock(event: .make(
+            start: .make(year: 2021, month: 1, day: 1, at: .start),
+            isAllDay: true,
+            type: .reminder(completed: false))
+        ) {
+            callback = $0
+        })
+
+        dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 12)
+
+        calendarService.spyRescheduleReminderObservable
+            .bind { args = $0 }
+            .disposed(by: disposeBag)
+
+        let action: ReminderAction = .remind(.init(day: 1))
+
+        viewModel.triggerAction(action)
+
+        XCTAssertEqual(args?.date, .make(year: 2021, month: 1, day: 2, at: .start))
+        XCTAssertEqual(args?.isAllDay, true)
+        XCTAssertEqual(callback, action)
+    }
+
+    func testReminder_rescheduleTomorrow_fromYesterday() throws {
+
+        var args: RescheduleReminderArgs?
+        var callback: ReminderAction?
+
+        let viewModel = try XCTUnwrap(mock(event: .make(
+            start: .make(year: 2020, month: 12, day: 31, hour: 10),
+            type: .reminder(completed: false))
+        ) {
+            callback = $0
+        })
+
+        dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 12)
+
+        calendarService.spyRescheduleReminderObservable
+            .bind { args = $0 }
+            .disposed(by: disposeBag)
+
+        let action: ReminderAction = .remind(.init(day: 1))
+
+        viewModel.triggerAction(action)
+
+        XCTAssertEqual(args?.date, .make(year: 2021, month: 1, day: 2, hour: 10))
+        XCTAssertEqual(args?.isAllDay, false)
+        XCTAssertEqual(callback, action)
+    }
+
+    func testReminder_rescheduleTomorrow_fromFuture() throws {
+
+        var args: RescheduleReminderArgs?
+        var callback: ReminderAction?
+
+        let viewModel = try XCTUnwrap(mock(event: .make(
+            start: .make(year: 2021, month: 1, day: 3, hour: 10),
+            type: .reminder(completed: false))
+        ) {
+            callback = $0
+        })
+
+        dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 12)
+
+        calendarService.spyRescheduleReminderObservable
+            .bind { args = $0 }
+            .disposed(by: disposeBag)
+
+        let action: ReminderAction = .remind(.init(day: 1))
+
+        viewModel.triggerAction(action)
+
+        XCTAssertEqual(args?.date, .make(year: 2021, month: 1, day: 2, hour: 10))
+        XCTAssertEqual(args?.isAllDay, false)
         XCTAssertEqual(callback, action)
     }
 
