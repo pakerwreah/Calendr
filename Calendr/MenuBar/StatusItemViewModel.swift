@@ -148,8 +148,9 @@ class StatusItemViewModel {
                 ))
             }
 
+            let titleFont = NSFont.systemFont(ofSize: (10 * textScaling).rounded(to: 0.5), weight: .medium)
             let title = text.isEmpty ? nil : NSAttributedString(string: text, attributes: [
-                .font: NSFont.systemFont(ofSize: (10 * textScaling).rounded(to: 0.5), weight: .medium)
+                .font: titleFont
             ])
 
             if let title {
@@ -184,7 +185,7 @@ class StatusItemViewModel {
                     icon.draw(at: .init(x: offsetX, y: 0), from: $0, operation: .sourceOver, fraction: 1)
                     offsetX += icon.size.width + spacing
                 }
-                title?.draw(at: .init(x: offsetX, y: 0))
+                title?.draw(at: .init(x: offsetX, y: -titleFont.descender))
                 return true
             }
 
