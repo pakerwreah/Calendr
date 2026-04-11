@@ -149,7 +149,8 @@ class StatusItemViewModel {
             }
 
             let title = text.isEmpty ? nil : NSAttributedString(string: text, attributes: [
-                .font: NSFont.systemFont(ofSize: (10 * textScaling).rounded(to: 0.5), weight: .medium)
+                .font: NSFont.systemFont(ofSize: (10 * textScaling).rounded(to: 0.5), weight: .medium),
+                .baselineOffset: 2
             ])
 
             if let title {
@@ -168,23 +169,25 @@ class StatusItemViewModel {
             }
 
             let radius: CGFloat = 3
-            let border: CGFloat = 1
-            let padding: NSPoint = text.isEmpty ? .init(x: border, y: border) : .init(x: 4, y: 2)
             let spacing: CGFloat = 4
+            let padding: CGFloat = text.isEmpty ? 2 : spacing
             var iconsWidth = icons.map(\.size.width).reduce(0) { $0 + $1 + spacing }
-            let iconsHeight = icons.map(\.size.height).reduce(0, max)
             if text.isEmpty {
                 iconsWidth -= spacing
             }
-            var size = CGSize(width: iconsWidth + titleWidth, height: max(iconsHeight, title?.size().height ?? 0))
+            var size = CGSize(width: iconsWidth + titleWidth, height: NSStatusBar.system.thickness - 3)
 
             let textImage = NSImage(size: size, flipped: false) {
                 var offsetX: CGFloat = 0
                 for icon in icons {
-                    icon.draw(at: .init(x: offsetX, y: 0), from: $0, operation: .sourceOver, fraction: 1)
+                    let offsetY = (size.height - icon.size.height) / 2
+                    icon.draw(at: .init(x: offsetX, y: offsetY), from: $0, operation: .sourceOver, fraction: 1)
                     offsetX += icon.size.width + spacing
                 }
-                title?.draw(at: .init(x: offsetX, y: 0))
+                if let title {
+                    let offsetY = (size.height - title.size().height) / 2
+                    title.draw(at: .init(x: offsetX, y: offsetY))
+                }
                 return true
             }
 
@@ -194,13 +197,12 @@ class StatusItemViewModel {
                 return textImage
             }
 
-            size.width += 2 * padding.x
-            size.height += 2 * padding.y
+            size.width += 2 * padding
 
             let image = NSImage(size: size, flipped: false) {
                 NSBezierPath(roundedRect: $0, xRadius: radius, yRadius: radius).addClip()
                 NSColor.red.drawSwatch(in: $0)
-                textImage.draw(at: padding, from: $0, operation: .destinationOut, fraction: 1)
+                textImage.draw(at: .init(x: padding, y: 0), from: $0, operation: .destinationOut, fraction: 1)
                 return true
             }
 
