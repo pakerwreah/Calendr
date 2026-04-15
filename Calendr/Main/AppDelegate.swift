@@ -36,6 +36,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let notificationCenter = NotificationCenter.default
         let fileManager = FileManager.default
 
+        // ensure prefs are loaded after an update
+        localStorage.synchronize()
+
         registerDefaultPrefs(in: localStorage)
 
         let dateProvider = DateProvider(notificationCenter: notificationCenter, localStorage: localStorage)

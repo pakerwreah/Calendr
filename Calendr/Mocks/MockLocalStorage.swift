@@ -13,6 +13,8 @@ class InMemoryStorage: NSObject, LocalStorage {
     private var storage: [String: Any] = [:]
     private var registeredDefaults: [String: Any] = [:]
 
+    func synchronize() -> Bool { true }
+
     func reset() {
         storage.removeAll()
     }
