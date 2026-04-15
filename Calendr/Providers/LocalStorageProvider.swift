@@ -11,6 +11,8 @@ import RxCocoa
 
 protocol LocalStorage: NSObject {
 
+    func synchronize() -> Bool
+
     func register(defaults: [String : Any])
 
     func set(_ value: Any?, forKey: String)
@@ -44,6 +46,11 @@ class LocalStorageProvider: NSObject, LocalStorage {
 
     init(storage: LocalStorage) {
         self.storage = storage
+    }
+
+    @discardableResult
+    func synchronize() -> Bool {
+        storage.synchronize()
     }
 
     func register(defaults: [String : Any]) {

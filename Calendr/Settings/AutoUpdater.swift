@@ -410,6 +410,8 @@ class AutoUpdater: AutoUpdating {
     @MainActor
     private func relaunchApp(url: URL) throws {
 
+        localStorage.synchronize()
+
         let task = Process()
         task.launchPath = "/usr/bin/open"
         task.arguments = ["-n", url.path]
