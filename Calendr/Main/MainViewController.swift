@@ -109,9 +109,11 @@ class MainViewController: NSViewController {
 
         eventStatusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         eventStatusItem.autosaveName = StatusItemName.event
+        eventStatusItem.isVisible = false
 
         reminderStatusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         reminderStatusItem.autosaveName = StatusItemName.reminder
+        reminderStatusItem.isVisible = false
 
         settingsViewModel = SettingsViewModel(
             autoLauncher: autoLauncher,
