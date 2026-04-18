@@ -44,9 +44,9 @@ class MockCalendarServiceProvider: CalendarServiceProviding {
 
     func calendars() -> Single<[CalendarModel]> { .just(m_calendars) }
 
-    func reminderCalendars() -> Single<[CalendarModel]> { .just([]) }
+    func calendars(forNew type: CalendarEntityType) -> Single<[CalendarModel]> { .just(m_calendars) }
 
-    var defaultReminderCalendarId: String? { nil }
+    func defaultCalendar(forNew type: CalendarEntityType) -> CalendarModel? { m_calendars.first }
 
     func createReminder(title: String, calendar: String, date: Date, isAllDay: Bool) -> Completable { .empty() }
 

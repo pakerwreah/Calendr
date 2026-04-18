@@ -92,7 +92,7 @@ class ReminderEditorViewModel: HostingWindowControllerDelegate {
 
     private func loadCalendars() {
 
-        calendarService.reminderCalendars()
+        calendarService.calendars(forNew: .reminder)
             .observe(on: MainScheduler.instance)
             .subscribe(onSuccess: { [weak self] calendars in
                 self?.setupCalendars(calendars)
@@ -114,7 +114,7 @@ class ReminderEditorViewModel: HostingWindowControllerDelegate {
             }
             .map { CalendarSection(title: $0.key, calendars: $0.value.sorted(by: \.title.localizedLowercase)) }
 
-        let defaultId = calendarService.defaultReminderCalendarId
+        let defaultId = calendarService.defaultCalendar(forNew: .reminder)?.id
 
         if let defaultId, calendars.contains(where: { $0.id == defaultId }) {
             selectedCalendarId = defaultId

@@ -15,8 +15,6 @@ typealias EventsArgs = (start: Date, end: Date, calendars: [String])
 
 class MockCalendarServiceProvider: CalendarServiceProviding {
 
-    static let defaultCalendarId = "test-cal"
-
     let (changeObservable, changeObserver) = PublishSubject<Void>.pipe()
 
     let (spyEventsObservable, spyEventsObserver) = PublishSubject<EventsArgs>.pipe()
@@ -27,23 +25,19 @@ class MockCalendarServiceProvider: CalendarServiceProviding {
 
     var didRequestAccess: (() -> Void)?
 
-    var m_calendars: [CalendarModel] = []
-    var m_reminderCalendars: [CalendarModel]
-    var m_defaultReminderCalendarId: String?
+    var m_calendars: [CalendarModel] = [.make(id: "default")]
+    var m_defaultCalendarId: String? = "default"
     var m_events: [EventModel] = []
-
-    init() {
-        m_reminderCalendars = [.make(id: MockCalendarServiceProvider.defaultCalendarId)]
-        m_defaultReminderCalendarId = MockCalendarServiceProvider.defaultCalendarId
-    }
 
     func requestAccess() { didRequestAccess?() }
 
     func calendars() -> Single<[CalendarModel]> { .just(m_calendars) }
 
-    func reminderCalendars() -> Single<[CalendarModel]> { .just(m_reminderCalendars) }
+    func calendars(forNew type: CalendarEntityType) -> Single<[CalendarModel]> { .just(m_calendars) }
 
-    var defaultReminderCalendarId: String? { m_defaultReminderCalendarId }
+    func defaultCalendar(forNew type: CalendarEntityType) -> CalendarModel? {
+        m_calendars.first { $0.id == m_defaultCalendarId }
+    }
 
     func events(from start: Date, to end: Date, calendars: [String]) -> Single<[EventModel]> {
         spyEventsObserver.onNext((start, end, calendars))

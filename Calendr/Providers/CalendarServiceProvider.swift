@@ -9,13 +9,18 @@ import RxSwift
 import EventKit
 import Sentry
 
+enum CalendarEntityType {
+    case event
+    case reminder
+}
+
 protocol CalendarServiceProviding {
 
     var changeObservable: Observable<Void> { get }
 
     func calendars() -> Single<[CalendarModel]>
-    func reminderCalendars() -> Single<[CalendarModel]>
-    var defaultReminderCalendarId: String? { get }
+    func calendars(forNew type: CalendarEntityType) -> Single<[CalendarModel]>
+    func defaultCalendar(forNew type: CalendarEntityType) -> CalendarModel?
     func events(from start: Date, to end: Date, calendars: [String]) -> Single<[EventModel]>
 
     func createReminder(title: String, calendar: String, date: Date, isAllDay: Bool) -> Completable
@@ -153,28 +158,38 @@ class CalendarServiceProvider: CalendarServiceProviding {
         storeCalendars().map { $0.map(CalendarModel.init(from:)) }
     }
 
-    func reminderCalendars() -> Single<[CalendarModel]> {
+    func calendars(forNew type: CalendarEntityType) -> Single<[CalendarModel]> {
 
         Single.create { [store] observer in
+            do {
+                guard store.hasAccess(to: type.entityType) else {
+                    throw .unexpected("Missing access for \(type.description)")
+                }
 
-            guard store.hasAccess(to: .reminder) else {
-                observer(.success([]))
-                return Disposables.create()
+                let calendars = store.calendars(for: type.entityType)
+                    .filter(\.allowsContentModifications)
+                    .map(CalendarModel.init(from:))
+
+                guard !calendars.isEmpty else {
+                    throw .unexpected("No \(type.description) calendar with write access")
+                }
+
+                observer(.success(calendars))
+            } catch {
+                observer(.failure(error))
             }
-
-            let calendars = store.calendars(for: .reminder)
-                .filter(\.allowsContentModifications)
-                .map(CalendarModel.init(from:))
-
-            observer(.success(calendars))
 
             return Disposables.create()
         }
         .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
     }
 
-    var defaultReminderCalendarId: String? {
-        store.defaultCalendarForNewReminders()?.calendarIdentifier
+    func defaultCalendar(forNew type: CalendarEntityType) -> CalendarModel? {
+        let cal = switch type {
+            case .event: store.defaultCalendarForNewEvents
+            case .reminder: store.defaultCalendarForNewReminders()
+        }
+        return cal.map(CalendarModel.init(from:))
     }
 
     func events(from start: Date, to end: Date, calendars ids: [String]) -> Single<[EventModel]> {
@@ -531,6 +546,23 @@ private extension CalendarModel {
             color: calendar.color,
             isSubscribed: calendar.isSubscribed || calendar.isDelegate
         )
+    }
+}
+
+private extension CalendarEntityType {
+
+    var entityType: EKEntityType {
+        switch self {
+            case .event: .event
+            case .reminder: .reminder
+        }
+    }
+
+    var description: String {
+        switch self {
+            case .event: "events"
+            case .reminder: "reminders"
+        }
     }
 }
 
