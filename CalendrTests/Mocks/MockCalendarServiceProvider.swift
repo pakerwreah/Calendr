@@ -25,8 +25,8 @@ class MockCalendarServiceProvider: CalendarServiceProviding {
 
     var didRequestAccess: (() -> Void)?
 
-    var m_calendars: [CalendarModel] = [.make(id: "default")]
-    var m_defaultCalendarId: String? = "default"
+    var m_calendars: [CalendarModel] = []
+    var m_defaultCalendarId: String?
     var m_events: [EventModel] = []
 
     func requestAccess() { didRequestAccess?() }

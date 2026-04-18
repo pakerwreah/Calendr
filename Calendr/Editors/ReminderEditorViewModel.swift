@@ -9,11 +9,6 @@ import AppKit
 import Observation
 import RxSwift
 
-struct CalendarSection: Equatable {
-    let title: String
-    let calendars: [CalendarModel]
-}
-
 @Observation.Observable
 class ReminderEditorViewModel: HostingWindowControllerDelegate {
     
@@ -24,7 +19,7 @@ class ReminderEditorViewModel: HostingWindowControllerDelegate {
     var isErrorVisible = false
 
     private(set) var calendarSections: [CalendarSection] = []
-    var selectedCalendarId: String = ""
+    var selectedCalendarId: String?
 
     var selectedCalendarColor: NSColor {
         calendarSections
@@ -69,16 +64,21 @@ class ReminderEditorViewModel: HostingWindowControllerDelegate {
     }
 
     func saveReminder() {
-        guard hasValidInput, !selectedCalendarId.isEmpty else { return }
+        guard hasValidInput, let selectedCalendarId else { return }
 
-        calendarService.createReminder(title: title, calendar: selectedCalendarId, date: dueDate, isAllDay: isAllDay)
-            .observe(on: MainScheduler.instance)
-            .subscribe(onCompleted: { [weak self] in
-                self?.confirmClose()
-            }, onError: { [weak self] error in
-                self?.error = error.unexpected
-            })
-            .disposed(by: disposeBag)
+        calendarService.createReminder(
+            title: title,
+            calendar: selectedCalendarId,
+            date: dueDate,
+            isAllDay: isAllDay
+        )
+        .observe(on: MainScheduler.instance)
+        .subscribe(onCompleted: { [weak self] in
+            self?.confirmClose()
+        }, onError: { [weak self] error in
+            self?.error = error.unexpected
+        })
+        .disposed(by: disposeBag)
     }
 
     func requestWindowClose() -> Bool {
@@ -96,6 +96,8 @@ class ReminderEditorViewModel: HostingWindowControllerDelegate {
             .observe(on: MainScheduler.instance)
             .subscribe(onSuccess: { [weak self] calendars in
                 self?.setupCalendars(calendars)
+            }, onFailure: { [weak self] error in
+                self?.error = error.unexpected
             })
             .disposed(by: disposeBag)
     }
@@ -106,19 +108,13 @@ class ReminderEditorViewModel: HostingWindowControllerDelegate {
             account == Strings.Calendars.Source.others
         }
 
-        calendarSections = Dictionary(grouping: calendars, by: \.account.title)
-            .sorted {
-                if isOther($0.key) && !isOther($1.key) { return false }
-                if !isOther($0.key) && isOther($1.key) { return true }
-                return $0.key.localizedLowercase < $1.key.localizedLowercase
-            }
-            .map { CalendarSection(title: $0.key, calendars: $0.value.sorted(by: \.title.localizedLowercase)) }
+        calendarSections = calendars.groupedByAccount()
 
         let defaultId = calendarService.defaultCalendar(forNew: .reminder)?.id
 
         if let defaultId, calendars.contains(where: { $0.id == defaultId }) {
             selectedCalendarId = defaultId
-        } else if let first = calendars.first {
+        } else if let first = calendarSections.first?.calendars.first {
             selectedCalendarId = first.id
         }
     }

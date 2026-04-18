@@ -58,13 +58,4 @@ extension NSImage {
         paddedImage.unlockFocus()
         return paddedImage
     }
-
-    static func colorCircle(_ color: NSColor, size: CGFloat = 10) -> NSImage {
-        let image = NSImage(size: NSSize(width: size, height: size))
-        image.lockFocus()
-        color.setFill()
-        NSBezierPath(ovalIn: NSRect(x: 0, y: 0, width: size, height: size)).fill()
-        image.unlockFocus()
-        return image
-    }
 }

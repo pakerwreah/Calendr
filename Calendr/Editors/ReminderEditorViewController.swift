@@ -25,37 +25,14 @@ struct ReminderEditorView: ViewModelView {
                 .font(.title2)
                 .bold()
 
-            let borderOverlay = RoundedRectangle(cornerRadius: 4)
-                .stroke(Color.init(nsColor: .tertiaryLabelColor))
-
-            let textColor = Color.init(nsColor: .textColor)
-
-            let font = Font.system(size: 13)
-
             HStack(spacing: 8) {
-                TextField(Strings.Reminder.Editor.title, text: $viewModel.title)
-                    .focused($autoFocus)
-                    .font(font)
-                    .foregroundStyle(textColor)
-                    .border(.clear)
-                    .overlay { borderOverlay }
-
-                calendarDropdown
+                TitleInput()
+                CalendarPicker()
             }
 
             HStack(spacing: 8) {
-                DatePicker("Date", selection: $viewModel.dueDate, displayedComponents: .date)
-                    .datePickerStyle(.field)
-                    .labelsHidden()
-
-                if !viewModel.isAllDay {
-                    DatePicker("Time", selection: $viewModel.dueDate, displayedComponents: .hourAndMinute)
-                        .datePickerStyle(.field)
-                        .labelsHidden()
-                }
-
+                DateTimeInput()
                 Spacer()
-
                 Toggle(Strings.Event.allDay, isOn: $viewModel.isAllDay)
                     .toggleStyle(.checkbox)
             }
@@ -94,30 +71,60 @@ struct ReminderEditorView: ViewModelView {
     }
 
     @ViewBuilder
-    private var calendarDropdown: some View {
+    private func TitleInput() -> some View {
+
+        let borderOverlay = RoundedRectangle(cornerRadius: 4)
+            .stroke(Color.init(nsColor: .tertiaryLabelColor))
+
+        let textColor = Color.init(nsColor: .textColor)
+
+        let font = Font.system(size: 13)
+
+        TextField(Strings.Reminder.Editor.title, text: $viewModel.title)
+            .focused($autoFocus)
+            .font(font)
+            .foregroundStyle(textColor)
+            .border(.clear)
+            .overlay { borderOverlay }
+    }
+
+    @ViewBuilder
+    private func CalendarPicker() -> some View {
         Menu {
-            ForEach(viewModel.calendarSections, id: \.title) { section in
-                Section(section.title) {
-                    ForEach(section.calendars, id: \.id) { calendar in
-                        Button {
-                            viewModel.selectedCalendarId = calendar.id
-                        } label: {
-                            Label {
-                                Text(calendar.title)
-                            } icon: {
-                                Image(nsImage: .colorCircle(calendar.color))
-                            }
+            Picker("", selection: $viewModel.selectedCalendarId) {
+                ForEach(viewModel.calendarSections, id: \.account) { section in
+                    Section(section.account.title) {
+                        ForEach(section.calendars, id: \.id) { calendar in
+                            Button(calendar.title, systemImage: "circle.fill") {}
+                                .symbolRenderingMode(.palette)
+                                .foregroundStyle(Color(nsColor: calendar.color))
+                                .tag(calendar.id)
                         }
                     }
                 }
             }
+            .labelsHidden()
         } label: {
-            Circle()
-                .fill(Color(nsColor: viewModel.selectedCalendarColor))
-                .frame(width: 12, height: 12)
+            Image(systemName: "circle.fill")
+                .symbolRenderingMode(.palette)
+                .foregroundStyle(Color(nsColor: viewModel.selectedCalendarColor))
         }
+        .pickerStyle(.inline)
         .menuStyle(.borderlessButton)
         .fixedSize()
+    }
+
+    @ViewBuilder
+    private func DateTimeInput() -> some View {
+        DatePicker("Date", selection: $viewModel.dueDate, displayedComponents: .date)
+            .datePickerStyle(.field)
+            .labelsHidden()
+
+        if !viewModel.isAllDay {
+            DatePicker("Time", selection: $viewModel.dueDate, displayedComponents: .hourAndMinute)
+                .datePickerStyle(.field)
+                .labelsHidden()
+        }
     }
 }
 
@@ -129,7 +136,13 @@ struct ReminderEditorView: ViewModelView {
     ReminderEditorView(
         viewModel: .init(
             dueDate: .init(date: .now),
-            calendarService: MockCalendarServiceProvider()
+            calendarService: MockCalendarServiceProvider(
+                calendars: [
+                    .make(id: "1", account: "iCloud", title: "Reminders", color: .systemBlue),
+                    .make(id: "2", account: "iCloud", title: "Groceries", color: .systemRed),
+                    .make(id: "3", account: "Google", title: "Todos", color: .systemYellow),
+                ]
+            )
         )
     )
 }

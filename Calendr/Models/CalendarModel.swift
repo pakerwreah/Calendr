@@ -7,7 +7,7 @@
 
 import Cocoa
 
-struct CalendarAccount: Equatable {
+struct CalendarAccount: Equatable, Hashable {
     let title: String
     let email: String?
 }
