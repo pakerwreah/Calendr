@@ -15,6 +15,8 @@ typealias EventsArgs = (start: Date, end: Date, calendars: [String])
 
 class MockCalendarServiceProvider: CalendarServiceProviding {
 
+    static let defaultCalendarId = "test-cal"
+
     let (changeObservable, changeObserver) = PublishSubject<Void>.pipe()
 
     let (spyEventsObservable, spyEventsObserver) = PublishSubject<EventsArgs>.pipe()
@@ -26,9 +28,14 @@ class MockCalendarServiceProvider: CalendarServiceProviding {
     var didRequestAccess: (() -> Void)?
 
     var m_calendars: [CalendarModel] = []
-    var m_reminderCalendars: [CalendarModel] = []
+    var m_reminderCalendars: [CalendarModel]
     var m_defaultReminderCalendarId: String?
     var m_events: [EventModel] = []
+
+    init() {
+        m_reminderCalendars = [.make(id: MockCalendarServiceProvider.defaultCalendarId)]
+        m_defaultReminderCalendarId = MockCalendarServiceProvider.defaultCalendarId
+    }
 
     func requestAccess() { didRequestAccess?() }
 
