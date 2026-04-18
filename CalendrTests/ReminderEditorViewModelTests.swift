@@ -39,6 +39,9 @@ class ReminderEditorViewModelTests: XCTestCase {
         XCTAssertFalse(viewModel.isErrorVisible)
         XCTAssertFalse(viewModel.hasValidInput)
         XCTAssertFalse(viewModel.isCloseConfirmationVisible)
+        XCTAssertTrue(viewModel.calendarSections.isEmpty)
+        XCTAssertEqual(viewModel.selectedCalendarId, "")
+        XCTAssertEqual(viewModel.selectedCalendarColor, .clear)
     }
 
     func testViewModel_validInput() {
@@ -58,7 +61,7 @@ class ReminderEditorViewModelTests: XCTestCase {
 
     func testViewModel_saveReminder_withInvalidInput_shouldNotCallService() {
 
-        let calendarService = MockCalendarServiceProvider()
+        let calendarService = MockCalendarServiceProvider.withDefaultCalendar()
         let dueDate = Date()
 
         let viewModel = ReminderEditorViewModel(dueDate: .init(date: dueDate), calendarService: calendarService)
@@ -76,13 +79,14 @@ class ReminderEditorViewModelTests: XCTestCase {
         viewModel.saveReminder()
 
         XCTAssertEqual(lastValue?.title, "valid")
+        XCTAssertEqual(lastValue?.calendar, MockCalendarServiceProvider.defaultCalendarId)
         XCTAssertEqual(lastValue?.date, dueDate)
         XCTAssertEqual(lastValue?.isAllDay, false)
     }
 
     func testViewModel_saveReminder_allDay() {
 
-        let calendarService = MockCalendarServiceProvider()
+        let calendarService = MockCalendarServiceProvider.withDefaultCalendar()
         let dueDate = Date()
 
         let viewModel = ReminderEditorViewModel(dueDate: .init(date: dueDate), calendarService: calendarService)
@@ -95,6 +99,7 @@ class ReminderEditorViewModelTests: XCTestCase {
         viewModel.saveReminder()
 
         XCTAssertEqual(lastValue?.title, "valid")
+        XCTAssertEqual(lastValue?.calendar, MockCalendarServiceProvider.defaultCalendarId)
         XCTAssertEqual(lastValue?.date, dueDate)
         XCTAssertEqual(lastValue?.isAllDay, true)
     }
@@ -151,6 +156,20 @@ class ReminderEditorViewModelTests: XCTestCase {
         waitForExpectations(timeout: 0.1)
     }
 
+    func testViewModel_saveReminder_withNoCalendar_shouldNotCallService() {
+
+        let calendarService = MockCalendarServiceProvider()
+        let viewModel = ReminderEditorViewModel(dueDate: .init(date: .now), calendarService: calendarService)
+
+        var lastValue: CreateReminderArgs?
+        _ = calendarService.spyCreateReminderObservable.bind { lastValue = $0 }
+
+        viewModel.title = "valid"
+        viewModel.saveReminder()
+
+        XCTAssertNil(lastValue)
+    }
+
     func testViewModel_withCloseRequested_withInvalidInput_shouldCloseWindow() {
 
         let expectation = expectation(description: "Should not call confirmation callback")
@@ -194,18 +213,194 @@ class ReminderEditorViewModelTests: XCTestCase {
 
         XCTAssertFalse(viewModel.isCloseConfirmationVisible)
     }
+
+    // MARK: - Calendar selection
+
+    func testViewModel_calendars_withDefault_shouldSelectDefaultCalendar() {
+
+        let calendarService = MockCalendarServiceProvider()
+        calendarService.m_reminderCalendars = [
+            .make(id: "cal-1", title: "Work"),
+            .make(id: "cal-2", title: "Personal"),
+        ]
+        calendarService.m_defaultReminderCalendarId = "cal-2"
+
+        let viewModel = ReminderEditorViewModel(dueDate: .init(date: .now), calendarService: calendarService)
+
+        XCTAssertEqual(viewModel.selectedCalendarId, "cal-2")
+    }
+
+    func testViewModel_calendars_withoutDefault_shouldSelectFirstCalendar() {
+
+        let calendarService = MockCalendarServiceProvider()
+        calendarService.m_reminderCalendars = [
+            .make(id: "cal-1", title: "Work"),
+            .make(id: "cal-2", title: "Personal"),
+        ]
+
+        let viewModel = ReminderEditorViewModel(dueDate: .init(date: .now), calendarService: calendarService)
+
+        XCTAssertEqual(viewModel.selectedCalendarId, "cal-1")
+    }
+
+    func testViewModel_calendars_withInvalidDefault_shouldSelectFirstCalendar() {
+
+        let calendarService = MockCalendarServiceProvider()
+        calendarService.m_reminderCalendars = [
+            .make(id: "cal-1", title: "Work"),
+            .make(id: "cal-2", title: "Personal"),
+        ]
+        calendarService.m_defaultReminderCalendarId = "non-existent"
+
+        let viewModel = ReminderEditorViewModel(dueDate: .init(date: .now), calendarService: calendarService)
+
+        XCTAssertEqual(viewModel.selectedCalendarId, "cal-1")
+    }
+
+    func testViewModel_calendars_shouldGroupByAccount() {
+
+        let calendarService = MockCalendarServiceProvider()
+        calendarService.m_reminderCalendars = [
+            .make(id: "cal-1", account: "iCloud", title: "Work"),
+            .make(id: "cal-2", account: "iCloud", title: "Personal"),
+            .make(id: "cal-3", account: "Google", title: "Tasks"),
+        ]
+
+        let viewModel = ReminderEditorViewModel(dueDate: .init(date: .now), calendarService: calendarService)
+
+        XCTAssertEqual(viewModel.calendarSections.count, 2)
+        XCTAssertEqual(viewModel.calendarSections[0].title, "Google")
+        XCTAssertEqual(viewModel.calendarSections[0].calendars.map(\.id), ["cal-3"])
+        XCTAssertEqual(viewModel.calendarSections[1].title, "iCloud")
+        XCTAssertEqual(viewModel.calendarSections[1].calendars.map(\.id), ["cal-1", "cal-2"])
+    }
+
+    func testViewModel_calendars_shouldSortOthersLast() {
+
+        let othersAccount = Strings.Calendars.Source.others
+
+        let calendarService = MockCalendarServiceProvider()
+        calendarService.m_reminderCalendars = [
+            .make(id: "cal-1", account: othersAccount, title: "Local"),
+            .make(id: "cal-2", account: "iCloud", title: "Work"),
+            .make(id: "cal-3", account: "Google", title: "Tasks"),
+        ]
+
+        let viewModel = ReminderEditorViewModel(dueDate: .init(date: .now), calendarService: calendarService)
+
+        XCTAssertEqual(viewModel.calendarSections.count, 3)
+        XCTAssertEqual(viewModel.calendarSections[0].title, "Google")
+        XCTAssertEqual(viewModel.calendarSections[1].title, "iCloud")
+        XCTAssertEqual(viewModel.calendarSections[2].title, othersAccount)
+    }
+
+    func testViewModel_calendars_shouldSortCalendarsWithinSection() {
+
+        let calendarService = MockCalendarServiceProvider()
+        calendarService.m_reminderCalendars = [
+            .make(id: "cal-1", account: "iCloud", title: "Zebra"),
+            .make(id: "cal-2", account: "iCloud", title: "Apple"),
+            .make(id: "cal-3", account: "iCloud", title: "Mango"),
+        ]
+
+        let viewModel = ReminderEditorViewModel(dueDate: .init(date: .now), calendarService: calendarService)
+
+        XCTAssertEqual(viewModel.calendarSections.count, 1)
+        XCTAssertEqual(viewModel.calendarSections[0].calendars.map(\.title), ["Apple", "Mango", "Zebra"])
+    }
+
+    func testViewModel_selectedCalendarColor() {
+
+        let calendarService = MockCalendarServiceProvider()
+        calendarService.m_reminderCalendars = [
+            .make(id: "cal-1", title: "Work", color: .red),
+            .make(id: "cal-2", title: "Personal", color: .blue),
+        ]
+        calendarService.m_defaultReminderCalendarId = "cal-1"
+
+        let viewModel = ReminderEditorViewModel(dueDate: .init(date: .now), calendarService: calendarService)
+
+        XCTAssertEqual(viewModel.selectedCalendarColor, .red)
+
+        viewModel.selectedCalendarId = "cal-2"
+
+        XCTAssertEqual(viewModel.selectedCalendarColor, .blue)
+    }
+
+    func testViewModel_selectedCalendarColor_withNoCalendars_shouldBeClear() {
+
+        let calendarService = MockCalendarServiceProvider()
+
+        let viewModel = ReminderEditorViewModel(dueDate: .init(date: .now), calendarService: calendarService)
+
+        XCTAssertEqual(viewModel.selectedCalendarColor, .clear)
+    }
+
+    func testViewModel_saveReminder_shouldPassSelectedCalendar() {
+
+        let calendarService = MockCalendarServiceProvider()
+        calendarService.m_reminderCalendars = [
+            .make(id: "cal-1", title: "Work"),
+            .make(id: "cal-2", title: "Personal"),
+        ]
+        calendarService.m_defaultReminderCalendarId = "cal-1"
+
+        let dueDate = Date()
+
+        let viewModel = ReminderEditorViewModel(dueDate: .init(date: dueDate), calendarService: calendarService)
+
+        var lastValue: CreateReminderArgs?
+        _ = calendarService.spyCreateReminderObservable.bind { lastValue = $0 }
+
+        viewModel.title = "My Reminder"
+        viewModel.selectedCalendarId = "cal-2"
+        viewModel.saveReminder()
+
+        XCTAssertEqual(lastValue?.title, "My Reminder")
+        XCTAssertEqual(lastValue?.calendar, "cal-2")
+        XCTAssertEqual(lastValue?.date, dueDate)
+        XCTAssertEqual(lastValue?.isAllDay, false)
+    }
+
+    func testViewModel_calendars_empty_shouldHaveNoSections() {
+
+        let calendarService = MockCalendarServiceProvider()
+
+        let viewModel = ReminderEditorViewModel(dueDate: .init(date: .now), calendarService: calendarService)
+
+        XCTAssertTrue(viewModel.calendarSections.isEmpty)
+        XCTAssertEqual(viewModel.selectedCalendarId, "")
+    }
 }
 
 private class FailingCalendarService: MockCalendarServiceProvider {
 
-    override func createReminder(title: String, date: Date, isAllDay: Bool) -> Completable {
+    override init() {
+        super.init()
+        m_reminderCalendars = [.make(id: MockCalendarServiceProvider.defaultCalendarId)]
+        m_defaultReminderCalendarId = MockCalendarServiceProvider.defaultCalendarId
+    }
+
+    override func createReminder(title: String, calendar: String, date: Date, isAllDay: Bool) -> Completable {
         return .error(.unexpected("Creation failed"))
+    }
+}
+
+private extension MockCalendarServiceProvider {
+
+    static let defaultCalendarId = "test-cal"
+
+    static func withDefaultCalendar() -> MockCalendarServiceProvider {
+        let mock = MockCalendarServiceProvider()
+        mock.m_reminderCalendars = [.make(id: defaultCalendarId)]
+        mock.m_defaultReminderCalendarId = defaultCalendarId
+        return mock
     }
 }
 
 private extension ReminderEditorViewModel {
 
-    convenience init(dueDate: Date = .now, calendarService: CalendarServiceProviding = MockCalendarServiceProvider()) {
+    convenience init(dueDate: Date = .now, calendarService: CalendarServiceProviding = MockCalendarServiceProvider.withDefaultCalendar()) {
         self.init(dueDate: .init(date: dueDate), calendarService: calendarService)
     }
 }

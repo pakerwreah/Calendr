@@ -10,7 +10,7 @@ import RxSwift
 @testable import Calendr
 
 typealias RescheduleReminderArgs = (date: Date, isAllDay: Bool)
-typealias CreateReminderArgs = (title: String, date: Date, isAllDay: Bool)
+typealias CreateReminderArgs = (title: String, calendar: String, date: Date, isAllDay: Bool)
 typealias EventsArgs = (start: Date, end: Date, calendars: [String])
 
 class MockCalendarServiceProvider: CalendarServiceProviding {
@@ -26,11 +26,17 @@ class MockCalendarServiceProvider: CalendarServiceProviding {
     var didRequestAccess: (() -> Void)?
 
     var m_calendars: [CalendarModel] = []
+    var m_reminderCalendars: [CalendarModel] = []
+    var m_defaultReminderCalendarId: String?
     var m_events: [EventModel] = []
 
     func requestAccess() { didRequestAccess?() }
 
     func calendars() -> Single<[CalendarModel]> { .just(m_calendars) }
+
+    func reminderCalendars() -> Single<[CalendarModel]> { .just(m_reminderCalendars) }
+
+    var defaultReminderCalendarId: String? { m_defaultReminderCalendarId }
 
     func events(from start: Date, to end: Date, calendars: [String]) -> Single<[EventModel]> {
         spyEventsObserver.onNext((start, end, calendars))
@@ -52,8 +58,8 @@ class MockCalendarServiceProvider: CalendarServiceProviding {
         return .empty()
     }
 
-    func createReminder(title: String, date: Date, isAllDay: Bool) -> Completable {
-        spyCreateReminderObserver.onNext((title, date, isAllDay))
+    func createReminder(title: String, calendar: String, date: Date, isAllDay: Bool) -> Completable {
+        spyCreateReminderObserver.onNext((title, calendar, date, isAllDay))
         return .empty()
     }
 }

@@ -32,12 +32,16 @@ struct ReminderEditorView: ViewModelView {
 
             let font = Font.system(size: 13)
 
-            TextField(Strings.Reminder.Editor.title, text: $viewModel.title)
-                .focused($autoFocus)
-                .font(font)
-                .foregroundStyle(textColor)
-                .border(.clear)
-                .overlay { borderOverlay }
+            HStack(spacing: 8) {
+                TextField(Strings.Reminder.Editor.title, text: $viewModel.title)
+                    .focused($autoFocus)
+                    .font(font)
+                    .foregroundStyle(textColor)
+                    .border(.clear)
+                    .overlay { borderOverlay }
+
+                calendarDropdown
+            }
 
             HStack(spacing: 8) {
                 DatePicker("Date", selection: $viewModel.dueDate, displayedComponents: .date)
@@ -87,6 +91,33 @@ struct ReminderEditorView: ViewModelView {
             Button("OK", role: .cancel, action: viewModel.dismissError)
                 .keyboardShortcut(.defaultAction)
         }
+    }
+
+    @ViewBuilder
+    private var calendarDropdown: some View {
+        Menu {
+            ForEach(viewModel.calendarSections, id: \.title) { section in
+                Section(section.title) {
+                    ForEach(section.calendars, id: \.id) { calendar in
+                        Button {
+                            viewModel.selectedCalendarId = calendar.id
+                        } label: {
+                            Label {
+                                Text(calendar.title)
+                            } icon: {
+                                Image(nsImage: .colorCircle(calendar.color))
+                            }
+                        }
+                    }
+                }
+            }
+        } label: {
+            Circle()
+                .fill(Color(nsColor: viewModel.selectedCalendarColor))
+                .frame(width: 12, height: 12)
+        }
+        .menuStyle(.borderlessButton)
+        .fixedSize()
     }
 }
 

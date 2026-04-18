@@ -14,9 +14,11 @@ protocol CalendarServiceProviding {
     var changeObservable: Observable<Void> { get }
 
     func calendars() -> Single<[CalendarModel]>
+    func reminderCalendars() -> Single<[CalendarModel]>
+    var defaultReminderCalendarId: String? { get }
     func events(from start: Date, to end: Date, calendars: [String]) -> Single<[EventModel]>
 
-    func createReminder(title: String, date: Date, isAllDay: Bool) -> Completable
+    func createReminder(title: String, calendar: String, date: Date, isAllDay: Bool) -> Completable
     func completeReminder(id: String, complete: Bool) -> Completable
     func rescheduleReminder(id: String, to: Date, isAllDay: Bool) -> Completable
 
@@ -151,6 +153,30 @@ class CalendarServiceProvider: CalendarServiceProviding {
         storeCalendars().map { $0.map(CalendarModel.init(from:)) }
     }
 
+    func reminderCalendars() -> Single<[CalendarModel]> {
+
+        Single.create { [store] observer in
+
+            guard store.hasAccess(to: .reminder) else {
+                observer(.success([]))
+                return Disposables.create()
+            }
+
+            let calendars = store.calendars(for: .reminder)
+                .filter(\.allowsContentModifications)
+                .map(CalendarModel.init(from:))
+
+            observer(.success(calendars))
+
+            return Disposables.create()
+        }
+        .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+    }
+
+    var defaultReminderCalendarId: String? {
+        store.defaultCalendarForNewReminders()?.calendarIdentifier
+    }
+
     func events(from start: Date, to end: Date, calendars ids: [String]) -> Single<[EventModel]> {
 
         storeCalendars(with: ids)
@@ -225,14 +251,14 @@ class CalendarServiceProvider: CalendarServiceProviding {
         }
     }
 
-    func createReminder(title: String, date: Date, isAllDay: Bool) -> Completable {
+    func createReminder(title: String, calendar calendarId: String, date: Date, isAllDay: Bool) -> Completable {
 
         let dateComponents = dueDateComponents(for: date, isAllDay: isAllDay)
 
         return Completable.create { [store] observer in
             do {
-                guard let calendar = store.defaultCalendarForNewReminders() else {
-                    throw .unexpected("Missing default calendar for reminders")
+                guard let calendar = store.calendar(withIdentifier: calendarId) else {
+                    throw .unexpected("Missing calendar for reminders")
                 }
                 let reminder = EKReminder(eventStore: store)
                 reminder.calendar = calendar

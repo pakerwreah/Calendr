@@ -5,9 +5,14 @@
 //  Created by Paker on 23/10/2025.
 //
 
-import Foundation
+import AppKit
 import Observation
 import RxSwift
+
+struct CalendarSection: Equatable {
+    let title: String
+    let calendars: [CalendarModel]
+}
 
 @Observation.Observable
 class ReminderEditorViewModel: HostingWindowControllerDelegate {
@@ -17,6 +22,16 @@ class ReminderEditorViewModel: HostingWindowControllerDelegate {
     var isAllDay = false
     var isCloseConfirmationVisible = false
     var isErrorVisible = false
+
+    private(set) var calendarSections: [CalendarSection] = []
+    var selectedCalendarId: String = ""
+
+    var selectedCalendarColor: NSColor {
+        calendarSections
+            .flatMap(\.calendars)
+            .first { $0.id == selectedCalendarId }?
+            .color ?? .clear
+    }
 
     private(set) var error: UnexpectedError? {
         didSet {
@@ -33,6 +48,8 @@ class ReminderEditorViewModel: HostingWindowControllerDelegate {
     init(dueDate: DueDate, calendarService: CalendarServiceProviding) {
         self.dueDate = dueDate.date
         self.calendarService = calendarService
+
+        loadCalendars()
     }
 
     var onCloseConfirmed: (() -> Void)?
@@ -52,9 +69,9 @@ class ReminderEditorViewModel: HostingWindowControllerDelegate {
     }
 
     func saveReminder() {
-        guard hasValidInput else { return }
+        guard hasValidInput, !selectedCalendarId.isEmpty else { return }
 
-        calendarService.createReminder(title: title, date: dueDate, isAllDay: isAllDay)
+        calendarService.createReminder(title: title, calendar: selectedCalendarId, date: dueDate, isAllDay: isAllDay)
             .observe(on: MainScheduler.instance)
             .subscribe(onCompleted: { [weak self] in
                 self?.confirmClose()
@@ -69,5 +86,40 @@ class ReminderEditorViewModel: HostingWindowControllerDelegate {
             isCloseConfirmationVisible = true
         }
         return !isCloseConfirmationVisible
+    }
+
+    // MARK: - Private
+
+    private func loadCalendars() {
+
+        calendarService.reminderCalendars()
+            .observe(on: MainScheduler.instance)
+            .subscribe(onSuccess: { [weak self] calendars in
+                self?.setupCalendars(calendars)
+            })
+            .disposed(by: disposeBag)
+    }
+
+    private func setupCalendars(_ calendars: [CalendarModel]) {
+
+        func isOther(_ account: String) -> Bool {
+            account == Strings.Calendars.Source.others
+        }
+
+        calendarSections = Dictionary(grouping: calendars, by: \.account.title)
+            .sorted {
+                if isOther($0.key) && !isOther($1.key) { return false }
+                if !isOther($0.key) && isOther($1.key) { return true }
+                return $0.key.localizedLowercase < $1.key.localizedLowercase
+            }
+            .map { CalendarSection(title: $0.key, calendars: $0.value.sorted(by: \.title.localizedLowercase)) }
+
+        let defaultId = calendarService.defaultReminderCalendarId
+
+        if let defaultId, calendars.contains(where: { $0.id == defaultId }) {
+            selectedCalendarId = defaultId
+        } else if let first = calendars.first {
+            selectedCalendarId = first.id
+        }
     }
 }
