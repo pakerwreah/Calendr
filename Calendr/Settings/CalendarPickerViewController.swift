@@ -89,10 +89,6 @@ class CalendarPickerViewController: NSViewController, SettingsUI {
 
                 itemsDisposeBag = DisposeBag()
 
-                func isOther(_ account: String) -> Bool {
-                    account == Strings.Calendars.Source.others
-                }
-
                 return calendars.groupedByAccount()
                     .map { section in
                         self.makeCalendarSection(

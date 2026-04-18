@@ -104,10 +104,6 @@ class ReminderEditorViewModel: HostingWindowControllerDelegate {
 
     private func setupCalendars(_ calendars: [CalendarModel]) {
 
-        func isOther(_ account: String) -> Bool {
-            account == Strings.Calendars.Source.others
-        }
-
         calendarSections = calendars.groupedByAccount()
 
         let defaultId = calendarService.defaultCalendar(forNew: .reminder)?.id
