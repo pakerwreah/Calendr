@@ -104,6 +104,9 @@
 "formatter.date.relative.ago" = "%@ önce";
 "formatter.date.relative.left" = "%@ kaldı";
 
+//"formatter.events.plural" = "%@ events";
+//"formatter.reminders.plural" = "%@ reminders";
+
 "reminder.status.overdue" = "Süresi geçmiş";
 
 "reminder.options.button" = "Seçenekler";

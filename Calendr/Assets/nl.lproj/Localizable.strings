@@ -102,6 +102,9 @@
 "formatter.date.relative.ago" = "%@ geleden";
 "formatter.date.relative.left" = "%@ resterend";
 
+//"formatter.events.plural" = "%@ events";
+//"formatter.reminders.plural" = "%@ reminders";
+
 "reminder.status.overdue" = "Achterstallig";
 
 "reminder.options.button" = "Opties";

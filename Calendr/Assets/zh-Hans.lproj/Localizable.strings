@@ -104,6 +104,9 @@
 "formatter.date.relative.ago" = "%@ 之前";
 "formatter.date.relative.left" = "还剩 %@";
 
+//"formatter.events.plural" = "%@ events";
+//"formatter.reminders.plural" = "%@ reminders";
+
 "reminder.status.overdue" = "逾期";
 
 "reminder.options.button" = "选项";

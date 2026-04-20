@@ -104,6 +104,9 @@
 "formatter.date.relative.ago" = "pred %@";
 "formatter.date.relative.left" = "zostáva %@";
 
+//"formatter.events.plural" = "%@ events";
+//"formatter.reminders.plural" = "%@ reminders";
+
 "reminder.status.overdue" = "Po termíne";
 
 "reminder.options.button" = "Možnosti";

@@ -106,6 +106,9 @@
 "formatter.date.relative.ago" = "%@ назад";
 "formatter.date.relative.left" = "осталось %@";
 
+//"formatter.events.plural" = "%@ events";
+//"formatter.reminders.plural" = "%@ reminders";
+
 "reminder.status.overdue" = "Просрочено";
 
 "reminder.options.button" = "Опции";

@@ -104,6 +104,9 @@
 "formatter.date.relative.ago" = "לפני %@";
 "formatter.date.relative.left" = "‏%@ נותרו";
 
+//"formatter.events.plural" = "%@ events";
+//"formatter.reminders.plural" = "%@ reminders";
+
 "reminder.status.overdue" = "עבר זמן ביצוע";
 
 "reminder.options.button" = "אפשרויות";

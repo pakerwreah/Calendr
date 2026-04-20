@@ -139,26 +139,8 @@ class NextEventViewModel {
                 }
             }
 
-        let statusOrder: [EventStatus] = [.accepted, .maybe, .pending, .unknown]
-
-        // This is a low effort strategy to untie events starting at the same time
-        // where one has a chosen status with higher priority than the other
-        let sortedEvents = filteredEvents.map { events in
-            events.sorted {
-                guard
-                    $0.start == $1.start,
-                    $0.status != $1.status,
-                    let firstStatusIndex = statusOrder.firstIndex(of: $0.status),
-                    let secondStatusIndex = statusOrder.firstIndex(of: $1.status)
-                else {
-                    return $0.start < $1.start
-                }
-                return firstStatusIndex < secondStatusIndex
-            }
-        }
-
         let nextEventObservable = Observable
-            .combineLatest(sortedEvents, settings.eventStatusItemCheckRange)
+            .combineLatest(filteredEvents, settings.eventStatusItemCheckRange)
             .flatMapLatest { [dateProvider] events, hoursToCheck -> Observable<NextEvent?> in
 
                 Observable<Int>.interval(.seconds(1), scheduler: scheduler)
@@ -175,18 +157,23 @@ class NextEventViewModel {
                                 // event is in the configured range to check
                                 dateProvider.now.distance(to: event.start) <= 3600 * max(0.5, Double(hoursToCheck))
                             }
-
-                        return upcoming
                             .sorted {
                                 abs($0.start.distance(to: dateProvider.now))
                             }
-                            .first
                             .map { event -> NextEvent in
                                 let isInProgress = dateProvider.calendar.isDate(
                                     dateProvider.now, greaterThanOrEqualTo: event.start, granularity: .second
                                 )
                                 return NextEvent(event: event, isInProgress: isInProgress)
                             }
+
+                        let concurrent = upcoming.prefix { $0.event.start == upcoming.first?.event.start }
+
+                        if concurrent.count > 1 {
+                            return makeAggregateEvent(type, concurrent, calendarService)
+                        } else {
+                            return upcoming.first
+                        }
                     }
             }
             .share(replay: 1)
@@ -368,7 +355,11 @@ class NextEventViewModel {
     }
 
     func makeContextMenuViewModel() -> (any ContextMenuViewModel)? {
-        guard let event = try? event.value() else { return nil }
+        guard
+            let event = try? event.value(),
+            !event.id.isEmpty
+        else { return nil }
+
         return ContextMenuFactory.makeViewModel(
             event: event,
             dateProvider: dateProvider,
@@ -380,7 +371,11 @@ class NextEventViewModel {
     }
 
     func makeDetailsViewModel() -> EventDetailsViewModel? {
-        guard let event = try? event.value() else { return nil }
+        guard
+            let event = try? event.value(),
+            !event.id.isEmpty
+        else { return nil }
+
         return .init(
             event: event,
             dateProvider: dateProvider,
@@ -401,4 +396,77 @@ class NextEventViewModel {
 private enum Constants {
 
     static let compactMaxWidth = 15
+}
+
+private func fakeEvent(start: Date, end: Date, title: String, type: EventType, color: NSColor) -> EventModel {
+
+    EventModel(
+        id: "",
+        externalId: "",
+        start: start,
+        end: end,
+        title: title,
+        location: nil,
+        coordinates: nil,
+        notes: nil,
+        url: nil,
+        isAllDay: false,
+        type: type,
+        calendar: .init(
+            id: "",
+            account: .init(title: "", email: nil),
+            title: "",
+            color: color,
+            isSubscribed: false
+        ),
+        participants: [],
+        timeZone: nil,
+        hasRecurrenceRules: false,
+        priority: nil,
+        attachments: []
+    )
+}
+
+private func makeAggregateEvent(
+    _ type: NextEventType,
+    _ items: ArraySlice<NextEvent>,
+    _ calendarService: CalendarServiceProviding
+) -> NextEvent? {
+
+    guard let first = items.first else { return nil }
+
+    let calendarType = switch (type) {
+        case .event: CalendarEntityType.event
+        case .reminder: CalendarEntityType.reminder
+    }
+
+    let color: NSColor
+
+    if Set(items.map(\.event.calendar.color)).count == 1 {
+        color = first.event.calendar.color
+    }
+    else if let defaultCalendar = calendarService.defaultCalendar(forNew: calendarType),
+       items.contains(where: { $0.event.calendar.id == defaultCalendar.id }) {
+
+        color = defaultCalendar.color
+    }
+    else {
+        color = .controlAccentColor
+    }
+
+    let title = switch type {
+        case .event: Strings.Formatter.Events.plural(items.count)
+        case .reminder: Strings.Formatter.Reminders.plural(items.count)
+    }
+
+    return NextEvent(
+        event: fakeEvent(
+            start: first.event.start,
+            end: items.map(\.event.end).max()!,
+            title: title,
+            type: first.event.type,
+            color: color,
+        ),
+        isInProgress: first.isInProgress
+    )
 }

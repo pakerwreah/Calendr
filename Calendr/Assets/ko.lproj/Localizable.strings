@@ -104,6 +104,9 @@
 "formatter.date.relative.ago" = "%@ 전";
 "formatter.date.relative.left" = "%@ 남음";
 
+//"formatter.events.plural" = "%@ events";
+//"formatter.reminders.plural" = "%@ reminders";
+
 //"reminder.status.overdue" = "Overdue";
 
 "reminder.options.button" = "옵션";

@@ -104,6 +104,9 @@
 "formatter.date.relative.ago" = "%@前";
 "formatter.date.relative.left" = "残り%@";
 
+//"formatter.events.plural" = "%@ events";
+//"formatter.reminders.plural" = "%@ reminders";
+
 "reminder.status.overdue" = "期限超過";
 
 "reminder.options.button" = "オプション";

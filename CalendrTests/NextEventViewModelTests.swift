@@ -385,58 +385,68 @@ class NextEventViewModelTests: XCTestCase {
         XCTAssertEqual(title, "Event 1")
     }
 
-    func testNextEvent_isPending_withSameStart_shouldNotAppearOverAccepted() {
+    func testNextEvent_withSameStart_shouldAggregate() {
 
         let viewModel = makeViewModel(type: .event)
 
         var title: String?
+        var time: String?
 
         viewModel.title
             .bind { title = $0 }
             .disposed(by: disposeBag)
 
+        viewModel.time
+            .bind { time = $0 }
+            .disposed(by: disposeBag)
+
         calendarService.changeEvents([
-            .make(start: now, end: now + 1, title: "Event 1", type: .event(.pending)),
-            .make(start: now, end: now + 2, title: "Event 2", type: .event(.accepted))
+            .make(start: now + 30, end: now + 10, title: "Event 1", type: .event(.pending)),
+            .make(start: now + 30, end: now + 20, title: "Event 2", type: .event(.accepted)),
+            .make(start: now + 30, end: now + 30, title: "Event 3", type: .event(.maybe)),
+            .make(start: now + 30, end: now + 40, title: "Event 4", type: .event(.declined)),
         ])
 
-        XCTAssertEqual(title, "Event 2")
+        XCTAssertEqual(title, "3 events")
+        XCTAssertEqual(time, "in 30s")
     }
 
-    func testNextEvent_isPending_withSameStart_shouldNotAppearOverMaybe() {
+    func testNextEvent_withSameStart_isInProgress_endsInLongestEnd() {
 
         let viewModel = makeViewModel(type: .event)
 
         var title: String?
+        var time: String?
 
         viewModel.title
             .bind { title = $0 }
             .disposed(by: disposeBag)
 
-        calendarService.changeEvents([
-            .make(start: now, end: now + 1, title: "Event 1", type: .event(.pending)),
-            .make(start: now, end: now + 2, title: "Event 2", type: .event(.maybe))
-        ])
-
-        XCTAssertEqual(title, "Event 2")
-    }
-
-    func testNextEvent_isMaybe_withSameStart_shouldNotAppearOverAccepted() {
-
-        let viewModel = makeViewModel(type: .event)
-
-        var title: String?
-
-        viewModel.title
-            .bind { title = $0 }
+        viewModel.time
+            .bind { time = $0 }
             .disposed(by: disposeBag)
 
         calendarService.changeEvents([
-            .make(start: now, end: now + 1, title: "Event 1", type: .event(.maybe)),
-            .make(start: now, end: now + 2, title: "Event 2", type: .event(.accepted))
+            .make(start: now, end: now + 10, title: "Event 1", type: .event(.pending)),
+            .make(start: now, end: now + 40, title: "Event 2", type: .event(.accepted)),
+            .make(start: now, end: now + 60, title: "Event 3", type: .event(.maybe)),
+            .make(start: now, end: now + 120, title: "Event 4", type: .event(.declined)),
         ])
 
-        XCTAssertEqual(title, "Event 2")
+        XCTAssertEqual(title, "3 events")
+        XCTAssertEqual(time, "1m left")
+
+        dateProvider.now.addTimeInterval(30)
+        scheduler.advance(.seconds(1))
+
+        XCTAssertEqual(title, "2 events")
+        XCTAssertEqual(time, "30s left")
+
+        dateProvider.now.addTimeInterval(20)
+        scheduler.advance(.seconds(1))
+
+        XCTAssertEqual(title, "Event 3")
+        XCTAssertEqual(time, "10s left")
     }
 
     func testNextEvent_startsIn30Seconds() {
@@ -891,8 +901,8 @@ class NextEventViewModelTests: XCTestCase {
             .disposed(by: disposeBag)
 
         calendarService.changeEvents([
-            .make(start: now, end: now + 1, title: "Event 1", type: .event(.maybe)),
-            .make(start: now + 1, end: now + 2, title: "Event 2", type: .event(.accepted))
+            .make(id: "1", start: now, end: now + 1, title: "Event 1", type: .event(.maybe)),
+            .make(id: "2", start: now + 1, end: now + 2, title: "Event 2", type: .event(.accepted))
         ])
 
         let contextMenu = viewModel.makeContextMenuViewModel() as? EventOptionsViewModel
@@ -928,8 +938,8 @@ class NextEventViewModelTests: XCTestCase {
             .disposed(by: disposeBag)
 
         calendarService.changeEvents([
-            .make(start: now, end: now + 1, title: "Event 1", type: .event(.maybe)),
-            .make(start: now + 1, end: now + 2, title: "Event 2", type: .event(.accepted))
+            .make(id: "1", start: now, end: now + 1, title: "Event 1", type: .event(.maybe)),
+            .make(id: "2", start: now + 1, end: now + 2, title: "Event 2", type: .event(.accepted))
         ])
 
         let detailsViewModel = viewModel.makeDetailsViewModel()

@@ -136,6 +136,18 @@ internal enum Strings {
         }
       }
     }
+    internal enum Events {
+      /// %@ events
+      internal static func plural(_ p1: Any) -> String {
+        return Strings.tr("Localizable", "formatter.events.plural", String(describing: p1), fallback: "%@ events")
+      }
+    }
+    internal enum Reminders {
+      /// %@ reminders
+      internal static func plural(_ p1: Any) -> String {
+        return Strings.tr("Localizable", "formatter.reminders.plural", String(describing: p1), fallback: "%@ reminders")
+      }
+    }
   }
   internal enum MapBlackList {
     /// Hide map if location contains any of these words

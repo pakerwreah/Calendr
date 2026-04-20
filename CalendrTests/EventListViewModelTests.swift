@@ -258,7 +258,7 @@ class EventListViewModelTests: XCTestCase {
     func testEventList_withFadePastEventsEnabled_shouldFadePastSections() {
 
         let events = testEvents()
-        let lastDate = events.filter(\.isAllDay.isFalse).max(by: { $0.end < $1.end })!.end
+        let lastDate = events.filter(\.isAllDay.isFalse).map(\.end).max()!
         let start = dateProvider.calendar.date(byAdding: .minute, value: 90, to: lastDate)!
 
         eventsSubject.onNext(events + [
