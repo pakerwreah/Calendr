@@ -104,6 +104,9 @@
 "formatter.date.relative.ago" = "%@ πριν";
 "formatter.date.relative.left" = "%@ μείνανε";
 
+//"formatter.events.plural" = "%@ events";
+//"formatter.reminders.plural" = "%@ reminders";
+
 //"reminder.status.overdue" = "Overdue";
 
 "reminder.options.button" = "Επιλογές";

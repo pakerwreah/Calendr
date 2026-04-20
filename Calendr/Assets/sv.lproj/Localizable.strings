@@ -104,6 +104,9 @@
 "formatter.date.relative.ago" = "%@ sedan";
 "formatter.date.relative.left" = "%@ kvar";
 
+//"formatter.events.plural" = "%@ events";
+//"formatter.reminders.plural" = "%@ reminders";
+
 //"reminder.status.overdue" = "Overdue";
 
 "reminder.options.button" = "Alternativ";

@@ -104,6 +104,9 @@
 "formatter.date.relative.ago" = "hace %@";
 "formatter.date.relative.left" = "%@ rest.";
 
+//"formatter.events.plural" = "%@ events";
+//"formatter.reminders.plural" = "%@ reminders";
+
 //"reminder.status.overdue" = "Overdue";
 
 "reminder.options.button" = "Opciones";
