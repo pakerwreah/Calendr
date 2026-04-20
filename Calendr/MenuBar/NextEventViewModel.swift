@@ -147,30 +147,33 @@ class NextEventViewModel {
                     .void()
                     .startWith(())
                     .map {
-                        let upcoming = events
+                        let now = dateProvider.now
+
+                        let eventsInRange = events
                             .filter { event in
                                 // event has not ended
-                                dateProvider.calendar.isDate(
-                                    dateProvider.now, lessThan: event.end, granularity: .second
-                                )
+                                dateProvider.calendar.isDate(now, lessThan: event.end, granularity: .second)
                                 &&
                                 // event is in the configured range to check
-                                dateProvider.now.distance(to: event.start) <= 3600 * max(0.5, Double(hoursToCheck))
+                                now.distance(to: event.start) <= 3600 * max(0.5, Double(hoursToCheck))
                             }
+
+                        guard !eventsInRange.isEmpty else { return nil }
+
+                        let upcoming = Dictionary(grouping: eventsInRange, by: \.start)
                             .sorted {
-                                abs($0.start.distance(to: dateProvider.now))
+                                abs($0.key.distance(to: now))
                             }
+                            .first!.value
                             .map { event -> NextEvent in
                                 let isInProgress = dateProvider.calendar.isDate(
-                                    dateProvider.now, greaterThanOrEqualTo: event.start, granularity: .second
+                                    now, greaterThanOrEqualTo: event.start, granularity: .second
                                 )
                                 return NextEvent(event: event, isInProgress: isInProgress)
                             }
 
-                        let concurrent = upcoming.prefix { $0.event.start == upcoming.first?.event.start }
-
-                        if concurrent.count > 1 {
-                            return makeAggregateEvent(type, concurrent, calendarService)
+                        if upcoming.count > 1 {
+                            return makeAggregateEvent(type, upcoming, calendarService)
                         } else {
                             return upcoming.first
                         }
@@ -429,7 +432,7 @@ private func fakeEvent(start: Date, end: Date, title: String, type: EventType, c
 
 private func makeAggregateEvent(
     _ type: NextEventType,
-    _ items: ArraySlice<NextEvent>,
+    _ items: [NextEvent],
     _ calendarService: CalendarServiceProviding
 ) -> NextEvent? {
 
