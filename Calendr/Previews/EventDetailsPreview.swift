@@ -23,6 +23,7 @@ struct EventDetailsPreview: PreviewProvider {
     static func makeMeeting() -> some View {
         let vc = EventDetailsViewController(
             viewModel: EventDetailsViewModel(
+                source: .menubar,
                 event: .make(
                     start: dateProvider.now,
                     end: dateProvider.now + 999,
@@ -42,7 +43,6 @@ struct EventDetailsPreview: PreviewProvider {
                 settings: settings,
                 isShowingObserver: .dummy(),
                 isInProgress: .just(false),
-                source: .menubar,
                 callback: .dummy()
             )
         )
@@ -56,6 +56,7 @@ struct EventDetailsPreview: PreviewProvider {
     static func makeEvent() -> some View {
         let vc = EventDetailsViewController(
             viewModel: EventDetailsViewModel(
+                source: .menubar,
                 event: .make(
                     start: dateProvider.now,
                     end: dateProvider.now,
@@ -73,7 +74,6 @@ struct EventDetailsPreview: PreviewProvider {
                 settings: settings,
                 isShowingObserver: .dummy(),
                 isInProgress: .just(false),
-                source: .menubar,
                 callback: .dummy()
             )
         )
@@ -87,6 +87,7 @@ struct EventDetailsPreview: PreviewProvider {
     static func makeBirthday() -> some View {
         let vc = EventDetailsViewController(
             viewModel: EventDetailsViewModel(
+                source: .menubar,
                 event: .make(
                     title: "Someones birthday",
                     type: .birthday
@@ -100,7 +101,6 @@ struct EventDetailsPreview: PreviewProvider {
                 settings: settings,
                 isShowingObserver: .dummy(),
                 isInProgress: .just(false),
-                source: .menubar,
                 callback: .dummy()
             )
         )
@@ -113,6 +113,7 @@ struct EventDetailsPreview: PreviewProvider {
     static func makeReminder() -> some View {
         let vc = EventDetailsViewController(
             viewModel: EventDetailsViewModel(
+                source: .menubar,
                 event: .make(
                     title: "Some reminder",
                     type: .reminder(completed: false)
@@ -126,7 +127,6 @@ struct EventDetailsPreview: PreviewProvider {
                 settings: settings,
                 isShowingObserver: .dummy(),
                 isInProgress: .just(false),
-                source: .menubar,
                 callback: .dummy()
             )
         )

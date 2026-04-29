@@ -17,7 +17,7 @@ class ContextMenuFactoryTests: XCTestCase {
 
     func testFactory_isEvent_withInvitationStatus_fromAnySource_shouldMakeViewModel() throws {
 
-        for source: ContextMenuSource in [.list, .menubar, .details] {
+        for source: ContextMenuSource in [.calendar, .menubar, .details] {
             for status in [.accepted, .maybe, .pending, .declined] as [EventStatus] {
                 let viewModel = try XCTUnwrap(make(event: .make(type: .event(status)), source: source))
                 XCTAssert(viewModel is EventOptionsViewModel)
@@ -27,7 +27,7 @@ class ContextMenuFactoryTests: XCTestCase {
 
     func testFactory_isEvent_withoutInvitationStatus_fromList_shouldMakeViewModel() throws {
 
-        let viewModel = try XCTUnwrap(make(event: .make(type: .event(.unknown)), source: .list))
+        let viewModel = try XCTUnwrap(make(event: .make(type: .event(.unknown)), source: .calendar))
         XCTAssert(viewModel is EventOptionsViewModel)
     }
 
@@ -44,7 +44,7 @@ class ContextMenuFactoryTests: XCTestCase {
 
     func testFactory_isReminder_notCompleted_fromAnySource_shouldMakeViewModel() throws {
 
-        for source: ContextMenuSource in [.list, .menubar, .details] {
+        for source: ContextMenuSource in [.calendar, .menubar, .details] {
             let viewModel = try XCTUnwrap(make(event: .make(type: .reminder(completed: false)), source: source))
             XCTAssert(viewModel is ReminderOptionsViewModel)
         }
@@ -52,7 +52,7 @@ class ContextMenuFactoryTests: XCTestCase {
 
     func testFactory_isReminder_isCompleted_fromList_shouldMakeViewModel() throws {
 
-        let viewModel = try XCTUnwrap(make(event: .make(type: .reminder(completed: true)), source: .list))
+        let viewModel = try XCTUnwrap(make(event: .make(type: .reminder(completed: true)), source: .calendar))
         XCTAssert(viewModel is ReminderOptionsViewModel)
     }
 
@@ -68,7 +68,7 @@ class ContextMenuFactoryTests: XCTestCase {
 
     func testFactory_isBirthday_fromList_shouldMakeViewModel() throws {
 
-        let viewModel = try XCTUnwrap(make(event: .make(type: .birthday), source: .list))
+        let viewModel = try XCTUnwrap(make(event: .make(type: .birthday), source: .calendar))
         XCTAssert(viewModel is EventOptionsViewModel)
     }
 

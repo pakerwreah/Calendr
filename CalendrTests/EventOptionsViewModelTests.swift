@@ -77,13 +77,13 @@ class EventOptionsViewModelTests: XCTestCase {
 
     func testOptions_fromList_withUnknownInvitationStatus() {
 
-        let viewModel = mock(event: .make(type: .event(.unknown)), source: .list)
+        let viewModel = mock(event: .make(type: .event(.unknown)), source: .calendar)
         XCTAssertEqual(viewModel.items, [.action(.open)])
     }
 
     func testOptions_fromList_withUnknownInvitationStatus_withLink() {
 
-        let viewModel = mock(event: .make(url: EventLink.zoomLink.url, type: .event(.unknown)), source: .list)
+        let viewModel = mock(event: .make(url: EventLink.zoomLink.url, type: .event(.unknown)), source: .calendar)
         XCTAssertEqual(viewModel.items, [
             .action(.open),
             .separator,
@@ -93,7 +93,7 @@ class EventOptionsViewModelTests: XCTestCase {
 
     func testOptions_fromList() {
 
-        let viewModel = mock(event: .make(type: .event(.pending)), source: .list)
+        let viewModel = mock(event: .make(type: .event(.pending)), source: .calendar)
         XCTAssertEqual(viewModel.items, [
             .action(.open),
             .separator,
@@ -105,7 +105,7 @@ class EventOptionsViewModelTests: XCTestCase {
 
     func testOptions_fromList_withLink() {
 
-        let viewModel = mock(event: .make(url: EventLink.zoomLink.url, type: .event(.pending)), source: .list)
+        let viewModel = mock(event: .make(url: EventLink.zoomLink.url, type: .event(.pending)), source: .calendar)
         XCTAssertEqual(viewModel.items, [
             .action(.open),
             .separator,
@@ -168,7 +168,7 @@ class EventOptionsViewModelTests: XCTestCase {
     func testOptions_withOpenTriggered() {
         let openExpectation = expectation(description: "Open")
 
-        let viewModel = mock(event: .make(id: "12345", type: .event(.pending)), source: .list)
+        let viewModel = mock(event: .make(id: "12345", type: .event(.pending)), source: .calendar)
 
         workspace.didOpenEvent = { event in
             XCTAssertEqual(event.id, "12345")

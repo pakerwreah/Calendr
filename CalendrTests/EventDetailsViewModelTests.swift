@@ -152,7 +152,7 @@ class EventDetailsViewModelTests: XCTestCase {
 
         let viewModel = mock(
             event: .make(type: .event(.unknown)),
-            source: .list
+            source: .calendar
         )
 
         XCTAssertFalse(viewModel.showSkip)
@@ -168,21 +168,21 @@ class EventDetailsViewModelTests: XCTestCase {
         XCTAssertTrue(viewModel.showSkip)
     }
 
-    func testSkip_withSouceMenubar_isBirthday_shouldShowSkip() {
+    func testSkip_withSouceMenubar_isBirthday_shouldNotShowSkip() {
 
         let viewModel = mock(
             event: .make(type: .birthday),
             source: .menubar
         )
 
-        XCTAssertTrue(viewModel.showSkip)
+        XCTAssertFalse(viewModel.showSkip)
     }
 
     func testSkip_withSouceMenubar_isReminder_shouldNotShowSkip() {
 
         let viewModel = mock(
             event: .make(type: .reminder(completed: false)),
-            source: .list
+            source: .menubar
         )
 
         XCTAssertFalse(viewModel.showSkip)
@@ -190,10 +190,12 @@ class EventDetailsViewModelTests: XCTestCase {
 
     func testSkip_shouldTriggerClose() {
 
+        let event: EventModel = .make(type: .event(.unknown))
+
         var action: ContextCallbackAction?
 
         let viewModel = mock(
-            event: .make(type: .event(.unknown)),
+            event: event,
             source: .menubar
         ) {
             action = $0
@@ -211,15 +213,17 @@ class EventDetailsViewModelTests: XCTestCase {
 
         waitForExpectations(timeout: 1)
 
-        XCTAssertEqual(action, .event(.skip))
+        XCTAssertEqual(action, .event(event, .skip))
     }
 
     func testStatusChange_shouldTriggerClose() {
 
+        let event: EventModel = .make(type: .event(.pending))
+
         var action: ContextCallbackAction?
 
         let viewModel = mock(
-            event: .make(type: .event(.pending)),
+            event: event,
             source: .menubar
         ) {
             action = $0
@@ -239,7 +243,7 @@ class EventDetailsViewModelTests: XCTestCase {
 
         waitForExpectations(timeout: 1)
 
-        XCTAssertEqual(action, .event(.status(.accept)))
+        XCTAssertEqual(action, .event(event, .status(.accept)))
     }
 
     func testBrowserOptions() {
@@ -312,9 +316,10 @@ class EventDetailsViewModelTests: XCTestCase {
         workspace.m_urlsForApplicationsToOpenContentType = [makeUrl("Browser 2"), makeUrl("Browser 1"), makeUrl("Default"), makeUrl("Browser 3"), makeUrl("Not a real browser 4")]
     }
 
-    func mock(event: EventModel, source: EventDetailsSource = .list, callback: @escaping (ContextCallbackAction?) -> Void = { _ in }) -> EventDetailsViewModel {
+    func mock(event: EventModel, source: EventDetailsSource = .calendar, callback: @escaping (ContextCallbackAction?) -> Void = { _ in }) -> EventDetailsViewModel {
 
         EventDetailsViewModel(
+            source: source,
             event: event,
             dateProvider: dateProvider,
             calendarService: calendarService,
@@ -325,7 +330,6 @@ class EventDetailsViewModelTests: XCTestCase {
             settings: settings,
             isShowingObserver: .dummy(),
             isInProgress: .just(false),
-            source: source,
             callback: .init { callback($0.element) }
         )
     }

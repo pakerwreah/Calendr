@@ -180,8 +180,10 @@ class MainViewController: NSViewController {
         focusedDateObservable = eventListEventsObservable.map(\.date)
 
         eventListViewModel = EventListViewModel(
+            source: .calendar,
             eventsObservable: eventListEventsObservable,
             isShowingDetailsModal: isShowingDetailsModal,
+            callback: .dummy(),
             dateProvider: dateProvider,
             calendarService: calendarService,
             geocoder: geocoder,
@@ -765,13 +767,36 @@ class MainViewController: NSViewController {
 
         clickHandler.leftClick
             .flatMapFirst { _ -> Observable<Void> in
-                guard let vm = viewModel.makeDetailsViewModel() else { return .void() }
-                let vc = EventDetailsViewController(viewModel: vm)
+                let vc: NSViewController
+                var optimisticLoadTime: DispatchTimeInterval?
+
+                if let vm = viewModel.makeEventListViewModel() {
+                    let eventList = EventListView(viewModel: vm)
+                    vc = NSViewController()
+                    vc.view.addSubview(eventList)
+                    eventList.edges(equalTo: vc.view, margins: Constants.NextEvent.EventList.margins)
+                    eventList.width(equalTo: Constants.NextEvent.EventList.width)
+
+                } else if let vm = viewModel.makeDetailsViewModel() {
+                    vc = EventDetailsViewController(viewModel: vm)
+                    optimisticLoadTime = vm.optimisticLoadTime
+                } else {
+                    return .void()
+                }
+
                 let popover = Popover()
                 popover.behavior = .transient
                 popover.contentViewController = vc
-                popover.delegate = vc
-                popover.show(from: statusBarButton, delay: vm.optimisticLoadTime)
+
+                if let vc = vc as? PopoverDelegate {
+                    popover.delegate = vc
+                }
+
+                if let optimisticLoadTime {
+                    popover.show(from: statusBarButton, delay: optimisticLoadTime)
+                } else {
+                    popover.show(from: statusBarButton)
+                }
 
                 let close = clickHandler.leftClick.bind {
                     vc.view.window?.performClose(nil)
@@ -1090,6 +1115,19 @@ private enum Constants {
             bottom: MainStackView.margin / 2,
             right: MainStackView.margin / 2
         )
+    }
+
+    enum NextEvent {
+
+        enum EventList {
+
+            static let width: CGFloat = 200
+
+            static let margins: NSEdgeInsets = .init(
+                horizontal: MainStackView.margin / 2,
+                vertical: MainStackView.margin
+            )
+        }
     }
 }
 

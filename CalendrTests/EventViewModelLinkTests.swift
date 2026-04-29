@@ -193,6 +193,7 @@ class EventViewModelLinkTests: XCTestCase {
     func mock(event: EventModel) -> EventViewModel {
 
         EventViewModel(
+            source: .calendar,
             event: event,
             dateProvider: dateProvider,
             calendarService: calendarService,
@@ -202,6 +203,7 @@ class EventViewModelLinkTests: XCTestCase {
             localStorage: localStorage,
             settings: settings,
             isShowingDetailsModal: .dummy(),
+            callback: .dummy(),
             isTodaySelected: true,
             scheduler: MainScheduler.instance
         )

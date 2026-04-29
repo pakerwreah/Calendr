@@ -39,7 +39,9 @@ class EventViewModel {
     let completeTapped: AnyObserver<Void>
 
     private let isShowingDetailsModal: AnyObserver<Bool>
+    private let callback: AnyObserver<ContextCallbackAction>
 
+    private let source: EventDetailsSource
     private let event: EventModel
     private let dateProvider: DateProviding
     private let calendarService: CalendarServiceProviding
@@ -52,6 +54,7 @@ class EventViewModel {
     private let disposeBag = DisposeBag()
 
     init(
+        source: EventDetailsSource,
         event: EventModel,
         dateProvider: DateProviding,
         calendarService: CalendarServiceProviding,
@@ -61,10 +64,12 @@ class EventViewModel {
         localStorage: LocalStorageProvider,
         settings: EventSettings,
         isShowingDetailsModal: AnyObserver<Bool>,
+        callback: AnyObserver<ContextCallbackAction>,
         isTodaySelected: Bool,
         scheduler: SchedulerType
     ) {
 
+        self.source = source
         self.event = event
         self.settings = settings
         self.dateProvider = dateProvider
@@ -74,6 +79,7 @@ class EventViewModel {
         self.geocoder = geocoder
         self.weatherService = weatherService
         self.isShowingDetailsModal = isShowingDetailsModal
+        self.callback = callback
 
         title = event.title
         color = event.calendar.color
@@ -297,6 +303,7 @@ class EventViewModel {
     func makeDetailsViewModel() -> EventDetailsViewModel {
 
         EventDetailsViewModel(
+            source: source,
             event: event,
             dateProvider: dateProvider,
             calendarService: calendarService,
@@ -307,8 +314,7 @@ class EventViewModel {
             settings: settings,
             isShowingObserver: isShowingDetailsModal,
             isInProgress: isInProgress,
-            source: .list,
-            callback: .dummy()
+            callback: callback
         )
     }
 
@@ -319,8 +325,8 @@ class EventViewModel {
             dateProvider: dateProvider,
             calendarService: calendarService,
             workspace: workspace,
-            source: .list,
-            callback: .dummy()
+            source: source == .menubar ? .menubar : .calendar,
+            callback: callback
         )
     }
 }

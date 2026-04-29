@@ -43,7 +43,7 @@ class EventOptionsViewModel: BaseContextMenuViewModel<EventAction> {
 
         super.init(callback: callback)
 
-        if [.list, .menubar].contains(source) {
+        if [.calendar, .menubar].contains(source) {
             addItem(.open)
 
             if let link = event.detectLink(using: workspace) {
@@ -82,7 +82,7 @@ class EventOptionsViewModel: BaseContextMenuViewModel<EventAction> {
         case .link(let link, _):
             workspace.open(link)
         case .skip:
-            break
+            break // handled by callback
         case .status(let action):
             return changeEventStatus(to: action.status)
         }

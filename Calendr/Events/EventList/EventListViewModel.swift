@@ -33,7 +33,9 @@ class EventListViewModel {
 
     private let disposeBag = DisposeBag()
 
+    private let source: EventDetailsSource
     private let isShowingDetailsModal: BehaviorSubject<Bool>
+    private let callback: AnyObserver<ContextCallbackAction>
     private let dateProvider: DateProviding
     private let calendarService: CalendarServiceProviding
     private let geocoder: GeocodeServiceProviding
@@ -70,8 +72,10 @@ class EventListViewModel {
     let summary: Observable<EventListSummary>
 
     init(
+        source: EventDetailsSource,
         eventsObservable: Observable<DateEvents>,
         isShowingDetailsModal: BehaviorSubject<Bool>,
+        callback: AnyObserver<ContextCallbackAction>,
         dateProvider: DateProviding,
         calendarService: CalendarServiceProviding,
         geocoder: GeocodeServiceProviding,
@@ -83,7 +87,9 @@ class EventListViewModel {
         refreshScheduler: SchedulerType,
         eventsScheduler: SchedulerType
     ) {
+        self.source = source
         self.isShowingDetailsModal = isShowingDetailsModal
+        self.callback = callback
         self.dateProvider = dateProvider
         self.calendarService = calendarService
         self.geocoder = geocoder
@@ -211,6 +217,11 @@ class EventListViewModel {
         propsWithRefresh.compactMap { [weak self] props -> EventListGroups? in
             guard let self else { return nil }
 
+            if source == .menubar {
+                let items = props.events.map { EventListItem.event(self.makeEventViewModel($0, true)) }
+                return EventListGroups(overdue: [], allday: [], today: items, future: [])
+            }
+
             let overdue = overdueViewModels(props)
             let allday = allDayViewModels(props)
             let today = todayViewModels(props, withFuture: false)
@@ -226,6 +237,7 @@ class EventListViewModel {
 
     private func makeEventViewModel(_ event: EventModel, _ isTodaySelected: Bool) -> EventViewModel {
         EventViewModel(
+            source: source,
             event: event,
             dateProvider: dateProvider,
             calendarService: calendarService,
@@ -235,6 +247,7 @@ class EventListViewModel {
             localStorage: localStorage,
             settings: settings,
             isShowingDetailsModal: isShowingDetailsModal.asObserver(),
+            callback: callback,
             isTodaySelected: isTodaySelected,
             scheduler: eventsScheduler
         )

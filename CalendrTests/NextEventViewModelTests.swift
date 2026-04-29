@@ -38,7 +38,7 @@ class NextEventViewModelTests: XCTestCase {
             weatherService: weatherService,
             workspace: workspace,
             screenProvider: screenProvider,
-            isShowingDetailsModal: .dummy(),
+            isShowingDetailsModal: .init(value: false),
             scheduler: scheduler,
             soundPlayer: soundPlayer
         )
@@ -884,7 +884,7 @@ class NextEventViewModelTests: XCTestCase {
         XCTAssertEqual(title, "Reminder 1")
     }
 
-    func testNextEvent_skipped_fromContextMenu() {
+    func testNextEvent_skipped_fromContextMenu() throws {
 
         let viewModel = makeViewModel(type: .event)
 
@@ -905,23 +905,20 @@ class NextEventViewModelTests: XCTestCase {
             .make(id: "2", start: now + 1, end: now + 2, title: "Event 2", type: .event(.accepted))
         ])
 
-        let contextMenu = viewModel.makeContextMenuViewModel() as? EventOptionsViewModel
-        XCTAssertNotNil(contextMenu)
-
         XCTAssertEqual(title, "Event 1")
         XCTAssertEqual(hasEvent, true)
 
-        contextMenu?.triggerAction(.skip)
+        try XCTUnwrap(viewModel.makeContextMenuViewModel() as? EventOptionsViewModel).triggerAction(.skip)
 
         XCTAssertEqual(title, "Event 2")
         XCTAssertEqual(hasEvent, true)
 
-        contextMenu?.triggerAction(.skip)
+        try XCTUnwrap(viewModel.makeContextMenuViewModel() as? EventOptionsViewModel).triggerAction(.skip)
 
         XCTAssertEqual(hasEvent, false)
     }
 
-    func testNextEvent_skipped_fromEventDetails() {
+    func testNextEvent_skipped_fromEventDetails() throws {
 
         let viewModel = makeViewModel(type: .event)
 
@@ -942,18 +939,15 @@ class NextEventViewModelTests: XCTestCase {
             .make(id: "2", start: now + 1, end: now + 2, title: "Event 2", type: .event(.accepted))
         ])
 
-        let detailsViewModel = viewModel.makeDetailsViewModel()
-        XCTAssertNotNil(detailsViewModel)
-
         XCTAssertEqual(title, "Event 1")
         XCTAssertEqual(hasEvent, true)
 
-        detailsViewModel?.skipTapped.onNext(())
+        try XCTUnwrap(viewModel.makeDetailsViewModel()).skipTapped.onNext(())
 
         XCTAssertEqual(title, "Event 2")
         XCTAssertEqual(hasEvent, true)
 
-        detailsViewModel?.skipTapped.onNext(())
+        try XCTUnwrap(viewModel.makeDetailsViewModel()).skipTapped.onNext(())
 
         XCTAssertEqual(hasEvent, false)
     }
