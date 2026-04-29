@@ -280,6 +280,7 @@ class EventViewModelProgressTests: XCTestCase {
     ) -> EventViewModel {
 
         EventViewModel(
+            source: .calendar,
             event: .make(start: start, end: end, isAllDay: isAllDay, type: type),
             dateProvider: dateProvider,
             calendarService: calendarService,
@@ -289,6 +290,7 @@ class EventViewModelProgressTests: XCTestCase {
             localStorage: localStorage,
             settings: settings,
             isShowingDetailsModal: .dummy(),
+            callback: .dummy(),
             isTodaySelected: true,
             scheduler: scheduler
         )

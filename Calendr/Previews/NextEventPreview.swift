@@ -45,7 +45,7 @@ struct NextEventPreview: PreviewProvider {
                 weatherService: weatherService,
                 workspace: workspace,
                 screenProvider: screenProvider,
-                isShowingDetailsModal: .dummy(),
+                isShowingDetailsModal: .init(value: false),
                 scheduler: MainScheduler.instance,
                 soundPlayer: soundPlayer
             )

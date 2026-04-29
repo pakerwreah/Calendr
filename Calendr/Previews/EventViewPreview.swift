@@ -22,6 +22,7 @@ struct EventViewPreview: PreviewProvider {
     static var previews: some View {
         EventView(
             viewModel: EventViewModel(
+                source: .calendar,
                 event: .make(
                     start: dateProvider.now + 5,
                     end: dateProvider.now + 15,
@@ -39,6 +40,7 @@ struct EventViewPreview: PreviewProvider {
                 localStorage: .shared,
                 settings: settings,
                 isShowingDetailsModal: .dummy(),
+                callback: .dummy(),
                 isTodaySelected: true,
                 scheduler: MainScheduler.instance
             )

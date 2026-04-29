@@ -9,7 +9,7 @@ import Cocoa
 import RxSwift
 
 enum EventDetailsSource {
-    case list
+    case calendar
     case menubar
 }
 
@@ -75,6 +75,7 @@ class EventDetailsViewModel {
     }
 
     init(
+        source: EventDetailsSource,
         event: EventModel,
         dateProvider: DateProviding,
         calendarService: CalendarServiceProviding,
@@ -85,7 +86,6 @@ class EventDetailsViewModel {
         settings: EventSettings,
         isShowingObserver: AnyObserver<Bool>,
         isInProgress: Observable<Bool>,
-        source: EventDetailsSource,
         callback: AnyObserver<ContextCallbackAction>
     ) {
         self.event = event
@@ -138,7 +138,7 @@ class EventDetailsViewModel {
             }
         }
 
-        showSkip = source ~= .menubar
+        showSkip = source == .menubar && type.isEvent
 
         let formatter = DateIntervalFormatter()
         formatter.dateStyle = .medium
@@ -186,7 +186,7 @@ class EventDetailsViewModel {
 
         skipTapped = self.callback.mapObserver { _ in
             // handled by NextEventViewModel
-            return .event(.skip)
+            return .event(event, .skip)
         }
 
         openTapped = .init { _ in

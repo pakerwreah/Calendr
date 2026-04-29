@@ -9,14 +9,14 @@ import Foundation
 import RxSwift
 
 enum ContextMenuSource {
-    case list
+    case calendar
     case details
     case menubar
 }
 
 enum ContextCallbackAction: Equatable {
-    case event(EventAction)
-    case reminder(ReminderAction)
+    case event(EventModel, EventAction)
+    case reminder(EventModel, ReminderAction)
 }
 
 enum ContextMenuFactory {
@@ -38,7 +38,7 @@ enum ContextMenuFactory {
                 calendarService: calendarService,
                 workspace: workspace,
                 source: source,
-                callback: callback.mapObserver { .event($0) }
+                callback: callback.mapObserver { .event(event, $0) }
             )
 
         case .reminder:
@@ -48,7 +48,7 @@ enum ContextMenuFactory {
                 calendarService: calendarService,
                 workspace: workspace,
                 source: source,
-                callback: callback.mapObserver { .reminder($0) }
+                callback: callback.mapObserver { .reminder(event, $0) }
             )
         }
     }

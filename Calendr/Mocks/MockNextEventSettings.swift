@@ -9,8 +9,7 @@
 
 import RxSwift
 
-class MockNextEventSettings: MockEventSettings, NextEventSettings {
-
+class MockNextEventSettings: MockEventListSettings, NextEventSettings {
     let showEventStatusItem: Observable<Bool>
     let eventStatusItemTextScaling: Observable<Double>
     let eventStatusItemCheckRange: Observable<Int>

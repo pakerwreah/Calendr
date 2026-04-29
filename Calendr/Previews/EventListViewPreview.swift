@@ -24,6 +24,7 @@ struct EventListViewPreview: PreviewProvider {
     static var previews: some View {
         EventListView(
             viewModel: EventListViewModel(
+                source: .calendar,
                 eventsObservable: .just(
                     DateEvents(date: now, events: [
                         .make(
@@ -60,6 +61,7 @@ struct EventListViewPreview: PreviewProvider {
                     ])
                 ),
                 isShowingDetailsModal: .init(value: false),
+                callback: .dummy(),
                 dateProvider: dateProvider,
                 calendarService: calendarService,
                 geocoder: geocoder,

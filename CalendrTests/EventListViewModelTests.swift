@@ -29,10 +29,12 @@ class EventListViewModelTests: XCTestCase {
     lazy var refreshScheduler = TrackedHistoricalScheduler(initialClock: dateProvider.now)
 
     lazy var viewModel = EventListViewModel(
+        source: .calendar,
         eventsObservable: Observable.combineLatest(dateSubject, eventsSubject).map { date, events in
             DateEvents(date: date, events: events)
         },
         isShowingDetailsModal: .init(value: false),
+        callback: .dummy(),
         dateProvider: dateProvider,
         calendarService: calendarService,
         geocoder: geocoder,

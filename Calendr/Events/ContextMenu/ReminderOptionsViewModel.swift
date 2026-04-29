@@ -31,7 +31,7 @@ class ReminderOptionsViewModel: BaseContextMenuViewModel<ReminderAction> {
     ) {
         guard
             case .reminder(let completed) = event.type,
-            source == .list || !completed
+            source == .calendar || !completed
         else { return nil }
 
         self.event = event
@@ -41,7 +41,7 @@ class ReminderOptionsViewModel: BaseContextMenuViewModel<ReminderAction> {
 
         super.init(callback: callback)
 
-        if [.list, .menubar].contains(source) {
+        if [.calendar, .menubar].contains(source) {
             addItem(.open)
         }
 

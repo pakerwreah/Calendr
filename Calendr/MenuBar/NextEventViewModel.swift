@@ -40,6 +40,7 @@ private struct Skipped: Equatable {
 
 private struct NextEvent: Equatable {
     let event: EventModel
+    let grouped: [EventModel]
     let isInProgress: Bool
 }
 
@@ -57,15 +58,15 @@ class NextEventViewModel {
     let textScaling: Observable<Double>
 
     private let disposeBag = DisposeBag()
-    private let event = BehaviorSubject<EventModel?>(value: nil)
+    private let nextEvent = BehaviorSubject<NextEvent?>(value: nil)
     private let skippedEvents = BehaviorSubject<[Skipped]>(value: [])
     private let actionCallback = PublishSubject<ContextCallbackAction>()
 
-    private let isShowingDetailsModal: AnyObserver<Bool>
+    private let isShowingDetailsModal: BehaviorSubject<Bool>
 
     private let type: NextEventType
     private let localStorage: LocalStorageProvider
-    private let settings: EventSettings
+    private let settings: NextEventSettings
     private let dateProvider: DateProviding
     private let calendarService: CalendarServiceProviding
     private let geocoder: GeocodeServiceProviding
@@ -83,7 +84,7 @@ class NextEventViewModel {
         weatherService: WeatherServiceProviding,
         workspace: WorkspaceServiceProviding,
         screenProvider: ScreenProviding,
-        isShowingDetailsModal: AnyObserver<Bool>,
+        isShowingDetailsModal: BehaviorSubject<Bool>,
         scheduler: SchedulerType,
         soundPlayer: SoundPlaying
     ) {
@@ -165,28 +166,31 @@ class NextEventViewModel {
                                 abs($0.key.distance(to: now))
                             }
                             .first!.value
-                            .map { event -> NextEvent in
-                                let isInProgress = dateProvider.calendar.isDate(
-                                    now, greaterThanOrEqualTo: event.start, granularity: .second
-                                )
-                                return NextEvent(event: event, isInProgress: isInProgress)
-                            }
+                            .sorted(by: \.id)
 
-                        if upcoming.count > 1 {
-                            return makeAggregateEvent(type, upcoming, calendarService)
+                        let event = if upcoming.count > 1 {
+                            makeEventsGroup(type, upcoming, calendarService)
                         } else {
-                            return upcoming.first
+                            upcoming.first
                         }
+
+                        guard let event else { return nil }
+
+                        let isInProgress = dateProvider.calendar.isDate(
+                            now, greaterThanOrEqualTo: event.start, granularity: .second
+                        )
+                        return NextEvent(event: event, grouped: upcoming, isInProgress: isInProgress)
                     }
             }
             .share(replay: 1)
 
         nextEventObservable
-            .map(\.?.event)
-            .bind(to: event)
+            .bind(to: nextEvent)
             .disposed(by: disposeBag)
 
         isInProgress = nextEventObservable.map { $0?.isInProgress ?? false }
+
+        let event = nextEvent.map(\.?.event)
 
         isPending = event
             .skipNil()
@@ -319,12 +323,11 @@ class NextEventViewModel {
             .distinctUntilChanged()
 
         actionCallback
-            .matching(.event(.skip))
-            .withLatestFrom(
-                Observable.combineLatest(event, skippedEvents)
-            )
-            .compactMap { event, skipped in
-                guard let event else { return nil }
+            .compactMap {
+                if case .event(let event, .skip) = $0 { event } else { nil }
+            }
+            .withLatestFrom(skippedEvents) { ($0, $1) }
+            .map { event, skipped in
                 let result = skipped + [Skipped(event)]
                 return result.suffix(MAX_SKIPPED)
             }
@@ -359,7 +362,7 @@ class NextEventViewModel {
 
     func makeContextMenuViewModel() -> (any ContextMenuViewModel)? {
         guard
-            let event = try? event.value(),
+            let event = try? nextEvent.value()?.event,
             !event.id.isEmpty
         else { return nil }
 
@@ -375,11 +378,12 @@ class NextEventViewModel {
 
     func makeDetailsViewModel() -> EventDetailsViewModel? {
         guard
-            let event = try? event.value(),
+            let event = try? nextEvent.value()?.event,
             !event.id.isEmpty
         else { return nil }
 
         return .init(
+            source: .menubar,
             event: event,
             dateProvider: dateProvider,
             calendarService: calendarService,
@@ -388,10 +392,40 @@ class NextEventViewModel {
             workspace: workspace,
             localStorage: localStorage,
             settings: settings,
-            isShowingObserver: isShowingDetailsModal,
+            isShowingObserver: isShowingDetailsModal.asObserver(),
             isInProgress: isInProgress,
-            source: .menubar,
             callback: actionCallback.asObserver()
+        )
+    }
+
+    func makeEventListViewModel() -> EventListViewModel? {
+        // This is just the initial condition to open the list
+        // After that, it will respond to updates until closed
+        guard
+            let current = try? nextEvent.value(),
+            current.event.id.isEmpty,
+            current.grouped.count > 1
+        else { return nil }
+
+        let events = self.nextEvent.map {
+            DateEvents(date: $0?.event.start ?? Date(), events: $0?.grouped ?? [])
+        }
+
+        return .init(
+            source: .menubar,
+            eventsObservable: events,
+            isShowingDetailsModal: isShowingDetailsModal,
+            callback: actionCallback.asObserver(),
+            dateProvider: dateProvider,
+            calendarService: calendarService,
+            geocoder: geocoder,
+            weatherService: weatherService,
+            workspace: workspace,
+            localStorage: localStorage,
+            settings: settings,
+            scheduler: MainScheduler.instance,
+            refreshScheduler: MainScheduler.instance,
+            eventsScheduler: MainScheduler.instance
         )
     }
 }
@@ -430,11 +464,11 @@ private func fakeEvent(start: Date, end: Date, title: String, type: EventType, c
     )
 }
 
-private func makeAggregateEvent(
+private func makeEventsGroup(
     _ type: NextEventType,
-    _ items: [NextEvent],
+    _ items: [EventModel],
     _ calendarService: CalendarServiceProviding
-) -> NextEvent? {
+) -> EventModel? {
 
     guard let first = items.first else { return nil }
 
@@ -445,11 +479,11 @@ private func makeAggregateEvent(
 
     let color: NSColor
 
-    if Set(items.map(\.event.calendar.color)).count == 1 {
-        color = first.event.calendar.color
+    if Set(items.map(\.calendar.color)).count == 1 {
+        color = first.calendar.color
     }
     else if let defaultCalendar = calendarService.defaultCalendar(forNew: calendarType),
-       items.contains(where: { $0.event.calendar.id == defaultCalendar.id }) {
+       items.contains(where: { $0.calendar.id == defaultCalendar.id }) {
 
         color = defaultCalendar.color
     }
@@ -457,19 +491,18 @@ private func makeAggregateEvent(
         color = .controlAccentColor
     }
 
-    let title = switch type {
-        case .event: Strings.Formatter.Events.plural(items.count)
-        case .reminder: Strings.Formatter.Reminders.plural(items.count)
+    let title = if items.distinct(by: \.title).count == 1 { first.title } else {
+        switch type {
+            case .event: Strings.Formatter.Events.plural(items.count)
+            case .reminder: Strings.Formatter.Reminders.plural(items.count)
+        }
     }
 
-    return NextEvent(
-        event: fakeEvent(
-            start: first.event.start,
-            end: items.map(\.event.end).max()!,
-            title: title,
-            type: first.event.type,
-            color: color,
-        ),
-        isInProgress: first.isInProgress
+    return fakeEvent(
+        start: first.start,
+        end: items.map(\.end).max()!,
+        title: title,
+        type: first.type,
+        color: color,
     )
 }

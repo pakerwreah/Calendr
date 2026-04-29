@@ -57,7 +57,7 @@ protocol EventListSettings: EventSettings {
     var showEventListSummary: Observable<Bool> { get }
 }
 
-protocol NextEventSettings: EventSettings {
+protocol NextEventSettings: EventListSettings {
     var showEventStatusItem: Observable<Bool> { get }
     var eventStatusItemCheckRange: Observable<Int> { get }
     var eventStatusItemFlashing: Observable<Bool> { get }

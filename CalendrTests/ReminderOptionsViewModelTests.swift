@@ -19,7 +19,7 @@ class ReminderOptionsViewModelTests: XCTestCase {
 
     func testOptions_fromList() throws {
 
-        let viewModel = try XCTUnwrap(mock(event: .make(type: .reminder(completed: false)), source: .list))
+        let viewModel = try XCTUnwrap(mock(event: .make(type: .reminder(completed: false)), source: .calendar))
 
         XCTAssertEqual(viewModel.items, [
             .action(.open),
@@ -97,7 +97,7 @@ class ReminderOptionsViewModelTests: XCTestCase {
 
     func testOptions_isCompleted_fromList() throws {
 
-        let viewModel = try XCTUnwrap(mock(event: .make(type: .reminder(completed: true)), source: .list))
+        let viewModel = try XCTUnwrap(mock(event: .make(type: .reminder(completed: true)), source: .calendar))
 
         XCTAssertEqual(viewModel.items, [.action(.open)])
     }
@@ -105,7 +105,7 @@ class ReminderOptionsViewModelTests: XCTestCase {
     func testOptions_withOpenTriggered() throws {
         let openExpectation = expectation(description: "Open")
 
-        let viewModel = try XCTUnwrap(mock(event: .make(id: "12345", type: .reminder(completed: false)), source: .list))
+        let viewModel = try XCTUnwrap(mock(event: .make(id: "12345", type: .reminder(completed: false)), source: .calendar))
 
         workspace.didOpenEvent = { event in
             XCTAssertEqual(event.id, "12345")
