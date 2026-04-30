@@ -10,3 +10,7 @@
 HTTPS=https:/$()/ // helper prefix for urls
 
 #include? "Config.local.xcconfig"
+
+// Local config example:
+
+// SENTRY_DSN=${HTTPS}12345@6789.ingest.de.sentry.io/12345
