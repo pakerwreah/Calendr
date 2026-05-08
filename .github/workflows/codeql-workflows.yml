@@ -5,7 +5,8 @@ on:
     branches: [ master ]
     paths: [ ".github/workflows/**" ]
   pull_request:
-    *shared_on
+    branches: [ master ]
+    paths: [ ".github/workflows/**" ]
     types: [ opened, reopened, synchronize, ready_for_review ]
 
 concurrency:
