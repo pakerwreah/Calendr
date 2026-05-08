@@ -4,8 +4,12 @@ on:
   push:
     branches: [ master ]
   pull_request:
-    branches: [ master, macos-13 ]
-    types: [opened, reopened, synchronize, ready_for_review]
+    branches: [ master ]
+    types: [ opened, reopened, synchronize, ready_for_review ]
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   unit-tests:

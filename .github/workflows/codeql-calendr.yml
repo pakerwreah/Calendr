@@ -1,0 +1,24 @@
+name: "CodeQL Calendr"
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+    types: [ opened, reopened, synchronize, ready_for_review ]
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  analyze:
+    permissions:
+      security-events: write
+      packages: read
+
+    uses: ./.github/workflows/codeql-shared.yml
+    with:
+      runner: macos-26
+      language: swift
+      build: swift build -c release

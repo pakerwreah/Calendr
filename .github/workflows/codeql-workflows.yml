@@ -1,0 +1,23 @@
+name: "CodeQL Workflows"
+
+on:
+  push:
+    branches: [ master ]
+    paths: [ ".github/workflows/**" ]
+  pull_request:
+    *shared_on
+    types: [ opened, reopened, synchronize, ready_for_review ]
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  analyze:
+    permissions:
+      security-events: write
+      packages: read
+
+    uses: ./.github/workflows/codeql-shared.yml
+    with:
+      language: actions
