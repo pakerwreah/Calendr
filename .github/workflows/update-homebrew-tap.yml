@@ -13,8 +13,6 @@ on:
 jobs:
   update-cask:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
 
     steps:
       - name: Set Release Version from Input
@@ -30,7 +28,7 @@ jobs:
         with:
           repository: pakerwreah/homebrew-calendr
           path: homebrew-calendr
-          token: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
+          token: ${{ secrets.UPDATE_HOMEBREW_CALENDR }}
 
       - name: Calculate sha256 checksum
         id: checksum
