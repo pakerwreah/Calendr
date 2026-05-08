@@ -4,13 +4,17 @@ on:
   push:
     branches: [ master ]
   pull_request:
-    branches: [ master, macos-13 ]
-    types: [opened, reopened, synchronize, ready_for_review]
+    branches: [ master ]
+    types: [ opened, reopened, synchronize, ready_for_review ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   unit-tests:
     if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
-    name: Unit Tests
+    name: ${{ github.workflow }}
     runs-on: macos-26
     env:
       scheme: Calendr
