@@ -10,6 +10,11 @@ on:
         required: true
         type: string
 
+      pre-build:
+        required: false
+        type: string
+        default: ''
+
       build:
         required: false
         type: string
@@ -24,6 +29,10 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+
+    - name: Pre-build (Dependencies)
+      if: inputs.pre-build != ''
+      run: ${{ inputs.pre-build }}
 
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v4

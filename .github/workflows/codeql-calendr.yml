@@ -21,6 +21,5 @@ jobs:
     with:
       runner: macos-26
       language: swift
-      build: |
-        xcodebuild build -scheme Calendr \
-        COMPILER_INDEX_STORE_ENABLE=NO CODE_SIGNING_ALLOWED=NO
+      pre-build: swift package resolve 
+      build: swift build -c debug
