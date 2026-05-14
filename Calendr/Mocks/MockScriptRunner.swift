@@ -11,7 +11,7 @@ class MockScriptRunner: ScriptRunner {
 
     var didRunScript: ((_ source: String) throws -> Void)?
 
-    func run(_ source: String) async throws {
+    func run(_ source: String) throws {
         try didRunScript?(source)
     }
 }
