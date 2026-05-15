@@ -62,7 +62,7 @@
 "settings.calendar.calendar_app_view_mode" = "캘린더 앱 보기 모드";
 "settings.calendar.default_calendar_app" = "기본 캘린더 앱";
 
-"settings.calendar.event_dots" = "일정 점";
+"settings.calendar.event_dots" = "일정 점 표시 방식";
 "settings.calendar.event_dots.none" = "없음";
 "settings.calendar.event_dots.single_neutral" = "기본";
 "settings.calendar.event_dots.single_highlighted" = "강조";
