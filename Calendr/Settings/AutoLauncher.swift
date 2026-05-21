@@ -8,7 +8,12 @@
 import AppKit
 import ServiceManagement
 
-class AutoLauncher: NSObject {
+@objc protocol AutoLaunching: AnyObject where Self: NSObject {
+    @objc dynamic var isEnabled: Bool { get set }
+    func syncStatus()
+}
+
+class AutoLauncher: NSObject, AutoLaunching {
 
     @objc dynamic var isEnabled: Bool = false {
         didSet {

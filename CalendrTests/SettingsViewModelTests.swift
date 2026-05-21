@@ -13,7 +13,7 @@ class SettingsViewModelTests: XCTestCase {
 
     let disposeBag = DisposeBag()
 
-    let autoLauncher = AutoLauncher()
+    let autoLauncher = MockAutoLauncher()
     let dateProvider = MockDateProvider()
     let workspace = MockWorkspaceServiceProvider()
     let localStorage = MockLocalStorageProvider()

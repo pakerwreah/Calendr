@@ -81,7 +81,7 @@ class MainViewController: NSViewController {
 
     init(
         deeplink: Observable<URL>,
-        autoLauncher: AutoLauncher,
+        autoLauncher: AutoLaunching,
         workspace: WorkspaceServiceProviding,
         calendarService: CalendarServiceProviding,
         geocoder: GeocodeServiceProviding,
