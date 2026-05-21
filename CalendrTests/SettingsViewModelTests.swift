@@ -184,8 +184,8 @@ class SettingsViewModelTests: XCTestCase {
         for name in names {
             let key = statusItemPreferredPositionKey(name, .visible)
             let savedKey = statusItemPreferredPositionKey(name, .saved)
+            XCTAssertEqual(localStorage.integer(forKey: savedKey), 0)
             localStorage.set(123, forKey: key)
-            localStorage.set(234, forKey: savedKey)
         }
 
         setInitialStatusItemPositions(in: localStorage)
@@ -194,7 +194,7 @@ class SettingsViewModelTests: XCTestCase {
             let key = statusItemPreferredPositionKey(name, .visible)
             let savedKey = statusItemPreferredPositionKey(name, .saved)
             XCTAssertEqual(localStorage.integer(forKey: key), 123)
-            XCTAssertEqual(localStorage.integer(forKey: savedKey), 234)
+            XCTAssertEqual(localStorage.integer(forKey: savedKey), 123)
         }
     }
 

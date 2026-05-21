@@ -24,14 +24,18 @@ func setInitialStatusItemPositions(in localStorage: LocalStorageProvider) {
         StatusItemName.event,
         StatusItemName.reminder
     ]
-    let states: [StatusItemPreferredPositionState] = [.visible, .saved]
 
     for name in names {
-        for state in states {
-            let key = statusItemPreferredPositionKey(name, state)
-            if localStorage.integer(forKey: key) == 0 {
-                localStorage.set(100, forKey: key)
-            }
+        let visibleKey = statusItemPreferredPositionKey(name, .visible)
+        let savedKey = statusItemPreferredPositionKey(name, .saved)
+
+        let visiblePosition = localStorage.integer(forKey: visibleKey)
+        let savedPosition = localStorage.integer(forKey: savedKey)
+
+        if savedPosition == 0 {
+            let position = visiblePosition > 0 ? visiblePosition : 100
+            localStorage.set(position, forKey: visibleKey)
+            localStorage.set(position, forKey: savedKey)
         }
     }
 }
