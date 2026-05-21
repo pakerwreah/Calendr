@@ -334,30 +334,38 @@ class NextEventViewModel {
             .bind(to: skippedEvents)
             .disposed(by: disposeBag)
 
-        localStorage.rx.observe(Int.self, preferredPositionKey, options: [.new])
+        let visiblePositionKey = statusItemPreferredPositionKey(statusItemName, .visible)
+        let savedPositionKey = statusItemPreferredPositionKey(statusItemName, .saved)
+
+        localStorage.rx.observe(Int.self, visiblePositionKey, options: [.new])
             .skipNil()
             .filter { $0 > 0 }
             .distinctUntilChanged()
-            .bind { [preferredPositionKey] in
-                localStorage.set($0, forKey: "saved \(preferredPositionKey)")
+            .bind {
+                localStorage.set($0, forKey: savedPositionKey)
             }
             .disposed(by: disposeBag)
     }
 
-    var preferredPositionKey: String {
-        let name: String
+    var statusItemName: String {
         switch type {
         case .event:
-            name = StatusItemName.event
+            StatusItemName.event
         case .reminder:
-            name = StatusItemName.reminder
+            StatusItemName.reminder
         }
-        return "\(Prefs.statusItemPreferredPosition) \(name)"
+    }
+
+    var preferredPositionKey: String {
+        statusItemPreferredPositionKey(statusItemName, .visible)
+    }
+
+    var savedPreferredPositionKey: String {
+        statusItemPreferredPositionKey(statusItemName, .saved)
     }
 
     func restorePreferredPosition() {
-        let position = localStorage.integer(forKey: "saved \(preferredPositionKey)")
-        localStorage.set(position, forKey: preferredPositionKey)
+        restoreStatusItemPreferredPosition(statusItemName, in: localStorage)
     }
 
     func makeContextMenuViewModel() -> (any ContextMenuViewModel)? {

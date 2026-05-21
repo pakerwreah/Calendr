@@ -19,6 +19,7 @@ class StatusItemViewModelTests: XCTestCase {
     let dateProvider = MockDateProvider()
     let screenProvider = MockScreenProvider()
     let calendarService = MockCalendarServiceProvider()
+    let localStorage = MockLocalStorageProvider()
     let settings = MockStatusItemSettings()
     let scheduler = HistoricalScheduler()
 
@@ -31,6 +32,7 @@ class StatusItemViewModelTests: XCTestCase {
         dateProvider: dateProvider,
         screenProvider: screenProvider,
         calendarService: calendarService,
+        localStorage: localStorage,
         notificationCenter: notificationCenter,
         scheduler: scheduler
     )
@@ -111,6 +113,31 @@ class StatusItemViewModelTests: XCTestCase {
 
         setUp(showIcon: false, showDate: false)
         XCTAssertEqual(isVisible, false)
+    }
+
+    func testSaveStatusItemPreferredPosition() {
+
+        let key = viewModel.preferredPositionKey
+        let savedKey = viewModel.savedPreferredPositionKey
+
+        localStorage.set(123, forKey: key)
+
+        XCTAssertEqual(localStorage.integer(forKey: savedKey), 123)
+    }
+
+    func testRestoreStatusItemPreferredPosition_whenBecomingVisible() {
+
+        let key = viewModel.preferredPositionKey
+        let savedKey = viewModel.savedPreferredPositionKey
+
+        setUp(showIcon: false, showDate: false)
+
+        localStorage.set(123, forKey: savedKey)
+        localStorage.removeObject(forKey: key)
+
+        setUp(showIcon: true, showDate: false)
+
+        XCTAssertEqual(localStorage.integer(forKey: key), 123)
     }
 
     func testIconVisibility() {
