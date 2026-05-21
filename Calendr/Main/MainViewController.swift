@@ -143,6 +143,7 @@ class MainViewController: NSViewController {
             dateProvider: dateProvider,
             screenProvider: screenProvider,
             calendarService: calendarService,
+            localStorage: localStorage,
             notificationCenter: notificationCenter,
             scheduler: MainScheduler.instance
         )

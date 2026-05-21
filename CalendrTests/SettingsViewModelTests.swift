@@ -148,6 +148,56 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(localStorageShowMonthOutline, true)
     }
 
+    func testSetStatusItemsInitialPositions() {
+
+        let names = [
+            StatusItemName.main,
+            StatusItemName.event,
+            StatusItemName.reminder
+        ]
+
+        for name in names {
+            let key = statusItemPreferredPositionKey(name, .visible)
+            let savedKey = statusItemPreferredPositionKey(name, .saved)
+            XCTAssertEqual(localStorage.integer(forKey: key), 0)
+            XCTAssertEqual(localStorage.integer(forKey: savedKey), 0)
+        }
+
+        setInitialStatusItemPositions(in: localStorage)
+
+        for name in names {
+            let key = statusItemPreferredPositionKey(name, .visible)
+            let savedKey = statusItemPreferredPositionKey(name, .saved)
+            XCTAssertEqual(localStorage.integer(forKey: key), 100)
+            XCTAssertEqual(localStorage.integer(forKey: savedKey), 100)
+        }
+    }
+
+    func testSetStatusItemsInitialPositions_keepsExistingPositions() {
+
+        let names = [
+            StatusItemName.main,
+            StatusItemName.event,
+            StatusItemName.reminder
+        ]
+
+        for name in names {
+            let key = statusItemPreferredPositionKey(name, .visible)
+            let savedKey = statusItemPreferredPositionKey(name, .saved)
+            XCTAssertEqual(localStorage.integer(forKey: savedKey), 0)
+            localStorage.set(123, forKey: key)
+        }
+
+        setInitialStatusItemPositions(in: localStorage)
+
+        for name in names {
+            let key = statusItemPreferredPositionKey(name, .visible)
+            let savedKey = statusItemPreferredPositionKey(name, .saved)
+            XCTAssertEqual(localStorage.integer(forKey: key), 123)
+            XCTAssertEqual(localStorage.integer(forKey: savedKey), 123)
+        }
+    }
+
     func testDateFormatOptions() {
 
         dateProvider.m_calendar.locale = Locale(identifier: "en_US")

@@ -26,6 +26,16 @@ class StatusItemViewModel {
     let isVisible: Observable<Bool>
     let image: Observable<NSImage>
 
+    var preferredPositionKey: String {
+        statusItemPreferredPositionKey(StatusItemName.main, .visible)
+    }
+
+    var savedPreferredPositionKey: String {
+        statusItemPreferredPositionKey(StatusItemName.main, .saved)
+    }
+
+    private let disposeBag = DisposeBag()
+
     init(
         dateChanged: Observable<Void>,
         nextEventCalendars: Observable<[String]>,
@@ -33,6 +43,7 @@ class StatusItemViewModel {
         dateProvider: DateProviding,
         screenProvider: ScreenProviding,
         calendarService: CalendarServiceProviding,
+        localStorage: LocalStorageProvider,
         notificationCenter: NotificationCenter,
         scheduler: SchedulerType
     ) {
@@ -214,7 +225,27 @@ class StatusItemViewModel {
         self.isVisible = Observable.combineLatest(
             settings.showStatusItemIcon,
             settings.showStatusItemDate
-        ).map { $0 || $1 }
+        )
+        .map { $0 || $1 }
+        .distinctUntilChanged()
+        .share(replay: 1)
+
+        self.isVisible.matching(true).void().bind {
+            restoreStatusItemPreferredPosition(StatusItemName.main, in: localStorage)
+        }
+        .disposed(by: disposeBag)
+
+        let visiblePositionKey = statusItemPreferredPositionKey(StatusItemName.main, .visible)
+        let savedPositionKey = statusItemPreferredPositionKey(StatusItemName.main, .saved)
+
+        localStorage.rx.observe(Int.self, visiblePositionKey, options: [.new])
+            .skipNil()
+            .filter { $0 > 0 }
+            .distinctUntilChanged()
+            .bind {
+                localStorage.set($0, forKey: savedPositionKey)
+            }
+            .disposed(by: disposeBag)
     }
 }
 

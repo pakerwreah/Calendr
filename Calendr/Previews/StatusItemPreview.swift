@@ -32,6 +32,7 @@ struct StatusItemPreview: PreviewProvider {
             dateProvider: dateProvider,
             screenProvider: screenProvider,
             calendarService: calendarService,
+            localStorage: .shared,
             notificationCenter: notificationCenter,
             scheduler: MainScheduler.instance
         )

@@ -59,19 +59,38 @@ class NextEventViewModelTests: XCTestCase {
 
         let viewModel = makeViewModel(type: .event)
         let key = viewModel.preferredPositionKey
+        let savedKey = viewModel.savedPreferredPositionKey
 
         localStorage.set(123, forKey: key)
-        XCTAssertEqual(localStorage.integer(forKey: "saved \(key)"), 123)
+        XCTAssertEqual(localStorage.integer(forKey: savedKey), 123)
     }
 
     func testRestoreStatusItemPreferredPosition() {
 
         let viewModel = makeViewModel(type: .event)
 
-        let key = "\(Prefs.statusItemPreferredPosition) \(StatusItemName.event)"
+        let key = viewModel.preferredPositionKey
+        let savedKey = viewModel.savedPreferredPositionKey
+
         XCTAssertEqual(localStorage.integer(forKey: key), 0)
-        localStorage.set(123, forKey: "saved \(key)")
+
+        localStorage.set(123, forKey: savedKey)
         viewModel.restorePreferredPosition()
+
+        XCTAssertEqual(localStorage.integer(forKey: key), 123)
+    }
+
+    func testRestoreStatusItemPreferredPosition_ignoresMissingSavedPosition() {
+
+        let viewModel = makeViewModel(type: .event)
+        let key = viewModel.preferredPositionKey
+        let savedKey = viewModel.savedPreferredPositionKey
+
+        XCTAssertEqual(localStorage.integer(forKey: savedKey), 0)
+
+        localStorage.set(123, forKey: key)
+        viewModel.restorePreferredPosition()
+
         XCTAssertEqual(localStorage.integer(forKey: key), 123)
     }
 
