@@ -224,12 +224,12 @@ class SettingsViewModel:
 
     let dateFormatPlaceholder = AppConstants.defaultCustomDateFormat
 
-    private let autoLauncher: AutoLauncher
+    private let autoLauncher: AutoLaunching
     private let dateProvider: DateProviding
     private let localStorage: LocalStorageProvider
 
     init(
-        autoLauncher: AutoLauncher,
+        autoLauncher: some AutoLaunching,
         dateProvider: DateProviding,
         workspace: WorkspaceServiceProviding,
         localStorage: LocalStorageProvider,
