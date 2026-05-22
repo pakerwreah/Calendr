@@ -86,13 +86,14 @@ class AboutViewController: NSViewController, SettingsUI {
 
     private func setUpBindings() {
 
-        autoUpdater.error.observe(on: MainScheduler.instance).bind { error in
+        autoUpdater.error.observe(on: MainScheduler.instance).bind { [weak self] error in
+            guard let window = self?.view.window else { return }
             let alert = NSAlert()
             alert.alertStyle = .warning
             alert.icon = NSImage(named: NSImage.cautionName)
             alert.messageText = error.title
             alert.informativeText = error.message
-            alert.runModal()
+            alert.beginSheetModal(for: window)
         }
         .disposed(by: disposeBag)
 
