@@ -252,15 +252,13 @@ class MainViewController: NSViewController {
 
         setUpKeyboard()
 
-        refreshDate.onNext(())
-
         setUpDeeplink()
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(5)) { [autoUpdater] in
-            autoUpdater.start()
-        }
+        setUpAutoUpdater()
 
         calendarService.requestAccess()
+
+        refreshDate.onNext(())
     }
 
     required init?(coder: NSCoder) {
@@ -449,8 +447,6 @@ class MainViewController: NSViewController {
         setUpCreateButton()
 
         setUpDateSuggestion()
-
-        setUpAutoUpdater()
     }
 
     private func setUpCreateButton() {
@@ -525,6 +521,10 @@ class MainViewController: NSViewController {
     }
 
     private func setUpAutoUpdater() {
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(5)) { [autoUpdater] in
+            autoUpdater.start()
+        }
 
         autoUpdater.notificationTap.bind { [weak self] action in
             guard let self else { return }
