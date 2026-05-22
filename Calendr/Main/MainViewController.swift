@@ -526,6 +526,24 @@ class MainViewController: NSViewController {
             autoUpdater.start()
         }
 
+        autoUpdater.error.observe(on: MainScheduler.instance).bind { [weak self] error in
+            guard let self else { return }
+
+            let alert = NSAlert()
+            alert.alertStyle = .critical
+            alert.messageText = error.title
+            alert.informativeText = error.message
+
+            if let window = settingsViewController.tabViewItems[SettingsTab.about.rawValue].view?.window {
+                alert.beginSheetModal(for: window)
+            } else if case .check = error {
+                // drop background update check errors
+            } else {
+                alert.runModal()
+            }
+        }
+        .disposed(by: disposeBag)
+
         autoUpdater.notificationTap.bind { [weak self] action in
             guard let self else { return }
 
