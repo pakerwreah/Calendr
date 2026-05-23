@@ -42,8 +42,8 @@ struct EventDetailsPreview: PreviewProvider {
                 localStorage: .shared,
                 settings: settings,
                 isShowingObserver: .dummy(),
-                isInProgress: .just(false),
-                callback: .dummy()
+                callback: .dummy(),
+                scheduler: MainScheduler.instance
             )
         )
         vc.view.width(equalTo: 300)
@@ -73,8 +73,8 @@ struct EventDetailsPreview: PreviewProvider {
                 localStorage: .shared,
                 settings: settings,
                 isShowingObserver: .dummy(),
-                isInProgress: .just(false),
-                callback: .dummy()
+                callback: .dummy(),
+                scheduler: MainScheduler.instance
             )
         )
         vc.view.width(equalTo: 300)
@@ -100,8 +100,8 @@ struct EventDetailsPreview: PreviewProvider {
                 localStorage: .shared,
                 settings: settings,
                 isShowingObserver: .dummy(),
-                isInProgress: .just(false),
-                callback: .dummy()
+                callback: .dummy(),
+                scheduler: MainScheduler.instance
             )
         )
         vc.view.width(equalTo: 250)
@@ -126,8 +126,8 @@ struct EventDetailsPreview: PreviewProvider {
                 localStorage: .shared,
                 settings: settings,
                 isShowingObserver: .dummy(),
-                isInProgress: .just(false),
-                callback: .dummy()
+                callback: .dummy(),
+                scheduler: MainScheduler.instance
             )
         )
         vc.view.width(equalTo: 250)

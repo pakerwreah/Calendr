@@ -85,15 +85,14 @@ class EventDetailsViewModel {
         localStorage: LocalStorageProvider,
         settings: EventSettings,
         isShowingObserver: AnyObserver<Bool>,
-        isInProgress: Observable<Bool>,
-        callback: AnyObserver<ContextCallbackAction>
+        callback: AnyObserver<ContextCallbackAction>,
+        scheduler: SchedulerType
     ) {
         self.event = event
         self.dateProvider = dateProvider
         self.calendarService = calendarService
         self.settings = settings
         self.isShowingObserver = isShowingObserver
-        self.isInProgress = isInProgress
         self.workspace = workspace
 
         type = event.type
@@ -311,6 +310,27 @@ class EventDetailsViewModel {
             }
 
         self.browserOptions = browserOptions
+
+        func distance(to date: Date) -> Int {
+            Int(dateProvider.now.distance(to: date).rounded(.up))
+        }
+
+        let secondsToStart = distance(to: event.start)
+        let secondsToEnd = distance(to: event.end)
+        let isAlreadyInProgress = secondsToStart <= 0 && secondsToEnd > 0
+
+        func timer(seconds: Int) -> Observable<Void> {
+            seconds > 0 ? Observable<Int>.timer(.seconds(seconds), scheduler: scheduler).void() : .empty()
+        }
+
+        self.isInProgress = timer(seconds: secondsToStart).map(true)
+            .concat(
+                Observable.deferred {
+                    timer(seconds: distance(to: event.end)).map(false)
+                }
+            )
+            .startWith(isAlreadyInProgress)
+            .share(replay: 1)
     }
 
     func makeContextMenuViewModel() -> (any ContextMenuViewModel)? {

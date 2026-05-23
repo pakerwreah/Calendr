@@ -41,6 +41,8 @@ class EventViewModel {
     private let isShowingDetailsModal: AnyObserver<Bool>
     private let callback: AnyObserver<ContextCallbackAction>
 
+    private let scheduler: SchedulerType
+
     private let source: EventDetailsSource
     private let event: EventModel
     private let dateProvider: DateProviding
@@ -80,6 +82,7 @@ class EventViewModel {
         self.weatherService = weatherService
         self.isShowingDetailsModal = isShowingDetailsModal
         self.callback = callback
+        self.scheduler = scheduler
 
         title = event.title
         color = event.calendar.color
@@ -313,8 +316,8 @@ class EventViewModel {
             localStorage: localStorage,
             settings: settings,
             isShowingObserver: isShowingDetailsModal,
-            isInProgress: isInProgress,
-            callback: callback
+            callback: callback,
+            scheduler: scheduler
         )
     }
 
