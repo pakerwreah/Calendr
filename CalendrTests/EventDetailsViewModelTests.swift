@@ -32,7 +32,7 @@ class EventDetailsViewModelTests: XCTestCase {
     func testIsInProgress() {
 
         let event = EventModel.make(
-            start: .make(year: 2021, month: 1, day: 1, hour: 10),
+            start: .make(year: 2021, month: 1, day: 1),
             end: .make(year: 2021, month: 1, day: 2)
         )
         let duration = Int(event.start.distance(to: event.end))
@@ -41,17 +41,83 @@ class EventDetailsViewModelTests: XCTestCase {
 
         let viewModel = mock(event: event)
 
-        XCTAssertEqual(viewModel.isInProgress.lastValue(), false)
+        var isInProgress: Bool?
+        viewModel.isInProgress.bind {
+            XCTAssertNotEqual(isInProgress, $0)
+            isInProgress = $0
+        }
+        .disposed(by: disposeBag)
+
+        XCTAssertEqual(isInProgress, false)
 
         dateProvider.add(1, .second)
         scheduler.advance(1, .second)
 
-        XCTAssertEqual(viewModel.isInProgress.lastValue(), true)
+        XCTAssertEqual(isInProgress, true)
 
         dateProvider.now = event.end
         scheduler.advance(.seconds(duration))
 
-        XCTAssertEqual(viewModel.isInProgress.lastValue(), false)
+        XCTAssertEqual(isInProgress, false)
+    }
+
+    func testIsInProgress_isAlreadyInProgress() {
+
+        let event = EventModel.make(
+            start: .make(year: 2021, month: 1, day: 1),
+            end: .make(year: 2021, month: 1, day: 2)
+        )
+
+        let duration = Int(event.start.distance(to: event.end))
+
+        dateProvider.now = event.start
+
+        let viewModel = mock(event: event)
+
+        var isInProgress: Bool?
+        viewModel.isInProgress.bind {
+            XCTAssertNotEqual(isInProgress, $0)
+            isInProgress = $0
+        }
+        .disposed(by: disposeBag)
+
+        XCTAssertEqual(isInProgress, true)
+
+        dateProvider.add(1, .second)
+        scheduler.advance(1, .second)
+
+        XCTAssertEqual(isInProgress, true)
+
+        dateProvider.now = event.end
+        scheduler.advance(.seconds(duration))
+
+        XCTAssertEqual(isInProgress, false)
+    }
+
+    func testIsInProgress_hasAlreadyEnded() {
+
+        let event = EventModel.make(
+            start: .make(year: 2021, month: 1, day: 1),
+            end: .make(year: 2021, month: 1, day: 2)
+        )
+
+        dateProvider.now = event.end
+
+        let viewModel = mock(event: event)
+
+        var isInProgress: Bool?
+        viewModel.isInProgress.bind {
+            XCTAssertNotEqual(isInProgress, $0)
+            isInProgress = $0
+        }
+        .disposed(by: disposeBag)
+
+        XCTAssertEqual(isInProgress, false)
+
+        dateProvider.add(1, .second)
+        scheduler.advance(1, .second)
+
+        XCTAssertEqual(isInProgress, false)
     }
 
     func testBasicInfo() {

@@ -311,20 +311,25 @@ class EventDetailsViewModel {
 
         self.browserOptions = browserOptions
 
-        let secondsToStart = Int(dateProvider.now.distance(to: event.start))
+        func distance(to date: Date) -> Int {
+            Int(dateProvider.now.distance(to: date).rounded(.up))
+        }
 
-        self.isInProgress = Observable<Int>.timer(.seconds(secondsToStart), scheduler: scheduler)
-            .map(true)
-            .startWith(secondsToStart <= 0)
+        let secondsToStart = distance(to: event.start)
+        let secondsToEnd = distance(to: event.end)
+        let isAlreadyInProgress = secondsToStart <= 0 && secondsToEnd > 0
+
+        func timer(seconds: Int) -> Observable<Void> {
+            seconds > 0 ? Observable<Int>.timer(.seconds(seconds), scheduler: scheduler).void() : .empty()
+        }
+
+        self.isInProgress = timer(seconds: secondsToStart).map(true)
             .concat(
                 Observable.deferred {
-                    let secondsToEnd = Int(dateProvider.now.distance(to: event.end).rounded(.up))
-                    return Observable<Int>.timer(.seconds(secondsToEnd), scheduler: scheduler)
-                        .map(false)
-                        .startWith(secondsToEnd > 0)
+                    timer(seconds: distance(to: event.end)).map(false)
                 }
             )
-            .distinctUntilChanged()
+            .startWith(isAlreadyInProgress)
             .share(replay: 1)
     }
 
