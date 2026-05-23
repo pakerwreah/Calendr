@@ -61,8 +61,6 @@ class EventDetailsViewModel {
 
     private let callback: AnyObserver<ContextCallbackAction>
 
-    private let scheduler: SchedulerType
-
     private let disposeBag = DisposeBag()
 
     var accessibilityIdentifier: String? {
@@ -96,7 +94,6 @@ class EventDetailsViewModel {
         self.settings = settings
         self.isShowingObserver = isShowingObserver
         self.workspace = workspace
-        self.scheduler = scheduler
 
         type = event.type
         status = event.status
