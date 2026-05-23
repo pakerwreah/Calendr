@@ -96,6 +96,7 @@ private enum WorkspaceApp {
             self = .teams("msteams://")
         }
         else if [
+            "facetime.apple.com",
             "meet.google.com",
             "hangouts.google.com",
             ".webex.com",
