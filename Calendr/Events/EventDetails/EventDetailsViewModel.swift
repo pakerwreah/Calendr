@@ -61,6 +61,8 @@ class EventDetailsViewModel {
 
     private let callback: AnyObserver<ContextCallbackAction>
 
+    private let scheduler: SchedulerType
+
     private let disposeBag = DisposeBag()
 
     var accessibilityIdentifier: String? {
@@ -85,16 +87,16 @@ class EventDetailsViewModel {
         localStorage: LocalStorageProvider,
         settings: EventSettings,
         isShowingObserver: AnyObserver<Bool>,
-        isInProgress: Observable<Bool>,
-        callback: AnyObserver<ContextCallbackAction>
+        callback: AnyObserver<ContextCallbackAction>,
+        scheduler: SchedulerType
     ) {
         self.event = event
         self.dateProvider = dateProvider
         self.calendarService = calendarService
         self.settings = settings
         self.isShowingObserver = isShowingObserver
-        self.isInProgress = isInProgress
         self.workspace = workspace
+        self.scheduler = scheduler
 
         type = event.type
         status = event.status
@@ -311,6 +313,22 @@ class EventDetailsViewModel {
             }
 
         self.browserOptions = browserOptions
+
+        let secondsToStart = Int(dateProvider.now.distance(to: event.start))
+
+        self.isInProgress = Observable<Int>.timer(.seconds(secondsToStart), scheduler: scheduler)
+            .map(true)
+            .startWith(secondsToStart <= 0)
+            .concat(
+                Observable.deferred {
+                    let secondsToEnd = Int(dateProvider.now.distance(to: event.end).rounded(.up))
+                    return Observable<Int>.timer(.seconds(secondsToEnd), scheduler: scheduler)
+                        .map(false)
+                        .startWith(secondsToEnd > 0)
+                }
+            )
+            .distinctUntilChanged()
+            .share(replay: 1)
     }
 
     func makeContextMenuViewModel() -> (any ContextMenuViewModel)? {

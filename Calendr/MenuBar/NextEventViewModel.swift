@@ -54,7 +54,6 @@ class NextEventViewModel {
     let hasEvent: Observable<Bool>
     var isVisible: Observable<Bool> { hasEvent }
     var isPending: Observable<Bool>
-    let isInProgress: Observable<Bool>
     let textScaling: Observable<Double>
 
     private let disposeBag = DisposeBag()
@@ -72,6 +71,7 @@ class NextEventViewModel {
     private let geocoder: GeocodeServiceProviding
     private let weatherService: WeatherServiceProviding
     private let workspace: WorkspaceServiceProviding
+    private let scheduler: SchedulerType
 
     init(
         type: NextEventType,
@@ -99,6 +99,7 @@ class NextEventViewModel {
         self.workspace = workspace
         self.isShowingDetailsModal = isShowingDetailsModal
         self.textScaling = settings.eventStatusItemTextScaling
+        self.scheduler = scheduler
 
         let throttledHoursToCheck = settings.eventStatusItemCheckRange
             .throttle(.seconds(1), scheduler: scheduler)
@@ -140,7 +141,7 @@ class NextEventViewModel {
                 }
             }
 
-        let nextEventObservable = Observable
+        let nextEventTickingObservable = Observable
             .combineLatest(filteredEvents, settings.eventStatusItemCheckRange)
             .flatMapLatest { [dateProvider] events, hoursToCheck -> Observable<NextEvent?> in
 
@@ -184,11 +185,10 @@ class NextEventViewModel {
             }
             .share(replay: 1)
 
-        nextEventObservable
+        nextEventTickingObservable
+            .distinctUntilChanged()
             .bind(to: nextEvent)
             .disposed(by: disposeBag)
-
-        isInProgress = nextEventObservable.map { $0?.isInProgress ?? false }
 
         let event = nextEvent.map(\.?.event)
 
@@ -207,14 +207,15 @@ class NextEventViewModel {
             .map { $0.type ~= .event(.maybe) ? .bordered : .filled }
             .distinctUntilChanged()
 
-        backgroundColor = nextEventObservable
-            .skipNil()
-            .withLatestFrom(
-                Observable.combineLatest(settings.eventStatusItemFlashing, settings.eventStatusItemSound)
-            ) { ($0, $1.0, $1.1) }
+        backgroundColor = Observable
+            .combineLatest(
+                nextEventTickingObservable,
+                settings.eventStatusItemFlashing,
+                settings.eventStatusItemSound
+            )
             .map { [dateProvider] nextEvent, flashing, sound in
 
-                guard nextEvent.event.status != .pending else { return .clear }
+                guard let nextEvent, nextEvent.event.status != .pending else { return .clear }
 
                 guard !nextEvent.isInProgress else {
                     return nextEvent.event.calendar.color.withAlphaComponent(0.3)
@@ -272,7 +273,7 @@ class NextEventViewModel {
         dateFormatter.unitsStyle = .abbreviated
         dateFormatter.maximumUnitCount = 2
 
-        time = nextEventObservable
+        time = nextEventTickingObservable
             .skipNil()
             .map { [dateProvider] nextEvent in
 
@@ -318,7 +319,7 @@ class NextEventViewModel {
             }
             .distinctUntilChanged()
 
-        hasEvent = nextEventObservable
+        hasEvent = nextEventTickingObservable
             .map(\.isNotNil)
             .distinctUntilChanged()
 
@@ -401,8 +402,8 @@ class NextEventViewModel {
             localStorage: localStorage,
             settings: settings,
             isShowingObserver: isShowingDetailsModal.asObserver(),
-            isInProgress: isInProgress,
-            callback: actionCallback.asObserver()
+            callback: actionCallback.asObserver(),
+            scheduler: scheduler
         )
     }
 

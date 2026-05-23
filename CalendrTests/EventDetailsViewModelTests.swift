@@ -20,12 +20,38 @@ class EventDetailsViewModelTests: XCTestCase {
     let weatherService = MockWeatherServiceProvider()
     lazy var workspace = MockWorkspaceServiceProvider(localStorage: localStorage)
     let settings = MockEventSettings()
+    let scheduler = HistoricalScheduler()
 
     override func setUp() {
 
         localStorage.reset()
 
         dateProvider.m_calendar.locale = Locale(identifier: "en_US")
+    }
+
+    func testIsInProgress() {
+
+        let event = EventModel.make(
+            start: .make(year: 2021, month: 1, day: 1, hour: 10),
+            end: .make(year: 2021, month: 1, day: 2)
+        )
+        let duration = Int(event.start.distance(to: event.end))
+
+        dateProvider.now = event.start - 1
+
+        let viewModel = mock(event: event)
+
+        XCTAssertEqual(viewModel.isInProgress.lastValue(), false)
+
+        dateProvider.add(1, .second)
+        scheduler.advance(1, .second)
+
+        XCTAssertEqual(viewModel.isInProgress.lastValue(), true)
+
+        dateProvider.now = event.end
+        scheduler.advance(.seconds(duration))
+
+        XCTAssertEqual(viewModel.isInProgress.lastValue(), false)
     }
 
     func testBasicInfo() {
@@ -329,8 +355,8 @@ class EventDetailsViewModelTests: XCTestCase {
             localStorage: localStorage,
             settings: settings,
             isShowingObserver: .dummy(),
-            isInProgress: .just(false),
-            callback: .init { callback($0.element) }
+            callback: .init { callback($0.element) },
+            scheduler: scheduler
         )
     }
 }
