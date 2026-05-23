@@ -142,6 +142,18 @@ class EventViewModelLinkTests: XCTestCase {
         XCTAssertEqual(link.url.absoluteString, appLink)
     }
 
+    func testLink_withFacetimeURL() throws {
+
+        let httpLink = "https://facetime.apple.com"
+
+        let viewModel = mock(event: .make(location: httpLink))
+
+        let link = try XCTUnwrap(viewModel.link)
+
+        XCTAssertTrue(link.isMeeting)
+        XCTAssertEqual(link.url.absoluteString, httpLink)
+    }
+
     func testLink_withGoogleMeetURL() throws {
 
         let httpLink = "https://meet.google.com"
