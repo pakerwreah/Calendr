@@ -8,10 +8,10 @@ let package = Package(
         .macOS(.v14)
     ],
     dependencies: [
-        .package(url: "https://github.com/ReactiveX/RxSwift", from: "6.10.2"),
-        .package(url: "https://github.com/apple/swift-collections", from: "1.5.1"),
+        .package(url: "https://github.com/ReactiveX/RxSwift", from: "6.10.1"),
+        .package(url: "https://github.com/apple/swift-collections", from: "1.3.0"),
         .package(url: "https://github.com/pointfreeco/swift-clocks", from: "1.0.6"),
-        .package(url: "https://github.com/getsentry/sentry-cocoa", from: "9.14.0"),
+        .package(url: "https://github.com/getsentry/sentry-cocoa", from: "8.58.0"),
         .package(url: "https://github.com/sindresorhus/KeyboardShortcuts", exact: "2.4.0"),
         .package(url: "https://github.com/weichsel/ZIPFoundation", from: "0.9.20")
     ],
