@@ -47,11 +47,11 @@ private func createCacheDirectory() throws -> String {
 
     let cachesURL = applicationSupport.appending(component: "SentryCaches", directoryHint: .isDirectory)
 
-    if !fileManager.fileExists(atPath: cachesURL.absoluteString) {
+    if !fileManager.fileExists(atPath: cachesURL.path()) {
         try fileManager.createDirectory(at: cachesURL, withIntermediateDirectories: true)
     }
 
-    return cachesURL.absoluteString
+    return cachesURL.path()
 }
 
 /**
