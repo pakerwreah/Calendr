@@ -14,6 +14,7 @@
 "access_required.cancel" = "キャンセル";
 
 "auto_update.check_for_updates" = "更新を確認";
+//"auto_update.check_automatically" = "Automatically check for updates";
 "auto_update.fetching_releases" = "更新を確認中";
 "auto_update.new_version" = "バージョン %@ が利用可能です";
 "auto_update.updated_to" = "バージョン %@ に更新されました";

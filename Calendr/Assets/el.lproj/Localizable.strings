@@ -14,6 +14,7 @@
 "access_required.cancel" = "Ακύρωση";
 
 "auto_update.check_for_updates" = "Έλεγχος για ενημερώσεις";
+//"auto_update.check_automatically" = "Automatically check for updates";
 "auto_update.fetching_releases" = "Λήψη εκδόσεων";
 "auto_update.new_version" = "Νέα διαθέσιμη έκδοση: %@";
 "auto_update.updated_to" = "Ενημερώθηκε στην έκδοση %@";

@@ -68,6 +68,7 @@ enum Prefs {
     static let updatedVersion = "updated_version"
     static let permissionSuppressed = "permission_suppressed"
     static let defaultBrowserPerCalendar = "default_browser_per_calendar"
+    static let autoCheckForUpdates = "auto_check_for_updates"
 
     // Security Scope Bookmarks
     static let attachmentsBookmark = "attachments_folder_bookmark"
@@ -139,7 +140,8 @@ func registerDefaultPrefs(in localStorage: LocalStorageProvider, calendar: Calen
         Prefs.textScaling: 1,
 
         // Misc
-        Prefs.defaultBrowserPerCalendar: [:]
+        Prefs.defaultBrowserPerCalendar: [:],
+        Prefs.autoCheckForUpdates: true
     ])
 }
 
@@ -392,6 +394,11 @@ extension LocalStorageProvider {
     @objc dynamic var defaultBrowserPerCalendar: [String: String] {
         get { dictionary(forKey: Prefs.defaultBrowserPerCalendar) as? [String: String] ?? [:] }
         set { set(newValue, forKey: Prefs.defaultBrowserPerCalendar) }
+    }
+
+    @objc dynamic var autoCheckForUpdates: Bool {
+        get { bool(forKey: Prefs.autoCheckForUpdates) }
+        set { set(newValue, forKey: Prefs.autoCheckForUpdates) }
     }
 
     // Security Scope Bookmarks

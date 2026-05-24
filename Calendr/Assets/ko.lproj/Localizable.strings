@@ -14,6 +14,7 @@
 "access_required.cancel" = "취소";
 
 "auto_update.check_for_updates" = "업데이트 확인";
+//"auto_update.check_automatically" = "Automatically check for updates";
 "auto_update.fetching_releases" = "릴리즈 가져오는 중";
 "auto_update.new_version" = "새로운 버전 사용 가능: %@";
 "auto_update.updated_to" = "버전 %@ 으로 업데이트되었습니다.";

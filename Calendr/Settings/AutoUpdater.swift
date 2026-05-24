@@ -40,12 +40,16 @@ enum UpdateError {
 }
 
 protocol AutoUpdating {
+    typealias NotificationAction = AutoUpdater.NotificationAction
+
     var status: Observable<UpdateStatus> { get }
     var error: Observable<UpdateError> { get }
+    var notificationTap: Observable<NotificationAction> { get }
 
     @MainActor func start()
-    func checkRelease()
-    func downloadAndInstall()
+    @MainActor func stop()
+    @MainActor func checkRelease()
+    @MainActor func downloadAndInstall()
 }
 
 class AutoUpdater: AutoUpdating {
@@ -135,24 +139,22 @@ class AutoUpdater: AutoUpdating {
         cleanUpDownloads()
     }
 
+    private var autoCheck: Task<Void, Error>?
+
     func start() {
+        autoCheck?.cancel()
 
-        guard !BuildConfig.isUITesting, !BuildConfig.isDebug else { return }
-
-        Task {
-            guard await notificationProvider.requestAuthorization() else { return }
-
-            self.checkRelease(notify: true)
-
-            DispatchQueue.main.async {
-                Timer.scheduledTimer(
-                    withTimeInterval: 3 * 60 * 60,
-                    repeats: true
-                ) { [weak self] _ in
-                    self?.checkRelease(notify: true)
-                }
+        autoCheck = Task {
+            while !Task.isCancelled {
+                self.checkRelease(notify: true)
+                try await Task.sleep(for: .seconds(3 * 60 * 60))
             }
         }
+    }
+
+    func stop() {
+        autoCheck?.cancel()
+        autoCheck = nil
     }
 
     func checkRelease() {
@@ -161,6 +163,7 @@ class AutoUpdater: AutoUpdating {
 
     private func checkRelease(notify: Bool) {
         Task {
+            guard await notificationProvider.requestAuthorization() else { return }
             do {
                 try await checkReleaseAsync(notify: notify)
             } catch {

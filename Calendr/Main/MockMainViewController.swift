@@ -31,7 +31,8 @@ class MockMainViewController: MainViewController {
 
         super.init(
             deeplink: .empty(),
-            autoLauncher: AutoLauncher(),
+            autoLauncher: MockAutoLauncher(),
+            autoUpdater: MockAutoUpdater(),
             workspace: MockWorkspaceServiceProvider(),
             calendarService: MockCalendarServiceProvider(dateProvider: dateProvider),
             geocoder: MockGeocodeServiceProvider(),

@@ -12,6 +12,7 @@
 "access_required.cancel" = "Annuleren";
 
 "auto_update.check_for_updates" = "Controleren op updates";
+//"auto_update.check_automatically" = "Automatically check for updates";
 "auto_update.fetching_releases" = "Releases ophalen";
 "auto_update.new_version" = "Nieuwe versie beschikbaar: %@";
 "auto_update.updated_to" = "Bijgewerkt naar versie %@";

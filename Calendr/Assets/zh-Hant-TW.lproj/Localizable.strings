@@ -14,6 +14,7 @@
 "access_required.cancel" = "取消";
 
 "auto_update.check_for_updates" = "檢查更新";
+//"auto_update.check_automatically" = "Automatically check for updates";
 "auto_update.fetching_releases" = "正在獲取版本";
 "auto_update.new_version" = "有新版本可用：%@";
 "auto_update.updated_to" = "已更新至版本 %@";

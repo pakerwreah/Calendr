@@ -72,7 +72,7 @@ class MainViewController: NSViewController {
     private let calendarService: CalendarServiceProviding
     private let dateProvider: DateProviding
     private let screenProvider: ScreenProviding
-    private let autoUpdater: AutoUpdater
+    private let autoUpdater: AutoUpdating
     private let localStorage: LocalStorageProvider
     private let notificationCenter: NotificationCenter
     private var heightConstraint: NSLayoutConstraint?
@@ -82,6 +82,7 @@ class MainViewController: NSViewController {
     init(
         deeplink: Observable<URL>,
         autoLauncher: AutoLaunching,
+        autoUpdater: AutoUpdating,
         workspace: WorkspaceServiceProviding,
         calendarService: CalendarServiceProviding,
         geocoder: GeocodeServiceProviding,
@@ -96,6 +97,7 @@ class MainViewController: NSViewController {
     ) {
 
         self.deeplink = deeplink
+        self.autoUpdater = autoUpdater
         self.workspace = workspace
         self.calendarService = calendarService
         self.dateProvider = dateProvider
@@ -117,10 +119,12 @@ class MainViewController: NSViewController {
 
         settingsViewModel = SettingsViewModel(
             autoLauncher: autoLauncher,
+            autoUpdater: autoUpdater,
             dateProvider: dateProvider,
             workspace: workspace,
             localStorage: localStorage,
-            notificationCenter: notificationCenter
+            notificationCenter: notificationCenter,
+            scheduler: MainScheduler.instance
         )
 
         calendarPickerViewModel = CalendarPickerViewModel(
@@ -146,13 +150,6 @@ class MainViewController: NSViewController {
             localStorage: localStorage,
             notificationCenter: notificationCenter,
             scheduler: MainScheduler.instance
-        )
-
-        autoUpdater = AutoUpdater(
-            localStorage: localStorage,
-            notificationProvider: notificationProvider,
-            networkProvider: networkProvider,
-            fileManager: fileManager
         )
 
         calendarViewModel = CalendarViewModel(
@@ -521,10 +518,6 @@ class MainViewController: NSViewController {
     }
 
     private func setUpAutoUpdater() {
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(5)) { [autoUpdater] in
-            autoUpdater.start()
-        }
 
         autoUpdater.error.observe(on: MainScheduler.instance).bind { [weak self] error in
             guard let self else { return }

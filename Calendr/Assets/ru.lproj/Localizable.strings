@@ -16,6 +16,7 @@
 "access_required.cancel" = "Отмена";
 
 "auto_update.check_for_updates" = "Проверить наличие обновлений";
+//"auto_update.check_automatically" = "Automatically check for updates";
 "auto_update.fetching_releases" = "Получение сведений о версиях";
 "auto_update.new_version" = "Доступна новая версия: %@";
 "auto_update.updated_to" = "Обновлено до версии %@";

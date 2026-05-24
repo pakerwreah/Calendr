@@ -14,6 +14,7 @@
 "access_required.cancel" = "İptal";
 
 "auto_update.check_for_updates" = "Güncellemeleri kontrol et";
+//"auto_update.check_automatically" = "Automatically check for updates";
 "auto_update.fetching_releases" = "Sürümler aranıyor";
 "auto_update.new_version" = "Yeni sürüm mevcut: %@";
 "auto_update.updated_to" = "%@ sürümüne güncellendi";
