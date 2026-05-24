@@ -600,7 +600,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.20.8;
+				MARKETING_VERSION = 1.21.0;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Calendr/ObjC/Calendr-Bridging-Header.h";
@@ -636,7 +636,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.20.8;
+				MARKETING_VERSION = 1.21.0;
 				PRODUCT_BUNDLE_IDENTIFIER = br.paker.Calendr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -739,7 +739,7 @@
 			repositoryURL = "https://github.com/ReactiveX/RxSwift";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 6.9.0;
+				minimumVersion = 6.10.2;
 			};
 		};
 		342AEE3F2DFF35F2008CBBE0 /* XCRemoteSwiftPackageReference "swift-collections" */ = {
@@ -747,7 +747,7 @@
 			repositoryURL = "https://github.com/apple/swift-collections.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.2.0;
+				minimumVersion = 1.5.1;
 			};
 		};
 		3477E70A2C67A6A9008D3844 /* XCRemoteSwiftPackageReference "sentry-cocoa" */ = {
@@ -755,8 +755,10 @@
 			repositoryURL = "https://github.com/getsentry/sentry-cocoa.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 8.52.1;
+				minimumVersion = 9.14.0;
 			};
+			traits = (
+			);
 		};
 		34DA13C32EDA20480031F8FF /* XCRemoteSwiftPackageReference "swift-clocks" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -779,7 +781,7 @@
 			repositoryURL = "https://github.com/weichsel/ZIPFoundation";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.9.19;
+				minimumVersion = 0.9.20;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
