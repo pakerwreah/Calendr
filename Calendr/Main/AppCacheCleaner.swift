@@ -30,8 +30,7 @@ class AppCacheCleaner {
     func delete() {
         guard
             BuildConfig.isSandboxed, // just to be safe
-            let cachesURL = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first,
-            fileManager.isDeletableFile(atPath: cachesURL.absoluteString)
+            let cachesURL = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first
         else { return }
 
         do {
