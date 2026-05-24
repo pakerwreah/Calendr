@@ -14,13 +14,15 @@ protocol NetworkServiceProviding {
 
 class NetworkServiceProvider: NetworkServiceProviding {
 
+    private let session = URLSession(configuration: .ephemeral)
+
     func data(from url: URL) async throws -> Data {
-        let (data, _) = try await URLSession.shared.data(from: url)
+        let (data, _) = try await session.data(from: url)
         return data
     }
 
     func download(from url: URL) async throws -> URL {
-        let (url, _) = try await URLSession.shared.download(from: url)
+        let (url, _) = try await session.download(from: url)
         return url
     }
 }

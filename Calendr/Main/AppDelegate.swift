@@ -7,6 +7,7 @@
 
 import Cocoa
 import RxSwift
+import Sentry
 
 class AppDelegate: NSObject, NSApplicationDelegate {
 
@@ -18,6 +19,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     private let skipReopen = BehaviorSubject(value: false)
 
+    private let appCacheCleaner = AppCacheCleaner()
+
     func applicationDidFinishLaunching(_ notification: Notification) {
 
         guard !BuildConfig.isTesting, !BuildConfig.isPreview else { return }
@@ -27,10 +30,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             viewController = MockMainViewController()
             return
         }
-        #else
+        #endif
+
         let appLaunch = startSentry()
         defer { appLaunch?.finish() }
-        #endif
 
         let localStorage = LocalStorageProvider.shared
         let notificationCenter = NotificationCenter.default
@@ -86,9 +89,22 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             .bind(to: skipReopen)
             .disposed(by: disposeBag)
 
+        appCacheCleaner.delete()
+
         #if DEBUG
         print(Bundle.main.bundlePath)
         #endif
+    }
+
+    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
+        if NSApp.popovers.isEmpty {
+            appCacheCleaner.schedule()
+        }
+        return false
+    }
+
+    func applicationDidBecomeActive(_ notification: Notification) {
+        appCacheCleaner.cancel()
     }
 
     func application(_ application: NSApplication, open urls: [URL]) {

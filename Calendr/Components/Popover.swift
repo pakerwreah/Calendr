@@ -7,7 +7,13 @@
 
 import AppKit
 
-var popovers: [Popover] = []
+private var popovers: [Popover] = []
+
+extension NSApplication {
+    var popovers: [Popover] {
+        self == NSApp ? Calendr.popovers : []
+    }
+}
 
 @objc protocol PopoverDelegate {
     @objc optional func popoverWillShow()
