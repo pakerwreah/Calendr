@@ -14,6 +14,7 @@
 "access_required.cancel" = "Avbryt";
 
 "auto_update.check_for_updates" = "Sök efter uppdateringar";
+//"auto_update.check_automatically" = "Automatically check for updates";
 "auto_update.fetching_releases" = "Hämtning av releaser";
 "auto_update.new_version" = "Ny version tillgänglig på: %@";
 "auto_update.updated_to" = "Uppdaterad till version %@";

@@ -14,17 +14,22 @@ class SettingsViewModelTests: XCTestCase {
     let disposeBag = DisposeBag()
 
     let autoLauncher = MockAutoLauncher()
+    let autoUpdater = MockAutoUpdater()
     let dateProvider = MockDateProvider()
     let workspace = MockWorkspaceServiceProvider()
     let localStorage = MockLocalStorageProvider()
     let notificationCenter = NotificationCenter()
 
+    let scheduler = HistoricalScheduler()
+
     lazy var viewModel = SettingsViewModel(
         autoLauncher: autoLauncher,
+        autoUpdater: autoUpdater,
         dateProvider: dateProvider,
         workspace: workspace,
         localStorage: localStorage,
-        notificationCenter: notificationCenter
+        notificationCenter: notificationCenter,
+        scheduler: scheduler
     )
 
     var localStorageStatusItemIconEnabled: Bool? { localStorage.object(forKey: Prefs.statusItemIconEnabled) as? Bool }
@@ -54,6 +59,7 @@ class SettingsViewModelTests: XCTestCase {
     var localStorageEventDotsStyle: String? { localStorage.object(forKey: Prefs.eventDotsStyle) as! String? }
     var localStorageFutureEventsDays: NSNumber? { localStorage.object(forKey: Prefs.futureEventsDays) as? NSNumber }
     var localStorageShowMonthOutline: Bool? { localStorage.object(forKey: Prefs.showMonthOutline) as? Bool }
+    var localStorageAutoCheckForUpdates: Bool? { localStorage.object(forKey: Prefs.autoCheckForUpdates) as? Bool }
 
     override func setUp() {
 
@@ -85,6 +91,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertNil(localStorageEventDotsStyle)
         XCTAssertNil(localStorageFutureEventsDays)
         XCTAssertNil(localStorageShowMonthOutline)
+        XCTAssertNil(localStorageAutoCheckForUpdates)
 
         registerDefaultPrefs(in: localStorage, calendar: .gregorian.with(firstWeekday: 3))
     }
@@ -119,6 +126,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.eventDotsStyle.lastValue(), .multiple)
         XCTAssertEqual(viewModel.futureEventsDays.lastValue(), 0)
         XCTAssertEqual(viewModel.showMonthOutline.lastValue(), true)
+        XCTAssertEqual(viewModel.autoCheckForUpdates.lastValue(), true)
 
         XCTAssertEqual(localStorageStatusItemIconEnabled, true)
         XCTAssertEqual(localStorageStatusItemDateEnabled, true)
@@ -146,6 +154,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(localStorageEventDotsStyle, EventDotsStyle.multiple.rawValue)
         XCTAssertEqual(localStorageFutureEventsDays, 0)
         XCTAssertEqual(localStorageShowMonthOutline, true)
+        XCTAssertEqual(localStorageAutoCheckForUpdates, true)
     }
 
     func testSetStatusItemsInitialPositions() {
@@ -323,6 +332,62 @@ class SettingsViewModelTests: XCTestCase {
 
         XCTAssertEqual(autoLaunch, true)
         XCTAssertEqual(autoLauncher.isEnabled, true)
+    }
+
+    func testToggleAutoCheckForUpdates() {
+
+        localStorage.autoCheckForUpdates = false
+
+        var autoCheckForUpdates: Bool?
+
+        viewModel.autoCheckForUpdates
+            .bind { autoCheckForUpdates = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(autoCheckForUpdates, false)
+        XCTAssertEqual(localStorageAutoCheckForUpdates, false)
+
+        viewModel.toggleAutoCheckForUpdates.onNext(true)
+
+        XCTAssertEqual(autoCheckForUpdates, true)
+        XCTAssertEqual(localStorageAutoCheckForUpdates, true)
+
+        viewModel.toggleAutoCheckForUpdates.onNext(false)
+
+        XCTAssertEqual(autoCheckForUpdates, false)
+        XCTAssertEqual(localStorageAutoCheckForUpdates, false)
+    }
+
+    func testAutoCheckForUpdatesStart() {
+
+        let startExpectation = expectation(description: "Start")
+
+        let stopExpectation = expectation(description: "Stop")
+        stopExpectation.isInverted = true
+
+        autoUpdater.didStart = startExpectation.fulfill
+        autoUpdater.didStop = stopExpectation.fulfill
+
+        viewModel.toggleAutoCheckForUpdates.onNext(true)
+        scheduler.advance(.seconds(5))
+
+        wait(for: [startExpectation, stopExpectation], timeout: 0.1)
+    }
+
+    func testAutoCheckForUpdatesStop() {
+
+        let startExpectation = expectation(description: "Start")
+        startExpectation.isInverted = true
+
+        let stopExpectation = expectation(description: "Stop")
+
+        autoUpdater.didStart = startExpectation.fulfill
+        autoUpdater.didStop = stopExpectation.fulfill
+
+        viewModel.toggleAutoCheckForUpdates.onNext(false)
+        scheduler.advance(.seconds(5))
+
+        wait(for: [startExpectation, stopExpectation], timeout: 0.1)
     }
 
     func testToggleShowEventStatusItem() {

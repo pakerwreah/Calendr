@@ -14,6 +14,7 @@
 "access_required.cancel" = "Abbrechen";
 
 "auto_update.check_for_updates" = "Nach Aktualisierungen suchen";
+//"auto_update.check_automatically" = "Automatically check for updates";
 "auto_update.fetching_releases" = "Veröffentlichungen abrufen";
 "auto_update.new_version" = "Neue Version verfügbar: %@";
 "auto_update.updated_to" = "Aktualisiert auf Version %@";

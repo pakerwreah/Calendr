@@ -4,9 +4,10 @@
 //
 //  Created by Paker on 21/05/2026.
 //
-import Foundation
 
 #if DEBUG
+
+import Foundation
 
 class MockAutoLauncher: NSObject, AutoLaunching {
     @objc dynamic var isEnabled: Bool = false

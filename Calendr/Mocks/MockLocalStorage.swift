@@ -5,9 +5,9 @@
 //  Created by Paker on 28/10/2025.
 //
 
-import Foundation
-
 #if DEBUG
+
+import Foundation
 
 class InMemoryStorage: NSObject, LocalStorage {
     private var storage: [String: Any] = [:]

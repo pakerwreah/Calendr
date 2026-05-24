@@ -14,6 +14,7 @@
 "access_required.cancel" = "ביטול";
 
 "auto_update.check_for_updates" = "בדוק עדכונים";
+//"auto_update.check_automatically" = "Automatically check for updates";
 "auto_update.fetching_releases" = "מקבל עדכונים";
 "auto_update.new_version" = "גרסה חדשה זמינה: %@";
 "auto_update.updated_to" = "עודכן לגרסה %@";

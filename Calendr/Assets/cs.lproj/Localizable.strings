@@ -14,6 +14,7 @@
 "access_required.cancel" = "Zrušit";
 
 "auto_update.check_for_updates" = "Zkontrolujte aktualizace";
+//"auto_update.check_automatically" = "Automatically check for updates";
 "auto_update.fetching_releases" = "Získávání verzí";
 "auto_update.new_version" = "Nová verze k dispozici: %@";
 "auto_update.updated_to" = "Aktualizováno na verzi %@";

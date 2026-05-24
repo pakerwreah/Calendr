@@ -14,6 +14,7 @@
 "access_required.cancel" = "Скасувати";
 
 "auto_update.check_for_updates" = "Перевірити наявність оновлень";
+//"auto_update.check_automatically" = "Automatically check for updates";
 "auto_update.fetching_releases" = "Отримання релізів";
 "auto_update.new_version" = "Доступна нова версія: %@";
 "auto_update.updated_to" = "Оновлено до версії %@";

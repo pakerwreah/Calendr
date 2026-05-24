@@ -47,10 +47,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let calendarAppProvider = CalendarAppProvider(dateProvider: dateProvider, appleScriptRunner: AppleScriptRunner(), clock: .continuous)
         let workspace = Workspace(localStorage: localStorage, dateProvider: dateProvider, calendarAppProvider: calendarAppProvider)
         let notificationProvider = LocalNotificationProvider()
+        let networkProvider = NetworkServiceProvider()
+
+        let autoUpdater = AutoUpdater(
+            localStorage: localStorage,
+            notificationProvider: notificationProvider,
+            networkProvider: networkProvider,
+            fileManager: fileManager
+        )
 
         viewController = MainViewController(
             deeplink: deeplink.skipNil(),
             autoLauncher: AutoLauncher(),
+            autoUpdater: autoUpdater,
             workspace: workspace,
             calendarService: CalendarServiceProvider(
                 dateProvider: dateProvider,
@@ -63,7 +72,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             dateProvider: dateProvider,
             screenProvider: ScreenProvider(notificationCenter: notificationCenter),
             notificationProvider: notificationProvider,
-            networkProvider: NetworkServiceProvider(),
+            networkProvider: networkProvider,
             localStorage: localStorage,
             notificationCenter: notificationCenter,
             fileManager: fileManager

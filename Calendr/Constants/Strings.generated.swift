@@ -36,6 +36,8 @@ internal enum Strings {
     }
   }
   internal enum AutoUpdate {
+    /// Automatically check for updates
+    internal static let checkAutomatically = Strings.tr("Localizable", "auto_update.check_automatically", fallback: "Automatically check for updates")
     /// Check for updates
     internal static let checkForUpdates = Strings.tr("Localizable", "auto_update.check_for_updates", fallback: "Check for updates")
     /// Downloading version %@

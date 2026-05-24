@@ -5,6 +5,8 @@
 //  Created by Paker on 07/09/2024.
 //
 
+#if DEBUG
+
 import Foundation
 
 class MockGeocodeServiceProvider: GeocodeServiceProviding {
@@ -13,3 +15,5 @@ class MockGeocodeServiceProvider: GeocodeServiceProviding {
         return nil
     }
 }
+
+#endif

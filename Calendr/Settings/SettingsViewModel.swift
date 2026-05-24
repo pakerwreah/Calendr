@@ -135,6 +135,7 @@ class SettingsViewModel:
     let calendarAppViewModeObserver: AnyObserver<CalendarViewMode>
     let defaultCalendarAppObserver: AnyObserver<CalendarApp>
     let appearanceModeObserver: AnyObserver<AppearanceMode>
+    let toggleAutoCheckForUpdates: AnyObserver<Bool>
 
     // Observables
     let autoLaunch: Observable<Bool>
@@ -184,8 +185,11 @@ class SettingsViewModel:
     let calendarAppViewMode: Observable<CalendarViewMode>
     let defaultCalendarApp: Observable<CalendarApp>
     let appearanceMode: Observable<AppearanceMode>
+    let autoCheckForUpdates: Observable<Bool>
 
     let isPresented = BehaviorSubject(value: false)
+
+    private let disposeBag = DisposeBag()
 
     private func localizedUnit(for mode: CalendarViewMode) -> String {
 
@@ -230,10 +234,12 @@ class SettingsViewModel:
 
     init(
         autoLauncher: some AutoLaunching,
+        autoUpdater: AutoUpdating,
         dateProvider: DateProviding,
         workspace: WorkspaceServiceProviding,
         localStorage: LocalStorageProvider,
-        notificationCenter: NotificationCenter
+        notificationCenter: NotificationCenter,
+        scheduler: SchedulerType
     ) {
         self.autoLauncher = autoLauncher
         self.dateProvider = dateProvider
@@ -282,6 +288,7 @@ class SettingsViewModel:
         calendarAppViewModeObserver = localStorage.rx.observer(for: \.calendarAppViewMode).mapObserver(\.rawValue)
         defaultCalendarAppObserver = localStorage.rx.observer(for: \.defaultCalendarApp).mapObserver(\.rawValue)
         appearanceModeObserver = localStorage.rx.observer(for: \.appearanceMode).mapObserver(\.rawValue)
+        toggleAutoCheckForUpdates = localStorage.rx.observer(for: \.autoCheckForUpdates)
 
         // MARK: - Observables
 
@@ -326,6 +333,7 @@ class SettingsViewModel:
         calendarAppViewMode = localStorage.rx.observe(\.calendarAppViewMode).map { .init(rawValue: $0) ?? .month }
         defaultCalendarApp = localStorage.rx.observe(\.defaultCalendarApp).map { .init(rawValue: $0) ?? .calendar }
         appearanceMode = localStorage.rx.observe(\.appearanceMode).map { .init(rawValue: $0) ?? .automatic }
+        autoCheckForUpdates = localStorage.rx.observe(\.autoCheckForUpdates)
 
         let localeChangeObservable = notificationCenter.rx
             .notification(NSLocale.currentLocaleDidChangeNotification)
@@ -446,6 +454,19 @@ class SettingsViewModel:
             // Previous calendar app missing. Defaulting to Calendar.app
             defaultCalendarAppObserver.onNext(.calendar)
         }
+
+        autoCheckForUpdates
+            .debounce(.seconds(5), scheduler: scheduler)
+            .bind { enabled in
+                Task { @MainActor in
+                    if enabled {
+                        autoUpdater.start()
+                    } else {
+                        autoUpdater.stop()
+                    }
+                }
+            }
+            .disposed(by: disposeBag)
     }
 
     func windowDidBecomeKey() {

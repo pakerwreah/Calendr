@@ -13,12 +13,15 @@ class AboutViewController: NSViewController, SettingsUI {
     private let quitButton: NSButton
     private let linkView: NSTextView
     private let newVersionButton: NSButton
-    private let autoUpdater: AutoUpdater
+    private let autoCheckForUpdatesCheckbox: Checkbox
+    private let autoUpdater: AutoUpdating
+    private let viewModel: SettingsViewModel
 
     private let disposeBag = DisposeBag()
 
-    init(autoUpdater: AutoUpdater) {
+    init(autoUpdater: AutoUpdating, settingsViewModel: SettingsViewModel) {
         self.autoUpdater = autoUpdater
+        self.viewModel = settingsViewModel
 
         quitButton = NSButton(title: Strings.quit, target: NSApp, action: #selector(NSApp.terminate))
         quitButton.refusesFirstResponder = true
@@ -34,6 +37,9 @@ class AboutViewController: NSViewController, SettingsUI {
         linkView.height(equalTo: 15)
 
         newVersionButton = NSButton()
+
+        autoCheckForUpdatesCheckbox = Checkbox(title: Strings.AutoUpdate.checkAutomatically)
+        autoCheckForUpdatesCheckbox.setContentHuggingPriority(.required, for: .horizontal)
 
         super.init(nibName: nil, bundle: nil)
 
@@ -59,13 +65,16 @@ class AboutViewController: NSViewController, SettingsUI {
             .spacer(height: 4),
             Label(text: "© 2020 - \(BuildConfig.date.suffix(4)) Carlos Enumo", align: .center),
             linkView,
-            .spacer(height: 2),
+            .spacer(height: 16),
             newVersionButton,
-            .spacer(height: 8),
+            .spacer(height: 0),
+            autoCheckForUpdatesCheckbox,
+            .spacer(height: 16),
             quitButton
         ])
         .with(insets: .init(bottom: 8))
         .with(orientation: .vertical)
+        .with(alignment: .centerX)
 
         view.addSubview(stackView)
 
@@ -108,6 +117,13 @@ class AboutViewController: NSViewController, SettingsUI {
                 newVersionButton.isEnabled = true
             }
         }
+        .disposed(by: disposeBag)
+
+        bind(
+            control: autoCheckForUpdatesCheckbox,
+            observable: viewModel.autoCheckForUpdates,
+            observer: viewModel.toggleAutoCheckForUpdates
+        )
         .disposed(by: disposeBag)
     }
 
