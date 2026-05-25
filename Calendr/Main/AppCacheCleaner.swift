@@ -16,7 +16,7 @@ class AppCacheCleaner {
     func schedule() {
         task?.cancel()
         task = Task { @MainActor in
-            try await Task.sleep(for: .seconds(5))
+            try await Task.sleep(for: .seconds(1))
             if NSApp.popovers.isEmpty {
                 delete()
             }
