@@ -94,13 +94,9 @@ class AutoUpdater: AutoUpdating {
         categoryId: NotificationCategory.updated.rawValue
     )
 
-    private struct Release: Decodable {
-        struct Asset: Decodable {
-            let name: String
-            let browser_download_url: URL
-        }
+    private struct Release {
         let name: String
-        let assets: [Asset]
+        let downloadURL: URL
     }
 
     let notificationTap: Observable<NotificationAction>
@@ -179,25 +175,22 @@ class AutoUpdater: AutoUpdating {
             do {
                 try await downloadAndInstallAsync()
             } catch {
-                SentrySDK.capture(error: error)
+                print(error)
                 statusObserver.onNext(.initial)
             }
         }
     }
 
     private func downloadAndInstallAsync() async throws {
-        guard
-            let release = newRelease,
-            let url = release.assets.first(where: { $0.name == "Calendr.zip" })?.browser_download_url
-        else {
-            throw .unexpected("Missing release asset")
+        guard let release = newRelease else {
+            throw .unexpected("Missing release")
         }
 
         statusObserver.onNext(.downloading(release.name))
 
         let archiveURL: URL
         do {
-            archiveURL = try await networkProvider.download(from: url)
+            archiveURL = try await networkProvider.download(from: release.downloadURL)
         } catch {
             errorObserver.onNext(.download(error))
             throw error
@@ -206,6 +199,7 @@ class AutoUpdater: AutoUpdating {
         do {
             try await install(version: release.name, archiveUrl: archiveURL)
         } catch {
+            SentrySDK.capture(error: error)
             errorObserver.onNext(.install(error))
             throw error
         }
@@ -245,7 +239,17 @@ class AutoUpdater: AutoUpdating {
 
         let url = "https://api.github.com/repos/pakerwreah/Calendr/releases/latest"
         let data = try await networkProvider.data(from: URL(string: url)!)
-        let release = try JSONDecoder().decode(Release.self, from: data)
+
+        struct Response: Decodable {
+            struct Asset: Decodable {
+                let name: String
+                let browser_download_url: URL
+            }
+            let name: String
+            let assets: [Asset]
+        }
+
+        let release = try JSONDecoder().decode(Response.self, from: data)
 
         guard release.name != BuildConfig.appVersion else {
             statusObserver.onNext(.initial)
@@ -253,7 +257,11 @@ class AutoUpdater: AutoUpdating {
             return
         }
 
-        newRelease = release
+        guard let asset = release.assets.first(where: { $0.name == "Calendr.zip" }) else {
+            throw .unexpected("Missing release asset")
+        }
+
+        newRelease = Release(name: release.name, downloadURL: asset.browser_download_url)
         statusObserver.onNext(.newVersion(release.name))
 
         guard notify else {
