@@ -12,6 +12,7 @@ import Sentry
 @objc protocol AutoLaunching: AnyObject where Self: NSObject {
     @objc dynamic var isEnabled: Bool { get set }
     func syncStatus()
+    func terminate()
 }
 
 class AutoLauncher: NSObject, AutoLaunching {
@@ -62,5 +63,14 @@ class AutoLauncher: NSObject, AutoLaunching {
 
     func syncStatus() {
         isEnabled = SMAppService.mainApp.status == .enabled
+    }
+
+    func terminate() {
+        Task { @MainActor in
+            if launcher.status == .enabled {
+                try? await launcher.unregister()
+            }
+            NSApp.terminate(nil)
+        }
     }
 }

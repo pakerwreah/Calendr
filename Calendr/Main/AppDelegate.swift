@@ -44,6 +44,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         setInitialStatusItemPositions(in: localStorage)
 
+        let autoLauncher = AutoLauncher()
         let dateProvider = DateProvider(notificationCenter: notificationCenter, localStorage: localStorage)
         let calendarAppProvider = CalendarAppProvider(dateProvider: dateProvider, appleScriptRunner: AppleScriptRunner(), clock: .continuous)
         let workspace = Workspace(localStorage: localStorage, dateProvider: dateProvider, calendarAppProvider: calendarAppProvider)
@@ -51,6 +52,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let networkProvider = NetworkServiceProvider()
 
         let autoUpdater = AutoUpdater(
+            autoLauncher: autoLauncher,
             localStorage: localStorage,
             notificationProvider: notificationProvider,
             networkProvider: networkProvider,
@@ -59,7 +61,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         viewController = MainViewController(
             deeplink: deeplink.skipNil(),
-            autoLauncher: AutoLauncher(),
+            autoLauncher: autoLauncher,
             autoUpdater: autoUpdater,
             workspace: workspace,
             calendarService: CalendarServiceProvider(

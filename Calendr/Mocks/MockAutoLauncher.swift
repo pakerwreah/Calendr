@@ -12,6 +12,7 @@ import Foundation
 class MockAutoLauncher: NSObject, AutoLaunching {
     @objc dynamic var isEnabled: Bool = false
     func syncStatus() { }
+    func terminate() { }
 }
 
 #endif
