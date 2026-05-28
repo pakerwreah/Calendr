@@ -20,16 +20,7 @@ func isTargetApp(at url: URL) -> Bool {
 }
 
 func getRunningApp() -> NSRunningApplication? {
-
-    let apps = NSRunningApplication.runningApplications(withBundleIdentifier: "br.paker.Calendr")
-
-    return apps.first {
-        if let url = $0.bundleURL {
-            return isTargetApp(at: url)
-        } else {
-            return false
-        }
-    }
+    NSRunningApplication.runningApplications(withBundleIdentifier: "br.paker.Calendr").first
 }
 
 func launchApp() async throws -> NSRunningApplication {
