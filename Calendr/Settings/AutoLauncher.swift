@@ -7,6 +7,7 @@
 
 import AppKit
 import ServiceManagement
+import Sentry
 
 @objc protocol AutoLaunching: AnyObject where Self: NSObject {
     @objc dynamic var isEnabled: Bool { get set }
@@ -15,14 +16,42 @@ import ServiceManagement
 
 class AutoLauncher: NSObject, AutoLaunching {
 
+    private let mainApp = SMAppService.mainApp
+    private let launcher = SMAppService.agent(plistName: "br.paker.Calendr.launcher.plist")
+
+    override init() {
+        super.init()
+        Task {
+            do {
+                try await initLauncher()
+            } catch {
+                print(error)
+            }
+            syncStatus()
+        }
+    }
+
+    private func initLauncher() async throws {
+        // always unregister at load so we can update the launcher config
+        switch launcher.status {
+            case .notFound:
+                SentrySDK.capture(message: "Launch agent not found")
+            case .enabled:
+                try await launcher.unregister()
+            default: ()
+        }
+    }
+
     @objc dynamic var isEnabled: Bool = false {
         didSet {
             guard oldValue != isEnabled else { return }
             do {
                 if isEnabled {
-                    try SMAppService.mainApp.register()
+                    try mainApp.register()
+                    try launcher.register()
                 } else {
-                    try SMAppService.mainApp.unregister()
+                    try mainApp.unregister()
+                    try launcher.unregister()
                 }
             } catch {
                 print(error)
