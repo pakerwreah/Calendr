@@ -95,6 +95,7 @@ class SettingsViewModel:
 
     // Observers
     let toggleAutoLaunch: AnyObserver<Bool>
+    let toggleLaunchAgent: AnyObserver<Bool>
     let toggleStatusItemIcon: AnyObserver<Bool>
     let toggleStatusItemDate: AnyObserver<Bool>
     let toggleStatusItemBackground: AnyObserver<Bool>
@@ -139,6 +140,7 @@ class SettingsViewModel:
 
     // Observables
     let autoLaunch: Observable<Bool>
+    let launchAgent: Observable<Bool>
     let showStatusItemIcon: Observable<Bool>
     let showStatusItemDate: Observable<Bool>
     let showStatusItemBackground: Observable<Bool>
@@ -247,7 +249,8 @@ class SettingsViewModel:
 
         // MARK: - Observers
 
-        toggleAutoLaunch = autoLauncher.rx.observer(for: \.isEnabled)
+        toggleAutoLaunch = autoLauncher.rx.observer(for: \.isLoginItemEnabled)
+        toggleLaunchAgent = autoLauncher.rx.observer(for: \.isLaunchAgentEnabled)
         toggleStatusItemIcon = localStorage.rx.observer(for: \.statusItemIconEnabled)
         toggleStatusItemDate = localStorage.rx.observer(for: \.statusItemDateEnabled)
         toggleStatusItemBackground = localStorage.rx.observer(for: \.statusItemBackgroundEnabled)
@@ -292,8 +295,8 @@ class SettingsViewModel:
 
         // MARK: - Observables
 
-        autoLaunch = autoLauncher.rx.observe(\.isEnabled)
-
+        autoLaunch = autoLauncher.rx.observe(\.isLoginItemEnabled)
+        launchAgent = autoLauncher.rx.observe(\.isLaunchAgentEnabled)
         openOnHover = localStorage.rx.observe(\.statusItemOpenOnHover)
         showStatusItemIcon = localStorage.rx.observe(\.statusItemIconEnabled)
         showStatusItemDate = localStorage.rx.observe(\.statusItemDateEnabled)

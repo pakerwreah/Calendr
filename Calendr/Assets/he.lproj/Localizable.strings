@@ -39,6 +39,8 @@
 
 "settings.menu_bar" = "שורת התפריטים";
 "settings.menu_bar.auto_launch" = "הפעלה אוטומטית";
+//"settings.menu_bar.launch_agent" = "Restart automatically";
+//"settings.menu_bar.launch_agent_tooltip" = "Restart the app in case macOS decides to kill it due to low memory or disk space.";
 "settings.menu_bar.show_icon" = "הצג סמל";
 "settings.menu_bar.show_date" = "הצג תאריך";
 "settings.menu_bar.show_background" = "הצג רקע אטום";

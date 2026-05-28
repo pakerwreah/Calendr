@@ -39,6 +39,8 @@
 
 "settings.menu_bar" = "Řádek nabídek";
 "settings.menu_bar.auto_launch" = "Spustit při přihlášení";
+//"settings.menu_bar.launch_agent" = "Restart automatically";
+//"settings.menu_bar.launch_agent_tooltip" = "Restart the app in case macOS decides to kill it due to low memory or disk space.";
 "settings.menu_bar.show_icon" = "Zobrazit ikonu";
 "settings.menu_bar.show_date" = "Zobrazit datum";
 "settings.menu_bar.show_background" = "Zobrazit neprůhledné pozadí";

@@ -39,6 +39,8 @@
 
 "settings.menu_bar" = "Γραμμή μενού";
 "settings.menu_bar.auto_launch" = "Εκκίνηση κατά την είσοδο";
+//"settings.menu_bar.launch_agent" = "Restart automatically";
+//"settings.menu_bar.launch_agent_tooltip" = "Restart the app in case macOS decides to kill it due to low memory or disk space.";
 "settings.menu_bar.show_icon" = "Εμφάνιση εικονιδίου";
 "settings.menu_bar.show_date" = "Εμφάνιση ημερομηνίας";
 "settings.menu_bar.show_background" = "Εμφάνιση αδιαφανούς φόντου";

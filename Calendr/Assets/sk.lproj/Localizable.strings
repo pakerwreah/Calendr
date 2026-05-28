@@ -39,6 +39,8 @@
 
 "settings.menu_bar" = "Lišta";
 "settings.menu_bar.auto_launch" = "Spustiť pri štarte";
+//"settings.menu_bar.launch_agent" = "Restart automatically";
+//"settings.menu_bar.launch_agent_tooltip" = "Restart the app in case macOS decides to kill it due to low memory or disk space.";
 "settings.menu_bar.show_icon" = "Zobraziť ikonu";
 "settings.menu_bar.show_date" = "Zobraziť dátum";
 "settings.menu_bar.show_background" = "Zobraziť nepriehľadné pozadie";

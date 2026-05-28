@@ -54,6 +54,32 @@ extension SettingsUI {
         return .init(value: stackView, disposable: disposable)
     }
 
+    func makeToolTip(_ text: String) -> DisposableWrapper<NSView> {
+        let tooltipViewController = NSViewController()
+        let view = NSView()
+        tooltipViewController.view = view
+        let label = Label(text: text)
+        label.preferredMaxLayoutWidth = 190
+        label.lineBreakMode = NSLineBreakMode.byWordWrapping
+        view.addSubview(label)
+        label.edges(equalTo: view, margin: 12)
+
+        let button = ImageButton(image: Icons.Settings.tooltip, cursor: nil)
+
+        let popover = NSPopover()
+        popover.contentViewController = tooltipViewController
+        popover.behavior = .transient
+        popover.animates = false
+
+        let disposable = button.rx.isHovered
+            .bind { isHovered in
+                guard isHovered else { return popover.performClose(nil) }
+                popover.show(relativeTo: .zero, of: button, preferredEdge: .maxX)
+            }
+
+        return .init(value: button, disposable: disposable)
+    }
+
     func bind(control: NSButton, observable: Observable<Bool>, observer: AnyObserver<Bool>) -> Disposable {
 
         Disposables.create(

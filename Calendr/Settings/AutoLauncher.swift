@@ -10,7 +10,8 @@ import ServiceManagement
 import Sentry
 
 @objc protocol AutoLaunching: AnyObject where Self: NSObject {
-    @objc dynamic var isEnabled: Bool { get set }
+    @objc dynamic var isLoginItemEnabled: Bool { get set }
+    @objc dynamic var isLaunchAgentEnabled: Bool { get set }
     func syncStatus()
     func terminate()
 }
@@ -20,57 +21,79 @@ class AutoLauncher: NSObject, AutoLaunching {
     private let mainApp = SMAppService.mainApp
     private let launcher = SMAppService.agent(plistName: "br.paker.Calendr.launcher.plist")
 
-    override init() {
+    private let localStorage: LocalStorageProvider
+
+    init(localStorage: LocalStorageProvider) {
+
+        self.localStorage = localStorage
+
         super.init()
-        Task {
-            do {
-                try await initLauncher()
-            } catch {
-                print(error)
-            }
-            syncStatus()
-        }
+
+        isLoginItemEnabled = mainApp.isEnabled
+
+        // we unregister the agent on a clean exit
+        // so we have to restore it on every launch
+        isLaunchAgentEnabled = localStorage.launchAgentEnabled
     }
 
-    private func initLauncher() async throws {
-        // always unregister at load so we can update the launcher config
-        switch launcher.status {
-            case .notFound:
-                SentrySDK.capture(message: "Launch agent not found")
-            case .enabled:
-                try await launcher.unregister()
-            default: ()
-        }
-    }
-
-    @objc dynamic var isEnabled: Bool = false {
+    @objc dynamic lazy var isLoginItemEnabled: Bool = mainApp.isEnabled {
         didSet {
-            guard oldValue != isEnabled else { return }
-            do {
-                if isEnabled {
-                    try mainApp.register()
-                    try launcher.register()
-                } else {
-                    try mainApp.unregister()
-                    try launcher.unregister()
-                }
-            } catch {
-                print(error)
+            guard oldValue != isLoginItemEnabled else { return }
+
+            toggleRegistration(&isLoginItemEnabled, for: mainApp)
+        }
+    }
+
+    // prevent side effects on toggle rollback
+    private var launchAgentToggleLocked = false
+
+    @objc dynamic lazy var isLaunchAgentEnabled: Bool = launcher.isEnabled {
+        didSet {
+            let newValue = isLaunchAgentEnabled
+            guard oldValue != newValue, !launchAgentToggleLocked else { return }
+
+            launchAgentToggleLocked = true
+            defer { launchAgentToggleLocked = false }
+
+            toggleRegistration(&isLaunchAgentEnabled, for: launcher)
+
+            if newValue && !isLoginItemEnabled {
+                // if it fails to enable, keep the previous storage value
+            } else {
+                localStorage.launchAgentEnabled = isLaunchAgentEnabled
             }
-            syncStatus()
+        }
+    }
+
+    private func toggleRegistration(_ enabled: inout Bool, for service: SMAppService) {
+        do {
+            if enabled {
+                try service.register()
+            } else {
+                try service.unregister()
+            }
+        } catch {
+            print(error)
+        }
+        if enabled != service.isEnabled {
+            enabled.toggle()
         }
     }
 
     func syncStatus() {
-        isEnabled = SMAppService.mainApp.status == .enabled
+        isLoginItemEnabled = mainApp.isEnabled
+        isLaunchAgentEnabled = launcher.isEnabled
     }
 
     func terminate() {
         Task { @MainActor in
-            if launcher.status == .enabled {
-                try? await launcher.unregister()
-            }
+            try? await launcher.unregister()
             NSApp.terminate(nil)
         }
     }
+}
+
+private extension SMAppService {
+
+    var isEnabled: Bool { status == .enabled }
 }

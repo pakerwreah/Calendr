@@ -44,7 +44,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         setInitialStatusItemPositions(in: localStorage)
 
-        let autoLauncher = AutoLauncher()
+        let autoLauncher = AutoLauncher(localStorage: localStorage)
         let dateProvider = DateProvider(notificationCenter: notificationCenter, localStorage: localStorage)
         let calendarAppProvider = CalendarAppProvider(dateProvider: dateProvider, appleScriptRunner: AppleScriptRunner(), clock: .continuous)
         let workspace = Workspace(localStorage: localStorage, dateProvider: dateProvider, calendarAppProvider: calendarAppProvider)

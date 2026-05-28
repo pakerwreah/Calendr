@@ -39,6 +39,8 @@
 
 "settings.menu_bar" = "Barra de Menus";
 "settings.menu_bar.auto_launch" = "Iniciar no login";
+"settings.menu_bar.launch_agent" = "Reiniciar automaticamente";
+"settings.menu_bar.launch_agent_tooltip" = "Reinicia o aplicativo caso o macOS decida encerrá-lo devido à falta de memória ou espaço em disco.";
 "settings.menu_bar.show_icon" = "Mostrar ícone";
 "settings.menu_bar.show_date" = "Mostrar data";
 "settings.menu_bar.show_background" = "Mostrar fundo opaco";

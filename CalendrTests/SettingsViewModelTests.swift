@@ -326,12 +326,29 @@ class SettingsViewModelTests: XCTestCase {
             .disposed(by: disposeBag)
 
         XCTAssertEqual(autoLaunch, false)
-        XCTAssertEqual(autoLauncher.isEnabled, false)
+        XCTAssertEqual(autoLauncher.isLoginItemEnabled, false)
 
         viewModel.toggleAutoLaunch.onNext(true)
 
         XCTAssertEqual(autoLaunch, true)
-        XCTAssertEqual(autoLauncher.isEnabled, true)
+        XCTAssertEqual(autoLauncher.isLoginItemEnabled, true)
+    }
+
+    func testToggleLaunchAgent() {
+
+        var launchAgent: Bool?
+
+        viewModel.launchAgent
+            .bind { launchAgent = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(launchAgent, false)
+        XCTAssertEqual(autoLauncher.isLaunchAgentEnabled, false)
+
+        viewModel.toggleLaunchAgent.onNext(true)
+
+        XCTAssertEqual(launchAgent, true)
+        XCTAssertEqual(autoLauncher.isLaunchAgentEnabled, true)
     }
 
     func testToggleAutoCheckForUpdates() {
