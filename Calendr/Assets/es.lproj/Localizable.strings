@@ -39,8 +39,8 @@
 
 "settings.menu_bar" = "Barra de menús";
 "settings.menu_bar.auto_launch" = "Comenzar al iniciar sesión";
-//"settings.menu_bar.launch_agent" = "Restart automatically";
-//"settings.menu_bar.launch_agent_tooltip" = "Restart the app in case macOS decides to kill it due to low memory or disk space.";
+//"settings.menu_bar.launch_agent" = "Relaunch automatically";
+//"settings.menu_bar.launch_agent_tooltip" = "Relaunch the app in case macOS decides to kill it due to low memory or disk space.";
 "settings.menu_bar.show_icon" = "Mostrar icono";
 "settings.menu_bar.show_date" = "Mostrar fecha";
 "settings.menu_bar.show_background" = "Mostrar fondo opaco";

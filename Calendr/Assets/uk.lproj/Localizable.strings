@@ -39,8 +39,8 @@
 
 "settings.menu_bar" = "Панель меню";
 "settings.menu_bar.auto_launch" = "Запуск при вході в систему";
-//"settings.menu_bar.launch_agent" = "Restart automatically";
-//"settings.menu_bar.launch_agent_tooltip" = "Restart the app in case macOS decides to kill it due to low memory or disk space.";
+//"settings.menu_bar.launch_agent" = "Relaunch automatically";
+//"settings.menu_bar.launch_agent_tooltip" = "Relaunch the app in case macOS decides to kill it due to low memory or disk space.";
 "settings.menu_bar.show_icon" = "Показувати іконку";
 "settings.menu_bar.show_date" = "Показувати дату";
 "settings.menu_bar.show_background" = "Показувати непрозорий фон";

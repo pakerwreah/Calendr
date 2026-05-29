@@ -297,10 +297,10 @@ internal enum Strings {
       internal static let autoLaunch = Strings.tr("Localizable", "settings.menu_bar.auto_launch", fallback: "Launch at login")
       /// Custom
       internal static let dateFormatCustom = Strings.tr("Localizable", "settings.menu_bar.date_format_custom", fallback: "Custom")
-      /// Restart automatically
-      internal static let launchAgent = Strings.tr("Localizable", "settings.menu_bar.launch_agent", fallback: "Restart automatically")
-      /// Restart the app in case macOS decides to kill it due to low memory or disk space.
-      internal static let launchAgentTooltip = Strings.tr("Localizable", "settings.menu_bar.launch_agent_tooltip", fallback: "Restart the app in case macOS decides to kill it due to low memory or disk space.")
+      /// Relaunch automatically
+      internal static let launchAgent = Strings.tr("Localizable", "settings.menu_bar.launch_agent", fallback: "Relaunch automatically")
+      /// Relaunch the app in case macOS decides to kill it due to low memory or disk space.
+      internal static let launchAgentTooltip = Strings.tr("Localizable", "settings.menu_bar.launch_agent_tooltip", fallback: "Relaunch the app in case macOS decides to kill it due to low memory or disk space.")
       /// Open on mouse hover
       internal static let openOnHover = Strings.tr("Localizable", "settings.menu_bar.open_on_hover", fallback: "Open on mouse hover")
       /// Show opaque background
