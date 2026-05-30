@@ -17,8 +17,7 @@ class CalendarCellView: NSView {
     private let clickObserver: AnyObserver<Date>
     private let doubleClickObserver: AnyObserver<Date>
     private let calendarScaling: Observable<Double>
-    private let calendarTextScaling: Observable<Double>
-    private let combinedScaling: Observable<Double>
+    private let textScaling: Observable<Double>
 
     private let label: Label
     private let eventsStackView = NSStackView()
@@ -30,7 +29,7 @@ class CalendarCellView: NSView {
         clickObserver: AnyObserver<Date>,
         doubleClickObserver: AnyObserver<Date>,
         calendarScaling: Observable<Double>,
-        calendarTextScaling: Observable<Double>
+        textScaling: Observable<Double>
     ) {
 
         self.viewModel = viewModel
@@ -38,14 +37,9 @@ class CalendarCellView: NSView {
         self.clickObserver = clickObserver
         self.doubleClickObserver = doubleClickObserver
         self.calendarScaling = calendarScaling
-        self.calendarTextScaling = calendarTextScaling
+        self.textScaling = textScaling
 
-        self.combinedScaling = Observable
-            .combineLatest(calendarScaling, calendarTextScaling)
-            .map(*)
-            .share(replay: 1)
-
-        label = Label(font: .systemFont(ofSize: Constants.fontSize), scaling: combinedScaling)
+        label = Label(font: .systemFont(ofSize: Constants.fontSize), scaling: textScaling)
 
         super.init(frame: .zero)
 
@@ -139,7 +133,7 @@ class CalendarCellView: NSView {
 
         Observable.combineLatest(
             viewModel.map(\.dots).distinctUntilChanged(),
-            combinedScaling
+            textScaling
         )
         .repeat(when: rx.updateLayer)
         .map { dots, scaling in

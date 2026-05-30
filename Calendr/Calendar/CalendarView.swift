@@ -167,15 +167,10 @@ class CalendarView: NSView {
         }
         .disposed(by: gridDisposeBag)
 
-        let combinedScaling = Observable
-            .combineLatest(viewModel.calendarScaling, viewModel.calendarTextScaling)
-            .map(*)
-            .share(replay: 1)
-
         for i in 0..<7 {
             let cellView = WeekDayCellView(
                 weekDay: viewModel.weekDays.map(\.[i].title),
-                scaling: combinedScaling
+                scaling: viewModel.textScaling
             )
             gridView.cell(atColumnIndex: 1 + i, rowIndex: 0).contentView = cellView
         }
@@ -188,7 +183,7 @@ class CalendarView: NSView {
 
             let cellView = WeekNumberCellView(
                 weekNumber: weekNumber,
-                scaling: combinedScaling
+                scaling: viewModel.textScaling
             )
             gridView.cell(atColumnIndex: 0, rowIndex: 1 + i).contentView = cellView
         }
@@ -209,7 +204,7 @@ class CalendarView: NSView {
                 clickObserver: clickObserver,
                 doubleClickObserver: doubleClickObserver,
                 calendarScaling: viewModel.calendarScaling,
-                calendarTextScaling: viewModel.calendarTextScaling
+                textScaling: viewModel.textScaling
             )
 
             dateViews.append(cellView)
