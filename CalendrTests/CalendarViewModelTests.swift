@@ -115,6 +115,40 @@ class CalendarViewModelTests: XCTestCase {
         scheduler.advance(.seconds(1))
     }
 
+    func testCombinedTextScaling() {
+
+        var textScaling: CGFloat?
+
+        viewModel.textScaling.bind {
+            textScaling = $0
+        }
+        .disposed(by: disposeBag)
+
+        XCTAssertEqual(textScaling, 1)
+
+        settings.calendarScalingObserver.onNext(2)
+        XCTAssertEqual(textScaling, 2)
+
+        settings.calendarTextScalingObserver.onNext(3)
+        XCTAssertEqual(textScaling, 6)
+    }
+
+    func testCombinedTextScaling_withGlobalTextScalingChange_shouldNotUpdate() {
+
+        var textScaling: CGFloat?
+
+        viewModel.textScaling.bind {
+            textScaling = $0
+        }
+        .disposed(by: disposeBag)
+
+        XCTAssertEqual(textScaling, 1)
+
+        settings.textScalingObserver.onNext(2)
+
+        XCTAssertEqual(textScaling, 1)
+    }
+
     func testTitle() {
 
         var titles: [String] = []
