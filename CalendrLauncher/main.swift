@@ -50,8 +50,10 @@ func main() async throws {
     defer { observation?.invalidate() }
 
     await withCheckedContinuation { continuation in
+        var resumed = false
         observation = app.observe(\.isTerminated, options: [.initial, .new]) { observedApp, change in
-            if change.newValue == true {
+            if change.newValue == true && !resumed {
+                resumed = true
                 logger.debug("Calendr has terminated.")
                 continuation.resume()
             }
