@@ -57,7 +57,7 @@ class AutoLauncher: NSObject, AutoLaunching {
 
             toggleRegistration(&isLaunchAgentEnabled, for: launcher)
 
-            if newValue && !isLoginItemEnabled {
+            if newValue && !isLaunchAgentEnabled {
                 // if it fails to enable, keep the previous storage value
             } else {
                 localStorage.launchAgentEnabled = isLaunchAgentEnabled
