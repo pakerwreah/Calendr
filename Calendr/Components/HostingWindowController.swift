@@ -29,15 +29,8 @@ class HostingWindowController<RootView: View>: NSHostingController<RootView>, NS
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
 
-        guard let window = view.window else {
-            return assertionFailure()
-        }
-        window.delegate = self
-    }
+    // IMPORTANT: loadView and viewDidLoad are never called here
 
     override func viewWillAppear() {
         super.viewWillAppear()
