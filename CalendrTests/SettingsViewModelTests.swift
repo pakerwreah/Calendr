@@ -39,6 +39,9 @@ class SettingsViewModelTests: XCTestCase {
     var localStorageStatusItemTextScaling: NSNumber? { localStorage.object(forKey: Prefs.statusItemTextScaling) as? NSNumber }
     var localStorageShowEventStatusItem: Bool? { localStorage.object(forKey: Prefs.showEventStatusItem) as? Bool }
     var localStorageEventStatusItemCheckRange: NSNumber? { localStorage.object(forKey: Prefs.eventStatusItemCheckRange) as? NSNumber }
+    var localStorageEventStatusItemSound: Bool? { localStorage.object(forKey: Prefs.eventStatusItemSound) as? Bool }
+    var localStorageEventStatusItemFlashing: Bool? { localStorage.object(forKey: Prefs.eventStatusItemFlashing) as? Bool }
+    var localStorageEventStatusItemFullScreen: Bool? { localStorage.object(forKey: Prefs.eventStatusItemFullScreen) as? Bool }
     var localStorageEventStatusItemTextScaling: NSNumber? { localStorage.object(forKey: Prefs.eventStatusItemTextScaling) as? NSNumber }
     var localStorageEventStatusItemLength: NSNumber? { localStorage.object(forKey: Prefs.eventStatusItemLength) as? NSNumber }
     var localStorageEventStatusItemDetectNotch: Bool? { localStorage.object(forKey: Prefs.eventStatusItemDetectNotch) as? Bool }
@@ -72,6 +75,9 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertNil(localStorageStatusItemTextScaling)
         XCTAssertNil(localStorageShowEventStatusItem)
         XCTAssertNil(localStorageEventStatusItemCheckRange)
+        XCTAssertNil(localStorageEventStatusItemSound)
+        XCTAssertNil(localStorageEventStatusItemFlashing)
+        XCTAssertNil(localStorageEventStatusItemFullScreen)
         XCTAssertNil(localStorageEventStatusItemTextScaling)
         XCTAssertNil(localStorageEventStatusItemLength)
         XCTAssertNil(localStorageEventStatusItemDetectNotch)
@@ -106,6 +112,9 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.showEventStatusItem.lastValue(), false)
         XCTAssertEqual(viewModel.eventStatusItemTextScaling.lastValue(), 1.2)
         XCTAssertEqual(viewModel.eventStatusItemCheckRange.lastValue(), 6)
+        XCTAssertEqual(viewModel.eventStatusItemSound.lastValue(), false)
+        XCTAssertEqual(viewModel.eventStatusItemFlashing.lastValue(), false)
+        XCTAssertEqual(viewModel.eventStatusItemFullScreen.lastValue(), false)
         XCTAssertEqual(viewModel.eventStatusItemLength.lastValue(), 18)
         XCTAssertEqual(viewModel.eventStatusItemDetectNotch.lastValue(), false)
         XCTAssertEqual(viewModel.calendarScaling.lastValue(), 1)
@@ -136,6 +145,9 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(localStorageShowEventStatusItem, false)
         XCTAssertEqual(localStorageEventStatusItemTextScaling, 1.2)
         XCTAssertEqual(localStorageEventStatusItemCheckRange, 6)
+        XCTAssertEqual(localStorageEventStatusItemSound, false)
+        XCTAssertEqual(localStorageEventStatusItemFlashing, false)
+        XCTAssertEqual(localStorageEventStatusItemFullScreen, false)
         XCTAssertEqual(localStorageEventStatusItemLength, 18)
         XCTAssertEqual(localStorageEventStatusItemDetectNotch, false)
         XCTAssertEqual(localStorageCalendarScaling, 1)
@@ -412,6 +424,78 @@ class SettingsViewModelTests: XCTestCase {
 
         XCTAssertEqual(showEventStatusItem, true)
         XCTAssertEqual(localStorageShowEventStatusItem, true)
+    }
+
+    func testToggleEventStatusItemSound() {
+
+        localStorage.eventStatusItemSound = true
+
+        var eventStatusItemSound: Bool?
+
+        viewModel.eventStatusItemSound
+            .bind { eventStatusItemSound = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(eventStatusItemSound, true)
+        XCTAssertEqual(localStorageEventStatusItemSound, true)
+
+        viewModel.toggleEventStatusItemSound.onNext(false)
+
+        XCTAssertEqual(eventStatusItemSound, false)
+        XCTAssertEqual(localStorageEventStatusItemSound, false)
+
+        viewModel.toggleEventStatusItemSound.onNext(true)
+
+        XCTAssertEqual(eventStatusItemSound, true)
+        XCTAssertEqual(localStorageEventStatusItemSound, true)
+    }
+
+    func testToggleEventStatusItemFlashing() {
+
+        localStorage.eventStatusItemFlashing = true
+
+        var eventStatusItemFlashing: Bool?
+
+        viewModel.eventStatusItemFlashing
+            .bind { eventStatusItemFlashing = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(eventStatusItemFlashing, true)
+        XCTAssertEqual(localStorageEventStatusItemFlashing, true)
+
+        viewModel.toggleEventStatusItemFlashing.onNext(false)
+
+        XCTAssertEqual(eventStatusItemFlashing, false)
+        XCTAssertEqual(localStorageEventStatusItemFlashing, false)
+
+        viewModel.toggleEventStatusItemFlashing.onNext(true)
+
+        XCTAssertEqual(eventStatusItemFlashing, true)
+        XCTAssertEqual(localStorageEventStatusItemFlashing, true)
+    }
+
+    func testToggleEventStatusItemFullScreen() {
+
+        localStorage.eventStatusItemFullScreen = true
+
+        var eventStatusItemFullScreen: Bool?
+
+        viewModel.eventStatusItemFullScreen
+            .bind { eventStatusItemFullScreen = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(eventStatusItemFullScreen, true)
+        XCTAssertEqual(localStorageEventStatusItemFullScreen, true)
+
+        viewModel.toggleEventStatusItemFullScreen.onNext(false)
+
+        XCTAssertEqual(eventStatusItemFullScreen, false)
+        XCTAssertEqual(localStorageEventStatusItemFullScreen, false)
+
+        viewModel.toggleEventStatusItemFullScreen.onNext(true)
+
+        XCTAssertEqual(eventStatusItemFullScreen, true)
+        XCTAssertEqual(localStorageEventStatusItemFullScreen, true)
     }
 
     func testChangeEventStatusItemLength() {

@@ -50,6 +50,7 @@
 "settings.next_event.grab_attention" = "Etkinlik yaklaştığında dikkat çek";
 "settings.next_event.grab_attention.flashing" = "Yanıp sönme";
 "settings.next_event.grab_attention.sound" = "Ses çal";
+//"settings.next_event.show_full_screen_alert" = "Show full screen alert";
 "settings.next_event.detect_notch" = "'Çentik' varsa kısalt";
 
 "settings.calendar" = "Takvim";

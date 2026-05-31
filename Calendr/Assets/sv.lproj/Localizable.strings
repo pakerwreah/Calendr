@@ -50,6 +50,7 @@
 "settings.next_event.grab_attention" = "Fånga uppmärksamheten när evenemanget är nära";
 "settings.next_event.grab_attention.flashing" = "Blinkande";
 "settings.next_event.grab_attention.sound" = "Spela ljud";
+//"settings.next_event.show_full_screen_alert" = "Show full screen alert";
 "settings.next_event.detect_notch" = "Korta om 'notch' finns";
 
 "settings.calendar" = "Kalender";
