@@ -7,7 +7,6 @@
 
 import AppKit
 import ServiceManagement
-import Sentry
 
 @objc protocol AutoLaunching: AnyObject where Self: NSObject {
     @objc dynamic var isLoginItemEnabled: Bool { get set }
