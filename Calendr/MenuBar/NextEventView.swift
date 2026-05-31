@@ -118,6 +118,24 @@ class NextEventView: NSView {
             .track(with: updateSubject)
             .bind(to: rx.isHidden)
             .disposed(by: disposeBag)
+
+        viewModel.fullScreenViewModel
+            .observe(on: MainScheduler.instance)
+            .flatMapFirst { vm -> Observable<Void> in
+                guard let screen = NSScreen.main else { return .empty() }
+
+                let window = EventFullScreenWindow(viewModel: vm)
+
+                let dismiss = vm.onDismiss.bind { [weak window] in
+                    window?.close()
+                }
+
+                window.present(on: screen)
+
+                return window.rx.deallocated.do(onNext: { dismiss.dispose() })
+            }
+            .subscribe()
+            .disposed(by: disposeBag)
     }
 
     required init?(coder: NSCoder) {

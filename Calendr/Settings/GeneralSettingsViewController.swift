@@ -31,6 +31,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     private let nextEventGrabAttentionLabel = Label(text: Strings.Settings.NextEvent.grabAttention)
     private let nextEventFlashingCheckbox = Checkbox(title: Strings.Settings.NextEvent.GrabAttention.flashing)
     private let nextEventSoundCheckbox = Checkbox(title: Strings.Settings.NextEvent.GrabAttention.sound)
+    private let nextEventFullScreenCheckbox = Checkbox(title: Strings.Settings.NextEvent.showFullScreenAlert)
 
     // Calendar
     private let firstWeekdayPrev = ImageButton(image: Icons.Settings.prev)
@@ -180,7 +181,9 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         return NSStackView(views: [
             showNextEventStack,
             nextEventGrabAttentionLabel,
-            grabAttentionStack
+            grabAttentionStack,
+            .spacer,
+            nextEventFullScreenCheckbox
 
         ]).with(orientation: .vertical)
     }()
@@ -364,6 +367,13 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             control: nextEventSoundCheckbox,
             observable: viewModel.eventStatusItemSound,
             observer: viewModel.toggleEventStatusItemSound
+        )
+        .disposed(by: disposeBag)
+
+        bind(
+            control: nextEventFullScreenCheckbox,
+            observable: viewModel.eventStatusItemFullScreen,
+            observer: viewModel.toggleEventStatusItemFullScreen
         )
         .disposed(by: disposeBag)
     }

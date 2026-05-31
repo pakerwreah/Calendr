@@ -55,6 +55,7 @@ class NextEventViewModel {
     var isVisible: Observable<Bool> { hasEvent }
     var isPending: Observable<Bool>
     let textScaling: Observable<Double>
+    let fullScreenViewModel: Observable<EventFullScreenViewModel>
 
     private let disposeBag = DisposeBag()
     private let nextEvent = BehaviorSubject<NextEvent?>(value: nil)
@@ -189,6 +190,34 @@ class NextEventViewModel {
             .distinctUntilChanged()
             .bind(to: nextEvent)
             .disposed(by: disposeBag)
+
+        let nextInProgressEvent = nextEvent
+            .skipNil()
+            .filter(\.isInProgress)
+            .map(\.event)
+
+        fullScreenViewModel = Observable
+            .combineLatest(
+                settings.eventStatusItemFullScreen,
+                nextInProgressEvent
+            )
+            .filter(\.0)
+            .map(\.1)
+            .distinctUntilChanged()
+            .withLatestFrom(settings.forceLocalTimeZone) { ($0, $1) }
+            .map { [actionCallback] event, forceLocalTimeZone in
+                EventFullScreenViewModel(
+                    event: event,
+                    dateProvider: dateProvider,
+                    forceLocalTimeZone: forceLocalTimeZone,
+                    workspace: workspace,
+                    onSkip: {
+                        actionCallback.onNext(
+                            .event(event, .skip)
+                        )
+                    }
+                )
+            }
 
         let event = nextEvent.map(\.?.event)
 

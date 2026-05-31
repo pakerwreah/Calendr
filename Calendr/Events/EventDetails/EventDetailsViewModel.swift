@@ -139,40 +139,13 @@ class EventDetailsViewModel {
 
         showSkip = source == .menubar && type.isEvent
 
-        let formatter = DateIntervalFormatter()
-        formatter.dateStyle = .medium
-        formatter.calendar = dateProvider.calendar
-
-        if event.isAllDay {
-            formatter.timeStyle = .none
-            duration = formatter.string(from: event.start, to: event.end)
-        } else {
-            formatter.timeStyle = .short
-
-            let range = event.range(using: dateProvider)
-
-            let end: Date
-
-            if type.isReminder {
-                end = event.start
-            }
-            else if range.isSingleDay && range.endsMidnight {
-                end = dateProvider.calendar.startOfDay(for: event.start)
-            }
-            else {
-                end = event.end
-            }
-
-            let forceLocalTimeZone = settings.forceLocalTimeZone.lastValue() ?? false
-            let timeZone = event.isMeeting || forceLocalTimeZone ? nil : event.timeZone
-
-            duration = EventUtils.duration(
-                from: event.start,
-                to: end,
-                timeZone: timeZone,
-                formatter: formatter
-            )
-        }
+        duration = EventUtils.duration(
+            for: event,
+            using: dateProvider,
+            dateStyle: .medium,
+            timeStyle: .short,
+            forceLocalTimeZone: settings.forceLocalTimeZone.lastValue() ?? false
+        )
 
         let closeSubject = PublishSubject<Never>()
 

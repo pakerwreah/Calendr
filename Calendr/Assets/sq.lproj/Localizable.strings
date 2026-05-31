@@ -50,6 +50,7 @@
 "settings.next_event.grab_attention" = "Tërhiq vëmendjen kur ngjarja është afër";
 "settings.next_event.grab_attention.flashing" = "Vezullim";
 "settings.next_event.grab_attention.sound" = "Luaj zërin";
+//"settings.next_event.show_full_screen_alert" = "Show full screen alert";
 "settings.next_event.detect_notch" = "Shkurtojeni nëse 'notch' është i pranishëm";
 
 "settings.calendar" = "Kalendari";

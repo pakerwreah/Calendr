@@ -51,6 +51,7 @@
 "settings.next_event.grab_attention" = "Cattura l'attenzione quando l'evento è vicino";
 "settings.next_event.grab_attention.flashing" = "Lampeggia";
 "settings.next_event.grab_attention.sound" = "Riproduci suono di avviso";
+//"settings.next_event.show_full_screen_alert" = "Show full screen alert";
 "settings.next_event.detect_notch" = "Più corto se c'è il 'notch'";
 
 "settings.calendar" = "Calendario";
