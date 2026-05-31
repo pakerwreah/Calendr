@@ -188,10 +188,10 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             showNextEventStack,
             nextEventGrabAttentionLabel,
             grabAttentionStack,
-            .spacer,
+            .spacer(height: 0),
             nextEventFullScreenCheckbox
-
-        ]).with(orientation: .vertical)
+        ])
+        .with(orientation: .vertical)
     }()
 
     private lazy var calendarAppStack: NSView? = {
