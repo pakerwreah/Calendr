@@ -1,25 +1,25 @@
 # The following languages have missing translations
 Language|Count
 -|-
-[German - Deutsch - (de)](Calendr/Assets/de.lproj/Localizable.strings)|31
-[Hebrew - עברית - (he)](Calendr/Assets/he.lproj/Localizable.strings)|6
-[Chinese - 中文 - (zh-Hant-TW)](Calendr/Assets/zh-Hant-TW.lproj/Localizable.strings)|29
-[Greek - Ελληνικά - (el)](Calendr/Assets/el.lproj/Localizable.strings)|32
-[Chinese - 中文 - (zh-Hans)](Calendr/Assets/zh-Hans.lproj/Localizable.strings)|6
-[Japanese - 日本語 - (ja)](Calendr/Assets/ja.lproj/Localizable.strings)|5
-[Albanian - shqip - (sq)](Calendr/Assets/sq.lproj/Localizable.strings)|32
-[Ukrainian - українська - (uk)](Calendr/Assets/uk.lproj/Localizable.strings)|26
-[Spanish - español - (es)](Calendr/Assets/es.lproj/Localizable.strings)|32
-[Italian - italiano - (it)](Calendr/Assets/it.lproj/Localizable.strings)|29
-[Slovak - slovenčina - (sk)](Calendr/Assets/sk.lproj/Localizable.strings)|5
-[Swedish - svenska - (sv)](Calendr/Assets/sv.lproj/Localizable.strings)|32
-[Czech - čeština - (cs)](Calendr/Assets/cs.lproj/Localizable.strings)|32
-[Korean - 한국어 - (ko)](Calendr/Assets/ko.lproj/Localizable.strings)|3
-[Turkish - Türkçe - (tr)](Calendr/Assets/tr.lproj/Localizable.strings)|6
-[Polish - polski - (pl)](Calendr/Assets/pl.lproj/Localizable.strings)|5
-[Russian - русский - (ru)](Calendr/Assets/ru.lproj/Localizable.strings)|8
-[French - français - (fr)](Calendr/Assets/fr.lproj/Localizable.strings)|22
-[Dutch - Nederlands - (nl)](Calendr/Assets/nl.lproj/Localizable.strings)|26
+[German - Deutsch - (de)](Calendr/Assets/de.lproj/Localizable.strings)|30
+[Hebrew - עברית - (he)](Calendr/Assets/he.lproj/Localizable.strings)|5
+[Chinese - 中文 - (zh-Hant-TW)](Calendr/Assets/zh-Hant-TW.lproj/Localizable.strings)|28
+[Greek - Ελληνικά - (el)](Calendr/Assets/el.lproj/Localizable.strings)|31
+[Chinese - 中文 - (zh-Hans)](Calendr/Assets/zh-Hans.lproj/Localizable.strings)|5
+[Japanese - 日本語 - (ja)](Calendr/Assets/ja.lproj/Localizable.strings)|4
+[Albanian - shqip - (sq)](Calendr/Assets/sq.lproj/Localizable.strings)|31
+[Ukrainian - українська - (uk)](Calendr/Assets/uk.lproj/Localizable.strings)|25
+[Spanish - español - (es)](Calendr/Assets/es.lproj/Localizable.strings)|31
+[Italian - italiano - (it)](Calendr/Assets/it.lproj/Localizable.strings)|28
+[Slovak - slovenčina - (sk)](Calendr/Assets/sk.lproj/Localizable.strings)|4
+[Swedish - svenska - (sv)](Calendr/Assets/sv.lproj/Localizable.strings)|31
+[Czech - čeština - (cs)](Calendr/Assets/cs.lproj/Localizable.strings)|31
+[Korean - 한국어 - (ko)](Calendr/Assets/ko.lproj/Localizable.strings)|2
+[Turkish - Türkçe - (tr)](Calendr/Assets/tr.lproj/Localizable.strings)|5
+[Polish - polski - (pl)](Calendr/Assets/pl.lproj/Localizable.strings)|4
+[Russian - русский - (ru)](Calendr/Assets/ru.lproj/Localizable.strings)|7
+[French - français - (fr)](Calendr/Assets/fr.lproj/Localizable.strings)|21
+[Dutch - Nederlands - (nl)](Calendr/Assets/nl.lproj/Localizable.strings)|25
 
 Feel free to open a new issue or pull request with the missing values.
 

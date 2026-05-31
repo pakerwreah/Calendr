@@ -52,6 +52,7 @@
 "settings.next_event.grab_attention" = "活動臨近時引起注意";
 "settings.next_event.grab_attention.flashing" = "閃爍";
 "settings.next_event.grab_attention.sound" = "播放聲音";
+//"settings.next_event.show_full_screen_alert" = "Show full screen alert";
 "settings.next_event.detect_notch" = "若有 '瀏海' 則縮短";
 
 "settings.calendar" = "行事曆";

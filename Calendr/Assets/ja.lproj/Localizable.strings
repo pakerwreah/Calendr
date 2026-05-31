@@ -52,6 +52,7 @@
 "settings.next_event.grab_attention" = "予定が近づいたら";
 "settings.next_event.grab_attention.flashing" = "点滅させる";
 "settings.next_event.grab_attention.sound" = "音を鳴らす";
+//"settings.next_event.show_full_screen_alert" = "Show full screen alert";
 "settings.next_event.detect_notch" = "ノッチがある場合に短くする";
 
 "settings.calendar" = "カレンダー";

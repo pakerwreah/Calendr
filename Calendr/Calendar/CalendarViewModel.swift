@@ -18,7 +18,7 @@ class CalendarViewModel {
     let weekDays: Observable<[WeekDay]>
     let weekNumbers: Observable<[Int]?>
     let calendarScaling: Observable<Double>
-    let calendarTextScaling: Observable<Double>
+    let textScaling: Observable<Double>
     let cellSize: Observable<Double>
     let weekNumbersWidth: Observable<Double>
     let showMonthOutline: Observable<Bool>
@@ -288,7 +288,11 @@ class CalendarViewModel {
         weekCount = cellViewModelsObservable.map { $0.count / 7 }.distinctUntilChanged()
 
         calendarScaling = settings.calendarScaling
-        calendarTextScaling = settings.calendarTextScaling
+
+        textScaling = Observable
+            .combineLatest(calendarScaling, settings.calendarTextScaling)
+            .map(*)
+            .share(replay: 1)
 
         cellSize = calendarScaling
             .map { Constants.cellSize * $0 + 10 * ($0 - 1) }

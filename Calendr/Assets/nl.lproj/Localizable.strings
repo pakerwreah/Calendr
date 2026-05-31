@@ -50,6 +50,7 @@
 "settings.next_event.grab_attention" = "Aandacht trekken voor nabije gebeurtenis";
 "settings.next_event.grab_attention.flashing" = "Knipperen";
 "settings.next_event.grab_attention.sound" = "Geluid afspelen";
+//"settings.next_event.show_full_screen_alert" = "Show full screen alert";
 "settings.next_event.detect_notch" = "Verkorten indien 'notch' aanwezig is";
 
 "settings.calendar" = "Agenda";

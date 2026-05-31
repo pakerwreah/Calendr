@@ -52,6 +52,7 @@
 "settings.next_event.grab_attention" = "הסב תשומת לב כאשר האירוע קרוב";
 "settings.next_event.grab_attention.flashing" = "הבהוב";
 "settings.next_event.grab_attention.sound" = "ניגון צליל";
+//"settings.next_event.show_full_screen_alert" = "Show full screen alert";
 "settings.next_event.detect_notch" = "מקוצר אם יש Notch";
 
 "settings.calendar" = "לוח שנה";

@@ -15,6 +15,7 @@ class MockNextEventSettings: MockEventListSettings, NextEventSettings {
     let eventStatusItemCheckRange: Observable<Int>
     let eventStatusItemFlashing: Observable<Bool>
     let eventStatusItemSound: Observable<Bool>
+    let eventStatusItemFullScreen: Observable<Bool>
     let eventStatusItemLength: Observable<Int>
     let eventStatusItemDetectNotch: Observable<Bool>
 
@@ -23,6 +24,7 @@ class MockNextEventSettings: MockEventListSettings, NextEventSettings {
         checkRange: Int = 10,
         flashing: Bool = true,
         sound: Bool = true,
+        fullScreen: Bool = true,
         textScaling: Double = 1,
         length: Int = 20,
         detectNotch: Bool = false
@@ -31,6 +33,7 @@ class MockNextEventSettings: MockEventListSettings, NextEventSettings {
         eventStatusItemCheckRange = .just(checkRange)
         eventStatusItemFlashing = .just(flashing)
         eventStatusItemSound = .just(sound)
+        eventStatusItemFullScreen = .just(fullScreen)
         eventStatusItemTextScaling = .just(textScaling)
         eventStatusItemLength = .just(length)
         eventStatusItemDetectNotch = .just(detectNotch)

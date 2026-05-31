@@ -30,7 +30,7 @@ class MainViewController: NSViewController {
     private let nextReminderView: NextEventView
     private let calendarView: CalendarView
     private let eventListView: EventListView
-    private let titleLabel = Label()
+    private let titleLabel: Label
     private let searchInput = NSSearchField()
     private let searchInputSuggestionView = SearchSuggestionView()
     private let prevBtn = ImageButton()
@@ -173,6 +173,8 @@ class MainViewController: NSViewController {
             clickObserver: dateClick.asObserver(),
             doubleClickObserver: dateDoubleClick.asObserver()
         )
+
+        titleLabel = Label(scaling: calendarViewModel.textScaling)
 
         let eventListEventsObservable = calendarViewModel.focusedDateEventsObservable
             .debounce(.milliseconds(50), scheduler: MainScheduler.instance)

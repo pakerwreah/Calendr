@@ -52,6 +52,7 @@
 "settings.next_event.grab_attention" = "Сповіщати про наближення події";
 "settings.next_event.grab_attention.flashing" = "Миготінням";
 "settings.next_event.grab_attention.sound" = "Звуком";
+//"settings.next_event.show_full_screen_alert" = "Show full screen alert";
 "settings.next_event.detect_notch" = "Вкоротити, якщо присутній 'виріз'";
 
 "settings.calendar" = "Календар";

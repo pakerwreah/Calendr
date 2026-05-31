@@ -52,6 +52,7 @@
 "settings.next_event.grab_attention" = "Upoutejte pozornost, když je událost blízko";
 "settings.next_event.grab_attention.flashing" = "Blikání";
 "settings.next_event.grab_attention.sound" = "Přehrát zvuk";
+//"settings.next_event.show_full_screen_alert" = "Show full screen alert";
 "settings.next_event.detect_notch" = "Zkrátit, pokud je 'výřez' přítomen";
 
 "settings.calendar" = "Kalendář";

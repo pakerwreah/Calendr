@@ -65,6 +65,7 @@ protocol NextEventSettings: EventListSettings {
     var eventStatusItemTextScaling: Observable<Double> { get }
     var eventStatusItemLength: Observable<Int> { get }
     var eventStatusItemDetectNotch: Observable<Bool> { get }
+    var eventStatusItemFullScreen: Observable<Bool> { get }
 }
 
 class SettingsViewModel:
@@ -108,6 +109,7 @@ class SettingsViewModel:
     let eventStatusItemCheckRangeObserver: AnyObserver<Int>
     let toggleEventStatusItemFlashing: AnyObserver<Bool>
     let toggleEventStatusItemSound: AnyObserver<Bool>
+    let toggleEventStatusItemFullScreen: AnyObserver<Bool>
     let eventStatusItemTextScalingObserver: AnyObserver<Double>
     let eventStatusItemLengthObserver: AnyObserver<Int>
     let toggleEventStatusItemDetectNotch: AnyObserver<Bool>
@@ -157,6 +159,7 @@ class SettingsViewModel:
     let eventStatusItemCheckRangeLabel: Observable<String>
     let eventStatusItemFlashing: Observable<Bool>
     let eventStatusItemSound: Observable<Bool>
+    let eventStatusItemFullScreen: Observable<Bool>
     let eventStatusItemTextScaling: Observable<Double>
     let eventStatusItemLength: Observable<Int>
     let eventStatusItemDetectNotch: Observable<Bool>
@@ -263,6 +266,7 @@ class SettingsViewModel:
         eventStatusItemCheckRangeObserver = localStorage.rx.observer(for: \.eventStatusItemCheckRange)
         toggleEventStatusItemFlashing = localStorage.rx.observer(for: \.eventStatusItemFlashing)
         toggleEventStatusItemSound = localStorage.rx.observer(for: \.eventStatusItemSound)
+        toggleEventStatusItemFullScreen = localStorage.rx.observer(for: \.eventStatusItemFullScreen)
         eventStatusItemTextScalingObserver = localStorage.rx.observer(for: \.eventStatusItemTextScaling)
         eventStatusItemLengthObserver = localStorage.rx.observer(for: \.eventStatusItemLength)
         toggleEventStatusItemDetectNotch = localStorage.rx.observer(for: \.eventStatusItemDetectNotch)
@@ -309,6 +313,7 @@ class SettingsViewModel:
         eventStatusItemCheckRange = localStorage.rx.observe(\.eventStatusItemCheckRange)
         eventStatusItemFlashing = localStorage.rx.observe(\.eventStatusItemFlashing)
         eventStatusItemSound = localStorage.rx.observe(\.eventStatusItemSound)
+        eventStatusItemFullScreen = localStorage.rx.observe(\.eventStatusItemFullScreen)
         eventStatusItemTextScaling = localStorage.rx.observe(\.eventStatusItemTextScaling)
         eventStatusItemLength = localStorage.rx.observe(\.eventStatusItemLength)
         eventStatusItemDetectNotch = localStorage.rx.observe(\.eventStatusItemDetectNotch)

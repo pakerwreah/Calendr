@@ -52,6 +52,7 @@
 "settings.next_event.grab_attention" = "Aufmerksamkeit erzeugen, wenn Ereignis kurz bevorsteht";
 "settings.next_event.grab_attention.flashing" = "Blinken";
 "settings.next_event.grab_attention.sound" = "Ton abspielen";
+//"settings.next_event.show_full_screen_alert" = "Show full screen alert";
 "settings.next_event.detect_notch" = "Kürzen, wenn 'notch' vorhanden ist";
 
 "settings.calendar" = "Kalender";

@@ -52,6 +52,7 @@
 "settings.next_event.grab_attention" = "Τράβηξε την προσοχή όταν το συμβάν είναι κοντά";
 "settings.next_event.grab_attention.flashing" = "Αναβοσβήνει";
 "settings.next_event.grab_attention.sound" = "Αναπαραγωγή ήχου";
+//"settings.next_event.show_full_screen_alert" = "Show full screen alert";
 "settings.next_event.detect_notch" = "Μείωση αν υπάρχει 'εγκοπή'";
 
 "settings.calendar" = "Ημερολόγιο";
