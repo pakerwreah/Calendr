@@ -19,11 +19,11 @@ class AboutViewController: NSViewController, SettingsUI {
 
     private let disposeBag = DisposeBag()
 
-    init(autoUpdater: AutoUpdating, settingsViewModel: SettingsViewModel) {
+    init(autoUpdater: AutoUpdating, autoLauncher: AutoLaunching, settingsViewModel: SettingsViewModel) {
         self.autoUpdater = autoUpdater
         self.viewModel = settingsViewModel
 
-        quitButton = NSButton(title: Strings.quit, target: NSApp, action: #selector(NSApp.terminate))
+        quitButton = NSButton(title: Strings.quit, target: autoLauncher, action: #selector(AutoLaunching.terminate))
         quitButton.refusesFirstResponder = true
 
         linkView = NSTextView()

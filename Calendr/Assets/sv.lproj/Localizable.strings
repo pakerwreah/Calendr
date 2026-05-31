@@ -39,6 +39,8 @@
 
 "settings.menu_bar" = "Menyrad";
 "settings.menu_bar.auto_launch" = "Öppna vid inloggning";
+//"settings.menu_bar.launch_agent" = "Relaunch automatically";
+//"settings.menu_bar.launch_agent_tooltip" = "Relaunch the app in case macOS decides to kill it due to low memory or disk space.";
 "settings.menu_bar.show_icon" = "Visa ikon";
 "settings.menu_bar.show_date" = "Visa datum";
 "settings.menu_bar.show_background" = "Show ogenomskinlig bakgrund";

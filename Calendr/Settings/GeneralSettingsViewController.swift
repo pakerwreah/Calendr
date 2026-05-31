@@ -16,6 +16,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
 
     // Menu Bar
     private let autoLaunchCheckbox = Checkbox(title: Strings.Settings.MenuBar.autoLaunch)
+    private let launchAgentCheckbox = Checkbox(title: Strings.Settings.MenuBar.launchAgent)
     private let showMenuBarIconCheckbox = Checkbox(title: Strings.Settings.MenuBar.showIcon)
     private let showMenuBarDateCheckbox = Checkbox(title: Strings.Settings.MenuBar.showDate)
     private let showMenuBarBackgroundCheckbox = Checkbox(title: Strings.Settings.MenuBar.showBackground)
@@ -151,8 +152,13 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             dateFormatTextField
         ])
 
+        let launchAgentTooltip = makeToolTip(
+            Strings.Settings.MenuBar.launchAgentTooltip
+        ).disposed(by: disposeBag)
+
         return NSStackView(views: [
             autoLaunchCheckbox,
+            NSStackView(views: [launchAgentCheckbox, launchAgentTooltip]),
             iconStyle,
             showMenuBarDateCheckbox,
             dateFormat,
@@ -188,34 +194,6 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         ]).with(orientation: .vertical)
     }()
 
-    private lazy var showDeclinedEventsTooltip: NSView = {
-
-        let tooltipViewController = NSViewController()
-        let view = NSView()
-        tooltipViewController.view = view
-        let label = Label(text: Strings.Settings.Calendar.showDeclinedEventsTooltip)
-        label.preferredMaxLayoutWidth = 190
-        label.lineBreakMode = NSLineBreakMode.byWordWrapping
-        view.addSubview(label)
-        label.edges(equalTo: view, margin: 8)
-
-        let button = ImageButton(image: Icons.Settings.tooltip, cursor: nil)
-
-        let popover = NSPopover()
-        popover.contentViewController = tooltipViewController
-        popover.behavior = .transient
-        popover.animates = false
-
-        button.rx.isHovered
-            .bind { isHovered in
-                guard isHovered else { return popover.performClose(nil) }
-                popover.show(relativeTo: .zero, of: button, preferredEdge: .maxX)
-            }
-            .disposed(by: disposeBag)
-
-        return button
-    }()
-
     private lazy var calendarAppStack: NSView? = {
         guard viewModel.calendarAppOptions.count > 1 else {
             return nil
@@ -239,6 +217,10 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         weekCountStepper.valueWraps = false
         weekCountStepper.refusesFirstResponder = true
         weekCountStepper.focusRingType = .none
+
+        let showDeclinedEventsTooltip = makeToolTip(
+            Strings.Settings.Calendar.showDeclinedEventsTooltip
+        ).disposed(by: disposeBag)
 
         let is26 = if #available(macOS 26.0, *) { true } else { false }
 
@@ -309,6 +291,13 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             control: autoLaunchCheckbox,
             observable: viewModel.autoLaunch,
             observer: viewModel.toggleAutoLaunch
+        )
+        .disposed(by: disposeBag)
+
+        bind(
+            control: launchAgentCheckbox,
+            observable: viewModel.launchAgent,
+            observer: viewModel.toggleLaunchAgent
         )
         .disposed(by: disposeBag)
 

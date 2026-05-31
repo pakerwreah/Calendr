@@ -9,6 +9,7 @@ import Foundation
 
 enum Prefs {
     // Menu Bar
+    static let launchAgentEnabled = "launch_agent_enabled"
     static let disabledCalendars = "disabled_calendars"
     static let silencedCalendars = "silenced_calendars"
     static let statusItemIconEnabled = "status_item_icon_enabled"
@@ -83,6 +84,7 @@ func registerDefaultPrefs(in localStorage: LocalStorageProvider, calendar: Calen
 
     localStorage.register(defaults: [
         // Menu Bar
+        Prefs.launchAgentEnabled: false,
         Prefs.statusItemIconEnabled: true,
         Prefs.statusItemIconStyle: StatusItemIconStyle.calendar.rawValue,
         Prefs.statusItemDateEnabled: true,
@@ -150,6 +152,11 @@ func registerDefaultPrefs(in localStorage: LocalStorageProvider, calendar: Calen
 extension LocalStorageProvider {
 
     // Menu Bar
+
+    @objc dynamic var launchAgentEnabled: Bool {
+        get { bool(forKey: Prefs.launchAgentEnabled) }
+        set { set(newValue, forKey: Prefs.launchAgentEnabled) }
+    }
 
     @objc dynamic var disabledCalendars: [String] {
         get { stringArray(forKey: Prefs.disabledCalendars) ?? [] }

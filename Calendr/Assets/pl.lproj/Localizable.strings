@@ -39,6 +39,8 @@
 
 "settings.menu_bar" = "Pasek menu";
 "settings.menu_bar.auto_launch" = "Uruchamiaj przy logowaniu";
+//"settings.menu_bar.launch_agent" = "Relaunch automatically";
+//"settings.menu_bar.launch_agent_tooltip" = "Relaunch the app in case macOS decides to kill it due to low memory or disk space.";
 "settings.menu_bar.show_icon" = "Pokaż ikonę";
 "settings.menu_bar.show_date" = "Pokaż datę";
 "settings.menu_bar.show_background" = "Pokaż nieprzezroczyste tło";

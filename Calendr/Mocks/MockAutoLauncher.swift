@@ -10,8 +10,10 @@
 import Foundation
 
 class MockAutoLauncher: NSObject, AutoLaunching {
-    @objc dynamic var isEnabled: Bool = false
+    @objc dynamic var isLoginItemEnabled: Bool = false
+    @objc dynamic var isLaunchAgentEnabled: Bool = false
     func syncStatus() { }
+    func terminate() { }
 }
 
 #endif

@@ -109,17 +109,20 @@ class AutoUpdater: AutoUpdating {
 
     private var newRelease: Release?
 
+    private let autoLauncher: AutoLaunching
     private let localStorage: LocalStorageProvider
     private(set) var notificationProvider: LocalNotificationProviding
     private let networkProvider: NetworkServiceProviding
     private let fileManager: FileManager
 
     init(
+        autoLauncher: AutoLaunching,
         localStorage: LocalStorageProvider,
         notificationProvider: LocalNotificationProviding,
         networkProvider: NetworkServiceProviding,
         fileManager: FileManager
     ) {
+        self.autoLauncher = autoLauncher
         self.localStorage = localStorage
         self.notificationProvider = notificationProvider
         self.networkProvider = networkProvider
@@ -430,7 +433,7 @@ class AutoUpdater: AutoUpdating {
 
         task.waitUntilExit()
 
-        NSApp.terminate(nil)
+        autoLauncher.terminate()
     }
 }
 

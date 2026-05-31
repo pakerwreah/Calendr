@@ -19,8 +19,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     private let skipReopen = BehaviorSubject(value: false)
 
-    private let appCacheCleaner = AppCacheCleaner()
-
     func applicationDidFinishLaunching(_ notification: Notification) {
 
         guard !BuildConfig.isTesting, !BuildConfig.isPreview else { return }
@@ -46,6 +44,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         setInitialStatusItemPositions(in: localStorage)
 
+        let autoLauncher = AutoLauncher(launchServices: LaunchServiceProvider(), localStorage: localStorage)
         let dateProvider = DateProvider(notificationCenter: notificationCenter, localStorage: localStorage)
         let calendarAppProvider = CalendarAppProvider(dateProvider: dateProvider, appleScriptRunner: AppleScriptRunner(), clock: .continuous)
         let workspace = Workspace(localStorage: localStorage, dateProvider: dateProvider, calendarAppProvider: calendarAppProvider)
@@ -53,6 +52,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let networkProvider = NetworkServiceProvider()
 
         let autoUpdater = AutoUpdater(
+            autoLauncher: autoLauncher,
             localStorage: localStorage,
             notificationProvider: notificationProvider,
             networkProvider: networkProvider,
@@ -61,7 +61,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         viewController = MainViewController(
             deeplink: deeplink.skipNil(),
-            autoLauncher: AutoLauncher(),
+            autoLauncher: autoLauncher,
             autoUpdater: autoUpdater,
             workspace: workspace,
             calendarService: CalendarServiceProvider(
@@ -89,22 +89,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             .bind(to: skipReopen)
             .disposed(by: disposeBag)
 
-        appCacheCleaner.delete()
-
         #if DEBUG
         print(Bundle.main.bundlePath)
         #endif
-    }
-
-    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
-        if NSApp.popovers.isEmpty {
-            appCacheCleaner.schedule()
-        }
-        return false
-    }
-
-    func applicationDidBecomeActive(_ notification: Notification) {
-        appCacheCleaner.cancel()
     }
 
     func application(_ application: NSApplication, open urls: [URL]) {

@@ -10,20 +10,9 @@ import Sentry
 func startSentry() -> Span? {
     guard let dsn = AppEnvironment.SENTRY_DSN else { return nil }
 
-    let createCacheResult = Result(catching: createCacheDirectory)
-    defer {
-        if case .failure(let error) = createCacheResult {
-            SentrySDK.capture(error: error)
-        }
-    }
-
     SentrySDK.start { options in
         options.dsn = dsn
         options.enableAppHangTracking = false
-
-        if case .success(let cacheDirectoryPath) = createCacheResult {
-            options.cacheDirectoryPath = cacheDirectoryPath
-        }
 
         if BuildConfig.isDebug {
             options.sampleRate = 0
@@ -35,23 +24,6 @@ func startSentry() -> Span? {
     addSystemUptimeInfo(to: transaction)
 
     return transaction
-}
-
-/// Prevent macOS from killing the app under heavy load to purge the caches (0xBADDD15C)
-private func createCacheDirectory() throws -> String {
-    let fileManager = FileManager.default
-
-    guard let applicationSupport = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else {
-        throw .unexpected("Failed to get application support directory")
-    }
-
-    let cachesURL = applicationSupport.appending(component: "SentryCaches", directoryHint: .isDirectory)
-
-    if !fileManager.fileExists(atPath: cachesURL.path()) {
-        try fileManager.createDirectory(at: cachesURL, withIntermediateDirectories: true)
-    }
-
-    return cachesURL.path()
 }
 
 /**

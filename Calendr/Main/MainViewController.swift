@@ -17,7 +17,8 @@ class MainViewController: NSViewController {
         settingsViewModel: settingsViewModel,
         calendarsViewModel: calendarPickerViewModel,
         notificationCenter: notificationCenter,
-        autoUpdater: autoUpdater
+        autoUpdater: autoUpdater,
+        autoLauncher: autoLauncher
     )
 
     // Views
@@ -72,6 +73,7 @@ class MainViewController: NSViewController {
     private let calendarService: CalendarServiceProviding
     private let dateProvider: DateProviding
     private let screenProvider: ScreenProviding
+    private let autoLauncher: AutoLaunching
     private let autoUpdater: AutoUpdating
     private let localStorage: LocalStorageProvider
     private let notificationCenter: NotificationCenter
@@ -97,6 +99,7 @@ class MainViewController: NSViewController {
     ) {
 
         self.deeplink = deeplink
+        self.autoLauncher = autoLauncher
         self.autoUpdater = autoUpdater
         self.workspace = workspace
         self.calendarService = calendarService
@@ -583,7 +586,7 @@ class MainViewController: NSViewController {
 
         settingsMenu.addItem(.separator())
 
-        settingsMenu.addItem(withTitle: Strings.quit, action: #selector(NSApp.terminate), keyEquivalent: "q")
+        settingsMenu.addItem(withTitle: Strings.quit, action: #selector(AutoLaunching.terminate), keyEquivalent: "q").target = autoLauncher
 
         settingsBtn.rx.tap.bind { [settingsBtn] in
             settingsMenu.popUp(positioning: nil, at: .init(x: 0, y: settingsBtn.frame.height), in: settingsBtn)
@@ -720,7 +723,7 @@ class MainViewController: NSViewController {
 
         menu.addItem(withTitle: Strings.Settings.title, action: #selector(openSettings), keyEquivalent: ",").target = self
         menu.addItem(.separator())
-        menu.addItem(withTitle: Strings.quit, action: #selector(NSApp.terminate), keyEquivalent: "q")
+        menu.addItem(withTitle: Strings.quit, action: #selector(AutoLaunching.terminate), keyEquivalent: "q").target = autoLauncher
 
         clickHandler.rightClick.bind {
             menu.show(in: statusBarButton)
@@ -852,7 +855,7 @@ class MainViewController: NSViewController {
 
             switch key {
             case .command(.char("q")):
-                NSApp.terminate(nil)
+                autoLauncher.terminate()
 
             case .command(.char(",")):
                 openSettings()

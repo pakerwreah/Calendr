@@ -39,6 +39,8 @@
 
 "settings.menu_bar" = "메뉴 바";
 "settings.menu_bar.auto_launch" = "로그인 시 실행";
+//"settings.menu_bar.launch_agent" = "Relaunch automatically";
+//"settings.menu_bar.launch_agent_tooltip" = "Relaunch the app in case macOS decides to kill it due to low memory or disk space.";
 "settings.menu_bar.show_icon" = "아이콘 표시";
 "settings.menu_bar.show_date" = "날짜 표시";
 "settings.menu_bar.show_background" = "불투명한 배경 표시";

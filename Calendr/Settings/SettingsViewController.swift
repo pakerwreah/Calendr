@@ -27,7 +27,8 @@ class SettingsViewController: NSTabViewController, NSWindowDelegate {
         settingsViewModel: SettingsViewModel,
         calendarsViewModel: CalendarPickerViewModel,
         notificationCenter: NotificationCenter,
-        autoUpdater: AutoUpdating
+        autoUpdater: AutoUpdating,
+        autoLauncher: AutoLaunching
     ) {
         self.settingsViewModel = settingsViewModel
         self.notificationCenter = notificationCenter
@@ -44,7 +45,13 @@ class SettingsViewController: NSTabViewController, NSWindowDelegate {
             viewController: CalendarPickerViewController(viewModel: calendarsViewModel, configuration: .settings)
         )
         let keyboard = NSTabViewItem(viewController: KeyboardViewController())
-        let about = NSTabViewItem(viewController: AboutViewController(autoUpdater: autoUpdater, settingsViewModel: settingsViewModel))
+        let about = NSTabViewItem(
+            viewController: AboutViewController(
+                autoUpdater: autoUpdater,
+                autoLauncher: autoLauncher,
+                settingsViewModel: settingsViewModel
+            )
+        )
 
         general.label = Strings.Settings.Tab.general
         general.image = Icons.Settings.general
