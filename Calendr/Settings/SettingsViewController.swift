@@ -112,7 +112,6 @@ class SettingsViewController: NSTabViewController, NSWindowDelegate {
         setUpAccessibilityWindow()
 
         window.styleMask.remove(.resizable)
-        window.delegate = self
 
         NSApp.activate(ignoringOtherApps: true)
     }
