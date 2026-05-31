@@ -20,7 +20,11 @@ func isTargetApp(at url: URL) -> Bool {
 }
 
 func getRunningApp() -> NSRunningApplication? {
-    NSRunningApplication.runningApplications(withBundleIdentifier: "br.paker.Calendr").first
+    if let app = NSRunningApplication.runningApplications(withBundleIdentifier: "br.paker.Calendr").first {
+        logger.debug("Calendr is already running.")
+        return app
+    }
+    return nil
 }
 
 func launchApp() async throws -> NSRunningApplication {
@@ -40,7 +44,7 @@ func main() async throws {
 
     let app = if let app = getRunningApp() { app } else { try await launchApp() }
 
-    logger.debug("Calendr launched. Monitoring for termination...")
+    logger.debug("Waiting for termination...")
 
     var observation: NSKeyValueObservation?
     defer { observation?.invalidate() }
@@ -54,21 +58,5 @@ func main() async throws {
         }
     }
 }
-
-UserDefaults.standard.register(defaults: [
-    "launch_delay": 2
-])
-
-let delay = UserDefaults.standard.integer(forKey: "launch_delay")
-
-if delay <= 0 {
-    logger.debug("Calendr launcher stopped")
-    try await Task.sleep(for: .seconds(999999999))
-    exit(EXIT_SUCCESS)
-}
-
-logger.debug("Calendr launcher started. Waiting \(delay) second(s)...")
-
-try await Task.sleep(for: .seconds(delay))
 
 try await main()
