@@ -120,6 +120,7 @@ class NextEventView: NSView {
             .disposed(by: disposeBag)
 
         viewModel.fullScreenViewModel
+            .skipNil()
             .observe(on: MainScheduler.instance)
             .flatMapFirst { vm -> Observable<Void> in
                 guard let screen = NSScreen.main else { return .empty() }
