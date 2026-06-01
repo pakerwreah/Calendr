@@ -74,6 +74,29 @@ class NextEventViewModelFullScreenTests: XCTestCase {
         XCTAssertNil(fullScreen)
     }
 
+    func testNextEvent_isInProgress_withFullScreenToggledOn_shouldPublishFullScreenViewModel() {
+
+        settings.toggleEventStatusItemFullScreen.onNext(false)
+
+        let viewModel = makeViewModel(type: .event)
+
+        var fullScreen: EventFullScreenViewModel?
+
+        viewModel.fullScreenViewModel
+            .bind { fullScreen = $0 }
+            .disposed(by: disposeBag)
+
+        calendarService.changeEvents([
+            .make(start: now - 1, end: now + 1)
+        ])
+
+        XCTAssertNil(fullScreen)
+
+        settings.toggleEventStatusItemFullScreen.onNext(true)
+
+        XCTAssertNotNil(fullScreen)
+    }
+
     func testNextEvent_isNotInProgress_shouldNotPublishFullScreenViewModel() {
 
         settings.toggleEventStatusItemFullScreen.onNext(true)

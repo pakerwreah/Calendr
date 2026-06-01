@@ -191,14 +191,18 @@ class NextEventViewModel {
             .bind(to: nextEvent)
             .disposed(by: disposeBag)
 
-        fullScreenViewModel = nextEvent
-            .distinctUntilChanged({ ($0?.event.externalId, $0?.isInProgress) }, comparer: ==)
-            .withLatestFrom(
-                Observable.combineLatest(
-                    settings.eventStatusItemFullScreen,
-                    settings.forceLocalTimeZone
-                )
-            ) { ($0, $1.0, $1.1) }
+        fullScreenViewModel = Observable
+            .combineLatest(
+                nextEvent,
+                settings.eventStatusItemFullScreen
+            )
+            .distinctUntilChanged(
+                { next, isEnabled in
+                    (next?.event.externalId, next?.isInProgress, isEnabled)
+                },
+                comparer: ==
+            )
+            .withLatestFrom(settings.forceLocalTimeZone) { ($0.0, $0.1, $1) }
             .map { [actionCallback] next, isEnabled, forceLocalTimeZone in
 
                 guard let next, next.isInProgress, isEnabled else { return nil }
