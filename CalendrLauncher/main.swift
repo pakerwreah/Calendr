@@ -21,7 +21,7 @@ func isTargetApp(at url: URL) -> Bool {
 
 func getRunningApp() -> NSRunningApplication? {
     if let app = NSRunningApplication.runningApplications(withBundleIdentifier: "br.paker.Calendr").first {
-        logger.debug("Calendr is already running.")
+        logger.log("Calendr is already running.")
         return app
     }
     return nil
@@ -32,10 +32,10 @@ func launchApp() async throws -> NSRunningApplication {
     let apps = NSWorkspace.shared.urlsForApplications(withBundleIdentifier: "br.paker.Calendr")
 
     guard let appURL = apps.first(where: isTargetApp(at:)) else {
-        logger.debug("Invalid URL: Calendr app could not be found.")
+        logger.error("Invalid URL: Calendr app could not be found.")
         throw URLError(.resourceUnavailable)
     }
-    logger.debug("Relaunching Calendr from: \(appURL.path, privacy: .public)")
+    logger.log("Relaunching Calendr from: \(appURL.path, privacy: .public)")
 
     return try await NSWorkspace.shared.openApplication(at: appURL, configuration: .init())
 }
@@ -44,7 +44,7 @@ func main() async throws {
 
     let app = if let app = getRunningApp() { app } else { try await launchApp() }
 
-    logger.debug("Waiting for termination...")
+    logger.log("Waiting for termination...")
 
     var observation: NSKeyValueObservation?
     defer { observation?.invalidate() }
@@ -54,7 +54,7 @@ func main() async throws {
         observation = app.observe(\.isTerminated, options: [.initial, .new]) { observedApp, change in
             if change.newValue == true && !resumed {
                 resumed = true
-                logger.debug("Calendr has terminated.")
+                logger.log("Calendr has terminated.")
                 continuation.resume()
             }
         }
