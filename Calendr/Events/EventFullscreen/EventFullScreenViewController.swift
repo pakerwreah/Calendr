@@ -11,8 +11,6 @@ typealias EventFullScreenViewController = HostingViewModelController<EventFullSc
 
 struct EventFullScreenView: ViewModelView {
 
-    @Environment(\.colorScheme) var colorScheme
-
     typealias ViewModel = EventFullScreenViewModel
 
     @State private var viewModel: ViewModel
@@ -22,19 +20,17 @@ struct EventFullScreenView: ViewModelView {
     }
 
     var body: some View {
-        let bgColor = colorScheme == .dark ? Color.black : Color.white
-        let shadowRadius = CGFloat(5)
         ZStack {
             VStack(spacing: 16) {
                 Text(viewModel.title)
-                    .font(.system(size: 40))
+                    .font(.system(size: 48))
                     .fontWeight(.medium)
-                    .shadow(color: bgColor, radius: shadowRadius)
+                    .foregroundStyle(.white)
 
                 Text(viewModel.duration)
                     .font(.system(size: 24))
                     .fontWeight(.regular)
-                    .shadow(color: bgColor, radius: shadowRadius)
+                    .foregroundStyle(.white)
 
                 Spacer(minLength: 100)
 
@@ -84,7 +80,8 @@ struct EventFullScreenView: ViewModelView {
         .onExitCommand(perform: viewModel.performClose)
         .onAppear(perform: viewModel.onAppear)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(.black.opacity(0.01))
+        .background(.ultraThickMaterial)
+        .colorScheme(.dark)
     }
 }
 
