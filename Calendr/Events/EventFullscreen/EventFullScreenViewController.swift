@@ -41,11 +41,17 @@ struct EventFullScreenView: ViewModelView {
                 let buttonWidth = CGFloat(200)
 
                 VStack(spacing: 16) {
-                    if viewModel.link?.isMeeting == true {
+                    if let link = viewModel.link {
                         Button(action: viewModel.join) {
                             HStack {
-                                Image(nsImage: Icons.Event.video)
-                                Text(Strings.Event.Action.join)
+                                Image(nsImage: link.isMeeting
+                                      ? Icons.Event.video
+                                      : Icons.Event.link)
+
+                                Text(link.isMeeting
+                                     ? Strings.Event.Action.join
+                                     : link.url.host()
+                                     ?? Strings.Event.Action.open)
                             }
                             .frame(width: buttonWidth)
                         }
