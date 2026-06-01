@@ -55,7 +55,7 @@ class NextEventViewModel {
     var isVisible: Observable<Bool> { hasEvent }
     var isPending: Observable<Bool>
     let textScaling: Observable<Double>
-    let fullScreenViewModel: Observable<EventFullScreenViewModel>
+    let fullScreenViewModel: Observable<EventFullScreenViewModel?>
 
     private let disposeBag = DisposeBag()
     private let nextEvent = BehaviorSubject<NextEvent?>(value: nil)
@@ -191,29 +191,26 @@ class NextEventViewModel {
             .bind(to: nextEvent)
             .disposed(by: disposeBag)
 
-        let nextInProgressEvent = nextEvent
-            .skipNil()
-            .filter(\.isInProgress)
-            .map(\.event)
+        fullScreenViewModel = nextEvent
+            .distinctUntilChanged({ ($0?.event.externalId, $0?.isInProgress) }, comparer: ==)
+            .withLatestFrom(
+                Observable.combineLatest(
+                    settings.eventStatusItemFullScreen,
+                    settings.forceLocalTimeZone
+                )
+            ) { ($0, $1.0, $1.1) }
+            .map { [actionCallback] next, isEnabled, forceLocalTimeZone in
 
-        fullScreenViewModel = Observable
-            .combineLatest(
-                settings.eventStatusItemFullScreen,
-                nextInProgressEvent
-            )
-            .filter(\.0)
-            .map(\.1)
-            .distinctUntilChanged()
-            .withLatestFrom(settings.forceLocalTimeZone) { ($0, $1) }
-            .map { [actionCallback] event, forceLocalTimeZone in
-                EventFullScreenViewModel(
-                    event: event,
+                guard let next, next.isInProgress, isEnabled else { return nil }
+
+                return EventFullScreenViewModel(
+                    event: next.event,
                     dateProvider: dateProvider,
                     forceLocalTimeZone: forceLocalTimeZone,
                     workspace: workspace,
                     onSkip: {
                         actionCallback.onNext(
-                            .event(event, .skip)
+                            .event(next.event, .skip)
                         )
                     }
                 )
@@ -473,11 +470,18 @@ private enum Constants {
     static let compactMaxWidth = 15
 }
 
-private func fakeEvent(start: Date, end: Date, title: String, type: EventType, color: NSColor) -> EventModel {
+private func fakeEvent(
+    externalId: String,
+    start: Date,
+    end: Date,
+    title: String,
+    type: EventType,
+    color: NSColor
+) -> EventModel {
 
     EventModel(
         id: "",
-        externalId: "",
+        externalId: externalId,
         start: start,
         end: end,
         title: title,
@@ -536,7 +540,11 @@ private func makeEventsGroup(
         }
     }
 
+    // to show distict fullscreen events
+    let externalId = "br.paker.Calendr.grouped:\(first.start.timeIntervalSince1970)"
+
     return fakeEvent(
+        externalId: externalId,
         start: first.start,
         end: items.map(\.end).max()!,
         title: title,
