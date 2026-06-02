@@ -21,9 +21,9 @@ struct EventFullScreenView: ViewModelView {
 
     var body: some View {
         ZStack {
-            VStack(spacing: 16) {
+            VStack(spacing: 32) {
                 Text(viewModel.title)
-                    .font(.system(size: 48))
+                    .font(.system(size: 40))
                     .fontWeight(.medium)
                     .foregroundStyle(.white)
 
@@ -32,7 +32,7 @@ struct EventFullScreenView: ViewModelView {
                     .fontWeight(.regular)
                     .foregroundStyle(.white)
 
-                Spacer(minLength: 100)
+                Spacer().frame(height: 32)
 
                 let buttonWidth = CGFloat(200)
 
@@ -70,10 +70,10 @@ struct EventFullScreenView: ViewModelView {
                 .disabled(viewModel.isDismissLocked)
                 .controlSize(.extraLarge)
 
-                Spacer(minLength: 100)
+                Spacer().frame(height: 32)
             }
-            .padding(32)
-            .fixedSize()
+            .frame(maxWidth: 1024)
+            .padding(100)
         }
         .focusable()
         .focusEffectDisabled()
