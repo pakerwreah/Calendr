@@ -37,9 +37,7 @@ class EventFullScreenWindow: NSWindow {
 
     func present(on screen: NSScreen) {
         NSApp.windows.filter(\.isModalPanel).forEach { $0.close() }
-        var frame = screen.visibleFrame
-        frame.size.width = screen.frame.width
-        setFrame(frame, display: true, animate: false)
+        setFrame(screen.visibleFrame, display: true, animate: false)
         makeKeyAndOrderFront(nil)
     }
 }
