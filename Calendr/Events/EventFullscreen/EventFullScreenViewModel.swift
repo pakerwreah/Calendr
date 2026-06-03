@@ -5,7 +5,7 @@
 //  Created by Paker on 30/05/2026.
 //
 
-import SwiftUI
+import Observation
 import RxSwift
 
 @Observation.Observable
@@ -16,12 +16,30 @@ class EventFullScreenViewModel {
 
     var isDismissLocked = true
 
+    var transparencyLevel: Int {
+        didSet {
+            localStorage.fullScreenEventTransparencyLevel = transparencyLevel
+        }
+    }
+
+    var material: Material {
+        [
+            .ultraThin,
+            .thin,
+            .regular,
+            .thick,
+            .ultraThick
+        ][clamped: transparencyLevel]!
+    }
+
     let onDismiss: Observable<Void>
     private let onDismissObserver: AnyObserver<Void>
 
-    private let onSkip: () -> Void
-
+    private let localStorage: LocalStorageProvider
     private let workspace: WorkspaceServiceProviding
+    private let clock: ClockProviding
+
+    private let onSkip: () -> Void
 
     func performClose() {
         if !isDismissLocked {
@@ -31,7 +49,7 @@ class EventFullScreenViewModel {
 
     func join() {
         if !isDismissLocked, let link {
-            workspace.open(link.url)
+            workspace.open(link)
             performClose()
         }
     }
@@ -44,7 +62,8 @@ class EventFullScreenViewModel {
     }
 
     func onAppear() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
+        Task { @MainActor [clock, weak self] in
+            try await clock.sleep(for: .seconds(1.5))
             self?.isDismissLocked = false
         }
     }
@@ -53,10 +72,14 @@ class EventFullScreenViewModel {
         event: EventModel,
         dateProvider: DateProviding,
         forceLocalTimeZone: Bool,
+        localStorage: LocalStorageProvider,
         workspace: WorkspaceServiceProviding,
+        clock: ClockProviding,
         onSkip: @escaping () -> Void
     ) {
+        self.localStorage = localStorage
         self.workspace = workspace
+        self.clock = clock
         self.onSkip = onSkip
 
         self.title = event.title
@@ -64,12 +87,14 @@ class EventFullScreenViewModel {
         self.duration = EventUtils.duration(
             for: event,
             using: dateProvider,
-            dateStyle: .none,
-            timeStyle: .short,
+            preferredDateStyle: .none,
+            preferredTimeStyle: .short,
             forceLocalTimeZone: forceLocalTimeZone
         )
 
         self.link = event.detectLink(using: workspace)
+
+        self.transparencyLevel = localStorage.fullScreenEventTransparencyLevel
 
         (onDismiss, onDismissObserver) = PublishSubject.pipe()
     }
