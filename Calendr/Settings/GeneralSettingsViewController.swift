@@ -361,8 +361,8 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
 
         bind(
             control: nextEventFullScreenCheckbox,
-            observable: viewModel.eventStatusItemFullScreen,
-            observer: viewModel.toggleEventStatusItemFullScreen
+            observable: viewModel.showFullScreenEvent,
+            observer: viewModel.toggleFullScreenEvent
         )
         .disposed(by: disposeBag)
     }

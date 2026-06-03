@@ -142,8 +142,8 @@ class EventDetailsViewModel {
         duration = EventUtils.duration(
             for: event,
             using: dateProvider,
-            dateStyle: .medium,
-            timeStyle: .short,
+            preferredDateStyle: .medium,
+            preferredTimeStyle: .short,
             forceLocalTimeZone: settings.forceLocalTimeZone.lastValue() ?? false
         )
 

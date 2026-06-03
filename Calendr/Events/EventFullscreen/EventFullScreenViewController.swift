@@ -74,34 +74,109 @@ struct EventFullScreenView: ViewModelView {
             }
             .frame(maxWidth: 1024)
             .padding(100)
+
+            SliderPopupButton(value: $viewModel.transparencyLevel)
+                .controlSize(.large)
+                .imageScale(.large)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
+                .padding(32)
+
         }
         .focusable()
         .focusEffectDisabled()
         .onExitCommand(perform: viewModel.performClose)
         .onAppear(perform: viewModel.onAppear)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(.ultraThickMaterial)
+        .background(viewModel.material.value)
         .colorScheme(.dark)
     }
 }
 
 #if DEBUG
 
-#Preview {
-    EventFullScreenView(
-        viewModel: EventFullScreenViewModel(
-            event: .make(
-                start: .make(year: 2026, month: 5, day: 30, hour: 21, minute: 0),
-                end: .make(year: 2026, month: 5, day: 30, hour: 21, minute: 30),
-                title: "Design Review",
-                url: URL(string: "https://meet.google.com")
-            ),
-            dateProvider: MockDateProvider(),
-            forceLocalTimeZone: false,
-            workspace: MockWorkspaceServiceProvider(),
-            onSkip: { }
+#Preview(traits: .fixedLayout(width: 800, height: 600)) {
+    ZStack {
+        DesktopWallpaper()
+        EventFullScreenView(
+            viewModel: EventFullScreenViewModel(
+                event: .make(
+                    start: .make(year: 2026, month: 5, day: 30, hour: 21, minute: 0),
+                    end: .make(year: 2026, month: 5, day: 30, hour: 21, minute: 30),
+                    title: "Design Review",
+                    url: URL(string: "https://meet.google.com")
+                ),
+                dateProvider: MockDateProvider(),
+                forceLocalTimeZone: false,
+                localStorage: MockLocalStorageProvider().withDefaults(),
+                workspace: MockWorkspaceServiceProvider(),
+                clock: .continuous,
+                onSkip: { }
+            )
         )
-    )
+    }
 }
 
 #endif
+
+private struct SliderPopupButton: View {
+
+    @Binding var value: Int
+    @State private var isPopupPresented: Bool = false
+
+    var body: some View {
+        Button {
+            isPopupPresented.toggle()
+        } label: {
+            Image(systemName: "gear")
+        }
+        .buttonBorderShape(.circle)
+        .popover(isPresented: $isPopupPresented, arrowEdge: .trailing) {
+            SliderPopupView(value: $value)
+        }
+    }
+}
+
+private struct SliderPopupView: View {
+    @Binding var value: Int
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text(Strings.Settings.Appearance.transparency)
+                .font(.subheadline)
+                .fontWeight(.semibold)
+                .foregroundColor(.secondary)
+
+            HStack(spacing: 8) {
+                Image(nsImage: Icons.Settings.transparencyLow)
+
+                Slider(value: Binding(
+                    get: { Double(value) },
+                    set: { value = Int($0) }
+                ), in: 0...4, step: 1)
+
+                Image(nsImage: Icons.Settings.transparencyHigh)
+            }
+            .frame(width: 200)
+        }
+        .padding()
+    }
+}
+
+private struct DesktopWallpaper: View {
+    let imageURL = NSWorkspace.shared.desktopImageURL(for: .main!)
+
+    var body: some View {
+        GeometryReader { geometry in
+            AsyncImage(url: imageURL) { image in
+                image
+                    .resizable()
+                    .scaledToFill()
+            } placeholder: {
+                Color.secondary.opacity(0.2)
+            }
+            // Match the container's calculated dimensions exactly
+            .frame(width: geometry.size.width, height: geometry.size.height)
+            .clipped()
+        }
+    }
+}

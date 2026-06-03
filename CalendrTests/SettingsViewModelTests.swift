@@ -41,7 +41,8 @@ class SettingsViewModelTests: XCTestCase {
     var localStorageEventStatusItemCheckRange: NSNumber? { localStorage.object(forKey: Prefs.eventStatusItemCheckRange) as? NSNumber }
     var localStorageEventStatusItemSound: Bool? { localStorage.object(forKey: Prefs.eventStatusItemSound) as? Bool }
     var localStorageEventStatusItemFlashing: Bool? { localStorage.object(forKey: Prefs.eventStatusItemFlashing) as? Bool }
-    var localStorageEventStatusItemFullScreen: Bool? { localStorage.object(forKey: Prefs.eventStatusItemFullScreen) as? Bool }
+    var localStorageShowFullScreenEvent: Bool? { localStorage.object(forKey: Prefs.showFullScreenEvent) as? Bool }
+    var localStorageFullScreenEventTransparencyLevel: NSNumber? { localStorage.object(forKey: Prefs.fullScreenEventTransparencyLevel) as? NSNumber }
     var localStorageEventStatusItemTextScaling: NSNumber? { localStorage.object(forKey: Prefs.eventStatusItemTextScaling) as? NSNumber }
     var localStorageEventStatusItemLength: NSNumber? { localStorage.object(forKey: Prefs.eventStatusItemLength) as? NSNumber }
     var localStorageEventStatusItemDetectNotch: Bool? { localStorage.object(forKey: Prefs.eventStatusItemDetectNotch) as? Bool }
@@ -77,7 +78,8 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertNil(localStorageEventStatusItemCheckRange)
         XCTAssertNil(localStorageEventStatusItemSound)
         XCTAssertNil(localStorageEventStatusItemFlashing)
-        XCTAssertNil(localStorageEventStatusItemFullScreen)
+        XCTAssertNil(localStorageShowFullScreenEvent)
+        XCTAssertNil(localStorageFullScreenEventTransparencyLevel)
         XCTAssertNil(localStorageEventStatusItemTextScaling)
         XCTAssertNil(localStorageEventStatusItemLength)
         XCTAssertNil(localStorageEventStatusItemDetectNotch)
@@ -114,7 +116,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.eventStatusItemCheckRange.lastValue(), 6)
         XCTAssertEqual(viewModel.eventStatusItemSound.lastValue(), false)
         XCTAssertEqual(viewModel.eventStatusItemFlashing.lastValue(), false)
-        XCTAssertEqual(viewModel.eventStatusItemFullScreen.lastValue(), false)
+        XCTAssertEqual(viewModel.showFullScreenEvent.lastValue(), false)
         XCTAssertEqual(viewModel.eventStatusItemLength.lastValue(), 18)
         XCTAssertEqual(viewModel.eventStatusItemDetectNotch.lastValue(), false)
         XCTAssertEqual(viewModel.calendarScaling.lastValue(), 1)
@@ -147,7 +149,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(localStorageEventStatusItemCheckRange, 6)
         XCTAssertEqual(localStorageEventStatusItemSound, false)
         XCTAssertEqual(localStorageEventStatusItemFlashing, false)
-        XCTAssertEqual(localStorageEventStatusItemFullScreen, false)
+        XCTAssertEqual(localStorageShowFullScreenEvent, false)
         XCTAssertEqual(localStorageEventStatusItemLength, 18)
         XCTAssertEqual(localStorageEventStatusItemDetectNotch, false)
         XCTAssertEqual(localStorageCalendarScaling, 1)
@@ -162,6 +164,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(localStorageShowRecurrenceIndicator, true)
         XCTAssertEqual(localStorageShowEventListSummary, true)
         XCTAssertEqual(localStorageTransparency, 2)
+        XCTAssertEqual(localStorageFullScreenEventTransparencyLevel, 2)
         XCTAssertEqual(localStorageAppearanceMode, 0)
         XCTAssertEqual(localStorageEventDotsStyle, EventDotsStyle.multiple.rawValue)
         XCTAssertEqual(localStorageFutureEventsDays, 0)
@@ -491,28 +494,28 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(localStorageEventStatusItemFlashing, true)
     }
 
-    func testToggleEventStatusItemFullScreen() {
+    func testToggleShowFullScreenEvent() {
 
-        localStorage.eventStatusItemFullScreen = true
+        localStorage.showFullScreenEvent = true
 
-        var eventStatusItemFullScreen: Bool?
+        var showFullScreenEvent: Bool?
 
-        viewModel.eventStatusItemFullScreen
-            .bind { eventStatusItemFullScreen = $0 }
+        viewModel.showFullScreenEvent
+            .bind { showFullScreenEvent = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(eventStatusItemFullScreen, true)
-        XCTAssertEqual(localStorageEventStatusItemFullScreen, true)
+        XCTAssertEqual(showFullScreenEvent, true)
+        XCTAssertEqual(localStorageShowFullScreenEvent, true)
 
-        viewModel.toggleEventStatusItemFullScreen.onNext(false)
+        viewModel.toggleFullScreenEvent.onNext(false)
 
-        XCTAssertEqual(eventStatusItemFullScreen, false)
-        XCTAssertEqual(localStorageEventStatusItemFullScreen, false)
+        XCTAssertEqual(showFullScreenEvent, false)
+        XCTAssertEqual(localStorageShowFullScreenEvent, false)
 
-        viewModel.toggleEventStatusItemFullScreen.onNext(true)
+        viewModel.toggleFullScreenEvent.onNext(true)
 
-        XCTAssertEqual(eventStatusItemFullScreen, true)
-        XCTAssertEqual(localStorageEventStatusItemFullScreen, true)
+        XCTAssertEqual(showFullScreenEvent, true)
+        XCTAssertEqual(localStorageShowFullScreenEvent, true)
     }
 
     func testChangeEventStatusItemLength() {

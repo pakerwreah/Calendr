@@ -57,7 +57,7 @@ class NextEventViewModelFullScreenTests: XCTestCase {
 
     func testNextEvent_isInProgress_withFullScreenDisabled_shouldNotPublishFullScreenViewModel() {
 
-        settings.toggleEventStatusItemFullScreen.onNext(false)
+        settings.toggleFullScreenEvent.onNext(false)
 
         let viewModel = makeViewModel(type: .event)
 
@@ -76,7 +76,7 @@ class NextEventViewModelFullScreenTests: XCTestCase {
 
     func testNextEvent_isInProgress_withFullScreenToggledOn_shouldPublishFullScreenViewModel() {
 
-        settings.toggleEventStatusItemFullScreen.onNext(false)
+        settings.toggleFullScreenEvent.onNext(false)
 
         let viewModel = makeViewModel(type: .event)
 
@@ -92,14 +92,14 @@ class NextEventViewModelFullScreenTests: XCTestCase {
 
         XCTAssertNil(fullScreen)
 
-        settings.toggleEventStatusItemFullScreen.onNext(true)
+        settings.toggleFullScreenEvent.onNext(true)
 
         XCTAssertNotNil(fullScreen)
     }
 
     func testNextEvent_isNotInProgress_shouldNotPublishFullScreenViewModel() {
 
-        settings.toggleEventStatusItemFullScreen.onNext(true)
+        settings.toggleFullScreenEvent.onNext(true)
 
         let viewModel = makeViewModel(type: .event)
 
@@ -118,7 +118,7 @@ class NextEventViewModelFullScreenTests: XCTestCase {
 
     func testNextEvent_isInProgress_shouldPublishFullScreenViewModel() {
 
-        settings.toggleEventStatusItemFullScreen.onNext(true)
+        settings.toggleFullScreenEvent.onNext(true)
 
         let viewModel = makeViewModel(type: .event)
 
@@ -138,7 +138,7 @@ class NextEventViewModelFullScreenTests: XCTestCase {
     // local id is not guaranteed to be stable
     func testNextEvent_isInProgress_eventIdChanged_shouldNotReplayFullScreenViewModel() {
 
-        settings.toggleEventStatusItemFullScreen.onNext(true)
+        settings.toggleFullScreenEvent.onNext(true)
 
         let viewModel = makeViewModel(type: .event)
 
@@ -166,7 +166,7 @@ class NextEventViewModelFullScreenTests: XCTestCase {
     // we don't care if someone accept / decline the event
     func testNextEvent_isInProgress_participantsChanged_shouldNotReplayFullScreenViewModel() {
 
-        settings.toggleEventStatusItemFullScreen.onNext(true)
+        settings.toggleFullScreenEvent.onNext(true)
 
         let viewModel = makeViewModel(type: .event)
 
@@ -198,7 +198,7 @@ class NextEventViewModelFullScreenTests: XCTestCase {
     // time doesn't matter, we only care if the meeting is in progress or not
     func testNextEvent_isInProgress_timeChanged_shouldNotReplayFullScreenViewModel() {
 
-        settings.toggleEventStatusItemFullScreen.onNext(true)
+        settings.toggleFullScreenEvent.onNext(true)
 
         let viewModel = makeViewModel(type: .event)
 
@@ -225,7 +225,7 @@ class NextEventViewModelFullScreenTests: XCTestCase {
 
     func testNextEvent_eventRescheduled_shouldPublishNilFullScreenViewModel() {
 
-        settings.toggleEventStatusItemFullScreen.onNext(true)
+        settings.toggleFullScreenEvent.onNext(true)
 
         let viewModel = makeViewModel(type: .event)
 
@@ -250,7 +250,7 @@ class NextEventViewModelFullScreenTests: XCTestCase {
 
     func testNextEvent_eventEnded_shouldPublishNilFullScreenViewModel() {
 
-        settings.toggleEventStatusItemFullScreen.onNext(true)
+        settings.toggleFullScreenEvent.onNext(true)
 
         let viewModel = makeViewModel(type: .event)
 
@@ -274,7 +274,7 @@ class NextEventViewModelFullScreenTests: XCTestCase {
 
     func testNextEvent_isInProgress_externalIdChanged_shouldPublishFullScreenViewModel() {
 
-        settings.toggleEventStatusItemFullScreen.onNext(true)
+        settings.toggleFullScreenEvent.onNext(true)
 
         let viewModel = makeViewModel(type: .event)
 

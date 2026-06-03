@@ -194,7 +194,7 @@ class NextEventViewModel {
         fullScreenViewModel = Observable
             .combineLatest(
                 nextEvent,
-                settings.eventStatusItemFullScreen
+                settings.showFullScreenEvent
             )
             .distinctUntilChanged(
                 { next, isEnabled in
@@ -211,7 +211,9 @@ class NextEventViewModel {
                     event: next.event,
                     dateProvider: dateProvider,
                     forceLocalTimeZone: forceLocalTimeZone,
+                    localStorage: localStorage,
                     workspace: workspace,
+                    clock: .continuous,
                     onSkip: {
                         actionCallback.onNext(
                             .event(next.event, .skip)

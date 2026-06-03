@@ -33,20 +33,23 @@ enum EventUtils {
     static func duration(
         for event: EventModel,
         using dateProvider: DateProviding,
-        dateStyle: DateIntervalFormatter.Style,
-        timeStyle: DateIntervalFormatter.Style,
+        preferredDateStyle: DateIntervalFormatter.Style,
+        preferredTimeStyle: DateIntervalFormatter.Style,
         forceLocalTimeZone: Bool
     ) -> String {
 
         let formatter = DateIntervalFormatter()
-        formatter.dateStyle = dateStyle
+        formatter.dateStyle = preferredDateStyle
         formatter.calendar = dateProvider.calendar
 
         if event.isAllDay {
+            if preferredDateStyle == .none {
+                formatter.dateStyle = .long
+            }
             formatter.timeStyle = .none
             return formatter.string(from: event.start, to: event.end)
         } else {
-            formatter.timeStyle = timeStyle
+            formatter.timeStyle = preferredTimeStyle
 
             let range = event.range(using: dateProvider)
 
@@ -63,6 +66,10 @@ enum EventUtils {
             }
 
             let timeZone = event.isMeeting || forceLocalTimeZone ? nil : event.timeZone
+
+            if preferredDateStyle == .none, !range.isSingleDay {
+                formatter.dateStyle = .medium
+            }
 
             return EventUtils.duration(
                 from: event.start,
