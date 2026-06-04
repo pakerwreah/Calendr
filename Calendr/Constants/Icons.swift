@@ -45,8 +45,8 @@ enum Icons {
         static let length_big = NSImage(systemName: "textformat.abc")
         static let zoomIn = NSImage(systemName: "plus.magnifyingglass")
         static let zoomOut = NSImage(systemName: "minus.magnifyingglass")
-        static let transparencyLow = NSImage(systemName: "cube.transparent")
-        static let transparencyHigh = NSImage(systemName: "cube.transparent.fill")
+        static let transparencyLow = NSImage(systemName: "cube.transparent.fill")
+        static let transparencyHigh = NSImage(systemName: "cube.transparent")
         static let textSmall = NSImage(systemName: "textformat.size.smaller")
         static let textLarge = NSImage(systemName: "textformat.size.larger")
         static let prev = Calendar.prev

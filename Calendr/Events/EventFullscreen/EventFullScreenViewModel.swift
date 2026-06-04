@@ -24,11 +24,11 @@ class EventFullScreenViewModel {
 
     var material: Material {
         [
-            .ultraThin,
-            .thin,
-            .regular,
+            .ultraThick,
             .thick,
-            .ultraThick
+            .regular,
+            .thin,
+            .ultraThin
         ][clamped: transparencyLevel]!
     }
 

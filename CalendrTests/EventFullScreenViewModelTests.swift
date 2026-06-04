@@ -77,27 +77,27 @@ class EventFullScreenViewModelTests: XCTestCase {
         let viewModel = mock()
 
         viewModel.transparencyLevel = 0
-        XCTAssertEqual(viewModel.material, .ultraThin)
+        XCTAssertEqual(viewModel.material, .ultraThick)
 
         viewModel.transparencyLevel = 1
-        XCTAssertEqual(viewModel.material, .thin)
+        XCTAssertEqual(viewModel.material, .thick)
 
         viewModel.transparencyLevel = 2
         XCTAssertEqual(viewModel.material, .regular)
 
         viewModel.transparencyLevel = 3
-        XCTAssertEqual(viewModel.material, .thick)
+        XCTAssertEqual(viewModel.material, .thin)
 
         viewModel.transparencyLevel = 4
-        XCTAssertEqual(viewModel.material, .ultraThick)
+        XCTAssertEqual(viewModel.material, .ultraThin)
 
         // Out of bounds
 
         viewModel.transparencyLevel = -1
-        XCTAssertEqual(viewModel.material, .ultraThin)
+        XCTAssertEqual(viewModel.material, .ultraThick)
 
         viewModel.transparencyLevel = 5
-        XCTAssertEqual(viewModel.material, .ultraThick)
+        XCTAssertEqual(viewModel.material, .ultraThin)
     }
 
     func testDismissLock() async {
