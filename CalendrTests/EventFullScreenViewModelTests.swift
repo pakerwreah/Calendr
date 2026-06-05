@@ -7,19 +7,18 @@
 
 import XCTest
 import RxSwift
-import Clocks
 @testable import Calendr
 
 class EventFullScreenViewModelTests: XCTestCase {
 
-    let cooldown: Duration = .seconds(1.5)
+    let cooldown: DispatchTimeInterval = .milliseconds(1500)
 
     let disposeBag = DisposeBag()
 
     let localStorage = MockLocalStorageProvider()
     let dateProvider = MockDateProvider()
     lazy var workspace = MockWorkspaceServiceProvider(localStorage: localStorage)
-    let clock = TestClock()
+    let scheduler = HistoricalScheduler()
 
     var onSkip: (() -> Void)?
 
@@ -100,7 +99,7 @@ class EventFullScreenViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.material, .ultraThin)
     }
 
-    func testDismissLock() async {
+    func testDismissLock() {
 
         let viewModel = mock()
 
@@ -108,7 +107,7 @@ class EventFullScreenViewModelTests: XCTestCase {
 
         XCTAssertTrue(viewModel.isDismissLocked)
 
-        await clock.advance(by: cooldown)
+        scheduler.advance(cooldown)
 
         XCTAssertFalse(viewModel.isDismissLocked)
     }
@@ -132,7 +131,7 @@ class EventFullScreenViewModelTests: XCTestCase {
         wait(for: [dismissExpectation], timeout: 0.1)
     }
 
-    func testClose_afterCooldown_shouldDismiss() async {
+    func testClose_afterCooldown_shouldDismiss() {
 
         let dismissExpectation = expectation(description: "Dismiss")
 
@@ -145,11 +144,11 @@ class EventFullScreenViewModelTests: XCTestCase {
 
         viewModel.onAppear()
 
-        await clock.advance(by: cooldown)
+        scheduler.advance(cooldown)
 
         viewModel.performClose()
 
-        await fulfillment(of: [dismissExpectation], timeout: 0.1)
+        wait(for: [dismissExpectation], timeout: 0.1)
     }
 
     func testSkip_beforeCooldown_shouldNotSkip() {
@@ -176,7 +175,7 @@ class EventFullScreenViewModelTests: XCTestCase {
         wait(for: [skipExpectation, dismissExpectation], timeout: 0.1)
     }
 
-    func testSkip_afterCooldown_shouldSkip() async {
+    func testSkip_afterCooldown_shouldSkip() {
 
         let skipExpectation = expectation(description: "Skip")
         let dismissExpectation = expectation(description: "Dismiss")
@@ -192,11 +191,11 @@ class EventFullScreenViewModelTests: XCTestCase {
 
         viewModel.onAppear()
 
-        await clock.advance(by: cooldown)
+        scheduler.advance(cooldown)
 
         viewModel.skip()
 
-        await fulfillment(of: [skipExpectation, dismissExpectation], timeout: 0.1)
+        wait(for: [skipExpectation, dismissExpectation], timeout: 0.1)
     }
 
     func testJoin_beforeCooldown_shouldNotJoin() {
@@ -229,7 +228,7 @@ class EventFullScreenViewModelTests: XCTestCase {
         wait(for: [joinExpectation, dismissExpectation], timeout: 0.1)
     }
 
-    func testJoin_afterCooldown_shouldJoin() async {
+    func testJoin_afterCooldown_shouldJoin() {
 
         let joinExpectation = expectation(description: "Join")
         let dismissExpectation = expectation(description: "Dismiss")
@@ -254,14 +253,14 @@ class EventFullScreenViewModelTests: XCTestCase {
 
         viewModel.onAppear()
 
-        await clock.advance(by: cooldown)
+        scheduler.advance(cooldown)
 
         viewModel.join()
 
-        await fulfillment(of: [joinExpectation, dismissExpectation], timeout: 0.1)
+        wait(for: [joinExpectation, dismissExpectation], timeout: 0.1)
     }
 
-    func testJoin_shouldOpenURL() async {
+    func testJoin_shouldOpenURL() {
 
         let openExpectation = expectation(description: "Open")
         let dismissExpectation = expectation(description: "Dismiss")
@@ -284,14 +283,14 @@ class EventFullScreenViewModelTests: XCTestCase {
 
         viewModel.onAppear()
 
-        await clock.advance(by: cooldown)
+        scheduler.advance(cooldown)
 
         viewModel.join()
 
-        await fulfillment(of: [openExpectation, dismissExpectation], timeout: 0.1)
+        wait(for: [openExpectation, dismissExpectation], timeout: 0.1)
     }
 
-    func testJoin_shouldOpenPreferredBrowserForCalendar() async {
+    func testJoin_shouldOpenPreferredBrowserForCalendar() {
 
         let openExpectation = expectation(description: "Open")
         let dismissExpectation = expectation(description: "Dismiss")
@@ -325,11 +324,11 @@ class EventFullScreenViewModelTests: XCTestCase {
 
         viewModel.onAppear()
 
-        await clock.advance(by: cooldown)
+        scheduler.advance(cooldown)
 
         viewModel.join()
 
-        await fulfillment(of: [openExpectation, dismissExpectation], timeout: 0.1)
+        wait(for: [openExpectation, dismissExpectation], timeout: 0.1)
     }
 
     func mock(event: EventModel = .make()) -> EventFullScreenViewModel {
@@ -340,7 +339,7 @@ class EventFullScreenViewModelTests: XCTestCase {
             forceLocalTimeZone: false,
             localStorage: localStorage,
             workspace: workspace,
-            clock: clock,
+            scheduler: scheduler,
             onSkip: { [weak self] in
                 self?.onSkip?()
             }

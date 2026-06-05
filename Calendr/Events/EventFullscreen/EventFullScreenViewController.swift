@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import RxSwift
 
 typealias EventFullScreenViewController = HostingViewModelController<EventFullScreenView>
 
@@ -109,7 +110,7 @@ struct EventFullScreenView: ViewModelView {
                 forceLocalTimeZone: false,
                 localStorage: MockLocalStorageProvider().withDefaults(),
                 workspace: MockWorkspaceServiceProvider(),
-                clock: .continuous,
+                scheduler: MainScheduler.instance,
                 onSkip: { }
             )
         )
