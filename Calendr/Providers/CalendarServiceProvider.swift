@@ -512,12 +512,17 @@ private extension EventStatus {
 private extension EKCalendar {
 
     var accountTitle: String {
-        switch source.sourceType {
-        case .local, .subscribed, .birthdays:
-            Strings.Calendars.Source.others
-        default:
-            source.title
-        }
+        {
+            guard let source else {
+                return nil
+            }
+            switch source.sourceType {
+                case .local, .subscribed, .birthdays:
+                    return nil
+                default:
+                    return source.title
+            }
+        }() ?? Strings.Calendars.Source.others
     }
 
     var accountEmail: String? {
