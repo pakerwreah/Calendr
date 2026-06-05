@@ -107,15 +107,4 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         skipReopen.onNext(false)
         return false
     }
-
-    private let activity = {
-        ProcessInfo.processInfo.beginActivity(
-            options: [
-                .userInitiatedAllowingIdleSystemSleep,
-                .automaticTerminationDisabled,
-                .suddenTerminationDisabled
-            ],
-            reason: "Stop killing my app!"
-        )
-    }()
 }
