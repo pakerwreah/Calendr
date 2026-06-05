@@ -458,14 +458,14 @@ private extension Strings.AccessRequired {
     }
 }
 
-extension EKParticipant {
+private extension EKParticipant {
 
     func setParticipantStatus(_ status: EKParticipantStatus) {
         setValue(status.rawValue, forKey: "participantStatus")
     }
 }
 
-extension EKEvent {
+private extension EKEvent {
 
     var currentUser: EKParticipant? {
         attendees?.first(where: \.isCurrentUser)
@@ -511,13 +511,22 @@ private extension EventStatus {
 
 private extension EKCalendar {
 
+    var isDelegate: Bool {
+        source?.isDelegate ?? false
+    }
+
     var accountTitle: String {
-        switch source.sourceType {
-        case .local, .subscribed, .birthdays:
-            Strings.Calendars.Source.others
-        default:
-            source.title
-        }
+        {
+            guard let source else {
+                return nil
+            }
+            switch source.sourceType {
+                case .local, .subscribed, .birthdays:
+                    return nil
+                default:
+                    return source.title
+            }
+        }() ?? Strings.Calendars.Source.others
     }
 
     var accountEmail: String? {
@@ -657,13 +666,6 @@ private extension EventModel {
             priority: .init(from: reminder.priority),
             attachments: reminder.attachments // doesn't work
         )
-    }
-}
-
-private extension EKCalendar {
-
-    var isDelegate: Bool {
-        source.isDelegate
     }
 }
 
