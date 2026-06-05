@@ -22,18 +22,27 @@ struct EventFullScreenView: ViewModelView {
 
     var body: some View {
         ZStack {
-            VStack(spacing: 32) {
-                Text(viewModel.title)
-                    .font(.system(size: 40))
-                    .fontWeight(.medium)
-                    .foregroundStyle(.white)
+            VStack(spacing: 16) {
+                HStack(spacing: 16) {
+                    RoundedRectangle(cornerRadius: 8, style: .circular)
+                        .fill(Color(nsColor: viewModel.barColor))
+                        .frame(width: 8)
+                        .offset(y: 2)
+
+                    Text(viewModel.title)
+                        .lineLimit(2)
+                        .font(.system(size: 40))
+                        .fontWeight(.medium)
+                        .foregroundStyle(.white)
+                }
+                .fixedSize(horizontal: false, vertical: true)
 
                 Text(viewModel.duration)
                     .font(.system(size: 24))
                     .fontWeight(.regular)
                     .foregroundStyle(.white)
 
-                Spacer().frame(height: 32)
+                Spacer().frame(height: 64)
 
                 let buttonWidth = CGFloat(200)
 
@@ -95,25 +104,40 @@ struct EventFullScreenView: ViewModelView {
 
 #if DEBUG
 
-#Preview(traits: .fixedLayout(width: 800, height: 600)) {
-    ZStack {
-        DesktopWallpaper()
-        EventFullScreenView(
-            viewModel: EventFullScreenViewModel(
-                event: .make(
-                    start: .make(year: 2026, month: 5, day: 30, hour: 21, minute: 0),
-                    end: .make(year: 2026, month: 5, day: 30, hour: 21, minute: 30),
-                    title: "Design Review",
-                    url: URL(string: "https://meet.google.com")
-                ),
-                dateProvider: MockDateProvider(),
-                forceLocalTimeZone: false,
-                localStorage: MockLocalStorageProvider().withDefaults(),
-                workspace: MockWorkspaceServiceProvider(),
-                scheduler: MainScheduler.instance,
-                onSkip: { }
-            )
+@ViewBuilder
+private func ContentView(title: String) -> some View {
+    EventFullScreenView(
+        viewModel: EventFullScreenViewModel(
+            event: .make(
+                start: .make(year: 2026, month: 5, day: 30, hour: 21, minute: 0),
+                end: .make(year: 2026, month: 5, day: 30, hour: 21, minute: 30),
+                title: title,
+                url: URL(string: "https://meet.google.com"),
+                calendar: .make(color: .systemYellow)
+            ),
+            dateProvider: MockDateProvider(),
+            forceLocalTimeZone: false,
+            localStorage: MockLocalStorageProvider().withDefaults(),
+            workspace: MockWorkspaceServiceProvider(),
+            scheduler: MainScheduler.instance,
+            onSkip: { }
         )
+    )
+}
+
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ForEach([
+            "Design Review",
+            "Lorem ipsum dolor sit amet dolor pit amet ipsum dolor sit amet dolor sit amet",
+        ], id: \.self) { title in
+            ZStack {
+                DesktopWallpaper()
+                ContentView(title: title)
+            }
+            .previewDisplayName(title.prefix(20).description)
+            .previewLayout(.fixed(width: 800, height: 450))
+        }
     }
 }
 
