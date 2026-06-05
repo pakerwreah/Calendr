@@ -213,11 +213,13 @@ class NextEventViewModel {
                     forceLocalTimeZone: forceLocalTimeZone,
                     localStorage: localStorage,
                     workspace: workspace,
-                    clock: .continuous,
+                    scheduler: scheduler,
                     onSkip: {
-                        actionCallback.onNext(
-                            .event(next.event, .skip)
-                        )
+                        for event in next.grouped {
+                            actionCallback.onNext(
+                                .event(event, .skip)
+                            )
+                        }
                     }
                 )
             }

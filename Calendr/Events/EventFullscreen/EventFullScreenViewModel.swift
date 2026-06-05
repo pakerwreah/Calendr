@@ -32,12 +32,16 @@ class EventFullScreenViewModel {
         ][clamped: transparencyLevel]!
     }
 
+    private let disposeBag = DisposeBag()
+
+    private let onAppearSubject = PublishSubject<Void>()
+
     let onDismiss: Observable<Void>
     private let onDismissObserver: AnyObserver<Void>
 
     private let localStorage: LocalStorageProvider
     private let workspace: WorkspaceServiceProviding
-    private let clock: ClockProviding
+    private let scheduler: SchedulerType
 
     private let onSkip: () -> Void
 
@@ -62,10 +66,7 @@ class EventFullScreenViewModel {
     }
 
     func onAppear() {
-        Task { @MainActor [clock, weak self] in
-            try await clock.sleep(for: .seconds(1.5))
-            self?.isDismissLocked = false
-        }
+        onAppearSubject.onNext(())
     }
 
     init(
@@ -74,12 +75,12 @@ class EventFullScreenViewModel {
         forceLocalTimeZone: Bool,
         localStorage: LocalStorageProvider,
         workspace: WorkspaceServiceProviding,
-        clock: ClockProviding,
+        scheduler: SchedulerType,
         onSkip: @escaping () -> Void
     ) {
         self.localStorage = localStorage
         self.workspace = workspace
-        self.clock = clock
+        self.scheduler = scheduler
         self.onSkip = onSkip
 
         self.title = event.title
@@ -97,5 +98,13 @@ class EventFullScreenViewModel {
         self.transparencyLevel = localStorage.fullScreenEventTransparencyLevel
 
         (onDismiss, onDismissObserver) = PublishSubject.pipe()
+
+        onAppearSubject
+            .delay(.milliseconds(1500), scheduler: scheduler)
+            .take(1)
+            .bind { [weak self] in
+                self?.isDismissLocked = false
+            }
+            .disposed(by: disposeBag)
     }
 }

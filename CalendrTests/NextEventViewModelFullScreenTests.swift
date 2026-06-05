@@ -296,4 +296,36 @@ class NextEventViewModelFullScreenTests: XCTestCase {
 
         XCTAssertEqual(fullScreen?.title, "Event 2")
     }
+
+    func testNextEvent_withFullScreenViewModel_onSkip_shouldSkipGroupedEvents() {
+
+        settings.toggleFullScreenEvent.onNext(true)
+
+        let viewModel = makeViewModel(type: .event)
+
+        var fullScreen: EventFullScreenViewModel?
+
+        viewModel.fullScreenViewModel
+            .bind { fullScreen = $0 }
+            .disposed(by: disposeBag)
+
+        calendarService.changeEvents([
+            .make(id: "1", externalId: "1", start: now, end: now + 1, title: "Event 1"),
+            .make(id: "2", externalId: "2", start: now, end: now + 2, title: "Event 2"),
+            .make(id: "3", externalId: "3", start: now, end: now + 3, title: "Event 3")
+        ])
+
+        let expectedTitle = "3 events"
+        XCTAssertEqual(fullScreen?.title, expectedTitle)
+        XCTAssertEqual(viewModel.title.lastValue(), expectedTitle)
+        XCTAssertEqual(viewModel.hasEvent.lastValue(), true)
+
+        fullScreen?.onAppear()
+        scheduler.advance(.seconds(2))
+        fullScreen?.skip()
+
+        XCTAssertNil(fullScreen)
+        XCTAssertNil(viewModel.title.lastValue())
+        XCTAssertEqual(viewModel.hasEvent.lastValue(), false)
+    }
 }
