@@ -511,6 +511,10 @@ private extension EventStatus {
 
 private extension EKCalendar {
 
+    var isDelegate: Bool {
+        source?.isDelegate ?? false
+    }
+
     var accountTitle: String {
         {
             guard let source else {
@@ -662,13 +666,6 @@ private extension EventModel {
             priority: .init(from: reminder.priority),
             attachments: reminder.attachments // doesn't work
         )
-    }
-}
-
-private extension EKCalendar {
-
-    var isDelegate: Bool {
-        source.isDelegate
     }
 }
 
