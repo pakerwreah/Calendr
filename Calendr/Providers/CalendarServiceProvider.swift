@@ -458,14 +458,14 @@ private extension Strings.AccessRequired {
     }
 }
 
-extension EKParticipant {
+private extension EKParticipant {
 
     func setParticipantStatus(_ status: EKParticipantStatus) {
         setValue(status.rawValue, forKey: "participantStatus")
     }
 }
 
-extension EKEvent {
+private extension EKEvent {
 
     var currentUser: EKParticipant? {
         attendees?.first(where: \.isCurrentUser)
