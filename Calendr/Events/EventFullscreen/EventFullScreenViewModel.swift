@@ -7,11 +7,13 @@
 
 import Observation
 import RxSwift
+import AppKit
 
 @Observation.Observable
 class EventFullScreenViewModel {
     let title: String
     let duration: String
+    let barColor: NSColor
     let link: EventLink?
 
     var isDismissLocked = true
@@ -92,6 +94,8 @@ class EventFullScreenViewModel {
             preferredTimeStyle: .short,
             forceLocalTimeZone: forceLocalTimeZone
         )
+
+        self.barColor = event.calendar.color
 
         self.link = event.detectLink(using: workspace)
 

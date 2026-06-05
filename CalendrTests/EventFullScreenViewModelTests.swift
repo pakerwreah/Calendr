@@ -37,11 +37,13 @@ class EventFullScreenViewModelTests: XCTestCase {
             event: .make(
                 title: "Design Review",
                 url: .init(string: "https://google.com"),
+                calendar: .make(color: .red)
             ),
         )
 
         XCTAssertEqual(viewModel.title, "Design Review")
         XCTAssertEqual(viewModel.link?.url.absoluteString, "https://google.com")
+        XCTAssertEqual(viewModel.barColor, .red)
         XCTAssertEqual(viewModel.isDismissLocked, true)
         XCTAssertEqual(viewModel.transparencyLevel, 2)
         XCTAssertEqual(viewModel.material, .regular)
