@@ -130,11 +130,14 @@ class NextEventView: NSView {
                     window?.close()
                 }
 
-                _ = vm.onDismiss.subscribe(onNext: close)
+                let dismiss = vm.onDismiss.subscribe(onNext: close)
 
                 window.present(on: screen)
 
-                return window.rx.deallocated.do(onDispose: close)
+                return window.rx.deallocated.do(onDispose: {
+                    dismiss.dispose()
+                    close()
+                })
             }
             .subscribe()
             .disposed(by: disposeBag)
