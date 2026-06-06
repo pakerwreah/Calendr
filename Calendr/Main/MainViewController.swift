@@ -712,7 +712,7 @@ class MainViewController: NSViewController {
                     Popover.closeAll()
                 }
 
-                return popover.rx.deallocated.do(onNext: { close.dispose() })
+                return popover.rx.deallocated.do(onDispose: { close.dispose() })
             }
             .bind { [weak self] in
                 self?.popoverDisposeBag = DisposeBag()
@@ -819,7 +819,7 @@ class MainViewController: NSViewController {
                     vc.view.window?.performClose(nil)
                 }
 
-                return popover.rx.deallocated.do(onNext: { close.dispose() })
+                return popover.rx.deallocated.do(onDispose: { close.dispose() })
             }
             .subscribe()
             .disposed(by: disposeBag)
