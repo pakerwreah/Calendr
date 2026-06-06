@@ -125,8 +125,11 @@ class NextEventView: NSView {
                 guard let vm, let screen = NSScreen.main else { return .empty() }
 
                 let window = EventFullScreenWindow(viewModel: vm)
+                var closed = false
 
                 let close: () -> Void = { [weak window] in
+                    guard !closed else { return }
+                    closed = true
                     window?.close()
                 }
 
