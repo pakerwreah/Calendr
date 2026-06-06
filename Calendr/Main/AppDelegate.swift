@@ -35,6 +35,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         let localStorage = LocalStorageProvider.shared
         let notificationCenter = NotificationCenter.default
+        let distributedNotificationCenter = DistributedNotificationCenter.default()
         let fileManager = FileManager.default
 
         // ensure prefs are loaded after an update
@@ -73,7 +74,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             geocoder: GeocodeServiceProvider(),
             weatherService: WeatherServiceProvider(dateProvider: dateProvider),
             dateProvider: dateProvider,
-            screenProvider: ScreenProvider(notificationCenter: notificationCenter),
+            screenProvider: ScreenProvider(
+                notificationCenter: notificationCenter,
+                distributedNotificationCenter: distributedNotificationCenter,
+                scheduler: MainScheduler.instance
+            ),
             notificationProvider: notificationProvider,
             networkProvider: networkProvider,
             localStorage: localStorage,

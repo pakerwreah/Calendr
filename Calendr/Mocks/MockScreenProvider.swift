@@ -17,9 +17,11 @@ struct MockScreen: Screen {
 
 class MockScreenProvider: ScreenProviding {
 
+    let isLockedObservable: Observable<Bool>
     let screenObservable: Observable<Screen>
 
     init(screen: Screen = MockScreen()) {
+        isLockedObservable = .just(false)
         screenObservable = .just(screen)
     }
 }

@@ -9,6 +9,7 @@
 
 import AppKit.NSWorkspace
 import UserNotifications
+import RxSwift
 
 class MockMainViewController: MainViewController {
 
@@ -26,7 +27,8 @@ class MockMainViewController: MainViewController {
         localStorage.showEventStatusItem = true
         localStorage.transparencyLevel = 5
 
-        let notificationCenter = NotificationCenter()
+        let notificationCenter = NotificationCenter.default
+        let distributedNotificationCenter = DistributedNotificationCenter.default()
         let fileManager = FileManager.default
 
         super.init(
@@ -38,7 +40,12 @@ class MockMainViewController: MainViewController {
             geocoder: MockGeocodeServiceProvider(),
             weatherService: MockWeatherServiceProvider(),
             dateProvider: dateProvider,
-            screenProvider: ScreenProvider(notificationCenter: notificationCenter), 
+            screenProvider: ScreenProvider(
+                notificationCenter: notificationCenter,
+                distributedNotificationCenter: distributedNotificationCenter,
+                scheduler: MainScheduler.instance
+            ),
+            
             notificationProvider: MockLocalNotificationProvider(),
             networkProvider: MockNetworkServiceProvider(),
             localStorage: localStorage,

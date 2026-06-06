@@ -202,6 +202,9 @@ class NextEventViewModel {
                 },
                 comparer: ==
             )
+            .flatMapLatest {
+                screenProvider.isLockedObservable.matching(false).take(1).map($0)
+            }
             .withLatestFrom(settings.forceLocalTimeZone) { ($0.0, $0.1, $1) }
             .map { [actionCallback] next, isEnabled, forceLocalTimeZone in
 

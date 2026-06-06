@@ -297,6 +297,103 @@ class NextEventViewModelFullScreenTests: XCTestCase {
         XCTAssertEqual(fullScreen?.title, "Event 2")
     }
 
+    func testNextEvent_isInProgress_withScreenLocked_shouldNotPublishFullScreenViewModel() {
+
+        settings.toggleFullScreenEvent.onNext(true)
+        screenProvider.isLockedObserver.onNext(true)
+
+        let viewModel = makeViewModel(type: .event)
+
+        var fullScreen: EventFullScreenViewModel?
+
+        viewModel.fullScreenViewModel
+            .bind { fullScreen = $0 }
+            .disposed(by: disposeBag)
+
+        calendarService.changeEvents([
+            .make(start: now - 1, end: now + 1)
+        ])
+
+        XCTAssertNil(fullScreen)
+    }
+
+    func testNextEvent_isInProgress_withScreenUnlocked_shouldPublishFullScreenViewModel() {
+
+        settings.toggleFullScreenEvent.onNext(true)
+        screenProvider.isLockedObserver.onNext(true)
+
+        let viewModel = makeViewModel(type: .event)
+
+        var fullScreen: EventFullScreenViewModel?
+
+        viewModel.fullScreenViewModel
+            .bind { fullScreen = $0 }
+            .disposed(by: disposeBag)
+
+        calendarService.changeEvents([
+            .make(start: now - 1, end: now + 1)
+        ])
+
+        XCTAssertNil(fullScreen)
+
+        screenProvider.isLockedObserver.onNext(false)
+
+        XCTAssertNotNil(fullScreen)
+    }
+
+    func testNextEvent_isInProgress_withScreenUnlocked_shouldPublishLatestFullScreenViewModel() {
+
+        settings.toggleFullScreenEvent.onNext(true)
+        screenProvider.isLockedObserver.onNext(true)
+
+        let viewModel = makeViewModel(type: .event)
+
+        var fullScreen: EventFullScreenViewModel?
+
+        viewModel.fullScreenViewModel
+            .bind { fullScreen = $0 }
+            .disposed(by: disposeBag)
+
+        calendarService.changeEvents([
+            .make(externalId: "1", start: now - 1, end: now + 1, title: "Event 1")
+        ])
+
+        XCTAssertNil(fullScreen)
+
+        calendarService.changeEvents([
+            .make(externalId: "2", start: now - 1, end: now + 1, title: "Event 2")
+        ])
+
+        XCTAssertNil(fullScreen)
+
+        screenProvider.isLockedObserver.onNext(false)
+
+        XCTAssertEqual(fullScreen?.title, "Event 2")
+    }
+
+    func testNextEvent_isInProgress_withScreenUnlockedThenLocked_shouldNotPublishNilFullScreenViewModel() {
+
+        settings.toggleFullScreenEvent.onNext(true)
+
+        let viewModel = makeViewModel(type: .event)
+
+        var fullScreen: EventFullScreenViewModel?
+
+        viewModel.fullScreenViewModel
+            .bind { fullScreen = $0 }
+            .disposed(by: disposeBag)
+
+        calendarService.changeEvents([
+            .make(start: now - 1, end: now + 1)
+        ])
+
+        XCTAssertNotNil(fullScreen)
+
+        screenProvider.isLockedObserver.onNext(true)
+
+        XCTAssertNotNil(fullScreen)
+    }
+
     func testNextEvent_withFullScreenViewModel_onSkip_shouldSkipGroupedEvents() {
 
         settings.toggleFullScreenEvent.onNext(true)
