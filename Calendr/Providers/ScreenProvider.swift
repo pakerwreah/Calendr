@@ -27,8 +27,9 @@ class ScreenProvider: ScreenProviding {
 
     init(
         notificationCenter: NotificationCenter,
-        distributedNotificationCenter: DistributedNotificationCenter,
-        scheduler: SchedulerType
+        distributedNotificationCenter: NotificationCenter,
+        scheduler: SchedulerType,
+        isScreenLocked: Bool = isScreenLocked()
     ) {
 
         isLockedObservable = Observable
@@ -36,7 +37,7 @@ class ScreenProvider: ScreenProviding {
                 distributedNotificationCenter.rx.notification(NSScreen.didLockNotification).map(true),
                 distributedNotificationCenter.rx.notification(NSScreen.didUnlockNotification).map(false)
             )
-            .startWith(false)
+            .startWith(isScreenLocked)
             .distinctUntilChanged()
             .share(replay: 1)
 
@@ -69,4 +70,11 @@ extension NSScreen: Screen {
 
     static let didLockNotification = NSNotification.Name("com.apple.screenIsLocked")
     static let didUnlockNotification = NSNotification.Name("com.apple.screenIsUnlocked")
+}
+
+private func isScreenLocked() -> Bool {
+    guard let session = CGSessionCopyCurrentDictionary() as? [String: Any] else {
+        return false
+    }
+    return session["CGSSessionScreenIsLocked"] as? Bool ?? false
 }
