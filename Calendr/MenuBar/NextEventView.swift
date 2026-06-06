@@ -120,20 +120,21 @@ class NextEventView: NSView {
             .disposed(by: disposeBag)
 
         viewModel.fullScreenViewModel
-            .skipNil()
             .observe(on: MainScheduler.instance)
-            .flatMapFirst { vm -> Observable<Void> in
-                guard let screen = NSScreen.main else { return .empty() }
+            .flatMapLatest { vm -> Observable<Void> in
+                guard let vm, let screen = NSScreen.main else { return .empty() }
 
                 let window = EventFullScreenWindow(viewModel: vm)
 
-                let dismiss = vm.onDismiss.bind { [weak window] in
+                let close: () -> Void = { [weak window] in
                     window?.close()
                 }
 
+                _ = vm.onDismiss.subscribe(onNext: close)
+
                 window.present(on: screen)
 
-                return window.rx.deallocated.do(onNext: { dismiss.dispose() })
+                return window.rx.deallocated.do(onDispose: close)
             }
             .subscribe()
             .disposed(by: disposeBag)
