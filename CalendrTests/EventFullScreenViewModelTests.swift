@@ -47,6 +47,14 @@ class EventFullScreenViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.isDismissLocked, true)
         XCTAssertEqual(viewModel.transparencyLevel, 2)
         XCTAssertEqual(viewModel.material, .regular)
+        XCTAssertEqual(viewModel.showSkip, true)
+    }
+
+    func testReminder_shouldNotAllowSkip() {
+
+        let viewModel = mock(event: .make(type: .reminder(completed: false)))
+
+        XCTAssertFalse(viewModel.showSkip)
     }
 
     func testDuration_isSameDay() {

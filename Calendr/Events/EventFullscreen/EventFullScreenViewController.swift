@@ -69,12 +69,15 @@ struct EventFullScreenView: ViewModelView {
                         }
                         .keyboardShortcut(.defaultAction)
                     }
-                    Button(action: viewModel.skip) {
-                        HStack {
-                            Image(nsImage: Icons.Event.skip)
-                            Text(Strings.Event.Action.skip)
+
+                    if viewModel.showSkip {
+                        Button(action: viewModel.skip) {
+                            HStack {
+                                Image(nsImage: Icons.Event.skip)
+                                Text(Strings.Event.Action.skip)
+                            }
+                            .frame(width: buttonWidth)
                         }
-                        .frame(width: buttonWidth)
                     }
                 }
                 .disabled(viewModel.isDismissLocked)

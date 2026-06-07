@@ -45,6 +45,7 @@ class EventFullScreenViewModel {
     private let workspace: WorkspaceServiceProviding
     private let scheduler: SchedulerType
 
+    let showSkip: Bool
     private let onSkip: () -> Void
 
     func performClose() {
@@ -83,6 +84,8 @@ class EventFullScreenViewModel {
         self.localStorage = localStorage
         self.workspace = workspace
         self.scheduler = scheduler
+
+        self.showSkip = !event.type.isReminder
         self.onSkip = onSkip
 
         self.title = event.title
