@@ -364,7 +364,7 @@ class NextEventViewModel {
             .compactMap {
                 if case .event(let event, .skip) = $0 { event } else { nil }
             }
-            .buffer(timeSpan: .milliseconds(1), count: Int.max, scheduler: scheduler)
+            .batch(timeSpan: .milliseconds(1), scheduler: scheduler)
             .withLatestFrom(skippedEvents) { ($0, $1) }
             .map { event, skipped in
                 let result = skipped + event.map(Skipped.init)
