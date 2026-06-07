@@ -419,7 +419,9 @@ class NextEventViewModelFullScreenTests: XCTestCase {
 
         fullScreen?.onAppear()
         scheduler.advance(.seconds(2))
+
         fullScreen?.skip()
+        scheduler.advance(.milliseconds(1))
 
         XCTAssertNil(fullScreen)
         XCTAssertNil(viewModel.title.lastValue())

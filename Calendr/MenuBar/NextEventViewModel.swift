@@ -364,9 +364,10 @@ class NextEventViewModel {
             .compactMap {
                 if case .event(let event, .skip) = $0 { event } else { nil }
             }
+            .buffer(timeSpan: .milliseconds(1), count: Int.max, scheduler: scheduler)
             .withLatestFrom(skippedEvents) { ($0, $1) }
             .map { event, skipped in
-                let result = skipped + [Skipped(event)]
+                let result = skipped + event.map(Skipped.init)
                 return result.suffix(MAX_SKIPPED)
             }
             .bind(to: skippedEvents)
