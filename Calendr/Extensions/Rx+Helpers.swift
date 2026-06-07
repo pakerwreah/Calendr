@@ -56,7 +56,7 @@ extension ObservableType {
     ///
     /// - Parameters:
     ///   - timeSpan: The duration the stream must be quiet before emitting the accumulated batch.
-    ///   - scheduler: The scheduler to run the debounce timer on.
+    ///   - scheduler: The scheduler to run the debounce timer on. It must be a serial scheduler.
     /// - Returns: An observable sequence of accumulated element arrays.
     func batch(timeSpan: RxTimeInterval, scheduler: SchedulerType) -> Observable<[Element]> {
         .deferred {
