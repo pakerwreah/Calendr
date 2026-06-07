@@ -50,6 +50,29 @@ extension ObservableType {
         _ = bind { value = $0 }
         return value
     }
+
+    /// Groups elements into an array when the stream goes quiet for a specified duration.
+    /// Unlike standard `.buffer`, this does not run a continuous timer and will never emit empty arrays.
+    ///
+    /// - Parameters:
+    ///   - timeSpan: The duration the stream must be quiet before emitting the accumulated batch.
+    ///   - scheduler: The scheduler to run the debounce timer on. It must be a serial scheduler.
+    /// - Returns: An observable sequence of accumulated element arrays.
+    func batch(timeSpan: RxTimeInterval, scheduler: SchedulerType) -> Observable<[Element]> {
+        .deferred {
+            var memoryBuffer = [Element]()
+            
+            return observe(on: scheduler)
+                .map { newElement in
+                    memoryBuffer.append(newElement)
+                    return memoryBuffer
+                }
+                .debounce(timeSpan, scheduler: scheduler)
+                .do(onNext: { _ in
+                    memoryBuffer = []
+                })
+        }
+    }
 }
 
 extension PublishSubject {

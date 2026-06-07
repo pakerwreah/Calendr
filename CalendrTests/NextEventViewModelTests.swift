@@ -929,10 +929,14 @@ class NextEventViewModelTests: XCTestCase {
 
         try XCTUnwrap(viewModel.makeContextMenuViewModel() as? EventOptionsViewModel).triggerAction(.skip)
 
+        scheduler.advance(.milliseconds(1))
+
         XCTAssertEqual(title, "Event 2")
         XCTAssertEqual(hasEvent, true)
 
         try XCTUnwrap(viewModel.makeContextMenuViewModel() as? EventOptionsViewModel).triggerAction(.skip)
+
+        scheduler.advance(.milliseconds(1))
 
         XCTAssertEqual(hasEvent, false)
     }
@@ -963,10 +967,14 @@ class NextEventViewModelTests: XCTestCase {
 
         try XCTUnwrap(viewModel.makeDetailsViewModel()).skipTapped.onNext(())
 
+        scheduler.advance(.milliseconds(1))
+
         XCTAssertEqual(title, "Event 2")
         XCTAssertEqual(hasEvent, true)
 
         try XCTUnwrap(viewModel.makeDetailsViewModel()).skipTapped.onNext(())
+
+        scheduler.advance(.milliseconds(1))
 
         XCTAssertEqual(hasEvent, false)
     }
