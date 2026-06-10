@@ -17,11 +17,6 @@ extension NSImage {
         self.init(systemSymbolName: systemName.description)!
     }
 
-    static func preferringMulticolor(systemName: String) -> NSImage? {
-        let image = NSImage(systemSymbolName: systemName + ".fill") ?? NSImage(systemSymbolName: systemName)
-        return image?.withSymbolConfiguration(.preferringMulticolor()) ?? image
-    }
-
     func with(scale: NSImage.SymbolScale) -> NSImage { withSymbolConfiguration(.init(scale: scale))! }
 
     func with(pointSize: CGFloat, weight: NSFont.Weight = .medium) -> NSImage {
