@@ -526,8 +526,12 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
 
                 let temperatures = isAllDay ? [weather.day.lowTemperature, weather.day.highTemperature] : [firstHour.temperature]
                 let symbolName = isAllDay ? weather.day.symbolName : firstHour.symbolName
-
-                guard let icon = NSImage.preferringMulticolor(systemName: symbolName) else { return }
+                
+                guard
+                    let icon = NSImage(systemSymbolName: symbolName).flatMap({
+                        $0.withSymbolConfiguration(.preferringHierarchical())
+                    })
+                else { return }
 
                 let temps = temperatures.map {
                     $0.formatted(
@@ -536,7 +540,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
                 }
 
                 let weatherStack = NSStackView(.vertical).with(spacing: 6)
-                weatherStack.addArrangedSubview(NSImageView(image: icon))
+                weatherStack.addArrangedSubview(NSImageView(image: icon).with(color: .labelColor))
                 weatherStack.addArrangedSubview(Label(text: temps.joined(separator: " "), font: .systemFont(ofSize: temps.count > 1 ? 10 : 12), align: .center))
 
                 weatherContainer.addSubview(weatherStack)
