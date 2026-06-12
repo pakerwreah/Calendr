@@ -31,6 +31,9 @@ class MockNextEventSettings: MockEventListSettings, NextEventSettings {
     let toggleEventStatusItemDetectNotch: AnyObserver<Bool>
     let eventStatusItemDetectNotch: Observable<Bool>
 
+    let eventStatusItemNotchLengthObserver: AnyObserver<Int>
+    let eventStatusItemNotchLength: Observable<Int>
+
     let eventStatusItemTextScaling: Observable<Double>
 
     override init() {
@@ -41,6 +44,7 @@ class MockNextEventSettings: MockEventListSettings, NextEventSettings {
         (showFullScreenEvent, toggleFullScreenEvent) = BehaviorSubject.pipe(value: false)
         (eventStatusItemLength, eventStatusItemLengthObserver) = BehaviorSubject.pipe(value: 18)
         (eventStatusItemDetectNotch, toggleEventStatusItemDetectNotch) = BehaviorSubject.pipe(value: false)
+        (eventStatusItemNotchLength, eventStatusItemNotchLengthObserver) = BehaviorSubject.pipe(value: 6)
         eventStatusItemTextScaling = .just(1)
         super.init()
     }

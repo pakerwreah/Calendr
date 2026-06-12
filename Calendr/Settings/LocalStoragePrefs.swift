@@ -28,6 +28,7 @@ enum Prefs {
     static let eventStatusItemSound = "event_status_item_sound"
     static let eventStatusItemLength = "event_status_item_length"
     static let eventStatusItemDetectNotch = "event_status_item_detect_notch"
+    static let eventStatusItemNotchLength = "event_status_item_notch_length"
     static let eventStatusItemTextScaling = "event_status_item_text_scaling"
 
     static let showFullScreenEvent = "event_status_item_full_screen"
@@ -106,6 +107,7 @@ func registerDefaultPrefs(in localStorage: LocalStorageProvider, calendar: Calen
         Prefs.eventStatusItemTextScaling: 1.2,
         Prefs.eventStatusItemLength: 18,
         Prefs.eventStatusItemDetectNotch: false,
+        Prefs.eventStatusItemNotchLength: 6,
 
         // Calendar
         Prefs.calendarScaling: 1,
@@ -256,6 +258,11 @@ extension LocalStorageProvider {
     @objc dynamic var eventStatusItemDetectNotch: Bool {
         get { bool(forKey: Prefs.eventStatusItemDetectNotch) }
         set { set(newValue, forKey: Prefs.eventStatusItemDetectNotch) }
+    }
+
+    @objc dynamic var eventStatusItemNotchLength: Int {
+        get { integer(forKey: Prefs.eventStatusItemNotchLength) }
+        set { set(newValue, forKey: Prefs.eventStatusItemNotchLength) }
     }
 
     // Calendar

@@ -231,9 +231,10 @@ class NextEventViewModelTests: XCTestCase {
 
         XCTAssertEqual(title, "This is an event with a text")
 
-        settings.eventStatusItemLengthObserver.onNext(10)
+        settings.eventStatusItemLengthObserver.onNext(11)
 
-        XCTAssertEqual(title, "This is an...")
+        // trimmed space (result: 10 chars)
+        XCTAssertEqual(title, "This is an.")
     }
 
     func testNextEventLengthWithNotch() {
@@ -260,11 +261,65 @@ class NextEventViewModelTests: XCTestCase {
 
         screenProvider.screenObserver.onNext(MockScreen(hasNotch: true))
 
-        XCTAssertEqual(title, "This is an even.")
+        XCTAssertEqual(title, "This i.")
 
-        settings.eventStatusItemLengthObserver.onNext(10)
+        settings.eventStatusItemNotchLengthObserver.onNext(5)
 
-        XCTAssertEqual(title, "This is an.")
+        // trimmed space (result: 4 chars)
+        XCTAssertEqual(title, "This.")
+
+        settings.eventStatusItemNotchLengthObserver.onNext(0)
+
+        XCTAssertEqual(title, "")
+    }
+
+    func testNextEventTitleVisibility() {
+
+        let viewModel = makeViewModel(type: .event)
+
+        var isTitleVisible: Bool?
+
+        viewModel.isTitleVisible
+            .bind { isTitleVisible = $0 }
+            .disposed(by: disposeBag)
+
+        calendarService.changeEvents([
+            .make(start: now, title: "This is an event")
+        ])
+
+        settings.eventStatusItemLengthObserver.onNext(1)
+
+        XCTAssertEqual(isTitleVisible, true)
+
+        settings.eventStatusItemLengthObserver.onNext(0)
+
+        XCTAssertEqual(isTitleVisible, false)
+    }
+
+    func testNextEventTitleVisibilityWithNotch() {
+
+        let viewModel = makeViewModel(type: .event)
+
+        var isTitleVisible: Bool?
+
+        viewModel.isTitleVisible
+            .bind { isTitleVisible = $0 }
+            .disposed(by: disposeBag)
+
+        calendarService.changeEvents([
+            .make(start: now, title: "This is an event")
+        ])
+
+        settings.toggleEventStatusItemDetectNotch.onNext(true)
+        screenProvider.screenObserver.onNext(MockScreen(hasNotch: true))
+
+        settings.eventStatusItemNotchLengthObserver.onNext(1)
+
+        XCTAssertEqual(isTitleVisible, true)
+
+        settings.eventStatusItemNotchLengthObserver.onNext(0)
+
+        XCTAssertEqual(isTitleVisible, false)
     }
 
     func testNextEvent_barStyle() {
