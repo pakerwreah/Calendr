@@ -46,6 +46,7 @@ class SettingsViewModelTests: XCTestCase {
     var localStorageEventStatusItemTextScaling: NSNumber? { localStorage.object(forKey: Prefs.eventStatusItemTextScaling) as? NSNumber }
     var localStorageEventStatusItemLength: NSNumber? { localStorage.object(forKey: Prefs.eventStatusItemLength) as? NSNumber }
     var localStorageEventStatusItemDetectNotch: Bool? { localStorage.object(forKey: Prefs.eventStatusItemDetectNotch) as? Bool }
+    var localStorageEventStatusItemNotchLength: NSNumber? { localStorage.object(forKey: Prefs.eventStatusItemNotchLength) as? NSNumber }
     var localStorageCalendarScaling: NSNumber? { localStorage.object(forKey: Prefs.calendarScaling) as? NSNumber }
     var localStorageFirstWeekday: NSNumber? { localStorage.object(forKey: Prefs.firstWeekday) as? NSNumber }
     var localStorageHighlightedWeekdays: [Int]? { localStorage.object(forKey: Prefs.highlightedWeekdays) as? [Int] }
@@ -83,6 +84,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertNil(localStorageEventStatusItemTextScaling)
         XCTAssertNil(localStorageEventStatusItemLength)
         XCTAssertNil(localStorageEventStatusItemDetectNotch)
+        XCTAssertNil(localStorageEventStatusItemNotchLength)
         XCTAssertNil(localStorageCalendarScaling)
         XCTAssertNil(localStorageFirstWeekday)
         XCTAssertNil(localStorageHighlightedWeekdays)
@@ -119,6 +121,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.showFullScreenEvent.lastValue(), false)
         XCTAssertEqual(viewModel.eventStatusItemLength.lastValue(), 18)
         XCTAssertEqual(viewModel.eventStatusItemDetectNotch.lastValue(), false)
+        XCTAssertEqual(viewModel.eventStatusItemNotchLength.lastValue(), 6)
         XCTAssertEqual(viewModel.calendarScaling.lastValue(), 1)
         XCTAssertEqual(viewModel.firstWeekday.lastValue(), 3)
         XCTAssertEqual(viewModel.highlightedWeekdays.lastValue(), [0, 6])
@@ -152,6 +155,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(localStorageShowFullScreenEvent, false)
         XCTAssertEqual(localStorageEventStatusItemLength, 18)
         XCTAssertEqual(localStorageEventStatusItemDetectNotch, false)
+        XCTAssertEqual(localStorageEventStatusItemNotchLength, 6)
         XCTAssertEqual(localStorageCalendarScaling, 1)
         XCTAssertEqual(localStorageFirstWeekday, 3)
         XCTAssertEqual(localStorageHighlightedWeekdays, [0, 6])
@@ -535,6 +539,25 @@ class SettingsViewModelTests: XCTestCase {
 
         XCTAssertEqual(eventStatusItemLength, 30)
         XCTAssertEqual(localStorageEventStatusItemLength, 30)
+    }
+
+    func testChangeEventStatusItemNotchLength() {
+
+        localStorage.eventStatusItemNotchLength = 6
+
+        var eventStatusItemNotchLength: Int?
+
+        viewModel.eventStatusItemNotchLength
+            .bind { eventStatusItemNotchLength = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(eventStatusItemNotchLength, 6)
+        XCTAssertEqual(localStorageEventStatusItemNotchLength, 6)
+
+        viewModel.eventStatusItemNotchLengthObserver.onNext(2)
+
+        XCTAssertEqual(eventStatusItemNotchLength, 2)
+        XCTAssertEqual(localStorageEventStatusItemNotchLength, 2)
     }
 
     func testChangeEventStatusItemCheckRange() {

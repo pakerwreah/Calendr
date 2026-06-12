@@ -122,6 +122,14 @@ extension SettingsUI {
 
 enum SettingsUISlider {
 
+    static func make(minValue: Double, step: Double, numberOfTickMarks: Int) -> NSSlider {
+        make(
+            minValue: minValue,
+            maxValue: minValue + Double(numberOfTickMarks - 1) * step,
+            numberOfTickMarks: numberOfTickMarks
+        )
+    }
+
     static func make(minValue: Double, maxValue: Double, numberOfTickMarks: Int) -> NSSlider {
         let slider = NSSlider(value: 0, minValue: minValue, maxValue: maxValue, target: nil, action: nil)
         slider.allowsTickMarkValuesOnly = true

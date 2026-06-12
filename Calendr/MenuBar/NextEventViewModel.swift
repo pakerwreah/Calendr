@@ -47,6 +47,7 @@ private struct NextEvent: Equatable {
 class NextEventViewModel {
 
     let title: Observable<String>
+    let isTitleVisible: Observable<Bool>
     let time: Observable<String>
     let barStyle: Observable<EventBarStyle>
     let barColor: Observable<NSColor>
@@ -295,15 +296,25 @@ class NextEventViewModel {
             .map { $0 && $1 }
             .distinctUntilChanged()
 
-        let eventStatusItemLength = Observable
-            .combineLatest(shouldCompact, settings.eventStatusItemLength)
-            .map { $0 ? min($1, Constants.compactMaxWidth) : $1 }
+        title = Observable
+            .combineLatest(
+                event.skipNil().map(\.title),
+                settings.eventStatusItemLength,
+                shouldCompact,
+                settings.eventStatusItemNotchLength
+            )
+            .map { title, length, shouldCompact, notchLength in
+                let maxLength = shouldCompact ? notchLength : length
 
-        let nextEventTitle = event.skipNil().map(\.title)
+                guard title.count > maxLength else { return title }
 
-        title = Observable.combineLatest(nextEventTitle, eventStatusItemLength, shouldCompact)
-            .map { $0.count > $1 ? "\($0.prefix($1).trimmed)\($2 ? "." : "...")": $0 }
+                let shorten = title.prefix(maxLength).trimmed
+                guard !shorten.isEmpty else { return "" }
+                return "\(shorten)."
+            }
             .distinctUntilChanged()
+
+        isTitleVisible = title.map(\.isEmpty.isFalse).distinctUntilChanged()
 
         let dateFormatter = DateComponentsFormatter()
         dateFormatter.calendar = dateProvider.calendar
@@ -475,11 +486,6 @@ class NextEventViewModel {
             eventsScheduler: MainScheduler.instance
         )
     }
-}
-
-private enum Constants {
-
-    static let compactMaxWidth = 15
 }
 
 private func fakeEvent(

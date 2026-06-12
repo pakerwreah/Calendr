@@ -30,7 +30,10 @@ class AppearanceViewController: NSViewController, SettingsUI {
     // Next Event
     private let nextEventTextScalingSlider = Slider.make(minValue: 1, maxValue: 1.6, numberOfTickMarks: 13)
     private let nextEventLengthSlider = Slider.make(minValue: 10, maxValue: 50, numberOfTickMarks: 13)
+
+    // Notch
     private let nextEventDetectNotchCheckbox = Checkbox(title: Strings.Settings.NextEvent.detectNotch)
+    private let nextEventNotchLengthSlider = Slider.make(minValue: 0, step: 2, numberOfTickMarks: 13)
 
     init(viewModel: SettingsViewModel) {
 
@@ -178,12 +181,21 @@ class AppearanceViewController: NSViewController, SettingsUI {
             makeIcon(Icons.Settings.textLarge, .large)
         ])
 
+        // Next event notch length
+
+        let nextEventNotchLengthView = NSStackView(views: [
+            makeIcon(Icons.Settings.length_small, .large),
+            nextEventNotchLengthSlider,
+            makeIcon(Icons.Settings.length_big, .large),
+        ])
+
         // Next event stack view
 
         return NSStackView(views: [
             textScalingView,
             nextEventLengthView,
             nextEventDetectNotchCheckbox,
+            nextEventNotchLengthView,
         ])
         .with(orientation: .vertical)
     }()
@@ -245,6 +257,17 @@ class AppearanceViewController: NSViewController, SettingsUI {
             observer: viewModel.toggleEventStatusItemDetectNotch
         )
         .disposed(by: disposeBag)
+
+        bind(
+            control: nextEventNotchLengthSlider,
+            observable: viewModel.eventStatusItemNotchLength,
+            observer: viewModel.eventStatusItemNotchLengthObserver
+        )
+        .disposed(by: disposeBag)
+
+        viewModel.eventStatusItemDetectNotch
+            .bind(to: nextEventNotchLengthSlider.rx.isEnabled)
+            .disposed(by: disposeBag)
     }
 
     required init?(coder: NSCoder) {

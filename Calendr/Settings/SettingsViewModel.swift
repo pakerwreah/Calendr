@@ -65,6 +65,7 @@ protocol NextEventSettings: EventListSettings {
     var eventStatusItemTextScaling: Observable<Double> { get }
     var eventStatusItemLength: Observable<Int> { get }
     var eventStatusItemDetectNotch: Observable<Bool> { get }
+    var eventStatusItemNotchLength: Observable<Int> { get }
     var showFullScreenEvent: Observable<Bool> { get }
 }
 
@@ -113,6 +114,7 @@ class SettingsViewModel:
     let eventStatusItemTextScalingObserver: AnyObserver<Double>
     let eventStatusItemLengthObserver: AnyObserver<Int>
     let toggleEventStatusItemDetectNotch: AnyObserver<Bool>
+    let eventStatusItemNotchLengthObserver: AnyObserver<Int>
     let calendarScalingObserver: AnyObserver<Double>
     let firstWeekdayPrevObserver: AnyObserver<Void>
     let firstWeekdayNextObserver: AnyObserver<Void>
@@ -163,6 +165,7 @@ class SettingsViewModel:
     let eventStatusItemTextScaling: Observable<Double>
     let eventStatusItemLength: Observable<Int>
     let eventStatusItemDetectNotch: Observable<Bool>
+    let eventStatusItemNotchLength: Observable<Int>
     let calendarScaling: Observable<Double>
     let firstWeekday: Observable<Int>
     let weekCount: Observable<Int>
@@ -270,6 +273,7 @@ class SettingsViewModel:
         eventStatusItemTextScalingObserver = localStorage.rx.observer(for: \.eventStatusItemTextScaling)
         eventStatusItemLengthObserver = localStorage.rx.observer(for: \.eventStatusItemLength)
         toggleEventStatusItemDetectNotch = localStorage.rx.observer(for: \.eventStatusItemDetectNotch)
+        eventStatusItemNotchLengthObserver = localStorage.rx.observer(for: \.eventStatusItemNotchLength)
         calendarScalingObserver = localStorage.rx.observer(for: \.calendarScaling)
         firstWeekdayPrevObserver = localStorage.rx.observer(for: \.firstWeekday).mapObserver { (1...7).circular(before: localStorage.firstWeekday) }
         firstWeekdayNextObserver = localStorage.rx.observer(for: \.firstWeekday).mapObserver { (1...7).circular(after: localStorage.firstWeekday) }
@@ -317,6 +321,7 @@ class SettingsViewModel:
         eventStatusItemTextScaling = localStorage.rx.observe(\.eventStatusItemTextScaling)
         eventStatusItemLength = localStorage.rx.observe(\.eventStatusItemLength)
         eventStatusItemDetectNotch = localStorage.rx.observe(\.eventStatusItemDetectNotch)
+        eventStatusItemNotchLength = localStorage.rx.observe(\.eventStatusItemNotchLength)
         calendarScaling = localStorage.rx.observe(\.calendarScaling)
         firstWeekday = localStorage.rx.observe(\.firstWeekday)
         highlightedWeekdays = localStorage.rx.observe(\.highlightedWeekdays)

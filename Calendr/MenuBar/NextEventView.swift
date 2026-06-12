@@ -108,6 +108,12 @@ class NextEventView: NSView {
             .bind(to: nextEventTitle.rx.stringValue)
             .disposed(by: disposeBag)
 
+        viewModel.isTitleVisible
+            .map(!)
+            .track(with: updateSubject)
+            .bind(to: nextEventTitle.rx.isHidden)
+            .disposed(by: disposeBag)
+
         viewModel.time
             .track(with: updateSubject)
             .bind(to: nextEventTime.rx.stringValue)
