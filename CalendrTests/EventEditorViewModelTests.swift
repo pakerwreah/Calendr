@@ -300,6 +300,77 @@ class EventEditorViewModelTests: XCTestCase {
         XCTAssertFalse(viewModel.isCloseConfirmationVisible)
     }
 
+    func testViewModel_withCloseRequested_withInvalidDateRange_shouldAskForConfirmation() {
+
+        let notCloseExpectation = expectation(description: "Should not close window")
+        notCloseExpectation.isInverted = true
+
+        let calendarService = MockCalendarServiceProvider()
+        calendarService.m_calendars = [.make(id: "cal-1")]
+
+        let viewModel = EventEditorViewModel(dateProvider: dateProvider, calendarService: calendarService)
+
+        viewModel.onCloseConfirmed = notCloseExpectation.fulfill
+        viewModel.title = "Meeting"
+        viewModel.notes = "Agenda"
+        viewModel.endDate = viewModel.startDate
+
+        XCTAssertFalse(viewModel.hasValidInput)
+        XCTAssertFalse(viewModel.requestWindowClose())
+        XCTAssertTrue(viewModel.isCloseConfirmationVisible)
+
+        wait(for: [notCloseExpectation], timeout: 0.1)
+    }
+
+    func testViewModel_withCloseRequested_withNotesOnly_shouldAskForConfirmation() {
+
+        let notCloseExpectation = expectation(description: "Should not close window")
+        notCloseExpectation.isInverted = true
+
+        let viewModel = EventEditorViewModel(dateProvider: dateProvider)
+
+        viewModel.onCloseConfirmed = notCloseExpectation.fulfill
+        viewModel.notes = "Some notes"
+
+        XCTAssertFalse(viewModel.requestWindowClose())
+        XCTAssertTrue(viewModel.isCloseConfirmationVisible)
+
+        wait(for: [notCloseExpectation], timeout: 0.1)
+    }
+
+    func testViewModel_withCloseRequested_withLocationOnly_shouldAskForConfirmation() {
+
+        let notCloseExpectation = expectation(description: "Should not close window")
+        notCloseExpectation.isInverted = true
+
+        let viewModel = EventEditorViewModel(dateProvider: dateProvider)
+
+        viewModel.onCloseConfirmed = notCloseExpectation.fulfill
+        viewModel.location = "Office"
+
+        XCTAssertFalse(viewModel.requestWindowClose())
+        XCTAssertTrue(viewModel.isCloseConfirmationVisible)
+
+        wait(for: [notCloseExpectation], timeout: 0.1)
+    }
+
+    func testViewModel_withCloseRequested_withWhitespaceOnly_shouldCloseWindow() {
+
+        let expectation = expectation(description: "Should not call confirmation callback")
+        expectation.isInverted = true
+
+        let viewModel = EventEditorViewModel(dateProvider: dateProvider)
+
+        viewModel.onCloseConfirmed = expectation.fulfill
+        viewModel.title = "   "
+        viewModel.notes = "   "
+
+        XCTAssertTrue(viewModel.requestWindowClose())
+        XCTAssertFalse(viewModel.isCloseConfirmationVisible)
+
+        waitForExpectations(timeout: 0.1)
+    }
+
     func testViewModel_calendars_withDefault_shouldSelectDefaultCalendar() {
 
         let calendarService = MockCalendarServiceProvider()

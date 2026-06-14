@@ -90,6 +90,10 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
         !title.trimmed.isEmpty && hasValidDateRange && selectedCalendarId != nil
     }
 
+    var hasUnsavedChanges: Bool {
+        [title, location, url, notes].contains(where: \.trimmed.isEmpty.isFalse)
+    }
+
     func saveEvent() {
         guard hasValidInput, let selectedCalendarId else { return }
 
@@ -116,7 +120,7 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
     }
 
     func requestWindowClose() -> Bool {
-        if hasValidInput {
+        if hasUnsavedChanges {
             isCloseConfirmationVisible = true
         }
         return !isCloseConfirmationVisible
