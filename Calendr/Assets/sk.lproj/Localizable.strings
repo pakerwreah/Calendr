@@ -117,12 +117,19 @@
 "reminder.options.complete" = "Dokončiť";
 "reminder.options.remind" = "Pripomenúť %@";
 
-"reminder.editor.headline" = "Nová pripomienka";
-"reminder.editor.title" = "Názov";
-"reminder.editor.save" = "Uložiť";
+"editor.title" = "Názov";
+"editor.save" = "Uložiť";
+"editor.confirm.continue" = "Pokračovať v úprave";
+"editor.confirm.discard" = "Zahodiť všetky zmeny";
 
-"reminder.editor.confirm.continue" = "Pokračovať v úprave";
-"reminder.editor.confirm.discard" = "Zahodiť všetky zmeny";
+//"event.editor.headline" = "New Event";
+//"event.editor.start" = "Start";
+//"event.editor.end" = "End";
+//"event.editor.location" = "Location";
+//"event.editor.url" = "URL";
+//"event.editor.notes" = "Notes";
+
+"reminder.editor.headline" = "Nová pripomienka";
 
 "map_black_list.headline" = "Skryť mapu, ak lokalita obsahuje niektoré z týchto slov";
 "map_black_list.new_item_text" = "Nová položka";

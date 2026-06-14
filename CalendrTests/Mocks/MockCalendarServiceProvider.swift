@@ -11,6 +11,16 @@ import RxSwift
 
 typealias RescheduleReminderArgs = (date: Date, isAllDay: Bool)
 typealias CreateReminderArgs = (title: String, calendar: String, date: Date, isAllDay: Bool)
+typealias CreateEventArgs = (
+    title: String,
+    calendar: String,
+    start: Date,
+    end: Date,
+    isAllDay: Bool,
+    location: String?,
+    url: URL?,
+    notes: String?
+)
 typealias EventsArgs = (start: Date, end: Date, calendars: [String])
 
 class MockCalendarServiceProvider: CalendarServiceProviding {
@@ -19,6 +29,7 @@ class MockCalendarServiceProvider: CalendarServiceProviding {
 
     let (spyEventsObservable, spyEventsObserver) = PublishSubject<EventsArgs>.pipe()
     let (spyCreateReminderObservable, spyCreateReminderObserver) = PublishSubject<CreateReminderArgs>.pipe()
+    let (spyCreateEventObservable, spyCreateEventObserver) = PublishSubject<CreateEventArgs>.pipe()
     let (spyCompleteReminderObservable, spyCompleteReminderObserver) = PublishSubject<Bool>.pipe()
     let (spyRescheduleReminderObservable, spyRescheduleReminderObserver) = PublishSubject<RescheduleReminderArgs>.pipe()
     let (spyChangeEventStatusObservable, spyChangeEventStatusObserver) = PublishSubject<EventStatus>.pipe()
@@ -61,6 +72,20 @@ class MockCalendarServiceProvider: CalendarServiceProviding {
 
     func createReminder(title: String, calendar: String, date: Date, isAllDay: Bool) -> Completable {
         spyCreateReminderObserver.onNext((title, calendar, date, isAllDay))
+        return .empty()
+    }
+
+    func createEvent(
+        title: String,
+        calendar: String,
+        start: Date,
+        end: Date,
+        isAllDay: Bool,
+        location: String?,
+        url: URL?,
+        notes: String?
+    ) -> Completable {
+        spyCreateEventObserver.onNext((title, calendar, start, end, isAllDay, location, url, notes))
         return .empty()
     }
 }

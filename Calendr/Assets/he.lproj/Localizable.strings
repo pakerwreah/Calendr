@@ -117,12 +117,19 @@
 "reminder.options.complete" = "בצע";
 "reminder.options.remind" = "הזכר %@";
 
-"reminder.editor.headline" = "תזכורת חדשה";
-"reminder.editor.title" = "כותרת";
-"reminder.editor.save" = "שמור";
+"editor.title" = "כותרת";
+"editor.save" = "שמור";
+"editor.confirm.continue" = "המשך עריכה";
+"editor.confirm.discard" = "ביטול כל השינויים";
 
-"reminder.editor.confirm.continue" = "המשך עריכה";
-"reminder.editor.confirm.discard" = "ביטול כל השינויים";
+//"event.editor.headline" = "New Event";
+//"event.editor.start" = "Start";
+//"event.editor.end" = "End";
+//"event.editor.location" = "Location";
+//"event.editor.url" = "URL";
+//"event.editor.notes" = "Notes";
+
+"reminder.editor.headline" = "תזכורת חדשה";
 
 "map_black_list.headline" = "הסתר מפה אם המיקום מכיל אחת מהמילים האלה";
 "map_black_list.new_item_text" = "פריט חדש";

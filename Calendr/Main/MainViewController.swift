@@ -453,28 +453,16 @@ class MainViewController: NSViewController {
 
     private func setUpCreateButton() {
 
-        let createMenu = TrackedMenu()
-
         let formatter = RelativeDateTimeFormatter()
         formatter.dateTimeStyle = .named
 
-        let options: [DateComponents] = [
+        let reminderOptions: [DateComponents] = [
             .init(minute: 5),
             .init(minute: 15),
             .init(minute: 30),
             .init(hour: 1),
             .init(day: 1)
         ]
-
-        createMenu.items = options.map { option in
-            let title = Strings.Reminder.Options.remind(formatter.localizedString(from: option))
-            let item = NSMenuItem()
-            item.title = title
-            item.representedObject = option
-            item.target = self
-            item.action = #selector(MainViewController.openReminderEditor)
-            return item
-        }
 
         selectedDate.map { [dateProvider] date in
             dateProvider.calendar.isDate(date, lessThan: dateProvider.now, granularity: .day)
@@ -486,13 +474,38 @@ class MainViewController: NSViewController {
 
             guard let self else { return }
 
-            guard dateProvider.isDateInToday(date) else {
-                return openReminderEditor()
-            }
-
+            let createMenu = makeCreateMenu(for: date, reminderOptions: reminderOptions, formatter: formatter)
             createMenu.popUp(positioning: nil, at: .init(x: 0, y: createBtn.frame.height), in: createBtn)
         }
         .disposed(by: disposeBag)
+    }
+
+    private func makeCreateMenu(
+        for date: Date,
+        reminderOptions: [DateComponents],
+        formatter: RelativeDateTimeFormatter
+    ) -> TrackedMenu {
+
+        let createMenu = TrackedMenu()
+
+        createMenu.addItem(withTitle: Strings.Event.Editor.headline, action: #selector(openEventEditor), keyEquivalent: "")
+            .target = self
+
+        if dateProvider.isDateInToday(date) {
+            createMenu.addItem(.separator())
+
+            for option in reminderOptions {
+                let title = Strings.Reminder.Options.remind(formatter.localizedString(from: option))
+                let item = createMenu.addItem(withTitle: title, action: #selector(openReminderEditor), keyEquivalent: "")
+                item.representedObject = option
+                item.target = self
+            }
+        } else {
+            createMenu.addItem(withTitle: Strings.Reminder.Editor.headline, action: #selector(openReminderEditor), keyEquivalent: "")
+                .target = self
+        }
+
+        return createMenu
     }
 
     private func setUpDateSuggestion() {
@@ -605,6 +618,31 @@ class MainViewController: NSViewController {
             presentAsModalWindow(settingsViewController)
         }
         settingsViewController.selectedTabViewItemIndex = tab.rawValue
+    }
+
+    @objc private func openEventEditor(_ sender: NSMenuItem? = nil) {
+
+        let dateComponents = sender?.representedObject as? DateComponents ?? .init()
+
+        let viewModel = EventEditorViewModel(
+            startDate: .withCurrentTime(
+                at: selectedDate.current,
+                adding: dateComponents,
+                using: dateProvider
+            ),
+            dateProvider: dateProvider,
+            calendarService: calendarService
+        )
+        let viewController = EventEditorViewController(viewModel: viewModel)
+
+        viewController.isResizable = false
+        viewController.delegate = viewModel
+
+        viewModel.onCloseConfirmed = { [weak viewController] in
+            viewController?.dismiss(nil)
+        }
+
+        presentAsModalWindow(viewController)
     }
 
     @objc private func openReminderEditor(_ sender: NSMenuItem? = nil) {

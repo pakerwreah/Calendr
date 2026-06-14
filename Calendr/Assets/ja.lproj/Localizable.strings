@@ -117,12 +117,19 @@
 "reminder.options.complete" = "完了";
 "reminder.options.remind" = "%@ にリマインド";
 
-"reminder.editor.headline" = "新しいリマインダー";
-"reminder.editor.title" = "タイトル";
-"reminder.editor.save" = "保存";
+"editor.title" = "タイトル";
+"editor.save" = "保存";
+"editor.confirm.continue" = "作成を続ける";
+"editor.confirm.discard" = "変更を破棄";
 
-"reminder.editor.confirm.continue" = "作成を続ける";
-"reminder.editor.confirm.discard" = "変更を破棄";
+//"event.editor.headline" = "New Event";
+//"event.editor.start" = "Start";
+//"event.editor.end" = "End";
+//"event.editor.location" = "Location";
+//"event.editor.url" = "URL";
+//"event.editor.notes" = "Notes";
+
+"reminder.editor.headline" = "新しいリマインダー";
 
 "map_black_list.headline" = "以下の語が含まれる場合に地図を非表示にする";
 "map_black_list.new_item_text" = "新しい除外ワード";

@@ -117,12 +117,19 @@
 "reminder.options.complete" = "Ukończ";
 "reminder.options.remind" = "Przypomnij %@";
 
-"reminder.editor.headline" = "Nowe przypomnienie";
-"reminder.editor.title" = "Tytuł";
-"reminder.editor.save" = "Zapisz";
+"editor.title" = "Tytuł";
+"editor.save" = "Zapisz";
+"editor.confirm.continue" = "Kontynuuj edycję";
+"editor.confirm.discard" = "Odrzuć wszystkie zmiany";
 
-"reminder.editor.confirm.continue" = "Kontynuuj edycję";
-"reminder.editor.confirm.discard" = "Odrzuć wszystkie zmiany";
+//"event.editor.headline" = "New Event";
+//"event.editor.start" = "Start";
+//"event.editor.end" = "End";
+//"event.editor.location" = "Location";
+//"event.editor.url" = "URL";
+//"event.editor.notes" = "Notes";
+
+"reminder.editor.headline" = "Nowe przypomnienie";
 
 "map_black_list.headline" = "Ukryj mapę, jeśli lokalizacja zawiera którekolwiek z tych słów";
 "map_black_list.new_item_text" = "Nowy element";

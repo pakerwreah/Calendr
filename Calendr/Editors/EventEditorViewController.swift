@@ -1,19 +1,19 @@
 //
-//  ReminderEditorViewController.swift
+//  EventEditorViewController.swift
 //  Calendr
 //
-//  Created by Paker on 23/10/2025.
+//  Created by Paker on 14/06/2026.
 //
 
 import SwiftUI
 
-typealias ReminderEditorViewController = HostingViewModelController<ReminderEditorView>
+typealias EventEditorViewController = HostingViewModelController<EventEditorView>
 
-struct ReminderEditorView: ViewModelView {
+struct EventEditorView: ViewModelView {
     @FocusState private var autoFocus: Bool
-    @State private var viewModel: ReminderEditorViewModel
+    @State private var viewModel: EventEditorViewModel
 
-    init(viewModel: ReminderEditorViewModel) {
+    init(viewModel: EventEditorViewModel) {
         self._viewModel = .init(wrappedValue: viewModel)
     }
 
@@ -21,7 +21,7 @@ struct ReminderEditorView: ViewModelView {
 
         VStack(alignment: .leading, spacing: 16) {
 
-            Text(Strings.Reminder.Editor.headline)
+            Text(Strings.Event.Editor.headline)
                 .font(.title2)
                 .bold()
 
@@ -38,24 +38,50 @@ struct ReminderEditorView: ViewModelView {
                 )
             }
 
-            HStack(spacing: 8) {
-                DateTimeInput(date: $viewModel.dueDate, showTime: !viewModel.isAllDay)
-                Spacer()
-                Toggle(Strings.Event.allDay, isOn: $viewModel.isAllDay)
-                    .toggleStyle(.checkbox)
+            Grid(alignment: .trailing, horizontalSpacing: 8, verticalSpacing: 8) {
+                GridRow {
+                    Text(Strings.Event.Editor.start + ":")
+                        .foregroundStyle(.secondary)
+
+                    DateTimeInput(
+                        date: $viewModel.startDate,
+                        showTime: !viewModel.isAllDay,
+                        isInvalid: !viewModel.hasValidDateRange
+                    )
+                }
+                GridRow {
+                    Text(Strings.Event.Editor.end + ":")
+                        .foregroundStyle(.secondary)
+
+                    DateTimeInput(
+                        date: $viewModel.endDate,
+                        showTime: !viewModel.isAllDay,
+                        isInvalid: !viewModel.hasValidDateRange
+                    )
+                }
             }
+
+            Toggle(Strings.Event.allDay, isOn: $viewModel.isAllDay)
+                .toggleStyle(.checkbox)
+
+            TextInput(placeholder: Strings.Event.Editor.location, text: $viewModel.location)
+
+            TextInput(placeholder: Strings.Event.Editor.url, text: $viewModel.url)
+
+            TextArea(placeholder: Strings.Event.Editor.notes, text: $viewModel.notes)
+                .frame(height: 60)
 
             HStack {
                 Spacer()
                 Button(Strings.Editor.save) {
-                    viewModel.saveReminder()
+                    viewModel.saveEvent()
                 }
                 .disabled(!viewModel.hasValidInput)
                 .keyboardShortcut(.defaultAction)
             }
         }
         .padding(20)
-        .frame(width: 300)
+        .frame(width: 380)
         .fixedSize()
         .onAppear {
             autoFocus = true
@@ -84,14 +110,14 @@ struct ReminderEditorView: ViewModelView {
 #if DEBUG
 
 #Preview {
-    ReminderEditorView(
+    EventEditorView(
         viewModel: .init(
-            dueDate: .init(date: .now),
+            startDate: .init(date: .now),
+            dateProvider: MockDateProvider(),
             calendarService: MockCalendarServiceProvider(
                 calendars: [
-                    .make(id: "1", account: "iCloud", title: "Reminders", color: .systemBlue),
-                    .make(id: "2", account: "iCloud", title: "Groceries", color: .systemRed),
-                    .make(id: "3", account: "Google", title: "Todos", color: .systemYellow),
+                    .make(id: "1", account: "iCloud", title: "Work", color: .systemBlue),
+                    .make(id: "2", account: "iCloud", title: "Personal", color: .systemRed),
                 ]
             )
         )
