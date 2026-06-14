@@ -7,7 +7,6 @@
 
 import Cocoa
 import RxSwift
-import Sentry
 
 class AppDelegate: NSObject, NSApplicationDelegate {
 
