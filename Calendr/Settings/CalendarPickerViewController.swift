@@ -31,17 +31,7 @@ class CalendarPickerViewController: NSViewController, SettingsUI {
 
         super.init(nibName: nil, bundle: nil)
 
-        setUpAccessibility()
-
         setUpBindings()
-    }
-
-    private func setUpAccessibility() {
-
-        guard BuildConfig.isUITesting else { return }
-
-        view.setAccessibilityElement(true)
-        view.setAccessibilityIdentifier(configuration.accessibilityIdentifier)
     }
 
     override func viewDidLoad() {
@@ -211,15 +201,6 @@ class CalendarPickerViewController: NSViewController, SettingsUI {
 // MARK: - Extensions
 
 extension CalendarPickerConfiguration {
-
-    var accessibilityIdentifier: String {
-        switch self {
-        case .settings:
-            return Accessibility.Settings.Calendars.view
-        case .picker:
-            return Accessibility.CalendarPicker.view
-        }
-    }
 
     var margins: NSEdgeInsets {
         switch self {

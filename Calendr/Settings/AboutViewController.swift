@@ -47,7 +47,6 @@ class AboutViewController: NSViewController, SettingsUI {
         newVersionButton.refusesFirstResponder = true
         newVersionButton.bezelStyle = .accessoryBarAction
 
-        setUpAccessibility()
         setUpBindings()
     }
 
@@ -79,18 +78,6 @@ class AboutViewController: NSViewController, SettingsUI {
         view.addSubview(stackView)
 
         stackView.edges(equalTo: view)
-    }
-
-    private func setUpAccessibility() {
-
-        guard BuildConfig.isUITesting else { return }
-
-        view.setAccessibilityElement(true)
-        view.setAccessibilityIdentifier(Accessibility.Settings.About.view)
-
-        quitButton.setAccessibilityElement(true)
-        quitButton.setAccessibilityRole(.button)
-        quitButton.setAccessibilityIdentifier(Accessibility.Settings.About.quitBtn)
     }
 
     private func setUpBindings() {

@@ -242,8 +242,6 @@ class MainViewController: NSViewController {
 
         super.init(nibName: nil, bundle: nil)
 
-        setUpAccessibility()
-
         setUpBindings()
 
         setUpSettings()
@@ -348,41 +346,6 @@ class MainViewController: NSViewController {
     }
 
     // MARK: - Setup
-
-    private func setUpAccessibility() {
-
-        guard BuildConfig.isUITesting else { return }
-
-        NSApp.addAccessibilityChild(view)
-
-        view.setAccessibilityIdentifier(Accessibility.Main.view)
-
-        statusItemViewModel.iconsAndText
-            .map { birthday, calendar, text in
-                [
-                    Accessibility.MenuBar.Main.item,
-                    birthday != nil ? Accessibility.MenuBar.Main.Icon.birthday : nil,
-                    calendar != nil ? Accessibility.MenuBar.Main.Icon.calendar : nil,
-                    text
-                ]
-                .compact()
-            }
-            .bind(to: mainStatusItem.button!.rx.accessibilityIdentifiers)
-            .disposed(by: disposeBag)
-
-        eventStatusItem.button?.setAccessibilityIdentifier(Accessibility.MenuBar.Event.item)
-        reminderStatusItem.button?.setAccessibilityIdentifier(Accessibility.MenuBar.Reminder.item)
-
-        titleLabel.setAccessibilityIdentifier(Accessibility.Main.title)
-        prevBtn.setAccessibilityIdentifier(Accessibility.Main.prevBtn)
-        resetBtn.setAccessibilityIdentifier(Accessibility.Main.resetBtn)
-        nextBtn.setAccessibilityIdentifier(Accessibility.Main.nextBtn)
-        pinBtn.setAccessibilityIdentifier(Accessibility.Main.pinBtn)
-        createBtn.setAccessibilityIdentifier(Accessibility.Main.createBtn)
-        remindersBtn.setAccessibilityIdentifier(Accessibility.Main.remindersBtn)
-        calendarBtn.setAccessibilityIdentifier(Accessibility.Main.calendarBtn)
-        settingsBtn.setAccessibilityIdentifier(Accessibility.Main.settingsBtn)
-    }
 
     private func setUpBindings() {
 

@@ -41,16 +41,7 @@ class AppearanceViewController: NSViewController, SettingsUI {
 
         super.init(nibName: nil, bundle: nil)
 
-        setUpAccessibility()
         setUpBindings()
-    }
-
-    private func setUpAccessibility() {
-
-        guard BuildConfig.isUITesting else { return }
-
-        view.setAccessibilityElement(true)
-        view.setAccessibilityIdentifier(Accessibility.Settings.Appearance.view)
     }
 
     func fittingSize(minWidth: CGFloat) -> NSSize {

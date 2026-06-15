@@ -70,15 +70,9 @@ class SettingsViewController: NSTabViewController, NSWindowDelegate {
 
         tabViewItems = [general, appearance, calendars, keyboard, about]
 
-        setUpAccessibility()
-
         setUpBindings()
 
         setUpKeyboard()
-    }
-
-    deinit {
-        tearDownAccessibility()
     }
 
     override func loadView() {
@@ -109,8 +103,6 @@ class SettingsViewController: NSTabViewController, NSWindowDelegate {
 
         guard let window = view.window else { return }
 
-        setUpAccessibilityWindow()
-
         window.styleMask.remove(.resizable)
 
         NSApp.activate(ignoringOtherApps: true)
@@ -119,8 +111,6 @@ class SettingsViewController: NSTabViewController, NSWindowDelegate {
     override func viewDidDisappear() {
 
         super.viewDidDisappear()
-
-        tearDownAccessibilityWindow()
 
         settingsViewModel.isPresented.onNext(false)
     }
@@ -225,41 +215,4 @@ private enum Constants {
 
     static let padding: CGFloat = 24
     static let minWidth: CGFloat = 500
-}
-
-// MARK: - Accessibility
-
-extension SettingsViewController {
-
-    private func setUpAccessibility() {
-
-        guard BuildConfig.isUITesting else { return }
-
-        NSApp.addAccessibilityChild(view)
-
-        view.setAccessibilityIdentifier(Accessibility.Settings.view)
-    }
-
-    private func tearDownAccessibility() {
-
-        guard BuildConfig.isUITesting else { return }
-
-        NSApp.removeAccessibilityChild(view)
-    }
-
-    private func setUpAccessibilityWindow() {
-
-        guard BuildConfig.isUITesting, let window = view.window else { return }
-
-        window.setAccessibilityIdentifier(Accessibility.Settings.window)
-
-        NSApp.addAccessibilityChild(window)
-    }
-
-    private func tearDownAccessibilityWindow() {
-
-        guard BuildConfig.isUITesting, let window = view.window else { return }
-
-        NSApp.removeAccessibilityChild(window)
-    }
 }
