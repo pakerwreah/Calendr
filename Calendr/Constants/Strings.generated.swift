@@ -77,6 +77,18 @@ internal enum Strings {
       internal static let others = Strings.tr("Localizable", "calendars.source.others", fallback: "Others")
     }
   }
+  internal enum Editor {
+    /// Save
+    internal static let save = Strings.tr("Localizable", "editor.save", fallback: "Save")
+    /// Title
+    internal static let title = Strings.tr("Localizable", "editor.title", fallback: "Title")
+    internal enum Confirm {
+      /// Continue editing
+      internal static let `continue` = Strings.tr("Localizable", "editor.confirm.continue", fallback: "Continue editing")
+      /// Discard all changes
+      internal static let discard = Strings.tr("Localizable", "editor.confirm.discard", fallback: "Discard all changes")
+    }
+  }
   internal enum Event {
     /// All day
     internal static let allDay = Strings.tr("Localizable", "event.all_day", fallback: "All day")
@@ -100,6 +112,46 @@ internal enum Strings {
         internal static let me = Strings.tr("Localizable", "event.details.participant.me", fallback: "me")
         /// organizer
         internal static let organizer = Strings.tr("Localizable", "event.details.participant.organizer", fallback: "organizer")
+      }
+    }
+    internal enum Editor {
+      /// Alert
+      internal static let alert = Strings.tr("Localizable", "event.editor.alert", fallback: "Alert")
+      /// End
+      internal static let end = Strings.tr("Localizable", "event.editor.end", fallback: "End")
+      /// New Event
+      internal static let headline = Strings.tr("Localizable", "event.editor.headline", fallback: "New Event")
+      /// Location
+      internal static let location = Strings.tr("Localizable", "event.editor.location", fallback: "Location")
+      /// Notes
+      internal static let notes = Strings.tr("Localizable", "event.editor.notes", fallback: "Notes")
+      /// Start
+      internal static let start = Strings.tr("Localizable", "event.editor.start", fallback: "Start")
+      /// Time Zone
+      internal static let timeZone = Strings.tr("Localizable", "event.editor.time_zone", fallback: "Time Zone")
+      /// URL
+      internal static let url = Strings.tr("Localizable", "event.editor.url", fallback: "URL")
+      internal enum Alert {
+        /// 10 minutes before
+        internal static let _10MinutesBefore = Strings.tr("Localizable", "event.editor.alert.10_minutes_before", fallback: "10 minutes before")
+        /// 15 minutes before
+        internal static let _15MinutesBefore = Strings.tr("Localizable", "event.editor.alert.15_minutes_before", fallback: "15 minutes before")
+        /// 1 day before
+        internal static let _1DayBefore = Strings.tr("Localizable", "event.editor.alert.1_day_before", fallback: "1 day before")
+        /// 1 hour before
+        internal static let _1HourBefore = Strings.tr("Localizable", "event.editor.alert.1_hour_before", fallback: "1 hour before")
+        /// 2 days before
+        internal static let _2DaysBefore = Strings.tr("Localizable", "event.editor.alert.2_days_before", fallback: "2 days before")
+        /// 2 hours before
+        internal static let _2HoursBefore = Strings.tr("Localizable", "event.editor.alert.2_hours_before", fallback: "2 hours before")
+        /// 30 minutes before
+        internal static let _30MinutesBefore = Strings.tr("Localizable", "event.editor.alert.30_minutes_before", fallback: "30 minutes before")
+        /// 5 minutes before
+        internal static let _5MinutesBefore = Strings.tr("Localizable", "event.editor.alert.5_minutes_before", fallback: "5 minutes before")
+        /// At time of event
+        internal static let atTime = Strings.tr("Localizable", "event.editor.alert.at_time", fallback: "At time of event")
+        /// None
+        internal static let `none` = Strings.tr("Localizable", "event.editor.alert.none", fallback: "None")
       }
     }
     internal enum Status {
@@ -161,16 +213,6 @@ internal enum Strings {
     internal enum Editor {
       /// New Reminder
       internal static let headline = Strings.tr("Localizable", "reminder.editor.headline", fallback: "New Reminder")
-      /// Save
-      internal static let save = Strings.tr("Localizable", "reminder.editor.save", fallback: "Save")
-      /// Title
-      internal static let title = Strings.tr("Localizable", "reminder.editor.title", fallback: "Title")
-      internal enum Confirm {
-        /// Continue editing
-        internal static let `continue` = Strings.tr("Localizable", "reminder.editor.confirm.continue", fallback: "Continue editing")
-        /// Discard all changes
-        internal static let discard = Strings.tr("Localizable", "reminder.editor.confirm.discard", fallback: "Discard all changes")
-      }
     }
     internal enum Options {
       /// Options

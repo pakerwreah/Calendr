@@ -1,4 +1,4 @@
-/* 
+/*
   Localizable.strings
   Calendr
 
@@ -117,12 +117,32 @@
 "reminder.options.complete" = "完了";
 "reminder.options.remind" = "%@ にリマインド";
 
-"reminder.editor.headline" = "新しいリマインダー";
-"reminder.editor.title" = "タイトル";
-"reminder.editor.save" = "保存";
+"editor.title" = "タイトル";
+"editor.save" = "保存";
+"editor.confirm.continue" = "作成を続ける";
+"editor.confirm.discard" = "変更を破棄";
 
-"reminder.editor.confirm.continue" = "作成を続ける";
-"reminder.editor.confirm.discard" = "変更を破棄";
+//"event.editor.headline" = "New Event";
+//"event.editor.start" = "Start";
+//"event.editor.end" = "End";
+//"event.editor.time_zone" = "Time Zone";
+//"event.editor.location" = "Location";
+//"event.editor.url" = "URL";
+//"event.editor.notes" = "Notes";
+
+//"event.editor.alert" = "Alert";
+//"event.editor.alert.none" = "None";
+//"event.editor.alert.at_time" = "At time of event";
+//"event.editor.alert.5_minutes_before" = "5 minutes before";
+//"event.editor.alert.10_minutes_before" = "10 minutes before";
+//"event.editor.alert.15_minutes_before" = "15 minutes before";
+//"event.editor.alert.30_minutes_before" = "30 minutes before";
+//"event.editor.alert.1_hour_before" = "1 hour before";
+//"event.editor.alert.2_hours_before" = "2 hours before";
+//"event.editor.alert.1_day_before" = "1 day before";
+//"event.editor.alert.2_days_before" = "2 days before";
+
+"reminder.editor.headline" = "新しいリマインダー";
 
 "map_black_list.headline" = "以下の語が含まれる場合に地図を非表示にする";
 "map_black_list.new_item_text" = "新しい除外ワード";

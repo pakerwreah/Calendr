@@ -1,4 +1,4 @@
-/* 
+/*
   Localizable.strings
   Calendr
 
@@ -119,12 +119,32 @@
 "reminder.options.complete" = "Выполнено";
 "reminder.options.remind" = "Напомнить %@";
 
-"reminder.editor.headline" = "Новое Напоминание";
-"reminder.editor.title" = "Название";
-"reminder.editor.save" = "Сохранить";
+"editor.title" = "Название";
+"editor.save" = "Сохранить";
+"editor.confirm.continue" = "Продолжить редактирование";
+"editor.confirm.discard" = "Отменить все изменения";
 
-"reminder.editor.confirm.continue" = "Продолжить редактирование";
-"reminder.editor.confirm.discard" = "Отменить все изменения";
+//"event.editor.headline" = "New Event";
+//"event.editor.start" = "Start";
+//"event.editor.end" = "End";
+//"event.editor.time_zone" = "Time Zone";
+//"event.editor.location" = "Location";
+//"event.editor.url" = "URL";
+//"event.editor.notes" = "Notes";
+
+//"event.editor.alert" = "Alert";
+//"event.editor.alert.none" = "None";
+//"event.editor.alert.at_time" = "At time of event";
+//"event.editor.alert.5_minutes_before" = "5 minutes before";
+//"event.editor.alert.10_minutes_before" = "10 minutes before";
+//"event.editor.alert.15_minutes_before" = "15 minutes before";
+//"event.editor.alert.30_minutes_before" = "30 minutes before";
+//"event.editor.alert.1_hour_before" = "1 hour before";
+//"event.editor.alert.2_hours_before" = "2 hours before";
+//"event.editor.alert.1_day_before" = "1 day before";
+//"event.editor.alert.2_days_before" = "2 days before";
+
+"reminder.editor.headline" = "Новое Напоминание";
 
 "map_black_list.headline" = "Скрывать карту, если в названии места есть одно из этих слов";
 "map_black_list.new_item_text" = "Новый элемент";

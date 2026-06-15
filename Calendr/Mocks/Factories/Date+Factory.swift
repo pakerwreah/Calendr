@@ -52,7 +52,8 @@ extension Date {
             day: day,
             hour: at ~= .start ? 0 : 23,
             minute: at ~= .start ? 0 : 59,
-            second: at ~= .start ? 0 : 59
+            second: at ~= .start ? 0 : 59,
+            timeZone: timeZone
         )
     }
 }

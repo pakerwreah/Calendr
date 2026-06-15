@@ -1,4 +1,4 @@
-/* 
+/*
   Localizable.strings
   Calendr
 
@@ -117,12 +117,32 @@
 "reminder.options.complete" = "Concluído";
 "reminder.options.remind" = "Lembrar %@";
 
-"reminder.editor.headline" = "Novo Lembrete";
-"reminder.editor.title" = "Título";
-"reminder.editor.save" = "Salvar";
+"editor.title" = "Título";
+"editor.save" = "Salvar";
+"editor.confirm.continue" = "Continuar editando";
+"editor.confirm.discard" = "Descartar todas as alterações";
 
-"reminder.editor.confirm.continue" = "Continuar editando";
-"reminder.editor.confirm.discard" = "Descartar todas as alterações";
+"event.editor.headline" = "Novo Evento";
+"event.editor.start" = "Início";
+"event.editor.end" = "Fim";
+"event.editor.time_zone" = "Fuso horário";
+"event.editor.location" = "Local";
+"event.editor.url" = "URL";
+"event.editor.notes" = "Notas";
+
+"event.editor.alert" = "Alerta";
+"event.editor.alert.none" = "Nenhum";
+"event.editor.alert.at_time" = "Na hora do evento";
+"event.editor.alert.5_minutes_before" = "5 minutos antes";
+"event.editor.alert.10_minutes_before" = "10 minutos antes";
+"event.editor.alert.15_minutes_before" = "15 minutos antes";
+"event.editor.alert.30_minutes_before" = "30 minutos antes";
+"event.editor.alert.1_hour_before" = "1 hora antes";
+"event.editor.alert.2_hours_before" = "2 horas antes";
+"event.editor.alert.1_day_before" = "1 dia antes";
+"event.editor.alert.2_days_before" = "2 dias antes";
+
+"reminder.editor.headline" = "Novo Lembrete";
 
 "map_black_list.headline" = "Ocultar mapa se o local contiver alguma destas palavras";
 "map_black_list.new_item_text" = "Novo Item";

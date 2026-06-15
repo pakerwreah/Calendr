@@ -24,6 +24,18 @@ protocol CalendarServiceProviding {
     func events(from start: Date, to end: Date, calendars: [String]) -> Single<[EventModel]>
 
     func createReminder(title: String, calendar: String, date: Date, isAllDay: Bool) -> Completable
+    func createEvent(
+        title: String,
+        calendar: String,
+        start: Date,
+        end: Date,
+        isAllDay: Bool,
+        location: String?,
+        url: URL?,
+        notes: String?,
+        alertOffset: TimeInterval?,
+        timeZone: TimeZone
+    ) -> Completable
     func completeReminder(id: String, complete: Bool) -> Completable
     func rescheduleReminder(id: String, to: Date, isAllDay: Bool) -> Completable
 
@@ -293,6 +305,50 @@ class CalendarServiceProvider: CalendarServiceProviding {
         .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
     }
 
+    func createEvent(
+        title: String,
+        calendar calendarId: String,
+        start: Date,
+        end: Date,
+        isAllDay: Bool,
+        location: String?,
+        url: URL?,
+        notes: String?,
+        alertOffset: TimeInterval?,
+        timeZone: TimeZone
+    ) -> Completable {
+
+        let dates = eventDates(start: start, end: end, isAllDay: isAllDay, timeZone: timeZone)
+
+        return Completable.create { [store] observer in
+            do {
+                guard let calendar = store.calendar(withIdentifier: calendarId) else {
+                    throw .unexpected("Missing calendar for events")
+                }
+                let event = EKEvent(eventStore: store)
+                event.calendar = calendar
+                event.title = title
+                event.startDate = dates.start
+                event.endDate = dates.end
+                event.isAllDay = isAllDay
+                event.timeZone = timeZone
+                event.location = location
+                event.url = url
+                event.notes = notes
+                if let alertOffset {
+                    event.addAlarm(EKAlarm(relativeOffset: alertOffset))
+                }
+                try store.save(event, span: .thisEvent, commit: true)
+                observer(.completed)
+            } catch {
+                observer(.error(error))
+            }
+
+            return Disposables.create()
+        }
+        .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+    }
+
     func completeReminder(id: String, complete: Bool) -> Completable {
 
         Completable.create { [store] observer in
@@ -412,6 +468,17 @@ class CalendarServiceProvider: CalendarServiceProviding {
             components.nanosecond = nil
         }
         return components
+    }
+
+    private func eventDates(start: Date, end: Date, isAllDay: Bool, timeZone: TimeZone) -> (start: Date, end: Date) {
+        guard isAllDay else { return (start, end) }
+
+        let calendar = dateProvider.calendar.with(timeZone: timeZone)
+        let startDay = calendar.startOfDay(for: start)
+        let endDay = calendar.startOfDay(for: end)
+        let exclusiveEnd = calendar.date(byAdding: .day, value: 1, to: endDay)!
+
+        return (startDay, exclusiveEnd)
     }
 }
 

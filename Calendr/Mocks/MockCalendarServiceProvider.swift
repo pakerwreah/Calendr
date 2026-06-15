@@ -50,6 +50,19 @@ class MockCalendarServiceProvider: CalendarServiceProviding {
 
     func createReminder(title: String, calendar: String, date: Date, isAllDay: Bool) -> Completable { .empty() }
 
+    func createEvent(
+        title: String,
+        calendar: String,
+        start: Date,
+        end: Date,
+        isAllDay: Bool,
+        location: String?,
+        url: URL?,
+        notes: String?,
+        alertOffset: TimeInterval?,
+        timeZone: TimeZone
+    ) -> Completable { .empty() }
+
     func completeReminder(id: String, complete: Bool) -> Completable { .empty() }
 
     func rescheduleReminder(id: String, to: Date, isAllDay: Bool) -> Completable { .empty() }
