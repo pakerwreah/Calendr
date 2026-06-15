@@ -18,20 +18,6 @@ class KeyboardViewController: NSViewController, SettingsUI {
 
     private var commandCharWidth = NSLayoutGuide()
 
-    init() {
-        super.init(nibName: nil, bundle: nil)
-
-        setUpAccessibility()
-    }
-
-    private func setUpAccessibility() {
-
-        guard BuildConfig.isUITesting else { return }
-
-        view.setAccessibilityElement(true)
-        view.setAccessibilityIdentifier(Accessibility.Settings.Keyboard.view)
-    }
-
     override func viewDidLoad() {
 
         super.viewDidLoad()
@@ -131,10 +117,6 @@ class KeyboardViewController: NSViewController, SettingsUI {
         shortcutRecorder.setContentHuggingPriority(.required, for: .horizontal)
 
         return shortcutRecorder
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }
 

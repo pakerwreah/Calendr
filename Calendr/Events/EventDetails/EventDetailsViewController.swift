@@ -46,24 +46,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
 
         super.init(nibName: nil, bundle: nil)
 
-        setUpAccessibility()
-
         setUpBindings()
-    }
-
-    private func setUpAccessibility() {
-
-        guard BuildConfig.isUITesting else { return }
-
-        NSApp.addAccessibilityChild(view)
-
-        view.setAccessibilityIdentifier(viewModel.accessibilityIdentifier)
-    }
-
-    deinit {
-        guard BuildConfig.isUITesting else { return }
-        
-        NSApp.removeAccessibilityChild(view)
     }
 
     override func viewDidLoad() {

@@ -36,8 +36,6 @@ class CalendarView: NSView {
 
         super.init(frame: .zero)
 
-        setUpAccessibility()
-
         setUpOutline()
 
         setUpBindings()
@@ -56,14 +54,6 @@ class CalendarView: NSView {
     override func updateLayer() {
         super.updateLayer()
         outlineLayer.strokeColor = Colors.outlineBackground
-    }
-
-    private func setUpAccessibility() {
-
-        guard BuildConfig.isUITesting else { return }
-
-        setAccessibilityElement(true)
-        setAccessibilityIdentifier(Accessibility.Calendar.view)
     }
 
     private func setUpOutline() {

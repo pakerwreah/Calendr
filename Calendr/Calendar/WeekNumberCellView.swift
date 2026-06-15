@@ -20,8 +20,6 @@ class WeekNumberCellView: NSView {
 
         super.init(frame: .zero)
 
-        setUpAccessibility()
-
         configureLayout()
 
         weekNumber
@@ -29,14 +27,6 @@ class WeekNumberCellView: NSView {
             .observe(on: MainScheduler.instance)
             .bind(to: label.rx.text)
             .disposed(by: disposeBag)
-    }
-
-    private func setUpAccessibility() {
-
-        guard BuildConfig.isUITesting else { return }
-
-        setAccessibilityElement(true)
-        setAccessibilityIdentifier(Accessibility.Calendar.weekNumber)
     }
 
     private func configureLayout() {

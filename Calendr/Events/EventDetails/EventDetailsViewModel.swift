@@ -63,17 +63,6 @@ class EventDetailsViewModel {
 
     private let disposeBag = DisposeBag()
 
-    var accessibilityIdentifier: String? {
-        switch type {
-        case .event:
-            return Accessibility.EventDetails.view
-        case .reminder:
-            return Accessibility.ReminderDetails.view
-        case .birthday:
-            return nil
-        }
-    }
-
     init(
         source: EventDetailsSource,
         event: EventModel,

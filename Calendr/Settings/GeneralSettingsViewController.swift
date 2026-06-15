@@ -72,21 +72,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
 
         super.init(nibName: nil, bundle: nil)
 
-        setUpAccessibility()
-
         setUpBindings()
-    }
-
-    private func setUpAccessibility() {
-
-        guard BuildConfig.isUITesting else { return }
-
-        view.setAccessibilityElement(true)
-        view.setAccessibilityIdentifier(Accessibility.Settings.General.view)
-
-        iconStyleDropdown.setAccessibilityIdentifier(Accessibility.Settings.General.iconStyleDropdown)
-        dateFormatDropdown.setAccessibilityIdentifier(Accessibility.Settings.General.dateFormatDropdown)
-        dateFormatTextField.setAccessibilityIdentifier(Accessibility.Settings.General.dateFormatInput)
     }
 
     override func viewDidLoad() {

@@ -43,35 +43,9 @@ class CalendarCellView: NSView {
 
         super.init(frame: .zero)
 
-        setUpAccessibility()
-
         configureLayout()
 
         setUpBindings()
-    }
-
-    private func setUpAccessibility() {
-
-        guard BuildConfig.isUITesting else { return }
-
-        setAccessibilityElement(true)
-
-        Observable.combineLatest(
-            viewModel.map(\.isToday).distinctUntilChanged(),
-            viewModel.map(\.isSelected).distinctUntilChanged(),
-            viewModel.map(\.isHovered).distinctUntilChanged()
-        )
-        .map { isToday, isSelected, isHovered in
-            [
-                Accessibility.Calendar.date,
-                isToday ? Accessibility.Calendar.today : nil,
-                isSelected ? Accessibility.Calendar.selected : nil,
-                isHovered ? Accessibility.Calendar.hovered : nil
-            ]
-            .compact()
-        }
-        .bind(to: rx.accessibilityIdentifiers)
-        .disposed(by: disposeBag)
     }
 
     private func configureLayout() {
@@ -253,11 +227,6 @@ private func makeEventDot(color: NSColor, scaling: Double) -> NSView {
     view.wantsLayer = true
     view.layer!.backgroundColor = color.effectiveCGColor
     view.layer!.cornerRadius = size / 2
-
-    if BuildConfig.isUITesting {
-        view.setAccessibilityElement(true)
-        view.setAccessibilityIdentifier(Accessibility.Calendar.event)
-    }
 
     return view
 }
