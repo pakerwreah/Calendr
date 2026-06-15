@@ -32,7 +32,8 @@ protocol CalendarServiceProviding {
         isAllDay: Bool,
         location: String?,
         url: URL?,
-        notes: String?
+        notes: String?,
+        alertOffset: TimeInterval?
     ) -> Completable
     func completeReminder(id: String, complete: Bool) -> Completable
     func rescheduleReminder(id: String, to: Date, isAllDay: Bool) -> Completable
@@ -311,7 +312,8 @@ class CalendarServiceProvider: CalendarServiceProviding {
         isAllDay: Bool,
         location: String?,
         url: URL?,
-        notes: String?
+        notes: String?,
+        alertOffset: TimeInterval?
     ) -> Completable {
 
         let dates = eventDates(start: start, end: end, isAllDay: isAllDay)
@@ -330,6 +332,9 @@ class CalendarServiceProvider: CalendarServiceProviding {
                 event.location = location
                 event.url = url
                 event.notes = notes
+                if let alertOffset {
+                    event.addAlarm(EKAlarm(relativeOffset: alertOffset))
+                }
                 try store.save(event, span: .thisEvent, commit: true)
                 observer(.completed)
             } catch {

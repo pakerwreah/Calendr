@@ -58,7 +58,8 @@ class MockCalendarServiceProvider: CalendarServiceProviding {
         isAllDay: Bool,
         location: String?,
         url: URL?,
-        notes: String?
+        notes: String?,
+        alertOffset: TimeInterval?
     ) -> Completable { .empty() }
 
     func completeReminder(id: String, complete: Bool) -> Completable { .empty() }

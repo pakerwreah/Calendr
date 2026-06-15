@@ -205,6 +205,64 @@ class EventEditorViewModelTests: XCTestCase {
         XCTAssertEqual(lastValue?.location, "Office")
         XCTAssertEqual(lastValue?.url?.absoluteString, "https://example.com")
         XCTAssertEqual(lastValue?.notes, "Agenda")
+        XCTAssertNil(lastValue?.alertOffset)
+    }
+
+    func testViewModel_initialState_selectedAlertIsNone() {
+
+        let viewModel = EventEditorViewModel(dateProvider: dateProvider)
+
+        XCTAssertEqual(viewModel.selectedAlert, .none)
+    }
+
+    func testViewModel_saveEvent_withNoAlertSelected() {
+
+        let calendarService = MockCalendarServiceProvider()
+        calendarService.m_calendars = [.make(id: "cal-1")]
+
+        let viewModel = EventEditorViewModel(dateProvider: dateProvider, calendarService: calendarService)
+
+        var lastValue: CreateEventArgs?
+        _ = calendarService.spyCreateEventObservable.bind { lastValue = $0 }
+
+        viewModel.title = "Meeting"
+        viewModel.saveEvent()
+
+        XCTAssertNil(lastValue?.alertOffset)
+    }
+
+    func testViewModel_saveEvent_withAlertSelected() {
+
+        let calendarService = MockCalendarServiceProvider()
+        calendarService.m_calendars = [.make(id: "cal-1")]
+
+        let viewModel = EventEditorViewModel(dateProvider: dateProvider, calendarService: calendarService)
+
+        var lastValue: CreateEventArgs?
+        _ = calendarService.spyCreateEventObservable.bind { lastValue = $0 }
+
+        viewModel.title = "Meeting"
+        viewModel.selectedAlert = .tenMinutesBefore
+        viewModel.saveEvent()
+
+        XCTAssertEqual(lastValue?.alertOffset, -600)
+    }
+
+    func testViewModel_saveEvent_withAtTimeOfEventAlert() {
+
+        let calendarService = MockCalendarServiceProvider()
+        calendarService.m_calendars = [.make(id: "cal-1")]
+
+        let viewModel = EventEditorViewModel(dateProvider: dateProvider, calendarService: calendarService)
+
+        var lastValue: CreateEventArgs?
+        _ = calendarService.spyCreateEventObservable.bind { lastValue = $0 }
+
+        viewModel.title = "Meeting"
+        viewModel.selectedAlert = .atTimeOfEvent
+        viewModel.saveEvent()
+
+        XCTAssertEqual(lastValue?.alertOffset, 0)
     }
 
     func testViewModel_saveEvent_withError() {
@@ -433,7 +491,8 @@ private class FailingEventCalendarService: MockCalendarServiceProvider {
         isAllDay: Bool,
         location: String?,
         url: URL?,
-        notes: String?
+        notes: String?,
+        alertOffset: TimeInterval?
     ) -> Completable {
         .error(.unexpected("Creation failed"))
     }

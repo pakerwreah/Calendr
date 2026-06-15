@@ -38,6 +38,9 @@ struct EventEditorView: ViewModelView {
                 )
             }
 
+            Toggle(Strings.Event.allDay, isOn: $viewModel.isAllDay)
+                .toggleStyle(.checkbox)
+
             Grid(alignment: .trailing, horizontalSpacing: 8, verticalSpacing: 8) {
                 GridRow {
                     Text(Strings.Event.Editor.start + ":")
@@ -61,8 +64,19 @@ struct EventEditorView: ViewModelView {
                 }
             }
 
-            Toggle(Strings.Event.allDay, isOn: $viewModel.isAllDay)
-                .toggleStyle(.checkbox)
+            Grid(alignment: .trailing, horizontalSpacing: 8, verticalSpacing: 8) {
+                GridRow {
+                    Text(Strings.Event.Editor.alert + ":")
+                        .foregroundStyle(.secondary)
+
+                    Picker("", selection: $viewModel.selectedAlert) {
+                        ForEach(EventAlert.allCases, id: \.self) { alert in
+                            Text(alert.title).tag(alert)
+                        }
+                    }
+                    .labelsHidden()
+                }
+            }
 
             TextInput(placeholder: Strings.Event.Editor.location, text: $viewModel.location)
 

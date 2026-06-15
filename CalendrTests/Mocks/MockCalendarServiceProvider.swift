@@ -19,7 +19,8 @@ typealias CreateEventArgs = (
     isAllDay: Bool,
     location: String?,
     url: URL?,
-    notes: String?
+    notes: String?,
+    alertOffset: TimeInterval?
 )
 typealias EventsArgs = (start: Date, end: Date, calendars: [String])
 
@@ -83,9 +84,10 @@ class MockCalendarServiceProvider: CalendarServiceProviding {
         isAllDay: Bool,
         location: String?,
         url: URL?,
-        notes: String?
+        notes: String?,
+        alertOffset: TimeInterval?
     ) -> Completable {
-        spyCreateEventObserver.onNext((title, calendar, start, end, isAllDay, location, url, notes))
+        spyCreateEventObserver.onNext((title, calendar, start, end, isAllDay, location, url, notes, alertOffset))
         return .empty()
     }
 }

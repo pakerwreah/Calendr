@@ -115,6 +115,8 @@ internal enum Strings {
       }
     }
     internal enum Editor {
+      /// Alert
+      internal static let alert = Strings.tr("Localizable", "event.editor.alert", fallback: "Alert")
       /// End
       internal static let end = Strings.tr("Localizable", "event.editor.end", fallback: "End")
       /// New Event
@@ -127,6 +129,28 @@ internal enum Strings {
       internal static let start = Strings.tr("Localizable", "event.editor.start", fallback: "Start")
       /// URL
       internal static let url = Strings.tr("Localizable", "event.editor.url", fallback: "URL")
+      internal enum Alert {
+        /// 10 minutes before
+        internal static let _10MinutesBefore = Strings.tr("Localizable", "event.editor.alert.10_minutes_before", fallback: "10 minutes before")
+        /// 15 minutes before
+        internal static let _15MinutesBefore = Strings.tr("Localizable", "event.editor.alert.15_minutes_before", fallback: "15 minutes before")
+        /// 1 day before
+        internal static let _1DayBefore = Strings.tr("Localizable", "event.editor.alert.1_day_before", fallback: "1 day before")
+        /// 1 hour before
+        internal static let _1HourBefore = Strings.tr("Localizable", "event.editor.alert.1_hour_before", fallback: "1 hour before")
+        /// 2 days before
+        internal static let _2DaysBefore = Strings.tr("Localizable", "event.editor.alert.2_days_before", fallback: "2 days before")
+        /// 2 hours before
+        internal static let _2HoursBefore = Strings.tr("Localizable", "event.editor.alert.2_hours_before", fallback: "2 hours before")
+        /// 30 minutes before
+        internal static let _30MinutesBefore = Strings.tr("Localizable", "event.editor.alert.30_minutes_before", fallback: "30 minutes before")
+        /// 5 minutes before
+        internal static let _5MinutesBefore = Strings.tr("Localizable", "event.editor.alert.5_minutes_before", fallback: "5 minutes before")
+        /// At time of event
+        internal static let atTime = Strings.tr("Localizable", "event.editor.alert.at_time", fallback: "At time of event")
+        /// None
+        internal static let `none` = Strings.tr("Localizable", "event.editor.alert.none", fallback: "None")
+      }
     }
     internal enum Status {
       /// Accepted

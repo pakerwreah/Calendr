@@ -1,4 +1,4 @@
-/* 
+/*
   Localizable.strings
   Calendr
 
@@ -129,6 +129,18 @@
 //"event.editor.location" = "Location";
 //"event.editor.url" = "URL";
 //"event.editor.notes" = "Notes";
+
+//"event.editor.alert" = "Alert";
+//"event.editor.alert.none" = "None";
+//"event.editor.alert.at_time" = "At time of event";
+//"event.editor.alert.5_minutes_before" = "5 minutes before";
+//"event.editor.alert.10_minutes_before" = "10 minutes before";
+//"event.editor.alert.15_minutes_before" = "15 minutes before";
+//"event.editor.alert.30_minutes_before" = "30 minutes before";
+//"event.editor.alert.1_hour_before" = "1 hour before";
+//"event.editor.alert.2_hours_before" = "2 hours before";
+//"event.editor.alert.1_day_before" = "1 day before";
+//"event.editor.alert.2_days_before" = "2 days before";
 
 //"reminder.editor.headline" = "New Reminder";
 

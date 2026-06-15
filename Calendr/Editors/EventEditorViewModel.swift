@@ -24,6 +24,7 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
     var location = ""
     var url = ""
     var notes = ""
+    var selectedAlert: EventAlert = .none
     var isCloseConfirmationVisible = false
     var isErrorVisible = false
 
@@ -108,7 +109,8 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
             isAllDay: isAllDay,
             location: trimmedLocation.isEmpty ? nil : trimmedLocation,
             url: parsedUrl,
-            notes: trimmedNotes.isEmpty ? nil : trimmedNotes
+            notes: trimmedNotes.isEmpty ? nil : trimmedNotes,
+            alertOffset: selectedAlert.relativeOffset
         )
         .observe(on: MainScheduler.instance)
         .subscribe(onCompleted: { [weak self] in

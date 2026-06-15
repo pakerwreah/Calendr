@@ -1,4 +1,4 @@
-/* 
+/*
   Localizable.strings
   Calendr
 
@@ -128,6 +128,18 @@
 "event.editor.location" = "Local";
 "event.editor.url" = "URL";
 "event.editor.notes" = "Notas";
+
+"event.editor.alert" = "Alerta";
+"event.editor.alert.none" = "Nenhum";
+"event.editor.alert.at_time" = "Na hora do evento";
+"event.editor.alert.5_minutes_before" = "5 minutos antes";
+"event.editor.alert.10_minutes_before" = "10 minutos antes";
+"event.editor.alert.15_minutes_before" = "15 minutos antes";
+"event.editor.alert.30_minutes_before" = "30 minutos antes";
+"event.editor.alert.1_hour_before" = "1 hora antes";
+"event.editor.alert.2_hours_before" = "2 horas antes";
+"event.editor.alert.1_day_before" = "1 dia antes";
+"event.editor.alert.2_days_before" = "2 dias antes";
 
 "reminder.editor.headline" = "Novo Lembrete";
 
