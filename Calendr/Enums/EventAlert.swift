@@ -5,6 +5,8 @@
 //  Created by Paker on 14/06/2026.
 //
 
+import Foundation
+
 enum EventAlert: Equatable, Hashable, CaseIterable {
     case none
     case atTimeOfEvent

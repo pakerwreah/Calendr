@@ -127,6 +127,8 @@ internal enum Strings {
       internal static let notes = Strings.tr("Localizable", "event.editor.notes", fallback: "Notes")
       /// Start
       internal static let start = Strings.tr("Localizable", "event.editor.start", fallback: "Start")
+      /// Time Zone
+      internal static let timeZone = Strings.tr("Localizable", "event.editor.time_zone", fallback: "Time Zone")
       /// URL
       internal static let url = Strings.tr("Localizable", "event.editor.url", fallback: "URL")
       internal enum Alert {

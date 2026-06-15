@@ -25,6 +25,14 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
     var url = ""
     var notes = ""
     var selectedAlert: EventAlert = .none
+    var selectedTimeZoneIdentifier: String {
+        didSet {
+            guard selectedTimeZoneIdentifier != oldValue else { return }
+            preserveWallClockTime(
+                from: TimeZone(identifier: oldValue) ?? dateProvider.calendar.timeZone
+            )
+        }
+    }
     var isCloseConfirmationVisible = false
     var isErrorVisible = false
 
@@ -51,13 +59,18 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
 
     private let disposeBag = DisposeBag()
 
-    private var calendar: Calendar { dateProvider.calendar }
+    private var calendar: Calendar { dateProvider.calendar.with(timeZone: selectedTimeZone) }
+
+    var selectedTimeZone: TimeZone {
+        TimeZone(identifier: selectedTimeZoneIdentifier) ?? dateProvider.calendar.timeZone
+    }
 
     init(startDate: DueDate, dateProvider: DateProviding, calendarService: CalendarServiceProviding) {
         self.dateProvider = dateProvider
         self.startDate = startDate.date
         self.endDate = dateProvider.calendar.date(byAdding: .hour, value: 1, to: startDate.date)!
         self.calendarService = calendarService
+        self.selectedTimeZoneIdentifier = dateProvider.calendar.timeZone.identifier
 
         loadCalendars()
     }
@@ -110,7 +123,8 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
             location: trimmedLocation.isEmpty ? nil : trimmedLocation,
             url: parsedUrl,
             notes: trimmedNotes.isEmpty ? nil : trimmedNotes,
-            alertOffset: selectedAlert.relativeOffset
+            alertOffset: selectedAlert.relativeOffset,
+            timeZone: selectedTimeZone
         )
         .observe(on: MainScheduler.instance)
         .subscribe(onCompleted: { [weak self] in
@@ -129,6 +143,24 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
     }
 
     // MARK: - Private
+
+    private func preserveWallClockTime(from oldTimeZone: TimeZone) {
+        let newTimeZone = selectedTimeZone
+        guard oldTimeZone != newTimeZone else { return }
+
+        let oldCalendar = dateProvider.calendar.with(timeZone: oldTimeZone)
+        let newCalendar = dateProvider.calendar.with(timeZone: newTimeZone)
+
+        let components: Set<Calendar.Component> = isAllDay
+            ? [.year, .month, .day]
+            : [.year, .month, .day, .hour, .minute, .second]
+
+        let startComponents = oldCalendar.dateComponents(components, from: startDate)
+        startDate = newCalendar.date(from: startComponents) ?? startDate
+
+        let endComponents = oldCalendar.dateComponents(components, from: endDate)
+        endDate = newCalendar.date(from: endComponents) ?? endDate
+    }
 
     private func adjustDatesForAllDayChange() {
         if isAllDay {

@@ -38,10 +38,16 @@ struct EventEditorView: ViewModelView {
                 )
             }
 
-            Toggle(Strings.Event.allDay, isOn: $viewModel.isAllDay)
-                .toggleStyle(.checkbox)
+            Grid(horizontalSpacing: 12, verticalSpacing: 12) {
+                GridRow {
+                    Text(Strings.Event.allDay + ":")
+                        .foregroundStyle(.secondary)
+                        .gridColumnAlignment(.trailing)
 
-            Grid(alignment: .trailing, horizontalSpacing: 8, verticalSpacing: 8) {
+                    Toggle(isOn: $viewModel.isAllDay) { }
+                        .toggleStyle(.checkbox)
+                        .gridColumnAlignment(.leading)
+                }
                 GridRow {
                     Text(Strings.Event.Editor.start + ":")
                         .foregroundStyle(.secondary)
@@ -49,6 +55,7 @@ struct EventEditorView: ViewModelView {
                     DateTimeInput(
                         date: $viewModel.startDate,
                         showTime: !viewModel.isAllDay,
+                        timeZone: viewModel.selectedTimeZone,
                         isInvalid: !viewModel.hasValidDateRange
                     )
                 }
@@ -59,12 +66,16 @@ struct EventEditorView: ViewModelView {
                     DateTimeInput(
                         date: $viewModel.endDate,
                         showTime: !viewModel.isAllDay,
+                        timeZone: viewModel.selectedTimeZone,
                         isInvalid: !viewModel.hasValidDateRange
                     )
                 }
-            }
+                GridRow {
+                    Text(Strings.Event.Editor.timeZone + ":")
+                        .foregroundStyle(.secondary)
 
-            Grid(alignment: .trailing, horizontalSpacing: 8, verticalSpacing: 8) {
+                    TimeZonePicker(selectedIdentifier: $viewModel.selectedTimeZoneIdentifier)
+                }
                 GridRow {
                     Text(Strings.Event.Editor.alert + ":")
                         .foregroundStyle(.secondary)
@@ -127,7 +138,7 @@ struct EventEditorView: ViewModelView {
     EventEditorView(
         viewModel: .init(
             startDate: .init(date: .now),
-            dateProvider: MockDateProvider(),
+            dateProvider: MockDateProvider(calendar: .current),
             calendarService: MockCalendarServiceProvider(
                 calendars: [
                     .make(id: "1", account: "iCloud", title: "Work", color: .systemBlue),

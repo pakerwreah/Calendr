@@ -33,7 +33,8 @@ protocol CalendarServiceProviding {
         location: String?,
         url: URL?,
         notes: String?,
-        alertOffset: TimeInterval?
+        alertOffset: TimeInterval?,
+        timeZone: TimeZone
     ) -> Completable
     func completeReminder(id: String, complete: Bool) -> Completable
     func rescheduleReminder(id: String, to: Date, isAllDay: Bool) -> Completable
@@ -313,10 +314,11 @@ class CalendarServiceProvider: CalendarServiceProviding {
         location: String?,
         url: URL?,
         notes: String?,
-        alertOffset: TimeInterval?
+        alertOffset: TimeInterval?,
+        timeZone: TimeZone
     ) -> Completable {
 
-        let dates = eventDates(start: start, end: end, isAllDay: isAllDay)
+        let dates = eventDates(start: start, end: end, isAllDay: isAllDay, timeZone: timeZone)
 
         return Completable.create { [store] observer in
             do {
@@ -329,6 +331,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
                 event.startDate = dates.start
                 event.endDate = dates.end
                 event.isAllDay = isAllDay
+                event.timeZone = timeZone
                 event.location = location
                 event.url = url
                 event.notes = notes
@@ -467,10 +470,10 @@ class CalendarServiceProvider: CalendarServiceProviding {
         return components
     }
 
-    private func eventDates(start: Date, end: Date, isAllDay: Bool) -> (start: Date, end: Date) {
+    private func eventDates(start: Date, end: Date, isAllDay: Bool, timeZone: TimeZone) -> (start: Date, end: Date) {
         guard isAllDay else { return (start, end) }
 
-        let calendar = dateProvider.calendar
+        let calendar = dateProvider.calendar.with(timeZone: timeZone)
         let startDay = calendar.startOfDay(for: start)
         let endDay = calendar.startOfDay(for: end)
         let exclusiveEnd = calendar.date(byAdding: .day, value: 1, to: endDay)!

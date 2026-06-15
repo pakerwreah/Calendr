@@ -125,6 +125,7 @@
 "event.editor.headline" = "Novo Evento";
 "event.editor.start" = "Início";
 "event.editor.end" = "Fim";
+"event.editor.time_zone" = "Fuso horário";
 "event.editor.location" = "Local";
 "event.editor.url" = "URL";
 "event.editor.notes" = "Notas";

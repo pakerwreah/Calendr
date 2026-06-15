@@ -206,6 +206,55 @@ class EventEditorViewModelTests: XCTestCase {
         XCTAssertEqual(lastValue?.url?.absoluteString, "https://example.com")
         XCTAssertEqual(lastValue?.notes, "Agenda")
         XCTAssertNil(lastValue?.alertOffset)
+        XCTAssertEqual(lastValue?.timeZone, dateProvider.calendar.timeZone)
+    }
+
+    func testViewModel_initialState_selectedTimeZoneIsDateProviderTimeZone() {
+
+        let timeZone = TimeZone(secondsFromGMT: -5 * 3600)!
+        dateProvider.m_calendar = Calendar.gregorian.with(timeZone: timeZone)
+
+        let viewModel = EventEditorViewModel(dateProvider: dateProvider)
+
+        XCTAssertEqual(viewModel.selectedTimeZoneIdentifier, timeZone.identifier)
+    }
+
+    func testViewModel_saveEvent_passesSelectedTimeZone() {
+
+        let calendarService = MockCalendarServiceProvider()
+        calendarService.m_calendars = [.make(id: "cal-1")]
+
+        let viewModel = EventEditorViewModel(dateProvider: dateProvider, calendarService: calendarService)
+
+        var lastValue: CreateEventArgs?
+        _ = calendarService.spyCreateEventObservable.bind { lastValue = $0 }
+
+        viewModel.title = "Meeting"
+        viewModel.selectedTimeZoneIdentifier = "America/Sao_Paulo"
+        viewModel.saveEvent()
+
+        XCTAssertEqual(lastValue?.timeZone.identifier, "America/Sao_Paulo")
+    }
+
+    func testViewModel_changingTimeZone_preservesWallClockTime() {
+
+        let oldTimeZone = TimeZone(secondsFromGMT: 3 * 3600)!
+        dateProvider.m_calendar = Calendar.gregorian.with(timeZone: oldTimeZone)
+
+        let start = Date.make(year: 2025, month: 10, day: 25, hour: 14, minute: 30, timeZone: oldTimeZone)
+
+        let viewModel = EventEditorViewModel(
+            startDate: start,
+            dateProvider: dateProvider
+        )
+
+        viewModel.selectedTimeZoneIdentifier = "UTC"
+
+        let utcCalendar = Calendar.gregorian.with(timeZone: TimeZone(identifier: "UTC")!)
+        let components = utcCalendar.dateComponents([.hour, .minute], from: viewModel.startDate)
+
+        XCTAssertEqual(components.hour, 14)
+        XCTAssertEqual(components.minute, 30)
     }
 
     func testViewModel_initialState_selectedAlertIsNone() {
@@ -492,7 +541,8 @@ private class FailingEventCalendarService: MockCalendarServiceProvider {
         location: String?,
         url: URL?,
         notes: String?,
-        alertOffset: TimeInterval?
+        alertOffset: TimeInterval?,
+        timeZone: TimeZone
     ) -> Completable {
         .error(.unexpected("Creation failed"))
     }

@@ -123,6 +123,7 @@
 //"event.editor.headline" = "New Event";
 //"event.editor.start" = "Start";
 //"event.editor.end" = "End";
+//"event.editor.time_zone" = "Time Zone";
 //"event.editor.location" = "Location";
 //"event.editor.url" = "URL";
 //"event.editor.notes" = "Notes";

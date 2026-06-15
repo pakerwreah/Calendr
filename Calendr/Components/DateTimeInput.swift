@@ -11,10 +11,11 @@ struct DateTimeInput: View {
 
     @Binding var date: Date
     var showTime: Bool
+    var timeZone: TimeZone = .current
     var isInvalid: Bool = false
 
     var body: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: 16) {
             DatePicker("Date", selection: $date, displayedComponents: .date)
                 .datePickerStyle(.field)
                 .labelsHidden()
@@ -25,6 +26,7 @@ struct DateTimeInput: View {
                     .labelsHidden()
             }
         }
+        .environment(\.timeZone, timeZone)
         .overlay { isInvalid ? InputBorder(isInvalid: true) : nil }
     }
 }
