@@ -79,7 +79,9 @@ class AutoLauncher: NSObject, AutoLaunching {
                 try service.unregister()
             }
         } catch {
-            print(error)
+            if !BuildConfig.isTesting {
+                print(error)
+            }
         }
         if enabled != service.isEnabled {
             enabled.toggle()

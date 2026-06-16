@@ -7,6 +7,8 @@
 
 #if DEBUG
 
+import Foundation
+
 class MockLaunchService: LaunchService {
 
     var isEnabled: Bool = false

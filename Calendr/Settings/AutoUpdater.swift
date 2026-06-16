@@ -191,7 +191,6 @@ class AutoUpdater: AutoUpdating {
         do {
             try await checkReleaseAsync(notify: notify)
         } catch {
-            print(error)
             errorObserver.onNext(.check(error))
             statusObserver.onNext(.initial)
         }
@@ -202,7 +201,6 @@ class AutoUpdater: AutoUpdating {
             do {
                 try await downloadAndInstallAsync()
             } catch {
-                print(error)
                 statusObserver.onNext(.initial)
             }
         }
@@ -357,16 +355,11 @@ class AutoUpdater: AutoUpdating {
         var resolvedURL: URL?
 
         if let bookmarkData = localStorage.installationBookmark {
-            resolvedURL = try? URL(
-                resolvingBookmarkData: bookmarkData,
-                options: .withSecurityScope,
-                relativeTo: nil,
-                bookmarkDataIsStale: &isStale
-            )
+            resolvedURL = fileProvider.resolveSecurityScopedURL(from: bookmarkData, isStale: &isStale)
         }
 
-        if let resolvedURL, !isStale, resolvedURL == appContainerUrl, resolvedURL.startAccessingSecurityScopedResource() {
-            defer { resolvedURL.stopAccessingSecurityScopedResource() }
+        if let resolvedURL, !isStale, resolvedURL == appContainerUrl, fileProvider.startAccessingSecurityScopedResource(resolvedURL) {
+            defer { fileProvider.stopAccessingSecurityScopedResource(resolvedURL) }
             try await task(resolvedURL)
             return true
         }
@@ -377,11 +370,7 @@ class AutoUpdater: AutoUpdating {
         }
 
         do {
-            localStorage.installationBookmark = try appContainerUrl.bookmarkData(
-                options: .withSecurityScope,
-                includingResourceValuesForKeys: nil,
-                relativeTo: nil
-            )
+            localStorage.installationBookmark = try fileProvider.bookmarkData(for: appContainerUrl)
         } catch {
             SentrySDK.capture(error: error)
             print("Failed to create bookmark: \(error)")
@@ -393,7 +382,7 @@ class AutoUpdater: AutoUpdating {
 
     @MainActor
     private func requestPermission(for appContainerUrl: URL) async -> Bool {
-        NSApp.modalWindow?.close()
+        NSApp?.modalWindow?.close()
 
         let panel = saveModalFactory.make(for: appContainerUrl)
 

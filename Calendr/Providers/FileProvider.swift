@@ -13,6 +13,11 @@ protocol FileProviding {
     func url(for directory: FileManager.SearchPathDirectory) -> URL?
     func removeItem(at url: URL) throws
     func trashItem(at url: URL) throws
+
+    func resolveSecurityScopedURL(from bookmark: Data, isStale: inout Bool) -> URL?
+    func bookmarkData(for url: URL) throws -> Data
+    func startAccessingSecurityScopedResource(_ url: URL) -> Bool
+    func stopAccessingSecurityScopedResource(_ url: URL)
 }
 
 class FileProvider: FileProviding {
@@ -31,5 +36,30 @@ class FileProvider: FileProviding {
 
     func trashItem(at url: URL) throws {
         try fileManager.trashItem(at: url, resultingItemURL: nil)
+    }
+
+    func resolveSecurityScopedURL(from bookmark: Data, isStale: inout Bool) -> URL? {
+        try? URL(
+            resolvingBookmarkData: bookmark,
+            options: .withSecurityScope,
+            relativeTo: nil,
+            bookmarkDataIsStale: &isStale
+        )
+    }
+
+    func bookmarkData(for url: URL) throws -> Data {
+        try url.bookmarkData(
+            options: .withSecurityScope,
+            includingResourceValuesForKeys: nil,
+            relativeTo: nil
+        )
+    }
+
+    func startAccessingSecurityScopedResource(_ url: URL) -> Bool {
+        url.startAccessingSecurityScopedResource()
+    }
+
+    func stopAccessingSecurityScopedResource(_ url: URL) {
+        url.stopAccessingSecurityScopedResource()
     }
 }
