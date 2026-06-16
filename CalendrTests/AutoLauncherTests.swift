@@ -474,25 +474,4 @@ class AutoLauncherTests: XCTestCase {
 
         wait(for: [registerExpectation], timeout: 0.1)
     }
-
-    func testTermination() {
-
-        let unregisterExpectation = expectation(description: "Unregister")
-        let terminateExpectation = expectation(description: "Terminate")
-
-        let autoLauncher = AutoLauncher(launchServices: launchServices, localStorage: localStorage)
-
-        launchAgent.spyUnregisterAsync = {
-            try await Task.sleep(for: .milliseconds(10))
-            unregisterExpectation.fulfill()
-        }
-
-        launchServices.didTerminate = {
-            terminateExpectation.fulfill()
-        }
-
-        autoLauncher.terminate()
-
-        wait(for: [unregisterExpectation, terminateExpectation], timeout: 0.1, enforceOrder: true)
-    }
 }

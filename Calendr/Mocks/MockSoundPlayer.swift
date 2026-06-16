@@ -1,5 +1,5 @@
 //
-//  MockSoundPlayer.swift
+//  MockSoundProvider.swift
 //  Calendr
 //
 //  Created by Paker on 02/11/2024.
@@ -9,7 +9,7 @@
 
 import Foundation
 
-class MockSoundPlayer: SoundPlaying {
+class MockSoundProvider: SoundProviding {
 
     func play(_ name: SystemSound) { }
 }

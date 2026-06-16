@@ -29,10 +29,10 @@ class MockMainViewController: MainViewController {
 
         let notificationCenter = NotificationCenter.default
         let distributedNotificationCenter = DistributedNotificationCenter.default()
-        let fileManager = FileManager.default
 
         super.init(
             deeplink: .empty(),
+            launchServices: MockLaunchServiceProvider(),
             autoLauncher: MockAutoLauncher(),
             autoUpdater: MockAutoUpdater(),
             workspace: MockWorkspaceServiceProvider(),
@@ -50,7 +50,7 @@ class MockMainViewController: MainViewController {
             networkProvider: MockNetworkServiceProvider(),
             localStorage: localStorage,
             notificationCenter: notificationCenter,
-            fileManager: fileManager
+            fileProvider: MockFileProvider()
         )
     }
 

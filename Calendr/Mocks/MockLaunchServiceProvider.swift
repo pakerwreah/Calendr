@@ -26,6 +26,7 @@ class MockLaunchServiceProvider: LaunchServiceProviding {
     let launchAgent: LaunchService
 
     var didTerminate: (() -> Void)?
+    var didRelaunch: ((URL) throws -> Void)?
 
     init(
         loginItem: LaunchService = MockLaunchService(),
@@ -36,6 +37,10 @@ class MockLaunchServiceProvider: LaunchServiceProviding {
     }
 
     func terminate() { didTerminate?() }
+
+    func relaunch(at url: URL) throws {
+        try didRelaunch?(url)
+    }
 }
 
 #endif

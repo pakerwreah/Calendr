@@ -13,16 +13,28 @@ import RxSwift
 
 class MockLocalNotificationProvider: LocalNotificationProviding {
 
-    var notificationTap: Observable<NotificationResponse> = .empty()
+    private let notificationTapSubject = PublishSubject<NotificationResponse>()
+    var notificationTap: Observable<NotificationResponse> { notificationTapSubject.asObservable() }
+
+    var m_requestAuthorization = true
+    var spySendNotification: ((_ id: String, UNNotificationContent) -> Bool)?
+    var spyRegisteredCategories: [UNNotificationCategory] = []
 
     func requestAuthorization() async -> Bool {
-        return true
+        m_requestAuthorization
     }
 
-    func register(_ categories: UNNotificationCategory...) { }
+    func register(_ categories: UNNotificationCategory...) {
+        spyRegisteredCategories.append(contentsOf: categories)
+    }
 
+    @discardableResult
     func send(id: String, _ content: UNNotificationContent) async -> Bool {
-        return true
+        spySendNotification?(id, content) ?? true
+    }
+
+    func simulateNotificationTap(_ response: NotificationResponse) {
+        notificationTapSubject.onNext(response)
     }
 }
 

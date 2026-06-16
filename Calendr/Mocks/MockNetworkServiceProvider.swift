@@ -10,13 +10,22 @@
 import Foundation
 
 class MockNetworkServiceProvider: NetworkServiceProviding {
-    
+
+    var m_dataHandler: ((URL) async throws -> Data)?
+    var m_downloadHandler: ((URL) async throws -> URL)?
+
     func data(from url: URL) async throws -> Data {
-        throw UnexpectedError(message: "Not mocked")
+        guard let handler = m_dataHandler else {
+            throw UnexpectedError(message: "data not mocked")
+        }
+        return try await handler(url)
     }
-    
+
     func download(from url: URL) async throws -> URL {
-        throw UnexpectedError(message: "Not mocked")
+        guard let handler = m_downloadHandler else {
+            throw UnexpectedError(message: "download not mocked")
+        }
+        return try await handler(url)
     }
 }
 
