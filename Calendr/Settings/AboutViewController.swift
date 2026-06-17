@@ -14,17 +14,17 @@ class AboutViewController: NSViewController, SettingsUI {
     private let linkView: NSTextView
     private let newVersionButton: NSButton
     private let autoCheckForUpdatesCheckbox: Checkbox
+    private let launchServices: LaunchServiceProviding
     private let autoUpdater: AutoUpdating
     private let viewModel: SettingsViewModel
 
     private let disposeBag = DisposeBag()
 
-    init(autoUpdater: AutoUpdating, autoLauncher: AutoLaunching, settingsViewModel: SettingsViewModel) {
-        self.autoUpdater = autoUpdater
-        self.viewModel = settingsViewModel
+    init(autoUpdater: AutoUpdating, launchServices: LaunchServiceProviding, settingsViewModel: SettingsViewModel) {
 
-        quitButton = NSButton(title: Strings.quit, target: autoLauncher, action: #selector(AutoLaunching.terminate))
-        quitButton.refusesFirstResponder = true
+        self.autoUpdater = autoUpdater
+        self.launchServices = launchServices
+        self.viewModel = settingsViewModel
 
         linkView = NSTextView()
         linkView.string = "https://github.com/pakerwreah"
@@ -41,13 +41,24 @@ class AboutViewController: NSViewController, SettingsUI {
         autoCheckForUpdatesCheckbox = Checkbox(title: Strings.AutoUpdate.checkAutomatically)
         autoCheckForUpdatesCheckbox.setContentHuggingPriority(.required, for: .horizontal)
 
+        quitButton = NSButton()
+
         super.init(nibName: nil, bundle: nil)
+
+        quitButton.title = Strings.quit
+        quitButton.target = self
+        quitButton.action = #selector(terminate)
+        quitButton.refusesFirstResponder = true
 
         newVersionButton.target = self
         newVersionButton.refusesFirstResponder = true
         newVersionButton.bezelStyle = .accessoryBarAction
 
         setUpBindings()
+    }
+
+    @objc func terminate() {
+        launchServices.terminate()
     }
 
     override func viewDidLoad() {

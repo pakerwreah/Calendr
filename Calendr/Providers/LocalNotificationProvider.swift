@@ -8,13 +8,16 @@
 import UserNotifications
 import RxSwift
 
-enum NotificationCategory: String {
-    case newVersion
-    case updated
+enum LocalNotification {
+
+    enum Category: String {
+        case newVersion
+        case updated
+    }
 }
 
 struct NotificationResponse {
-    let category: NotificationCategory
+    let category: LocalNotification.Category
     let actionId: String?
 }
 
@@ -100,7 +103,7 @@ class LocalNotificationProvider: NSObject, LocalNotificationProviding, UNUserNot
 
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
         guard
-            let category = NotificationCategory(rawValue: response.notification.request.content.categoryIdentifier)
+            let category = LocalNotification.Category(rawValue: response.notification.request.content.categoryIdentifier)
         else { return }
 
         let actionId = response.actionIdentifier != UNNotificationDefaultActionIdentifier ? response.actionIdentifier : nil

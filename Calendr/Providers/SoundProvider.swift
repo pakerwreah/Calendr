@@ -1,5 +1,5 @@
 //
-//  SoundPlayer.swift
+//  SoundProvider.swift
 //  Calendr
 //
 //  Created by Paker on 02/11/2024.
@@ -23,11 +23,11 @@ enum SystemSound: NSSound.Name {
     case tink = "Tink"
 }
 
-protocol SoundPlaying {
+protocol SoundProviding {
     func play(_ name: SystemSound)
 }
 
-class SoundPlayer: SoundPlaying {
+class SoundProvider: SoundProviding {
 
     fileprivate init() {}
 
@@ -40,9 +40,9 @@ class SoundPlayer: SoundPlaying {
     }
 }
 
-private let soundPlayer = SoundPlayer()
+private let soundPlayer = SoundProvider()
 
-extension SoundPlaying where Self == SoundPlayer {
+extension SoundProviding where Self == SoundProvider {
 
     static var shared: Self { soundPlayer }
 }

@@ -20,7 +20,7 @@ struct NextEventPreview: PreviewProvider {
     static let settings = MockNextEventSettings(showItem: true, textScaling: 1.1, length: 35, detectNotch: false)
     static let notificationCenter = NotificationCenter()
     static let workspace = MockWorkspaceServiceProvider()
-    static let soundPlayer = MockSoundPlayer()
+    static let soundPlayer = MockSoundProvider()
 
     static let events: [EventModel] = [
         .make(

@@ -52,6 +52,21 @@ protocol AutoUpdating {
     @MainActor func downloadAndInstall()
 }
 
+private class AutoUpdaterSaveModalFactory: SaveModalFactory {
+
+    func make(for url: URL) -> SaveModal {
+        let panel = NSOpenPanel()
+        panel.canChooseFiles = false
+        panel.canChooseDirectories = true
+        panel.canCreateDirectories = false
+        panel.allowsMultipleSelection = false
+        panel.directoryURL = url
+        panel.prompt = Strings.AutoUpdate.install
+        panel.message = Strings.AutoUpdate.Replace.message
+        return panel
+    }
+}
+
 class AutoUpdater: AutoUpdating {
 
     enum NotificationAction {
@@ -84,15 +99,18 @@ class AutoUpdater: AutoUpdating {
         }
     }
 
-    private let newVersionCategory = UNNotificationCategory(
-        categoryId: NotificationCategory.newVersion.rawValue,
-        actionId: NotificationAction.NewVersion.install.rawValue,
-        title: Strings.AutoUpdate.install
-    )
+    enum NotificationCategory {
 
-    private let updatedCategory = UNNotificationCategory(
-        categoryId: NotificationCategory.updated.rawValue
-    )
+        static let newVersion = UNNotificationCategory(
+            categoryId: LocalNotification.Category.newVersion.rawValue,
+            actionId: NotificationAction.NewVersion.install.rawValue,
+            title: Strings.AutoUpdate.install
+        )
+
+        static let updated = UNNotificationCategory(
+            categoryId: LocalNotification.Category.updated.rawValue
+        )
+    }
 
     private struct Release {
         let name: String
@@ -109,24 +127,30 @@ class AutoUpdater: AutoUpdating {
 
     private var newRelease: Release?
 
-    private let autoLauncher: AutoLaunching
+    private let launchServices: LaunchServiceProviding
     private let localStorage: LocalStorageProvider
     private(set) var notificationProvider: LocalNotificationProviding
     private let networkProvider: NetworkServiceProviding
-    private let fileManager: FileManager
+    private let fileProvider: FileProviding
+    private let saveModalFactory: SaveModalFactory
+    private let bundleInfo: BundleInfo
 
     init(
-        autoLauncher: AutoLaunching,
+        launchServices: LaunchServiceProviding,
         localStorage: LocalStorageProvider,
         notificationProvider: LocalNotificationProviding,
         networkProvider: NetworkServiceProviding,
-        fileManager: FileManager
+        fileProvider: FileProviding,
+        bundleInfo: BundleInfo,
+        saveModalFactory: SaveModalFactory = AutoUpdaterSaveModalFactory()
     ) {
-        self.autoLauncher = autoLauncher
+        self.launchServices = launchServices
         self.localStorage = localStorage
         self.notificationProvider = notificationProvider
         self.networkProvider = networkProvider
-        self.fileManager = fileManager
+        self.fileProvider = fileProvider
+        self.saveModalFactory = saveModalFactory
+        self.bundleInfo = bundleInfo
 
         (status, statusObserver) = BehaviorSubject.pipe(value: .initial)
         (error, errorObserver) = PublishSubject.pipe()
@@ -145,7 +169,7 @@ class AutoUpdater: AutoUpdating {
 
         autoCheck = Task {
             while !Task.isCancelled {
-                self.checkRelease(notify: true)
+                await self.checkRelease(notify: true)
                 try await Task.sleep(for: .seconds(3 * 60 * 60))
             }
         }
@@ -157,19 +181,18 @@ class AutoUpdater: AutoUpdating {
     }
 
     func checkRelease() {
-        checkRelease(notify: false)
+        Task {
+            await checkRelease(notify: false)
+        }
     }
 
-    private func checkRelease(notify: Bool) {
-        Task {
-            guard await notificationProvider.requestAuthorization() else { return }
-            do {
-                try await checkReleaseAsync(notify: notify)
-            } catch {
-                print(error)
-                errorObserver.onNext(.check(error))
-                statusObserver.onNext(.initial)
-            }
+    private func checkRelease(notify: Bool) async {
+        guard await notificationProvider.requestAuthorization() else { return }
+        do {
+            try await checkReleaseAsync(notify: notify)
+        } catch {
+            errorObserver.onNext(.check(error))
+            statusObserver.onNext(.initial)
         }
     }
 
@@ -178,7 +201,6 @@ class AutoUpdater: AutoUpdating {
             do {
                 try await downloadAndInstallAsync()
             } catch {
-                print(error)
                 statusObserver.onNext(.initial)
             }
         }
@@ -206,15 +228,15 @@ class AutoUpdater: AutoUpdating {
             errorObserver.onNext(.install(error))
             throw error
         }
-
-        // if there's no error, the user just cancelled
-        statusObserver.onNext(.newVersion(release.name))
     }
 
     private func setUpNotifications() {
         
-        notificationProvider.register(newVersionCategory, updatedCategory)
-        
+        notificationProvider.register(
+            NotificationCategory.newVersion,
+            NotificationCategory.updated
+        )
+
         sendUpdatedNotification()
     }
 
@@ -229,7 +251,7 @@ class AutoUpdater: AutoUpdating {
         let content = UNMutableNotificationContent()
         content.title = Strings.AutoUpdate.updatedTo("\(BuildConfig.appVersion) 🎉")
         content.sound = .default
-        content.categoryIdentifier = updatedCategory.identifier
+        content.categoryIdentifier = NotificationCategory.updated.identifier
 
         notificationProvider.send(id: .uuid, content)
     }
@@ -284,21 +306,21 @@ class AutoUpdater: AutoUpdating {
         let content = UNMutableNotificationContent()
         content.title = Strings.AutoUpdate.newVersion(version)
         content.sound = .default
-        content.categoryIdentifier = newVersionCategory.identifier
+        content.categoryIdentifier = NotificationCategory.newVersion.identifier
 
         if await notificationProvider.send(id: .uuid, content) {
             localStorage.lastCheckedVersion = version
         }
     }
 
-    private func getApplicationsUrl() -> URL? {
-        try? fileManager.url(for: .applicationDirectory, in: .localDomainMask, appropriateFor: nil, create: false)
+    private func getApplicationsFolderUrl() -> URL? {
+        fileProvider.url(for: .applicationDirectory)
     }
 
-    private func getAppContainerUrl() -> URL {
-        let appUrl = Bundle.main.bundleURL
+    private func getAppContainingFolderUrl() -> URL {
+        let appUrl = bundleInfo.bundleURL
         /// gatekeeper might go nuts if you restore the app from the trash 🔮
-        if appUrl.pathComponents.contains("AppTranslocation"), let applications = getApplicationsUrl() {
+        if appUrl.pathComponents.contains("AppTranslocation"), let applications = getApplicationsFolderUrl() {
             return applications
         }
         return appUrl.deletingLastPathComponent()
@@ -306,71 +328,63 @@ class AutoUpdater: AutoUpdating {
 
     private func install(version: String, archiveUrl: URL) async throws {
 
-        let containerUrl = getAppContainerUrl()
+        let containerUrl = getAppContainingFolderUrl()
 
-        defer { try? fileManager.removeItem(at: archiveUrl) }
+        defer { try? fileProvider.removeItem(at: archiveUrl) }
 
-        try await withSecurityScope(for: containerUrl) { secureUrl in
+        let installed = try await withSecurityScope(for: containerUrl) { secureUrl in
             let appUrl = secureUrl.withAppComponent()
             try replaceApp(url: appUrl, archive: archiveUrl)
         }
 
-        localStorage.updatedVersion = version
+        // if there's no error, the user just cancelled
+        guard installed else {
+            statusObserver.onNext(.newVersion(version))
+            return
+        }
 
-        let appUrl = containerUrl.withAppComponent()
-        try await relaunchApp(url: appUrl)
+        localStorage.updatedVersion = version
+        localStorage.synchronize()
+
+        try await launchServices.relaunch(at: containerUrl.withAppComponent())
     }
 
-    private func withSecurityScope(for appContainerUrl: URL, _ task: (URL) async throws -> Void) async throws {
+    private func withSecurityScope(for appContainerUrl: URL, _ task: (URL) async throws -> Void) async throws -> Bool {
 
         var isStale = true
         var resolvedURL: URL?
 
         if let bookmarkData = localStorage.installationBookmark {
-            resolvedURL = try? URL(
-                resolvingBookmarkData: bookmarkData,
-                options: .withSecurityScope,
-                relativeTo: nil,
-                bookmarkDataIsStale: &isStale
-            )
+            resolvedURL = fileProvider.resolveSecurityScopedURL(from: bookmarkData, isStale: &isStale)
         }
 
-        if let resolvedURL, !isStale, resolvedURL == appContainerUrl, resolvedURL.startAccessingSecurityScopedResource() {
-            defer { resolvedURL.stopAccessingSecurityScopedResource() }
-            return try await task(resolvedURL)
+        if let resolvedURL, !isStale, resolvedURL == appContainerUrl, fileProvider.startAccessingSecurityScopedResource(resolvedURL) {
+            defer { fileProvider.stopAccessingSecurityScopedResource(resolvedURL) }
+            try await task(resolvedURL)
+            return true
         }
 
         // if we can't access the secure bookmark, ask the user for permission
-        guard try await savePanel(for: appContainerUrl) else {
-            return // user cancelled
+        guard await requestPermission(for: appContainerUrl) else {
+            return false
         }
 
         do {
-            localStorage.installationBookmark = try appContainerUrl.bookmarkData(
-                options: .withSecurityScope,
-                includingResourceValuesForKeys: nil,
-                relativeTo: nil
-            )
+            localStorage.installationBookmark = try fileProvider.bookmarkData(for: appContainerUrl)
         } catch {
             SentrySDK.capture(error: error)
             print("Failed to create bookmark: \(error)")
         }
 
         try await task(appContainerUrl)
+        return true
     }
 
     @MainActor
-    private func savePanel(for appContainerUrl: URL) async throws -> Bool {
-        NSApp.modalWindow?.close()
+    private func requestPermission(for appContainerUrl: URL) async -> Bool {
+        NSApp?.modalWindow?.close()
 
-        let panel = NSOpenPanel()
-        panel.canChooseFiles = false
-        panel.canChooseDirectories = true
-        panel.canCreateDirectories = false
-        panel.allowsMultipleSelection = false
-        panel.directoryURL = appContainerUrl
-        panel.prompt = Strings.AutoUpdate.install
-        panel.message = Strings.AutoUpdate.Replace.message
+        let panel = saveModalFactory.make(for: appContainerUrl)
 
         guard await panel.begin() == .OK, let url = panel.url else {
             return false
@@ -390,7 +404,7 @@ class AutoUpdater: AutoUpdating {
             throw .unexpected("This is not the app we want to replace: \(appUrl)")
         }
 
-        try fileManager.trashItem(at: appUrl, resultingItemURL: nil)
+        try fileProvider.trashItem(at: appUrl)
 
         let archive: Archive
         do {
@@ -410,30 +424,15 @@ class AutoUpdater: AutoUpdating {
     }
 
     private func cleanUpDownloads() {
-        let tmp = fileManager.temporaryDirectory
+        let tmp = fileProvider.temporaryDirectory
         guard
-            let bundleID = Bundle.main.bundleIdentifier,
+            let bundleID = bundleInfo.bundleIdentifier,
             // make sure we are sandboxed
             tmp.absoluteString.contains(bundleID)
         else {
             return
         }
-        try? fileManager.removeItem(at: tmp)
-    }
-
-    @MainActor
-    private func relaunchApp(url: URL) throws {
-
-        localStorage.synchronize()
-
-        let task = Process()
-        task.launchPath = "/usr/bin/open"
-        task.arguments = ["-n", url.path]
-        try task.run()
-
-        task.waitUntilExit()
-
-        autoLauncher.terminate()
+        try? fileProvider.removeItem(at: tmp)
     }
 }
 

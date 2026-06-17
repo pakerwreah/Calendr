@@ -88,7 +88,7 @@ class NextEventViewModel {
         screenProvider: ScreenProviding,
         isShowingDetailsModal: BehaviorSubject<Bool>,
         scheduler: SchedulerType,
-        soundPlayer: SoundPlaying
+        soundPlayer: SoundProviding
     ) {
 
         self.type = type

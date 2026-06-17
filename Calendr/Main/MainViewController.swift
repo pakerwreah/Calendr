@@ -18,7 +18,7 @@ class MainViewController: NSViewController {
         calendarsViewModel: calendarPickerViewModel,
         notificationCenter: notificationCenter,
         autoUpdater: autoUpdater,
-        autoLauncher: autoLauncher
+        launchServices: launchServices
     )
 
     // Views
@@ -73,6 +73,7 @@ class MainViewController: NSViewController {
     private let calendarService: CalendarServiceProviding
     private let dateProvider: DateProviding
     private let screenProvider: ScreenProviding
+    private let launchServices: LaunchServiceProviding
     private let autoLauncher: AutoLaunching
     private let autoUpdater: AutoUpdating
     private let localStorage: LocalStorageProvider
@@ -83,6 +84,7 @@ class MainViewController: NSViewController {
 
     init(
         deeplink: Observable<URL>,
+        launchServices: LaunchServiceProviding,
         autoLauncher: AutoLaunching,
         autoUpdater: AutoUpdating,
         workspace: WorkspaceServiceProviding,
@@ -95,10 +97,11 @@ class MainViewController: NSViewController {
         networkProvider: NetworkServiceProviding,
         localStorage: LocalStorageProvider,
         notificationCenter: NotificationCenter,
-        fileManager: FileManager
+        fileProvider: FileProviding
     ) {
 
         self.deeplink = deeplink
+        self.launchServices = launchServices
         self.autoLauncher = autoLauncher
         self.autoUpdater = autoUpdater
         self.workspace = workspace
@@ -562,12 +565,16 @@ class MainViewController: NSViewController {
 
         settingsMenu.addItem(.separator())
 
-        settingsMenu.addItem(withTitle: Strings.quit, action: #selector(AutoLaunching.terminate), keyEquivalent: "q").target = autoLauncher
+        settingsMenu.addItem(withTitle: Strings.quit, action: #selector(terminate), keyEquivalent: "q").target = self
 
         settingsBtn.rx.tap.bind { [settingsBtn] in
             settingsMenu.popUp(positioning: nil, at: .init(x: 0, y: settingsBtn.frame.height), in: settingsBtn)
         }
         .disposed(by: disposeBag)
+    }
+
+    @objc private func terminate() {
+        launchServices.terminate()
     }
 
     @objc func openSettings() {
@@ -724,7 +731,7 @@ class MainViewController: NSViewController {
 
         menu.addItem(withTitle: Strings.Settings.title, action: #selector(openSettings), keyEquivalent: ",").target = self
         menu.addItem(.separator())
-        menu.addItem(withTitle: Strings.quit, action: #selector(AutoLaunching.terminate), keyEquivalent: "q").target = autoLauncher
+        menu.addItem(withTitle: Strings.quit, action: #selector(terminate), keyEquivalent: "q").target = self
 
         clickHandler.rightClick.bind {
             menu.show(in: statusBarButton)
@@ -856,7 +863,7 @@ class MainViewController: NSViewController {
 
             switch key {
             case .command(.char("q")):
-                autoLauncher.terminate()
+                launchServices.terminate()
 
             case .command(.char(",")):
                 openSettings()

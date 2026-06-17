@@ -35,7 +35,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let localStorage = LocalStorageProvider.shared
         let notificationCenter = NotificationCenter.default
         let distributedNotificationCenter = DistributedNotificationCenter.default()
-        let fileManager = FileManager.default
+        let fileProvider = FileProvider()
 
         // ensure prefs are loaded after an update
         localStorage.synchronize()
@@ -44,7 +44,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         setInitialStatusItemPositions(in: localStorage)
 
-        let autoLauncher = AutoLauncher(launchServices: LaunchServiceProvider(), localStorage: localStorage)
+        let launchServices = LaunchServiceProvider()
+        let autoLauncher = AutoLauncher(launchServices: launchServices, localStorage: localStorage)
         let dateProvider = DateProvider(notificationCenter: notificationCenter, localStorage: localStorage)
         let calendarAppProvider = CalendarAppProvider(dateProvider: dateProvider, appleScriptRunner: AppleScriptRunner(), clock: .continuous)
         let workspace = Workspace(localStorage: localStorage, dateProvider: dateProvider, calendarAppProvider: calendarAppProvider)
@@ -52,15 +53,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let networkProvider = NetworkServiceProvider()
 
         let autoUpdater = AutoUpdater(
-            autoLauncher: autoLauncher,
+            launchServices: launchServices,
             localStorage: localStorage,
             notificationProvider: notificationProvider,
             networkProvider: networkProvider,
-            fileManager: fileManager
+            fileProvider: fileProvider,
+            bundleInfo: .main
         )
 
         viewController = MainViewController(
             deeplink: deeplink.skipNil(),
+            launchServices: launchServices,
             autoLauncher: autoLauncher,
             autoUpdater: autoUpdater,
             workspace: workspace,
@@ -82,7 +85,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             networkProvider: networkProvider,
             localStorage: localStorage,
             notificationCenter: notificationCenter,
-            fileManager: fileManager
+            fileProvider: fileProvider
         )
 
         setUpEditShortcuts()

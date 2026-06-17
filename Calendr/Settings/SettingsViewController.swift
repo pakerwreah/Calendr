@@ -28,7 +28,7 @@ class SettingsViewController: NSTabViewController, NSWindowDelegate {
         calendarsViewModel: CalendarPickerViewModel,
         notificationCenter: NotificationCenter,
         autoUpdater: AutoUpdating,
-        autoLauncher: AutoLaunching
+        launchServices: LaunchServiceProviding
     ) {
         self.settingsViewModel = settingsViewModel
         self.notificationCenter = notificationCenter
@@ -48,7 +48,7 @@ class SettingsViewController: NSTabViewController, NSWindowDelegate {
         let about = NSTabViewItem(
             viewController: AboutViewController(
                 autoUpdater: autoUpdater,
-                autoLauncher: autoLauncher,
+                launchServices: launchServices,
                 settingsViewModel: settingsViewModel
             )
         )

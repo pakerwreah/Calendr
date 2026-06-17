@@ -12,7 +12,6 @@ import ServiceManagement
     @objc dynamic var isLoginItemEnabled: Bool { get set }
     @objc dynamic var isLaunchAgentEnabled: Bool { get set }
     func syncStatus()
-    func terminate()
 }
 
 class AutoLauncher: NSObject, AutoLaunching {
@@ -80,7 +79,9 @@ class AutoLauncher: NSObject, AutoLaunching {
                 try service.unregister()
             }
         } catch {
-            print(error)
+            if !BuildConfig.isTesting {
+                print(error)
+            }
         }
         if enabled != service.isEnabled {
             enabled.toggle()
@@ -90,12 +91,5 @@ class AutoLauncher: NSObject, AutoLaunching {
     func syncStatus() {
         isLoginItemEnabled = loginItem.isEnabled
         isLaunchAgentEnabled = launchAgent.isEnabled
-    }
-
-    func terminate() {
-        Task { @MainActor in
-            try? await launchAgent.unregister()
-            launchServices.terminate()
-        }
     }
 }

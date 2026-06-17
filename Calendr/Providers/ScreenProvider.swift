@@ -43,7 +43,9 @@ class ScreenProvider: ScreenProviding {
 
         // keep the observable updated
         isLockedObservable.bind {
-            print("Screen is", $0 ? "locked" : "unlocked")
+            if !BuildConfig.isTesting {
+                print("Screen is", $0 ? "locked" : "unlocked")
+            }
         }.disposed(by: disposeBag)
 
         screenObservable = notificationCenter.rx.notification(NSWindow.didChangeScreenNotification)

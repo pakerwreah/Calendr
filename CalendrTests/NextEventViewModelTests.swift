@@ -24,7 +24,7 @@ class NextEventViewModelTests: XCTestCase {
     let workspace = MockWorkspaceServiceProvider()
     let screenProvider = MockScreenProvider()
     let scheduler = HistoricalScheduler()
-    let soundPlayer = MockSoundPlayer()
+    let soundPlayer = MockSoundProvider()
 
     func makeViewModel(type: NextEventType) -> NextEventViewModel {
         .init(
