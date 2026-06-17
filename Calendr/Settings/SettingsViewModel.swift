@@ -36,6 +36,7 @@ protocol CalendarSettings {
     var calendarAppViewMode: Observable<CalendarViewMode> { get }
     var defaultCalendarApp: Observable<CalendarApp> { get }
     var futureEventsDays: Observable<Int> { get }
+    var showAllDayEvents: Observable<Bool> { get }
 }
 
 protocol AppearanceSettings {
@@ -48,6 +49,7 @@ protocol EventSettings: AppearanceSettings {
     var showRecurrenceIndicator: Observable<Bool> { get }
     var forceLocalTimeZone: Observable<Bool> { get }
     var showMap: Observable<Bool> { get }
+    var showAllDayEvents: Observable<Bool> { get }
     var showAllDayDetails: Observable<Bool> { get }
 }
 
@@ -129,6 +131,7 @@ class SettingsViewModel:
     let togglePastEvents: AnyObserver<Bool>
     let toggleOverdueReminders: AnyObserver<Bool>
     let futureEventsDaysObserver: AnyObserver<Int>
+    let toggleAllDayEvents: AnyObserver<Bool>
     let toggleAllDayDetails: AnyObserver<Bool>
     let toggleRecurrenceIndicator: AnyObserver<Bool>
     let toggleForceLocalTimeZone: AnyObserver<Bool>
@@ -181,6 +184,7 @@ class SettingsViewModel:
     let showOverdueReminders: Observable<Bool>
     let futureEventsDays: Observable<Int>
     let futureEventsStepperLabel: Observable<String>
+    let showAllDayEvents: Observable<Bool>
     let showAllDayDetails: Observable<Bool>
     let showRecurrenceIndicator: Observable<Bool>
     let forceLocalTimeZone: Observable<Bool>
@@ -288,6 +292,7 @@ class SettingsViewModel:
         togglePastEvents = localStorage.rx.observer(for: \.showPastEvents)
         toggleOverdueReminders = localStorage.rx.observer(for: \.showOverdueReminders)
         futureEventsDaysObserver = localStorage.rx.observer(for: \.futureEventsDays)
+        toggleAllDayEvents = localStorage.rx.observer(for: \.showAllDayEvents)
         toggleAllDayDetails = localStorage.rx.observer(for: \.showAllDayDetails)
         toggleRecurrenceIndicator = localStorage.rx.observer(for: \.showRecurrenceIndicator)
         toggleForceLocalTimeZone = localStorage.rx.observer(for: \.forceLocalTimeZone)
@@ -335,6 +340,7 @@ class SettingsViewModel:
         showPastEvents = localStorage.rx.observe(\.showPastEvents)
         showOverdueReminders = localStorage.rx.observe(\.showOverdueReminders)
         futureEventsDays = localStorage.rx.observe(\.futureEventsDays)
+        showAllDayEvents = localStorage.rx.observe(\.showAllDayEvents)
         showAllDayDetails = localStorage.rx.observe(\.showAllDayDetails)
         showRecurrenceIndicator = localStorage.rx.observe(\.showRecurrenceIndicator)
         forceLocalTimeZone = localStorage.rx.observe(\.forceLocalTimeZone)

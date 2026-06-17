@@ -75,6 +75,7 @@
 "settings.events" = "Wydarzenia";
 "settings.events.show_map" = "Pokaż mapę i pogodę";
 "settings.events.show_overdue_reminders" = "Pokaż zaległe przypomnienia";
+//"settings.events.show_all_day_events" = "Show all-day events";
 "settings.events.show_all_day_details" = "Pokaż szczegóły wydarzeń całodniowych";
 "settings.events.show_finished_events" = "Pokaż zakończone wydarzenia";
 "settings.events.show_recurrence_indicator" = "Pokaż wskaźnik powtarzania";

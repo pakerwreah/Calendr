@@ -161,15 +161,17 @@ class EventListViewModel {
             eventsObservable,
             settings.showPastEvents,
             settings.showOverdueReminders,
+            settings.showAllDayEvents,
             isShowingDetailsModal
         )
-        .compactMap { dateEvents, showPast, showOverdue, isShowingDetailsModal -> EventListProps? in
+        .compactMap { dateEvents, showPast, showOverdue, showAllDay, isShowingDetailsModal -> EventListProps? in
             guard !isShowingDetailsModal else { return nil }
 
             let isTodaySelected = dateProvider.calendar.isDate(dateEvents.date, inSameDayAs: dateProvider.now)
+            let events = showAllDay ? dateEvents.events : dateEvents.events.filter { !$0.isAllDay }
 
             return .init(
-                events: dateEvents.events,
+                events: events,
                 date: dateEvents.date,
                 showPastEvents: showPast,
                 showOverdueReminders: showOverdue,

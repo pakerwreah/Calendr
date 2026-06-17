@@ -75,6 +75,7 @@
 "settings.events" = "일정";
 "settings.events.show_map" = "지도 및 날씨 표시";
 "settings.events.show_overdue_reminders" = "기한이 지난 미리 알림 표시";
+//"settings.events.show_all_day_events" = "Show all-day events";
 "settings.events.show_all_day_details" = "하루 종일 일정 상세 표시";
 "settings.events.show_finished_events" = "완료된 일정 표시";
 "settings.events.show_recurrence_indicator" = "반복 일정 표시";
