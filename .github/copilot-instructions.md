@@ -12,7 +12,7 @@ The project follows **MVVM (Model-View-ViewModel)** with **RxSwift** for reactiv
 - **ViewModels** – Reactive state/logic classes named `*ViewModel` (e.g. `CalendarViewModel`, `EventViewModel`)
 - **ViewControllers / Views** – AppKit `NSViewController` / `NSView` subclasses for UI, with some SwiftUI components
 - **Providers** – Service abstractions named `*Provider` in `Calendr/Providers/` (e.g. `CalendarServiceProvider`, `WeatherServiceProvider`)
-- **Mocks** – Test doubles prefixed with `Mock` and stored in `CalendrTests/Mocks/`
+- **Mocks** – Test doubles prefixed with `Mock` and stored in `Calendr/Mocks/`
 
 ## Key Dependencies (Package.swift)
 
@@ -56,7 +56,6 @@ Calendr/
   Utils/           – Utility functions
 
 CalendrTests/      – XCTest unit tests
-  Mocks/           – Mock providers used in tests
   Schedulers/      – Scheduler utilities for tests
 ```
 
@@ -73,14 +72,7 @@ xcodebuild build-for-testing -scheme "Calendr" \
 xcodebuild test-without-building -scheme "Calendr" | xcbeautify
 ```
 
-Tests use **XCTest** with **RxTest** (`HistoricalScheduler`, `TestableObserver`) for testing reactive streams. Always write tests in `CalendrTests/` using mock providers from `CalendrTests/Mocks/`.
-
-## Testing Patterns
-
-- Each test class creates subjects, mock providers, and a `lazy var viewModel` in `setUp`
-- Use `HistoricalScheduler` to control RxSwift time in tests
-- Assert using `XCTAssert*` on values collected from observable streams
-- Mock providers expose mutable `m_*` properties (e.g. `calendarService.m_events`) that tests configure before observing
+Tests use **XCTest** with **RxTest** (`HistoricalScheduler`) for testing reactive streams. Always write tests in `CalendrTests/` using mock providers from `Calendr/Mocks/`.
 
 ## Localization
 
