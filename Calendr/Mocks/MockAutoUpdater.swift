@@ -16,8 +16,11 @@ class MockAutoUpdater: AutoUpdating {
     let error: Observable<UpdateError> = .empty()
     let notificationTap: Observable<NotificationAction> = .empty()
 
-    func start() { }
-    func stop() { }
+    var didStart: (() -> Void)?
+    var didStop: (() -> Void)?
+
+    func start() { didStart?() }
+    func stop() { didStop?() }
     func checkRelease() { }
     func downloadAndInstall() { }
 }

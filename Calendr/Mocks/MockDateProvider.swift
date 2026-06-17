@@ -11,19 +11,28 @@ import Foundation
 import RxSwift
 
 class MockDateProvider: DateProviding {
-    let calendarUpdated: Observable<Calendar> = .empty()
-    let calendar: Calendar
-    let initial = Date()
-    let start: Date
+    var m_calendar: Calendar
+    var calendar: Calendar { m_calendar }
+    var now: Date
 
-    var now: Date { start.advanced(by: initial.distance(to: Date())) }
+    let calendarUpdated: Observable<Calendar>
+    private let calendarObserver: AnyObserver<Calendar>
 
     init(
-        calendar: Calendar = .gregorian.with(locale: .init(identifier: "en_GB")).with(firstWeekday: 1),
-        start: Date = .make(year: 2021, month: 1, day: 1)
+        calendar: Calendar = .gregorian,
+        now: Date = .make(year: 2021, month: 1, day: 1)
     ) {
-        self.calendar = calendar
-        self.start = start
+        self.m_calendar = calendar
+        self.now = now
+        (calendarUpdated, calendarObserver) = PublishSubject.pipe()
+    }
+
+    func add(_ value: Int, _ component: Calendar.Component) {
+        now = calendar.date(byAdding: component, value: value, to: now)!
+    }
+
+    func notifyCalendarUpdated() {
+        calendarObserver.onNext(calendar)
     }
 }
 

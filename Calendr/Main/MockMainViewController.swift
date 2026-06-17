@@ -15,7 +15,7 @@ class MockMainViewController: MainViewController {
 
     init() {
 
-        let dateProvider = MockDateProvider(start: .make(year: 2021, month: 1, day: 1, hour: 15, minute: 45))
+        let dateProvider = MockDateProvider(now: .make(year: 2021, month: 1, day: 1, hour: 15, minute: 45))
 
         let localStorage = LocalStorageProvider.shared
 

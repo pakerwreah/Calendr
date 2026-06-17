@@ -11,6 +11,14 @@ import RxSwift
 
 class MockStatusItemSettings: StatusItemSettings {
 
+    let toggleIcon: AnyObserver<Bool>
+    let toggleDate: AnyObserver<Bool>
+    let toggleBackground: AnyObserver<Bool>
+    let statusItemIconStyleObserver: AnyObserver<StatusItemIconStyle>
+    let statusItemDateStyleObserver: AnyObserver<StatusItemDateStyle>
+    let statusItemDateFormatObserver: AnyObserver<String>
+    let showEventStatusItemObserver: AnyObserver<Bool>
+
     let showStatusItemIcon: Observable<Bool>
     let showStatusItemDate: Observable<Bool>
     let showStatusItemBackground: Observable<Bool>
@@ -27,21 +35,20 @@ class MockStatusItemSettings: StatusItemSettings {
         showDate: Bool = true,
         showBackground: Bool = false,
         iconStyle: StatusItemIconStyle = .calendar,
-        dateStyle: StatusItemDateStyle = .none,
-        dateFormat: String = "E d MMM yyyy",
+        dateStyle: StatusItemDateStyle = .short,
+        dateFormat: String = "",
         showNextEvent: Bool = true,
         textScaling: Double = 1
     ) {
-        showStatusItemIcon = .just(showIcon)
-        showStatusItemDate = .just(showDate)
-        showStatusItemBackground = .just(showBackground)
-        statusItemIconStyle = .just(iconStyle)
-        statusItemDateStyle = .just(dateStyle)
-        statusItemDateFormat = .just(dateFormat)
-        showEventStatusItem = .just(showNextEvent)
+        (showStatusItemIcon, toggleIcon) = BehaviorSubject.pipe(value: showIcon)
+        (showStatusItemDate, toggleDate) = BehaviorSubject.pipe(value: showDate)
+        (showStatusItemBackground, toggleBackground) = BehaviorSubject.pipe(value: showBackground)
+        (statusItemIconStyle, statusItemIconStyleObserver) = BehaviorSubject.pipe(value: iconStyle)
+        (statusItemDateStyle, statusItemDateStyleObserver) = BehaviorSubject.pipe(value: dateStyle)
+        (statusItemDateFormat, statusItemDateFormatObserver) = BehaviorSubject.pipe(value: dateFormat)
+        (showEventStatusItem, showEventStatusItemObserver) = BehaviorSubject.pipe(value: showNextEvent)
         statusItemTextScaling = .just(textScaling)
     }
 }
-
 
 #endif
