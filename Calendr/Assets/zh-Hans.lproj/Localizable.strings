@@ -75,6 +75,7 @@
 "settings.events" = "日程";
 "settings.events.show_map" = "展示地图和天气";
 "settings.events.show_overdue_reminders" = "展示逾期日程";
+//"settings.events.show_all_day_events" = "Show all-day events";
 "settings.events.show_all_day_details" = "展示全天日程的详细信息";
 "settings.events.show_finished_events" = "展示已完成日程";
 "settings.events.show_recurrence_indicator" = "展示日程重复标识";

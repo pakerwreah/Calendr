@@ -58,6 +58,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     private let mapBlacklistButton = ImageButton(image: Icons.Settings.blacklist)
     private let showFinishedEventsCheckbox = Checkbox(title: Strings.Settings.Events.showFinishedEvents)
     private let showOverdueCheckbox = Checkbox(title: Strings.Settings.Events.showOverdueReminders)
+    private let showAllDayEventsCheckbox = Checkbox(title: Strings.Settings.Events.showAllDayEvents)
     private let showAllDayDetailsCheckbox = Checkbox(title: Strings.Settings.Events.showAllDayDetails)
     private let showRecurrenceCheckbox = Checkbox(title: Strings.Settings.Events.showRecurrenceIndicator)
     private let forceLocalTimeZoneCheckbox = Checkbox(title: Strings.Settings.Events.forceLocalTimeZone)
@@ -254,6 +255,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             NSStackView(views: [showMapCheckbox, mapBlacklistButton]),
             showFinishedEventsCheckbox,
             showOverdueCheckbox,
+            showAllDayEventsCheckbox,
             showAllDayDetailsCheckbox,
             showRecurrenceCheckbox,
             forceLocalTimeZoneCheckbox,
@@ -699,6 +701,17 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             observer: viewModel.toggleOverdueReminders
         )
         .disposed(by: disposeBag)
+
+        bind(
+            control: showAllDayEventsCheckbox,
+            observable: viewModel.showAllDayEvents,
+            observer: viewModel.toggleAllDayEvents
+        )
+        .disposed(by: disposeBag)
+
+        viewModel.showAllDayEvents
+            .bind(to: showAllDayDetailsCheckbox.rx.isEnabled)
+            .disposed(by: disposeBag)
 
         bind(
             control: showAllDayDetailsCheckbox,

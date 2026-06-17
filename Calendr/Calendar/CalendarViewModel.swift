@@ -162,11 +162,14 @@ class CalendarViewModel {
         let filteredEventsObservable = Observable.combineLatest(
             eventsObservable,
             settings.showDeclinedEvents,
+            settings.showAllDayEvents,
             searchObservable
         )
-        .map { events, showDeclinedEvents, searchTerm in
+        .map { events, showDeclinedEvents, showAllDayEvents, searchTerm in
             events.filter {
                 (showDeclinedEvents || $0.status != .declined)
+                &&
+                (showAllDayEvents || !$0.isAllDay)
                 &&
                 (searchTerm.isEmpty || $0.propertiesContain(searchTerm))
             }

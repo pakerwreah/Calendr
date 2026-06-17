@@ -75,6 +75,7 @@
 "settings.events" = "אירועים";
 "settings.events.show_map" = "הצג מפה ומזג אוויר";
 "settings.events.show_overdue_reminders" = "הצג תזכורות מאוחרות";
+//"settings.events.show_all_day_events" = "Show all-day events";
 "settings.events.show_all_day_details" = "הצג פרטים של אירועי יום שלם";
 "settings.events.show_finished_events" = "הצג אירועים שהסתיימו";
 "settings.events.show_recurrence_indicator" = "הצג מחוון על אירוע מחזורי";

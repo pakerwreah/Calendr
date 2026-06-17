@@ -140,6 +140,55 @@ class EventListViewModelTests: XCTestCase {
         ))
     }
 
+    func testEventList_showAllDayEventsDisabled_shouldNotShowAllDaySection() {
+
+        settings.toggleAllDayEvents.onNext(false)
+        eventsSubject.onNext(testEvents())
+
+        XCTAssertEqual(eventListItems, [
+            .section("Thursday, Dec 31"),
+            .event("Multi day"),
+            .section("Today"),
+            .event("Event 3"),
+            .interval("1m"),
+            .event("Event 2"),
+            .event("Event 1")
+        ])
+    }
+
+    func testEventList_showAllDayEventsDisabled_shouldUpdateSummary() {
+
+        settings.toggleAllDayEvents.onNext(false)
+        eventsSubject.onNext(testEvents())
+
+        XCTAssertEqual(viewModel.summary.lastValue(), EventListSummary(
+            overdue: .init(colors: [], count: 0),
+            allday: .init(colors: [], count: 0),
+            today: .init(colors: [.blue, .yellow, .red], count: 4)
+        ))
+    }
+
+    func testEventList_showAllDayEventsEnabled_shouldRestoreAllDaySection() {
+
+        settings.toggleAllDayEvents.onNext(false)
+        eventsSubject.onNext(testEvents())
+
+        settings.toggleAllDayEvents.onNext(true)
+
+        XCTAssertEqual(eventListItems, [
+            .section("All day"),
+            .event("All day 1"),
+            .event("All day 2"),
+            .section("Thursday, Dec 31"),
+            .event("Multi day"),
+            .section("Today"),
+            .event("Event 3"),
+            .interval("1m"),
+            .event("Event 2"),
+            .event("Event 1")
+        ])
+    }
+
     func testEventList_isToday_shouldShowTodaySection() {
 
         eventsSubject.onNext(testEvents())

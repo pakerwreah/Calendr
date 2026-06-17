@@ -56,6 +56,7 @@ class SettingsViewModelTests: XCTestCase {
     var localStorageShowMap: Bool? { localStorage.object(forKey: Prefs.showMap) as? Bool }
     var localStorageShowPastEvents: Bool? { localStorage.object(forKey: Prefs.showPastEvents) as? Bool }
     var localStorageShowOverdueReminders: Bool? { localStorage.object(forKey: Prefs.showOverdueReminders) as? Bool }
+    var localStorageShowAllDayEvents: Bool? { localStorage.object(forKey: Prefs.showAllDayEvents) as? Bool }
     var localStorageShowAllDayDetails: Bool? { localStorage.object(forKey: Prefs.showAllDayDetails) as? Bool }
     var localStorageShowRecurrenceIndicator: Bool? { localStorage.object(forKey: Prefs.showRecurrenceIndicator) as? Bool }
     var localStorageShowEventListSummary: Bool? { localStorage.object(forKey: Prefs.showEventListSummary) as? Bool }
@@ -94,6 +95,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertNil(localStorageShowMap)
         XCTAssertNil(localStorageShowPastEvents)
         XCTAssertNil(localStorageShowOverdueReminders)
+        XCTAssertNil(localStorageShowAllDayEvents)
         XCTAssertNil(localStorageShowAllDayDetails)
         XCTAssertNil(localStorageShowRecurrenceIndicator)
         XCTAssertNil(localStorageShowEventListSummary)
@@ -131,6 +133,7 @@ class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.showMap.lastValue(), true)
         XCTAssertEqual(viewModel.showPastEvents.lastValue(), true)
         XCTAssertEqual(viewModel.showOverdueReminders.lastValue(), true)
+        XCTAssertEqual(viewModel.showAllDayEvents.lastValue(), true)
         XCTAssertEqual(viewModel.showAllDayDetails.lastValue(), true)
         XCTAssertEqual(viewModel.showRecurrenceIndicator.lastValue(), true)
         XCTAssertEqual(viewModel.showEventListSummary.lastValue(), true)
@@ -840,6 +843,30 @@ class SettingsViewModelTests: XCTestCase {
 
         XCTAssertEqual(showOverdueReminders, false)
         XCTAssertEqual(localStorageShowOverdueReminders, false)
+    }
+
+    func testToggleShowAllDayEvents() {
+
+        localStorage.showAllDayEvents = false
+
+        var showAllDayEvents: Bool?
+
+        viewModel.showAllDayEvents
+            .bind { showAllDayEvents = $0 }
+            .disposed(by: disposeBag)
+
+        XCTAssertEqual(showAllDayEvents, false)
+        XCTAssertEqual(localStorageShowAllDayEvents, false)
+
+        viewModel.toggleAllDayEvents.onNext(true)
+
+        XCTAssertEqual(showAllDayEvents, true)
+        XCTAssertEqual(localStorageShowAllDayEvents, true)
+
+        viewModel.toggleAllDayEvents.onNext(false)
+
+        XCTAssertEqual(showAllDayEvents, false)
+        XCTAssertEqual(localStorageShowAllDayEvents, false)
     }
 
     func testToggleShowAllDayDetails() {

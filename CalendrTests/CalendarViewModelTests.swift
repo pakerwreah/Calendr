@@ -474,6 +474,32 @@ class CalendarViewModelTests: XCTestCase {
         ])
     }
 
+    func testEventsPerDate_withAllDayEventsDisabled_shouldNotShowAllDayEvents() {
+
+        settings.toggleAllDayEvents.onNext(false)
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+
+        assertExpectedEvents({ $0.events.map(\.title) }, [
+            (.make(year: 2021, month: 1, day: 1), []),
+            (.make(year: 2021, month: 1, day: 2), ["Event 3"]),
+            (.make(year: 2021, month: 1, day: 3), ["Event 4"]),
+            (.make(year: 2021, month: 1, day: 4), []),
+        ])
+    }
+
+    func testEventDotsPerDate_withAllDayEventsDisabled_shouldNotShowAllDayDots() {
+
+        settings.toggleAllDayEvents.onNext(false)
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+
+        assertExpectedEvents(\.dots, [
+            (.make(year: 2021, month: 1, day: 1), [.clear]),
+            (.make(year: 2021, month: 1, day: 2), [.black]),
+            (.make(year: 2021, month: 1, day: 3), [.blue]),
+            (.make(year: 2021, month: 1, day: 4), [.clear]),
+        ])
+    }
+
     func testEventsPerDate_withDeclinedEvents() {
 
         settings.toggleDeclinedEvents.onNext(true)
