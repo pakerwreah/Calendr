@@ -12,36 +12,58 @@ import UniformTypeIdentifiers
 
 class MockWorkspaceServiceProvider: WorkspaceServiceProviding {
 
-    let localStorage: LocalStorageProvider = .shared
-    let dateProvider: DateProviding = MockDateProvider()
-    let calendarAppProvider: CalendarAppProviding = MockCalendarAppProvider()
-    let notificationCenter: NotificationCenter = .init()
+    let localStorage: LocalStorageProvider
+    let dateProvider: DateProviding
+    let calendarAppProvider: CalendarAppProviding
+    let notificationCenter: NotificationCenter
 
-    func urlForApplication(toOpen url: URL) -> URL? {
-        return nil
+    init(
+        localStorage: LocalStorageProvider? = nil,
+        dateProvider: DateProviding? = nil,
+        calendarAppProvider: CalendarAppProviding? = nil,
+        notificationCenter: NotificationCenter? = nil
+    ) {
+        self.localStorage = localStorage ?? MockLocalStorageProvider()
+        self.dateProvider = dateProvider ?? MockDateProvider()
+        self.calendarAppProvider = calendarAppProvider ?? MockCalendarAppProvider()
+        self.notificationCenter = notificationCenter ?? .init()
     }
-    
-    func urlsForApplications(toOpen url: URL) -> [URL] {
-        return []
-    }
-    
-    func urlForApplication(toOpen contentType: UTType) -> URL? {
-        return nil
-    }
-    
-    func urlsForApplications(toOpen contentType: UTType) -> [URL] {
-        return []
-    }
+
+    var m_urlForApplicationToOpenURL: URL?
+    var m_urlForApplicationToOpenContentType: URL?
+
+    var m_urlsForApplicationsToOpenURL: [URL] = []
+    var m_urlsForApplicationsToOpenContentType: [URL] = []
+
+    var didOpenURL: ((URL) -> Void)?
+    var didOpenEvent: ((EventModel) -> Void)?
+    var didOpenDate: ((Date, CalendarViewMode) -> Void)?
+    var didOpenURLWithApplication: ((URL, _ applicationURL: URL?) -> Void)?
+
+    func urlForApplication(toOpen url: URL) -> URL? { m_urlForApplicationToOpenURL }
+
+    func urlsForApplications(toOpen url: URL) -> [URL] { m_urlsForApplicationsToOpenURL }
+
+    func urlForApplication(toOpen contentType: UTType) -> URL? { m_urlForApplicationToOpenContentType }
+
+    func urlsForApplications(toOpen contentType: UTType) -> [URL] { m_urlsForApplicationsToOpenContentType }
 
     func open(_ url: URL) -> Bool {
+        didOpenURL?(url)
         return true
     }
 
-    func open(_ url: URL, withApplicationAt applicationURL: URL) { }
+    func open(_ url: URL, withApplicationAt applicationURL: URL) {
+        didOpenURLWithApplication?(url, applicationURL)
+    }
 
-    func open(_ link: EventLink) { }
+    func open(_ event: EventModel) {
+        didOpenEvent?(event)
+    }
 
-    func open(_ link: EventModel) { }
+    func open(_ date: Date, mode: CalendarViewMode) {
+        didOpenDate?(date, mode)
+    }
 }
 
 #endif

@@ -10,45 +10,103 @@
 import Foundation
 import RxSwift
 
+typealias RescheduleReminderArgs = (date: Date, isAllDay: Bool)
+typealias CreateReminderArgs = (title: String, calendar: String, date: Date, isAllDay: Bool)
+typealias CreateEventArgs = (
+    title: String,
+    calendar: String,
+    start: Date,
+    end: Date,
+    isAllDay: Bool,
+    location: String?,
+    url: URL?,
+    notes: String?,
+    alertOffset: TimeInterval?,
+    timeZone: TimeZone
+)
+typealias EventsArgs = (start: Date, end: Date, calendars: [String])
+
 class MockCalendarServiceProvider: CalendarServiceProviding {
 
-    let m_events: [EventModel]
-    let m_calendars: [CalendarModel]
-    let dateProvider: DateProviding
+    let (changeObservable, changeObserver) = PublishSubject<Void>.pipe()
 
-    private let changeObserver: AnyObserver<Void>
-    let changeObservable: Observable<Void>
+    let (spyEventsObservable, spyEventsObserver) = PublishSubject<EventsArgs>.pipe()
+    let (spyCreateReminderObservable, spyCreateReminderObserver) = PublishSubject<CreateReminderArgs>.pipe()
+    let (spyCreateEventObservable, spyCreateEventObserver) = PublishSubject<CreateEventArgs>.pipe()
+    let (spyCompleteReminderObservable, spyCompleteReminderObserver) = PublishSubject<Bool>.pipe()
+    let (spyRescheduleReminderObservable, spyRescheduleReminderObserver) = PublishSubject<RescheduleReminderArgs>.pipe()
+    let (spyChangeEventStatusObservable, spyChangeEventStatusObserver) = PublishSubject<EventStatus>.pipe()
 
-    private var calendar: Calendar { dateProvider.calendar }
+    var didRequestAccess: (() -> Void)?
 
-    init(events: [EventModel] = [], calendars: [CalendarModel] = [], dateProvider: DateProviding = MockDateProvider()) {
+    var m_events: [EventModel]
+    var m_calendars: [CalendarModel]
+    var m_defaultCalendarId: String?
+    let dateProvider: DateProviding?
 
+    init(
+        events: [EventModel] = [],
+        calendars: [CalendarModel] = [],
+        dateProvider: DateProviding? = nil
+    ) {
         self.m_events = events
         self.m_calendars = calendars
         self.dateProvider = dateProvider
-
-        (changeObservable, changeObserver) = PublishSubject.pipe()
     }
 
-    func events(from start: Date, to end: Date, calendars: [String]) -> Single<[EventModel]> {
-        .just(
-            m_events
-                .filter { $0.calendar.id.isEmpty || calendars.contains($0.calendar.id) }
-                .filter {
-                    calendar.isDay($0.start, inDays: (start, end))
-                    ||
-                    calendar.isDay($0.end, inDays: (start, end))
-                }
-        )
+    func requestAccess() {
+        didRequestAccess?()
+        changeObserver.onNext(())
     }
 
     func calendars() -> Single<[CalendarModel]> { .just(m_calendars) }
 
     func calendars(forNew type: CalendarEntityType) -> Single<[CalendarModel]> { .just(m_calendars) }
 
-    func defaultCalendar(forNew type: CalendarEntityType) -> CalendarModel? { m_calendars.first }
+    func defaultCalendar(forNew type: CalendarEntityType) -> CalendarModel? {
+        m_calendars.first { $0.id == m_defaultCalendarId }
+    }
 
-    func createReminder(title: String, calendar: String, date: Date, isAllDay: Bool) -> Completable { .empty() }
+    func events(from start: Date, to end: Date, calendars: [String]) -> Single<[EventModel]> {
+        spyEventsObserver.onNext((start, end, calendars))
+
+        var events = m_events
+
+        if !calendars.isEmpty {
+            events = events.filter { $0.calendar.id.isEmpty || calendars.contains($0.calendar.id) }
+        }
+
+        if let dateProvider {
+            let calendar = dateProvider.calendar
+            events = events.filter {
+                calendar.isDay($0.start, inDays: (start, end))
+                ||
+                calendar.isDay($0.end, inDays: (start, end))
+            }
+        }
+
+        return .just(events)
+    }
+
+    func completeReminder(id: String, complete: Bool) -> Completable {
+        spyCompleteReminderObserver.onNext(complete)
+        return .empty()
+    }
+
+    func rescheduleReminder(id: String, to date: Date, isAllDay: Bool) -> Completable {
+        spyRescheduleReminderObserver.onNext((date, isAllDay))
+        return .empty()
+    }
+
+    func changeEventStatus(id: String, date: Date, to status: EventStatus) -> Completable {
+        spyChangeEventStatusObserver.onNext(status)
+        return .empty()
+    }
+
+    func createReminder(title: String, calendar: String, date: Date, isAllDay: Bool) -> Completable {
+        spyCreateReminderObserver.onNext((title, calendar, date, isAllDay))
+        return .empty()
+    }
 
     func createEvent(
         title: String,
@@ -61,15 +119,20 @@ class MockCalendarServiceProvider: CalendarServiceProviding {
         notes: String?,
         alertOffset: TimeInterval?,
         timeZone: TimeZone
-    ) -> Completable { .empty() }
+    ) -> Completable {
+        spyCreateEventObserver.onNext((title, calendar, start, end, isAllDay, location, url, notes, alertOffset, timeZone))
+        return .empty()
+    }
+}
 
-    func completeReminder(id: String, complete: Bool) -> Completable { .empty() }
+// MARK: - Helpers
 
-    func rescheduleReminder(id: String, to: Date, isAllDay: Bool) -> Completable { .empty() }
+extension MockCalendarServiceProvider {
 
-    func changeEventStatus(id: String, date: Date, to: EventStatus) -> Completable { .empty() }
-
-    func requestAccess() { changeObserver.onNext(()) }
+    func changeEvents(_ events: [EventModel]) {
+        m_events = events
+        changeObserver.onNext(())
+    }
 }
 
 #endif

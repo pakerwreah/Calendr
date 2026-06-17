@@ -12,7 +12,7 @@ import RxSwift
 
 struct EventListViewPreview: PreviewProvider {
 
-    static let dateProvider = MockDateProvider(start: .make(hour: 16, minute: 45))
+    static let dateProvider = MockDateProvider(now: .make(hour: 16, minute: 45))
     static let calendarService = MockCalendarServiceProvider()
     static let geocoder = MockGeocodeServiceProvider()
     static let weatherService = MockWeatherServiceProvider()

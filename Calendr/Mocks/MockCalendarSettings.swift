@@ -11,21 +11,43 @@ import RxSwift
 
 class MockCalendarSettings: CalendarSettings {
 
-    let calendarScaling: Observable<Double>
-    let textScaling: Observable<Double>
-    let calendarTextScaling: Observable<Double>
+    let futureEventsDays: Observable<Int>
+    let futureEventsDaysObserver: AnyObserver<Int>
+
     let firstWeekday: Observable<Int>
+    let firstWeekdayObserver: AnyObserver<Int>
+
     let highlightedWeekdays: Observable<[Int]>
+    let highlightedWeekdaysObserver: AnyObserver<[Int]>
+
     let weekCount: Observable<Int>
-    let showMonthOutline: Observable<Bool>
+    let weekCountObserver: AnyObserver<Int>
+
     let showWeekNumbers: Observable<Bool>
+    let toggleWeekNumbers: AnyObserver<Bool>
+
     let showDeclinedEvents: Observable<Bool>
-    let preserveSelectedDate: Observable<Bool>
+    let toggleDeclinedEvents: AnyObserver<Bool>
+
     let dateHoverOption: Observable<Bool>
+    let toggleDateHoverOption: AnyObserver<Bool>
+
     let eventDotsStyle: Observable<EventDotsStyle>
+    let eventDotsStyleObserver: AnyObserver<EventDotsStyle>
+
+    let showMonthOutline: Observable<Bool>
+    let preserveSelectedDate: Observable<Bool>
     let calendarAppViewMode: Observable<CalendarViewMode>
     let defaultCalendarApp: Observable<CalendarApp>
-    let futureEventsDays: Observable<Int>
+
+    let calendarScaling: Observable<Double>
+    let calendarScalingObserver: AnyObserver<Double>
+
+    let calendarTextScaling: Observable<Double>
+    let calendarTextScalingObserver: AnyObserver<Double>
+
+    let textScaling: Observable<Double>
+    let textScalingObserver: AnyObserver<Double>
 
     init(
         calendarScaling: Double = 1,
@@ -33,26 +55,30 @@ class MockCalendarSettings: CalendarSettings {
         calendarTextScaling: Double = 1,
         firstWeekday: Int = 1,
         highlightedWeekdays: [Int] = [0, 6],
-        showMonthOutline: Bool = true,
-        showWeekNumbers: Bool = true,
+        showMonthOutline: Bool = false,
+        showWeekNumbers: Bool = false,
         weekCount: Int = 6,
         eventDotsStyle: EventDotsStyle = .multiple,
+        showDeclinedEvents: Bool = false,
+        dateHoverOption: Bool = false,
+        futureEventsDays: Int = 0
     ) {
-        self.calendarScaling = .just(calendarScaling)
-        self.textScaling = .just(textScaling)
-        self.calendarTextScaling = .just(calendarTextScaling)
-        self.firstWeekday = .just(firstWeekday)
-        self.highlightedWeekdays = .just(highlightedWeekdays)
-        self.weekCount = .just(weekCount)
+        (self.futureEventsDays, futureEventsDaysObserver) = BehaviorSubject.pipe(value: futureEventsDays)
+        (self.firstWeekday, firstWeekdayObserver) = BehaviorSubject.pipe(value: firstWeekday)
+        (self.highlightedWeekdays, highlightedWeekdaysObserver) = BehaviorSubject.pipe(value: highlightedWeekdays)
+        (self.showWeekNumbers, toggleWeekNumbers) = BehaviorSubject.pipe(value: showWeekNumbers)
+        (self.weekCount, weekCountObserver) = BehaviorSubject.pipe(value: weekCount)
+        (self.showDeclinedEvents, toggleDeclinedEvents) = BehaviorSubject.pipe(value: showDeclinedEvents)
+        (self.dateHoverOption, toggleDateHoverOption) = BehaviorSubject.pipe(value: dateHoverOption)
+        (self.eventDotsStyle, eventDotsStyleObserver) = BehaviorSubject.pipe(value: eventDotsStyle)
+        (self.calendarScaling, calendarScalingObserver) = BehaviorSubject.pipe(value: calendarScaling)
+        (self.calendarTextScaling, calendarTextScalingObserver) = BehaviorSubject.pipe(value: calendarTextScaling)
+        (self.textScaling, textScalingObserver) = BehaviorSubject.pipe(value: textScaling)
+
         self.showMonthOutline = .just(showMonthOutline)
-        self.showWeekNumbers = .just(showWeekNumbers)
-        self.preserveSelectedDate = .just(false)
-        self.showDeclinedEvents = .just(false)
-        self.dateHoverOption = .just(false)
-        self.eventDotsStyle = .just(eventDotsStyle)
-        self.calendarAppViewMode = .just(.month)
-        self.defaultCalendarApp = .just(.calendar)
-        self.futureEventsDays = .just(0)
+        preserveSelectedDate = .just(false)
+        calendarAppViewMode = .just(.month)
+        defaultCalendarApp = .just(.calendar)
     }
 }
 
