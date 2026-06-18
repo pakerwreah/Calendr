@@ -119,4 +119,40 @@ else
     echo -e "⚠️  resources/AppIcon.icns not found — app will have no icon.\n"
 fi
 
+prepare_entitlements() {
+    local dest="$1"
+    cp "assemble.entitlements" "$dest"
+
+    if [[ "$MODE" == "debug" ]]; then
+        plutil -replace 'com\.apple\.security\.get-task-allow' -bool true "$dest"
+    fi
+}
+
+sign_framework() {
+    local framework="$1"
+    local name="${framework%.framework}"
+    name="${name##*/}"
+    local binary="$framework/Versions/Current/$name"
+
+    if [[ -f "$binary" ]]; then
+        codesign --force --sign "$SIGN_IDENTITY" --options runtime "$binary"
+    fi
+    codesign --force --sign "$SIGN_IDENTITY" --options runtime "$framework"
+}
+
+# Ad-hoc signing keeps local assemble builds launchable without Gatekeeper
+# developer verification (Apple Development certs trigger that check).
+SIGN_IDENTITY="-"
+ENTITLEMENTS=$(mktemp)
+prepare_entitlements "$ENTITLEMENTS"
+
+echo -e "\n🔏 Signing with ad-hoc identity (sandbox entitlements)\n"
+
+while IFS= read -r -d '' framework; do
+    sign_framework "$framework"
+done < <(find "$CONTENTS/Frameworks" -name "*.framework" -print0 2>/dev/null)
+
+# Sign the app bundle with entitlements and hardened runtime
+codesign --force --sign "$SIGN_IDENTITY" --entitlements "$ENTITLEMENTS" --options runtime "$APP_BUNDLE"
+
 echo "✅ $APP_BUNDLE assembled successfully!"
