@@ -124,7 +124,7 @@ prepare_entitlements() {
     cp "assemble.entitlements" "$dest"
 
     if [[ "$MODE" == "debug" ]]; then
-        plutil -replace 'com\.apple\.security\.get-task-allow' -bool true "$dest"
+        plutil -insert 'com\.apple\.security\.get-task-allow' -bool true "$dest"
     fi
 }
 
