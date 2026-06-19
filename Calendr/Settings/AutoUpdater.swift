@@ -76,12 +76,8 @@ class AutoUpdater: AutoUpdating {
             case install
         }
 
-        enum Updated: String {
-            case `default`
-        }
-
         case newVersion(NewVersion)
-        case updated(Updated)
+        case updated
 
         fileprivate static func from(_ response: NotificationResponse) -> NotificationAction {
 
@@ -92,9 +88,7 @@ class AutoUpdater: AutoUpdating {
                 )
 
             case .updated:
-                return NotificationAction.updated(
-                    response.actionId.flatMap(NotificationAction.Updated.init(rawValue:)) ?? .default
-                )
+                return NotificationAction.updated
             }
         }
     }

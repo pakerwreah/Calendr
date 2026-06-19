@@ -89,7 +89,7 @@ class AutoUpdaterTests: XCTestCase {
 
         notificationProvider.simulateNotificationTap(.init(category: .updated, actionId: nil))
 
-        guard case .updated(.default) = received else {
+        guard case .updated = received else {
             XCTFail("Expected .updated(.default), got \(String(describing: received))")
             return
         }

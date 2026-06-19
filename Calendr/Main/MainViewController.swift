@@ -43,6 +43,7 @@ class MainViewController: NSViewController {
     private let settingsBtn = ImageButton()
 
     // ViewModels
+    private let mainViewModel: MainViewModel
     private let calendarViewModel: CalendarViewModel
     private let settingsViewModel: SettingsViewModel
     private let statusItemViewModel: StatusItemViewModel
@@ -54,17 +55,8 @@ class MainViewController: NSViewController {
     // Reactive
     private let disposeBag = DisposeBag()
     private var popoverDisposeBag = DisposeBag()
-    private let dateClick = PublishSubject<Date>()
-    private let dateDoubleClick = PublishSubject<Date>()
     private let hoveredDate = BehaviorSubject<Date?>(value: nil)
-    private let refreshDate = PublishSubject<Void>()
-    private let selectedDate: BehaviorSubject<Date>
     private let focusedDateObservable: Observable<Date>
-    private let isShowingDetailsModal = BehaviorSubject<Bool>(value: false)
-    private let searchInputText = BehaviorSubject<String>(value: "")
-    private let searchInputSuggestionDate = BehaviorSubject<DateSuggestionResult?>(value: nil)
-    private let navigationSubject = PublishSubject<Keyboard.Key>()
-    private let keyboardModifiers = BehaviorSubject<NSEvent.ModifierFlags>(value: [])
     private let deeplink: Observable<URL>
 
     // Properties
@@ -107,7 +99,6 @@ class MainViewController: NSViewController {
         self.workspace = workspace
         self.calendarService = calendarService
         self.dateProvider = dateProvider
-        self.selectedDate = .init(value: dateProvider.now)
         self.screenProvider = screenProvider
         self.localStorage = localStorage
         self.notificationCenter = notificationCenter
@@ -138,6 +129,15 @@ class MainViewController: NSViewController {
             localStorage: localStorage
         )
 
+        mainViewModel = MainViewModel(
+            dateProvider: dateProvider,
+            settings: settingsViewModel,
+            autoUpdater: autoUpdater,
+            isAppActive: NSApp.rx.observe(\.isActive),
+            notificationCenter: notificationCenter,
+            workspace: workspace
+        )
+
         let nextEventCalendars = Observable
             .combineLatest(
                 calendarPickerViewModel.enabledCalendars,
@@ -147,7 +147,7 @@ class MainViewController: NSViewController {
             .share(replay: 1)
 
         statusItemViewModel = StatusItemViewModel(
-            dateChanged: refreshDate,
+            dateChanged: mainViewModel.refreshDate,
             nextEventCalendars: nextEventCalendars,
             settings: settingsViewModel,
             dateProvider: dateProvider,
@@ -159,10 +159,10 @@ class MainViewController: NSViewController {
         )
 
         calendarViewModel = CalendarViewModel(
-            searchObservable: searchInputText,
-            dateObservable: selectedDate,
+            searchObservable: mainViewModel.searchInputText,
+            dateObservable: mainViewModel.selectedDate,
             hoverObservable: hoveredDate,
-            keyboardModifiers: keyboardModifiers,
+            keyboardModifiers: mainViewModel.keyboardModifiers,
             enabledCalendars: calendarPickerViewModel.enabledCalendars,
             calendarService: calendarService,
             dateProvider: dateProvider,
@@ -173,8 +173,8 @@ class MainViewController: NSViewController {
         calendarView = CalendarView(
             viewModel: calendarViewModel,
             hoverObserver: hoveredDate.asObserver(),
-            clickObserver: dateClick.asObserver(),
-            doubleClickObserver: dateDoubleClick.asObserver()
+            clickObserver: mainViewModel.selectDateObserver,
+            doubleClickObserver: mainViewModel.openCalendarDateObserver
         )
 
         titleLabel = Label(scaling: calendarViewModel.textScaling)
@@ -188,7 +188,7 @@ class MainViewController: NSViewController {
         eventListViewModel = EventListViewModel(
             source: .calendar,
             eventsObservable: eventListEventsObservable,
-            isShowingDetailsModal: isShowingDetailsModal,
+            isShowingDetailsModal: mainViewModel.isShowingDetailsModal,
             callback: .dummy(),
             dateProvider: dateProvider,
             calendarService: calendarService,
@@ -218,7 +218,7 @@ class MainViewController: NSViewController {
             weatherService: weatherService,
             workspace: workspace,
             screenProvider: screenProvider,
-            isShowingDetailsModal: isShowingDetailsModal.asObserver(),
+            isShowingDetailsModal: mainViewModel.isShowingDetailsModal.asObserver(),
             scheduler: MainScheduler.instance,
             soundPlayer: .shared
         )
@@ -234,7 +234,7 @@ class MainViewController: NSViewController {
             weatherService: weatherService,
             workspace: workspace,
             screenProvider: screenProvider,
-            isShowingDetailsModal: isShowingDetailsModal.asObserver(),
+            isShowingDetailsModal: mainViewModel.isShowingDetailsModal.asObserver(),
             scheduler: MainScheduler.instance,
             soundPlayer: .shared
         )
@@ -260,8 +260,6 @@ class MainViewController: NSViewController {
         setUpAutoUpdater()
 
         calendarService.requestAccess()
-
-        refreshDate.onNext(())
     }
 
     required init?(coder: NSCoder) {
@@ -342,10 +340,9 @@ class MainViewController: NSViewController {
 
         super.viewDidDisappear()
 
-        hideSearchInput()
+        mainViewModel.viewDidDisappearObserver.onNext(())
 
         hoveredDate.onNext(nil)
-        keyboardModifiers.onNext([])
     }
 
     // MARK: - Setup
@@ -357,34 +354,12 @@ class MainViewController: NSViewController {
             .bind(to: NSApp.rx.appearance)
             .disposed(by: disposeBag)
 
-        NSApp.rx.observe(\.isActive)
-            .matching(false)
-            .map([])
-            .bind(to: keyboardModifiers)
-            .disposed(by: disposeBag)
+        resetBtn.rx.tap.bind(to: mainViewModel.resetObserver).disposed(by: disposeBag)
+        prevBtn.rx.tap.bind(to: mainViewModel.prevMonthObserver).disposed(by: disposeBag)
+        nextBtn.rx.tap.bind(to: mainViewModel.nextMonthObserver).disposed(by: disposeBag)
 
-        makeDateSelector()
-            .asObservable()
-            .observe(on: MainScheduler.asyncInstance)
-            .bind(to: selectedDate)
-            .disposed(by: disposeBag)
-
-        Observable.merge(
-            notificationCenter.rx.notification(.NSCalendarDayChanged).void(),
-            workspace.notificationCenter.rx.notification(NSWorkspace.didWakeNotification).void(),
-            rx.viewDidDisappear.withLatestFrom(settingsViewModel.preserveSelectedDate).filter(!).void()
-        )
-        .bind(to: refreshDate)
-        .disposed(by: disposeBag)
-
-        dateClick
-            .bind(to: selectedDate)
-            .disposed(by: disposeBag)
-
-        dateDoubleClick
-            .bind { [workspace] date in
-                workspace.open(date, mode: .day)
-            }
+        calendarBtn.rx.tap
+            .bind(to: mainViewModel.openCalendarObserver)
             .disposed(by: disposeBag)
 
         calendarViewModel.title
@@ -396,19 +371,12 @@ class MainViewController: NSViewController {
         }
         .disposed(by: disposeBag)
 
-        calendarBtn.rx.tap
-            .withLatestFrom(selectedDate)
-            .bind { [workspace] date in
-                workspace.open(date)
-            }
-            .disposed(by: disposeBag)
-
         searchInput.rx.text
             .skipNil()
-            .bind(to: searchInputText)
+            .bind(to: mainViewModel.searchInputTextObserver)
             .disposed(by: disposeBag)
 
-        searchInputText
+        mainViewModel.searchInputText
             .bind(to: searchInput.rx.stringValue)
             .disposed(by: disposeBag)
 
@@ -419,56 +387,41 @@ class MainViewController: NSViewController {
 
     private func setUpCreateButton() {
 
-        let formatter = RelativeDateTimeFormatter()
-        formatter.dateTimeStyle = .named
+        mainViewModel.isCreateButtonHidden
+            .bind(to: createBtn.rx.isHidden)
+            .disposed(by: disposeBag)
 
-        let reminderOptions: [DateComponents] = [
-            .init(minute: 5),
-            .init(minute: 15),
-            .init(minute: 30),
-            .init(hour: 1),
-            .init(day: 1)
-        ]
-
-        selectedDate.map { [dateProvider] date in
-            dateProvider.calendar.isDate(date, lessThan: dateProvider.now, granularity: .day)
-        }
-        .bind(to: createBtn.rx.isHidden)
-        .disposed(by: disposeBag)
-
-        createBtn.rx.tap.withLatestFrom(selectedDate).bind { [weak self] date in
-
+        createBtn.rx.tap.bind { [weak self] in
             guard let self else { return }
 
-            let createMenu = makeCreateMenu(for: date, reminderOptions: reminderOptions, formatter: formatter)
+            let createMenu = makeCreateMenu(from: mainViewModel.createMenuItems)
             createMenu.popUp(positioning: nil, at: .init(x: 0, y: createBtn.frame.height), in: createBtn)
         }
         .disposed(by: disposeBag)
     }
 
-    private func makeCreateMenu(
-        for date: Date,
-        reminderOptions: [DateComponents],
-        formatter: RelativeDateTimeFormatter
-    ) -> TrackedMenu {
+    private func makeCreateMenu(from items: [MainViewModel.CreateMenuItem]) -> TrackedMenu {
 
         let createMenu = TrackedMenu()
 
-        createMenu.addItem(withTitle: Strings.Event.Editor.headline, action: #selector(openEventEditor), keyEquivalent: "")
-            .target = self
+        for item in items {
+            switch item {
+            case .separator:
+                createMenu.addItem(.separator())
 
-        if dateProvider.isDateInToday(date) {
-            createMenu.addItem(.separator())
+            case .newEvent:
+                createMenu.addItem(withTitle: Strings.Event.Editor.headline, action: #selector(openEventEditor), keyEquivalent: "")
+                    .target = self
 
-            for option in reminderOptions {
-                let title = Strings.Reminder.Options.remind(formatter.localizedString(from: option))
-                let item = createMenu.addItem(withTitle: title, action: #selector(openReminderEditor), keyEquivalent: "")
-                item.representedObject = option
-                item.target = self
+            case .quickReminder(let title, let offset):
+                let menuItem = createMenu.addItem(withTitle: title, action: #selector(openReminderEditor), keyEquivalent: "")
+                menuItem.representedObject = offset
+                menuItem.target = self
+
+            case .newReminder:
+                createMenu.addItem(withTitle: Strings.Reminder.Editor.headline, action: #selector(openReminderEditor), keyEquivalent: "")
+                    .target = self
             }
-        } else {
-            createMenu.addItem(withTitle: Strings.Reminder.Editor.headline, action: #selector(openReminderEditor), keyEquivalent: "")
-                .target = self
         }
 
         return createMenu
@@ -476,34 +429,26 @@ class MainViewController: NSViewController {
 
     private func setUpDateSuggestion() {
 
-        searchInputText
-            .map { [dateProvider] text in
-                DateSearchParser.parse(text: text, using: dateProvider)
-            }
-            .bind(to: searchInputSuggestionDate)
+        searchInput.rx.hasFocus
+            .bind(to: mainViewModel.searchInputFocusObserver)
             .disposed(by: disposeBag)
 
-        Observable
-            .combineLatest(searchInputSuggestionDate, searchInput.rx.hasFocus)
-            .map { suggestion, hasFocus in
-                return suggestion == nil || !hasFocus
-            }
+        mainViewModel.isSearchInputHidden
+            .bind(to: searchInput.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        mainViewModel.isSearchInputSuggestionHidden
             .bind(to: searchInputSuggestionView.rx.isHidden)
             .disposed(by: disposeBag)
 
-        let formatter = DateFormatter(calendar: dateProvider.calendar)
-        formatter.dateStyle = .long
-
-        searchInputSuggestionDate
-            .compactMap(\.?.date)
-            .map(formatter.string(from:))
+        mainViewModel.searchInputSuggestionText
             .bind(to: searchInputSuggestionView.textField.rx.text)
             .disposed(by: disposeBag)
     }
 
     private func setUpAutoUpdater() {
 
-        autoUpdater.error.observe(on: MainScheduler.instance).bind { [weak self] error in
+        mainViewModel.updateError.observe(on: MainScheduler.instance).bind { [weak self] error in
             guard let self else { return }
 
             let alert = NSAlert()
@@ -521,17 +466,17 @@ class MainViewController: NSViewController {
         }
         .disposed(by: disposeBag)
 
-        autoUpdater.notificationTap.bind { [weak self] action in
+        mainViewModel.updateAction.bind { [weak self] action in
             guard let self else { return }
 
             switch action {
-                case .newVersion(.default):
-                    openSettingsTab(.about)
+                case .openSettings(let tab):
+                    openSettingsTab(tab)
 
-                case .newVersion(.install):
+                case .installUpdate:
                     autoUpdater.downloadAndInstall()
 
-                case .updated:
+                case .openReleasePage:
                     openReleasePage()
             }
 
@@ -596,7 +541,7 @@ class MainViewController: NSViewController {
 
         let viewModel = EventEditorViewModel(
             startDate: .withCurrentTime(
-                at: selectedDate.current,
+                at: mainViewModel.currentSelectedDate,
                 adding: dateComponents,
                 using: dateProvider
             ),
@@ -621,7 +566,7 @@ class MainViewController: NSViewController {
 
         let viewModel = ReminderEditorViewModel(
             dueDate: .withCurrentTime(
-                at: selectedDate.current,
+                at: mainViewModel.currentSelectedDate,
                 adding: dateComponents,
                 using: dateProvider
             ),
@@ -641,14 +586,13 @@ class MainViewController: NSViewController {
 
     @objc private func showSearchInput() {
 
-        searchInput.isHidden = false
+        mainViewModel.showSearchInputObserver.onNext(())
         searchInput.focus()
     }
 
     private func hideSearchInput() {
 
-        searchInputText.onNext("")
-        searchInput.isHidden = true
+        mainViewModel.hideSearchInputObserver.onNext(())
     }
 
     private func setUpAndShow(_ popover: Popover, from button: NSStatusBarButton) {
@@ -855,7 +799,7 @@ class MainViewController: NSViewController {
         keyboard.listen(in: self) { [weak self] event, key -> NSEvent? in
             guard let self else { return event }
 
-            keyboardModifiers.onNext(event.modifierFlags)
+            mainViewModel.keyboardModifiersObserver.onNext(event.modifierFlags)
 
             guard let key else {
                 return event
@@ -878,11 +822,10 @@ class MainViewController: NSViewController {
                 hideSearchInput()
 
             case .enter where searchInput.hasFocus:
-                guard let (date, result) = searchInputSuggestionDate.current else {
+                guard mainViewModel.currentSearchInputSuggestion != nil else {
                     return event
                 }
-                selectedDate.onNext(date)
-                searchInputText.onNext(result)
+                mainViewModel.acceptSearchInputSuggestionObserver.onNext(())
 
             case _ where searchInput.hasFocus:
                 return event
@@ -896,10 +839,10 @@ class MainViewController: NSViewController {
                 localStorage.showDeclinedEvents.toggle()
 
             case .arrow, .command(.arrow), .backspace:
-                navigationSubject.onNext(key)
+                mainViewModel.navigationObserver.onNext(key)
 
             case .enter:
-                dateDoubleClick.onNext(selectedDate.current)
+                mainViewModel.openCalendarDateObserver.onNext(mainViewModel.currentSelectedDate)
 
             default:
                 return event
@@ -959,21 +902,12 @@ class MainViewController: NSViewController {
             .ignoreElements()
             .asCompletable()
 
-        let date = handleColdStart
+        handleColdStart
             .andThen(deeplink)
-            .compactMap { [dateProvider] url -> Date? in
-                guard let action = url.host, action == "date" else {
-                    return nil
-                }
-                let result = DateSearchParser.parse(text: url.lastPathComponent, using: dateProvider)
-                return result?.date
-            }
-            .share(replay: 1)
-
-        date.bind(to: selectedDate)
+            .bind(to: mainViewModel.deeplinkObserver)
             .disposed(by: disposeBag)
 
-        date.void()
+        mainViewModel.showMainPopover
             .filter { [view] in view.window == nil }
             .bind(to: mainStatusItemClickHandler.leftClick)
             .disposed(by: disposeBag)
@@ -1094,33 +1028,6 @@ class MainViewController: NSViewController {
         return NSStackView(views: [pinBtn, createBtn, .spacer, remindersBtn, calendarBtn, settingsBtn])
     }
 
-    private func makeDateSelector() -> DateSelector {
-
-        let backspace = navigationSubject.matching(.backspace).void()
-
-        let keyLeft = navigationSubject.matching(.arrow(.left)).void()
-        let keyRight = navigationSubject.matching(.arrow(.right)).void()
-        let keyDown = navigationSubject.matching(.arrow(.down)).void()
-        let keyUp = navigationSubject.matching(.arrow(.up)).void()
-
-        let cmdUpLeft = navigationSubject.matching(.command(.arrow(.up)), .command(.arrow(.left))).void()
-        let cmdDownRight = navigationSubject.matching(.command(.arrow(.down)), .command(.arrow(.right))).void()
-
-        let dateSelector = DateSelector(
-            calendar: dateProvider.calendar,
-            initial: refreshDate.map { [dateProvider] in dateProvider.now },
-            selected: selectedDate,
-            reset: .merge(resetBtn.rx.tap.asObservable(), backspace),
-            prevDay: keyLeft,
-            nextDay: keyRight,
-            prevWeek: keyUp,
-            nextWeek: keyDown,
-            prevMonth: .merge(prevBtn.rx.tap.asObservable(), cmdUpLeft),
-            nextMonth: .merge(nextBtn.rx.tap.asObservable(), cmdDownRight)
-        )
-
-        return dateSelector
-    }
 }
 
 private func makeContextMenu(_ viewModel: some ContextMenuViewModel) -> NSMenu {
@@ -1157,7 +1064,7 @@ private enum Constants {
 }
 
 private extension NSMenu {
-    
+
     func show(in view: NSView) {
 
         Popover.closeAll()
