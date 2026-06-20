@@ -12,12 +12,23 @@ import RxSwift
 
 class MockAutoUpdater: AutoUpdating {
 
-    let status: Observable<UpdateStatus> = .just(.initial)
-    let error: Observable<UpdateError> = .empty()
-    let notificationTap: Observable<NotificationAction> = .empty()
+    let status: Observable<UpdateStatus>
+    let statusObserver: AnyObserver<UpdateStatus>
+
+    let error: Observable<UpdateError>
+    let errorObserver: AnyObserver<UpdateError>
+
+    let notificationTap: Observable<NotificationAction>
+    let notificationTapObserver: AnyObserver<NotificationAction>
 
     var didStart: (() -> Void)?
     var didStop: (() -> Void)?
+
+    init() {
+        (status, statusObserver) = BehaviorSubject.pipe(value: .initial)
+        (error, errorObserver) = PublishSubject.pipe()
+        (notificationTap, notificationTapObserver) = PublishSubject.pipe()
+    }
 
     func start() { didStart?() }
     func stop() { didStop?() }

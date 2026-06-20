@@ -17,7 +17,7 @@ enum DateSearchParser {
 
         let formatter = DateFormatter(calendar: dateProvider.calendar)
 
-        if let match = searchMatchDate(text: text) {
+        if let match = searchMatchDate(text: text, dateProvider: dateProvider) {
             return makeResult(text, match)
         }
 
@@ -39,12 +39,12 @@ private func makeResult(_ text: String, _ match: DateSuggestionMatch) -> DateSug
     return (match.date, result.trimmingCharacters(in: .whitespaces))
 }
 
-private func searchMatchDate(text: String) -> DateSuggestionMatch? {
+private func searchMatchDate(text: String, dateProvider: DateProviding) -> DateSuggestionMatch? {
     let detector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.date.rawValue)
     let matches = detector?.matches(in: text, options: [], range: NSRange(location: 0, length: text.count))
     guard
         let match = matches?.first(where: \.date.isNotNil),
-        let date = match.date,
+        let date = match.date.map(dateProvider.calendar.startOfDay),
         let range = Range(match.range, in: text)
     else {
         return nil
