@@ -18,9 +18,9 @@ The project follows **MVVM (Model-View-ViewModel)** with **RxSwift** for reactiv
 
 | Package | Purpose |
 |---------|---------|
-| RxSwift / RxCocoa / RxTest | Reactive programming and bindings |
+| RxSwift / RxCocoa | Reactive programming and bindings |
 | swift-collections | Additional collection types |
-| swift-clocks | Testable clocks for time-dependent logic |
+| swift-clocks | Testable clocks for async logic |
 | sentry-cocoa | Error tracking |
 | KeyboardShortcuts | Global keyboard shortcut support |
 | ZIPFoundation | ZIP file handling |
@@ -72,7 +72,8 @@ xcodebuild build-for-testing -scheme "Calendr" \
 xcodebuild test-without-building -scheme "Calendr" | xcbeautify
 ```
 
-Tests use **XCTest** with **RxTest** (`HistoricalScheduler`) for testing reactive streams. Always write tests in `CalendrTests/` using mock providers from `Calendr/Mocks/`.
+Tests use **XCTest** with **RxSwift** `HistoricalScheduler` and **swift-clocks** `TestClock` for async code.
+Always write tests in `CalendrTests/` using mock providers from `Calendr/Mocks/`.
 
 ## Localization
 

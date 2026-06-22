@@ -7,13 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		340A6A8F2FE9C1A30043CD69 /* Clocks in Frameworks */ = {isa = PBXBuildFile; productRef = 340A6A8E2FE9C1A30043CD69 /* Clocks */; };
 		3418207E26755CC80075B3DC /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 3418207D26755CC80075B3DC /* RxSwift */; };
-		3418208026755CC80075B3DC /* RxTest in Frameworks */ = {isa = PBXBuildFile; productRef = 3418207F26755CC80075B3DC /* RxTest */; };
 		3418208426755CC80075B3DC /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 3418208326755CC80075B3DC /* RxCocoa */; };
 		342AEE412DFF35F2008CBBE0 /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = 342AEE402DFF35F2008CBBE0 /* Collections */; };
 		3474A1982FC77DE000BB0844 /* CalendrLauncher.app in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3474A1802FC77D8600BB0844 /* CalendrLauncher.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		3477E70C2C67A6A9008D3844 /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = 3477E70B2C67A6A9008D3844 /* Sentry */; };
-		34DA13C52EDA20480031F8FF /* Clocks in Frameworks */ = {isa = PBXBuildFile; productRef = 34DA13C42EDA20480031F8FF /* Clocks */; };
 		34E259832B659B5600074D3A /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 34E259822B659B5600074D3A /* KeyboardShortcuts */; };
 		34E8556D2C711D1A00757B58 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 34E8556C2C711D1A00757B58 /* ZIPFoundation */; };
 /* End PBXBuildFile section */
@@ -132,7 +131,6 @@
 				3418208426755CC80075B3DC /* RxCocoa in Frameworks */,
 				3418207E26755CC80075B3DC /* RxSwift in Frameworks */,
 				34E259832B659B5600074D3A /* KeyboardShortcuts in Frameworks */,
-				34DA13C52EDA20480031F8FF /* Clocks in Frameworks */,
 				3477E70C2C67A6A9008D3844 /* Sentry in Frameworks */,
 				34E8556D2C711D1A00757B58 /* ZIPFoundation in Frameworks */,
 			);
@@ -142,7 +140,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3418208026755CC80075B3DC /* RxTest in Frameworks */,
+				340A6A8F2FE9C1A30043CD69 /* Clocks in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -219,7 +217,6 @@
 				3477E70B2C67A6A9008D3844 /* Sentry */,
 				34E8556C2C711D1A00757B58 /* ZIPFoundation */,
 				342AEE402DFF35F2008CBBE0 /* Collections */,
-				34DA13C42EDA20480031F8FF /* Clocks */,
 			);
 			productName = Calendr;
 			productReference = 347D0F9425952F89002451EC /* Calendr.app */;
@@ -243,7 +240,7 @@
 			);
 			name = CalendrTests;
 			packageProductDependencies = (
-				3418207F26755CC80075B3DC /* RxTest */,
+				340A6A8E2FE9C1A30043CD69 /* Clocks */,
 			);
 			productName = CalendrTests;
 			productReference = 347D0FA425952F8A002451EC /* CalendrTests.xctest */;
@@ -862,15 +859,15 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		340A6A8E2FE9C1A30043CD69 /* Clocks */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 34DA13C32EDA20480031F8FF /* XCRemoteSwiftPackageReference "swift-clocks" */;
+			productName = Clocks;
+		};
 		3418207D26755CC80075B3DC /* RxSwift */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3418207C26755CC80075B3DC /* XCRemoteSwiftPackageReference "RxSwift" */;
 			productName = RxSwift;
-		};
-		3418207F26755CC80075B3DC /* RxTest */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 3418207C26755CC80075B3DC /* XCRemoteSwiftPackageReference "RxSwift" */;
-			productName = RxTest;
 		};
 		3418208326755CC80075B3DC /* RxCocoa */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -886,11 +883,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3477E70A2C67A6A9008D3844 /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
 			productName = Sentry;
-		};
-		34DA13C42EDA20480031F8FF /* Clocks */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 34DA13C32EDA20480031F8FF /* XCRemoteSwiftPackageReference "swift-clocks" */;
-			productName = Clocks;
 		};
 		34E259822B659B5600074D3A /* KeyboardShortcuts */ = {
 			isa = XCSwiftPackageProductDependency;
