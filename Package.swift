@@ -28,7 +28,6 @@ let package = Package(
                 .product(name: "RxSwift", package: "RxSwift"),
                 .product(name: "RxCocoa", package: "RxSwift"),
                 .product(name: "Collections", package: "swift-collections"),
-                .product(name: "Clocks", package: "swift-clocks"),
                 .product(name: "Sentry", package: "sentry-cocoa"),
                 .product(name: "KeyboardShortcuts", package: "KeyboardShortcuts"),
                 .product(name: "ZIPFoundation", package: "ZIPFoundation")
@@ -47,9 +46,6 @@ let package = Package(
             name: "CalendrTests",
             dependencies: [
                 "Calendr",
-                .product(name: "RxSwift", package: "RxSwift"),
-                .product(name: "RxCocoa", package: "RxSwift"),
-                .product(name: "RxTest", package: "RxSwift"),
                 .product(name: "Clocks", package: "swift-clocks")
             ],
             path: "CalendrTests",
