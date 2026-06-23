@@ -172,6 +172,8 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
     private func preserveWallClockTime(from oldTimeZone: TimeZone) {
         let newTimeZone = selectedTimeZone
         guard oldTimeZone != newTimeZone else { return }
+        isSyncingDates = true
+        defer { isSyncingDates = false }
 
         let oldCalendar = dateProvider.calendar.with(timeZone: oldTimeZone)
         let newCalendar = dateProvider.calendar.with(timeZone: newTimeZone)
@@ -181,13 +183,16 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
             : [.year, .month, .day, .hour, .minute, .second]
 
         let startComponents = oldCalendar.dateComponents(components, from: startDate)
-        startDate = newCalendar.date(from: startComponents) ?? startDate
-
         let endComponents = oldCalendar.dateComponents(components, from: endDate)
+
+        startDate = newCalendar.date(from: startComponents) ?? startDate
         endDate = newCalendar.date(from: endComponents) ?? endDate
     }
 
     private func adjustDatesForAllDayChange() {
+        isSyncingDates = true
+        defer { isSyncingDates = false }
+
         if isAllDay {
             startDate = calendar.startOfDay(for: startDate)
             endDate = calendar.startOfDay(for: endDate)
@@ -195,9 +200,7 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
                 endDate = startDate
             }
         } else if endDate <= startDate {
-            isSyncingDates = true
             endDate = startDate.addingTimeInterval(eventDuration)
-            isSyncingDates = false
         }
     }
 

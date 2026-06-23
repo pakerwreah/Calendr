@@ -254,6 +254,7 @@ class EventEditorViewModelTests: XCTestCase {
         viewModel.selectedTimeZoneIdentifier = "UTC"
 
         XCTAssertEqual(viewModel.startDate, .make(year: 2025, month: 10, day: 25, hour: 15, minute: 0, timeZone: .utc))
+        XCTAssertEqual(viewModel.endDate, .make(year: 2025, month: 10, day: 25, hour: 16, minute: 0, timeZone: .utc))
     }
 
     func testViewModel_init_roundsStartUpToNextHour() {
