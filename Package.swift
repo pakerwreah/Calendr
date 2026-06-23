@@ -37,6 +37,8 @@ let package = Package(
                 "Config",
                 "Tools",
                 "ObjC",
+                "AGENTS.md",
+                "CLAUDE.md",
             ],
             resources: [
                 .process("Assets")
@@ -51,7 +53,9 @@ let package = Package(
             path: "CalendrTests",
             exclude: [
                 "Info.plist",
-                "UnitTests.xctestplan"
+                "UnitTests.xctestplan",
+                "AGENTS.md",
+                "CLAUDE.md",
             ]
         )
     ]
