@@ -16,16 +16,14 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
     var startDate: Date {
         didSet {
             guard !isSyncingDates, startDate != oldValue else { return }
+            isSyncingDates = true
+            defer { isSyncingDates = false }
 
             if isAllDay {
                 guard calendar.isDate(endDate, lessThan: startDate, granularity: .day) else { return }
-                isSyncingDates = true
                 endDate = startDate
-                isSyncingDates = false
             } else {
-                isSyncingDates = true
                 endDate = startDate.addingTimeInterval(eventDuration)
-                isSyncingDates = false
             }
         }
     }
