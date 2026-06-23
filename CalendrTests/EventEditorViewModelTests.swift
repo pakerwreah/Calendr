@@ -16,7 +16,7 @@ class EventEditorViewModelTests: XCTestCase {
     override func setUp() {
         super.setUp()
         dateProvider = MockDateProvider()
-        dateProvider.now = Date.make(year: 2025, month: 10, day: 25, hour: 10, minute: 30)
+        dateProvider.now = .make(year: 2025, month: 10, day: 25, hour: 10, minute: 30)
     }
 
     func testViewModel_initialState() {
@@ -30,11 +30,9 @@ class EventEditorViewModelTests: XCTestCase {
             calendarService: calendarService
         )
 
-        let expectedEnd = dateProvider.calendar.date(byAdding: .hour, value: 1, to: start)!
-
         XCTAssertEqual(viewModel.title, "")
-        XCTAssertEqual(viewModel.startDate, start)
-        XCTAssertEqual(viewModel.endDate, expectedEnd)
+        XCTAssertEqual(viewModel.startDate, .make(year: 2025, month: 10, day: 25, hour: 11, minute: 0))
+        XCTAssertEqual(viewModel.endDate, .make(year: 2025, month: 10, day: 25, hour: 12, minute: 0))
         XCTAssertFalse(viewModel.isAllDay)
         XCTAssertEqual(viewModel.location, "")
         XCTAssertEqual(viewModel.url, "")
@@ -83,10 +81,14 @@ class EventEditorViewModelTests: XCTestCase {
         let calendarService = MockCalendarServiceProvider()
         calendarService.m_calendars = [.make(id: "cal-1")]
 
-        let viewModel = EventEditorViewModel(dateProvider: dateProvider, calendarService: calendarService)
+        let viewModel = EventEditorViewModel(
+            startDate: .make(year: 2025, month: 10, day: 25, hour: 10, minute: 30),
+            dateProvider: dateProvider,
+            calendarService: calendarService
+        )
 
         viewModel.title = "Meeting"
-        viewModel.endDate = dateProvider.calendar.date(byAdding: .hour, value: 1, to: viewModel.startDate)!
+        viewModel.endDate = .make(year: 2025, month: 10, day: 25, hour: 13, minute: 0)
 
         XCTAssertTrue(viewModel.hasValidDateRange)
         XCTAssertTrue(viewModel.hasValidInput)
@@ -101,8 +103,8 @@ class EventEditorViewModelTests: XCTestCase {
 
         viewModel.title = "Holiday"
         viewModel.isAllDay = true
-        viewModel.startDate = Date.make(year: 2025, month: 10, day: 25, at: .start)
-        viewModel.endDate = Date.make(year: 2025, month: 10, day: 25, at: .start)
+        viewModel.startDate = .make(year: 2025, month: 10, day: 25, at: .start)
+        viewModel.endDate = .make(year: 2025, month: 10, day: 25, at: .start)
 
         XCTAssertTrue(viewModel.hasValidDateRange)
         XCTAssertTrue(viewModel.hasValidInput)
@@ -117,8 +119,8 @@ class EventEditorViewModelTests: XCTestCase {
 
         viewModel.title = "Holiday"
         viewModel.isAllDay = true
-        viewModel.startDate = Date.make(year: 2025, month: 10, day: 25, at: .start)
-        viewModel.endDate = Date.make(year: 2025, month: 10, day: 24, at: .start)
+        viewModel.startDate = .make(year: 2025, month: 10, day: 25, at: .start)
+        viewModel.endDate = .make(year: 2025, month: 10, day: 24, at: .start)
 
         XCTAssertFalse(viewModel.hasValidDateRange)
         XCTAssertFalse(viewModel.hasValidInput)
@@ -127,30 +129,29 @@ class EventEditorViewModelTests: XCTestCase {
     func testViewModel_isAllDay_toggleOn_stripsTimeAndFixesEnd() {
 
         let viewModel = EventEditorViewModel(
-            startDate: Date.make(year: 2025, month: 10, day: 25, hour: 14, minute: 30),
+            startDate: .make(year: 2025, month: 10, day: 25, hour: 14, minute: 30),
             dateProvider: dateProvider
         )
 
-        viewModel.endDate = Date.make(year: 2025, month: 10, day: 24, hour: 16)
+        viewModel.endDate = .make(year: 2025, month: 10, day: 24, hour: 16)
 
         viewModel.isAllDay = true
 
-        XCTAssertEqual(viewModel.startDate, Date.make(year: 2025, month: 10, day: 25, at: .start))
-        XCTAssertEqual(viewModel.endDate, Date.make(year: 2025, month: 10, day: 25, at: .start))
+        XCTAssertEqual(viewModel.startDate, .make(year: 2025, month: 10, day: 25, at: .start))
+        XCTAssertEqual(viewModel.endDate, .make(year: 2025, month: 10, day: 25, at: .start))
     }
 
     func testViewModel_isAllDay_toggleOff_setsEndOneHourAfterStartWhenNeeded() {
 
         let viewModel = EventEditorViewModel(
-            startDate: Date.make(year: 2025, month: 10, day: 25, hour: 14),
+            startDate: .make(year: 2025, month: 10, day: 25, hour: 14),
             dateProvider: dateProvider
         )
 
         viewModel.isAllDay = true
         viewModel.isAllDay = false
 
-        let expectedEnd = dateProvider.calendar.date(byAdding: .hour, value: 1, to: viewModel.startDate)!
-        XCTAssertEqual(viewModel.endDate, expectedEnd)
+        XCTAssertEqual(viewModel.endDate, .make(year: 2025, month: 10, day: 25, hour: 1, minute: 0))
     }
 
     func testViewModel_saveEvent_withInvalidInput_shouldNotCallService() {
@@ -177,8 +178,8 @@ class EventEditorViewModelTests: XCTestCase {
         let calendarService = MockCalendarServiceProvider()
         calendarService.m_calendars = [.make(id: "cal-1")]
 
-        let start = dateProvider.now
-        let end = dateProvider.calendar.date(byAdding: .hour, value: 2, to: start)!
+        let start: Date = .make(year: 2025, month: 10, day: 25, hour: 11, minute: 0)
+        let end: Date = .make(year: 2025, month: 10, day: 25, hour: 12, minute: 30)
 
         let viewModel = EventEditorViewModel(
             startDate: .init(date: start),
@@ -241,20 +242,95 @@ class EventEditorViewModelTests: XCTestCase {
         let oldTimeZone = TimeZone(secondsFromGMT: 3 * 3600)!
         dateProvider.m_calendar = Calendar.gregorian.with(timeZone: oldTimeZone)
 
-        let start = Date.make(year: 2025, month: 10, day: 25, hour: 14, minute: 30, timeZone: oldTimeZone)
+        let start: Date = .make(year: 2025, month: 10, day: 25, hour: 14, minute: 30, timeZone: oldTimeZone)
 
         let viewModel = EventEditorViewModel(
             startDate: start,
             dateProvider: dateProvider
         )
 
+        XCTAssertEqual(viewModel.startDate, .make(year: 2025, month: 10, day: 25, hour: 15, minute: 0, timeZone: oldTimeZone))
+
         viewModel.selectedTimeZoneIdentifier = "UTC"
 
-        let utcCalendar = Calendar.gregorian.with(timeZone: TimeZone(identifier: "UTC")!)
-        let components = utcCalendar.dateComponents([.hour, .minute], from: viewModel.startDate)
+        XCTAssertEqual(viewModel.startDate, .make(year: 2025, month: 10, day: 25, hour: 15, minute: 0, timeZone: .utc))
+    }
 
-        XCTAssertEqual(components.hour, 14)
-        XCTAssertEqual(components.minute, 30)
+    func testViewModel_init_roundsStartUpToNextHour() {
+
+        let onTheHour: Date = .make(year: 2025, month: 10, day: 25, hour: 10, minute: 0)
+        let withMinutes: Date = .make(year: 2025, month: 10, day: 25, hour: 10, minute: 30)
+
+        let onTheHourViewModel = EventEditorViewModel(
+            startDate: onTheHour,
+            dateProvider: dateProvider
+        )
+        let withMinutesViewModel = EventEditorViewModel(
+            startDate: withMinutes,
+            dateProvider: dateProvider
+        )
+
+        XCTAssertEqual(onTheHourViewModel.startDate, onTheHour)
+        XCTAssertEqual(withMinutesViewModel.startDate, .make(year: 2025, month: 10, day: 25, hour: 11, minute: 0))
+    }
+
+    func testViewModel_changingEndDate_tracksDuration() {
+
+        let viewModel = EventEditorViewModel(
+            startDate: .make(year: 2025, month: 10, day: 25, hour: 10),
+            dateProvider: dateProvider
+        )
+
+        viewModel.endDate = .make(year: 2025, month: 10, day: 25, hour: 12, minute: 0)
+
+        viewModel.startDate = .make(year: 2025, month: 10, day: 25, hour: 13, minute: 0)
+
+        XCTAssertEqual(viewModel.endDate, .make(year: 2025, month: 10, day: 25, hour: 15, minute: 0))
+    }
+
+    func testViewModel_changingEndDate_invalid_doesNotUpdateDuration() {
+
+        let viewModel = EventEditorViewModel(
+            startDate: .make(year: 2025, month: 10, day: 25, hour: 10),
+            dateProvider: dateProvider
+        )
+
+        viewModel.endDate = .make(year: 2025, month: 10, day: 25, hour: 12, minute: 0)
+        viewModel.endDate = viewModel.startDate
+
+        viewModel.startDate = .make(year: 2025, month: 10, day: 25, hour: 13, minute: 0)
+
+        XCTAssertEqual(viewModel.endDate, .make(year: 2025, month: 10, day: 25, hour: 15, minute: 0))
+    }
+
+    func testViewModel_isAllDay_changingStartDate_fixesInvalidEnd() {
+
+        let viewModel = EventEditorViewModel(
+            startDate: .make(year: 2025, month: 10, day: 25, hour: 10),
+            dateProvider: dateProvider
+        )
+
+        viewModel.isAllDay = true
+        viewModel.startDate = .make(year: 2025, month: 10, day: 26, at: .start)
+
+        XCTAssertEqual(viewModel.startDate, .make(year: 2025, month: 10, day: 26, at: .start))
+        XCTAssertEqual(viewModel.endDate, .make(year: 2025, month: 10, day: 26, at: .start))
+    }
+
+    func testViewModel_isAllDay_changingStartDate_keepsValidEnd() {
+
+        let viewModel = EventEditorViewModel(
+            startDate: .make(year: 2025, month: 10, day: 25, hour: 10),
+            dateProvider: dateProvider
+        )
+
+        viewModel.isAllDay = true
+
+        XCTAssertEqual(viewModel.endDate, .make(year: 2025, month: 10, day: 25, at: .start))
+
+        viewModel.startDate = .make(year: 2025, month: 10, day: 26, at: .start)
+
+        XCTAssertEqual(viewModel.endDate, .make(year: 2025, month: 10, day: 26, at: .start))
     }
 
     func testViewModel_initialState_selectedAlertIsNone() {
