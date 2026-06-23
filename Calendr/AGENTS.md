@@ -1,8 +1,14 @@
-# Copilot Instructions for Calendr
+# Agent instructions
 
-## Project Overview
+## Project overview
 
-Calendr is a **macOS menu bar calendar application** built in Swift targeting macOS 14+. It displays calendar events and reminders from the system calendar and supports weather integration, time zone display, keyboard shortcuts, and a URL scheme for opening specific dates.
+Calendr is a **macOS menu bar calendar application** built in Swift. It displays events and reminders from the system calendar, upcoming events and reminders as separate items in the menu bar, and fullscreen notifications.
+
+## Building and Testing
+
+The app supports both Xcode and SPM build systems.
+There's a convenience `assemble.sh` script to build and package the app bundle without Xcode.
+Testing with SPM is as simple as running `swift test`.
 
 ## Architecture
 
@@ -14,7 +20,7 @@ The project follows **MVVM (Model-View-ViewModel)** with **RxSwift** for reactiv
 - **Providers** – Service abstractions named `*Provider` in `Calendr/Providers/` (e.g. `CalendarServiceProvider`, `WeatherServiceProvider`)
 - **Mocks** – Test doubles prefixed with `Mock` and stored in `Calendr/Mocks/`
 
-## Key Dependencies (Package.swift)
+## Key dependencies
 
 | Package | Purpose |
 |---------|---------|
@@ -25,16 +31,16 @@ The project follows **MVVM (Model-View-ViewModel)** with **RxSwift** for reactiv
 | KeyboardShortcuts | Global keyboard shortcut support |
 | ZIPFoundation | ZIP file handling |
 
-## Coding Conventions
+## Coding conventions
 
 - **Swift** is the primary language; a small `CalendrObjC` target handles Objective-C bridging
+- The app requires **macOS 14+** and must not use deprecated APIs
 - Use `BehaviorSubject` and `PublishSubject` for ViewModel state; expose read-only `Observable` to consumers
 - Inject all services (providers) into ViewModels via initialiser parameters — do not reference singletons directly from ViewModels
 - Dispose RxSwift subscriptions with a `DisposeBag` stored on the owner
 - Localised strings are code-generated via **swiftgen** into `Calendr/Constants/Strings.generated.swift` — always reference `Strings.*` constants instead of raw string literals for UI text
-- Use factory helpers (`*.make(...)`) defined in `Calendr/Mocks/Factories/` when constructing model objects in tests
 
-## File / Folder Organisation
+## File / folder organisation
 
 ```
 Calendr/
@@ -55,34 +61,11 @@ Calendr/
   Settings/        – Settings UI and ViewModels
   Utils/           – Utility functions
 
-CalendrTests/      – XCTest unit tests
-  Schedulers/      – Scheduler utilities for tests
+CalendrTests/      – XCTest unit tests (see CalendrTests/AGENTS.md)
 ```
-
-## Building and Testing
-
-**Build for testing** (used in CI):
-```bash
-xcodebuild build-for-testing -scheme "Calendr" \
-  COMPILER_INDEX_STORE_ENABLE=NO CODE_SIGNING_ALLOWED=NO
-```
-
-**Run tests** (requires a prior build step):
-```bash
-xcodebuild test-without-building -scheme "Calendr" | xcbeautify
-```
-
-Tests use **XCTest** with **RxSwift** `HistoricalScheduler` and **swift-clocks** `TestClock` for async code.
-Always write tests in `CalendrTests/` using mock providers from `Calendr/Mocks/`.
 
 ## Localization
 
 - All user-visible strings must be added to `Calendr/Assets/en.lproj/Localizable.strings`
 - After editing localisation files, regenerate `Strings.generated.swift` with the **Generate Strings** VS Code task (uses `swiftgen`)
 - Track missing translations in `MISSING_TRANSLATIONS.md`
-
-## Important Notes
-
-- The app requires macOS 14+ and must not use deprecated APIs removed before that version
-- Code signing is disabled during CI (`CODE_SIGNING_ALLOWED=NO`)
-- Entitlements (`Calendr.entitlements`) include WeatherKit, Apple Events, and executable-file access — avoid adding entitlements without a clear functional requirement
