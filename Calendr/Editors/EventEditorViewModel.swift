@@ -13,8 +13,27 @@ import RxSwift
 class EventEditorViewModel: HostingWindowControllerDelegate {
 
     var title = ""
-    var startDate: Date
-    var endDate: Date
+    var startDate: Date {
+        didSet {
+            guard !isSyncingDates, startDate != oldValue else { return }
+            isSyncingDates = true
+            defer { isSyncingDates = false }
+
+            if isAllDay {
+                guard calendar.isDate(endDate, lessThan: startDate, granularity: .day) else { return }
+                endDate = startDate
+            } else {
+                endDate = startDate.addingTimeInterval(eventDuration)
+            }
+        }
+    }
+    var endDate: Date {
+        didSet {
+            guard !isSyncingDates, endDate != oldValue, !isAllDay else { return }
+            guard endDate > startDate else { return }
+            eventDuration = endDate.timeIntervalSince(startDate)
+        }
+    }
     var isAllDay = false {
         didSet {
             guard isAllDay != oldValue else { return }
@@ -59,6 +78,9 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
 
     private let disposeBag = DisposeBag()
 
+    private var eventDuration: TimeInterval = 3600
+    private var isSyncingDates = false
+
     private var calendar: Calendar { dateProvider.calendar.with(timeZone: selectedTimeZone) }
 
     var selectedTimeZone: TimeZone {
@@ -67,8 +89,11 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
 
     init(startDate: DueDate, dateProvider: DateProviding, calendarService: CalendarServiceProviding) {
         self.dateProvider = dateProvider
-        self.startDate = startDate.date
-        self.endDate = dateProvider.calendar.date(byAdding: .hour, value: 1, to: startDate.date)!
+        let roundedStart = roundUpToNextHour(startDate.date, using: dateProvider)
+        let defaultDuration: TimeInterval = 3600
+        self.startDate = roundedStart
+        self.eventDuration = defaultDuration
+        self.endDate = roundedStart.addingTimeInterval(defaultDuration)
         self.calendarService = calendarService
         self.selectedTimeZoneIdentifier = dateProvider.calendar.timeZone.identifier
 
@@ -147,6 +172,8 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
     private func preserveWallClockTime(from oldTimeZone: TimeZone) {
         let newTimeZone = selectedTimeZone
         guard oldTimeZone != newTimeZone else { return }
+        isSyncingDates = true
+        defer { isSyncingDates = false }
 
         let oldCalendar = dateProvider.calendar.with(timeZone: oldTimeZone)
         let newCalendar = dateProvider.calendar.with(timeZone: newTimeZone)
@@ -156,13 +183,16 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
             : [.year, .month, .day, .hour, .minute, .second]
 
         let startComponents = oldCalendar.dateComponents(components, from: startDate)
-        startDate = newCalendar.date(from: startComponents) ?? startDate
-
         let endComponents = oldCalendar.dateComponents(components, from: endDate)
+
+        startDate = newCalendar.date(from: startComponents) ?? startDate
         endDate = newCalendar.date(from: endComponents) ?? endDate
     }
 
     private func adjustDatesForAllDayChange() {
+        isSyncingDates = true
+        defer { isSyncingDates = false }
+
         if isAllDay {
             startDate = calendar.startOfDay(for: startDate)
             endDate = calendar.startOfDay(for: endDate)
@@ -170,7 +200,7 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
                 endDate = startDate
             }
         } else if endDate <= startDate {
-            endDate = calendar.date(byAdding: .hour, value: 1, to: startDate)!
+            endDate = startDate.addingTimeInterval(eventDuration)
         }
     }
 
@@ -198,4 +228,11 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
             selectedCalendarId = first.id
         }
     }
+}
+
+private func roundUpToNextHour(_ date: Date, using dateProvider: DateProviding) -> Date {
+    let calendar = dateProvider.calendar
+    guard let interval = calendar.dateInterval(of: .hour, for: date) else { return date }
+    if date == interval.start { return date }
+    return calendar.date(byAdding: .hour, value: 1, to: interval.start)!
 }
