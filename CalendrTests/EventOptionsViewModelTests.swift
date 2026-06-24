@@ -5,11 +5,12 @@
 //  Created by Paker on 18/02/23.
 //
 
-import XCTest
+import Foundation
 import RxSwift
+import Testing
 @testable import Calendr
 
-class EventOptionsViewModelTests: XCTestCase {
+class EventOptionsViewModelTests {
 
     let disposeBag = DisposeBag()
 
@@ -17,44 +18,44 @@ class EventOptionsViewModelTests: XCTestCase {
     let calendarService = MockCalendarServiceProvider()
     lazy var workspace = MockWorkspaceServiceProvider(dateProvider: dateProvider)
 
-    func testOptions_withPendingInvitationStatus() {
+    @Test func testOptions_withPendingInvitationStatus() {
 
         let viewModel = mock(event: .make(type: .event(.pending)), source: .details)
-        XCTAssertEqual(viewModel.items, [
+        #expect(viewModel.items == [
             .action(.status(.accept)),
             .action(.status(.maybe)),
             .action(.status(.decline))
         ])
     }
 
-    func testOptions_withAcceptedInvitationStatus() {
+    @Test func testOptions_withAcceptedInvitationStatus() {
 
         let viewModel = mock(event: .make(type: .event(.accepted)), source: .details)
-        XCTAssertEqual(viewModel.items, [
+        #expect(viewModel.items == [
             .action(.status(.maybe)),
             .action(.status(.decline))
         ])
     }
 
-    func testOptions_withMaybeInvitationStatus() {
+    @Test func testOptions_withMaybeInvitationStatus() {
 
         let viewModel = mock(event: .make(type: .event(.maybe)), source: .details)
-        XCTAssertEqual(viewModel.items, [
+        #expect(viewModel.items == [
             .action(.status(.accept)),
             .action(.status(.decline))
         ])
     }
 
-    func testOptions_withDeclinedInvitationStatus() {
+    @Test func testOptions_withDeclinedInvitationStatus() {
 
         let viewModel = mock(event: .make(type: .event(.declined)), source: .details)
-        XCTAssertEqual(viewModel.items, [
+        #expect(viewModel.items == [
             .action(.status(.accept)),
             .action(.status(.maybe))
         ])
     }
 
-    func testStatusChanged_shouldChangeStatus() {
+    @Test func testStatusChanged_shouldChangeStatus() {
 
         var status: EventStatus?
         var callback: EventAction?
@@ -71,30 +72,30 @@ class EventOptionsViewModelTests: XCTestCase {
 
         viewModel.triggerAction(action)
 
-        XCTAssertEqual(status, .accepted)
-        XCTAssertEqual(callback, action)
+        #expect(status == .accepted)
+        #expect(callback == action)
     }
 
-    func testOptions_fromList_withUnknownInvitationStatus() {
+    @Test func testOptions_fromList_withUnknownInvitationStatus() {
 
         let viewModel = mock(event: .make(type: .event(.unknown)), source: .calendar)
-        XCTAssertEqual(viewModel.items, [.action(.open)])
+        #expect(viewModel.items == [.action(.open)])
     }
 
-    func testOptions_fromList_withUnknownInvitationStatus_withLink() {
+    @Test func testOptions_fromList_withUnknownInvitationStatus_withLink() {
 
         let viewModel = mock(event: .make(url: EventLink.zoomLink.url, type: .event(.unknown)), source: .calendar)
-        XCTAssertEqual(viewModel.items, [
+        #expect(viewModel.items == [
             .action(.open),
             .separator,
             .action(.link(.zoomLink, isInProgress: false))
         ])
     }
 
-    func testOptions_fromList() {
+    @Test func testOptions_fromList() {
 
         let viewModel = mock(event: .make(type: .event(.pending)), source: .calendar)
-        XCTAssertEqual(viewModel.items, [
+        #expect(viewModel.items == [
             .action(.open),
             .separator,
             .action(.status(.accept)),
@@ -103,10 +104,10 @@ class EventOptionsViewModelTests: XCTestCase {
         ])
     }
 
-    func testOptions_fromList_withLink() {
+    @Test func testOptions_fromList_withLink() {
 
         let viewModel = mock(event: .make(url: EventLink.zoomLink.url, type: .event(.pending)), source: .calendar)
-        XCTAssertEqual(viewModel.items, [
+        #expect(viewModel.items == [
             .action(.open),
             .separator,
             .action(.link(.zoomLink, isInProgress: false)),
@@ -117,16 +118,16 @@ class EventOptionsViewModelTests: XCTestCase {
         ])
     }
 
-    func testOptions_fromMenuBar_withUnknownInvitationStatus() {
+    @Test func testOptions_fromMenuBar_withUnknownInvitationStatus() {
 
         let viewModel = mock(event: .make(type: .event(.unknown)), source: .menubar)
-        XCTAssertEqual(viewModel.items, [.action(.open), .separator, .action(.skip)])
+        #expect(viewModel.items == [.action(.open), .separator, .action(.skip)])
     }
 
-    func testOptions_fromMenuBar_withUnknownInvitationStatus_withLink() {
+    @Test func testOptions_fromMenuBar_withUnknownInvitationStatus_withLink() {
 
         let viewModel = mock(event: .make(url: EventLink.zoomLink.url, type: .event(.unknown)), source: .menubar)
-        XCTAssertEqual(viewModel.items, [
+        #expect(viewModel.items == [
             .action(.open),
             .separator,
             .action(.link(.zoomLink, isInProgress: false)),
@@ -135,10 +136,10 @@ class EventOptionsViewModelTests: XCTestCase {
         ])
     }
 
-    func testOptions_fromMenuBar() {
+    @Test func testOptions_fromMenuBar() {
 
         let viewModel = mock(event: .make(type: .event(.pending)), source: .menubar)
-        XCTAssertEqual(viewModel.items, [
+        #expect(viewModel.items == [
             .action(.open),
             .separator,
             .action(.skip),
@@ -149,10 +150,10 @@ class EventOptionsViewModelTests: XCTestCase {
         ])
     }
 
-    func testOptions_fromMenuBar_withLink() {
+    @Test func testOptions_fromMenuBar_withLink() {
 
         let viewModel = mock(event: .make(url: EventLink.zoomLink.url, type: .event(.pending)), source: .menubar)
-        XCTAssertEqual(viewModel.items, [
+        #expect(viewModel.items == [
             .action(.open),
             .separator,
             .action(.link(.zoomLink, isInProgress: false)),
@@ -165,38 +166,38 @@ class EventOptionsViewModelTests: XCTestCase {
         ])
     }
 
-    func testOptions_withOpenTriggered() {
+    @Test func testOptions_withOpenTriggered() async {
         let openExpectation = expectation(description: "Open")
 
         let viewModel = mock(event: .make(id: "12345", type: .event(.pending)), source: .calendar)
 
         workspace.didOpenEvent = { event in
-            XCTAssertEqual(event.id, "12345")
+            #expect(event.id == "12345")
             openExpectation.fulfill()
         }
 
         viewModel.triggerAction(.open)
-        waitForExpectations(timeout: 1)
+        await fulfillment(of: [openExpectation], timeout: 1)
     }
 
-    func testEventLinkAction_isMeeting() {
-        XCTAssertEqual(EventAction.link(.zoomLink, isInProgress: false).title, Strings.Event.Action.join)
+    @Test func testEventLinkAction_isMeeting() {
+        #expect(EventAction.link(.zoomLink, isInProgress: false).title == Strings.Event.Action.join)
 
-        XCTAssertEqual(EventAction.link(.zoomLink, isInProgress: false).icon, Icons.Event.video)
+        #expect(EventAction.link(.zoomLink, isInProgress: false).icon == Icons.Event.video)
         
-        XCTAssertEqual(
-            EventAction.link(.zoomLink, isInProgress: true).icon?.tiffRepresentation,
+        #expect(
+            EventAction.link(.zoomLink, isInProgress: true).icon?.tiffRepresentation ==
             Icons.Event.video_fill.with(color: .controlAccentColor).tiffRepresentation
         )
     }
 
-    func testEventLinkAction_isGenericLink() {
-        XCTAssertEqual(EventAction.link(.genericLink, isInProgress: false).title, "google.com")
+    @Test func testEventLinkAction_isGenericLink() {
+        #expect(EventAction.link(.genericLink, isInProgress: false).title == "google.com")
         
-        XCTAssertEqual(EventAction.link(.genericLink, isInProgress: false).icon, Icons.Event.link)
+        #expect(EventAction.link(.genericLink, isInProgress: false).icon == Icons.Event.link)
         
-        XCTAssertEqual(
-            EventAction.link(.genericLink, isInProgress: true).icon?.tiffRepresentation,
+        #expect(
+            EventAction.link(.genericLink, isInProgress: true).icon?.tiffRepresentation ==
             Icons.Event.link.with(color: .controlAccentColor).tiffRepresentation
         )
     }

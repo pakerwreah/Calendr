@@ -5,11 +5,12 @@
 //  Created by Paker on 30/01/21.
 //
 
-import XCTest
+import Foundation
 import RxSwift
+import Testing
 @testable import Calendr
 
-class EventViewModelProgressTests: XCTestCase {
+class EventViewModelProgressTests {
 
     let disposeBag = DisposeBag()
 
@@ -21,7 +22,7 @@ class EventViewModelProgressTests: XCTestCase {
     let settings = MockEventSettings()
     let localStorage = MockLocalStorageProvider()
 
-    func testProgress_isAllDay_shouldNotCalculateProgress() {
+    @Test func testProgress_isAllDay_shouldNotCalculateProgress() {
 
         dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 12)
 
@@ -37,10 +38,10 @@ class EventViewModelProgressTests: XCTestCase {
             .bind { progress = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertNil(progress)
+        #expect(progress == nil)
     }
 
-    func testProgress_isMultiDay_shouldNotCalculateProgress() {
+    @Test func testProgress_isMultiDay_shouldNotCalculateProgress() {
 
         dateProvider.now = .make(year: 2021, month: 1, day: 2, hour: 12)
 
@@ -55,10 +56,10 @@ class EventViewModelProgressTests: XCTestCase {
             .bind { progress = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertNil(progress)
+        #expect(progress == nil)
     }
 
-    func testProgress_isToday_isFuture_shouldNotCalculateProgress() {
+    @Test func testProgress_isToday_isFuture_shouldNotCalculateProgress() {
 
         dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 9)
 
@@ -73,10 +74,10 @@ class EventViewModelProgressTests: XCTestCase {
             .bind { progress = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertNil(progress)
+        #expect(progress == nil)
     }
 
-    func testProgress_isToday_isPast_shouldNotCalculateProgress() {
+    @Test func testProgress_isToday_isPast_shouldNotCalculateProgress() {
 
         dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 16)
 
@@ -91,10 +92,10 @@ class EventViewModelProgressTests: XCTestCase {
             .bind { progress = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertNil(progress)
+        #expect(progress == nil)
     }
 
-    func testProgress_isInProgress_shouldCalculateProgress() {
+    @Test func testProgress_isInProgress_shouldCalculateProgress() {
 
         dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 12)
 
@@ -109,10 +110,10 @@ class EventViewModelProgressTests: XCTestCase {
             .bind { progress = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(progress, 0.4)
+        #expect(progress == 0.4)
     }
 
-    func testProgress_isNotInProgress() {
+    @Test func testProgress_isNotInProgress() {
 
         dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 9)
 
@@ -127,10 +128,10 @@ class EventViewModelProgressTests: XCTestCase {
             .bind { isInProgress = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(isInProgress, false)
+        #expect(isInProgress == false)
     }
 
-    func testProgress_isInProgress() {
+    @Test func testProgress_isInProgress() {
 
         dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 12)
 
@@ -145,10 +146,10 @@ class EventViewModelProgressTests: XCTestCase {
             .bind { isInProgress = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(isInProgress, true)
+        #expect(isInProgress == true)
     }
 
-    func testProgress_isNotInProgress_shouldShowClearBackground() {
+    @Test func testProgress_isNotInProgress_shouldShowClearBackground() {
 
         dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 9)
 
@@ -163,10 +164,10 @@ class EventViewModelProgressTests: XCTestCase {
             .bind { backgroundColor = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(backgroundColor, .clear)
+        #expect(backgroundColor == .clear)
     }
 
-    func testProgress_isInProgress_shouldShowColoredBackgroundWithAlpha() {
+    @Test func testProgress_isInProgress_shouldShowColoredBackgroundWithAlpha() {
 
         dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 12)
 
@@ -181,10 +182,10 @@ class EventViewModelProgressTests: XCTestCase {
             .bind { backgroundColor = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(backgroundColor, .color(viewModel.color.withAlphaComponent(0.15)))
+        #expect(backgroundColor == .color(viewModel.color.withAlphaComponent(0.15)))
     }
 
-    func testProgress_isNotInProgress_isPending_shouldShowPendingBackground() {
+    @Test func testProgress_isNotInProgress_isPending_shouldShowPendingBackground() {
 
         dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 9)
 
@@ -200,10 +201,10 @@ class EventViewModelProgressTests: XCTestCase {
             .bind { backgroundColor = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(backgroundColor, .pending)
+        #expect(backgroundColor == .pending)
     }
 
-    func testProgress_isInProgress_isPending_shouldShowPendingBackground() {
+    @Test func testProgress_isInProgress_isPending_shouldShowPendingBackground() {
 
         dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 12)
 
@@ -219,10 +220,10 @@ class EventViewModelProgressTests: XCTestCase {
             .bind { backgroundColor = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(backgroundColor, .pending)
+        #expect(backgroundColor == .pending)
     }
 
-    func testProgressClock() {
+    @Test func testProgressClock() {
 
         // 1 second before the event starts
         dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 9, minute: 59, second: 59)
@@ -242,33 +243,33 @@ class EventViewModelProgressTests: XCTestCase {
             .disposed(by: disposeBag)
 
         // event should not be in progress yet
-        XCTAssertNil(progress)
+        #expect(progress == nil)
 
         // now the event has started
         dateProvider.now += 1
 
         // check that the progress is not computed before 1 second
         scheduler.advance(.milliseconds(500))
-        XCTAssertNil(progress)
+        #expect(progress == nil)
 
         // now the progress should be computed
         scheduler.advance(.milliseconds(500))
-        XCTAssertEqual(progress, 0)
+        #expect(progress == 0)
 
         // 20% progress
         dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 11)
         scheduler.advance(.seconds(1))
-        XCTAssertEqual(progress, 0.2)
+        #expect(progress == 0.2)
 
         // 100% progress
         dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 15)
         scheduler.advance(.seconds(1))
-        XCTAssertEqual(progress, 1)
+        #expect(progress == 1)
 
         // event finished
         dateProvider.add(1, .second)
         scheduler.advance(.seconds(1))
-        XCTAssertNil(progress)
+        #expect(progress == nil)
     }
 
     func mock(

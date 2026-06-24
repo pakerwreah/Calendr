@@ -5,11 +5,12 @@
 //  Created by Paker on 09/01/21.
 //
 
-import XCTest
+import AppKit
 import RxSwift
+import Testing
 @testable import Calendr
 
-class CalendarViewModelTests: XCTestCase {
+class CalendarViewModelTests {
 
     let disposeBag = DisposeBag()
     
@@ -39,7 +40,7 @@ class CalendarViewModelTests: XCTestCase {
 
     var lastValue: [CalendarCellViewModel]?
 
-    override func setUp() {
+    init() {
 
         calendarService.m_calendars = [
             .make(id: "1", account: "A1", title: "Calendar 1", color: .white),
@@ -115,7 +116,7 @@ class CalendarViewModelTests: XCTestCase {
         scheduler.advance(.seconds(1))
     }
 
-    func testCombinedTextScaling() {
+    @Test func testCombinedTextScaling() {
 
         var textScaling: CGFloat?
 
@@ -124,16 +125,16 @@ class CalendarViewModelTests: XCTestCase {
         }
         .disposed(by: disposeBag)
 
-        XCTAssertEqual(textScaling, 1)
+        #expect(textScaling == 1)
 
         settings.calendarScalingObserver.onNext(2)
-        XCTAssertEqual(textScaling, 2)
+        #expect(textScaling == 2)
 
         settings.calendarTextScalingObserver.onNext(3)
-        XCTAssertEqual(textScaling, 6)
+        #expect(textScaling == 6)
     }
 
-    func testCombinedTextScaling_withGlobalTextScalingChange_shouldNotUpdate() {
+    @Test func testCombinedTextScaling_withGlobalTextScalingChange_shouldNotUpdate() {
 
         var textScaling: CGFloat?
 
@@ -142,14 +143,14 @@ class CalendarViewModelTests: XCTestCase {
         }
         .disposed(by: disposeBag)
 
-        XCTAssertEqual(textScaling, 1)
+        #expect(textScaling == 1)
 
         settings.textScalingObserver.onNext(2)
 
-        XCTAssertEqual(textScaling, 1)
+        #expect(textScaling == 1)
     }
 
-    func testTitle() {
+    @Test func testTitle() {
 
         var titles: [String] = []
 
@@ -165,76 +166,76 @@ class CalendarViewModelTests: XCTestCase {
         dateSubject.onNext(.make(year: 2021, month: 1, day: 2))
         dateSubject.onNext(.make(year: 2021, month: 2, day: 1))
 
-        XCTAssertEqual(titles, ["Janv. 2021", "Févr. 2021"])
+        #expect(titles == ["Janv. 2021", "Févr. 2021"])
     }
 
-    func testMonthSpan() throws {
+    @Test func testMonthSpan() throws {
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
 
-        let cellViewModels = try XCTUnwrap(lastValue)
+        let cellViewModels = try #require(lastValue)
 
         let inMonth = cellViewModels.filter(\.inMonth)
 
-        XCTAssertEqual(inMonth.count, 31)
-        XCTAssertEqual(inMonth.first.map(\.date), .make(year: 2021, month: 1, day: 1))
-        XCTAssertEqual(inMonth.last.map(\.date), .make(year: 2021, month: 1, day: 31))
+        #expect(inMonth.count == 31)
+        #expect(inMonth.first.map(\.date) == .make(year: 2021, month: 1, day: 1))
+        #expect(inMonth.last.map(\.date) == .make(year: 2021, month: 1, day: 31))
     }
 
-    func testDateSpan_weekCount7() throws {
+    @Test func testDateSpan_weekCount7() throws {
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
 
         settings.weekCountObserver.onNext(7)
         scheduler.advance(.milliseconds(300))
 
-        let cellViewModels = try XCTUnwrap(lastValue)
+        let cellViewModels = try #require(lastValue)
 
-        XCTAssertEqual(cellViewModels.count, 49)
-        XCTAssertEqual(cellViewModels.first.map(\.date), .make(year: 2020, month: 12, day: 27))
-        XCTAssertEqual(cellViewModels.last.map(\.date), .make(year: 2021, month: 2, day: 13))
+        #expect(cellViewModels.count == 49)
+        #expect(cellViewModels.first.map(\.date) == .make(year: 2020, month: 12, day: 27))
+        #expect(cellViewModels.last.map(\.date) == .make(year: 2021, month: 2, day: 13))
     }
 
-    func testDateSpan_firstWeekDaySunday() throws {
+    @Test func testDateSpan_firstWeekDaySunday() throws {
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
 
-        let cellViewModels = try XCTUnwrap(lastValue)
+        let cellViewModels = try #require(lastValue)
 
-        XCTAssertEqual(cellViewModels.count, 42)
-        XCTAssertEqual(cellViewModels.first.map(\.date), .make(year: 2020, month: 12, day: 27))
-        XCTAssertEqual(cellViewModels.last.map(\.date), .make(year: 2021, month: 2, day: 6))
+        #expect(cellViewModels.count == 42)
+        #expect(cellViewModels.first.map(\.date) == .make(year: 2020, month: 12, day: 27))
+        #expect(cellViewModels.last.map(\.date) == .make(year: 2021, month: 2, day: 6))
     }
 
-    func testDateSpan_firstWeekDayMonday() throws {
+    @Test func testDateSpan_firstWeekDayMonday() throws {
 
         dateProvider.m_calendar.firstWeekday = 2
         dateProvider.notifyCalendarUpdated()
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
 
-        let cellViewModels = try XCTUnwrap(lastValue)
+        let cellViewModels = try #require(lastValue)
 
-        XCTAssertEqual(cellViewModels.count, 42)
-        XCTAssertEqual(cellViewModels.first.map(\.date), .make(year: 2020, month: 12, day: 28))
-        XCTAssertEqual(cellViewModels.last.map(\.date), .make(year: 2021, month: 2, day: 7))
+        #expect(cellViewModels.count == 42)
+        #expect(cellViewModels.first.map(\.date) == .make(year: 2020, month: 12, day: 28))
+        #expect(cellViewModels.last.map(\.date) == .make(year: 2021, month: 2, day: 7))
     }
 
-    func testDateSpan_firstWeekDayGreaterThanMonthStart() throws {
+    @Test func testDateSpan_firstWeekDayGreaterThanMonthStart() throws {
 
         dateProvider.m_calendar.firstWeekday = 2
         dateProvider.notifyCalendarUpdated()
 
         dateSubject.onNext(.make(year: 2021, month: 8, day: 1))
 
-        let cellViewModels = try XCTUnwrap(lastValue)
+        let cellViewModels = try #require(lastValue)
 
-        XCTAssertEqual(cellViewModels.count, 42)
-        XCTAssertEqual(cellViewModels.first.map(\.date), .make(year: 2021, month: 7, day: 26))
-        XCTAssertEqual(cellViewModels.last.map(\.date), .make(year: 2021, month: 9, day: 5))
+        #expect(cellViewModels.count == 42)
+        #expect(cellViewModels.first.map(\.date) == .make(year: 2021, month: 7, day: 26))
+        #expect(cellViewModels.last.map(\.date) == .make(year: 2021, month: 9, day: 5))
     }
 
-    func testWeekDays_firstWeekDaySunday() {
+    @Test func testWeekDays_firstWeekDaySunday() {
 
         var weekDays: [WeekDay]?
 
@@ -244,10 +245,10 @@ class CalendarViewModelTests: XCTestCase {
 
         let expected = ["S", "M", "T", "W", "T", "F", "S"]
 
-        XCTAssertEqual(weekDays?.map(\.title), expected)
+        #expect(weekDays?.map(\.title) == expected)
     }
 
-    func testWeekDays_firstWeekDayMonday() {
+    @Test func testWeekDays_firstWeekDayMonday() {
 
         dateProvider.m_calendar.firstWeekday = 2
         dateProvider.notifyCalendarUpdated()
@@ -260,10 +261,10 @@ class CalendarViewModelTests: XCTestCase {
 
         let expected = ["M", "T", "W", "T", "F", "S", "S"]
 
-        XCTAssertEqual(weekDays?.map(\.title), expected)
+        #expect(weekDays?.map(\.title) == expected)
     }
 
-    func testWeekDays_isHighlighted() {
+    @Test func testWeekDays_isHighlighted() {
 
         var weekDays: [WeekDay]?
 
@@ -271,14 +272,14 @@ class CalendarViewModelTests: XCTestCase {
             .bind { weekDays = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(weekDays?.filter(\.isHighlighted).map(\.title), ["S", "S"])
+        #expect(weekDays?.filter(\.isHighlighted).map(\.title) == ["S", "S"])
 
         settings.highlightedWeekdaysObserver.onNext([1, 2, 5])
         
-        XCTAssertEqual(weekDays?.filter(\.isHighlighted).map(\.title), ["M", "T", "F"])
+        #expect(weekDays?.filter(\.isHighlighted).map(\.title) == ["M", "T", "F"])
     }
 
-    func testWeekNumbers_shouldReturnWeekNumbersIfEnabled() {
+    @Test func testWeekNumbers_shouldReturnWeekNumbersIfEnabled() {
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
 
@@ -290,14 +291,14 @@ class CalendarViewModelTests: XCTestCase {
             .bind { weekNumbers = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertNil(weekNumbers)
+        #expect(weekNumbers == nil)
 
         settings.toggleWeekNumbers.onNext(true)
 
-        XCTAssertNotNil(weekNumbers)
+        #expect(weekNumbers != nil)
     }
 
-    func testWeekNumbers_gregorianCalendar() {
+    @Test func testWeekNumbers_gregorianCalendar() {
 
         var weekNumbers: [Int]?
 
@@ -306,13 +307,13 @@ class CalendarViewModelTests: XCTestCase {
             .disposed(by: disposeBag)
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
-        XCTAssertEqual(weekNumbers, Array(1...6))
+        #expect(weekNumbers == Array(1...6))
 
         dateSubject.onNext(.make(year: 2021, month: 2, day: 1))
-        XCTAssertEqual(weekNumbers, Array(6...11))
+        #expect(weekNumbers == Array(6...11))
     }
 
-    func testWeekNumbers_iso8601Calendar_firstWeekDayMonday() {
+    @Test func testWeekNumbers_iso8601Calendar_firstWeekDayMonday() {
 
         dateProvider.m_calendar = .iso8601
         dateProvider.notifyCalendarUpdated()
@@ -324,13 +325,13 @@ class CalendarViewModelTests: XCTestCase {
             .disposed(by: disposeBag)
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
-        XCTAssertEqual(weekNumbers, Array([53, 1, 2, 3, 4, 5]))
+        #expect(weekNumbers == Array([53, 1, 2, 3, 4, 5]))
 
         dateSubject.onNext(.make(year: 2021, month: 2, day: 1))
-        XCTAssertEqual(weekNumbers, Array(5...10))
+        #expect(weekNumbers == Array(5...10))
     }
 
-    func testHoverDistinctly() throws {
+    @Test func testHoverDistinctly() throws {
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
 
@@ -340,63 +341,63 @@ class CalendarViewModelTests: XCTestCase {
         .forEach { date in
             hoverSubject.onNext(date)
 
-            let hovered = try XCTUnwrap(lastValue?.filter(\.isHovered))
+            let hovered = try #require(lastValue).filter(\.isHovered)
 
-            XCTAssertEqual(hovered.count, 1)
-            XCTAssertEqual(hovered.first.map(\.date), date)
+            #expect(hovered.count == 1)
+            #expect(hovered.first.map(\.date) == date)
         }
     }
 
-    func testUnhover() {
+    @Test func testUnhover() {
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
 
         hoverSubject.onNext(.make(year: 2021, month: 1, day: 1))
-        XCTAssertTrue(hasHoveredDate)
+        #expect(hasHoveredDate)
 
         hoverSubject.onNext(nil)
-        XCTAssertFalse(hasHoveredDate)
+        #expect(hasHoveredDate == false)
     }
 
-    func testUnhoverAfterMonthChange() {
+    @Test func testUnhoverAfterMonthChange() {
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
 
         hoverSubject.onNext(.make(year: 2021, month: 1, day: 1))
-        XCTAssertTrue(hasHoveredDate)
+        #expect(hasHoveredDate)
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 2))
-        XCTAssertTrue(hasHoveredDate)
+        #expect(hasHoveredDate)
 
         dateSubject.onNext(.make(year: 2021, month: 2, day: 2))
-        XCTAssertFalse(hasHoveredDate)
+        #expect(hasHoveredDate == false)
     }
 
-    func testHoverWithOption() {
+    @Test func testHoverWithOption() {
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
 
         hoverSubject.onNext(.make(year: 2021, month: 1, day: 1))
-        XCTAssertTrue(hasHoveredDate)
+        #expect(hasHoveredDate)
 
         settings.toggleDateHoverOption.onNext(true)
-        XCTAssertFalse(hasHoveredDate)
+        #expect(hasHoveredDate == false)
 
         keyboardModifiers.onNext([.command])
-        XCTAssertFalse(hasHoveredDate)
+        #expect(hasHoveredDate == false)
 
         keyboardModifiers.onNext([.option])
-        XCTAssertTrue(hasHoveredDate)
+        #expect(hasHoveredDate)
 
         keyboardModifiers.onNext([.option, .capsLock])
-        XCTAssertTrue(hasHoveredDate)
+        #expect(hasHoveredDate)
     }
 
     var hasHoveredDate: Bool {
         lastValue?.filter(\.isHovered).isEmpty == false
     }
 
-    func testSelectDateDistinctly() throws {
+    @Test func testSelectDateDistinctly() throws {
 
         try (1...5).map {
             Date.make(year: 2021, month: 1, day: $0)
@@ -404,14 +405,14 @@ class CalendarViewModelTests: XCTestCase {
         .forEach { date in
             dateSubject.onNext(date)
 
-            let selected = try XCTUnwrap(lastValue?.filter(\.isSelected))
+            let selected = try #require(lastValue).filter(\.isSelected)
 
-            XCTAssertEqual(selected.count, 1)
-            XCTAssertEqual(selected.first.map(\.date), date)
+            #expect(selected.count == 1)
+            #expect(selected.first.map(\.date) == date)
         }
     }
 
-    func testTodayVisibility() {
+    @Test func testTodayVisibility() {
 
         dateProvider.now = .make(year: 2020, month: 12, day: 31)
 
@@ -424,11 +425,11 @@ class CalendarViewModelTests: XCTestCase {
         for (date, position) in expectedPositions {
             dateSubject.onNext(date)
 
-            XCTAssertEqual(lastValue?.map(\.date).lastIndex(of: dateProvider.now), position, "\(date)")
+            #expect(lastValue?.map(\.date).lastIndex(of: dateProvider.now) == position, "\(date)")
         }
     }
 
-    func testTodayChange() {
+    @Test func testTodayChange() {
 
         let dates: [Date] = [
             .make(year: 2021, month: 1, day: 1),
@@ -440,11 +441,11 @@ class CalendarViewModelTests: XCTestCase {
             dateProvider.now = date
             dateSubject.onNext(date)
 
-            XCTAssertEqual(lastValue?.first(where: \.isToday).map(\.date), date, "\(date)")
+            #expect(lastValue?.first(where: \.isToday).map(\.date) == date, "\(date)")
         }
     }
 
-    func testTimeZoneChange() {
+    @Test func testTimeZoneChange() {
 
         let timeZone = TimeZone(abbreviation: "UTC-1")!
 
@@ -453,16 +454,16 @@ class CalendarViewModelTests: XCTestCase {
 
         dateSubject.onNext(dateProvider.now)
 
-        XCTAssertEqual(lastValue?.firstIndex(where: \.isToday), 5)
+        #expect(lastValue?.firstIndex(where: \.isToday) == 5)
 
         dateProvider.m_calendar.timeZone = .utc
 
         dateSubject.onNext(dateProvider.now)
 
-        XCTAssertEqual(lastValue?.firstIndex(where: \.isToday), 6)
+        #expect(lastValue?.firstIndex(where: \.isToday) == 6)
     }
 
-    func testEventsPerDate() {
+    @Test func testEventsPerDate() {
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
 
@@ -474,7 +475,7 @@ class CalendarViewModelTests: XCTestCase {
         ])
     }
 
-    func testEventsPerDate_withAllDayEventsDisabled_shouldNotShowAllDayEvents() {
+    @Test func testEventsPerDate_withAllDayEventsDisabled_shouldNotShowAllDayEvents() {
 
         settings.toggleAllDayEvents.onNext(false)
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
@@ -487,7 +488,7 @@ class CalendarViewModelTests: XCTestCase {
         ])
     }
 
-    func testEventDotsPerDate_withAllDayEventsDisabled_shouldNotShowAllDayDots() {
+    @Test func testEventDotsPerDate_withAllDayEventsDisabled_shouldNotShowAllDayDots() {
 
         settings.toggleAllDayEvents.onNext(false)
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
@@ -500,7 +501,7 @@ class CalendarViewModelTests: XCTestCase {
         ])
     }
 
-    func testEventsPerDate_withDeclinedEvents() {
+    @Test func testEventsPerDate_withDeclinedEvents() {
 
         settings.toggleDeclinedEvents.onNext(true)
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
@@ -513,7 +514,7 @@ class CalendarViewModelTests: XCTestCase {
         ])
     }
 
-    func testEventsPerDate_withFutureEvents_shouldOnlyShowFutureEventsInCurrentDate() {
+    @Test func testEventsPerDate_withFutureEvents_shouldOnlyShowFutureEventsInCurrentDate() {
 
         settings.futureEventsDaysObserver.onNext(1)
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
@@ -535,7 +536,7 @@ class CalendarViewModelTests: XCTestCase {
         ])
     }
 
-    func testEventsPerDate_withFutureEvents_withDeclinedEvents_shouldOnlyShowFutureEventsInCurrentDate() {
+    @Test func testEventsPerDate_withFutureEvents_withDeclinedEvents_shouldOnlyShowFutureEventsInCurrentDate() {
 
         settings.toggleDeclinedEvents.onNext(true)
         settings.futureEventsDaysObserver.onNext(1)
@@ -558,7 +559,7 @@ class CalendarViewModelTests: XCTestCase {
         ])
     }
 
-    func testFutureEventsInSelectedDate_withSelectedDateToday() {
+    @Test func testFutureEventsInSelectedDate_withSelectedDateToday() {
 
         var events: [EventModel]?
 
@@ -573,20 +574,20 @@ class CalendarViewModelTests: XCTestCase {
         dateProvider.now = .make(year: 2021, month: 1, day: 2)
         dateSubject.onNext(.make(year: 2021, month: 1, day: 2))
 
-        XCTAssertEqual(events?.map(\.title), ["Event 1", "Event 2", "Event 3", "Event 4", "Event 5"])
+        #expect(events?.map(\.title) == ["Event 1", "Event 2", "Event 3", "Event 4", "Event 5"])
 
         dateProvider.now = .make(year: 2021, month: 1, day: 3)
         dateSubject.onNext(.make(year: 2021, month: 1, day: 3))
 
-        XCTAssertEqual(events?.map(\.title), ["Event 1", "Event 4", "Event 5", "Event 6"])
+        #expect(events?.map(\.title) == ["Event 1", "Event 4", "Event 5", "Event 6"])
 
         dateProvider.now = .make(year: 2021, month: 1, day: 4)
         dateSubject.onNext(.make(year: 2021, month: 1, day: 4))
 
-        XCTAssertEqual(events?.map(\.title), ["Event 6", "Completed"])
+        #expect(events?.map(\.title) == ["Event 6", "Completed"])
     }
 
-    func testFutureEventsInSelectedDate_withSelectedDateNotToday() {
+    @Test func testFutureEventsInSelectedDate_withSelectedDateNotToday() {
 
         var events: [EventModel]?
 
@@ -600,18 +601,18 @@ class CalendarViewModelTests: XCTestCase {
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 2))
 
-        XCTAssertEqual(events?.map(\.title), ["Event 1", "Event 2", "Event 3"])
+        #expect(events?.map(\.title) == ["Event 1", "Event 2", "Event 3"])
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 3))
 
-        XCTAssertEqual(events?.map(\.title), ["Event 1", "Event 4", "Event 5"])
+        #expect(events?.map(\.title) == ["Event 1", "Event 4", "Event 5"])
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 4))
 
-        XCTAssertEqual(events?.map(\.title), ["Event 6"])
+        #expect(events?.map(\.title) == ["Event 6"])
     }
 
-    func testEventDotsPerDate() {
+    @Test func testEventDotsPerDate() {
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
 
@@ -623,7 +624,7 @@ class CalendarViewModelTests: XCTestCase {
         ])
     }
 
-    func testEventDotsPerDate_shouldNotShowFutureEvents() {
+    @Test func testEventDotsPerDate_shouldNotShowFutureEvents() {
 
         settings.futureEventsDaysObserver.onNext(5)
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
@@ -636,7 +637,7 @@ class CalendarViewModelTests: XCTestCase {
         ])
     }
 
-    func testEventDotsPerDate_withDeclinedEvents() {
+    @Test func testEventDotsPerDate_withDeclinedEvents() {
 
         settings.toggleDeclinedEvents.onNext(true)
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
@@ -649,7 +650,7 @@ class CalendarViewModelTests: XCTestCase {
         ])
     }
 
-    func testEventDotsPerDate_withPendingReminder() {
+    @Test func testEventDotsPerDate_withPendingReminder() {
 
         calendarService.m_events.append(
             .make(
@@ -670,7 +671,7 @@ class CalendarViewModelTests: XCTestCase {
         ])
     }
 
-    func testEventDotsPerDate_withCompletedReminder() {
+    @Test func testEventDotsPerDate_withCompletedReminder() {
 
         calendarService.m_events.append(
             .make(
@@ -691,7 +692,7 @@ class CalendarViewModelTests: XCTestCase {
         ])
     }
 
-    func testEventDotsPerDate_withHiddenItems() {
+    @Test func testEventDotsPerDate_withHiddenItems() {
 
         calendarService.m_events = [
             .make(
@@ -742,7 +743,7 @@ class CalendarViewModelTests: XCTestCase {
         ])
     }
 
-    func testEvents_withOverdueReminder_withSelectedDateToday() {
+    @Test func testEvents_withOverdueReminder_withSelectedDateToday() {
 
         calendarService.m_events.append(contentsOf: [
             .make(
@@ -768,10 +769,10 @@ class CalendarViewModelTests: XCTestCase {
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
 
-        XCTAssertEqual(events?.map(\.title), ["Overdue 1", "Overdue 2" ,"Event 1"])
+        #expect(events?.map(\.title) == ["Overdue 1", "Overdue 2" ,"Event 1"])
     }
 
-    func testEvents_withOverdueReminder_withSelectedDateNotToday() {
+    @Test func testEvents_withOverdueReminder_withSelectedDateNotToday() {
 
         dateProvider.now = .make(year: 2021, month: 1, day: 2)
 
@@ -799,7 +800,7 @@ class CalendarViewModelTests: XCTestCase {
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
 
-        XCTAssertEqual(events?.map(\.title), ["Event 1"])
+        #expect(events?.map(\.title) == ["Event 1"])
     }
 
     /// Ensure overdues are not affected when future events are enabled.
@@ -807,7 +808,7 @@ class CalendarViewModelTests: XCTestCase {
     /// This used to be a problem, because the same future event could be shared by multiple cells.
     /// It should be fine now, since future events are only fetched for the current date.
     /// I kept the test because it doesn't hurt to make sure it still works properly.
-    func testEvents_withOverdueReminder_withSelectedDateToday_withFutureEvents() {
+    @Test func testEvents_withOverdueReminder_withSelectedDateToday_withFutureEvents() {
 
         settings.futureEventsDaysObserver.onNext(2)
 
@@ -835,10 +836,10 @@ class CalendarViewModelTests: XCTestCase {
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
 
-        XCTAssertEqual(events?.map(\.title), ["Overdue 1", "Overdue 2" ,"Event 1", "Event 2", "Event 3", "Event 4"])
+        #expect(events?.map(\.title) == ["Overdue 1", "Overdue 2" ,"Event 1", "Event 2", "Event 3", "Event 4"])
     }
 
-    func testEventDotsPerDate_withSearch() {
+    @Test func testEventDotsPerDate_withSearch() {
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
 
@@ -864,7 +865,7 @@ class CalendarViewModelTests: XCTestCase {
         ])
     }
 
-    func testEventDotsPerDate_withNeutralOption() {
+    @Test func testEventDotsPerDate_withNeutralOption() {
 
         settings.eventDotsStyleObserver.onNext(.single_neutral)
 
@@ -879,7 +880,7 @@ class CalendarViewModelTests: XCTestCase {
         ])
     }
 
-    func testEventDotsPerDate_withHighlightedOption() {
+    @Test func testEventDotsPerDate_withHighlightedOption() {
 
         settings.eventDotsStyleObserver.onNext(.single_highlighted)
 
@@ -894,7 +895,7 @@ class CalendarViewModelTests: XCTestCase {
         ])
     }
 
-    func testServiceProviderEventsDateRange() {
+    @Test func testServiceProviderEventsDateRange() {
 
         var ranges: [[Date]] = []
 
@@ -908,13 +909,13 @@ class CalendarViewModelTests: XCTestCase {
         dateSubject.onNext(.make(year: 2021, month: 1, day: 2))
         dateSubject.onNext(.make(year: 2021, month: 2, day: 1))
 
-        XCTAssertEqual(ranges, [
+        #expect(ranges == [
             [.make(year: 2020, month: 12, day: 27), .make(year: 2021, month: 2, day: 6, at: .end)], // calendar
             [.make(year: 2021, month: 1, day: 31), .make(year: 2021, month: 3, day: 13, at: .end)] // month change
         ])
     }
 
-    func testServiceProviderEventsCalendars() {
+    @Test func testServiceProviderEventsCalendars() {
 
         var calendars: [[String]] = []
 
@@ -928,7 +929,7 @@ class CalendarViewModelTests: XCTestCase {
         dateSubject.onNext(.make(year: 2021, month: 2, day: 1))
         calendarsSubject.onNext(["1", "3"])
 
-        XCTAssertEqual(calendars, [
+        #expect(calendars == [
             ["1", "2", "3"], // calendar
             ["1", "2", "3"], // month change
             ["1", "3"] // calendar
@@ -939,9 +940,7 @@ class CalendarViewModelTests: XCTestCase {
 
     private func assertExpectedEvents<T, U: Collection<T> & Equatable>(
         _ pick: (CalendarCellViewModel) -> U,
-        _ expectedItems: [(Date, U)],
-        file: StaticString = #filePath,
-        line: UInt = #line
+        _ expectedItems: [(Date, U)]
     ) {
         func named<V>(_ value: V) -> String {
             if let color = value as? NSColor {
@@ -953,10 +952,10 @@ class CalendarViewModelTests: XCTestCase {
 
         for (date, expected) in expectedItems {
             guard let actual = lastValue?.first(where: { $0.date == date }).map(pick) else {
-                XCTFail("\(date) not found")
+                Issue.record("\(date) not found")
                 return
             }
-            XCTAssertEqual(actual.map(named), expected.map(named), "\(date)", file: file, line: line)
+            #expect(actual.map(named) == expected.map(named), "\(date)")
         }
     }
 }

@@ -5,14 +5,15 @@
 //  Created by Paker on 28/03/2026.
 //
 
-import XCTest
+import Foundation
+import Testing
 @testable import Calendr
 
-final class DateComponentsTests: XCTestCase {
+final class DateComponentsTests {
 
     let dateProvider = MockDateProvider()
 
-    func testDateComponents_fromGregorianCalendar() {
+    @Test func testDateComponents_fromGregorianCalendar() {
         let date = ISO8601DateFormatter().date(from: "2024-03-10T00:30:00Z")!
         let timeZone = TimeZone(secondsFromGMT: 3 * 3600)!
 
@@ -20,15 +21,15 @@ final class DateComponentsTests: XCTestCase {
 
         let components = date.dateComponents(using: dateProvider)
 
-        XCTAssertEqual(components.calendar?.identifier, .gregorian)
-        XCTAssertEqual(components.hour, 3)
-        XCTAssertEqual(components.minute, 30)
-        XCTAssertEqual(components.day, 10)
-        XCTAssertEqual(components.month, 3)
-        XCTAssertEqual(components.year, 2024)
+        #expect(components.calendar?.identifier == .gregorian)
+        #expect(components.hour == 3)
+        #expect(components.minute == 30)
+        #expect(components.day == 10)
+        #expect(components.month == 3)
+        #expect(components.year == 2024)
     }
 
-    func testDateComponents_fromNonGregorianCalendar() {
+    @Test func testDateComponents_fromNonGregorianCalendar() {
         let date = ISO8601DateFormatter().date(from: "2024-03-10T00:30:00Z")!
         let timeZone = TimeZone(secondsFromGMT: 3 * 3600)!
 
@@ -36,15 +37,15 @@ final class DateComponentsTests: XCTestCase {
 
         let components = date.dateComponents(using: dateProvider)
 
-        XCTAssertEqual(components.calendar?.identifier, .islamicUmmAlQura)
-        XCTAssertEqual(components.hour, 3)
-        XCTAssertEqual(components.minute, 30)
-        XCTAssertEqual(components.day, 29)
-        XCTAssertEqual(components.month, 8)
-        XCTAssertEqual(components.year, 1445)
+        #expect(components.calendar?.identifier == .islamicUmmAlQura)
+        #expect(components.hour == 3)
+        #expect(components.minute == 30)
+        #expect(components.day == 29)
+        #expect(components.month == 8)
+        #expect(components.year == 1445)
     }
 
-    func testDateComponents_fromNonGregorianCalendar_toGregorianCalendar() {
+    @Test func testDateComponents_fromNonGregorianCalendar_toGregorianCalendar() {
         let date = ISO8601DateFormatter().date(from: "2024-03-10T00:30:00Z")!
         let timeZone = TimeZone(secondsFromGMT: 3 * 3600)!
 
@@ -52,11 +53,11 @@ final class DateComponentsTests: XCTestCase {
 
         let components = date.dateComponents(using: dateProvider, calendar: .gregorian)
 
-        XCTAssertEqual(components.calendar?.identifier, .gregorian)
-        XCTAssertEqual(components.hour, 3)
-        XCTAssertEqual(components.minute, 30)
-        XCTAssertEqual(components.day, 10)
-        XCTAssertEqual(components.month, 3)
-        XCTAssertEqual(components.year, 2024)
+        #expect(components.calendar?.identifier == .gregorian)
+        #expect(components.hour == 3)
+        #expect(components.minute == 30)
+        #expect(components.day == 10)
+        #expect(components.month == 3)
+        #expect(components.year == 2024)
     }
 }

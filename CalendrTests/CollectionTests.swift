@@ -5,37 +5,38 @@
 //  Created by Paker on 03/06/2026.
 //
 
-import XCTest
+import Foundation
+import Testing
 @testable import Calendr
 
-class CollectionTests: XCTestCase {
+class CollectionTests {
 
-    func testSafeSubscriptOperator() {
+    @Test func testSafeSubscriptOperator() {
 
-        XCTAssertNil([][safe: 0])
-        XCTAssertNil(["a"][safe: 1])
-        XCTAssertNil(["a"][safe: -1])
+        #expect([][safe: 0] == nil)
+        #expect(["a"][safe: 1] == nil)
+        #expect(["a"][safe: -1] == nil)
     }
 
-    func testClampedSubscriptOperator() {
+    @Test func testClampedSubscriptOperator() {
 
-        XCTAssertNil([][clamped: -1])
-        XCTAssertNil([][clamped: 0])
-        XCTAssertNil([][clamped: 1])
+        #expect([][clamped: -1] == nil)
+        #expect([][clamped: 0] == nil)
+        #expect([][clamped: 1] == nil)
 
-        XCTAssertEqual(["a"][clamped: -1], "a")
-        XCTAssertEqual(["a"][clamped: 0], "a")
-        XCTAssertEqual(["a"][clamped: 1], "a")
+        #expect(["a"][clamped: -1] == "a")
+        #expect(["a"][clamped: 0] == "a")
+        #expect(["a"][clamped: 1] == "a")
 
-        XCTAssertEqual(["a", "b"][clamped: -1], "a")
-        XCTAssertEqual(["a", "b"][clamped: 0], "a")
-        XCTAssertEqual(["a", "b"][clamped: 1], "b")
-        XCTAssertEqual(["a", "b"][clamped: 2], "b")
+        #expect(["a", "b"][clamped: -1] == "a")
+        #expect(["a", "b"][clamped: 0] == "a")
+        #expect(["a", "b"][clamped: 1] == "b")
+        #expect(["a", "b"][clamped: 2] == "b")
 
-        XCTAssertEqual(["a", "b", "c"][clamped: -1], "a")
-        XCTAssertEqual(["a", "b", "c"][clamped: 0], "a")
-        XCTAssertEqual(["a", "b", "c"][clamped: 1], "b")
-        XCTAssertEqual(["a", "b", "c"][clamped: 2], "c")
-        XCTAssertEqual(["a", "b", "c"][clamped: 3], "c")
+        #expect(["a", "b", "c"][clamped: -1] == "a")
+        #expect(["a", "b", "c"][clamped: 0] == "a")
+        #expect(["a", "b", "c"][clamped: 1] == "b")
+        #expect(["a", "b", "c"][clamped: 2] == "c")
+        #expect(["a", "b", "c"][clamped: 3] == "c")
     }
 }

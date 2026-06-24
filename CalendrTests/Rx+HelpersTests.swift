@@ -5,15 +5,16 @@
 //  Created by Paker on 07/06/2026.
 //
 
-import XCTest
+import Foundation
 import RxSwift
+import Testing
 @testable import Calendr
 
-class RxHelpersTests: XCTestCase {
+class RxHelpersTests {
 
     let scheduler = HistoricalScheduler()
 
-    func testBatch_shouldNotProduceEmptyResults() {
+    @Test func testBatch_shouldNotProduceEmptyResults() async {
 
         let batchExpectation = expectation(description: "Batch")
 
@@ -22,14 +23,14 @@ class RxHelpersTests: XCTestCase {
         var result: [Int]?
 
         _ = subject.batch(timeSpan: .milliseconds(1), scheduler: scheduler).bind {
-            XCTAssertNotNil($0)
+            #expect($0.isEmpty == false)
             result = $0
             batchExpectation.fulfill()
         }
 
         scheduler.advance(.milliseconds(1))
 
-        XCTAssertNil(result)
+        #expect(result == nil)
 
         subject.onNext(1)
         subject.onNext(2)
@@ -37,14 +38,14 @@ class RxHelpersTests: XCTestCase {
 
         scheduler.advance(.milliseconds(1))
 
-        XCTAssertEqual(result, [1,2,3])
+        #expect(result == [1,2,3])
 
         result = nil
 
         scheduler.advance(.milliseconds(1))
 
-        XCTAssertNil(result)
+        #expect(result == nil)
 
-        wait(for: [batchExpectation], timeout: 0.1)
+        await fulfillment(of: [batchExpectation])
     }
 }

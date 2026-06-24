@@ -5,11 +5,12 @@
 //  Created by Paker on 20/06/2026.
 //
 
-import XCTest
+import Foundation
 import RxSwift
+import Testing
 @testable import Calendr
 
-class MainViewModelDateNavigationTests: XCTestCase {
+class MainViewModelDateNavigationTests {
 
     let disposeBag = DisposeBag()
 
@@ -23,7 +24,7 @@ class MainViewModelDateNavigationTests: XCTestCase {
     var viewModel: MainViewModel!
     var values = [String]()
 
-    override func setUp() {
+    init() {
         dateProvider.now = .make(year: 2021, month: 1, day: 1)
 
         viewModel = MainViewModel(
@@ -48,73 +49,73 @@ class MainViewModelDateNavigationTests: XCTestCase {
             .disposed(by: disposeBag)
     }
 
-    func testInitial() {
+    @Test func testInitial() {
         dateProvider.now = .make(year: 2025, month: 1, day: 1)
         viewModel.resetObserver.onNext(())
 
-        XCTAssertEqual(values.last, "2025-01-01")
+        #expect(values.last == "2025-01-01")
     }
 
-    func testSelect() {
+    @Test func testSelect() {
         viewModel.selectDateObserver.onNext(.make(year: 2025, month: 1, day: 1))
 
-        XCTAssertEqual(values.last, "2025-01-01")
+        #expect(values.last == "2025-01-01")
     }
 
-    func testReset() {
+    @Test func testReset() {
         viewModel.selectDateObserver.onNext(.make(year: 2025, month: 1, day: 1))
         viewModel.resetObserver.onNext(())
 
-        XCTAssertEqual(values, ["2021-01-01", "2025-01-01", "2021-01-01"])
+        #expect(values == ["2021-01-01", "2025-01-01", "2021-01-01"])
     }
 
-    func testDistinct() {
+    @Test func testDistinct() {
         viewModel.navigationObserver.onNext(.arrow(.right))
         dateProvider.now = .make(year: 2021, month: 1, day: 2)
         viewModel.resetObserver.onNext(())
         viewModel.selectDateObserver.onNext(.make(year: 2021, month: 1, day: 2))
         viewModel.resetObserver.onNext(())
 
-        XCTAssertEqual(values, ["2021-01-01", "2021-01-02"])
+        #expect(values == ["2021-01-01", "2021-01-02"])
     }
 
-    func testPrevDay() {
+    @Test func testPrevDay() {
         viewModel.navigationObserver.onNext(.arrow(.left))
 
-        XCTAssertEqual(values.last, "2020-12-31")
+        #expect(values.last == "2020-12-31")
     }
 
-    func testNextDay() {
+    @Test func testNextDay() {
         viewModel.navigationObserver.onNext(.arrow(.right))
 
-        XCTAssertEqual(values.last, "2021-01-02")
+        #expect(values.last == "2021-01-02")
     }
 
-    func testPrevWeek() {
+    @Test func testPrevWeek() {
         viewModel.navigationObserver.onNext(.arrow(.up))
 
-        XCTAssertEqual(values.last, "2020-12-25")
+        #expect(values.last == "2020-12-25")
     }
 
-    func testNextWeek() {
+    @Test func testNextWeek() {
         viewModel.navigationObserver.onNext(.arrow(.down))
 
-        XCTAssertEqual(values.last, "2021-01-08")
+        #expect(values.last == "2021-01-08")
     }
 
-    func testPrevMonth() {
+    @Test func testPrevMonth() {
         viewModel.prevMonthObserver.onNext(())
 
-        XCTAssertEqual(values.last, "2020-12-01")
+        #expect(values.last == "2020-12-01")
     }
 
-    func testNextMonth() {
+    @Test func testNextMonth() {
         viewModel.nextMonthObserver.onNext(())
 
-        XCTAssertEqual(values.last, "2021-02-01")
+        #expect(values.last == "2021-02-01")
     }
 
-    func testSequence() {
+    @Test func testSequence() {
         let steps: [() -> Void] = [
             { self.viewModel.navigationObserver.onNext(.arrow(.left)) },
             { self.viewModel.navigationObserver.onNext(.arrow(.right)) },
@@ -128,7 +129,7 @@ class MainViewModelDateNavigationTests: XCTestCase {
             step()
         }
 
-        XCTAssertEqual(values, [
+        #expect(values == [
             "2021-01-01", // initial
             "2020-12-31", // prevDay
             "2021-01-01", // nextDay

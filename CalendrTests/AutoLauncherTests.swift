@@ -5,10 +5,11 @@
 //  Created by Paker on 31/05/2026.
 //
 
-import XCTest
+import Foundation
+import Testing
 @testable import Calendr
 
-class AutoLauncherTests: XCTestCase {
+class AutoLauncherTests {
 
     let loginItem = MockLaunchService()
     let launchAgent = MockLaunchService()
@@ -20,46 +21,46 @@ class AutoLauncherTests: XCTestCase {
 
     let localStorage = MockLocalStorageProvider()
 
-    func testInit_withLoginItemDisabled() {
+    @Test func testInit_withLoginItemDisabled() {
 
         loginItem.spyRegister = {
-            XCTExpectFailure()
+            Issue.record()
         }
 
         loginItem.spyUnregister = {
-            XCTExpectFailure()
+            Issue.record()
         }
 
         let autoLauncher = AutoLauncher(launchServices: launchServices, localStorage: localStorage)
 
-        XCTAssertFalse(autoLauncher.isLoginItemEnabled)
+        #expect(autoLauncher.isLoginItemEnabled == false)
     }
 
-    func testInit_withLoginItemEnabled() {
+    @Test func testInit_withLoginItemEnabled() {
 
         loginItem.spyRegister = {
-            XCTExpectFailure()
+            Issue.record()
         }
 
         loginItem.spyUnregister = {
-            XCTExpectFailure()
+            Issue.record()
         }
 
         loginItem.isEnabled = true
 
         let autoLauncher = AutoLauncher(launchServices: launchServices, localStorage: localStorage)
 
-        XCTAssertTrue(autoLauncher.isLoginItemEnabled)
+        #expect(autoLauncher.isLoginItemEnabled)
     }
 
-    func testInit_withLaunchAgentDisabled_withStorageDisabled() {
+    @Test func testInit_withLaunchAgentDisabled_withStorageDisabled() {
 
         launchAgent.spyRegister = {
-            XCTExpectFailure()
+            Issue.record()
         }
 
         launchAgent.spyUnregister = {
-            XCTExpectFailure()
+            Issue.record()
         }
 
         launchAgent.isEnabled = false
@@ -67,18 +68,18 @@ class AutoLauncherTests: XCTestCase {
 
         let autoLauncher = AutoLauncher(launchServices: launchServices, localStorage: localStorage)
 
-        XCTAssertFalse(autoLauncher.isLaunchAgentEnabled)
-        XCTAssertFalse(localStorage.launchAgentEnabled)
+        #expect(autoLauncher.isLaunchAgentEnabled == false)
+        #expect(localStorage.launchAgentEnabled == false)
     }
 
-    func testInit_withLaunchAgentEnabled_withStorageEnabled() {
+    @Test func testInit_withLaunchAgentEnabled_withStorageEnabled() {
 
         launchAgent.spyRegister = {
-            XCTExpectFailure()
+            Issue.record()
         }
 
         launchAgent.spyUnregister = {
-            XCTExpectFailure()
+            Issue.record()
         }
 
         launchAgent.isEnabled = true
@@ -86,11 +87,11 @@ class AutoLauncherTests: XCTestCase {
 
         let autoLauncher = AutoLauncher(launchServices: launchServices, localStorage: localStorage)
 
-        XCTAssertTrue(autoLauncher.isLaunchAgentEnabled)
-        XCTAssertTrue(localStorage.launchAgentEnabled)
+        #expect(autoLauncher.isLaunchAgentEnabled)
+        #expect(localStorage.launchAgentEnabled)
     }
 
-    func testInit_withLaunchAgentDisabled_withStorageEnabled_shouldRegister() {
+    @Test func testInit_withLaunchAgentDisabled_withStorageEnabled_shouldRegister() async {
 
         let registerExpectation = expectation(description: "Register")
 
@@ -100,7 +101,7 @@ class AutoLauncherTests: XCTestCase {
         }
 
         launchAgent.spyUnregister = {
-            XCTExpectFailure()
+            Issue.record()
         }
 
         launchAgent.isEnabled = false
@@ -108,13 +109,13 @@ class AutoLauncherTests: XCTestCase {
 
         let autoLauncher = AutoLauncher(launchServices: launchServices, localStorage: localStorage)
 
-        XCTAssertTrue(autoLauncher.isLaunchAgentEnabled)
-        XCTAssertTrue(localStorage.launchAgentEnabled)
+        #expect(autoLauncher.isLaunchAgentEnabled)
+        #expect(localStorage.launchAgentEnabled)
 
-        wait(for: [registerExpectation], timeout: 0.1)
+        await fulfillment(of: [registerExpectation])
     }
 
-    func testInit_withLaunchAgentDisabled_withStorageEnabled_withRegisterFailure_shouldNotRollbackStorage() {
+    @Test func testInit_withLaunchAgentDisabled_withStorageEnabled_withRegisterFailure_shouldNotRollbackStorage() async {
 
         let registerExpectation = expectation(description: "Register")
 
@@ -124,7 +125,7 @@ class AutoLauncherTests: XCTestCase {
         }
 
         launchAgent.spyUnregister = {
-            XCTExpectFailure()
+            Issue.record()
         }
 
         launchAgent.isEnabled = false
@@ -132,18 +133,18 @@ class AutoLauncherTests: XCTestCase {
 
         let autoLauncher = AutoLauncher(launchServices: launchServices, localStorage: localStorage)
 
-        XCTAssertTrue(localStorage.launchAgentEnabled)
-        XCTAssertFalse(autoLauncher.isLaunchAgentEnabled)
+        #expect(localStorage.launchAgentEnabled)
+        #expect(autoLauncher.isLaunchAgentEnabled == false)
 
-        wait(for: [registerExpectation], timeout: 0.1)
+        await fulfillment(of: [registerExpectation])
     }
 
-    func testInit_withLaunchAgentEnabled_withStorageDisabled_shouldUnregister() {
+    @Test func testInit_withLaunchAgentEnabled_withStorageDisabled_shouldUnregister() async {
 
         let unregisterExpectation = expectation(description: "Unregister")
 
         launchAgent.spyRegister = {
-            XCTExpectFailure()
+            Issue.record()
         }
 
         launchAgent.spyUnregister = { [launchAgent] in
@@ -156,18 +157,18 @@ class AutoLauncherTests: XCTestCase {
 
         let autoLauncher = AutoLauncher(launchServices: launchServices, localStorage: localStorage)
 
-        XCTAssertFalse(localStorage.launchAgentEnabled)
-        XCTAssertFalse(autoLauncher.isLaunchAgentEnabled)
+        #expect(localStorage.launchAgentEnabled == false)
+        #expect(autoLauncher.isLaunchAgentEnabled == false)
 
-        wait(for: [unregisterExpectation], timeout: 0.1)
+        await fulfillment(of: [unregisterExpectation])
     }
 
-    func testInit_withLaunchAgentEnabled_withStorageDisabled_withUnregisterFailure_shouldUpdateLocalStorage() {
+    @Test func testInit_withLaunchAgentEnabled_withStorageDisabled_withUnregisterFailure_shouldUpdateLocalStorage() async {
 
         let unregisterExpectation = expectation(description: "Unregister")
 
         launchAgent.spyRegister = {
-            XCTExpectFailure()
+            Issue.record()
         }
 
         launchAgent.spyUnregister = {
@@ -180,13 +181,13 @@ class AutoLauncherTests: XCTestCase {
 
         let autoLauncher = AutoLauncher(launchServices: launchServices, localStorage: localStorage)
 
-        XCTAssertTrue(localStorage.launchAgentEnabled)
-        XCTAssertTrue(autoLauncher.isLaunchAgentEnabled)
+        #expect(localStorage.launchAgentEnabled)
+        #expect(autoLauncher.isLaunchAgentEnabled)
 
-        wait(for: [unregisterExpectation], timeout: 0.1)
+        await fulfillment(of: [unregisterExpectation])
     }
 
-    func testLoginItemToggleOn() {
+    @Test func testLoginItemToggleOn() async {
 
         let registerExpectation = expectation(description: "Register")
 
@@ -196,23 +197,23 @@ class AutoLauncherTests: XCTestCase {
         }
 
         loginItem.spyUnregister = {
-            XCTExpectFailure()
+            Issue.record()
         }
 
         loginItem.isEnabled = false
 
         let autoLauncher = AutoLauncher(launchServices: launchServices, localStorage: localStorage)
 
-        XCTAssertFalse(autoLauncher.isLoginItemEnabled)
+        #expect(autoLauncher.isLoginItemEnabled == false)
 
         autoLauncher.isLoginItemEnabled.toggle()
 
-        XCTAssertTrue(autoLauncher.isLoginItemEnabled)
+        #expect(autoLauncher.isLoginItemEnabled)
 
-        wait(for: [registerExpectation], timeout: 0.1)
+        await fulfillment(of: [registerExpectation])
     }
 
-    func testLoginItemToggleOn_withRegisterFailure() {
+    @Test func testLoginItemToggleOn_withRegisterFailure() async {
 
         let registerExpectation = expectation(description: "Register")
 
@@ -222,28 +223,28 @@ class AutoLauncherTests: XCTestCase {
         }
 
         loginItem.spyUnregister = {
-            XCTExpectFailure()
+            Issue.record()
         }
 
         loginItem.isEnabled = false
 
         let autoLauncher = AutoLauncher(launchServices: launchServices, localStorage: localStorage)
 
-        XCTAssertFalse(autoLauncher.isLoginItemEnabled)
+        #expect(autoLauncher.isLoginItemEnabled == false)
 
         autoLauncher.isLoginItemEnabled.toggle()
 
-        XCTAssertFalse(autoLauncher.isLoginItemEnabled)
+        #expect(autoLauncher.isLoginItemEnabled == false)
 
-        wait(for: [registerExpectation], timeout: 0.1)
+        await fulfillment(of: [registerExpectation])
     }
 
-    func testLoginItemToggleOff() {
+    @Test func testLoginItemToggleOff() async {
 
         let unregisterExpectation = expectation(description: "Unregister")
 
         loginItem.spyRegister = {
-            XCTExpectFailure()
+            Issue.record()
         }
 
         loginItem.spyUnregister = { [loginItem] in
@@ -255,21 +256,21 @@ class AutoLauncherTests: XCTestCase {
 
         let autoLauncher = AutoLauncher(launchServices: launchServices, localStorage: localStorage)
 
-        XCTAssertTrue(autoLauncher.isLoginItemEnabled)
+        #expect(autoLauncher.isLoginItemEnabled)
 
         autoLauncher.isLoginItemEnabled.toggle()
 
-        XCTAssertFalse(autoLauncher.isLoginItemEnabled)
+        #expect(autoLauncher.isLoginItemEnabled == false)
 
-        wait(for: [unregisterExpectation], timeout: 0.1)
+        await fulfillment(of: [unregisterExpectation])
     }
 
-    func testLoginItemToggleOff_withFailure() {
+    @Test func testLoginItemToggleOff_withFailure() async {
 
         let unregisterExpectation = expectation(description: "Unregister")
 
         loginItem.spyRegister = {
-            XCTExpectFailure()
+            Issue.record()
         }
 
         loginItem.spyUnregister = {
@@ -281,16 +282,16 @@ class AutoLauncherTests: XCTestCase {
 
         let autoLauncher = AutoLauncher(launchServices: launchServices, localStorage: localStorage)
 
-        XCTAssertTrue(autoLauncher.isLoginItemEnabled)
+        #expect(autoLauncher.isLoginItemEnabled)
 
         autoLauncher.isLoginItemEnabled.toggle()
 
-        XCTAssertTrue(autoLauncher.isLoginItemEnabled)
+        #expect(autoLauncher.isLoginItemEnabled)
 
-        wait(for: [unregisterExpectation], timeout: 0.1)
+        await fulfillment(of: [unregisterExpectation])
     }
 
-    func testLaunchAgentToggleOn_withStorageDisabled() {
+    @Test func testLaunchAgentToggleOn_withStorageDisabled() async {
 
         let registerExpectation = expectation(description: "Register")
 
@@ -300,7 +301,7 @@ class AutoLauncherTests: XCTestCase {
         }
 
         launchAgent.spyUnregister = {
-            XCTExpectFailure()
+            Issue.record()
         }
 
         launchAgent.isEnabled = false
@@ -308,18 +309,18 @@ class AutoLauncherTests: XCTestCase {
 
         let autoLauncher = AutoLauncher(launchServices: launchServices, localStorage: localStorage)
 
-        XCTAssertFalse(autoLauncher.isLaunchAgentEnabled)
-        XCTAssertFalse(localStorage.launchAgentEnabled)
+        #expect(autoLauncher.isLaunchAgentEnabled == false)
+        #expect(localStorage.launchAgentEnabled == false)
 
         autoLauncher.isLaunchAgentEnabled.toggle()
 
-        XCTAssertTrue(autoLauncher.isLaunchAgentEnabled)
-        XCTAssertTrue(localStorage.launchAgentEnabled)
+        #expect(autoLauncher.isLaunchAgentEnabled)
+        #expect(localStorage.launchAgentEnabled)
 
-        wait(for: [registerExpectation], timeout: 0.1)
+        await fulfillment(of: [registerExpectation])
     }
 
-    func testLaunchAgentToggleOn_withStorageDisabled_withRegisterFailure() {
+    @Test func testLaunchAgentToggleOn_withStorageDisabled_withRegisterFailure() async {
 
         let registerExpectation = expectation(description: "Register")
 
@@ -329,7 +330,7 @@ class AutoLauncherTests: XCTestCase {
         }
 
         launchAgent.spyUnregister = {
-            XCTExpectFailure()
+            Issue.record()
         }
 
         launchAgent.isEnabled = false
@@ -337,23 +338,23 @@ class AutoLauncherTests: XCTestCase {
 
         let autoLauncher = AutoLauncher(launchServices: launchServices, localStorage: localStorage)
 
-        XCTAssertFalse(autoLauncher.isLaunchAgentEnabled)
-        XCTAssertFalse(localStorage.launchAgentEnabled)
+        #expect(autoLauncher.isLaunchAgentEnabled == false)
+        #expect(localStorage.launchAgentEnabled == false)
 
         autoLauncher.isLaunchAgentEnabled.toggle()
 
-        XCTAssertFalse(autoLauncher.isLaunchAgentEnabled)
-        XCTAssertFalse(localStorage.launchAgentEnabled)
+        #expect(autoLauncher.isLaunchAgentEnabled == false)
+        #expect(localStorage.launchAgentEnabled == false)
 
-        wait(for: [registerExpectation], timeout: 0.1)
+        await fulfillment(of: [registerExpectation])
     }
 
-    func testLaunchAgentToggleOff_withStorageEnabled() {
+    @Test func testLaunchAgentToggleOff_withStorageEnabled() async {
 
         let unregisterExpectation = expectation(description: "Unregister")
 
         launchAgent.spyRegister = {
-            XCTExpectFailure()
+            Issue.record()
         }
 
         launchAgent.spyUnregister = { [launchAgent] in
@@ -366,23 +367,23 @@ class AutoLauncherTests: XCTestCase {
 
         let autoLauncher = AutoLauncher(launchServices: launchServices, localStorage: localStorage)
 
-        XCTAssertTrue(autoLauncher.isLaunchAgentEnabled)
-        XCTAssertTrue(localStorage.launchAgentEnabled)
+        #expect(autoLauncher.isLaunchAgentEnabled)
+        #expect(localStorage.launchAgentEnabled)
 
         autoLauncher.isLaunchAgentEnabled.toggle()
 
-        XCTAssertFalse(autoLauncher.isLaunchAgentEnabled)
-        XCTAssertFalse(localStorage.launchAgentEnabled)
+        #expect(autoLauncher.isLaunchAgentEnabled == false)
+        #expect(localStorage.launchAgentEnabled == false)
 
-        wait(for: [unregisterExpectation], timeout: 0.1)
+        await fulfillment(of: [unregisterExpectation])
     }
 
-    func testLaunchAgentToggleOff_withStorageEnabled_withUnregisterFailure() {
+    @Test func testLaunchAgentToggleOff_withStorageEnabled_withUnregisterFailure() async {
 
         let unregisterExpectation = expectation(description: "Unregister")
 
         launchAgent.spyRegister = {
-            XCTExpectFailure()
+            Issue.record()
         }
 
         launchAgent.spyUnregister = {
@@ -395,18 +396,18 @@ class AutoLauncherTests: XCTestCase {
 
         let autoLauncher = AutoLauncher(launchServices: launchServices, localStorage: localStorage)
 
-        XCTAssertTrue(autoLauncher.isLaunchAgentEnabled)
-        XCTAssertTrue(localStorage.launchAgentEnabled)
+        #expect(autoLauncher.isLaunchAgentEnabled)
+        #expect(localStorage.launchAgentEnabled)
 
         autoLauncher.isLaunchAgentEnabled.toggle()
 
-        XCTAssertTrue(autoLauncher.isLaunchAgentEnabled)
-        XCTAssertTrue(localStorage.launchAgentEnabled)
+        #expect(autoLauncher.isLaunchAgentEnabled)
+        #expect(localStorage.launchAgentEnabled)
 
-        wait(for: [unregisterExpectation], timeout: 0.1)
+        await fulfillment(of: [unregisterExpectation])
     }
 
-    func testLaunchAgentToggleOn_withStorageEnabled_withRegisterFailure_shouldNotRollbackStorage() {
+    @Test func testLaunchAgentToggleOn_withStorageEnabled_withRegisterFailure_shouldNotRollbackStorage() async {
 
         let registerExpectation = expectation(description: "Register")
         registerExpectation.expectedFulfillmentCount = 2
@@ -417,7 +418,7 @@ class AutoLauncherTests: XCTestCase {
         }
 
         launchAgent.spyUnregister = {
-            XCTExpectFailure()
+            Issue.record()
         }
 
         launchAgent.isEnabled = false
@@ -426,19 +427,19 @@ class AutoLauncherTests: XCTestCase {
         // will fail to register on init and leave storage != agent
         let autoLauncher = AutoLauncher(launchServices: launchServices, localStorage: localStorage)
 
-        XCTAssertFalse(autoLauncher.isLaunchAgentEnabled)
-        XCTAssertTrue(localStorage.launchAgentEnabled)
+        #expect(autoLauncher.isLaunchAgentEnabled == false)
+        #expect(localStorage.launchAgentEnabled)
 
         // will fail again, should not rollback storage
         autoLauncher.isLaunchAgentEnabled.toggle()
 
-        XCTAssertFalse(autoLauncher.isLaunchAgentEnabled)
-        XCTAssertTrue(localStorage.launchAgentEnabled)
+        #expect(autoLauncher.isLaunchAgentEnabled == false)
+        #expect(localStorage.launchAgentEnabled)
 
-        wait(for: [registerExpectation], timeout: 0.1)
+        await fulfillment(of: [registerExpectation])
     }
 
-    func testLaunchAgentToggleOn_withStorageEnabled_withRegisterFailureOnInit_withRegisterSuccessOnToggle() {
+    @Test func testLaunchAgentToggleOn_withStorageEnabled_withRegisterFailureOnInit_withRegisterSuccessOnToggle() async {
 
         let registerExpectation = expectation(description: "Register")
         registerExpectation.expectedFulfillmentCount = 2
@@ -449,7 +450,7 @@ class AutoLauncherTests: XCTestCase {
         }
 
         launchAgent.spyUnregister = {
-            XCTExpectFailure()
+            Issue.record()
         }
 
         launchAgent.isEnabled = false
@@ -458,8 +459,8 @@ class AutoLauncherTests: XCTestCase {
         // will fail to register on init and leave storage != agent
         let autoLauncher = AutoLauncher(launchServices: launchServices, localStorage: localStorage)
 
-        XCTAssertFalse(autoLauncher.isLaunchAgentEnabled)
-        XCTAssertTrue(localStorage.launchAgentEnabled)
+        #expect(autoLauncher.isLaunchAgentEnabled == false)
+        #expect(localStorage.launchAgentEnabled)
 
         launchAgent.spyRegister = { [launchAgent] in
             launchAgent.isEnabled = true
@@ -469,9 +470,9 @@ class AutoLauncherTests: XCTestCase {
         // success on toggle, now we can update the storage
         autoLauncher.isLaunchAgentEnabled.toggle()
 
-        XCTAssertTrue(autoLauncher.isLaunchAgentEnabled)
-        XCTAssertTrue(localStorage.launchAgentEnabled)
+        #expect(autoLauncher.isLaunchAgentEnabled)
+        #expect(localStorage.launchAgentEnabled)
 
-        wait(for: [registerExpectation], timeout: 0.1)
+        await fulfillment(of: [registerExpectation])
     }
 }

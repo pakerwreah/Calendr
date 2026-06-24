@@ -5,11 +5,12 @@
 //  Created by Paker on 30/01/21.
 //
 
-import XCTest
+import Foundation
 import RxSwift
+import Testing
 @testable import Calendr
 
-class EventViewModelFadeTests: XCTestCase {
+class EventViewModelFadeTests {
 
     let disposeBag = DisposeBag()
 
@@ -21,7 +22,7 @@ class EventViewModelFadeTests: XCTestCase {
     let settings = MockEventSettings()
     let localStorage = MockLocalStorageProvider()
 
-    func testFade_isAllDay_shouldNotFade() {
+    @Test func testFade_isAllDay_shouldNotFade() {
 
         dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 15)
 
@@ -37,10 +38,10 @@ class EventViewModelFadeTests: XCTestCase {
             .bind { isFaded = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(isFaded, false)
+        #expect(isFaded == false)
     }
 
-    func testFade_isMultiDay_doesNotEndToday_shouldNotFade() {
+    @Test func testFade_isMultiDay_doesNotEndToday_shouldNotFade() {
 
         dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 15)
 
@@ -55,10 +56,10 @@ class EventViewModelFadeTests: XCTestCase {
             .bind { isFaded = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(isFaded, false)
+        #expect(isFaded == false)
     }
 
-    func testFade_isMultiDay_endsToday_isInProgress_shouldNotFade() {
+    @Test func testFade_isMultiDay_endsToday_isInProgress_shouldNotFade() {
 
         dateProvider.now = .make(year: 2021, month: 1, day: 2, hour: 11)
 
@@ -73,10 +74,10 @@ class EventViewModelFadeTests: XCTestCase {
             .bind { isFaded = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(isFaded, false)
+        #expect(isFaded == false)
     }
 
-    func testFade_isMultiDay_endsToday_isPast_shouldFade() {
+    @Test func testFade_isMultiDay_endsToday_isPast_shouldFade() {
 
         dateProvider.now = .make(year: 2021, month: 1, day: 2, hour: 15)
 
@@ -91,10 +92,10 @@ class EventViewModelFadeTests: XCTestCase {
             .bind { isFaded = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(isFaded, true)
+        #expect(isFaded == true)
     }
 
-    func testFade_isNotToday_shouldNotFade() {
+    @Test func testFade_isNotToday_shouldNotFade() {
 
         dateProvider.now = .make(year: 2021, month: 1, day: 2)
 
@@ -109,10 +110,10 @@ class EventViewModelFadeTests: XCTestCase {
             .bind { isFaded = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(isFaded, false)
+        #expect(isFaded == false)
     }
 
-    func testFade_isToday_isFuture_shouldNotFade() {
+    @Test func testFade_isToday_isFuture_shouldNotFade() {
 
         dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 9)
 
@@ -127,10 +128,10 @@ class EventViewModelFadeTests: XCTestCase {
             .bind { isFaded = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(isFaded, false)
+        #expect(isFaded == false)
     }
 
-    func testFade_isToday_isInProgress_shouldNotFade() {
+    @Test func testFade_isToday_isInProgress_shouldNotFade() {
 
         dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 11)
 
@@ -145,10 +146,10 @@ class EventViewModelFadeTests: XCTestCase {
             .bind { isFaded = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(isFaded, false)
+        #expect(isFaded == false)
     }
 
-    func testFade_isToday_isPast_shouldFade() {
+    @Test func testFade_isToday_isPast_shouldFade() {
 
         dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 15)
 
@@ -163,10 +164,10 @@ class EventViewModelFadeTests: XCTestCase {
             .bind { isFaded = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(isFaded, true)
+        #expect(isFaded == true)
     }
 
-    func testFade_isToday_isReminder_isPastTime_shouldNotFade() {
+    @Test func testFade_isToday_isReminder_isPastTime_shouldNotFade() {
 
         dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 15)
 
@@ -182,10 +183,10 @@ class EventViewModelFadeTests: XCTestCase {
             .bind { isFaded = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(isFaded, false)
+        #expect(isFaded == false)
     }
 
-    func testFade_isOverdue_isTodaySelected_isReminder_shouldNotFade() {
+    @Test func testFade_isOverdue_isTodaySelected_isReminder_shouldNotFade() {
 
         dateProvider.now = .make(year: 2021, month: 1, day: 2, hour: 15)
 
@@ -201,10 +202,10 @@ class EventViewModelFadeTests: XCTestCase {
             .bind { isFaded = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(isFaded, false)
+        #expect(isFaded == false)
     }
 
-    func testFade_isCompleted_isTodaySelected_isReminder_shouldFade() {
+    @Test func testFade_isCompleted_isTodaySelected_isReminder_shouldFade() {
 
         dateProvider.now = .make(year: 2021, month: 1, day: 2, hour: 15)
 
@@ -220,10 +221,10 @@ class EventViewModelFadeTests: XCTestCase {
             .bind { isFaded = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(isFaded, true)
+        #expect(isFaded == true)
     }
 
-    func testFade_isOverdue_isNotTodaySelected_isReminder_shouldNotFade() {
+    @Test func testFade_isOverdue_isNotTodaySelected_isReminder_shouldNotFade() {
 
         dateProvider.now = .make(year: 2021, month: 1, day: 2, hour: 15)
 
@@ -240,7 +241,7 @@ class EventViewModelFadeTests: XCTestCase {
             .bind { isFaded = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(isFaded, false)
+        #expect(isFaded == false)
     }
 
     func mock(

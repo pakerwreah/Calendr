@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import RxSwift
 
 typealias EventEditorViewController = HostingViewModelController<EventEditorView>
 
@@ -144,7 +145,8 @@ struct EventEditorView: ViewModelView {
                     .make(id: "1", account: "iCloud", title: "Work", color: .systemBlue),
                     .make(id: "2", account: "iCloud", title: "Personal", color: .systemRed),
                 ]
-            )
+            ),
+            scheduler: MainScheduler.instance
         )
     )
 }

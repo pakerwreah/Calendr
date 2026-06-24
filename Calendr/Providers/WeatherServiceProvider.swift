@@ -128,7 +128,9 @@ class WeatherServiceProvider: WeatherServiceProviding {
             return weather
         } catch {
             guard let error = error as? WeatherError else {
-                print(error.localizedDescription)
+                if !BuildConfig.isTesting {
+                    print(error.localizedDescription)
+                }
                 return nil
             }
             if let errorDescription = error.errorDescription {

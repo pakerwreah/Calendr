@@ -34,7 +34,7 @@ protocol LocalNotificationProviding {
 }
 
 extension LocalNotificationProviding {
-    
+
     func send(id: String, _ content: UNNotificationContent) {
         Task {
             await send(id: id, content)
@@ -88,7 +88,9 @@ class LocalNotificationProvider: NSObject, LocalNotificationProviding, UNUserNot
             )
             return true
         } catch {
-            print(error.localizedDescription)
+            if !BuildConfig.isTesting {
+                print(error.localizedDescription)
+            }
             return false
         }
     }

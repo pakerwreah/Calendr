@@ -5,12 +5,13 @@
 //  Created by Paker on 01/01/21.
 //
 
-import XCTest
+import Foundation
+import Testing
 @testable import Calendr
 
-class CalendarExtensionTests: XCTestCase {
+class CalendarExtensionTests {
 
-    func testDateInRange() {
+    @Test func testDateInRange() {
         let date: Date = .make(day: 5)
 
         let ranges: [(start: Date, end: Date, expected: Bool)] = [
@@ -25,7 +26,7 @@ class CalendarExtensionTests: XCTestCase {
 
         for (start, end, expected) in ranges {
             let result = Calendar.gregorian.isDay(date, inDays: (start, end))
-            XCTAssertEqual(expected, result, "\(start) - \(end))")
+            #expect(expected == result, "\(start) - \(end))")
         }
     }
 }

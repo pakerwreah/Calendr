@@ -5,19 +5,20 @@
 //  Created by Paker on 18/12/2021.
 //
 
-import XCTest
+import Foundation
+import Testing
 @testable import Calendr
 
-class DateSearchParserTests: XCTestCase {
+class DateSearchParserTests {
 
     let dateProvider = MockDateProvider()
 
-    override func setUp() {
+    init() {
         dateProvider.m_calendar.locale = Locale(identifier: "en_GB")
         dateProvider.now = .make(year: 2021, month: 12, day: 18)
     }
 
-    func testValidDates() throws {
+    @Test func testValidDates() throws {
         // unfortunately, there's no way to mock the current date in NSDataDetector
         // and if it detects a date that's missing the year, it defaults to some year around that date 🔮
         func datesForMissingYear(_ date: String) -> [String] {
@@ -48,23 +49,23 @@ class DateSearchParserTests: XCTestCase {
         formatter.dateStyle = .short
 
         for (text, expected) in dateStrings {
-            let (date, _) = try XCTUnwrap(DateSearchParser.parse(text: text, using: dateProvider), text)
-            XCTAssert(expected.contains(formatter.string(from: date)), text)
+            let (date, _) = try #require(DateSearchParser.parse(text: text, using: dateProvider), "\(text)")
+            #expect(expected.contains(formatter.string(from: date)), "\(text)")
         }
     }
 
-    func testResult() throws {
+    @Test func testResult() throws {
         let text = "Search term 6 december 2022"
-        let (date, result) = try XCTUnwrap(DateSearchParser.parse(text: text, using: dateProvider), text)
+        let (date, result) = try #require(DateSearchParser.parse(text: text, using: dateProvider), "\(text)")
 
         let formatter = DateFormatter(calendar: dateProvider.calendar)
         formatter.dateStyle = .short
 
-        XCTAssertEqual(formatter.string(from: date), "06/12/2022")
-        XCTAssertEqual(result, "Search term")
+        #expect(formatter.string(from: date) == "06/12/2022")
+        #expect(result == "Search term")
     }
 
-    func testInvalidDates() throws {
+    @Test func testInvalidDates() throws {
 
         let dateStrings: [String] = [
             "2021-12-118",
@@ -81,7 +82,7 @@ class DateSearchParserTests: XCTestCase {
         ]
 
         for text in dateStrings {
-            XCTAssertNil(DateSearchParser.parse(text: text, using: dateProvider), text)
+            #expect(DateSearchParser.parse(text: text, using: dateProvider) == nil, "\(text)")
         }
     }
 }

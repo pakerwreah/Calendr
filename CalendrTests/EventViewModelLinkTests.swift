@@ -5,11 +5,12 @@
 //  Created by Paker on 21/02/2021.
 //
 
-import XCTest
+import Foundation
 import RxSwift
+import Testing
 @testable import Calendr
 
-class EventViewModelLinkTests: XCTestCase {
+class EventViewModelLinkTests {
 
     let dateProvider = MockDateProvider()
     let calendarService = MockCalendarServiceProvider()
@@ -19,16 +20,16 @@ class EventViewModelLinkTests: XCTestCase {
     let settings = MockEventSettings()
     let localStorage = MockLocalStorageProvider()
 
-    func testLink_withRegularLocation_withoutURL_shouldNotShowLinkButton() {
+    @Test func testLink_withRegularLocation_withoutURL_shouldNotShowLinkButton() {
 
         let viewModel = mock(
             event: .make(location: "some location")
         )
 
-        XCTAssertNil(viewModel.link)
+        #expect(viewModel.link == nil)
     }
 
-    func testLink_withRegularLocation_withInvalidURL_shouldNotShowLinkButton() {
+    @Test func testLink_withRegularLocation_withInvalidURL_shouldNotShowLinkButton() {
 
         let viewModel = mock(
             event: .make(
@@ -37,10 +38,10 @@ class EventViewModelLinkTests: XCTestCase {
             )
         )
 
-        XCTAssertNil(viewModel.link)
+        #expect(viewModel.link == nil)
     }
 
-    func testLink_withRegularLocation_withValidURL_shouldShowLinkButton() throws {
+    @Test func testLink_withRegularLocation_withValidURL_shouldShowLinkButton() throws {
 
         let viewModel = mock(
             event: .make(
@@ -49,58 +50,58 @@ class EventViewModelLinkTests: XCTestCase {
             )
         )
 
-        let link = try XCTUnwrap(viewModel.link)
+        let link = try #require(viewModel.link)
 
-        XCTAssertFalse(link.isMeeting)
-        XCTAssertEqual(link.url.absoluteString, "https://someurl.com")
+        #expect(link.isMeeting == false)
+        #expect(link.url.absoluteString == "https://someurl.com")
     }
 
-    func testLink_withUrlLocation_shouldShowLinkButton() throws {
+    @Test func testLink_withUrlLocation_shouldShowLinkButton() throws {
 
         let viewModel = mock(
             event: .make(location: "https://someurl.com")
         )
 
-        let link = try XCTUnwrap(viewModel.link)
+        let link = try #require(viewModel.link)
 
-        XCTAssertFalse(link.isMeeting)
-        XCTAssertEqual(link.url.absoluteString, "https://someurl.com")
+        #expect(link.isMeeting == false)
+        #expect(link.url.absoluteString == "https://someurl.com")
     }
 
-    func testLink_withInvalidURL_shouldNotShowLinkButton() {
+    @Test func testLink_withInvalidURL_shouldNotShowLinkButton() {
 
         let viewModel = mock(
             event: .make(url: URL(string: "invalidurl")!)
         )
 
-        XCTAssertNil(viewModel.link)
+        #expect(viewModel.link == nil)
     }
 
-    func testLink_withValidURL_shouldShowLinkButton() throws {
+    @Test func testLink_withValidURL_shouldShowLinkButton() throws {
 
         let viewModel = mock(
             event: .make(url: URL(string: "https://someurl.com")!)
         )
 
-        let link = try XCTUnwrap(viewModel.link)
+        let link = try #require(viewModel.link)
 
-        XCTAssertFalse(link.isMeeting)
-        XCTAssertEqual(link.url.absoluteString, "https://someurl.com")
+        #expect(link.isMeeting == false)
+        #expect(link.url.absoluteString == "https://someurl.com")
     }
 
-    func testLink_withZoomURL_withZoomNotInstalled() throws {
+    @Test func testLink_withZoomURL_withZoomNotInstalled() throws {
 
         let httpLink = "https://something.zoom.us/j/0000000000?pwd=xxxxxxxxxx"
 
         let viewModel = mock(event: .make(location: httpLink))
 
-        let link = try XCTUnwrap(viewModel.link)
+        let link = try #require(viewModel.link)
 
-        XCTAssertTrue(link.isMeeting)
-        XCTAssertEqual(link.url.absoluteString, httpLink)
+        #expect(link.isMeeting)
+        #expect(link.url.absoluteString == httpLink)
     }
 
-    func testLink_withZoomURL_withZoomInstalled() throws {
+    @Test func testLink_withZoomURL_withZoomInstalled() throws {
 
         workspace.m_urlForApplicationToOpenURL = URL(string: "dummy")
 
@@ -109,25 +110,25 @@ class EventViewModelLinkTests: XCTestCase {
 
         let viewModel = mock(event: .make(location: httpLink))
 
-        let link = try XCTUnwrap(viewModel.link)
+        let link = try #require(viewModel.link)
 
-        XCTAssertTrue(link.isMeeting)
-        XCTAssertEqual(link.url.absoluteString, appLink)
+        #expect(link.isMeeting)
+        #expect(link.url.absoluteString == appLink)
     }
 
-    func testLink_withTeamsURL_withTeamsNotInstalled() throws {
+    @Test func testLink_withTeamsURL_withTeamsNotInstalled() throws {
 
         let httpLink = "https://teams.microsoft.com/l/meetup-join/xxxxxxxxxx"
 
         let viewModel = mock(event: .make(location: httpLink))
 
-        let link = try XCTUnwrap(viewModel.link)
+        let link = try #require(viewModel.link)
 
-        XCTAssertTrue(link.isMeeting)
-        XCTAssertEqual(link.url.absoluteString, httpLink)
+        #expect(link.isMeeting)
+        #expect(link.url.absoluteString == httpLink)
     }
 
-    func testLink_withTeamsURL_withTeamsInstalled() throws {
+    @Test func testLink_withTeamsURL_withTeamsInstalled() throws {
 
         workspace.m_urlForApplicationToOpenURL = URL(string: "dummy")
 
@@ -136,70 +137,70 @@ class EventViewModelLinkTests: XCTestCase {
 
         let viewModel = mock(event: .make(location: httpLink))
 
-        let link = try XCTUnwrap(viewModel.link)
+        let link = try #require(viewModel.link)
 
-        XCTAssertTrue(link.isMeeting)
-        XCTAssertEqual(link.url.absoluteString, appLink)
+        #expect(link.isMeeting)
+        #expect(link.url.absoluteString == appLink)
     }
 
-    func testLink_withFacetimeURL() throws {
+    @Test func testLink_withFacetimeURL() throws {
 
         let httpLink = "https://facetime.apple.com"
 
         let viewModel = mock(event: .make(location: httpLink))
 
-        let link = try XCTUnwrap(viewModel.link)
+        let link = try #require(viewModel.link)
 
-        XCTAssertTrue(link.isMeeting)
-        XCTAssertEqual(link.url.absoluteString, httpLink)
+        #expect(link.isMeeting)
+        #expect(link.url.absoluteString == httpLink)
     }
 
-    func testLink_withGoogleMeetURL() throws {
+    @Test func testLink_withGoogleMeetURL() throws {
 
         let httpLink = "https://meet.google.com"
 
         let viewModel = mock(event: .make(location: httpLink))
 
-        let link = try XCTUnwrap(viewModel.link)
+        let link = try #require(viewModel.link)
 
-        XCTAssertTrue(link.isMeeting)
-        XCTAssertEqual(link.url.absoluteString, httpLink)
+        #expect(link.isMeeting)
+        #expect(link.url.absoluteString == httpLink)
     }
 
-    func testLink_withGoogleHangoutsURL() throws {
+    @Test func testLink_withGoogleHangoutsURL() throws {
 
         let httpLink = "https://hangouts.google.com"
 
         let viewModel = mock(event: .make(location: httpLink))
 
-        let link = try XCTUnwrap(viewModel.link)
+        let link = try #require(viewModel.link)
 
-        XCTAssertTrue(link.isMeeting)
-        XCTAssertEqual(link.url.absoluteString, httpLink)
+        #expect(link.isMeeting)
+        #expect(link.url.absoluteString == httpLink)
     }
 
-    func testLink_withWebexMeetingURL() throws {
+    @Test func testLink_withWebexMeetingURL() throws {
 
         let httpLink = "https://mycompany.webex.com/mycompany/j.php?MTID=12345"
 
         let viewModel = mock(event: .make(location: httpLink))
 
-        let link = try XCTUnwrap(viewModel.link)
+        let link = try #require(viewModel.link)
 
-        XCTAssertTrue(link.isMeeting)
-        XCTAssertEqual(link.url.absoluteString, httpLink)
+        #expect(link.isMeeting)
+        #expect(link.url.absoluteString == httpLink)
     }
 
-    func testLink_withWebexPersonalURL() throws {
+    @Test func testLink_withWebexPersonalURL() throws {
 
         let httpLink = "https://mycompany.webex.com/meet/name"
 
         let viewModel = mock(event: .make(location: httpLink))
 
-        let link = try XCTUnwrap(viewModel.link)
+        let link = try #require(viewModel.link)
 
-        XCTAssertTrue(link.isMeeting)
-        XCTAssertEqual(link.url.absoluteString, httpLink)
+        #expect(link.isMeeting)
+        #expect(link.url.absoluteString == httpLink)
     }
 
     func mock(event: EventModel) -> EventViewModel {

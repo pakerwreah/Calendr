@@ -5,11 +5,12 @@
 //  Created by Paker on 27/01/21.
 //
 
-import XCTest
+import Foundation
 import RxSwift
+import Testing
 @testable import Calendr
 
-class EventViewModelTests: XCTestCase {
+class EventViewModelTests {
 
     let disposeBag = DisposeBag()
 
@@ -22,194 +23,194 @@ class EventViewModelTests: XCTestCase {
     let settings = MockEventSettings()
     let scheduler = HistoricalScheduler()
 
-    override func setUp() {
+    init() {
         dateProvider.m_calendar.locale = Locale(identifier: "en_US")
     }
 
-    func testBasicInfo() {
+    @Test func testBasicInfo() {
 
         let viewModel = mock(
             event: .make(title: "Title", type: .event(.pending), calendar: .make(color: .black))
         )
 
-        XCTAssertEqual(viewModel.title, "Title")
-        XCTAssertEqual(viewModel.color, .black)
-        XCTAssertEqual(viewModel.type, .event(.pending))
+        #expect(viewModel.title == "Title")
+        #expect(viewModel.color == .black)
+        #expect(viewModel.type == .event(.pending))
     }
 
-    func testShowAllDayDetails_isAllDay_withOptionDisabled_shouldNotShowDetails() {
+    @Test func testShowAllDayDetails_isAllDay_withOptionDisabled_shouldNotShowDetails() {
 
         let viewModel = mock(
             event: .make(isAllDay: true)
         )
 
-        XCTAssertEqual(viewModel.showDetails.lastValue(), true)
+        #expect(viewModel.showDetails.lastValue() == true)
 
         settings.toggleAllDayDetails.onNext(false)
 
-        XCTAssertEqual(viewModel.showDetails.lastValue(), false)
+        #expect(viewModel.showDetails.lastValue() == false)
     }
 
-    func testShowAllDayDetails_isNotAllDay_withOptionDisabled_shouldShowDetails() {
+    @Test func testShowAllDayDetails_isNotAllDay_withOptionDisabled_shouldShowDetails() {
 
         let viewModel = mock(
             event: .make(isAllDay: false)
         )
 
-        XCTAssertEqual(viewModel.showDetails.lastValue(), true)
+        #expect(viewModel.showDetails.lastValue() == true)
 
         settings.toggleAllDayDetails.onNext(false)
 
-        XCTAssertEqual(viewModel.showDetails.lastValue(), true)
+        #expect(viewModel.showDetails.lastValue() == true)
     }
 
-    func testSubtitle_withURLInLocation_shouldShowURL() {
+    @Test func testSubtitle_withURLInLocation_shouldShowURL() {
 
         let viewModel = mock(
             event: .make(location: "Location https://someurl.com ")
         )
 
-        XCTAssertEqual(viewModel.subtitle, "")
-        XCTAssertEqual(viewModel.subtitleLink, "someurl.com")
+        #expect(viewModel.subtitle == "")
+        #expect(viewModel.subtitleLink == "someurl.com")
     }
 
-    func testSubtitle_withExtraSpacesInLocation_withURLInLocation_shouldShowURL() {
+    @Test func testSubtitle_withExtraSpacesInLocation_withURLInLocation_shouldShowURL() {
 
         let viewModel = mock(
             event: .make(location: " \n https://someurl.com ")
         )
 
-        XCTAssertEqual(viewModel.subtitle, "")
-        XCTAssertEqual(viewModel.subtitleLink, "someurl.com")
+        #expect(viewModel.subtitle == "")
+        #expect(viewModel.subtitleLink == "someurl.com")
     }
 
-    func testSubtitle_withEmptyLocation_withURL_shouldShowURL() {
+    @Test func testSubtitle_withEmptyLocation_withURL_shouldShowURL() {
 
         let viewModel = mock(
             event: .make(location: " ", url: URL(string: "https://someurl.com")!)
         )
 
-        XCTAssertEqual(viewModel.subtitle, "")
-        XCTAssertEqual(viewModel.subtitleLink, "someurl.com")
+        #expect(viewModel.subtitle == "")
+        #expect(viewModel.subtitleLink == "someurl.com")
     }
 
-    func testSubtitle_withEmptyLocation_withURLInNotes_shouldShowURL() {
+    @Test func testSubtitle_withEmptyLocation_withURLInNotes_shouldShowURL() {
 
         let viewModel = mock(
             event: .make(location: " ", notes: " \nSome \nnotes https://someurl.com ")
         )
 
-        XCTAssertEqual(viewModel.subtitle, "")
-        XCTAssertEqual(viewModel.subtitleLink, "someurl.com")
+        #expect(viewModel.subtitle == "")
+        #expect(viewModel.subtitleLink == "someurl.com")
     }
 
-    func testSubtitle_withLocation_withoutURL_shouldShowLocation() {
+    @Test func testSubtitle_withLocation_withoutURL_shouldShowLocation() {
 
         let viewModel = mock(
             event: .make(location: "Some address")
         )
 
-        XCTAssertEqual(viewModel.subtitle, "Some address")
+        #expect(viewModel.subtitle == "Some address")
     }
 
-    func testSubtitle_withURL_withoutLocation_shouldShowURL() {
+    @Test func testSubtitle_withURL_withoutLocation_shouldShowURL() {
 
         let viewModel = mock(
             event: .make(url: URL(string: "https://someurl.com")!)
         )
 
-        XCTAssertEqual(viewModel.subtitle, "")
-        XCTAssertEqual(viewModel.subtitleLink, "someurl.com")
+        #expect(viewModel.subtitle == "")
+        #expect(viewModel.subtitleLink == "someurl.com")
     }
 
-    func testSubtitle_withURL_withLocation_shouldShowLocation_shouldShowURL() {
+    @Test func testSubtitle_withURL_withLocation_shouldShowLocation_shouldShowURL() {
 
         let viewModel = mock(
             event: .make(location: "Some address", url: URL(string: "https://someurl.com")!)
         )
 
-        XCTAssertEqual(viewModel.subtitle, "Some address")
-        XCTAssertEqual(viewModel.subtitleLink, "someurl.com")
+        #expect(viewModel.subtitle == "Some address")
+        #expect(viewModel.subtitleLink == "someurl.com")
     }
 
-    func testSubtitle_withURL_withDifferentDomainInLocation_shouldShowLocation_shouldShowURL() {
+    @Test func testSubtitle_withURL_withDifferentDomainInLocation_shouldShowLocation_shouldShowURL() {
 
         let viewModel = mock(
             event: .make(location: "Join at someotherurl.com", url: URL(string: "https://someurl.com")!)
         )
 
-        XCTAssertEqual(viewModel.subtitle, "Join at someotherurl.com")
-        XCTAssertEqual(viewModel.subtitleLink, "someurl.com")
+        #expect(viewModel.subtitle == "Join at someotherurl.com")
+        #expect(viewModel.subtitleLink == "someurl.com")
     }
 
-    func testSubtitle_withURL_withSameDomainInLocation_shouldNotShowLocation_shouldShowURL() {
+    @Test func testSubtitle_withURL_withSameDomainInLocation_shouldNotShowLocation_shouldShowURL() {
 
         let viewModel = mock(
             event: .make(location: "Join at someurl.com", url: URL(string: "https://someurl.com")!)
         )
 
-        XCTAssertEqual(viewModel.subtitle, "")
-        XCTAssertEqual(viewModel.subtitleLink, "someurl.com")
+        #expect(viewModel.subtitle == "")
+        #expect(viewModel.subtitleLink == "someurl.com")
     }
 
-    func testSubtitle_withoutLocation_withoutURL_withURLInNotes_shouldShowURL() {
+    @Test func testSubtitle_withoutLocation_withoutURL_withURLInNotes_shouldShowURL() {
 
         let viewModel = mock(
             event: .make(notes: "Some notes https://someurl.com")
         )
 
-        XCTAssertEqual(viewModel.subtitle, "")
-        XCTAssertEqual(viewModel.subtitleLink, "someurl.com")
+        #expect(viewModel.subtitle == "")
+        #expect(viewModel.subtitleLink == "someurl.com")
     }
 
-    func testSubtitle_withoutLocation_withoutURL_withNotes_shouldShowNotes() {
+    @Test func testSubtitle_withoutLocation_withoutURL_withNotes_shouldShowNotes() {
 
         let viewModel = mock(
             event: .make(notes: "Some notes")
         )
 
-        XCTAssertEqual(viewModel.subtitle, "Some notes")
+        #expect(viewModel.subtitle == "Some notes")
     }
 
-    func testSubtitle_withoutLocation_withoutURL_withNotesStartingWithTitle_shouldNotShowNotes() {
+    @Test func testSubtitle_withoutLocation_withoutURL_withNotesStartingWithTitle_shouldNotShowNotes() {
 
         let viewModel = mock(
             event: .make(title: "Title", notes: "Title some notes")
         )
 
-        XCTAssertEqual(viewModel.subtitle, "")
+        #expect(viewModel.subtitle == "")
     }
 
-    func testSubtitle_withLocation_isAllDay_shouldShowLocation() {
+    @Test func testSubtitle_withLocation_isAllDay_shouldShowLocation() {
 
         let viewModel = mock(
             event: .make(location: "Some address", isAllDay: true)
         )
 
-        XCTAssertEqual(viewModel.subtitle, "Some address")
+        #expect(viewModel.subtitle == "Some address")
     }
 
-    func testSubtitle_withURL_isAllDay_isNotBirthday_shouldShowURL() {
+    @Test func testSubtitle_withURL_isAllDay_isNotBirthday_shouldShowURL() {
 
         let viewModel = mock(
             event: .make(url: URL(string: "https://someurl.com")!)
         )
 
-        XCTAssertEqual(viewModel.subtitle, "")
-        XCTAssertEqual(viewModel.subtitleLink, "someurl.com")
+        #expect(viewModel.subtitle == "")
+        #expect(viewModel.subtitleLink == "someurl.com")
     }
 
-    func testSubtitle_withURL_isBirthday_shouldNotShowURL() {
+    @Test func testSubtitle_withURL_isBirthday_shouldNotShowURL() {
 
         let viewModel = mock(
             event: .make(url: URL(string: "https://someurl.com")!, type: .birthday)
         )
 
-        XCTAssertEqual(viewModel.subtitle, "")
-        XCTAssertNil(viewModel.subtitleLink)
+        #expect(viewModel.subtitle == "")
+        #expect(viewModel.subtitleLink == nil)
     }
 
-    func testDuration_isAllDay_isSingleDay_shouldNotShowDuration() {
+    @Test func testDuration_isAllDay_isSingleDay_shouldNotShowDuration() {
 
         let viewModel = mock(
             event: .make(
@@ -219,10 +220,10 @@ class EventViewModelTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(viewModel.duration.lastValue(), "")
+        #expect(viewModel.duration.lastValue() == "")
     }
 
-    func testDuration_isAllDay_isMultiDay_shouldShowDuration() {
+    @Test func testDuration_isAllDay_isMultiDay_shouldShowDuration() {
 
         let viewModel = mock(
             event: .make(
@@ -232,10 +233,10 @@ class EventViewModelTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(viewModel.duration.lastValue(), "January 1 - 2")
+        #expect(viewModel.duration.lastValue() == "January 1 - 2")
     }
 
-    func testDuration_isSameDay() {
+    @Test func testDuration_isSameDay() {
 
         let viewModel = mock(
             event: .make(
@@ -244,10 +245,10 @@ class EventViewModelTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(viewModel.duration.lastValue(), "3:00 - 4:00 PM")
+        #expect(viewModel.duration.lastValue() == "3:00 - 4:00 PM")
     }
 
-    func testDuration_endsMidnight() {
+    @Test func testDuration_endsMidnight() {
 
         let viewModel = mock(
             event: .make(
@@ -256,10 +257,10 @@ class EventViewModelTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(viewModel.duration.lastValue(), "3:00 PM - 12:00 AM")
+        #expect(viewModel.duration.lastValue() == "3:00 PM - 12:00 AM")
     }
 
-    func testDuration_isMultiDay_isSameMonth_withTime() {
+    @Test func testDuration_isMultiDay_isSameMonth_withTime() {
 
         dateProvider.m_calendar = .gregorian.with(timeZone: .utc)
 
@@ -270,10 +271,10 @@ class EventViewModelTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(viewModel.duration.lastValue(), "2021-01-01 00:00\n2021-01-03 00:01")
+        #expect(viewModel.duration.lastValue() == "2021-01-01 00:00\n2021-01-03 00:01")
     }
 
-    func testDuration_isMultiDay_isDifferentMonth_withTime() {
+    @Test func testDuration_isMultiDay_isDifferentMonth_withTime() {
 
         dateProvider.m_calendar = .gregorian.with(timeZone: .utc)
 
@@ -284,10 +285,10 @@ class EventViewModelTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(viewModel.duration.lastValue(), "2021-01-01 00:00\n2021-02-03 00:01")
+        #expect(viewModel.duration.lastValue() == "2021-01-01 00:00\n2021-02-03 00:01")
     }
 
-    func testDuration_isMultiDay_isSameMonth_endsStartOfNextDay() {
+    @Test func testDuration_isMultiDay_isSameMonth_endsStartOfNextDay() {
 
         let viewModel = mock(
             event: .make(
@@ -296,10 +297,10 @@ class EventViewModelTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(viewModel.duration.lastValue(), "January 1 - 2")
+        #expect(viewModel.duration.lastValue() == "January 1 - 2")
     }
 
-    func testDuration_isMultiDay_isDifferentMonth_endsStartOfNextDay() {
+    @Test func testDuration_isMultiDay_isDifferentMonth_endsStartOfNextDay() {
 
         let viewModel = mock(
             event: .make(
@@ -308,10 +309,10 @@ class EventViewModelTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(viewModel.duration.lastValue(), "Jan 1 - Feb 2")
+        #expect(viewModel.duration.lastValue() == "Jan 1 - Feb 2")
     }
 
-    func testDuration_isSameDay_withDifferentTimeZone() {
+    @Test func testDuration_isSameDay_withDifferentTimeZone() {
 
         let viewModel = mock(
             event: .make(
@@ -321,10 +322,10 @@ class EventViewModelTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(viewModel.duration.lastValue(), "12:00 - 1:00 PM (GMT-3)")
+        #expect(viewModel.duration.lastValue() == "12:00 - 1:00 PM (GMT-3)")
     }
 
-    func testDuration_isSameDay_isMeeting_withDifferentTimeZone() {
+    @Test func testDuration_isSameDay_isMeeting_withDifferentTimeZone() {
 
         let viewModel = mock(
             event: .make(
@@ -335,20 +336,20 @@ class EventViewModelTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(viewModel.duration.lastValue(), "3:00 - 4:00 PM")
+        #expect(viewModel.duration.lastValue() == "3:00 - 4:00 PM")
     }
 
-    func testBarStyle() {
+    @Test func testBarStyle() {
 
-        XCTAssertEqual(mock(type: .birthday).barStyle, .filled)
-        XCTAssertEqual(mock(type: .reminder(completed: false)).barStyle, .filled)
-        XCTAssertEqual(mock(type: .event(.accepted)).barStyle, .filled)
-        XCTAssertEqual(mock(type: .event(.pending)).barStyle, .filled)
-        XCTAssertEqual(mock(type: .event(.declined)).barStyle, .filled)
-        XCTAssertEqual(mock(type: .event(.maybe)).barStyle, .bordered)
+        #expect(mock(type: .birthday).barStyle == .filled)
+        #expect(mock(type: .reminder(completed: false)).barStyle == .filled)
+        #expect(mock(type: .event(.accepted)).barStyle == .filled)
+        #expect(mock(type: .event(.pending)).barStyle == .filled)
+        #expect(mock(type: .event(.declined)).barStyle == .filled)
+        #expect(mock(type: .event(.maybe)).barStyle == .bordered)
     }
 
-    func testReminderDuration() {
+    @Test func testReminderDuration() {
 
         let viewModel = mock(
             event: .make(
@@ -357,10 +358,10 @@ class EventViewModelTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(viewModel.duration.lastValue(), "1:00 AM")
+        #expect(viewModel.duration.lastValue() == "1:00 AM")
     }
 
-    func testOverdueReminder_shouldShowRelativeDuration() {
+    @Test func testOverdueReminder_shouldShowRelativeDuration() {
 
         dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 0, minute: 30)
 
@@ -371,11 +372,11 @@ class EventViewModelTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(viewModel.duration.lastValue(), "12:15 AM")
-        XCTAssertEqual(viewModel.relativeDuration.lastValue(), "15m ago")
+        #expect(viewModel.duration.lastValue() == "12:15 AM")
+        #expect(viewModel.relativeDuration.lastValue() == "15m ago")
     }
 
-    func testOverdueReminder_isCompleted_shouldNotShowRelativeDuration() {
+    @Test func testOverdueReminder_isCompleted_shouldNotShowRelativeDuration() {
 
         dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 0, minute: 30)
 
@@ -386,11 +387,11 @@ class EventViewModelTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(viewModel.duration.lastValue(), "12:15 AM")
-        XCTAssertNil(viewModel.relativeDuration.lastValue())
+        #expect(viewModel.duration.lastValue() == "12:15 AM")
+        #expect(viewModel.relativeDuration.lastValue() == nil)
     }
 
-    func testOverdueReminder_isAllDay_shouldNotShowDurationOrRelativeDuration() {
+    @Test func testOverdueReminder_isAllDay_shouldNotShowDurationOrRelativeDuration() {
 
         dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 0, minute: 30)
 
@@ -402,11 +403,11 @@ class EventViewModelTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(viewModel.duration.lastValue(), "")
-        XCTAssertNil(viewModel.relativeDuration.lastValue())
+        #expect(viewModel.duration.lastValue() == "")
+        #expect(viewModel.relativeDuration.lastValue() == nil)
     }
 
-    func testReminder_toggleComplete_isNotCompleted() {
+    @Test func testReminder_toggleComplete_isNotCompleted() {
 
         let viewModel = mock(type: .reminder(completed: false))
 
@@ -421,20 +422,20 @@ class EventViewModelTests: XCTestCase {
             .bind { serviceCompleted = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(isCompleted, false)
+        #expect(isCompleted == false)
 
         viewModel.completeTapped.onNext(())
 
-        XCTAssertEqual(isCompleted, true)
-        XCTAssertNil(serviceCompleted)
+        #expect(isCompleted == true)
+        #expect(serviceCompleted == nil)
 
         scheduler.advance(.milliseconds(500))
 
-        XCTAssertEqual(isCompleted, true)
-        XCTAssertEqual(serviceCompleted, true)
+        #expect(isCompleted == true)
+        #expect(serviceCompleted == true)
     }
 
-    func testReminder_toggleComplete_isCompleted() {
+    @Test func testReminder_toggleComplete_isCompleted() {
 
         let viewModel = mock(type: .reminder(completed: true))
 
@@ -449,20 +450,20 @@ class EventViewModelTests: XCTestCase {
             .bind { serviceCompleted = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(isCompleted, true)
+        #expect(isCompleted == true)
 
         viewModel.completeTapped.onNext(())
 
-        XCTAssertEqual(isCompleted, false)
-        XCTAssertNil(serviceCompleted)
+        #expect(isCompleted == false)
+        #expect(serviceCompleted == nil)
 
         scheduler.advance(.milliseconds(500))
 
-        XCTAssertEqual(isCompleted, false)
-        XCTAssertEqual(serviceCompleted, false)
+        #expect(isCompleted == false)
+        #expect(serviceCompleted == false)
     }
 
-    func testReminder_toggleComplete_notChanged_shouldNotTriggerService() {
+    @Test func testReminder_toggleComplete_notChanged_shouldNotTriggerService() {
 
         let viewModel = mock(type: .reminder(completed: false))
 
@@ -477,25 +478,25 @@ class EventViewModelTests: XCTestCase {
             .bind { serviceCompleted = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(isCompleted, false)
+        #expect(isCompleted == false)
 
         viewModel.completeTapped.onNext(())
 
-        XCTAssertEqual(isCompleted, true)
-        XCTAssertNil(serviceCompleted)
+        #expect(isCompleted == true)
+        #expect(serviceCompleted == nil)
 
         viewModel.completeTapped.onNext(())
 
-        XCTAssertEqual(isCompleted, false)
-        XCTAssertNil(serviceCompleted)
+        #expect(isCompleted == false)
+        #expect(serviceCompleted == nil)
 
         scheduler.advance(.milliseconds(500))
 
-        XCTAssertEqual(isCompleted, false)
-        XCTAssertNil(serviceCompleted)
+        #expect(isCompleted == false)
+        #expect(serviceCompleted == nil)
     }
 
-    func testRecurrenceIndicator_withNonRecurrentEvent() {
+    @Test func testRecurrenceIndicator_withNonRecurrentEvent() {
 
         let viewModel = mock(event: .make(type: .event(.unknown), hasRecurrenceRules: false))
 
@@ -505,10 +506,10 @@ class EventViewModelTests: XCTestCase {
             .bind { showRecurrenceIndicator = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(showRecurrenceIndicator, false)
+        #expect(showRecurrenceIndicator == false)
     }
 
-    func testRecurrenceIndicator_withRecurrentEvent() {
+    @Test func testRecurrenceIndicator_withRecurrentEvent() {
 
         let viewModel = mock(event: .make(type: .event(.unknown), hasRecurrenceRules: true))
 
@@ -518,19 +519,19 @@ class EventViewModelTests: XCTestCase {
             .bind { showRecurrenceIndicator = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(showRecurrenceIndicator, true)
+        #expect(showRecurrenceIndicator == true)
 
         settings.toggleRecurrenceIndicator.onNext(false)
 
-        XCTAssertEqual(showRecurrenceIndicator, false)
+        #expect(showRecurrenceIndicator == false)
     }
 
-    func testOpenEventInDefaultCalendar() throws {
+    @Test func testOpenEventInDefaultCalendar() throws {
         let viewModel = mock(
             event: .make(title: "Title", type: .event(.pending), calendar: .make(color: .black))
         )
 
-        let menu = try XCTUnwrap(viewModel.makeContextMenuViewModel() as? EventOptionsViewModel)
+        let menu = try #require(viewModel.makeContextMenuViewModel() as? EventOptionsViewModel)
         menu.triggerAction(.open)
     }
 

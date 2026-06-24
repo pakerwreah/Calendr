@@ -5,11 +5,12 @@
 //  Created by Paker on 26/02/2021.
 //
 
-import XCTest
+import AppKit
 import RxSwift
+import Testing
 @testable import Calendr
 
-class EventListViewModelTests: XCTestCase {
+class EventListViewModelTests {
 
     let disposeBag = DisposeBag()
 
@@ -70,7 +71,7 @@ class EventListViewModelTests: XCTestCase {
         ]
     }
 
-    override func setUp() {
+    init() {
 
         dateProvider.m_calendar.locale = Locale(identifier: "en_US")
 
@@ -94,18 +95,18 @@ class EventListViewModelTests: XCTestCase {
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
     }
 
-    func testEventList_noEvents_shouldNotShowAnySection() {
+    @Test func testEventList_noEvents_shouldNotShowAnySection() {
 
         eventsSubject.onNext([])
 
-        XCTAssertEqual(eventListItems, [])
+        #expect(eventListItems == [])
     }
 
-    func testEventList_onlyAllDay_shouldNotShowTodaySection() {
+    @Test func testEventList_onlyAllDay_shouldNotShowTodaySection() {
 
         eventsSubject.onNext(testEvents().filter(\.isAllDay))
 
-        XCTAssertEqual(eventListItems, [
+        #expect(eventListItems == [
             .section("All day"),
             .event("All day 1"),
             .event("All day 2"),
@@ -116,14 +117,14 @@ class EventListViewModelTests: XCTestCase {
             allday: .init(colors: [.red, .yellow], count: 2),
             today: .init(colors: [], count: 0)
         )
-        XCTAssertEqual(viewModel.summary.lastValue(), summary)
+        #expect(viewModel.summary.lastValue() == summary)
     }
 
-    func testEventList_noAllDay_shouldNotShowAllDaySection() {
+    @Test func testEventList_noAllDay_shouldNotShowAllDaySection() {
 
         eventsSubject.onNext(testEvents().filter(\.isAllDay.isFalse))
 
-        XCTAssertEqual(eventListItems, [
+        #expect(eventListItems == [
             .section("Thursday, Dec 31"),
             .event("Multi day"),
             .section("Today"),
@@ -133,19 +134,19 @@ class EventListViewModelTests: XCTestCase {
             .event("Event 1")
         ])
 
-        XCTAssertEqual(viewModel.summary.lastValue(), EventListSummary(
+        #expect(viewModel.summary.lastValue() == EventListSummary(
             overdue: .init(colors: [], count: 0),
             allday: .init(colors: [], count: 0),
             today: .init(colors: [.blue, .yellow, .red], count: 4)
         ))
     }
 
-    func testEventList_showAllDayEventsDisabled_shouldNotShowAllDaySection() {
+    @Test func testEventList_showAllDayEventsDisabled_shouldNotShowAllDaySection() {
 
         settings.toggleAllDayEvents.onNext(false)
         eventsSubject.onNext(testEvents())
 
-        XCTAssertEqual(eventListItems, [
+        #expect(eventListItems == [
             .section("Thursday, Dec 31"),
             .event("Multi day"),
             .section("Today"),
@@ -156,26 +157,26 @@ class EventListViewModelTests: XCTestCase {
         ])
     }
 
-    func testEventList_showAllDayEventsDisabled_shouldUpdateSummary() {
+    @Test func testEventList_showAllDayEventsDisabled_shouldUpdateSummary() {
 
         settings.toggleAllDayEvents.onNext(false)
         eventsSubject.onNext(testEvents())
 
-        XCTAssertEqual(viewModel.summary.lastValue(), EventListSummary(
+        #expect(viewModel.summary.lastValue() == EventListSummary(
             overdue: .init(colors: [], count: 0),
             allday: .init(colors: [], count: 0),
             today: .init(colors: [.blue, .yellow, .red], count: 4)
         ))
     }
 
-    func testEventList_showAllDayEventsEnabled_shouldRestoreAllDaySection() {
+    @Test func testEventList_showAllDayEventsEnabled_shouldRestoreAllDaySection() {
 
         settings.toggleAllDayEvents.onNext(false)
         eventsSubject.onNext(testEvents())
 
         settings.toggleAllDayEvents.onNext(true)
 
-        XCTAssertEqual(eventListItems, [
+        #expect(eventListItems == [
             .section("All day"),
             .event("All day 1"),
             .event("All day 2"),
@@ -189,11 +190,11 @@ class EventListViewModelTests: XCTestCase {
         ])
     }
 
-    func testEventList_isToday_shouldShowTodaySection() {
+    @Test func testEventList_isToday_shouldShowTodaySection() {
 
         eventsSubject.onNext(testEvents())
 
-        XCTAssertEqual(eventListItems, [
+        #expect(eventListItems == [
             .section("All day"),
             .event("All day 1"),
             .event("All day 2"),
@@ -206,19 +207,19 @@ class EventListViewModelTests: XCTestCase {
             .event("Event 1")
         ])
 
-        XCTAssertEqual(viewModel.summary.lastValue(), EventListSummary(
+        #expect(viewModel.summary.lastValue() == EventListSummary(
             overdue: .init(colors: [], count: 0),
             allday: .init(colors: [.red, .yellow], count: 2),
             today: .init(colors: [.blue, .yellow, .red], count: 4)
         ))
     }
 
-    func testEventList_isNotToday_shouldShowDateSection() {
+    @Test func testEventList_isNotToday_shouldShowDateSection() {
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 2))
         eventsSubject.onNext(testEvents())
 
-        XCTAssertEqual(eventListItems, [
+        #expect(eventListItems == [
             .section("All day"),
             .event("All day 1"),
             .event("All day 2"),
@@ -231,21 +232,21 @@ class EventListViewModelTests: XCTestCase {
             .event("Event 1")
         ])
 
-        XCTAssertEqual(viewModel.summary.lastValue(), EventListSummary(
+        #expect(viewModel.summary.lastValue() == EventListSummary(
             overdue: .init(colors: [], count: 0),
             allday: .init(colors: [.red, .yellow], count: 2),
             today: .init(colors: [.blue, .yellow, .red], count: 4)
         ))
     }
 
-    func testEventList_withHidePastEventsEnabled_isNotToday_shouldNotHideEvents() {
+    @Test func testEventList_withHidePastEventsEnabled_isNotToday_shouldNotHideEvents() {
 
         let selectedDate: Date = .make(year: 2020, month: 12, day: 31)
         dateSubject.onNext(selectedDate)
         eventsSubject.onNext(testEvents(baseDate: selectedDate))
         settings.togglePastEvents.onNext(false)
 
-        XCTAssertEqual(eventListItems, [
+        #expect(eventListItems == [
             .section("All day"),
             .event("All day 1"),
             .event("All day 2"),
@@ -258,14 +259,14 @@ class EventListViewModelTests: XCTestCase {
             .event("Event 1")
         ])
 
-        XCTAssertEqual(viewModel.summary.lastValue(), EventListSummary(
+        #expect(viewModel.summary.lastValue() == EventListSummary(
             overdue: .init(colors: [], count: 0),
             allday: .init(colors: [.red, .yellow], count: 2),
             today: .init(colors: [.blue, .yellow, .red], count: 4)
         ))
     }
 
-    func testEventList_withHidePastEventsEnabled_isToday_shouldHidePastEvents() {
+    @Test func testEventList_withHidePastEventsEnabled_isToday_shouldHidePastEvents() {
 
         eventsSubject.onNext(testEvents())
         settings.togglePastEvents.onNext(false)
@@ -273,7 +274,7 @@ class EventListViewModelTests: XCTestCase {
         dateProvider.add(1, .minute)
         refreshScheduler.advance(1, .minute)
 
-        XCTAssertEqual(eventListItems, [
+        #expect(eventListItems == [
             .section("All day"),
             .event("All day 1"),
             .event("All day 2"),
@@ -282,7 +283,7 @@ class EventListViewModelTests: XCTestCase {
             .event("Event 1")
         ])
 
-        XCTAssertEqual(viewModel.summary.lastValue(), EventListSummary(
+        #expect(viewModel.summary.lastValue() == EventListSummary(
             overdue: .init(colors: [], count: 0),
             allday: .init(colors: [.red, .yellow], count: 2),
             today: .init(colors: [.red], count: 2)
@@ -291,7 +292,7 @@ class EventListViewModelTests: XCTestCase {
         dateProvider.add(1, .minute)
         refreshScheduler.advance(1, .minute)
 
-        XCTAssertEqual(eventListItems, [
+        #expect(eventListItems == [
             .section("All day"),
             .event("All day 1"),
             .event("All day 2"),
@@ -299,14 +300,14 @@ class EventListViewModelTests: XCTestCase {
             .event("Event 1")
         ])
 
-        XCTAssertEqual(viewModel.summary.lastValue(), EventListSummary(
+        #expect(viewModel.summary.lastValue() == EventListSummary(
             overdue: .init(colors: [], count: 0),
             allday: .init(colors: [.red, .yellow], count: 2),
             today: .init(colors: [.red], count: 1)
         ))
     }
 
-    func testEventList_withFadePastEventsEnabled_shouldFadePastSections() {
+    @Test func testEventList_withFadePastEventsEnabled_shouldFadePastSections() {
 
         let events = testEvents()
         let lastDate = events.filter(\.isAllDay.isFalse).map(\.end).max()!
@@ -316,7 +317,7 @@ class EventListViewModelTests: XCTestCase {
             .make(start: start, end: start + 1, title: "Event 4")
         ])
 
-        XCTAssertEqual(eventListItems, [
+        #expect(eventListItems == [
             .section("All day"),
             .event("All day 1"),
             .event("All day 2"),
@@ -351,9 +352,9 @@ class EventListViewModelTests: XCTestCase {
             }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(sectionsFaded, [false, false])
+        #expect(sectionsFaded == [false, false])
 
-        XCTAssertEqual(viewModel.summary.lastValue(), EventListSummary(
+        #expect(viewModel.summary.lastValue() == EventListSummary(
             overdue: .init(colors: [], count: 0),
             allday: .init(colors: [.red, .yellow], count: 2),
             today: .init(colors: [.blue, .yellow, .red, .clear], count: 5)
@@ -362,9 +363,9 @@ class EventListViewModelTests: XCTestCase {
         dateProvider.add(1, .hour)
         eventsScheduler.advance(1, .hour)
 
-        XCTAssertEqual(sectionsFaded, [true, false])
+        #expect(sectionsFaded == [true, false])
 
-        XCTAssertEqual(viewModel.summary.lastValue(), EventListSummary(
+        #expect(viewModel.summary.lastValue() == EventListSummary(
             overdue: .init(colors: [], count: 0),
             allday: .init(colors: [.red, .yellow], count: 2),
             today: .init(colors: [.clear], count: 1)
@@ -373,42 +374,42 @@ class EventListViewModelTests: XCTestCase {
         dateProvider.add(1, .hour)
         eventsScheduler.advance(1, .hour)
 
-        XCTAssertEqual(sectionsFaded, [true, true])
+        #expect(sectionsFaded == [true, true])
 
-        XCTAssertEqual(viewModel.summary.lastValue(), EventListSummary(
+        #expect(viewModel.summary.lastValue() == EventListSummary(
             overdue: .init(colors: [], count: 0),
             allday: .init(colors: [.red, .yellow], count: 2),
             today: .init(colors: [], count: 0)
         ))
     }
 
-    func testEventList_withFadePastEventsEnabled_shouldNotScheduleRefreshes() {
+    @Test func testEventList_withFadePastEventsEnabled_shouldNotScheduleRefreshes() {
 
         eventsSubject.onNext(testEvents())
 
-        XCTAssertTrue(refreshScheduler.log.isEmpty)
+        #expect(refreshScheduler.log.isEmpty)
     }
 
-    func testEventList_withHidePastEventsEnabled_isNotToday_shouldNotScheduleRefreshes() {
+    @Test func testEventList_withHidePastEventsEnabled_isNotToday_shouldNotScheduleRefreshes() {
 
         dateSubject.onNext(.make(year: 2021, month: 1, day: 2))
         eventsSubject.onNext(testEvents())
         settings.togglePastEvents.onNext(false)
 
-        XCTAssertTrue(refreshScheduler.log.isEmpty)
+        #expect(refreshScheduler.log.isEmpty)
     }
 
-    func testEventList_withHidePastEventsEnabled_withExactSecond_shouldScheduleRefreshesCorrectly() {
+    @Test func testEventList_withHidePastEventsEnabled_withExactSecond_shouldScheduleRefreshesCorrectly() {
 
         let events = testEvents()
         eventsSubject.onNext(events)
         settings.togglePastEvents.onNext(false)
 
-        XCTAssertFalse(refreshScheduler.log.isEmpty)
-        XCTAssertTrue(zip(refreshScheduler.log, events.filter(\.isAllDay.isFalse).map(\.end)).allSatisfy(>))
+        #expect(refreshScheduler.log.isEmpty == false)
+        #expect(zip(refreshScheduler.log, events.filter(\.isAllDay.isFalse).map(\.end)).allSatisfy(>))
     }
 
-    func testEventList_withHidePastEventsEnabled_withPartialSecond_shouldScheduleRefreshesCorrectly() {
+    @Test func testEventList_withHidePastEventsEnabled_withPartialSecond_shouldScheduleRefreshesCorrectly() {
 
         let events = testEvents()
 
@@ -419,11 +420,11 @@ class EventListViewModelTests: XCTestCase {
 
         settings.togglePastEvents.onNext(false)
 
-        XCTAssertFalse(refreshScheduler.log.isEmpty)
-        XCTAssertTrue(zip(refreshScheduler.log, events.filter(\.isAllDay.isFalse).map(\.end)).allSatisfy(>))
+        #expect(refreshScheduler.log.isEmpty == false)
+        #expect(zip(refreshScheduler.log, events.filter(\.isAllDay.isFalse).map(\.end)).allSatisfy(>))
     }
 
-    func testEventList_withOverdueReminders_shouldShowInDedicatedSections() {
+    @Test func testEventList_withOverdueReminders_shouldShowInDedicatedSections() {
 
         let yesterday = dateProvider.calendar.date(byAdding: .day, value: -1, to: dateProvider.now)!
         let twoDaysAgo = dateProvider.calendar.date(byAdding: .day, value: -2, to: dateProvider.now)!
@@ -437,7 +438,7 @@ class EventListViewModelTests: XCTestCase {
             ]
         )
 
-        XCTAssertEqual(eventListItems, [
+        #expect(eventListItems == [
             .section("2 days ago"),
             .event("All day overdue"),
             .section("Yesterday"),
@@ -455,14 +456,14 @@ class EventListViewModelTests: XCTestCase {
             .event("Event 1")
         ])
 
-        XCTAssertEqual(viewModel.summary.lastValue(), EventListSummary(
+        #expect(viewModel.summary.lastValue() == EventListSummary(
             overdue: .init(colors: [.green, .purple], count: 3),
             allday: .init(colors: [.red, .yellow], count: 2),
             today: .init(colors: [.blue, .yellow, .red], count: 4)
         ))
     }
 
-    func testEventList_withOverdueReminders_withShowOverdueDisabled_shouldNotShowOverdueReminders() {
+    @Test func testEventList_withOverdueReminders_withShowOverdueDisabled_shouldNotShowOverdueReminders() {
 
         settings.toggleOverdueReminders.onNext(false)
 
@@ -478,7 +479,7 @@ class EventListViewModelTests: XCTestCase {
             ]
         )
 
-        XCTAssertEqual(eventListItems, [
+        #expect(eventListItems == [
             .section("All day"),
             .event("All day 1"),
             .event("All day 2"),
@@ -491,14 +492,14 @@ class EventListViewModelTests: XCTestCase {
             .event("Event 1")
         ])
 
-        XCTAssertEqual(viewModel.summary.lastValue(), EventListSummary(
+        #expect(viewModel.summary.lastValue() == EventListSummary(
             overdue: .init(colors: [], count: 0),
             allday: .init(colors: [.red, .yellow], count: 2),
             today: .init(colors: [.blue, .yellow, .red], count: 4)
         ))
     }
 
-    func testEventList_withOverdueReminders_isNotToday_shouldShowNormally() {
+    @Test func testEventList_withOverdueReminders_isNotToday_shouldShowNormally() {
 
         let date = dateProvider.calendar.date(byAdding: .day, value: -1, to: dateProvider.now)!
         dateSubject.onNext(date)
@@ -516,7 +517,7 @@ class EventListViewModelTests: XCTestCase {
             ]
         )
 
-        XCTAssertEqual(eventListItems, [
+        #expect(eventListItems == [
             .section("All day"),
             .event("All day event"),
             .event("All day overdue"),
@@ -528,14 +529,14 @@ class EventListViewModelTests: XCTestCase {
             .event("Completed")
         ])
 
-        XCTAssertEqual(viewModel.summary.lastValue(), EventListSummary(
+        #expect(viewModel.summary.lastValue() == EventListSummary(
             overdue: .init(colors: [], count: 0),
             allday: .init(colors: [.red], count: 2),
             today: .init(colors: [.red, .yellow], count: 4)
         ))
     }
 
-    func testEventList_withCompletedReminders_isToday_shouldShowNormally() {
+    @Test func testEventList_withCompletedReminders_isToday_shouldShowNormally() {
 
         let date = dateProvider.now
 
@@ -550,7 +551,7 @@ class EventListViewModelTests: XCTestCase {
             ]
         )
 
-        XCTAssertEqual(eventListItems, [
+        #expect(eventListItems == [
             .section("All day"),
             .event("All day event"),
             .event("All day overdue"),
@@ -562,7 +563,7 @@ class EventListViewModelTests: XCTestCase {
             .event("Reminder 2")
         ])
 
-        XCTAssertEqual(viewModel.summary.lastValue(), EventListSummary(
+        #expect(viewModel.summary.lastValue() == EventListSummary(
             overdue: .init(colors: [], count: 0),
             allday: .init(colors: [.red, .yellow], count: 2),
             today: .init(colors: [.red, .green], count: 3)
@@ -570,7 +571,7 @@ class EventListViewModelTests: XCTestCase {
     }
 
 
-    func testEventList_withCompletedReminders_withHidePastEventsEnabled_isToday_shouldHideCompleted() {
+    @Test func testEventList_withCompletedReminders_withHidePastEventsEnabled_isToday_shouldHideCompleted() {
 
         let date = dateProvider.now
 
@@ -587,7 +588,7 @@ class EventListViewModelTests: XCTestCase {
             ]
         )
 
-        XCTAssertEqual(eventListItems, [
+        #expect(eventListItems == [
             .section("All day"),
             .event("All day event"),
             .event("All day overdue"),
@@ -598,14 +599,14 @@ class EventListViewModelTests: XCTestCase {
             .event("Reminder 2")
         ])
 
-        XCTAssertEqual(viewModel.summary.lastValue(), EventListSummary(
+        #expect(viewModel.summary.lastValue() == EventListSummary(
             overdue: .init(colors: [], count: 0),
             allday: .init(colors: [.red, .yellow], count: 2),
             today: .init(colors: [.red, .green], count: 3)
         ))
     }
 
-    func testEventList_withUpcomingEvent_shouldShowRelativeTime() {
+    @Test func testEventList_withUpcomingEvent_shouldShowRelativeTime() {
 
         let date = dateProvider.now
 
@@ -616,7 +617,7 @@ class EventListViewModelTests: XCTestCase {
             .make(start: date + 5 * 60, end: date + 8 * 60, title: "Event 4"),
         ])
 
-        XCTAssertEqual(eventListItems, [
+        #expect(eventListItems == [
             .section("Thursday, Dec 31"),
             .event("Event 1"),
             .interval("2m"),

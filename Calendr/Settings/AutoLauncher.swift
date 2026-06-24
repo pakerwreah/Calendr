@@ -80,7 +80,7 @@ class AutoLauncher: NSObject, AutoLaunching {
             }
         } catch {
             if !BuildConfig.isTesting {
-                print(error)
+                print(error.localizedDescription)
             }
         }
         if enabled != service.isEnabled {

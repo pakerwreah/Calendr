@@ -5,12 +5,13 @@
 //  Created by Paker on 16/06/2026.
 //
 
-import XCTest
+import Foundation
 import RxSwift
+import Testing
 @testable import Calendr
 
 @MainActor
-class AutoUpdaterTests: XCTestCase {
+class AutoUpdaterTests {
 
     let disposeBag = DisposeBag()
 
@@ -33,11 +34,11 @@ class AutoUpdaterTests: XCTestCase {
 
     private var tempDirs: [URL] = []
 
-    override func setUp() {
+    init() {
         localStorage.reset()
     }
 
-    override func tearDown() {
+    deinit {
         saveModalFactory.cancel()
         for dir in tempDirs {
             try? FileManager.default.removeItem(at: dir)
@@ -47,7 +48,7 @@ class AutoUpdaterTests: XCTestCase {
 
     // MARK: - NotificationAction mapping via notificationTap
 
-    func testNotificationTap_mapsNewVersion_default() {
+    @Test func testNotificationTap_mapsNewVersion_default() {
 
         var received: AutoUpdater.NotificationAction?
 
@@ -58,12 +59,12 @@ class AutoUpdaterTests: XCTestCase {
         notificationProvider.simulateNotificationTap(.init(category: .newVersion, actionId: nil))
 
         guard case .newVersion(.default) = received else {
-            XCTFail("Expected .newVersion(.default), got \(String(describing: received))")
+            Issue.record("Expected .newVersion(.default), got \(String(describing: received))")
             return
         }
     }
 
-    func testNotificationTap_withNewVersionCategory_install() {
+    @Test func testNotificationTap_withNewVersionCategory_install() {
 
         var received: AutoUpdater.NotificationAction?
 
@@ -74,12 +75,12 @@ class AutoUpdaterTests: XCTestCase {
         notificationProvider.simulateNotificationTap(.init(category: .newVersion, actionId: "install"))
 
         guard case .newVersion(.install) = received else {
-            XCTFail("Expected .newVersion(.install), got \(String(describing: received))")
+            Issue.record("Expected .newVersion(.install), got \(String(describing: received))")
             return
         }
     }
 
-    func testNotificationTap_withUpdatedCategory_shouldTriggerDefaultAction() {
+    @Test func testNotificationTap_withUpdatedCategory_shouldTriggerDefaultAction() {
 
         var received: AutoUpdater.NotificationAction?
 
@@ -90,12 +91,12 @@ class AutoUpdaterTests: XCTestCase {
         notificationProvider.simulateNotificationTap(.init(category: .updated, actionId: nil))
 
         guard case .updated = received else {
-            XCTFail("Expected .updated(.default), got \(String(describing: received))")
+            Issue.record("Expected .updated(.default), got \(String(describing: received))")
             return
         }
     }
 
-    func testNotificationTap_mapsNewVersion_unknownActionId() {
+    @Test func testNotificationTap_mapsNewVersion_unknownActionId() {
 
         var received: AutoUpdater.NotificationAction?
 
@@ -106,14 +107,14 @@ class AutoUpdaterTests: XCTestCase {
         notificationProvider.simulateNotificationTap(.init(category: .newVersion, actionId: "unknown"))
 
         guard case .newVersion(.default) = received else {
-            XCTFail("Expected .newVersion(.default) for unknown action, got \(String(describing: received))")
+            Issue.record("Expected .newVersion(.default) for unknown action, got \(String(describing: received))")
             return
         }
     }
 
     // MARK: - Initial status
 
-    func testInitialStatus() {
+    @Test func testInitialStatus() {
 
         var status: UpdateStatus?
 
@@ -122,14 +123,14 @@ class AutoUpdaterTests: XCTestCase {
             .disposed(by: disposeBag)
 
         guard case .initial = status else {
-            XCTFail("Expected .initial, got \(String(describing: status))")
+            Issue.record("Expected .initial, got \(String(describing: status))")
             return
         }
     }
 
     // MARK: - checkRelease
 
-    func testCheckRelease_authorizationDenied_shouldNotFetch() {
+    @Test func testCheckRelease_authorizationDenied_shouldNotFetch() async {
 
         let initialExpectation = expectation(description: "Initial")
         let unexpected = expectation(description: "Unexpected")
@@ -148,10 +149,10 @@ class AutoUpdaterTests: XCTestCase {
 
         updater.checkRelease()
 
-        waitForExpectations(timeout: 0.1)
+        await fulfillment(of: [initialExpectation, unexpected])
     }
 
-    func testCheckRelease_sameVersion_resetsToInitial() {
+    @Test func testCheckRelease_sameVersion_resetsToInitial() async {
 
         let initialExpectation = expectation(description: "Initial")
         let fetchExpectation = expectation(description: "Fetching")
@@ -169,19 +170,19 @@ class AutoUpdaterTests: XCTestCase {
                     case (0, .initial): initialExpectation.fulfill()
                     case (1, .fetching): fetchExpectation.fulfill()
                     case (2, .initial): rollbackExpectation.fulfill()
-                    default: XCTFail("Unexpected status: \($0)")
+                    default: Issue.record("Unexpected status: \($0)")
                 }
             }
             .disposed(by: disposeBag)
 
         updater.checkRelease()
 
-        waitForExpectations(timeout: 0.1)
+        await fulfillment(of: [initialExpectation, fetchExpectation, rollbackExpectation])
 
-        XCTAssertEqual(localStorage.lastCheckedVersion, version)
+        #expect(localStorage.lastCheckedVersion == version)
     }
 
-    func testCheckRelease_newVersion_updatesStatus() {
+    @Test func testCheckRelease_newVersion_updatesStatus() async {
 
         let initialExpectation = expectation(description: "Initial")
         let fetchExpectation = expectation(description: "Fetching")
@@ -200,19 +201,19 @@ class AutoUpdaterTests: XCTestCase {
 
                     case (2, .newVersion(let v)):
                         newVersionExpectation.fulfill()
-                        XCTAssertEqual(v, "v99.0.0")
+                        #expect(v == "v99.0.0")
 
-                    default: XCTFail("Unexpected status: \($0)")
+                    default: Issue.record("Unexpected status: \($0)")
                 }
             }
             .disposed(by: disposeBag)
 
         updater.checkRelease()
 
-        waitForExpectations(timeout: 0.1)
+        await fulfillment(of: [initialExpectation, fetchExpectation, newVersionExpectation])
     }
 
-    func testCheckRelease_newVersion_setsLastCheckedVersion() {
+    @Test func testCheckRelease_newVersion_setsLastCheckedVersion() async {
 
         let newVersionExpectation = expectation(description: "New Version")
 
@@ -230,12 +231,12 @@ class AutoUpdaterTests: XCTestCase {
 
         updater.checkRelease()
 
-        waitForExpectations(timeout: 0.1)
+        await fulfillment(of: [newVersionExpectation])
 
-        XCTAssertEqual(localStorage.lastCheckedVersion, "v99.0.0")
+        #expect(localStorage.lastCheckedVersion == "v99.0.0")
     }
 
-    func testCheckRelease_missingAsset_reportsError() {
+    @Test func testCheckRelease_missingAsset_reportsError() async {
 
         let errorExpectation = expectation(description: "Error")
 
@@ -254,21 +255,21 @@ class AutoUpdaterTests: XCTestCase {
 
         updater.checkRelease()
 
-        waitForExpectations(timeout: 0.1)
+        await fulfillment(of: [errorExpectation])
 
         guard let error else {
-            XCTFail("Expected error")
+            Issue.record("Expected error")
             return
         }
         guard case .check = error else {
-            XCTFail("Unexpected error \(error)")
+            Issue.record("Unexpected error \(error)")
             return
         }
-        XCTAssertEqual(error.title, "Failed to check for update")
-        XCTAssertEqual(error.message, "Missing release asset")
+        #expect(error.title == "Failed to check for update")
+        #expect(error.message == "Missing release asset")
     }
 
-    func testCheckRelease_networkError_reportsError() {
+    @Test func testCheckRelease_networkError_reportsError() async {
 
         let initialExpectation = expectation(description: "Initial")
         let fetchExpectation = expectation(description: "Fetching")
@@ -286,7 +287,7 @@ class AutoUpdaterTests: XCTestCase {
                     case (0, .initial): initialExpectation.fulfill()
                     case (1, .fetching): fetchExpectation.fulfill()
                     case (2, .initial): rollbackExpectation.fulfill()
-                    default: XCTFail("Unexpected status: \($0)")
+                    default: Issue.record("Unexpected status: \($0)")
                 }
             }
             .disposed(by: disposeBag)
@@ -302,31 +303,31 @@ class AutoUpdaterTests: XCTestCase {
 
         updater.checkRelease()
 
-        waitForExpectations(timeout: 0.1)
+        await fulfillment(of: [initialExpectation, fetchExpectation, rollbackExpectation, errorExpectation])
 
         guard let error else {
-            XCTFail("Expected error")
+            Issue.record("Expected error")
             return
         }
         guard case .check = error else {
-            XCTFail("Unexpected error \(error)")
+            Issue.record("Unexpected error \(error)")
             return
         }
-        XCTAssertEqual(error.title, "Failed to check for update")
-        XCTAssertEqual(error.message, "Network failed")
+        #expect(error.title == "Failed to check for update")
+        #expect(error.message == "Network failed")
     }
 
-    func testCheckRelease_emptyResponse_reportsError() {
+    @Test func testCheckRelease_emptyResponse_reportsError() async {
 
-        assertCheckRelease_invalidData(Data())
+        await assertCheckRelease_invalidData(Data())
     }
 
-    func testCheckRelease_htmlResponse_reportsError() {
+    @Test func testCheckRelease_htmlResponse_reportsError() async {
 
-        assertCheckRelease_invalidData(Data("<html><body>Not Found</body></html>".utf8))
+        await assertCheckRelease_invalidData(Data("<html><body>Not Found</body></html>".utf8))
     }
 
-    private func assertCheckRelease_invalidData(_ data: Data) {
+    private func assertCheckRelease_invalidData(_ data: Data) async {
 
         let initialExpectation = expectation(description: "Initial")
         let fetchExpectation = expectation(description: "Fetching")
@@ -342,7 +343,7 @@ class AutoUpdaterTests: XCTestCase {
                     case (0, .initial): initialExpectation.fulfill()
                     case (1, .fetching): fetchExpectation.fulfill()
                     case (2, .initial): rollbackExpectation.fulfill()
-                    default: XCTFail("Unexpected status: \($0)")
+                    default: Issue.record("Unexpected status: \($0)")
                 }
             }
             .disposed(by: disposeBag)
@@ -358,18 +359,18 @@ class AutoUpdaterTests: XCTestCase {
 
         updater.checkRelease()
 
-        waitForExpectations(timeout: 0.1)
+        await fulfillment(of: [initialExpectation, fetchExpectation, rollbackExpectation, errorExpectation])
 
         guard case .check = error else {
-            XCTFail("Unexpected error \(String(describing: error))")
+            Issue.record("Unexpected error \(String(describing: error))")
             return
         }
-        XCTAssertEqual(error?.title, "Failed to check for update")
+        #expect(error?.title == "Failed to check for update")
     }
 
     // MARK: - downloadAndInstall
 
-    func testDownloadAndInstall_withoutRelease_resetsToInitial() {
+    @Test func testDownloadAndInstall_withoutRelease_resetsToInitial() async {
 
         let initialExpectation = expectation(description: "Initial")
         initialExpectation.expectedFulfillmentCount = 2
@@ -378,17 +379,17 @@ class AutoUpdaterTests: XCTestCase {
             .bind {
                 switch $0 {
                     case .initial: initialExpectation.fulfill()
-                    default: XCTFail("Unexpected status: \($0)")
+                    default: Issue.record("Unexpected status: \($0)")
                 }
             }
             .disposed(by: disposeBag)
 
         updater.downloadAndInstall()
 
-        waitForExpectations(timeout: 0.1)
+        await fulfillment(of: [initialExpectation])
     }
 
-    func testDownloadAndInstall_downloadError_reportsError() {
+    @Test func testDownloadAndInstall_downloadError_reportsError() async {
 
         let initialExpectation = expectation(description: "Initial")
         let fetchExpectation = expectation(description: "Fetching")
@@ -414,7 +415,7 @@ class AutoUpdaterTests: XCTestCase {
                     case (2, .newVersion("v99.0.0")): newVersionExpectation.fulfill()
                     case (3, .downloading("v99.0.0")): downloadingExpectation.fulfill()
                     case (4, .initial): rollbackExpectation.fulfill()
-                    default: XCTFail("Unexpected status: \($0)")
+                    default: Issue.record("Unexpected status: \($0)")
                 }
             }
             .disposed(by: disposeBag)
@@ -430,27 +431,27 @@ class AutoUpdaterTests: XCTestCase {
 
         updater.checkRelease()
 
-        wait(for: [initialExpectation, fetchExpectation, newVersionExpectation], timeout: 0.1)
+        await fulfillment(of: [initialExpectation, fetchExpectation, newVersionExpectation])
 
-        XCTAssertNil(error)
+        #expect(error == nil)
 
         updater.downloadAndInstall()
 
-        wait(for: [downloadingExpectation, errorExpectation, rollbackExpectation], timeout: 0.1)
+        await fulfillment(of: [downloadingExpectation, errorExpectation, rollbackExpectation])
 
         guard let error else {
-            XCTFail("Expected error")
+            Issue.record("Expected error")
             return
         }
         guard case .download = error else {
-            XCTFail("Unexpected error \(error)")
+            Issue.record("Unexpected error \(error)")
             return
         }
-        XCTAssertEqual(error.title, "Failed to download update")
-        XCTAssertEqual(error.message, "Download failed")
+        #expect(error.title == "Failed to download update")
+        #expect(error.message == "Download failed")
     }
 
-    func testDownloadAndInstall_setsDownloadingStatus() {
+    @Test func testDownloadAndInstall_setsDownloadingStatus() async {
 
         let initialExpectation = expectation(description: "Initial")
         let fetchExpectation = expectation(description: "Fetching")
@@ -485,7 +486,7 @@ class AutoUpdaterTests: XCTestCase {
                     case (2, .newVersion("v99.0.0")): newVersionExpectation.fulfill()
                     case (3, .downloading("v99.0.0")): downloadingExpectation.fulfill()
                     case (_, .initial): rollbackExpectation.fulfill()
-                    default: XCTFail("Unexpected status: \($0)")
+                    default: Issue.record("Unexpected status: \($0)")
                 }
             }
             .disposed(by: localBag)
@@ -498,16 +499,16 @@ class AutoUpdaterTests: XCTestCase {
 
         updater.checkRelease()
 
-        wait(for: [initialExpectation, fetchExpectation, newVersionExpectation], timeout: 0.1)
+        await fulfillment(of: [initialExpectation, fetchExpectation, newVersionExpectation])
 
         updater.downloadAndInstall()
 
-        wait(for: [downloadingExpectation, errorExpectation, rollbackExpectation], timeout: 0.1)
+        await fulfillment(of: [downloadingExpectation, errorExpectation, rollbackExpectation])
     }
 
     // MARK: - Installation flow
 
-    func testInstall_permissionDenied_returnsToNewVersion() {
+    @Test func testInstall_permissionDenied_returnsToNewVersion() async {
 
         let containerURL = makeTempDir()
         let updater = makeInstallUpdater(containerURL: containerURL)
@@ -536,31 +537,31 @@ class AutoUpdaterTests: XCTestCase {
                     case (2, .newVersion("v99.0.0")): newVersionExpectation.fulfill()
                     case (3, .downloading("v99.0.0")): downloadingExpectation.fulfill()
                     case (4, .newVersion("v99.0.0")): backToNewVersionExpectation.fulfill()
-                    default: XCTFail("Unexpected status: \($0)")
+                    default: Issue.record("Unexpected status: \($0)")
                 }
             }
             .disposed(by: disposeBag)
 
         updater.checkRelease()
 
-        wait(for: [initialExpectation, fetchExpectation, newVersionExpectation], timeout: 0.1)
+        await fulfillment(of: [initialExpectation, fetchExpectation, newVersionExpectation])
 
         updater.downloadAndInstall()
 
-        wait(for: [downloadingExpectation, backToNewVersionExpectation], timeout: 0.1)
+        await fulfillment(of: [downloadingExpectation, backToNewVersionExpectation])
 
-        XCTAssertTrue(saveModalFactory.spyMakeCalled)
-        XCTAssertNil(relaunchURL)
-        XCTAssertNil(localStorage.updatedVersion)
-        XCTAssertNil(localStorage.installationBookmark)
+        #expect(saveModalFactory.spyMakeCalled)
+        #expect(relaunchURL == nil)
+        #expect(localStorage.updatedVersion == nil)
+        #expect(localStorage.installationBookmark == nil)
     }
 
-    func testInstall_permissionGrantedWrongFolder_reportsInstallError() {
+    @Test func testInstall_permissionGrantedWrongFolder_reportsInstallError() async {
 
         let containerURL = makeTempDir()
         let updater = makeInstallUpdater(containerURL: containerURL)
 
-        primeRelease(updater, version: "v99.0.0")
+        await primeRelease(updater, version: "v99.0.0")
 
         networkProvider.m_downloadHandler = { $0 }
         saveModalFactory.response = .OK
@@ -584,24 +585,24 @@ class AutoUpdaterTests: XCTestCase {
 
         updater.downloadAndInstall()
 
-        wait(for: [errorExpectation], timeout: 0.1)
+        await fulfillment(of: [errorExpectation])
 
         guard case .install = error else {
-            XCTFail("Expected .install error, got \(String(describing: error))")
+            Issue.record("Expected .install error, got \(String(describing: error))")
             return
         }
-        XCTAssertEqual(error?.message, Strings.AutoUpdate.Replace.error)
-        XCTAssertFalse(bookmarkSaved)
-        XCTAssertNil(relaunchURL)
-        XCTAssertNil(localStorage.installationBookmark)
+        #expect(error?.message == Strings.AutoUpdate.Replace.error)
+        #expect(bookmarkSaved == false)
+        #expect(relaunchURL == nil)
+        #expect(localStorage.installationBookmark == nil)
     }
 
-    func testInstall_existingValidBookmark_usesSecurityScope() {
+    @Test func testInstall_existingValidBookmark_usesSecurityScope() async {
 
         let containerURL = makeTempDir()
         let updater = makeInstallUpdater(containerURL: containerURL)
 
-        primeRelease(updater, version: "v99.0.0")
+        await primeRelease(updater, version: "v99.0.0")
 
         localStorage.installationBookmark = Data([1, 2, 3])
 
@@ -629,20 +630,20 @@ class AutoUpdaterTests: XCTestCase {
 
         updater.downloadAndInstall()
 
-        wait(for: [errorExpectation], timeout: 0.1)
+        await fulfillment(of: [errorExpectation])
 
-        XCTAssertTrue(startAccessed)
-        XCTAssertTrue(stopAccessed)
-        XCTAssertFalse(saveModalFactory.spyMakeCalled)
+        #expect(startAccessed)
+        #expect(stopAccessed)
+        #expect(saveModalFactory.spyMakeCalled == false)
 
         guard case .install = error else {
-            XCTFail("Expected .install error, got \(String(describing: error))")
+            Issue.record("Expected .install error, got \(String(describing: error))")
             return
         }
-        XCTAssertEqual(error?.message, "trash failed")
+        #expect(error?.message == "trash failed")
     }
 
-    func testInstall_replaceAppFails_savesBookmarkAndCleansUp() {
+    @Test func testInstall_replaceAppFails_savesBookmarkAndCleansUp() async {
 
         let containerURL = makeTempDir()
         let updater = makeInstallUpdater(containerURL: containerURL)
@@ -680,7 +681,7 @@ class AutoUpdaterTests: XCTestCase {
                     case (2, .newVersion("v99.0.0")): newVersionExpectation.fulfill()
                     case (3, .downloading("v99.0.0")): downloadingExpectation.fulfill()
                     case (4, .initial): rollbackExpectation.fulfill()
-                    default: XCTFail("Unexpected status: \($0)")
+                    default: Issue.record("Unexpected status: \($0)")
                 }
             }
             .disposed(by: disposeBag)
@@ -695,27 +696,27 @@ class AutoUpdaterTests: XCTestCase {
 
         updater.checkRelease()
 
-        wait(for: [initialExpectation, fetchExpectation, newVersionExpectation], timeout: 0.1)
+        await fulfillment(of: [initialExpectation, fetchExpectation, newVersionExpectation])
 
         updater.downloadAndInstall()
 
-        wait(for: [downloadingExpectation, errorExpectation, rollbackExpectation], timeout: 0.1)
+        await fulfillment(of: [downloadingExpectation, errorExpectation, rollbackExpectation])
 
         guard case .install = error else {
-            XCTFail("Expected .install error, got \(String(describing: error))")
+            Issue.record("Expected .install error, got \(String(describing: error))")
             return
         }
-        XCTAssertEqual(localStorage.installationBookmark, Data([9, 9]))
-        XCTAssertEqual(removedItem, archiveURL)
-        XCTAssertNil(relaunchURL)
+        #expect(localStorage.installationBookmark == Data([9, 9]))
+        #expect(removedItem == archiveURL)
+        #expect(relaunchURL == nil)
     }
 
-    func testInstall_success_relaunchesAndPersistsVersion() throws {
+    @Test func testInstall_success_relaunchesAndPersistsVersion() async throws {
 
         let containerURL = makeTempDir()
         let updater = makeInstallUpdater(containerURL: containerURL)
 
-        primeRelease(updater, version: "v99.0.0")
+        await primeRelease(updater, version: "v99.0.0")
 
         let archiveURL = try makeAppZip(content: "v99.0.0")
         networkProvider.m_downloadHandler = { _ in archiveURL }
@@ -734,20 +735,20 @@ class AutoUpdaterTests: XCTestCase {
 
         updater.downloadAndInstall()
 
-        wait(for: [relaunchExpectation], timeout: 0.1)
+        await fulfillment(of: [relaunchExpectation])
 
         let appURL = containerURL.appendingPathComponent("Calendr.app", isDirectory: true)
-        XCTAssertEqual(relaunchURL, appURL)
-        XCTAssertEqual(localStorage.updatedVersion, "v99.0.0")
-        XCTAssertEqual(localStorage.installationBookmark, Data([5]))
+        #expect(relaunchURL == appURL)
+        #expect(localStorage.updatedVersion == "v99.0.0")
+        #expect(localStorage.installationBookmark == Data([5]))
 
         let extractedFile = appURL.appendingPathComponent("Contents/Info.plist")
-        XCTAssertTrue(FileManager.default.fileExists(atPath: extractedFile.path))
+        #expect(FileManager.default.fileExists(atPath: extractedFile.path))
     }
 
     // MARK: - Updated notification on init
 
-    func testInit_withUpdatedVersion_matchingAppVersion_sendsNotification() {
+    @Test func testInit_withUpdatedVersion_matchingAppVersion_sendsNotification() async {
 
         localStorage.updatedVersion = BuildConfig.appVersion
 
@@ -769,12 +770,12 @@ class AutoUpdaterTests: XCTestCase {
             bundleInfo: .main
         )
 
-        waitForExpectations(timeout: 0.1)
+        await fulfillment(of: [expectation])
 
-        XCTAssertNil(localStorage.updatedVersion)
+        #expect(localStorage.updatedVersion == nil)
     }
 
-    func testInit_withUpdatedVersion_differentVersion_shouldNotSendNotification() {
+    @Test func testInit_withUpdatedVersion_differentVersion_shouldNotSendNotification() async {
 
         localStorage.updatedVersion = "v0.0.1"
 
@@ -797,12 +798,12 @@ class AutoUpdaterTests: XCTestCase {
             bundleInfo: .main
         )
 
-        waitForExpectations(timeout: 0.1)
+        await fulfillment(of: [expectation])
 
-        XCTAssertNil(localStorage.updatedVersion)
+        #expect(localStorage.updatedVersion == nil)
     }
 
-    func testInit_withoutUpdatedVersion_shouldNotSendNotification() {
+    @Test func testInit_withoutUpdatedVersion_shouldNotSendNotification() async {
 
         let expectation = expectation(description: "notification")
         expectation.isInverted = true
@@ -823,12 +824,12 @@ class AutoUpdaterTests: XCTestCase {
             bundleInfo: .main
         )
 
-        waitForExpectations(timeout: 0.1)
+        await fulfillment(of: [expectation])
     }
 
     // MARK: - Notification categories registration
 
-    func testInit_registersNotificationCategories() {
+    @Test func testInit_registersNotificationCategories() {
 
         let notificationProvider = MockLocalNotificationProvider()
 
@@ -841,42 +842,42 @@ class AutoUpdaterTests: XCTestCase {
             bundleInfo: .main
         )
 
-        XCTAssertEqual(notificationProvider.spyRegisteredCategories.count, 2)
+        #expect(notificationProvider.spyRegisteredCategories.count == 2)
 
         let identifiers = notificationProvider.spyRegisteredCategories.map(\.identifier)
-        XCTAssertTrue(identifiers.contains(LocalNotification.Category.newVersion.rawValue))
-        XCTAssertTrue(identifiers.contains(LocalNotification.Category.updated.rawValue))
+        #expect(identifiers.contains(LocalNotification.Category.newVersion.rawValue))
+        #expect(identifiers.contains(LocalNotification.Category.updated.rawValue))
     }
 
     // MARK: - UpdateError properties
 
-    func testUpdateError_check_title() {
+    @Test func testUpdateError_check_title() {
 
         let error = UpdateError.check(UnexpectedError(message: "test"))
-        XCTAssertEqual(error.title, Strings.AutoUpdate.Failed.check)
+        #expect(error.title == Strings.AutoUpdate.Failed.check)
     }
 
-    func testUpdateError_download_title() {
+    @Test func testUpdateError_download_title() {
 
         let error = UpdateError.download(UnexpectedError(message: "test"))
-        XCTAssertEqual(error.title, Strings.AutoUpdate.Failed.download)
+        #expect(error.title == Strings.AutoUpdate.Failed.download)
     }
 
-    func testUpdateError_install_title() {
+    @Test func testUpdateError_install_title() {
 
         let error = UpdateError.install(UnexpectedError(message: "test"))
-        XCTAssertEqual(error.title, Strings.AutoUpdate.Failed.install)
+        #expect(error.title == Strings.AutoUpdate.Failed.install)
     }
 
-    func testUpdateError_message() {
+    @Test func testUpdateError_message() {
 
         let error = UpdateError.check(UnexpectedError(message: "Something went wrong"))
-        XCTAssertEqual(error.message, "Something went wrong")
+        #expect(error.message == "Something went wrong")
     }
 
     // MARK: - start / stop
 
-    func testStop_cancelsAutoCheck() {
+    @Test func testStop_cancelsAutoCheck() async {
 
         let expectation = expectation(description: "cancel")
 
@@ -904,7 +905,7 @@ class AutoUpdaterTests: XCTestCase {
             self.updater.stop()
         }
 
-        waitForExpectations(timeout: 0.1)
+        await fulfillment(of: [expectation])
     }
 
     // MARK: - Helpers
@@ -932,7 +933,7 @@ class AutoUpdaterTests: XCTestCase {
         )
     }
 
-    private func primeRelease(_ updater: AutoUpdater, version: String) {
+    private func primeRelease(_ updater: AutoUpdater, version: String) async {
 
         let json = makeReleaseJSON(name: version, assetURL: "https://example.com/Calendr.zip")
         networkProvider.m_dataHandler = { _ in json }
@@ -945,7 +946,7 @@ class AutoUpdaterTests: XCTestCase {
 
         updater.checkRelease()
 
-        wait(for: [newVersionExpectation], timeout: 0.1)
+        await fulfillment(of: [newVersionExpectation])
 
         token.dispose()
     }
