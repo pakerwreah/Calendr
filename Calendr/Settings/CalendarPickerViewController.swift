@@ -91,7 +91,7 @@ class CalendarPickerViewController: NSViewController, SettingsUI {
             .bind(to: contentStackView.rx.arrangedSubviews)
             .disposed(by: pickerDisposeBag)
     }
-    
+
     private func makeCalendarSection(title: String, calendars: [CalendarModel], showNextEvent: Bool) -> NSView {
 
         let label = Label(text: title, font: .systemFont(ofSize: 11, weight: .semibold))

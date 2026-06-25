@@ -184,7 +184,7 @@ class EventOptionsViewModelTests {
         #expect(EventAction.link(.zoomLink, isInProgress: false).title == Strings.Event.Action.join)
 
         #expect(EventAction.link(.zoomLink, isInProgress: false).icon == Icons.Event.video)
-        
+
         #expect(
             EventAction.link(.zoomLink, isInProgress: true).icon?.tiffRepresentation ==
             Icons.Event.video_fill.with(color: .controlAccentColor).tiffRepresentation
@@ -193,9 +193,9 @@ class EventOptionsViewModelTests {
 
     @Test func testEventLinkAction_isGenericLink() {
         #expect(EventAction.link(.genericLink, isInProgress: false).title == "google.com")
-        
+
         #expect(EventAction.link(.genericLink, isInProgress: false).icon == Icons.Event.link)
-        
+
         #expect(
             EventAction.link(.genericLink, isInProgress: true).icon?.tiffRepresentation ==
             Icons.Event.link.with(color: .controlAccentColor).tiffRepresentation

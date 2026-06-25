@@ -26,7 +26,7 @@ class TrackedMenu: NSMenu, NSMenuDelegate {
         super.init(title: "")
         delegate = self
     }
-    
+
     func menuWillOpen(_ menu: NSMenu) {
         activeMenus.append(self)
     }

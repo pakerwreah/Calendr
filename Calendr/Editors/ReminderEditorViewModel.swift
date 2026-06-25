@@ -11,7 +11,7 @@ import RxSwift
 
 @Observation.Observable
 class ReminderEditorViewModel: HostingWindowControllerDelegate {
-    
+
     var title = ""
     var dueDate: Date
     var isAllDay = false

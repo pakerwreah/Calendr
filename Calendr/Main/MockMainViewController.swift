@@ -45,7 +45,7 @@ class MockMainViewController: MainViewController {
                 distributedNotificationCenter: distributedNotificationCenter,
                 scheduler: MainScheduler.instance
             ),
-            
+
             notificationProvider: MockLocalNotificationProvider(),
             networkProvider: MockNetworkServiceProvider(),
             localStorage: localStorage,

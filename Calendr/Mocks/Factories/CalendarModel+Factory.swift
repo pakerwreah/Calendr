@@ -10,7 +10,7 @@
 import AppKit
 
 extension CalendarModel {
-    
+
     static func make(
         id: String = "",
         account: String = "",

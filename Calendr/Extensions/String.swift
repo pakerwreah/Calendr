@@ -81,6 +81,6 @@ extension StringProtocol {
 }
 
 extension Optional where Wrapped: StringProtocol {
-    
+
     var isNilOrEmpty: Bool { self == nil || self!.isEmpty }
 }

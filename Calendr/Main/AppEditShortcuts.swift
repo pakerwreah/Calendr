@@ -8,7 +8,7 @@
 import AppKit
 
 extension AppDelegate {
-    
+
     // 🔨 This will not be visible, but it allows us to use basic commands in text fields
     func setUpEditShortcuts() {
 

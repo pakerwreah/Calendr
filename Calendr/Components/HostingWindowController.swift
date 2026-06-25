@@ -22,10 +22,10 @@ class HostingWindowController<RootView: View>: NSHostingController<RootView>, NS
 
     override init(rootView: RootView) {
         super.init(rootView: rootView)
-        
+
         title = ""
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

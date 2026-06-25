@@ -10,7 +10,7 @@ import Foundation
 protocol Cache: AnyObject {
     associatedtype Key: Hashable
     associatedtype Value
-    
+
     func get(_ key: Key) -> Value?
     func set(_ key: Key, _ value: Value)
     func remove(_ key: Key)

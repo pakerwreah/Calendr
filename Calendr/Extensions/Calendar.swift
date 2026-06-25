@@ -33,7 +33,7 @@ extension Calendar {
     func isDate(_ date: Date, in range: (start: Date, end: Date), granularity: Component) -> Bool {
         // date >= start
         let gte = isDate(date, greaterThanOrEqualTo: range.start, granularity: granularity)
-        
+
         // date < end
         let lt = isDate(date, lessThan: range.end, granularity: granularity)
 

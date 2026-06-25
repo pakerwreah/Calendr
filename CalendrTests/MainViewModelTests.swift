@@ -128,7 +128,7 @@ class MainViewModelTests {
             isSearchInputHidden = $0
         }
         .disposed(by: disposeBag)
-        
+
         viewModel.isSearchInputSuggestionHidden.bind {
             isSearchInputSuggestionHidden = $0
         }

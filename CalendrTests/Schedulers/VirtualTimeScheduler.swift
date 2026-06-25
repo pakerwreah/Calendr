@@ -21,7 +21,7 @@ extension VirtualTimeScheduler where VirtualTime == RxTime {
 }
 
 extension RxTimeInterval {
-    
+
     var timeInterval: TimeInterval {
         switch self {
         case let .seconds(s):

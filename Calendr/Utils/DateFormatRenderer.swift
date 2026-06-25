@@ -85,7 +85,7 @@ enum DateFormatRenderer {
         let components = offsetText.split(separator: ":")
         guard let hours = Int(components[0]) else { return nil }
         let minutes = components.count == 2 ? Int(components[1]) : 0
-        
+
         guard let minutes = minutes else { return nil }
         guard (0...14).contains(hours) else { return nil }
         guard (0...59).contains(minutes) else { return nil }

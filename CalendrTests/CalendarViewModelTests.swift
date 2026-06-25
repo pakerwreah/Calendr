@@ -13,7 +13,7 @@ import Testing
 class CalendarViewModelTests {
 
     let disposeBag = DisposeBag()
-    
+
     let searchSubject = BehaviorSubject<String>(value: "")
     let dateSubject = PublishSubject<Date>()
     let hoverSubject = PublishSubject<Date?>()
@@ -275,7 +275,7 @@ class CalendarViewModelTests {
         #expect(weekDays?.filter(\.isHighlighted).map(\.title) == ["S", "S"])
 
         settings.highlightedWeekdaysObserver.onNext([1, 2, 5])
-        
+
         #expect(weekDays?.filter(\.isHighlighted).map(\.title) == ["M", "T", "F"])
     }
 

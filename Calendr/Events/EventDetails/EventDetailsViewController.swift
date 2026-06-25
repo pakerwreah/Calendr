@@ -35,7 +35,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
     private let optionsButton = NSButton()
 
     private let viewModel: EventDetailsViewModel
-    
+
     private lazy var notesHeightConstraint = notesTextView.height(equalTo: 0)
     private lazy var meetingInfoHeightConstraint = meetingInfoTextView.height(equalTo: 0)
     private lazy var meetingInfoScrollViewHeightConstraint = meetingInfoScrollView.contentView.height(lessThanOrEqualTo: 150)
@@ -423,7 +423,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         static let corner: CGFloat = 6
         static let height: CGFloat = 150
         static let distance: CLLocationDistance = 1000
-        
+
         static func region(for center: Coordinates) -> MKCoordinateRegion {
             .init(center: .init(center), latitudinalMeters: distance, longitudinalMeters: distance)
         }
@@ -489,7 +489,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
 
         let mapButton = ImageButton(image: Icons.EventDetails.map)
         mapView.addSubview(mapButton)
-        
+
         mapButton.size(equalTo: 26)
         mapButton.bottom(equalTo: mapView, constant: -2)
         mapButton.trailing(equalTo: mapView, constant: -2)
@@ -509,7 +509,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
 
                 let temperatures = isAllDay ? [weather.day.lowTemperature, weather.day.highTemperature] : [firstHour.temperature]
                 let symbolName = isAllDay ? weather.day.symbolName : firstHour.symbolName
-                
+
                 guard
                     let icon = NSImage(systemSymbolName: symbolName).flatMap({
                         $0.withSymbolConfiguration(.preferringHierarchical())

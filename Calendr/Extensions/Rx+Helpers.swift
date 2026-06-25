@@ -61,7 +61,7 @@ extension ObservableType {
     func batch(timeSpan: RxTimeInterval, scheduler: SchedulerType) -> Observable<[Element]> {
         .deferred {
             var memoryBuffer = [Element]()
-            
+
             return observe(on: scheduler)
                 .map { newElement in
                     memoryBuffer.append(newElement)

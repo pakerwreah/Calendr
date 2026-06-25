@@ -225,7 +225,7 @@ class AutoUpdater: AutoUpdating {
     }
 
     private func setUpNotifications() {
-        
+
         notificationProvider.register(
             NotificationCategory.newVersion,
             NotificationCategory.updated

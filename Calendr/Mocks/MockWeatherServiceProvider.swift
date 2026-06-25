@@ -10,7 +10,7 @@
 import Foundation
 
 class MockWeatherServiceProvider: WeatherServiceProviding {
-    
+
     func weather(for coordinates: Coordinates, start: Date, end: Date) async -> Weather? { nil }
 }
 

@@ -220,7 +220,7 @@ class AppearanceViewController: NSViewController, SettingsUI {
             observer: viewModel.textScalingObserver
         )
         .disposed(by: disposeBag)
-        
+
         bind(
             control: calendarTextScalingSlider,
             observable: viewModel.calendarTextScaling,

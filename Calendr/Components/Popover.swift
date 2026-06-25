@@ -224,7 +224,7 @@ private class PopoverWindow: NSPanel {
     }
 
     private func relativePosition(to view: NSView, edge: NSRectEdge, spacing: CGFloat) -> NSPoint? {
-        
+
         guard let viewWindow = view.window, let screen = viewWindow.screen else {
             return nil
         }

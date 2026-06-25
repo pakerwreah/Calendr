@@ -49,7 +49,7 @@ class ReminderOptionsViewModel: BaseContextMenuViewModel<ReminderAction> {
 
         addSeparator()
         addItem(.complete(event.calendar.color))
-        
+
         addSeparator()
         addItems(
             .remind(.init(minute: 5)),

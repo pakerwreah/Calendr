@@ -11,7 +11,7 @@ import RxSwift
 protocol DateProviding: AnyObject {
     var calendar: Calendar { get }
     var now: Date { get }
-    
+
     var calendarUpdated: Observable<Calendar> { get }
 }
 
@@ -25,7 +25,7 @@ extension DateProviding {
 class DateProvider: DateProviding {
     private(set) var calendar: Calendar = .current
     var now: Date { Date() }
-    
+
     let calendarUpdated: Observable<Calendar>
 
     private let disposeBag = DisposeBag()

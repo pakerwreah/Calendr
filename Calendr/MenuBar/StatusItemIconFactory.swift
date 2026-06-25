@@ -47,7 +47,7 @@ enum StatusItemIconFactory {
 
             return true
         }
-        
+
         image.isTemplate = true
 
         return image
