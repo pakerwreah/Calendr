@@ -5,11 +5,12 @@
 //  Created by Paker on 01/06/2026.
 //
 
-import XCTest
+import Foundation
 import RxSwift
+import Testing
 @testable import Calendr
 
-class NextEventViewModelFullScreenTests: XCTestCase {
+class NextEventViewModelFullScreenTests {
 
     let disposeBag = DisposeBag()
 
@@ -48,14 +49,14 @@ class NextEventViewModelFullScreenTests: XCTestCase {
         dateProvider.now
     }
 
-    override func setUp() {
+    init() {
 
         localStorage.reset()
 
         dateProvider.m_calendar.locale = Locale(identifier: "en_US")
     }
 
-    func testNextEvent_isInProgress_withFullScreenDisabled_shouldNotPublishFullScreenViewModel() {
+    @Test func testNextEvent_isInProgress_withFullScreenDisabled_shouldNotPublishFullScreenViewModel() {
 
         settings.toggleFullScreenEvent.onNext(false)
 
@@ -71,10 +72,10 @@ class NextEventViewModelFullScreenTests: XCTestCase {
             .make(start: now - 1, end: now + 1)
         ])
 
-        XCTAssertNil(fullScreen)
+        #expect(fullScreen == nil)
     }
 
-    func testNextEvent_isInProgress_withFullScreenToggledOn_shouldPublishFullScreenViewModel() {
+    @Test func testNextEvent_isInProgress_withFullScreenToggledOn_shouldPublishFullScreenViewModel() {
 
         settings.toggleFullScreenEvent.onNext(false)
 
@@ -90,14 +91,14 @@ class NextEventViewModelFullScreenTests: XCTestCase {
             .make(start: now - 1, end: now + 1)
         ])
 
-        XCTAssertNil(fullScreen)
+        #expect(fullScreen == nil)
 
         settings.toggleFullScreenEvent.onNext(true)
 
-        XCTAssertNotNil(fullScreen)
+        #expect(fullScreen != nil)
     }
 
-    func testNextEvent_isNotInProgress_shouldNotPublishFullScreenViewModel() {
+    @Test func testNextEvent_isNotInProgress_shouldNotPublishFullScreenViewModel() {
 
         settings.toggleFullScreenEvent.onNext(true)
 
@@ -113,10 +114,10 @@ class NextEventViewModelFullScreenTests: XCTestCase {
             .make(start: now - 10, end: now - 5)
         ])
 
-        XCTAssertNil(fullScreen)
+        #expect(fullScreen == nil)
     }
 
-    func testNextEvent_isInProgress_shouldPublishFullScreenViewModel() {
+    @Test func testNextEvent_isInProgress_shouldPublishFullScreenViewModel() {
 
         settings.toggleFullScreenEvent.onNext(true)
 
@@ -132,11 +133,11 @@ class NextEventViewModelFullScreenTests: XCTestCase {
             .make(start: now - 1, end: now + 1)
         ])
 
-        XCTAssertNotNil(fullScreen)
+        #expect(fullScreen != nil)
     }
 
     // local id is not guaranteed to be stable
-    func testNextEvent_isInProgress_eventIdChanged_shouldNotReplayFullScreenViewModel() {
+    @Test func testNextEvent_isInProgress_eventIdChanged_shouldNotReplayFullScreenViewModel() {
 
         settings.toggleFullScreenEvent.onNext(true)
 
@@ -152,7 +153,7 @@ class NextEventViewModelFullScreenTests: XCTestCase {
             .make(id: "1", start: now, end: now + 1)
         ])
 
-        XCTAssertNotNil(fullScreen)
+        #expect(fullScreen != nil)
 
         let lastValue = fullScreen
 
@@ -160,11 +161,11 @@ class NextEventViewModelFullScreenTests: XCTestCase {
             .make(id: "2", start: now, end: now + 1)
         ])
 
-        XCTAssert(fullScreen === lastValue)
+        #expect(fullScreen === lastValue)
     }
 
     // we don't care if someone accept / decline the event
-    func testNextEvent_isInProgress_participantsChanged_shouldNotReplayFullScreenViewModel() {
+    @Test func testNextEvent_isInProgress_participantsChanged_shouldNotReplayFullScreenViewModel() {
 
         settings.toggleFullScreenEvent.onNext(true)
 
@@ -182,7 +183,7 @@ class NextEventViewModelFullScreenTests: XCTestCase {
             .make(start: now, end: now + 1, participants: participants)
         ])
 
-        XCTAssertNotNil(fullScreen)
+        #expect(fullScreen != nil)
 
         let lastValue = fullScreen
 
@@ -192,11 +193,11 @@ class NextEventViewModelFullScreenTests: XCTestCase {
             ])
         ])
 
-        XCTAssert(fullScreen === lastValue)
+        #expect(fullScreen === lastValue)
     }
 
     // time doesn't matter, we only care if the meeting is in progress or not
-    func testNextEvent_isInProgress_timeChanged_shouldNotReplayFullScreenViewModel() {
+    @Test func testNextEvent_isInProgress_timeChanged_shouldNotReplayFullScreenViewModel() {
 
         settings.toggleFullScreenEvent.onNext(true)
 
@@ -212,7 +213,7 @@ class NextEventViewModelFullScreenTests: XCTestCase {
             .make(start: now, end: now + 1)
         ])
 
-        XCTAssertNotNil(fullScreen)
+        #expect(fullScreen != nil)
 
         let lastValue = fullScreen
 
@@ -220,10 +221,10 @@ class NextEventViewModelFullScreenTests: XCTestCase {
             .make(start: now, end: now + 2)
         ])
 
-        XCTAssert(fullScreen === lastValue)
+        #expect(fullScreen === lastValue)
     }
 
-    func testNextEvent_eventRescheduled_shouldPublishNilFullScreenViewModel() {
+    @Test func testNextEvent_eventRescheduled_shouldPublishNilFullScreenViewModel() {
 
         settings.toggleFullScreenEvent.onNext(true)
 
@@ -239,16 +240,16 @@ class NextEventViewModelFullScreenTests: XCTestCase {
             .make(start: now, end: now + 1)
         ])
 
-        XCTAssertNotNil(fullScreen)
+        #expect(fullScreen != nil)
 
         calendarService.changeEvents([
             .make(start: now + 1, end: now + 2)
         ])
 
-        XCTAssertNil(fullScreen)
+        #expect(fullScreen == nil)
     }
 
-    func testNextEvent_eventEnded_shouldPublishNilFullScreenViewModel() {
+    @Test func testNextEvent_eventEnded_shouldPublishNilFullScreenViewModel() {
 
         settings.toggleFullScreenEvent.onNext(true)
 
@@ -264,15 +265,15 @@ class NextEventViewModelFullScreenTests: XCTestCase {
             .make(start: now, end: now + 1)
         ])
 
-        XCTAssertNotNil(fullScreen)
+        #expect(fullScreen != nil)
 
         dateProvider.add(1, .second)
         scheduler.advance(1, .second)
 
-        XCTAssertNil(fullScreen)
+        #expect(fullScreen == nil)
     }
 
-    func testNextEvent_isInProgress_externalIdChanged_shouldPublishFullScreenViewModel() {
+    @Test func testNextEvent_isInProgress_externalIdChanged_shouldPublishFullScreenViewModel() {
 
         settings.toggleFullScreenEvent.onNext(true)
 
@@ -288,16 +289,16 @@ class NextEventViewModelFullScreenTests: XCTestCase {
             .make(externalId: "1", start: now, end: now + 1, title: "Event 1")
         ])
 
-        XCTAssertEqual(fullScreen?.title, "Event 1")
+        #expect(fullScreen?.title == "Event 1")
 
         calendarService.changeEvents([
             .make(externalId: "2", start: now, end: now + 1, title: "Event 2")
         ])
 
-        XCTAssertEqual(fullScreen?.title, "Event 2")
+        #expect(fullScreen?.title == "Event 2")
     }
 
-    func testNextEvent_isInProgress_withScreenLocked_shouldNotPublishFullScreenViewModel() {
+    @Test func testNextEvent_isInProgress_withScreenLocked_shouldNotPublishFullScreenViewModel() {
 
         settings.toggleFullScreenEvent.onNext(true)
         screenProvider.isLockedObserver.onNext(true)
@@ -314,10 +315,10 @@ class NextEventViewModelFullScreenTests: XCTestCase {
             .make(start: now - 1, end: now + 1)
         ])
 
-        XCTAssertNil(fullScreen)
+        #expect(fullScreen == nil)
     }
 
-    func testNextEvent_isInProgress_withScreenUnlocked_shouldPublishFullScreenViewModel() {
+    @Test func testNextEvent_isInProgress_withScreenUnlocked_shouldPublishFullScreenViewModel() {
 
         settings.toggleFullScreenEvent.onNext(true)
         screenProvider.isLockedObserver.onNext(true)
@@ -334,14 +335,14 @@ class NextEventViewModelFullScreenTests: XCTestCase {
             .make(start: now - 1, end: now + 1)
         ])
 
-        XCTAssertNil(fullScreen)
+        #expect(fullScreen == nil)
 
         screenProvider.isLockedObserver.onNext(false)
 
-        XCTAssertNotNil(fullScreen)
+        #expect(fullScreen != nil)
     }
 
-    func testNextEvent_isInProgress_withScreenUnlocked_shouldPublishLatestFullScreenViewModel() {
+    @Test func testNextEvent_isInProgress_withScreenUnlocked_shouldPublishLatestFullScreenViewModel() {
 
         settings.toggleFullScreenEvent.onNext(true)
         screenProvider.isLockedObserver.onNext(true)
@@ -358,20 +359,20 @@ class NextEventViewModelFullScreenTests: XCTestCase {
             .make(externalId: "1", start: now - 1, end: now + 1, title: "Event 1")
         ])
 
-        XCTAssertNil(fullScreen)
+        #expect(fullScreen == nil)
 
         calendarService.changeEvents([
             .make(externalId: "2", start: now - 1, end: now + 1, title: "Event 2")
         ])
 
-        XCTAssertNil(fullScreen)
+        #expect(fullScreen == nil)
 
         screenProvider.isLockedObserver.onNext(false)
 
-        XCTAssertEqual(fullScreen?.title, "Event 2")
+        #expect(fullScreen?.title == "Event 2")
     }
 
-    func testNextEvent_isInProgress_withScreenUnlockedThenLocked_shouldNotPublishNilFullScreenViewModel() {
+    @Test func testNextEvent_isInProgress_withScreenUnlockedThenLocked_shouldNotPublishNilFullScreenViewModel() {
 
         settings.toggleFullScreenEvent.onNext(true)
 
@@ -387,14 +388,14 @@ class NextEventViewModelFullScreenTests: XCTestCase {
             .make(start: now - 1, end: now + 1)
         ])
 
-        XCTAssertNotNil(fullScreen)
+        #expect(fullScreen != nil)
 
         screenProvider.isLockedObserver.onNext(true)
 
-        XCTAssertNotNil(fullScreen)
+        #expect(fullScreen != nil)
     }
 
-    func testNextEvent_withFullScreenViewModel_onSkip_shouldSkipGroupedEvents() {
+    @Test func testNextEvent_withFullScreenViewModel_onSkip_shouldSkipGroupedEvents() {
 
         settings.toggleFullScreenEvent.onNext(true)
 
@@ -413,9 +414,9 @@ class NextEventViewModelFullScreenTests: XCTestCase {
         ])
 
         let expectedTitle = "3 events"
-        XCTAssertEqual(fullScreen?.title, expectedTitle)
-        XCTAssertEqual(viewModel.title.lastValue(), expectedTitle)
-        XCTAssertEqual(viewModel.hasEvent.lastValue(), true)
+        #expect(fullScreen?.title == expectedTitle)
+        #expect(viewModel.title.lastValue() == expectedTitle)
+        #expect(viewModel.hasEvent.lastValue() == true)
 
         fullScreen?.onAppear()
         scheduler.advance(.seconds(2))
@@ -423,8 +424,8 @@ class NextEventViewModelFullScreenTests: XCTestCase {
         fullScreen?.skip()
         scheduler.advance(.milliseconds(1))
 
-        XCTAssertNil(fullScreen)
-        XCTAssertNil(viewModel.title.lastValue())
-        XCTAssertEqual(viewModel.hasEvent.lastValue(), false)
+        #expect(fullScreen == nil)
+        #expect(viewModel.title.lastValue() == nil)
+        #expect(viewModel.hasEvent.lastValue() == false)
     }
 }

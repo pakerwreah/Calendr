@@ -5,11 +5,12 @@
 //  Created by Paker on 18/02/23.
 //
 
-import XCTest
+import Foundation
 import RxSwift
+import Testing
 @testable import Calendr
 
-class ReminderOptionsViewModelTests: XCTestCase {
+class ReminderOptionsViewModelTests {
 
     let disposeBag = DisposeBag()
 
@@ -17,11 +18,11 @@ class ReminderOptionsViewModelTests: XCTestCase {
     let calendarService = MockCalendarServiceProvider()
     let workspace = MockWorkspaceServiceProvider()
 
-    func testOptions_fromList() throws {
+    @Test func testOptions_fromList() throws {
 
-        let viewModel = try XCTUnwrap(mock(event: .make(type: .reminder(completed: false)), source: .calendar))
+        let viewModel = try #require(mock(event: .make(type: .reminder(completed: false)), source: .calendar))
 
-        XCTAssertEqual(viewModel.items, [
+        #expect(viewModel.items == [
             .action(.open),
             .separator,
             .action(.complete(.clear)),
@@ -34,11 +35,11 @@ class ReminderOptionsViewModelTests: XCTestCase {
         ])
     }
 
-    func testOptions_fromMenuBar() throws {
+    @Test func testOptions_fromMenuBar() throws {
 
-        let viewModel = try XCTUnwrap(mock(event: .make(type: .reminder(completed: false)), source: .menubar))
+        let viewModel = try #require(mock(event: .make(type: .reminder(completed: false)), source: .menubar))
 
-        XCTAssertEqual(viewModel.items, [
+        #expect(viewModel.items == [
             .action(.open),
             .separator,
             .action(.complete(.clear)),
@@ -51,11 +52,11 @@ class ReminderOptionsViewModelTests: XCTestCase {
         ])
     }
 
-    func testOptions_fromDetails() throws {
+    @Test func testOptions_fromDetails() throws {
 
-        let viewModel = try XCTUnwrap(mock(event: .make(type: .reminder(completed: false)), source: .details))
+        let viewModel = try #require(mock(event: .make(type: .reminder(completed: false)), source: .details))
 
-        XCTAssertEqual(viewModel.items, [
+        #expect(viewModel.items == [
             .action(.complete(.clear)),
             .separator,
             .action(.remind(.init(minute: 5))),
@@ -66,16 +67,16 @@ class ReminderOptionsViewModelTests: XCTestCase {
         ])
     }
 
-    func testOptions_isTomorrow_shouldHideTomorrowOption() throws {
+    @Test func testOptions_isTomorrow_shouldHideTomorrowOption() throws {
 
         dateProvider.now = .make(year: 2021, month: 1, day: 1, hour: 12)
 
-        let viewModel = try XCTUnwrap(mock(event: .make(
+        let viewModel = try #require(mock(event: .make(
             start: .make(year: 2021, month: 1, day: 2, hour: 10),
             type: .reminder(completed: false),
         )))
 
-        XCTAssertEqual(viewModel.items, [
+        #expect(viewModel.items == [
             .action(.complete(.clear)),
             .separator,
             .action(.remind(.init(minute: 5))),
@@ -85,43 +86,43 @@ class ReminderOptionsViewModelTests: XCTestCase {
         ])
     }
 
-    func testOptions_isCompleted_fromDetails() {
+    @Test func testOptions_isCompleted_fromDetails() {
 
-        XCTAssertNil(mock(event: .make(type: .reminder(completed: true)), source: .details))
+        #expect(mock(event: .make(type: .reminder(completed: true)), source: .details) == nil)
     }
 
-    func testOptions_isCompleted_fromMenuBar() throws {
+    @Test func testOptions_isCompleted_fromMenuBar() throws {
 
-        XCTAssertNil(mock(event: .make(type: .reminder(completed: true)), source: .menubar))
+        #expect(mock(event: .make(type: .reminder(completed: true)), source: .menubar) == nil)
     }
 
-    func testOptions_isCompleted_fromList() throws {
+    @Test func testOptions_isCompleted_fromList() throws {
 
-        let viewModel = try XCTUnwrap(mock(event: .make(type: .reminder(completed: true)), source: .calendar))
+        let viewModel = try #require(mock(event: .make(type: .reminder(completed: true)), source: .calendar))
 
-        XCTAssertEqual(viewModel.items, [.action(.open)])
+        #expect(viewModel.items == [.action(.open)])
     }
 
-    func testOptions_withOpenTriggered() throws {
+    @Test func testOptions_withOpenTriggered() async throws {
         let openExpectation = expectation(description: "Open")
 
-        let viewModel = try XCTUnwrap(mock(event: .make(id: "12345", type: .reminder(completed: false)), source: .calendar))
+        let viewModel = try #require(mock(event: .make(id: "12345", type: .reminder(completed: false)), source: .calendar))
 
         workspace.didOpenEvent = { event in
-            XCTAssertEqual(event.id, "12345")
+            #expect(event.id == "12345")
             openExpectation.fulfill()
         }
 
         viewModel.triggerAction(.open)
-        waitForExpectations(timeout: 1)
+        await fulfillment(of: [openExpectation], timeout: 1)
     }
 
-    func testReminder_rescheduleBy1Hour() throws {
+    @Test func testReminder_rescheduleBy1Hour() throws {
 
         var args: RescheduleReminderArgs?
         var callback: ReminderAction?
 
-        let viewModel = try XCTUnwrap(mock(event: .make(type: .reminder(completed: false))) {
+        let viewModel = try #require(mock(event: .make(type: .reminder(completed: false))) {
             callback = $0
         })
 
@@ -135,17 +136,17 @@ class ReminderOptionsViewModelTests: XCTestCase {
 
         viewModel.triggerAction(action)
 
-        XCTAssertEqual(args?.date, .make(year: 2021, month: 1, day: 1, hour: 13))
-        XCTAssertEqual(args?.isAllDay, false)
-        XCTAssertEqual(callback, action)
+        #expect(args?.date == .make(year: 2021, month: 1, day: 1, hour: 13))
+        #expect(args?.isAllDay == false)
+        #expect(callback == action)
     }
 
-    func testReminder_rescheduleBy1Hour_allDay() throws {
+    @Test func testReminder_rescheduleBy1Hour_allDay() throws {
 
         var args: RescheduleReminderArgs?
         var callback: ReminderAction?
 
-        let viewModel = try XCTUnwrap(mock(event: .make(isAllDay: true, type: .reminder(completed: false))) {
+        let viewModel = try #require(mock(event: .make(isAllDay: true, type: .reminder(completed: false))) {
             callback = $0
         })
 
@@ -159,17 +160,17 @@ class ReminderOptionsViewModelTests: XCTestCase {
 
         viewModel.triggerAction(action)
 
-        XCTAssertEqual(args?.date, .make(year: 2021, month: 1, day: 1, hour: 13))
-        XCTAssertEqual(args?.isAllDay, false)
-        XCTAssertEqual(callback, action)
+        #expect(args?.date == .make(year: 2021, month: 1, day: 1, hour: 13))
+        #expect(args?.isAllDay == false)
+        #expect(callback == action)
     }
 
-    func testReminder_rescheduleTomorrow() throws {
+    @Test func testReminder_rescheduleTomorrow() throws {
 
         var args: RescheduleReminderArgs?
         var callback: ReminderAction?
 
-        let viewModel = try XCTUnwrap(mock(event: .make(
+        let viewModel = try #require(mock(event: .make(
             start: .make(year: 2021, month: 1, day: 1, hour: 10),
             type: .reminder(completed: false))
         ) {
@@ -186,17 +187,17 @@ class ReminderOptionsViewModelTests: XCTestCase {
 
         viewModel.triggerAction(action)
 
-        XCTAssertEqual(args?.date, .make(year: 2021, month: 1, day: 2, hour: 10))
-        XCTAssertEqual(args?.isAllDay, false)
-        XCTAssertEqual(callback, action)
+        #expect(args?.date == .make(year: 2021, month: 1, day: 2, hour: 10))
+        #expect(args?.isAllDay == false)
+        #expect(callback == action)
     }
 
-    func testReminder_rescheduleTomorrow_allDay() throws {
+    @Test func testReminder_rescheduleTomorrow_allDay() throws {
 
         var args: RescheduleReminderArgs?
         var callback: ReminderAction?
 
-        let viewModel = try XCTUnwrap(mock(event: .make(
+        let viewModel = try #require(mock(event: .make(
             start: .make(year: 2021, month: 1, day: 1, at: .start),
             isAllDay: true,
             type: .reminder(completed: false))
@@ -214,17 +215,17 @@ class ReminderOptionsViewModelTests: XCTestCase {
 
         viewModel.triggerAction(action)
 
-        XCTAssertEqual(args?.date, .make(year: 2021, month: 1, day: 2, at: .start))
-        XCTAssertEqual(args?.isAllDay, true)
-        XCTAssertEqual(callback, action)
+        #expect(args?.date == .make(year: 2021, month: 1, day: 2, at: .start))
+        #expect(args?.isAllDay == true)
+        #expect(callback == action)
     }
 
-    func testReminder_rescheduleTomorrow_fromYesterday() throws {
+    @Test func testReminder_rescheduleTomorrow_fromYesterday() throws {
 
         var args: RescheduleReminderArgs?
         var callback: ReminderAction?
 
-        let viewModel = try XCTUnwrap(mock(event: .make(
+        let viewModel = try #require(mock(event: .make(
             start: .make(year: 2020, month: 12, day: 31, hour: 10),
             type: .reminder(completed: false))
         ) {
@@ -241,17 +242,17 @@ class ReminderOptionsViewModelTests: XCTestCase {
 
         viewModel.triggerAction(action)
 
-        XCTAssertEqual(args?.date, .make(year: 2021, month: 1, day: 2, hour: 10))
-        XCTAssertEqual(args?.isAllDay, false)
-        XCTAssertEqual(callback, action)
+        #expect(args?.date == .make(year: 2021, month: 1, day: 2, hour: 10))
+        #expect(args?.isAllDay == false)
+        #expect(callback == action)
     }
 
-    func testReminder_rescheduleTomorrow_fromFuture() throws {
+    @Test func testReminder_rescheduleTomorrow_fromFuture() throws {
 
         var args: RescheduleReminderArgs?
         var callback: ReminderAction?
 
-        let viewModel = try XCTUnwrap(mock(event: .make(
+        let viewModel = try #require(mock(event: .make(
             start: .make(year: 2021, month: 1, day: 3, hour: 10),
             type: .reminder(completed: false))
         ) {
@@ -268,17 +269,17 @@ class ReminderOptionsViewModelTests: XCTestCase {
 
         viewModel.triggerAction(action)
 
-        XCTAssertEqual(args?.date, .make(year: 2021, month: 1, day: 2, hour: 10))
-        XCTAssertEqual(args?.isAllDay, false)
-        XCTAssertEqual(callback, action)
+        #expect(args?.date == .make(year: 2021, month: 1, day: 2, hour: 10))
+        #expect(args?.isAllDay == false)
+        #expect(callback == action)
     }
 
-    func testReminder_markCompleted() throws {
+    @Test func testReminder_markCompleted() throws {
 
         var complete = false
         var callback: ReminderAction?
 
-        let viewModel = try XCTUnwrap(mock(event: .make(type: .reminder(completed: false))) {
+        let viewModel = try #require(mock(event: .make(type: .reminder(completed: false))) {
             callback = $0
         })
 
@@ -290,8 +291,8 @@ class ReminderOptionsViewModelTests: XCTestCase {
 
         viewModel.triggerAction(action)
 
-        XCTAssert(complete)
-        XCTAssertEqual(callback, action)
+        #expect(complete)
+        #expect(callback == action)
     }
 
     func mock(

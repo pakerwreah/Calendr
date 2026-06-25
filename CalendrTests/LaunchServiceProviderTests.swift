@@ -5,12 +5,13 @@
 //  Created by Paker on 16/06/2026.
 //
 
-import XCTest
+import Foundation
+import Testing
 @testable import Calendr
 
-class LaunchServiceProviderTests: XCTestCase {
+class LaunchServiceProviderTests {
 
-    func testTermination() {
+    @Test func testTermination() async {
 
         let unregisterExpectation = expectation(description: "Unregister")
         let terminateExpectation = expectation(description: "Terminate")
@@ -31,6 +32,6 @@ class LaunchServiceProviderTests: XCTestCase {
 
         launchServices.terminate()
 
-        wait(for: [unregisterExpectation, terminateExpectation], timeout: 0.1, enforceOrder: true)
+        await fulfillment(of: [unregisterExpectation, terminateExpectation], enforceOrder: true)
     }
 }

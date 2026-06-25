@@ -5,82 +5,83 @@
 //  Created by Paker on 18/02/23.
 //
 
-import XCTest
+import Foundation
 import RxSwift
+import Testing
 @testable import Calendr
 
-class ContextMenuFactoryTests: XCTestCase {
+class ContextMenuFactoryTests {
 
     let dateProvider = MockDateProvider()
     let calendarService = MockCalendarServiceProvider()
     let workspace = MockWorkspaceServiceProvider()
 
-    func testFactory_isEvent_withInvitationStatus_fromAnySource_shouldMakeViewModel() throws {
+    @Test func testFactory_isEvent_withInvitationStatus_fromAnySource_shouldMakeViewModel() throws {
 
         for source: ContextMenuSource in [.calendar, .menubar, .details] {
             for status in [.accepted, .maybe, .pending, .declined] as [EventStatus] {
-                let viewModel = try XCTUnwrap(make(event: .make(type: .event(status)), source: source))
-                XCTAssert(viewModel is EventOptionsViewModel)
+                let viewModel = try #require(make(event: .make(type: .event(status)), source: source))
+                #expect(viewModel is EventOptionsViewModel)
             }
         }
     }
 
-    func testFactory_isEvent_withoutInvitationStatus_fromList_shouldMakeViewModel() throws {
+    @Test func testFactory_isEvent_withoutInvitationStatus_fromList_shouldMakeViewModel() throws {
 
-        let viewModel = try XCTUnwrap(make(event: .make(type: .event(.unknown)), source: .calendar))
-        XCTAssert(viewModel is EventOptionsViewModel)
+        let viewModel = try #require(make(event: .make(type: .event(.unknown)), source: .calendar))
+        #expect(viewModel is EventOptionsViewModel)
     }
 
-    func testFactory_isEvent_withoutInvitationStatus_fromMenuBar_shouldMakeViewModel() throws {
+    @Test func testFactory_isEvent_withoutInvitationStatus_fromMenuBar_shouldMakeViewModel() throws {
 
-        let viewModel = try XCTUnwrap(make(event: .make(type: .event(.unknown)), source: .menubar))
-        XCTAssert(viewModel is EventOptionsViewModel)
+        let viewModel = try #require(make(event: .make(type: .event(.unknown)), source: .menubar))
+        #expect(viewModel is EventOptionsViewModel)
     }
 
-    func testFactory_isEvent_withoutInvitationStatus_fromDetails_shouldNotMakeViewModel() {
+    @Test func testFactory_isEvent_withoutInvitationStatus_fromDetails_shouldNotMakeViewModel() {
 
-        XCTAssertNil(make(event: .make(type: .event(.unknown)), source: .details))
+        #expect(make(event: .make(type: .event(.unknown)), source: .details) == nil)
     }
 
-    func testFactory_isReminder_notCompleted_fromAnySource_shouldMakeViewModel() throws {
+    @Test func testFactory_isReminder_notCompleted_fromAnySource_shouldMakeViewModel() throws {
 
         for source: ContextMenuSource in [.calendar, .menubar, .details] {
-            let viewModel = try XCTUnwrap(make(event: .make(type: .reminder(completed: false)), source: source))
-            XCTAssert(viewModel is ReminderOptionsViewModel)
+            let viewModel = try #require(make(event: .make(type: .reminder(completed: false)), source: source))
+            #expect(viewModel is ReminderOptionsViewModel)
         }
     }
 
-    func testFactory_isReminder_isCompleted_fromList_shouldMakeViewModel() throws {
+    @Test func testFactory_isReminder_isCompleted_fromList_shouldMakeViewModel() throws {
 
-        let viewModel = try XCTUnwrap(make(event: .make(type: .reminder(completed: true)), source: .calendar))
-        XCTAssert(viewModel is ReminderOptionsViewModel)
+        let viewModel = try #require(make(event: .make(type: .reminder(completed: true)), source: .calendar))
+        #expect(viewModel is ReminderOptionsViewModel)
     }
 
-    func testFactory_isReminder_isCompleted_fromMenuBar_shouldNotMakeViewModel() throws {
+    @Test func testFactory_isReminder_isCompleted_fromMenuBar_shouldNotMakeViewModel() throws {
 
-        XCTAssertNil(make(event: .make(type: .reminder(completed: true)), source: .menubar))
+        #expect(make(event: .make(type: .reminder(completed: true)), source: .menubar) == nil)
     }
 
-    func testFactory_isReminder_isCompleted_fromDetails_shouldNotMakeViewModel() throws {
+    @Test func testFactory_isReminder_isCompleted_fromDetails_shouldNotMakeViewModel() throws {
 
-        XCTAssertNil(make(event: .make(type: .reminder(completed: true)), source: .details))
+        #expect(make(event: .make(type: .reminder(completed: true)), source: .details) == nil)
     }
 
-    func testFactory_isBirthday_fromList_shouldMakeViewModel() throws {
+    @Test func testFactory_isBirthday_fromList_shouldMakeViewModel() throws {
 
-        let viewModel = try XCTUnwrap(make(event: .make(type: .birthday), source: .calendar))
-        XCTAssert(viewModel is EventOptionsViewModel)
+        let viewModel = try #require(make(event: .make(type: .birthday), source: .calendar))
+        #expect(viewModel is EventOptionsViewModel)
     }
 
-    func testFactory_isBirthday_fromMenuBar_shouldMakeViewModel() throws {
+    @Test func testFactory_isBirthday_fromMenuBar_shouldMakeViewModel() throws {
 
-        let viewModel = try XCTUnwrap(make(event: .make(type: .birthday), source: .menubar))
-        XCTAssert(viewModel is EventOptionsViewModel)
+        let viewModel = try #require(make(event: .make(type: .birthday), source: .menubar))
+        #expect(viewModel is EventOptionsViewModel)
     }
 
-    func testFactory_isBirthday_fromDetails_shouldNotMakeViewModel() {
+    @Test func testFactory_isBirthday_fromDetails_shouldNotMakeViewModel() {
 
-        XCTAssertNil(make(event: .make(type: .birthday), source: .details))
+        #expect(make(event: .make(type: .birthday), source: .details) == nil)
     }
 
     func make(event: EventModel, source: ContextMenuSource) -> (any ContextMenuViewModel)? {

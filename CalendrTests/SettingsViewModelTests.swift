@@ -5,11 +5,12 @@
 //  Created by Paker on 21/01/21.
 //
 
-import XCTest
+import Foundation
 import RxSwift
+import Testing
 @testable import Calendr
 
-class SettingsViewModelTests: XCTestCase {
+class SettingsViewModelTests {
 
     let disposeBag = DisposeBag()
 
@@ -67,119 +68,119 @@ class SettingsViewModelTests: XCTestCase {
     var localStorageShowMonthOutline: Bool? { localStorage.object(forKey: Prefs.showMonthOutline) as? Bool }
     var localStorageAutoCheckForUpdates: Bool? { localStorage.object(forKey: Prefs.autoCheckForUpdates) as? Bool }
 
-    override func setUp() {
+    init() {
 
         localStorage.reset()
 
-        XCTAssertNil(localStorageStatusItemIconEnabled)
-        XCTAssertNil(localStorageStatusItemDateEnabled)
-        XCTAssertNil(localStorageStatusItemBackgroundEnabled)
-        XCTAssertNil(localStorageStatusItemDateStyle)
-        XCTAssertNil(localStorageStatusItemTextScaling)
-        XCTAssertNil(localStorageShowEventStatusItem)
-        XCTAssertNil(localStorageEventStatusItemCheckRange)
-        XCTAssertNil(localStorageEventStatusItemSound)
-        XCTAssertNil(localStorageEventStatusItemFlashing)
-        XCTAssertNil(localStorageShowFullScreenEvent)
-        XCTAssertNil(localStorageFullScreenEventTransparencyLevel)
-        XCTAssertNil(localStorageEventStatusItemTextScaling)
-        XCTAssertNil(localStorageEventStatusItemLength)
-        XCTAssertNil(localStorageEventStatusItemDetectNotch)
-        XCTAssertNil(localStorageEventStatusItemNotchLength)
-        XCTAssertNil(localStorageCalendarScaling)
-        XCTAssertNil(localStorageFirstWeekday)
-        XCTAssertNil(localStorageHighlightedWeekdays)
-        XCTAssertNil(localStorageShowWeekNumbers)
-        XCTAssertNil(localStorageShowDeclinedEvents)
-        XCTAssertNil(localStoragePreserveSelectedDate)
-        XCTAssertNil(localStorageShowMap)
-        XCTAssertNil(localStorageShowPastEvents)
-        XCTAssertNil(localStorageShowOverdueReminders)
-        XCTAssertNil(localStorageShowAllDayEvents)
-        XCTAssertNil(localStorageShowAllDayDetails)
-        XCTAssertNil(localStorageShowRecurrenceIndicator)
-        XCTAssertNil(localStorageShowEventListSummary)
-        XCTAssertNil(localStorageTransparency)
-        XCTAssertNil(localStorageEventDotsStyle)
-        XCTAssertNil(localStorageFutureEventsDays)
-        XCTAssertNil(localStorageShowMonthOutline)
-        XCTAssertNil(localStorageAutoCheckForUpdates)
+        #expect(localStorageStatusItemIconEnabled == nil)
+        #expect(localStorageStatusItemDateEnabled == nil)
+        #expect(localStorageStatusItemBackgroundEnabled == nil)
+        #expect(localStorageStatusItemDateStyle == nil)
+        #expect(localStorageStatusItemTextScaling == nil)
+        #expect(localStorageShowEventStatusItem == nil)
+        #expect(localStorageEventStatusItemCheckRange == nil)
+        #expect(localStorageEventStatusItemSound == nil)
+        #expect(localStorageEventStatusItemFlashing == nil)
+        #expect(localStorageShowFullScreenEvent == nil)
+        #expect(localStorageFullScreenEventTransparencyLevel == nil)
+        #expect(localStorageEventStatusItemTextScaling == nil)
+        #expect(localStorageEventStatusItemLength == nil)
+        #expect(localStorageEventStatusItemDetectNotch == nil)
+        #expect(localStorageEventStatusItemNotchLength == nil)
+        #expect(localStorageCalendarScaling == nil)
+        #expect(localStorageFirstWeekday == nil)
+        #expect(localStorageHighlightedWeekdays == nil)
+        #expect(localStorageShowWeekNumbers == nil)
+        #expect(localStorageShowDeclinedEvents == nil)
+        #expect(localStoragePreserveSelectedDate == nil)
+        #expect(localStorageShowMap == nil)
+        #expect(localStorageShowPastEvents == nil)
+        #expect(localStorageShowOverdueReminders == nil)
+        #expect(localStorageShowAllDayEvents == nil)
+        #expect(localStorageShowAllDayDetails == nil)
+        #expect(localStorageShowRecurrenceIndicator == nil)
+        #expect(localStorageShowEventListSummary == nil)
+        #expect(localStorageTransparency == nil)
+        #expect(localStorageEventDotsStyle == nil)
+        #expect(localStorageFutureEventsDays == nil)
+        #expect(localStorageShowMonthOutline == nil)
+        #expect(localStorageAutoCheckForUpdates == nil)
 
         registerDefaultPrefs(in: localStorage, calendar: .gregorian.with(firstWeekday: 3))
     }
 
-    func testDefaultSettings() {
+    @Test func testDefaultSettings() {
 
-        XCTAssertEqual(viewModel.showStatusItemIcon.lastValue(), true)
-        XCTAssertEqual(viewModel.showStatusItemDate.lastValue(), true)
-        XCTAssertEqual(viewModel.showStatusItemBackground.lastValue(), false)
-        XCTAssertEqual(viewModel.statusItemDateStyle.lastValue(), .short)
-        XCTAssertEqual(viewModel.statusItemTextScaling.lastValue(), 1.2)
-        XCTAssertEqual(viewModel.showEventStatusItem.lastValue(), false)
-        XCTAssertEqual(viewModel.eventStatusItemTextScaling.lastValue(), 1.2)
-        XCTAssertEqual(viewModel.eventStatusItemCheckRange.lastValue(), 6)
-        XCTAssertEqual(viewModel.eventStatusItemSound.lastValue(), false)
-        XCTAssertEqual(viewModel.eventStatusItemFlashing.lastValue(), false)
-        XCTAssertEqual(viewModel.showFullScreenEvent.lastValue(), false)
-        XCTAssertEqual(viewModel.eventStatusItemLength.lastValue(), 18)
-        XCTAssertEqual(viewModel.eventStatusItemDetectNotch.lastValue(), false)
-        XCTAssertEqual(viewModel.eventStatusItemNotchLength.lastValue(), 6)
-        XCTAssertEqual(viewModel.calendarScaling.lastValue(), 1)
-        XCTAssertEqual(viewModel.firstWeekday.lastValue(), 3)
-        XCTAssertEqual(viewModel.highlightedWeekdays.lastValue(), [0, 6])
-        XCTAssertEqual(viewModel.showWeekNumbers.lastValue(), false)
-        XCTAssertEqual(viewModel.showDeclinedEvents.lastValue(), false)
-        XCTAssertEqual(viewModel.preserveSelectedDate.lastValue(), false)
-        XCTAssertEqual(viewModel.showMap.lastValue(), true)
-        XCTAssertEqual(viewModel.showPastEvents.lastValue(), true)
-        XCTAssertEqual(viewModel.showOverdueReminders.lastValue(), true)
-        XCTAssertEqual(viewModel.showAllDayEvents.lastValue(), true)
-        XCTAssertEqual(viewModel.showAllDayDetails.lastValue(), true)
-        XCTAssertEqual(viewModel.showRecurrenceIndicator.lastValue(), true)
-        XCTAssertEqual(viewModel.showEventListSummary.lastValue(), true)
-        XCTAssertEqual(viewModel.popoverTransparency.lastValue(), 2)
-        XCTAssertEqual(viewModel.popoverMaterial.lastValue(), .headerView)
-        XCTAssertEqual(viewModel.appearanceMode.lastValue(), .automatic)
-        XCTAssertEqual(viewModel.eventDotsStyle.lastValue(), .multiple)
-        XCTAssertEqual(viewModel.futureEventsDays.lastValue(), 0)
-        XCTAssertEqual(viewModel.showMonthOutline.lastValue(), true)
-        XCTAssertEqual(viewModel.autoCheckForUpdates.lastValue(), true)
+        #expect(viewModel.showStatusItemIcon.lastValue() == true)
+        #expect(viewModel.showStatusItemDate.lastValue() == true)
+        #expect(viewModel.showStatusItemBackground.lastValue() == false)
+        #expect(viewModel.statusItemDateStyle.lastValue() == .short)
+        #expect(viewModel.statusItemTextScaling.lastValue() == 1.2)
+        #expect(viewModel.showEventStatusItem.lastValue() == false)
+        #expect(viewModel.eventStatusItemTextScaling.lastValue() == 1.2)
+        #expect(viewModel.eventStatusItemCheckRange.lastValue() == 6)
+        #expect(viewModel.eventStatusItemSound.lastValue() == false)
+        #expect(viewModel.eventStatusItemFlashing.lastValue() == false)
+        #expect(viewModel.showFullScreenEvent.lastValue() == false)
+        #expect(viewModel.eventStatusItemLength.lastValue() == 18)
+        #expect(viewModel.eventStatusItemDetectNotch.lastValue() == false)
+        #expect(viewModel.eventStatusItemNotchLength.lastValue() == 6)
+        #expect(viewModel.calendarScaling.lastValue() == 1)
+        #expect(viewModel.firstWeekday.lastValue() == 3)
+        #expect(viewModel.highlightedWeekdays.lastValue() == [0, 6])
+        #expect(viewModel.showWeekNumbers.lastValue() == false)
+        #expect(viewModel.showDeclinedEvents.lastValue() == false)
+        #expect(viewModel.preserveSelectedDate.lastValue() == false)
+        #expect(viewModel.showMap.lastValue() == true)
+        #expect(viewModel.showPastEvents.lastValue() == true)
+        #expect(viewModel.showOverdueReminders.lastValue() == true)
+        #expect(viewModel.showAllDayEvents.lastValue() == true)
+        #expect(viewModel.showAllDayDetails.lastValue() == true)
+        #expect(viewModel.showRecurrenceIndicator.lastValue() == true)
+        #expect(viewModel.showEventListSummary.lastValue() == true)
+        #expect(viewModel.popoverTransparency.lastValue() == 2)
+        #expect(viewModel.popoverMaterial.lastValue() == .headerView)
+        #expect(viewModel.appearanceMode.lastValue() == .automatic)
+        #expect(viewModel.eventDotsStyle.lastValue() == .multiple)
+        #expect(viewModel.futureEventsDays.lastValue() == 0)
+        #expect(viewModel.showMonthOutline.lastValue() == true)
+        #expect(viewModel.autoCheckForUpdates.lastValue() == true)
 
-        XCTAssertEqual(localStorageStatusItemIconEnabled, true)
-        XCTAssertEqual(localStorageStatusItemDateEnabled, true)
-        XCTAssertEqual(localStorageStatusItemBackgroundEnabled, false)
-        XCTAssertEqual(localStorageStatusItemTextScaling, 1.2)
-        XCTAssertEqual(localStorageStatusItemDateStyle, 1)
-        XCTAssertEqual(localStorageShowEventStatusItem, false)
-        XCTAssertEqual(localStorageEventStatusItemTextScaling, 1.2)
-        XCTAssertEqual(localStorageEventStatusItemCheckRange, 6)
-        XCTAssertEqual(localStorageEventStatusItemSound, false)
-        XCTAssertEqual(localStorageEventStatusItemFlashing, false)
-        XCTAssertEqual(localStorageShowFullScreenEvent, false)
-        XCTAssertEqual(localStorageEventStatusItemLength, 18)
-        XCTAssertEqual(localStorageEventStatusItemDetectNotch, false)
-        XCTAssertEqual(localStorageEventStatusItemNotchLength, 6)
-        XCTAssertEqual(localStorageCalendarScaling, 1)
-        XCTAssertEqual(localStorageFirstWeekday, 3)
-        XCTAssertEqual(localStorageHighlightedWeekdays, [0, 6])
-        XCTAssertEqual(localStorageShowWeekNumbers, false)
-        XCTAssertEqual(localStorageShowDeclinedEvents, false)
-        XCTAssertEqual(localStoragePreserveSelectedDate, false)
-        XCTAssertEqual(localStorageShowMap, true)
-        XCTAssertEqual(localStorageShowPastEvents, true)
-        XCTAssertEqual(localStorageShowOverdueReminders, true)
-        XCTAssertEqual(localStorageShowRecurrenceIndicator, true)
-        XCTAssertEqual(localStorageShowEventListSummary, true)
-        XCTAssertEqual(localStorageTransparency, 2)
-        XCTAssertEqual(localStorageFullScreenEventTransparencyLevel, 2)
-        XCTAssertEqual(localStorageAppearanceMode, 0)
-        XCTAssertEqual(localStorageEventDotsStyle, EventDotsStyle.multiple.rawValue)
-        XCTAssertEqual(localStorageFutureEventsDays, 0)
-        XCTAssertEqual(localStorageShowMonthOutline, true)
-        XCTAssertEqual(localStorageAutoCheckForUpdates, true)
+        #expect(localStorageStatusItemIconEnabled == true)
+        #expect(localStorageStatusItemDateEnabled == true)
+        #expect(localStorageStatusItemBackgroundEnabled == false)
+        #expect(localStorageStatusItemTextScaling == 1.2)
+        #expect(localStorageStatusItemDateStyle == 1)
+        #expect(localStorageShowEventStatusItem == false)
+        #expect(localStorageEventStatusItemTextScaling == 1.2)
+        #expect(localStorageEventStatusItemCheckRange == 6)
+        #expect(localStorageEventStatusItemSound == false)
+        #expect(localStorageEventStatusItemFlashing == false)
+        #expect(localStorageShowFullScreenEvent == false)
+        #expect(localStorageEventStatusItemLength == 18)
+        #expect(localStorageEventStatusItemDetectNotch == false)
+        #expect(localStorageEventStatusItemNotchLength == 6)
+        #expect(localStorageCalendarScaling == 1)
+        #expect(localStorageFirstWeekday == 3)
+        #expect(localStorageHighlightedWeekdays == [0, 6])
+        #expect(localStorageShowWeekNumbers == false)
+        #expect(localStorageShowDeclinedEvents == false)
+        #expect(localStoragePreserveSelectedDate == false)
+        #expect(localStorageShowMap == true)
+        #expect(localStorageShowPastEvents == true)
+        #expect(localStorageShowOverdueReminders == true)
+        #expect(localStorageShowRecurrenceIndicator == true)
+        #expect(localStorageShowEventListSummary == true)
+        #expect(localStorageTransparency == 2)
+        #expect(localStorageFullScreenEventTransparencyLevel == 2)
+        #expect(localStorageAppearanceMode == 0)
+        #expect(localStorageEventDotsStyle == EventDotsStyle.multiple.rawValue)
+        #expect(localStorageFutureEventsDays == 0)
+        #expect(localStorageShowMonthOutline == true)
+        #expect(localStorageAutoCheckForUpdates == true)
     }
 
-    func testSetStatusItemsInitialPositions() {
+    @Test func testSetStatusItemsInitialPositions() {
 
         let names = [
             StatusItemName.main,
@@ -190,8 +191,8 @@ class SettingsViewModelTests: XCTestCase {
         for name in names {
             let key = statusItemPreferredPositionKey(name, .visible)
             let savedKey = statusItemPreferredPositionKey(name, .saved)
-            XCTAssertEqual(localStorage.integer(forKey: key), 0)
-            XCTAssertEqual(localStorage.integer(forKey: savedKey), 0)
+            #expect(localStorage.integer(forKey: key) == 0)
+            #expect(localStorage.integer(forKey: savedKey) == 0)
         }
 
         setInitialStatusItemPositions(in: localStorage)
@@ -199,12 +200,12 @@ class SettingsViewModelTests: XCTestCase {
         for name in names {
             let key = statusItemPreferredPositionKey(name, .visible)
             let savedKey = statusItemPreferredPositionKey(name, .saved)
-            XCTAssertEqual(localStorage.integer(forKey: key), 100)
-            XCTAssertEqual(localStorage.integer(forKey: savedKey), 100)
+            #expect(localStorage.integer(forKey: key) == 100)
+            #expect(localStorage.integer(forKey: savedKey) == 100)
         }
     }
 
-    func testSetStatusItemsInitialPositions_keepsExistingPositions() {
+    @Test func testSetStatusItemsInitialPositions_keepsExistingPositions() {
 
         let names = [
             StatusItemName.main,
@@ -215,7 +216,7 @@ class SettingsViewModelTests: XCTestCase {
         for name in names {
             let key = statusItemPreferredPositionKey(name, .visible)
             let savedKey = statusItemPreferredPositionKey(name, .saved)
-            XCTAssertEqual(localStorage.integer(forKey: savedKey), 0)
+            #expect(localStorage.integer(forKey: savedKey) == 0)
             localStorage.set(123, forKey: key)
         }
 
@@ -224,18 +225,18 @@ class SettingsViewModelTests: XCTestCase {
         for name in names {
             let key = statusItemPreferredPositionKey(name, .visible)
             let savedKey = statusItemPreferredPositionKey(name, .saved)
-            XCTAssertEqual(localStorage.integer(forKey: key), 123)
-            XCTAssertEqual(localStorage.integer(forKey: savedKey), 123)
+            #expect(localStorage.integer(forKey: key) == 123)
+            #expect(localStorage.integer(forKey: savedKey) == 123)
         }
     }
 
-    func testDateFormatOptions() {
+    @Test func testDateFormatOptions() {
 
         dateProvider.m_calendar.locale = Locale(identifier: "en_US")
 
         let options = viewModel.dateFormatOptions.lastValue()
 
-        XCTAssertEqual(options, [
+        #expect(options == [
             .init(style: .short, title: "1/1/21"),
             .init(style: .medium, title: "Jan 1, 2021"),
             .init(style: .long, title: "January 1, 2021"),
@@ -244,7 +245,7 @@ class SettingsViewModelTests: XCTestCase {
         ])
     }
 
-    func testDateFormatOptions_withLocaleChange() {
+    @Test func testDateFormatOptions_withLocaleChange() {
 
         dateProvider.m_calendar.locale = Locale(identifier: "en_US")
 
@@ -254,18 +255,18 @@ class SettingsViewModelTests: XCTestCase {
             .bind { options = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(options?.first, .init(style: .short, title: "1/1/21"))
+        #expect(options?.first == .init(style: .short, title: "1/1/21"))
 
         dateProvider.m_calendar.locale = Locale(identifier: "en_GB")
 
         notificationCenter.post(name: NSLocale.currentLocaleDidChangeNotification, object: nil)
 
-        XCTAssertEqual(options?.first, .init(style: .short, title: "01/01/2021"))
+        #expect(options?.first == .init(style: .short, title: "01/01/2021"))
     }
 
-    func testEventDotsStyle() {
+    @Test func testEventDotsStyle() {
         localStorage.eventDotsStyle = EventDotsStyle.single_neutral.rawValue
-        XCTAssertEqual(localStorageEventDotsStyle, EventDotsStyle.single_neutral.rawValue)
+        #expect(localStorageEventDotsStyle == EventDotsStyle.single_neutral.rawValue)
 
         var eventDotsStyle: EventDotsStyle?
 
@@ -273,32 +274,32 @@ class SettingsViewModelTests: XCTestCase {
             .bind { eventDotsStyle = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(eventDotsStyle, .single_neutral)
+        #expect(eventDotsStyle == .single_neutral)
 
         viewModel.eventDotsStyleObserver.onNext(.single_highlighted)
 
-        XCTAssertEqual(eventDotsStyle, .single_highlighted)
-        XCTAssertEqual(localStorageEventDotsStyle, EventDotsStyle.single_highlighted.rawValue)
+        #expect(eventDotsStyle == .single_highlighted)
+        #expect(localStorageEventDotsStyle == EventDotsStyle.single_highlighted.rawValue)
     }
 
-    func testCalendarAppViewModeOptions_pt() {
+    @Test func testCalendarAppViewModeOptions_pt() {
 
         dateProvider.m_calendar.locale = Locale(identifier: "pt")
 
-        XCTAssertEqual(viewModel.calendarAppViewModeOptions.map(\.title), ["mês", "semana", "dia"])
+        #expect(viewModel.calendarAppViewModeOptions.map(\.title) == ["mês", "semana", "dia"])
     }
 
-    func testCalendarAppViewModeOptions_de() {
+    @Test func testCalendarAppViewModeOptions_de() {
 
         dateProvider.m_calendar.locale = Locale(identifier: "de")
 
-        XCTAssertEqual(viewModel.calendarAppViewModeOptions.map(\.title), ["Monat", "Woche", "Tag"])
+        #expect(viewModel.calendarAppViewModeOptions.map(\.title) == ["Monat", "Woche", "Tag"])
     }
 
-    func testDateStyleSelected() {
+    @Test func testDateStyleSelected() {
 
         localStorage.statusItemDateStyle = 1
-        XCTAssertEqual(localStorageStatusItemDateStyle, 1)
+        #expect(localStorageStatusItemDateStyle == 1)
 
         var statusItemDateStyle: StatusItemDateStyle?
 
@@ -308,14 +309,14 @@ class SettingsViewModelTests: XCTestCase {
 
         viewModel.statusItemDateStyleObserver.onNext(.medium)
 
-        XCTAssertEqual(statusItemDateStyle, .medium)
-        XCTAssertEqual(localStorageStatusItemDateStyle, 2)
+        #expect(statusItemDateStyle == .medium)
+        #expect(localStorageStatusItemDateStyle == 2)
     }
 
-    func testCustomDateStyleSelected() throws {
+    @Test func testCustomDateStyleSelected() throws {
 
         localStorage.statusItemDateStyle = 0
-        XCTAssertEqual(localStorageStatusItemDateStyle, 0)
+        #expect(localStorageStatusItemDateStyle == 0)
 
         var isDateFormatInputVisible: Bool?
 
@@ -323,23 +324,23 @@ class SettingsViewModelTests: XCTestCase {
             .bind { isDateFormatInputVisible = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(isDateFormatInputVisible, true)
+        #expect(isDateFormatInputVisible == true)
 
         viewModel.statusItemDateStyleObserver.onNext(.short)
-        XCTAssertEqual(isDateFormatInputVisible, false)
+        #expect(isDateFormatInputVisible == false)
 
         // this should fail, but it doesn't, so we test it ¯\_(ツ)_/¯
-        viewModel.statusItemDateStyleObserver.onNext(try XCTUnwrap(.init(rawValue: 5)))
-        XCTAssertEqual(isDateFormatInputVisible, true)
+        viewModel.statusItemDateStyleObserver.onNext(try #require(.init(rawValue: 5)))
+        #expect(isDateFormatInputVisible == true)
 
         viewModel.statusItemDateStyleObserver.onNext(.full)
-        XCTAssertEqual(isDateFormatInputVisible, false)
+        #expect(isDateFormatInputVisible == false)
 
         viewModel.statusItemDateStyleObserver.onNext(.none)
-        XCTAssertEqual(isDateFormatInputVisible, true)
+        #expect(isDateFormatInputVisible == true)
     }
 
-    func testToggleAutoLaunch() {
+    @Test func testToggleAutoLaunch() {
 
         var autoLaunch: Bool?
 
@@ -347,16 +348,16 @@ class SettingsViewModelTests: XCTestCase {
             .bind { autoLaunch = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(autoLaunch, false)
-        XCTAssertEqual(autoLauncher.isLoginItemEnabled, false)
+        #expect(autoLaunch == false)
+        #expect(autoLauncher.isLoginItemEnabled == false)
 
         viewModel.toggleAutoLaunch.onNext(true)
 
-        XCTAssertEqual(autoLaunch, true)
-        XCTAssertEqual(autoLauncher.isLoginItemEnabled, true)
+        #expect(autoLaunch == true)
+        #expect(autoLauncher.isLoginItemEnabled == true)
     }
 
-    func testToggleLaunchAgent() {
+    @Test func testToggleLaunchAgent() {
 
         var launchAgent: Bool?
 
@@ -364,16 +365,16 @@ class SettingsViewModelTests: XCTestCase {
             .bind { launchAgent = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(launchAgent, false)
-        XCTAssertEqual(autoLauncher.isLaunchAgentEnabled, false)
+        #expect(launchAgent == false)
+        #expect(autoLauncher.isLaunchAgentEnabled == false)
 
         viewModel.toggleLaunchAgent.onNext(true)
 
-        XCTAssertEqual(launchAgent, true)
-        XCTAssertEqual(autoLauncher.isLaunchAgentEnabled, true)
+        #expect(launchAgent == true)
+        #expect(autoLauncher.isLaunchAgentEnabled == true)
     }
 
-    func testToggleAutoCheckForUpdates() {
+    @Test func testToggleAutoCheckForUpdates() {
 
         localStorage.autoCheckForUpdates = false
 
@@ -383,21 +384,21 @@ class SettingsViewModelTests: XCTestCase {
             .bind { autoCheckForUpdates = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(autoCheckForUpdates, false)
-        XCTAssertEqual(localStorageAutoCheckForUpdates, false)
+        #expect(autoCheckForUpdates == false)
+        #expect(localStorageAutoCheckForUpdates == false)
 
         viewModel.toggleAutoCheckForUpdates.onNext(true)
 
-        XCTAssertEqual(autoCheckForUpdates, true)
-        XCTAssertEqual(localStorageAutoCheckForUpdates, true)
+        #expect(autoCheckForUpdates == true)
+        #expect(localStorageAutoCheckForUpdates == true)
 
         viewModel.toggleAutoCheckForUpdates.onNext(false)
 
-        XCTAssertEqual(autoCheckForUpdates, false)
-        XCTAssertEqual(localStorageAutoCheckForUpdates, false)
+        #expect(autoCheckForUpdates == false)
+        #expect(localStorageAutoCheckForUpdates == false)
     }
 
-    func testAutoCheckForUpdatesStart() {
+    @Test func testAutoCheckForUpdatesStart() async {
 
         let startExpectation = expectation(description: "Start")
 
@@ -410,10 +411,10 @@ class SettingsViewModelTests: XCTestCase {
         viewModel.toggleAutoCheckForUpdates.onNext(true)
         scheduler.advance(.seconds(5))
 
-        wait(for: [startExpectation, stopExpectation], timeout: 0.1)
+        await fulfillment(of: [startExpectation, stopExpectation])
     }
 
-    func testAutoCheckForUpdatesStop() {
+    @Test func testAutoCheckForUpdatesStop() async {
 
         let startExpectation = expectation(description: "Start")
         startExpectation.isInverted = true
@@ -426,10 +427,10 @@ class SettingsViewModelTests: XCTestCase {
         viewModel.toggleAutoCheckForUpdates.onNext(false)
         scheduler.advance(.seconds(5))
 
-        wait(for: [startExpectation, stopExpectation], timeout: 0.1)
+        await fulfillment(of: [startExpectation, stopExpectation])
     }
 
-    func testToggleShowEventStatusItem() {
+    @Test func testToggleShowEventStatusItem() {
 
         localStorage.showEventStatusItem = true
 
@@ -439,21 +440,21 @@ class SettingsViewModelTests: XCTestCase {
             .bind { showEventStatusItem = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(showEventStatusItem, true)
-        XCTAssertEqual(localStorageShowEventStatusItem, true)
+        #expect(showEventStatusItem == true)
+        #expect(localStorageShowEventStatusItem == true)
 
         viewModel.toggleEventStatusItem.onNext(false)
 
-        XCTAssertEqual(showEventStatusItem, false)
-        XCTAssertEqual(localStorageShowEventStatusItem, false)
+        #expect(showEventStatusItem == false)
+        #expect(localStorageShowEventStatusItem == false)
 
         viewModel.toggleEventStatusItem.onNext(true)
 
-        XCTAssertEqual(showEventStatusItem, true)
-        XCTAssertEqual(localStorageShowEventStatusItem, true)
+        #expect(showEventStatusItem == true)
+        #expect(localStorageShowEventStatusItem == true)
     }
 
-    func testToggleEventStatusItemSound() {
+    @Test func testToggleEventStatusItemSound() {
 
         localStorage.eventStatusItemSound = true
 
@@ -463,21 +464,21 @@ class SettingsViewModelTests: XCTestCase {
             .bind { eventStatusItemSound = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(eventStatusItemSound, true)
-        XCTAssertEqual(localStorageEventStatusItemSound, true)
+        #expect(eventStatusItemSound == true)
+        #expect(localStorageEventStatusItemSound == true)
 
         viewModel.toggleEventStatusItemSound.onNext(false)
 
-        XCTAssertEqual(eventStatusItemSound, false)
-        XCTAssertEqual(localStorageEventStatusItemSound, false)
+        #expect(eventStatusItemSound == false)
+        #expect(localStorageEventStatusItemSound == false)
 
         viewModel.toggleEventStatusItemSound.onNext(true)
 
-        XCTAssertEqual(eventStatusItemSound, true)
-        XCTAssertEqual(localStorageEventStatusItemSound, true)
+        #expect(eventStatusItemSound == true)
+        #expect(localStorageEventStatusItemSound == true)
     }
 
-    func testToggleEventStatusItemFlashing() {
+    @Test func testToggleEventStatusItemFlashing() {
 
         localStorage.eventStatusItemFlashing = true
 
@@ -487,21 +488,21 @@ class SettingsViewModelTests: XCTestCase {
             .bind { eventStatusItemFlashing = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(eventStatusItemFlashing, true)
-        XCTAssertEqual(localStorageEventStatusItemFlashing, true)
+        #expect(eventStatusItemFlashing == true)
+        #expect(localStorageEventStatusItemFlashing == true)
 
         viewModel.toggleEventStatusItemFlashing.onNext(false)
 
-        XCTAssertEqual(eventStatusItemFlashing, false)
-        XCTAssertEqual(localStorageEventStatusItemFlashing, false)
+        #expect(eventStatusItemFlashing == false)
+        #expect(localStorageEventStatusItemFlashing == false)
 
         viewModel.toggleEventStatusItemFlashing.onNext(true)
 
-        XCTAssertEqual(eventStatusItemFlashing, true)
-        XCTAssertEqual(localStorageEventStatusItemFlashing, true)
+        #expect(eventStatusItemFlashing == true)
+        #expect(localStorageEventStatusItemFlashing == true)
     }
 
-    func testToggleShowFullScreenEvent() {
+    @Test func testToggleShowFullScreenEvent() {
 
         localStorage.showFullScreenEvent = true
 
@@ -511,21 +512,21 @@ class SettingsViewModelTests: XCTestCase {
             .bind { showFullScreenEvent = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(showFullScreenEvent, true)
-        XCTAssertEqual(localStorageShowFullScreenEvent, true)
+        #expect(showFullScreenEvent == true)
+        #expect(localStorageShowFullScreenEvent == true)
 
         viewModel.toggleFullScreenEvent.onNext(false)
 
-        XCTAssertEqual(showFullScreenEvent, false)
-        XCTAssertEqual(localStorageShowFullScreenEvent, false)
+        #expect(showFullScreenEvent == false)
+        #expect(localStorageShowFullScreenEvent == false)
 
         viewModel.toggleFullScreenEvent.onNext(true)
 
-        XCTAssertEqual(showFullScreenEvent, true)
-        XCTAssertEqual(localStorageShowFullScreenEvent, true)
+        #expect(showFullScreenEvent == true)
+        #expect(localStorageShowFullScreenEvent == true)
     }
 
-    func testChangeEventStatusItemLength() {
+    @Test func testChangeEventStatusItemLength() {
 
         localStorage.eventStatusItemLength = 20
 
@@ -535,16 +536,16 @@ class SettingsViewModelTests: XCTestCase {
             .bind { eventStatusItemLength = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(eventStatusItemLength, 20)
-        XCTAssertEqual(localStorageEventStatusItemLength, 20)
+        #expect(eventStatusItemLength == 20)
+        #expect(localStorageEventStatusItemLength == 20)
 
         viewModel.eventStatusItemLengthObserver.onNext(30)
 
-        XCTAssertEqual(eventStatusItemLength, 30)
-        XCTAssertEqual(localStorageEventStatusItemLength, 30)
+        #expect(eventStatusItemLength == 30)
+        #expect(localStorageEventStatusItemLength == 30)
     }
 
-    func testChangeEventStatusItemNotchLength() {
+    @Test func testChangeEventStatusItemNotchLength() {
 
         localStorage.eventStatusItemNotchLength = 6
 
@@ -554,16 +555,16 @@ class SettingsViewModelTests: XCTestCase {
             .bind { eventStatusItemNotchLength = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(eventStatusItemNotchLength, 6)
-        XCTAssertEqual(localStorageEventStatusItemNotchLength, 6)
+        #expect(eventStatusItemNotchLength == 6)
+        #expect(localStorageEventStatusItemNotchLength == 6)
 
         viewModel.eventStatusItemNotchLengthObserver.onNext(2)
 
-        XCTAssertEqual(eventStatusItemNotchLength, 2)
-        XCTAssertEqual(localStorageEventStatusItemNotchLength, 2)
+        #expect(eventStatusItemNotchLength == 2)
+        #expect(localStorageEventStatusItemNotchLength == 2)
     }
 
-    func testChangeEventStatusItemCheckRange() {
+    @Test func testChangeEventStatusItemCheckRange() {
 
         localStorage.eventStatusItemCheckRange = 12
 
@@ -578,27 +579,27 @@ class SettingsViewModelTests: XCTestCase {
             .bind { eventStatusItemCheckRangeLabel = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(eventStatusItemCheckRange, 12)
-        XCTAssertEqual(eventStatusItemCheckRangeLabel, "in 12 hours")
-        XCTAssertEqual(localStorageEventStatusItemCheckRange, 12)
+        #expect(eventStatusItemCheckRange == 12)
+        #expect(eventStatusItemCheckRangeLabel == "in 12 hours")
+        #expect(localStorageEventStatusItemCheckRange == 12)
 
         viewModel.eventStatusItemCheckRangeObserver.onNext(18)
 
-        XCTAssertEqual(eventStatusItemCheckRange, 18)
-        XCTAssertEqual(eventStatusItemCheckRangeLabel, "in 18 hours")
-        XCTAssertEqual(localStorageEventStatusItemCheckRange, 18)
+        #expect(eventStatusItemCheckRange == 18)
+        #expect(eventStatusItemCheckRangeLabel == "in 18 hours")
+        #expect(localStorageEventStatusItemCheckRange == 18)
     }
 
-    func testEventStatusItemCheckRangeZero_shouldDisplay30min() {
+    @Test func testEventStatusItemCheckRangeZero_shouldDisplay30min() {
 
         viewModel.eventStatusItemCheckRangeObserver.onNext(0)
 
-        XCTAssertEqual(viewModel.eventStatusItemCheckRange.lastValue(), 0)
-        XCTAssertEqual(viewModel.eventStatusItemCheckRangeLabel.lastValue(), "in 30 minutes")
-        XCTAssertEqual(localStorageEventStatusItemCheckRange, 0)
+        #expect(viewModel.eventStatusItemCheckRange.lastValue() == 0)
+        #expect(viewModel.eventStatusItemCheckRangeLabel.lastValue() == "in 30 minutes")
+        #expect(localStorageEventStatusItemCheckRange == 0)
     }
 
-    func testToggleEventStatusItemDetectNotch() {
+    @Test func testToggleEventStatusItemDetectNotch() {
 
         localStorage.eventStatusItemDetectNotch = true
 
@@ -608,21 +609,21 @@ class SettingsViewModelTests: XCTestCase {
             .bind { eventStatusItemDetectNotch = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(eventStatusItemDetectNotch, true)
-        XCTAssertEqual(localStorageEventStatusItemDetectNotch, true)
+        #expect(eventStatusItemDetectNotch == true)
+        #expect(localStorageEventStatusItemDetectNotch == true)
 
         viewModel.toggleEventStatusItemDetectNotch.onNext(false)
 
-        XCTAssertEqual(eventStatusItemDetectNotch, false)
-        XCTAssertEqual(localStorageEventStatusItemDetectNotch, false)
+        #expect(eventStatusItemDetectNotch == false)
+        #expect(localStorageEventStatusItemDetectNotch == false)
 
         viewModel.toggleEventStatusItemDetectNotch.onNext(true)
 
-        XCTAssertEqual(eventStatusItemDetectNotch, true)
-        XCTAssertEqual(localStorageEventStatusItemDetectNotch, true)
+        #expect(eventStatusItemDetectNotch == true)
+        #expect(localStorageEventStatusItemDetectNotch == true)
     }
 
-    func testChangeCalendarScaling() {
+    @Test func testChangeCalendarScaling() {
 
         localStorage.calendarScaling = 1.2
 
@@ -632,16 +633,16 @@ class SettingsViewModelTests: XCTestCase {
             .bind { calendarScaling = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(calendarScaling, 1.2)
-        XCTAssertEqual(localStorageCalendarScaling, 1.2)
+        #expect(calendarScaling == 1.2)
+        #expect(localStorageCalendarScaling == 1.2)
 
         viewModel.calendarScalingObserver.onNext(1.1)
 
-        XCTAssertEqual(calendarScaling, 1.1)
-        XCTAssertEqual(localStorageCalendarScaling, 1.1)
+        #expect(calendarScaling == 1.1)
+        #expect(localStorageCalendarScaling == 1.1)
     }
 
-    func testChangeFirstWeekday() {
+    @Test func testChangeFirstWeekday() {
 
         localStorage.firstWeekday = 1
 
@@ -651,28 +652,28 @@ class SettingsViewModelTests: XCTestCase {
             .bind { firstWeekday = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(firstWeekday, 1)
-        XCTAssertEqual(localStorageFirstWeekday, 1)
+        #expect(firstWeekday == 1)
+        #expect(localStorageFirstWeekday == 1)
 
         viewModel.firstWeekdayNextObserver.onNext(())
 
-        XCTAssertEqual(firstWeekday, 2)
-        XCTAssertEqual(localStorageFirstWeekday, 2)
+        #expect(firstWeekday == 2)
+        #expect(localStorageFirstWeekday == 2)
 
         localStorage.firstWeekday = 7
 
         viewModel.firstWeekdayNextObserver.onNext(())
 
-        XCTAssertEqual(firstWeekday, 1)
-        XCTAssertEqual(localStorageFirstWeekday, 1)
+        #expect(firstWeekday == 1)
+        #expect(localStorageFirstWeekday == 1)
 
         viewModel.firstWeekdayPrevObserver.onNext(())
 
-        XCTAssertEqual(firstWeekday, 7)
-        XCTAssertEqual(localStorageFirstWeekday, 7)
+        #expect(firstWeekday == 7)
+        #expect(localStorageFirstWeekday == 7)
     }
 
-    func testChangeHighlightedWeekdays() {
+    @Test func testChangeHighlightedWeekdays() {
 
         localStorage.highlightedWeekdays = []
 
@@ -682,26 +683,26 @@ class SettingsViewModelTests: XCTestCase {
             .bind { highlightedWeekdays = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(highlightedWeekdays, [])
-        XCTAssertEqual(localStorageHighlightedWeekdays, [])
+        #expect(highlightedWeekdays == [])
+        #expect(localStorageHighlightedWeekdays == [])
 
         viewModel.toggleHighlightedWeekday.onNext(1)
 
-        XCTAssertEqual(highlightedWeekdays, [1])
-        XCTAssertEqual(localStorageHighlightedWeekdays, [1])
+        #expect(highlightedWeekdays == [1])
+        #expect(localStorageHighlightedWeekdays == [1])
 
         viewModel.toggleHighlightedWeekday.onNext(2)
 
-        XCTAssertEqual(highlightedWeekdays, [1, 2])
-        XCTAssertEqual(localStorageHighlightedWeekdays, [1, 2])
+        #expect(highlightedWeekdays == [1, 2])
+        #expect(localStorageHighlightedWeekdays == [1, 2])
 
         viewModel.toggleHighlightedWeekday.onNext(2)
 
-        XCTAssertEqual(highlightedWeekdays, [1])
-        XCTAssertEqual(localStorageHighlightedWeekdays, [1])
+        #expect(highlightedWeekdays == [1])
+        #expect(localStorageHighlightedWeekdays == [1])
     }
 
-    func testToggleShowWeekNumbers() {
+    @Test func testToggleShowWeekNumbers() {
 
         localStorage.showWeekNumbers = true
 
@@ -711,21 +712,21 @@ class SettingsViewModelTests: XCTestCase {
             .bind { showWeekNumbers = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(showWeekNumbers, true)
-        XCTAssertEqual(localStorageShowWeekNumbers, true)
+        #expect(showWeekNumbers == true)
+        #expect(localStorageShowWeekNumbers == true)
 
         viewModel.toggleWeekNumbers.onNext(false)
 
-        XCTAssertEqual(showWeekNumbers, false)
-        XCTAssertEqual(localStorageShowWeekNumbers, false)
+        #expect(showWeekNumbers == false)
+        #expect(localStorageShowWeekNumbers == false)
 
         viewModel.toggleWeekNumbers.onNext(true)
 
-        XCTAssertEqual(showWeekNumbers, true)
-        XCTAssertEqual(localStorageShowWeekNumbers, true)
+        #expect(showWeekNumbers == true)
+        #expect(localStorageShowWeekNumbers == true)
     }
 
-    func testToggleShowDeclinedEvents() {
+    @Test func testToggleShowDeclinedEvents() {
 
         localStorage.showDeclinedEvents = true
 
@@ -735,21 +736,21 @@ class SettingsViewModelTests: XCTestCase {
             .bind { showDeclinedEvents = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(showDeclinedEvents, true)
-        XCTAssertEqual(localStorageShowDeclinedEvents, true)
+        #expect(showDeclinedEvents == true)
+        #expect(localStorageShowDeclinedEvents == true)
 
         viewModel.toggleDeclinedEvents.onNext(false)
 
-        XCTAssertEqual(showDeclinedEvents, false)
-        XCTAssertEqual(localStorageShowDeclinedEvents, false)
+        #expect(showDeclinedEvents == false)
+        #expect(localStorageShowDeclinedEvents == false)
 
         viewModel.toggleDeclinedEvents.onNext(true)
 
-        XCTAssertEqual(showDeclinedEvents, true)
-        XCTAssertEqual(localStorageShowDeclinedEvents, true)
+        #expect(showDeclinedEvents == true)
+        #expect(localStorageShowDeclinedEvents == true)
     }
 
-    func testTogglePreserveSelectedDate() {
+    @Test func testTogglePreserveSelectedDate() {
 
         localStorage.preserveSelectedDate = true
 
@@ -759,21 +760,21 @@ class SettingsViewModelTests: XCTestCase {
             .bind { preserveSelectedDate = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(preserveSelectedDate, true)
-        XCTAssertEqual(localStoragePreserveSelectedDate, true)
+        #expect(preserveSelectedDate == true)
+        #expect(localStoragePreserveSelectedDate == true)
 
         viewModel.togglePreserveSelectedDate.onNext(false)
 
-        XCTAssertEqual(preserveSelectedDate, false)
-        XCTAssertEqual(localStoragePreserveSelectedDate, false)
+        #expect(preserveSelectedDate == false)
+        #expect(localStoragePreserveSelectedDate == false)
 
         viewModel.togglePreserveSelectedDate.onNext(true)
 
-        XCTAssertEqual(preserveSelectedDate, true)
-        XCTAssertEqual(localStoragePreserveSelectedDate, true)
+        #expect(preserveSelectedDate == true)
+        #expect(localStoragePreserveSelectedDate == true)
     }
 
-    func testToggleShowMap() {
+    @Test func testToggleShowMap() {
 
         localStorage.showMap = false
 
@@ -783,21 +784,21 @@ class SettingsViewModelTests: XCTestCase {
             .bind { showMap = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(showMap, false)
-        XCTAssertEqual(localStorageShowMap, false)
+        #expect(showMap == false)
+        #expect(localStorageShowMap == false)
 
         viewModel.toggleMap.onNext(true)
 
-        XCTAssertEqual(showMap, true)
-        XCTAssertEqual(localStorageShowMap, true)
+        #expect(showMap == true)
+        #expect(localStorageShowMap == true)
 
         viewModel.toggleMap.onNext(false)
 
-        XCTAssertEqual(showMap, false)
-        XCTAssertEqual(localStorageShowMap, false)
+        #expect(showMap == false)
+        #expect(localStorageShowMap == false)
     }
 
-    func testToggleShowPastEvents() {
+    @Test func testToggleShowPastEvents() {
 
         localStorage.showPastEvents = false
 
@@ -807,21 +808,21 @@ class SettingsViewModelTests: XCTestCase {
             .bind { showPastEvents = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(showPastEvents, false)
-        XCTAssertEqual(localStorageShowPastEvents, false)
+        #expect(showPastEvents == false)
+        #expect(localStorageShowPastEvents == false)
 
         viewModel.togglePastEvents.onNext(true)
 
-        XCTAssertEqual(showPastEvents, true)
-        XCTAssertEqual(localStorageShowPastEvents, true)
+        #expect(showPastEvents == true)
+        #expect(localStorageShowPastEvents == true)
 
         viewModel.togglePastEvents.onNext(false)
 
-        XCTAssertEqual(showPastEvents, false)
-        XCTAssertEqual(localStorageShowPastEvents, false)
+        #expect(showPastEvents == false)
+        #expect(localStorageShowPastEvents == false)
     }
 
-    func testToggleShowOverdueReminders() {
+    @Test func testToggleShowOverdueReminders() {
 
         localStorage.showOverdueReminders = false
 
@@ -831,21 +832,21 @@ class SettingsViewModelTests: XCTestCase {
             .bind { showOverdueReminders = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(showOverdueReminders, false)
-        XCTAssertEqual(localStorageShowOverdueReminders, false)
+        #expect(showOverdueReminders == false)
+        #expect(localStorageShowOverdueReminders == false)
 
         viewModel.toggleOverdueReminders.onNext(true)
 
-        XCTAssertEqual(showOverdueReminders, true)
-        XCTAssertEqual(localStorageShowOverdueReminders, true)
+        #expect(showOverdueReminders == true)
+        #expect(localStorageShowOverdueReminders == true)
 
         viewModel.toggleOverdueReminders.onNext(false)
 
-        XCTAssertEqual(showOverdueReminders, false)
-        XCTAssertEqual(localStorageShowOverdueReminders, false)
+        #expect(showOverdueReminders == false)
+        #expect(localStorageShowOverdueReminders == false)
     }
 
-    func testToggleShowAllDayEvents() {
+    @Test func testToggleShowAllDayEvents() {
 
         localStorage.showAllDayEvents = false
 
@@ -855,21 +856,21 @@ class SettingsViewModelTests: XCTestCase {
             .bind { showAllDayEvents = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(showAllDayEvents, false)
-        XCTAssertEqual(localStorageShowAllDayEvents, false)
+        #expect(showAllDayEvents == false)
+        #expect(localStorageShowAllDayEvents == false)
 
         viewModel.toggleAllDayEvents.onNext(true)
 
-        XCTAssertEqual(showAllDayEvents, true)
-        XCTAssertEqual(localStorageShowAllDayEvents, true)
+        #expect(showAllDayEvents == true)
+        #expect(localStorageShowAllDayEvents == true)
 
         viewModel.toggleAllDayEvents.onNext(false)
 
-        XCTAssertEqual(showAllDayEvents, false)
-        XCTAssertEqual(localStorageShowAllDayEvents, false)
+        #expect(showAllDayEvents == false)
+        #expect(localStorageShowAllDayEvents == false)
     }
 
-    func testToggleShowAllDayDetails() {
+    @Test func testToggleShowAllDayDetails() {
 
         localStorage.showAllDayDetails = false
 
@@ -879,21 +880,21 @@ class SettingsViewModelTests: XCTestCase {
             .bind { showAllDayDetails = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(showAllDayDetails, false)
-        XCTAssertEqual(localStorageShowAllDayDetails, false)
+        #expect(showAllDayDetails == false)
+        #expect(localStorageShowAllDayDetails == false)
 
         viewModel.toggleAllDayDetails.onNext(true)
 
-        XCTAssertEqual(showAllDayDetails, true)
-        XCTAssertEqual(localStorageShowAllDayDetails, true)
+        #expect(showAllDayDetails == true)
+        #expect(localStorageShowAllDayDetails == true)
 
         viewModel.toggleAllDayDetails.onNext(false)
 
-        XCTAssertEqual(showAllDayDetails, false)
-        XCTAssertEqual(localStorageShowAllDayDetails, false)
+        #expect(showAllDayDetails == false)
+        #expect(localStorageShowAllDayDetails == false)
     }
 
-    func testToggleShowRecurrenceIndicator() {
+    @Test func testToggleShowRecurrenceIndicator() {
 
         localStorage.showRecurrenceIndicator = false
 
@@ -903,21 +904,21 @@ class SettingsViewModelTests: XCTestCase {
             .bind { showRecurrenceIndicator = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(showRecurrenceIndicator, false)
-        XCTAssertEqual(localStorageShowRecurrenceIndicator, false)
+        #expect(showRecurrenceIndicator == false)
+        #expect(localStorageShowRecurrenceIndicator == false)
 
         viewModel.toggleRecurrenceIndicator.onNext(true)
 
-        XCTAssertEqual(showRecurrenceIndicator, true)
-        XCTAssertEqual(localStorageShowRecurrenceIndicator, true)
+        #expect(showRecurrenceIndicator == true)
+        #expect(localStorageShowRecurrenceIndicator == true)
 
         viewModel.toggleRecurrenceIndicator.onNext(false)
 
-        XCTAssertEqual(showRecurrenceIndicator, false)
-        XCTAssertEqual(localStorageShowRecurrenceIndicator, false)
+        #expect(showRecurrenceIndicator == false)
+        #expect(localStorageShowRecurrenceIndicator == false)
     }
 
-    func testToggleShowEventListSummary() {
+    @Test func testToggleShowEventListSummary() {
 
         localStorage.showEventListSummary = false
 
@@ -927,21 +928,21 @@ class SettingsViewModelTests: XCTestCase {
             .bind { showEventListSummary = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(showEventListSummary, false)
-        XCTAssertEqual(localStorageShowEventListSummary, false)
+        #expect(showEventListSummary == false)
+        #expect(localStorageShowEventListSummary == false)
 
         viewModel.toggleEventListSummary.onNext(true)
 
-        XCTAssertEqual(showEventListSummary, true)
-        XCTAssertEqual(localStorageShowEventListSummary, true)
+        #expect(showEventListSummary == true)
+        #expect(localStorageShowEventListSummary == true)
 
         viewModel.toggleEventListSummary.onNext(false)
 
-        XCTAssertEqual(showEventListSummary, false)
-        XCTAssertEqual(localStorageShowEventListSummary, false)
+        #expect(showEventListSummary == false)
+        #expect(localStorageShowEventListSummary == false)
     }
 
-    func testChangeTransparency() {
+    @Test func testChangeTransparency() {
 
         localStorage.transparencyLevel = 5
 
@@ -965,21 +966,21 @@ class SettingsViewModelTests: XCTestCase {
             .hudWindow
         ]
 
-        XCTAssertEqual(popoverTransparency, 5)
-        XCTAssertEqual(localStorageTransparency, 5)
-        XCTAssertEqual(popoverMaterial, expected[5])
+        #expect(popoverTransparency == 5)
+        #expect(localStorageTransparency == 5)
+        #expect(popoverMaterial == expected[5])
 
         for level in 0..<expected.count {
 
             viewModel.transparencyObserver.onNext(level)
 
-            XCTAssertEqual(popoverTransparency, level)
-            XCTAssertEqual(localStorageTransparency?.intValue, level)
-            XCTAssertEqual(popoverMaterial, expected[level])
+            #expect(popoverTransparency == level)
+            #expect(localStorageTransparency?.intValue == level)
+            #expect(popoverMaterial == expected[level])
         }
     }
 
-    func testToggleStatusItemIcon() {
+    @Test func testToggleStatusItemIcon() {
 
         localStorage.statusItemIconEnabled = false
 
@@ -989,21 +990,21 @@ class SettingsViewModelTests: XCTestCase {
             .bind { statusItemIconEnabled = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(statusItemIconEnabled, false)
-        XCTAssertEqual(localStorageStatusItemIconEnabled, false)
+        #expect(statusItemIconEnabled == false)
+        #expect(localStorageStatusItemIconEnabled == false)
 
         viewModel.toggleStatusItemIcon.onNext(true)
 
-        XCTAssertEqual(statusItemIconEnabled, true)
-        XCTAssertEqual(localStorageStatusItemIconEnabled, true)
+        #expect(statusItemIconEnabled == true)
+        #expect(localStorageStatusItemIconEnabled == true)
 
         viewModel.toggleStatusItemIcon.onNext(false)
 
-        XCTAssertEqual(statusItemIconEnabled, false)
-        XCTAssertEqual(localStorageStatusItemIconEnabled, false)
+        #expect(statusItemIconEnabled == false)
+        #expect(localStorageStatusItemIconEnabled == false)
     }
 
-    func testToggleStatusItemDate() {
+    @Test func testToggleStatusItemDate() {
 
         localStorage.statusItemDateEnabled = false
 
@@ -1013,21 +1014,21 @@ class SettingsViewModelTests: XCTestCase {
             .bind { statusItemDateEnabled = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(statusItemDateEnabled, false)
-        XCTAssertEqual(localStorageStatusItemDateEnabled, false)
+        #expect(statusItemDateEnabled == false)
+        #expect(localStorageStatusItemDateEnabled == false)
 
         viewModel.toggleStatusItemDate.onNext(true)
 
-        XCTAssertEqual(statusItemDateEnabled, true)
-        XCTAssertEqual(localStorageStatusItemDateEnabled, true)
+        #expect(statusItemDateEnabled == true)
+        #expect(localStorageStatusItemDateEnabled == true)
 
         viewModel.toggleStatusItemDate.onNext(false)
 
-        XCTAssertEqual(statusItemDateEnabled, false)
-        XCTAssertEqual(localStorageStatusItemDateEnabled, false)
+        #expect(statusItemDateEnabled == false)
+        #expect(localStorageStatusItemDateEnabled == false)
     }
 
-    func testToggleShowStatusItemBackground() {
+    @Test func testToggleShowStatusItemBackground() {
 
         localStorage.statusItemBackgroundEnabled = true
 
@@ -1037,31 +1038,31 @@ class SettingsViewModelTests: XCTestCase {
             .bind { showBackground = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(showBackground, true)
-        XCTAssertEqual(localStorageStatusItemBackgroundEnabled, true)
+        #expect(showBackground == true)
+        #expect(localStorageStatusItemBackgroundEnabled == true)
 
         viewModel.toggleStatusItemBackground.onNext(false)
 
-        XCTAssertEqual(showBackground, false)
-        XCTAssertEqual(localStorageStatusItemBackgroundEnabled, false)
+        #expect(showBackground == false)
+        #expect(localStorageStatusItemBackgroundEnabled == false)
 
         viewModel.toggleStatusItemBackground.onNext(true)
 
-        XCTAssertEqual(showBackground, true)
-        XCTAssertEqual(localStorageStatusItemBackgroundEnabled, true)
+        #expect(showBackground == true)
+        #expect(localStorageStatusItemBackgroundEnabled == true)
     }
 
-    func testChangeAppearance() {
+    @Test func testChangeAppearance() {
 
         for mode in AppearanceMode.allCases {
             viewModel.appearanceModeObserver.onNext(mode)
 
-            XCTAssertEqual(viewModel.appearanceMode.lastValue(), mode)
-            XCTAssertEqual(localStorageAppearanceMode?.intValue, mode.rawValue)
+            #expect(viewModel.appearanceMode.lastValue() == mode)
+            #expect(localStorageAppearanceMode?.intValue == mode.rawValue)
         }
     }
 
-    func testChangeFutureEventsDays() {
+    @Test func testChangeFutureEventsDays() {
 
         localStorage.futureEventsDays = 1
 
@@ -1076,18 +1077,18 @@ class SettingsViewModelTests: XCTestCase {
             .bind { futureEventsStepperLabel = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(futureEventsDays, 1)
-        XCTAssertEqual(futureEventsStepperLabel, "in 1 day")
-        XCTAssertEqual(localStorageFutureEventsDays, 1)
+        #expect(futureEventsDays == 1)
+        #expect(futureEventsStepperLabel == "in 1 day")
+        #expect(localStorageFutureEventsDays == 1)
 
         viewModel.futureEventsDaysObserver.onNext(5)
 
-        XCTAssertEqual(futureEventsDays, 5)
-        XCTAssertEqual(futureEventsStepperLabel, "in 5 days")
-        XCTAssertEqual(localStorageFutureEventsDays, 5)
+        #expect(futureEventsDays == 5)
+        #expect(futureEventsStepperLabel == "in 5 days")
+        #expect(localStorageFutureEventsDays == 5)
     }
 
-    func testToggleShowMonthOutline() {
+    @Test func testToggleShowMonthOutline() {
 
         localStorage.showMonthOutline = true
 
@@ -1097,17 +1098,17 @@ class SettingsViewModelTests: XCTestCase {
             .bind { showMonthOutline = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(showMonthOutline, true)
-        XCTAssertEqual(localStorageShowMonthOutline, true)
+        #expect(showMonthOutline == true)
+        #expect(localStorageShowMonthOutline == true)
 
         viewModel.toggleMonthOutline.onNext(false)
 
-        XCTAssertEqual(showMonthOutline, false)
-        XCTAssertEqual(localStorageShowMonthOutline, false)
+        #expect(showMonthOutline == false)
+        #expect(localStorageShowMonthOutline == false)
 
         viewModel.toggleMonthOutline.onNext(true)
 
-        XCTAssertEqual(showMonthOutline, true)
-        XCTAssertEqual(localStorageShowMonthOutline, true)
+        #expect(showMonthOutline == true)
+        #expect(localStorageShowMonthOutline == true)
     }
 }

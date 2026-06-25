@@ -5,11 +5,12 @@
 //  Created by Paker on 06/06/2026.
 //
 
-import XCTest
+import AppKit
 import RxSwift
+import Testing
 @testable import Calendr
 
-class ScreenProviderTests: XCTestCase {
+class ScreenProviderTests {
 
     let notificationCenter = NotificationCenter()
     let distributedNotificationCenter = NotificationCenter()
@@ -18,7 +19,7 @@ class ScreenProviderTests: XCTestCase {
 
     let disposeBag = DisposeBag()
 
-    func testScreenChange() {
+    @Test func testScreenChange() {
 
         let screenProvider = makeScreenProvider()
 
@@ -28,82 +29,82 @@ class ScreenProviderTests: XCTestCase {
             changeCount += 1
         }.disposed(by: disposeBag)
 
-        XCTAssertEqual(changeCount, 1)
+        #expect(changeCount == 1)
 
         notificationCenter.post(name: NSWindow.didChangeScreenNotification, object: nil)
 
-        XCTAssertEqual(changeCount, 1)
+        #expect(changeCount == 1)
 
         scheduler.advance(.milliseconds(1))
 
-        XCTAssertEqual(changeCount, 2)
+        #expect(changeCount == 2)
     }
 
-    func testScreenInit_isLocked() {
+    @Test func testScreenInit_isLocked() async {
 
         let screenProvider = makeScreenProvider(isScreenLocked: true)
 
         let initExpectation = expectation(description: "Init")
 
         screenProvider.isLockedObservable.bind { isLocked in
-            XCTAssertTrue(isLocked)
+            #expect(isLocked)
             initExpectation.fulfill()
         }
         .disposed(by: disposeBag)
 
-        wait(for: [initExpectation], timeout: 0.1)
+        await fulfillment(of: [initExpectation])
     }
 
-    func testScreenInit_isUnlocked() {
+    @Test func testScreenInit_isUnlocked() async {
 
         let screenProvider = makeScreenProvider(isScreenLocked: false)
 
         let initExpectation = expectation(description: "Init")
 
         screenProvider.isLockedObservable.bind { isLocked in
-            XCTAssertFalse(isLocked)
+            #expect(isLocked == false)
             initExpectation.fulfill()
         }
         .disposed(by: disposeBag)
 
-        wait(for: [initExpectation], timeout: 0.1)
+        await fulfillment(of: [initExpectation])
     }
 
-    func testScreenLock() {
+    @Test func testScreenLock() async {
 
         let lockExpectation = expectation(description: "Lock")
 
         let screenProvider = makeScreenProvider(isScreenLocked: false)
 
         screenProvider.isLockedObservable.skip(1).bind { isLocked in
-            XCTAssertTrue(isLocked)
+            #expect(isLocked)
             lockExpectation.fulfill()
         }
         .disposed(by: disposeBag)
 
         distributedNotificationCenter.post(name: NSScreen.didLockNotification, object: nil)
 
-        wait(for: [lockExpectation], timeout: 0.1)
+        await fulfillment(of: [lockExpectation])
     }
 
-    func testScreenUnlock() {
+    @Test func testScreenUnlock() async {
 
         let unlockExpectation = expectation(description: "Unlock")
 
         let screenProvider = makeScreenProvider(isScreenLocked: true)
 
         screenProvider.isLockedObservable.skip(1).bind { isLocked in
-            XCTAssertFalse(isLocked)
+            #expect(isLocked == false)
             unlockExpectation.fulfill()
         }
         .disposed(by: disposeBag)
 
         distributedNotificationCenter.post(name: NSScreen.didUnlockNotification, object: nil)
 
-        wait(for: [unlockExpectation], timeout: 0.1)
+        await fulfillment(of: [unlockExpectation])
     }
 
-    func testScreenLock_thenUnlock() {
+    @Test func testScreenLock_thenUnlock() async {
 
         let lockExpectation = expectation(description: "Lock")
         let unlockExpectation = expectation(description: "Unlock")
@@ -121,11 +122,11 @@ class ScreenProviderTests: XCTestCase {
 
         distributedNotificationCenter.post(name: NSScreen.didLockNotification, object: nil)
 
-        wait(for: [lockExpectation], timeout: 0.1)
+        await fulfillment(of: [lockExpectation])
 
         distributedNotificationCenter.post(name: NSScreen.didUnlockNotification, object: nil)
 
-        wait(for: [unlockExpectation], timeout: 0.1)
+        await fulfillment(of: [unlockExpectation])
     }
 
     // MARK: - Factory

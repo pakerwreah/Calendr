@@ -5,10 +5,11 @@
 //  Created by Paker on 29/10/2025.
 //
 
-import XCTest
+import Foundation
+import Testing
 @testable import Calendr
 
-class MapBlackListViewModelTests: XCTestCase {
+class MapBlackListViewModelTests {
 
     let localStorage = MockLocalStorageProvider()
 
@@ -16,33 +17,33 @@ class MapBlackListViewModelTests: XCTestCase {
         .init(localStorage: localStorage, idProvider: IntIDProvider())
     }
 
-    func testViewModel_initialState() {
+    @Test func testViewModel_initialState() {
 
         registerDefaultPrefs(in: localStorage)
 
         let viewModel = makeViewModel()
 
-        XCTAssertEqual(viewModel.items, [
+        #expect(viewModel.items == [
             .init(id: 1, text: "Microsoft Teams"),
             .init(id: 2, text: "Google Meet"),
             .init(id: 3, text: "Discord"),
             .init(id: 4, text: "Slack"),
             .init(id: 5, text: "Zoom"),
         ])
-        XCTAssertTrue(viewModel.selection.isEmpty)
-        XCTAssertFalse(viewModel.canRemove)
+        #expect(viewModel.selection.isEmpty)
+        #expect(viewModel.canRemove == false)
     }
 
-    func testViewModel_withSelection_canRemoveItems() {
+    @Test func testViewModel_withSelection_canRemoveItems() {
 
         let viewModel = makeViewModel()
 
-        XCTAssertFalse(viewModel.canRemove)
+        #expect(viewModel.canRemove == false)
         viewModel.selection = [1]
-        XCTAssertTrue(viewModel.canRemove)
+        #expect(viewModel.canRemove)
     }
 
-    func testViewModel_removeSelected() {
+    @Test func testViewModel_removeSelected() {
 
         let viewModel = makeViewModel()
 
@@ -53,30 +54,30 @@ class MapBlackListViewModelTests: XCTestCase {
         viewModel.selection = [1, 3]
         viewModel.removeSelected()
 
-        XCTAssertEqual(viewModel.items.map(\.id), [2, 4])
-        XCTAssertEqual(localStorage.showMapBlacklistItems, ["Test 2", "Test 4"])
+        #expect(viewModel.items.map(\.id) == [2, 4])
+        #expect(localStorage.showMapBlacklistItems == ["Test 2", "Test 4"])
     }
 
-    func testViewModel_newItems() {
+    @Test func testViewModel_newItems() {
 
         let viewModel = makeViewModel()
 
-        XCTAssertTrue(viewModel.items.isEmpty)
+        #expect(viewModel.items.isEmpty)
 
-        XCTAssertEqual(viewModel.newItem(), 1)
-        XCTAssertEqual(viewModel.selection, [1])
-        XCTAssertEqual(viewModel.items, [.init(id: 1, text: .newItemText)])
-        XCTAssertTrue(localStorage.showMapBlacklistItems.isEmpty)
+        #expect(viewModel.newItem() == 1)
+        #expect(viewModel.selection == [1])
+        #expect(viewModel.items == [.init(id: 1, text: .newItemText)])
+        #expect(localStorage.showMapBlacklistItems.isEmpty)
 
-        XCTAssertEqual(viewModel.newItem(), 2)
-        XCTAssertEqual(viewModel.selection, [2])
-        XCTAssertEqual(viewModel.items, [.init(id: 1, text: .newItemText), .init(id: 2, text: .newItemText)])
-        XCTAssertTrue(localStorage.showMapBlacklistItems.isEmpty)
+        #expect(viewModel.newItem() == 2)
+        #expect(viewModel.selection == [2])
+        #expect(viewModel.items == [.init(id: 1, text: .newItemText), .init(id: 2, text: .newItemText)])
+        #expect(localStorage.showMapBlacklistItems.isEmpty)
 
         viewModel.items[0].text = "Edited Item"
         viewModel.save()
 
-        XCTAssertEqual(localStorage.showMapBlacklistItems, ["Edited Item", .newItemText])
+        #expect(localStorage.showMapBlacklistItems == ["Edited Item", .newItemText])
     }
 }
 

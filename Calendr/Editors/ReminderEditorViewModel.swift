@@ -37,12 +37,14 @@ class ReminderEditorViewModel: HostingWindowControllerDelegate {
     }
 
     private let calendarService: CalendarServiceProviding
+    private let scheduler: ImmediateSchedulerType
 
     private let disposeBag = DisposeBag()
 
-    init(dueDate: DueDate, calendarService: CalendarServiceProviding) {
+    init(dueDate: DueDate, calendarService: CalendarServiceProviding, scheduler: ImmediateSchedulerType) {
         self.dueDate = dueDate.date
         self.calendarService = calendarService
+        self.scheduler = scheduler
 
         loadCalendars()
     }
@@ -72,7 +74,7 @@ class ReminderEditorViewModel: HostingWindowControllerDelegate {
             date: dueDate,
             isAllDay: isAllDay
         )
-        .observe(on: MainScheduler.instance)
+        .observe(on: scheduler)
         .subscribe(onCompleted: { [weak self] in
             self?.confirmClose()
         }, onError: { [weak self] error in
@@ -93,7 +95,7 @@ class ReminderEditorViewModel: HostingWindowControllerDelegate {
     private func loadCalendars() {
 
         calendarService.calendars(forNew: .reminder)
-            .observe(on: MainScheduler.instance)
+            .observe(on: scheduler)
             .subscribe(onSuccess: { [weak self] calendars in
                 self?.setupCalendars(calendars)
             }, onFailure: { [weak self] error in

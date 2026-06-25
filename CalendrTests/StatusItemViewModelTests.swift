@@ -5,11 +5,12 @@
 //  Created by Paker on 07/02/21.
 //
 
-import XCTest
+import AppKit
 import RxSwift
+import Testing
 @testable import Calendr
 
-class StatusItemViewModelTests: XCTestCase {
+class StatusItemViewModelTests {
 
     let disposeBag = DisposeBag()
 
@@ -41,7 +42,7 @@ class StatusItemViewModelTests: XCTestCase {
     var lastText: String? { iconsAndText?.text }
     var isVisible: Bool?
 
-    override func setUp() {
+    init() {
 
         viewModel.iconsAndText
             .bind { [weak self] in
@@ -75,57 +76,57 @@ class StatusItemViewModelTests: XCTestCase {
         settings.statusItemIconStyleObserver.onNext(iconStyle)
     }
 
-    func testText_withDateChange_shouldUpdateText() {
+    @Test func testText_withDateChange_shouldUpdateText() {
 
         setUp(showIcon: false, showDate: true, iconStyle: .calendar)
 
-        XCTAssertEqual(lastText, "2021-01-01")
+        #expect(lastText == "2021-01-01")
 
         changeDate(.make(year: 2021, month: 1, day: 2))
-        XCTAssertEqual(lastText, "2021-01-02")
+        #expect(lastText == "2021-01-02")
 
         changeDate(.make(year: 2021, month: 2, day: 2))
-        XCTAssertEqual(lastText, "2021-02-02")
+        #expect(lastText == "2021-02-02")
     }
 
-    func testText_withLocaleChange_shouldUpdateText() {
+    @Test func testText_withLocaleChange_shouldUpdateText() {
 
         setUp(showIcon: false, showDate: true, iconStyle: .calendar)
 
-        XCTAssertEqual(lastText, "2021-01-01")
+        #expect(lastText == "2021-01-01")
 
         dateProvider.m_calendar.locale = Locale(identifier: "en")
         notificationCenter.post(name: NSLocale.currentLocaleDidChangeNotification, object: nil)
 
-        XCTAssertEqual(lastText, "1/1/21")
+        #expect(lastText == "1/1/21")
     }
 
-    func testStatusItemVisibility() {
+    @Test func testStatusItemVisibility() {
 
         setUp(showIcon: true, showDate: true)
-        XCTAssertEqual(isVisible, true)
+        #expect(isVisible == true)
 
         setUp(showIcon: true, showDate: false)
-        XCTAssertEqual(isVisible, true)
+        #expect(isVisible == true)
 
         setUp(showIcon: false, showDate: true)
-        XCTAssertEqual(isVisible, true)
+        #expect(isVisible == true)
 
         setUp(showIcon: false, showDate: false)
-        XCTAssertEqual(isVisible, false)
+        #expect(isVisible == false)
     }
 
-    func testSaveStatusItemPreferredPosition() {
+    @Test func testSaveStatusItemPreferredPosition() {
 
         let key = viewModel.preferredPositionKey
         let savedKey = viewModel.savedPreferredPositionKey
 
         localStorage.set(123, forKey: key)
 
-        XCTAssertEqual(localStorage.integer(forKey: savedKey), 123)
+        #expect(localStorage.integer(forKey: savedKey) == 123)
     }
 
-    func testRestoreStatusItemPreferredPosition_whenBecomingVisible() {
+    @Test func testRestoreStatusItemPreferredPosition_whenBecomingVisible() {
 
         let key = viewModel.preferredPositionKey
         let savedKey = viewModel.savedPreferredPositionKey
@@ -137,110 +138,110 @@ class StatusItemViewModelTests: XCTestCase {
 
         setUp(showIcon: true, showDate: false)
 
-        XCTAssertEqual(localStorage.integer(forKey: key), 123)
+        #expect(localStorage.integer(forKey: key) == 123)
     }
 
-    func testIconVisibility() {
+    @Test func testIconVisibility() {
 
         setUp(showIcon: true, showDate: true, iconStyle: .date)
-        XCTAssertEqual(iconsAndText?.calendar?.style, .date)
+        #expect(iconsAndText?.calendar?.style == .date)
 
         setUp(showIcon: true, showDate: true, iconStyle: .calendar)
-        XCTAssertEqual(iconsAndText?.calendar?.style, .calendar)
+        #expect(iconsAndText?.calendar?.style == .calendar)
 
         setUp(showIcon: true, showDate: true, iconStyle: .dayOfWeek)
-        XCTAssertEqual(iconsAndText?.calendar?.style, .dayOfWeek)
+        #expect(iconsAndText?.calendar?.style == .dayOfWeek)
 
         setUp(showIcon: true, showDate: false, iconStyle: .date)
-        XCTAssertEqual(iconsAndText?.calendar?.style, .date)
+        #expect(iconsAndText?.calendar?.style == .date)
 
         setUp(showIcon: true, showDate: false, iconStyle: .calendar)
-        XCTAssertEqual(iconsAndText?.calendar?.style, .calendar)
+        #expect(iconsAndText?.calendar?.style == .calendar)
 
         setUp(showIcon: true, showDate: false, iconStyle: .dayOfWeek)
-        XCTAssertEqual(iconsAndText?.calendar?.style, .dayOfWeek)
+        #expect(iconsAndText?.calendar?.style == .dayOfWeek)
 
         setUp(showIcon: false, showDate: true, iconStyle: .date)
-        XCTAssertNil(iconsAndText?.calendar)
+        #expect(iconsAndText?.calendar == nil)
 
         setUp(showIcon: false, showDate: true, iconStyle: .calendar)
-        XCTAssertNil(iconsAndText?.calendar)
+        #expect(iconsAndText?.calendar == nil)
 
         setUp(showIcon: false, showDate: true, iconStyle: .dayOfWeek)
-        XCTAssertNil(iconsAndText?.calendar)
+        #expect(iconsAndText?.calendar == nil)
 
         setUp(showIcon: false, showDate: false, iconStyle: .date)
-        XCTAssertEqual(iconsAndText?.calendar?.style, .date)
+        #expect(iconsAndText?.calendar?.style == .date)
 
         setUp(showIcon: false, showDate: false, iconStyle: .calendar)
-        XCTAssertEqual(iconsAndText?.calendar?.style, .calendar)
+        #expect(iconsAndText?.calendar?.style == .calendar)
 
         setUp(showIcon: false, showDate: false, iconStyle: .dayOfWeek)
-        XCTAssertEqual(iconsAndText?.calendar?.style, .dayOfWeek)
+        #expect(iconsAndText?.calendar?.style == .dayOfWeek)
     }
 
-    func testIconVisibility_withBirthday() {
+    @Test func testIconVisibility_withBirthday() {
 
         calendarService.changeEvents([.make(type: .birthday)])
 
         setUp(showIcon: true, showDate: true, iconStyle: .date)
-        XCTAssertNotNil(iconsAndText?.birthday)
-        XCTAssertNotNil(iconsAndText?.calendar)
+        #expect(iconsAndText?.birthday != nil)
+        #expect(iconsAndText?.calendar != nil)
 
         setUp(showIcon: true, showDate: true, iconStyle: .calendar)
-        XCTAssertNotNil(iconsAndText?.birthday)
-        XCTAssertNil(iconsAndText?.calendar)
+        #expect(iconsAndText?.birthday != nil)
+        #expect(iconsAndText?.calendar == nil)
 
         setUp(showIcon: true, showDate: false, iconStyle: .date)
-        XCTAssertNotNil(iconsAndText?.birthday)
-        XCTAssertNotNil(iconsAndText?.calendar)
+        #expect(iconsAndText?.birthday != nil)
+        #expect(iconsAndText?.calendar != nil)
 
         setUp(showIcon: true, showDate: false, iconStyle: .calendar)
-        XCTAssertNotNil(iconsAndText?.birthday)
-        XCTAssertNil(iconsAndText?.calendar)
+        #expect(iconsAndText?.birthday != nil)
+        #expect(iconsAndText?.calendar == nil)
 
         setUp(showIcon: false, showDate: true, iconStyle: .date)
-        XCTAssertNotNil(iconsAndText?.birthday)
-        XCTAssertNil(iconsAndText?.calendar)
+        #expect(iconsAndText?.birthday != nil)
+        #expect(iconsAndText?.calendar == nil)
 
         setUp(showIcon: false, showDate: true, iconStyle: .calendar)
-        XCTAssertNotNil(iconsAndText?.birthday)
-        XCTAssertNil(iconsAndText?.calendar)
+        #expect(iconsAndText?.birthday != nil)
+        #expect(iconsAndText?.calendar == nil)
 
         setUp(showIcon: false, showDate: false, iconStyle: .date)
-        XCTAssertNotNil(iconsAndText?.birthday)
-        XCTAssertNil(iconsAndText?.calendar)
+        #expect(iconsAndText?.birthday != nil)
+        #expect(iconsAndText?.calendar == nil)
 
         setUp(showIcon: false, showDate: false, iconStyle: .calendar)
-        XCTAssertNotNil(iconsAndText?.birthday)
-        XCTAssertNil(iconsAndText?.calendar)
+        #expect(iconsAndText?.birthday != nil)
+        #expect(iconsAndText?.calendar == nil)
     }
 
-    func testBirthdayIconVisibility_withShowNextEventDisabled() {
+    @Test func testBirthdayIconVisibility_withShowNextEventDisabled() {
 
         calendarService.changeEvents([.make(type: .birthday)])
 
         setUp(showIcon: true, showDate: true, iconStyle: .date)
-        XCTAssertNotNil(iconsAndText?.birthday)
-        XCTAssertNotNil(iconsAndText?.calendar)
+        #expect(iconsAndText?.birthday != nil)
+        #expect(iconsAndText?.calendar != nil)
 
         settings.showEventStatusItemObserver.onNext(false)
 
         setUp(showIcon: true, showDate: true, iconStyle: .date)
-        XCTAssertNil(iconsAndText?.birthday)
-        XCTAssertNotNil(iconsAndText?.calendar)
+        #expect(iconsAndText?.birthday == nil)
+        #expect(iconsAndText?.calendar != nil)
     }
 
-    func testDateVisibility() {
+    @Test func testDateVisibility() {
 
         setUp(showIcon: false, showDate: true, iconStyle: .calendar)
-        XCTAssertEqual(lastText, "2021-01-01")
+        #expect(lastText == "2021-01-01")
 
         setUp(showIcon: false, showDate: false, iconStyle: .calendar)
-        XCTAssertEqual(lastText, "")
+        #expect(lastText == "")
     }
 
-    func testDateStyle() {
+    @Test func testDateStyle() {
 
         setUp(showIcon: false, showDate: true, iconStyle: .calendar)
 
@@ -248,108 +249,108 @@ class StatusItemViewModelTests: XCTestCase {
         notificationCenter.post(name: NSLocale.currentLocaleDidChangeNotification, object: nil)
 
         settings.statusItemDateStyleObserver.onNext(.short)
-        XCTAssertEqual(lastText, "1/1/21")
+        #expect(lastText == "1/1/21")
 
         settings.statusItemDateStyleObserver.onNext(.medium)
-        XCTAssertEqual(lastText, "Jan 1, 2021")
+        #expect(lastText == "Jan 1, 2021")
 
         settings.statusItemDateStyleObserver.onNext(.long)
-        XCTAssertEqual(lastText, "January 1, 2021")
+        #expect(lastText == "January 1, 2021")
 
         settings.statusItemDateStyleObserver.onNext(.full)
-        XCTAssertEqual(lastText, "Friday, January 1, 2021")
+        #expect(lastText == "Friday, January 1, 2021")
 
         settings.statusItemDateStyleObserver.onNext(.none)
-        XCTAssertEqual(lastText, "???")
+        #expect(lastText == "???")
 
         settings.statusItemDateFormatObserver.onNext("E d MMM YY")
-        XCTAssertEqual(lastText, "Fri 1 Jan 21")
+        #expect(lastText == "Fri 1 Jan 21")
 
         settings.statusItemDateStyleObserver.onNext(.short)
-        XCTAssertEqual(lastText, "1/1/21")
+        #expect(lastText == "1/1/21")
     }
 
-    func testDateFormatWithTime() {
+    @Test func testDateFormatWithTime() {
 
         setUp(showIcon: false, showDate: true, iconStyle: .calendar)
 
         settings.statusItemDateStyleObserver.onNext(.none)
         settings.statusItemDateFormatObserver.onNext("HH:mm:ss")
-        XCTAssertEqual(lastText, "00:00:00")
+        #expect(lastText == "00:00:00")
 
         dateProvider.add(1, .second)
         scheduler.advance(.seconds(1))
-        XCTAssertEqual(lastText, "00:00:01")
+        #expect(lastText == "00:00:01")
 
         dateProvider.add(13, .hour)
         dateProvider.add(15, .minute)
         scheduler.advance(.seconds(1))
-        XCTAssertEqual(lastText, "13:15:01")
+        #expect(lastText == "13:15:01")
 
         settings.statusItemDateFormatObserver.onNext("hh:mm a")
-        XCTAssertEqual(lastText, "01:15 PM")
+        #expect(lastText == "01:15 PM")
     }
 
-    func testDateFormatWithTimeZones() {
+    @Test func testDateFormatWithTimeZones() {
 
         setUp(showIcon: false, showDate: true, iconStyle: .calendar)
 
         settings.statusItemDateStyleObserver.onNext(.none)
         settings.statusItemDateFormatObserver.onNext("dd/MM/yyyy HH:mm@GMT+2'LT' | 'BR'HH:mm@GMT-3")
 
-        XCTAssertEqual(lastText, "01/01/2021 02:00LT | BR21:00")
+        #expect(lastText == "01/01/2021 02:00LT | BR21:00")
 
         settings.statusItemDateFormatObserver.onNext("dd/MM/yyyy HH:mm@GMT+2 'LT' | 'BR' HH:mm@GMT-3")
 
-        XCTAssertEqual(lastText, "01/01/2021 02:00 LT | BR 21:00")
+        #expect(lastText == "01/01/2021 02:00 LT | BR 21:00")
     }
 
-    func testDateFormatWithTimeZonesWithSeconds() {
+    @Test func testDateFormatWithTimeZonesWithSeconds() {
 
         setUp(showIcon: false, showDate: true, iconStyle: .calendar)
 
         settings.statusItemDateStyleObserver.onNext(.none)
         settings.statusItemDateFormatObserver.onNext("HH:mm:ss@GMT+2 | HH:mm:ss@GMT-3")
 
-        XCTAssertEqual(lastText, "02:00:00 | 21:00:00")
+        #expect(lastText == "02:00:00 | 21:00:00")
 
         dateProvider.add(1, .second)
         scheduler.advance(.seconds(1))
 
-        XCTAssertEqual(lastText, "02:00:01 | 21:00:01")
+        #expect(lastText == "02:00:01 | 21:00:01")
     }
 
-    func testDateFormatWithTimeZonesHalfHourOffset() {
+    @Test func testDateFormatWithTimeZonesHalfHourOffset() {
 
         setUp(showIcon: false, showDate: true, iconStyle: .calendar)
 
         settings.statusItemDateStyleObserver.onNext(.none)
         settings.statusItemDateFormatObserver.onNext("HH:mm@GMT+5:30 | HH:mm@GMT+9:30")
 
-        XCTAssertEqual(lastText, "05:30 | 09:30")
+        #expect(lastText == "05:30 | 09:30")
     }
 
-    func testDateFormatWithTimeZonesQuarterHourOffset() {
+    @Test func testDateFormatWithTimeZonesQuarterHourOffset() {
 
         setUp(showIcon: false, showDate: true, iconStyle: .calendar)
 
         settings.statusItemDateStyleObserver.onNext(.none)
         settings.statusItemDateFormatObserver.onNext("HH:mm@GMT+5:45 | HH:mm@GMT-3:15")
 
-        XCTAssertEqual(lastText, "05:45 | 20:45")
+        #expect(lastText == "05:45 | 20:45")
     }
 
-    func testDateFormatWithMixedTimeZoneOffsets() {
+    @Test func testDateFormatWithMixedTimeZoneOffsets() {
 
         setUp(showIcon: false, showDate: true, iconStyle: .calendar)
 
         settings.statusItemDateStyleObserver.onNext(.none)
         settings.statusItemDateFormatObserver.onNext("HH:mm@GMT+2 | HH:mm@GMT+5:30 | HH:mm@GMT-3")
 
-        XCTAssertEqual(lastText, "02:00 | 05:30 | 21:00")
+        #expect(lastText == "02:00 | 05:30 | 21:00")
     }
 
-    func testBackground() {
+    @Test func testBackground() {
 
         var image: NSImage?
 
@@ -358,16 +359,16 @@ class StatusItemViewModelTests: XCTestCase {
             .disposed(by: disposeBag)
 
         scheduler.advance(.nanoseconds(1))
-        XCTAssertNotNil(image)
+        #expect(image != nil)
 
         image = nil
         settings.toggleBackground.onNext(true)
         scheduler.advance(.nanoseconds(1))
-        XCTAssertNotNil(image)
+        #expect(image != nil)
 
         image = nil
         settings.toggleBackground.onNext(false)
         scheduler.advance(.nanoseconds(1))
-        XCTAssertNotNil(image)
+        #expect(image != nil)
     }
 }

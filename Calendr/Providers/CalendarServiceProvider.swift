@@ -138,7 +138,9 @@ class CalendarServiceProvider: CalendarServiceProviding {
 
             return granted
         } catch {
-            print(error.localizedDescription)
+            if !BuildConfig.isTesting {
+                print(error.localizedDescription)
+            }
             SentrySDK.capture(error: error)
             return false
         }
@@ -708,7 +710,7 @@ private extension EventModel {
     }
 
     init?(from reminder: EKReminder, dateProvider: DateProviding) {
-        guard 
+        guard
             let calendar = reminder.calendar,
             let dueDateComponents = reminder.dueDateComponents,
             let date = dateProvider.calendar.date(from: dueDateComponents)

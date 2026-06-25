@@ -5,11 +5,12 @@
 //  Created by Paker on 19/01/21.
 //
 
-import XCTest
+import AppKit
 import RxSwift
+import Testing
 @testable import Calendr
 
-class CalendarPickerViewModelTests: XCTestCase {
+class CalendarPickerViewModelTests {
 
     let disposeBag = DisposeBag()
 
@@ -21,7 +22,7 @@ class CalendarPickerViewModelTests: XCTestCase {
         localStorage: localStorage
     )
 
-    override func setUp() {
+    init() {
 
         localStorage.reset()
 
@@ -32,7 +33,7 @@ class CalendarPickerViewModelTests: XCTestCase {
         ]
     }
 
-    func testCalendars() {
+    @Test func testCalendars() {
 
         var calendars: [String]?
 
@@ -42,10 +43,10 @@ class CalendarPickerViewModelTests: XCTestCase {
 
         calendarService.changeObserver.onNext(())
 
-        XCTAssertEqual(calendars, ["1", "2", "3"])
+        #expect(calendars == ["1", "2", "3"])
     }
 
-    func testDefaultEnabledCalendars() {
+    @Test func testDefaultEnabledCalendars() {
 
         var enabled: [String]?
 
@@ -53,14 +54,14 @@ class CalendarPickerViewModelTests: XCTestCase {
             .bind { enabled = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(localStorage.disabledCalendars, [])
+        #expect(localStorage.disabledCalendars == [])
 
         calendarService.changeObserver.onNext(())
 
-        XCTAssertEqual(enabled, ["1", "2", "3"])
+        #expect(enabled == ["1", "2", "3"])
     }
 
-    func testDefaultNextEventCalendars() {
+    @Test func testDefaultNextEventCalendars() {
 
         var nextEvent: [String]?
 
@@ -68,14 +69,14 @@ class CalendarPickerViewModelTests: XCTestCase {
             .bind { nextEvent = $0 }
             .disposed(by: disposeBag)
 
-        XCTAssertEqual(localStorage.silencedCalendars, [])
+        #expect(localStorage.silencedCalendars == [])
 
         calendarService.changeObserver.onNext(())
 
-        XCTAssertEqual(nextEvent, ["1", "2", "3"])
+        #expect(nextEvent == ["1", "2", "3"])
     }
 
-    func testEnabledCalendars() {
+    @Test func testEnabledCalendars() {
 
         var enabled: [String]?
 
@@ -87,10 +88,10 @@ class CalendarPickerViewModelTests: XCTestCase {
 
         localStorage.disabledCalendars = ["3"]
 
-        XCTAssertEqual(enabled, ["1", "2"])
+        #expect(enabled == ["1", "2"])
     }
 
-    func testNextEventCalendars() {
+    @Test func testNextEventCalendars() {
 
         var nextEvent: [String]?
 
@@ -102,10 +103,10 @@ class CalendarPickerViewModelTests: XCTestCase {
 
         localStorage.silencedCalendars = ["3"]
 
-        XCTAssertEqual(nextEvent, ["1", "2"])
+        #expect(nextEvent == ["1", "2"])
     }
 
-    func testToggleCalendar() {
+    @Test func testToggleCalendar() {
 
         var enabled: [String]?
 
@@ -117,16 +118,16 @@ class CalendarPickerViewModelTests: XCTestCase {
 
         viewModel.toggleCalendar.onNext("2")
 
-        XCTAssertEqual(localStorage.disabledCalendars, ["2"])
-        XCTAssertEqual(enabled, ["1", "3"])
+        #expect(localStorage.disabledCalendars == ["2"])
+        #expect(enabled == ["1", "3"])
 
         viewModel.toggleCalendar.onNext("2")
 
-        XCTAssertEqual(localStorage.disabledCalendars, [])
-        XCTAssertEqual(enabled, ["1", "2", "3"])
+        #expect(localStorage.disabledCalendars == [])
+        #expect(enabled == ["1", "2", "3"])
     }
 
-    func testSilenceCalendar() {
+    @Test func testSilenceCalendar() {
 
         var nextEvent: [String]?
 
@@ -138,16 +139,16 @@ class CalendarPickerViewModelTests: XCTestCase {
 
         viewModel.toggleNextEvent.onNext("2")
 
-        XCTAssertEqual(localStorage.silencedCalendars, ["2"])
-        XCTAssertEqual(nextEvent, ["1", "3"])
+        #expect(localStorage.silencedCalendars == ["2"])
+        #expect(nextEvent == ["1", "3"])
 
         viewModel.toggleNextEvent.onNext("2")
 
-        XCTAssertEqual(localStorage.silencedCalendars, [])
-        XCTAssertEqual(nextEvent, ["1", "2", "3"])
+        #expect(localStorage.silencedCalendars == [])
+        #expect(nextEvent == ["1", "2", "3"])
     }
 
-    func testNewCalendar_shouldBeEnabled() {
+    @Test func testNewCalendar_shouldBeEnabled() {
 
         var enabled: [String]?
 
@@ -159,16 +160,16 @@ class CalendarPickerViewModelTests: XCTestCase {
 
         calendarService.changeObserver.onNext(())
 
-        XCTAssertEqual(enabled, ["2", "3"])
+        #expect(enabled == ["2", "3"])
 
         calendarService.m_calendars.append(.make(id: "4", account: "", title: "", color: .clear))
 
         calendarService.changeObserver.onNext(())
 
-        XCTAssertEqual(enabled, ["2", "3", "4"])
+        #expect(enabled == ["2", "3", "4"])
     }
 
-    func testNewCalendar_shouldNotBeSilenced() {
+    @Test func testNewCalendar_shouldNotBeSilenced() {
 
         var nextEvent: [String]?
 
@@ -180,16 +181,16 @@ class CalendarPickerViewModelTests: XCTestCase {
 
         calendarService.changeObserver.onNext(())
 
-        XCTAssertEqual(nextEvent, ["2", "3"])
+        #expect(nextEvent == ["2", "3"])
 
         calendarService.m_calendars.append(.make(id: "4", account: "", title: "", color: .clear))
 
         calendarService.changeObserver.onNext(())
 
-        XCTAssertEqual(nextEvent, ["2", "3", "4"])
+        #expect(nextEvent == ["2", "3", "4"])
     }
 
-    func testRemoveCalendar_shouldRemoveEnabled() {
+    @Test func testRemoveCalendar_shouldRemoveEnabled() {
 
         var enabled: [String]?
 
@@ -199,16 +200,16 @@ class CalendarPickerViewModelTests: XCTestCase {
 
         calendarService.changeObserver.onNext(())
 
-        XCTAssertEqual(enabled, ["1", "2", "3"])
+        #expect(enabled == ["1", "2", "3"])
 
         calendarService.m_calendars.removeFirst()
 
         calendarService.changeObserver.onNext(())
 
-        XCTAssertEqual(enabled, ["2", "3"])
+        #expect(enabled == ["2", "3"])
     }
 
-    func testRemoveCalendar_shouldRemoveDisabled() {
+    @Test func testRemoveCalendar_shouldRemoveDisabled() {
 
         var enabled: [String]?
 
@@ -220,17 +221,17 @@ class CalendarPickerViewModelTests: XCTestCase {
 
         calendarService.changeObserver.onNext(())
 
-        XCTAssertEqual(enabled, ["2", "3"])
+        #expect(enabled == ["2", "3"])
 
         calendarService.m_calendars.removeFirst()
 
         calendarService.changeObserver.onNext(())
 
-        XCTAssertEqual(enabled, ["2", "3"])
-        XCTAssertEqual(localStorage.disabledCalendars, [])
+        #expect(enabled == ["2", "3"])
+        #expect(localStorage.disabledCalendars == [])
     }
 
-    func testRemoveCalendar_shouldRemoveSilenced() {
+    @Test func testRemoveCalendar_shouldRemoveSilenced() {
 
         var nextEvent: [String]?
 
@@ -242,13 +243,13 @@ class CalendarPickerViewModelTests: XCTestCase {
 
         calendarService.changeObserver.onNext(())
 
-        XCTAssertEqual(nextEvent, ["2", "3"])
+        #expect(nextEvent == ["2", "3"])
 
         calendarService.m_calendars.removeFirst()
 
         calendarService.changeObserver.onNext(())
 
-        XCTAssertEqual(nextEvent, ["2", "3"])
-        XCTAssertEqual(localStorage.silencedCalendars, [])
+        #expect(nextEvent == ["2", "3"])
+        #expect(localStorage.silencedCalendars == [])
     }
 }

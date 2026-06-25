@@ -5,33 +5,38 @@
 //  Created by Paker on 19/11/2025.
 //
 
-import XCTest
+import Foundation
+import Testing
 @testable import Calendr
 
-class KVCTests: XCTestCase {
+class KVCTests {
 
-    func testExistingKey() {
+    @Test func testExistingKey() throws {
 
-        XCTAssertNoThrow(XCTAssertEqual(try TestObject().safeValue(forKey: "testKey"), "testValue"))
+        #expect(try TestObject().safeValue(forKey: "testKey") == "testValue")
     }
 
-    func testNonExistingKey() {
+    @Test func testNonExistingKey() {
 
-        XCTAssertThrowsError(try TestObject().safeValue(forKey: "missingKey") as String) { error in
-
+        #expect {
+            _ = try TestObject().safeValue(forKey: "missingKey") as String
+        } throws: { error in
             guard case KVCError.unknownKey(key: "missingKey", in: "TestObject") = error else {
-                return XCTFail()
+                return false
             }
+            return true
         }
     }
 
-    func testExistingKeyWrongType() {
+    @Test func testExistingKeyWrongType() {
 
-        XCTAssertThrowsError(try TestObject().safeValue(forKey: "testKey") as Int) { error in
-
+        #expect {
+            _ = try TestObject().safeValue(forKey: "testKey") as Int
+        } throws: { error in
             guard case KVCError.typeMismatch(key: "testKey", source: "NSTaggedPointerString", target: "Int") = error else {
-                return XCTFail()
+                return false
             }
+            return true
         }
     }
 }

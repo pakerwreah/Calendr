@@ -181,7 +181,7 @@ class CalendarAppProvider: CalendarAppProviding {
             "startDate": startDate,
             "endDate": endDate,
             "title": event.title,
-            "ref": Bundle.main.bundleIdentifier,
+            "ref": BuildConfig.bundleIdentifier,
         ]
 
         let params = queryItems.compactMap { (key, value) in

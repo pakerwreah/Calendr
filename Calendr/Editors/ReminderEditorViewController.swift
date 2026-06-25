@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import RxSwift
 
 typealias ReminderEditorViewController = HostingViewModelController<ReminderEditorView>
 
@@ -93,7 +94,8 @@ struct ReminderEditorView: ViewModelView {
                     .make(id: "2", account: "iCloud", title: "Groceries", color: .systemRed),
                     .make(id: "3", account: "Google", title: "Todos", color: .systemYellow),
                 ]
-            )
+            ),
+            scheduler: MainScheduler.instance
         )
     )
 }

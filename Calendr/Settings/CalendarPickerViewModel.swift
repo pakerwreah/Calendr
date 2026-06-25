@@ -30,6 +30,7 @@ class CalendarPickerViewModel {
         calendarService: CalendarServiceProviding,
         localStorage: LocalStorageProvider
     ) {
+        self.localStorage = localStorage
 
         self.calendars = calendarService.changeObservable
             .startWith(())
@@ -42,8 +43,6 @@ class CalendarPickerViewModel {
         self.toggleCalendar = toggleCalendarSubject.asObserver()
         self.toggleNextEvent = toggleNextEventSubject.asObserver()
 
-        self.localStorage = localStorage
-
         setUpBindings()
     }
 
@@ -52,13 +51,13 @@ class CalendarPickerViewModel {
         setUpBinding(
             subject: toggleCalendarSubject,
             current: localStorage.rx.observe(\.disabledCalendars),
-            binder: localStorage.rx.disabledCalendars
+            observer: localStorage.rx.observer(for: \.disabledCalendars)
         )
 
         setUpBinding(
             subject: toggleNextEventSubject,
             current: localStorage.rx.observe(\.silencedCalendars),
-            binder: localStorage.rx.silencedCalendars
+            observer: localStorage.rx.observer(for: \.silencedCalendars)
         )
 
         calendars
@@ -75,7 +74,7 @@ class CalendarPickerViewModel {
     private func setUpBinding(
         subject: PublishSubject<String>,
         current: Observable<[String]>,
-        binder: Binder<[String]>
+        observer: AnyObserver<[String]>
     ) {
         subject
             .withLatestFrom(current) { ($0, $1) }
@@ -84,7 +83,7 @@ class CalendarPickerViewModel {
                     ? identifiers.filter { $0 != toggled }
                     : identifiers + [toggled]
             }
-            .bind(to: binder)
+            .bind(to: observer)
             .disposed(by: disposeBag)
     }
 

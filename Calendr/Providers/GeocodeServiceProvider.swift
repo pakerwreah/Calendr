@@ -66,7 +66,9 @@ where LocationCache.Key == String, LocationCache.Value == Coordinates? {
             cache.set(location, coordinates)
             return coordinates
         } catch {
-            print(error.localizedDescription)
+            if !BuildConfig.isTesting {
+                print(error.localizedDescription)
+            }
             return nil
         }
     }

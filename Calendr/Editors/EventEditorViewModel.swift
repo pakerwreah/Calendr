@@ -75,6 +75,7 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
 
     private let calendarService: CalendarServiceProviding
     private let dateProvider: DateProviding
+    private let scheduler: ImmediateSchedulerType
 
     private let disposeBag = DisposeBag()
 
@@ -87,7 +88,7 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
         TimeZone(identifier: selectedTimeZoneIdentifier) ?? dateProvider.calendar.timeZone
     }
 
-    init(startDate: DueDate, dateProvider: DateProviding, calendarService: CalendarServiceProviding) {
+    init(startDate: DueDate, dateProvider: DateProviding, calendarService: CalendarServiceProviding, scheduler: ImmediateSchedulerType) {
         self.dateProvider = dateProvider
         let roundedStart = roundUpToNextHour(startDate.date, using: dateProvider)
         let defaultDuration: TimeInterval = 3600
@@ -95,6 +96,7 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
         self.eventDuration = defaultDuration
         self.endDate = roundedStart.addingTimeInterval(defaultDuration)
         self.calendarService = calendarService
+        self.scheduler = scheduler
         self.selectedTimeZoneIdentifier = dateProvider.calendar.timeZone.identifier
 
         loadCalendars()
@@ -151,7 +153,7 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
             alertOffset: selectedAlert.relativeOffset,
             timeZone: selectedTimeZone
         )
-        .observe(on: MainScheduler.instance)
+        .observe(on: scheduler)
         .subscribe(onCompleted: { [weak self] in
             self?.confirmClose()
         }, onError: { [weak self] error in
@@ -207,7 +209,7 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
     private func loadCalendars() {
 
         calendarService.calendars(forNew: .event)
-            .observe(on: MainScheduler.instance)
+            .observe(on: scheduler)
             .subscribe(onSuccess: { [weak self] calendars in
                 self?.setupCalendars(calendars)
             }, onFailure: { [weak self] error in

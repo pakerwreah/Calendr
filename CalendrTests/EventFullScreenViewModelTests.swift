@@ -5,11 +5,12 @@
 //  Created by Paker on 03/06/2026.
 //
 
-import XCTest
+import Foundation
 import RxSwift
+import Testing
 @testable import Calendr
 
-class EventFullScreenViewModelTests: XCTestCase {
+class EventFullScreenViewModelTests {
 
     let cooldown: DispatchTimeInterval = .milliseconds(1500)
 
@@ -22,7 +23,7 @@ class EventFullScreenViewModelTests: XCTestCase {
 
     var onSkip: (() -> Void)?
 
-    override func setUp() {
+    init() {
 
         localStorage.reset()
 
@@ -31,7 +32,7 @@ class EventFullScreenViewModelTests: XCTestCase {
         dateProvider.m_calendar.locale = Locale(identifier: "en_US")
     }
 
-    func testBasicInfo() {
+    @Test func testBasicInfo() {
 
         let viewModel = mock(
             event: .make(
@@ -41,23 +42,23 @@ class EventFullScreenViewModelTests: XCTestCase {
             ),
         )
 
-        XCTAssertEqual(viewModel.title, "Design Review")
-        XCTAssertEqual(viewModel.link?.url.absoluteString, "https://google.com")
-        XCTAssertEqual(viewModel.barColor, .red)
-        XCTAssertEqual(viewModel.isDismissLocked, true)
-        XCTAssertEqual(viewModel.transparencyLevel, 2)
-        XCTAssertEqual(viewModel.material, .regular)
-        XCTAssertEqual(viewModel.showSkip, true)
+        #expect(viewModel.title == "Design Review")
+        #expect(viewModel.link?.url.absoluteString == "https://google.com")
+        #expect(viewModel.barColor == .red)
+        #expect(viewModel.isDismissLocked == true)
+        #expect(viewModel.transparencyLevel == 2)
+        #expect(viewModel.material == .regular)
+        #expect(viewModel.showSkip == true)
     }
 
-    func testReminder_shouldNotAllowSkip() {
+    @Test func testReminder_shouldNotAllowSkip() {
 
         let viewModel = mock(event: .make(type: .reminder(completed: false)))
 
-        XCTAssertFalse(viewModel.showSkip)
+        #expect(viewModel.showSkip == false)
     }
 
-    func testDuration_isSameDay() {
+    @Test func testDuration_isSameDay() {
 
         let viewModel = mock(
             event: .make(
@@ -66,10 +67,10 @@ class EventFullScreenViewModelTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(viewModel.duration, "3:00 - 4:00 PM")
+        #expect(viewModel.duration == "3:00 - 4:00 PM")
     }
 
-    func testDuration_isNotSameDay() {
+    @Test func testDuration_isNotSameDay() {
 
         let viewModel = mock(
             event: .make(
@@ -78,51 +79,51 @@ class EventFullScreenViewModelTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(viewModel.duration, "Jan 1, 2026 at 3:00 PM - Jan 2, 2026 at 4:00 PM")
+        #expect(viewModel.duration == "Jan 1, 2026 at 3:00 PM - Jan 2, 2026 at 4:00 PM")
     }
 
-    func testTransparency() {
+    @Test func testTransparency() {
 
         let viewModel = mock()
 
         viewModel.transparencyLevel = 0
-        XCTAssertEqual(viewModel.material, .ultraThick)
+        #expect(viewModel.material == .ultraThick)
 
         viewModel.transparencyLevel = 1
-        XCTAssertEqual(viewModel.material, .thick)
+        #expect(viewModel.material == .thick)
 
         viewModel.transparencyLevel = 2
-        XCTAssertEqual(viewModel.material, .regular)
+        #expect(viewModel.material == .regular)
 
         viewModel.transparencyLevel = 3
-        XCTAssertEqual(viewModel.material, .thin)
+        #expect(viewModel.material == .thin)
 
         viewModel.transparencyLevel = 4
-        XCTAssertEqual(viewModel.material, .ultraThin)
+        #expect(viewModel.material == .ultraThin)
 
         // Out of bounds
 
         viewModel.transparencyLevel = -1
-        XCTAssertEqual(viewModel.material, .ultraThick)
+        #expect(viewModel.material == .ultraThick)
 
         viewModel.transparencyLevel = 5
-        XCTAssertEqual(viewModel.material, .ultraThin)
+        #expect(viewModel.material == .ultraThin)
     }
 
-    func testDismissLock() {
+    @Test func testDismissLock() {
 
         let viewModel = mock()
 
         viewModel.onAppear()
 
-        XCTAssertTrue(viewModel.isDismissLocked)
+        #expect(viewModel.isDismissLocked)
 
         scheduler.advance(cooldown)
 
-        XCTAssertFalse(viewModel.isDismissLocked)
+        #expect(viewModel.isDismissLocked == false)
     }
 
-    func testClose_beforeCooldown_shouldNotDismiss() {
+    @Test func testClose_beforeCooldown_shouldNotDismiss() async {
 
         let dismissExpectation = expectation(description: "Dismiss")
         dismissExpectation.isInverted = true
@@ -138,10 +139,10 @@ class EventFullScreenViewModelTests: XCTestCase {
 
         viewModel.performClose()
 
-        wait(for: [dismissExpectation], timeout: 0.1)
+        await fulfillment(of: [dismissExpectation])
     }
 
-    func testClose_afterCooldown_shouldDismiss() {
+    @Test func testClose_afterCooldown_shouldDismiss() async {
 
         let dismissExpectation = expectation(description: "Dismiss")
 
@@ -158,10 +159,10 @@ class EventFullScreenViewModelTests: XCTestCase {
 
         viewModel.performClose()
 
-        wait(for: [dismissExpectation], timeout: 0.1)
+        await fulfillment(of: [dismissExpectation])
     }
 
-    func testSkip_beforeCooldown_shouldNotSkip() {
+    @Test func testSkip_beforeCooldown_shouldNotSkip() async {
 
         let skipExpectation = expectation(description: "Skip")
         skipExpectation.isInverted = true
@@ -182,10 +183,10 @@ class EventFullScreenViewModelTests: XCTestCase {
 
         viewModel.skip()
 
-        wait(for: [skipExpectation, dismissExpectation], timeout: 0.1)
+        await fulfillment(of: [skipExpectation, dismissExpectation])
     }
 
-    func testSkip_afterCooldown_shouldSkip() {
+    @Test func testSkip_afterCooldown_shouldSkip() async {
 
         let skipExpectation = expectation(description: "Skip")
         let dismissExpectation = expectation(description: "Dismiss")
@@ -205,10 +206,10 @@ class EventFullScreenViewModelTests: XCTestCase {
 
         viewModel.skip()
 
-        wait(for: [skipExpectation, dismissExpectation], timeout: 0.1)
+        await fulfillment(of: [skipExpectation, dismissExpectation])
     }
 
-    func testJoin_beforeCooldown_shouldNotJoin() {
+    @Test func testJoin_beforeCooldown_shouldNotJoin() async {
 
         let joinExpectation = expectation(description: "Join")
         joinExpectation.isInverted = true
@@ -235,10 +236,10 @@ class EventFullScreenViewModelTests: XCTestCase {
 
         viewModel.join()
 
-        wait(for: [joinExpectation, dismissExpectation], timeout: 0.1)
+        await fulfillment(of: [joinExpectation, dismissExpectation])
     }
 
-    func testJoin_afterCooldown_shouldJoin() {
+    @Test func testJoin_afterCooldown_shouldJoin() async {
 
         let joinExpectation = expectation(description: "Join")
         let dismissExpectation = expectation(description: "Dismiss")
@@ -252,7 +253,7 @@ class EventFullScreenViewModelTests: XCTestCase {
         )
 
         workspace.didOpenURL = { url in
-            XCTAssertEqual(url.absoluteString, "zoommtg://zoom.us/join?confno=99999")
+            #expect(url.absoluteString == "zoommtg://zoom.us/join?confno=99999")
             joinExpectation.fulfill()
         }
 
@@ -267,10 +268,10 @@ class EventFullScreenViewModelTests: XCTestCase {
 
         viewModel.join()
 
-        wait(for: [joinExpectation, dismissExpectation], timeout: 0.1)
+        await fulfillment(of: [joinExpectation, dismissExpectation])
     }
 
-    func testJoin_shouldOpenURL() {
+    @Test func testJoin_shouldOpenURL() async {
 
         let openExpectation = expectation(description: "Open")
         let dismissExpectation = expectation(description: "Dismiss")
@@ -282,7 +283,7 @@ class EventFullScreenViewModelTests: XCTestCase {
         )
 
         workspace.didOpenURL = { url in
-            XCTAssertEqual(url.absoluteString, "https://zoom.us/j/99999")
+            #expect(url.absoluteString == "https://zoom.us/j/99999")
             openExpectation.fulfill()
         }
 
@@ -297,10 +298,10 @@ class EventFullScreenViewModelTests: XCTestCase {
 
         viewModel.join()
 
-        wait(for: [openExpectation, dismissExpectation], timeout: 0.1)
+        await fulfillment(of: [openExpectation, dismissExpectation])
     }
 
-    func testJoin_shouldOpenPreferredBrowserForCalendar() {
+    @Test func testJoin_shouldOpenPreferredBrowserForCalendar() async {
 
         let openExpectation = expectation(description: "Open")
         let dismissExpectation = expectation(description: "Dismiss")
@@ -318,13 +319,13 @@ class EventFullScreenViewModelTests: XCTestCase {
         localStorage.defaultBrowserPerCalendar = ["1": browserAppUrl]
 
         workspace.didOpenURLWithApplication = { url, appUrl in
-            XCTAssertEqual(url.absoluteString, httpUrl)
-            XCTAssertEqual(appUrl?.absoluteString, browserAppUrl)
+            #expect(url.absoluteString == httpUrl)
+            #expect(appUrl?.absoluteString == browserAppUrl)
             openExpectation.fulfill()
         }
 
         workspace.didOpenURL = { _ in
-            XCTFail()
+            Issue.record()
         }
 
         viewModel.onDismiss.bind {
@@ -338,7 +339,7 @@ class EventFullScreenViewModelTests: XCTestCase {
 
         viewModel.join()
 
-        wait(for: [openExpectation, dismissExpectation], timeout: 0.1)
+        await fulfillment(of: [openExpectation, dismissExpectation])
     }
 
     func mock(event: EventModel = .make()) -> EventFullScreenViewModel {

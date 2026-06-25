@@ -5,12 +5,13 @@
 //  Created by Paker on 15/06/2025.
 //
 
-import XCTest
+import Foundation
 import RxSwift
 import Clocks
+import Testing
 @testable import Calendr
 
-class CalendarAppProviderTests: XCTestCase {
+class CalendarAppProviderTests {
 
     let dateProvider = MockDateProvider()
     let appleScriptRunner = MockScriptRunner()
@@ -25,18 +26,18 @@ class CalendarAppProviderTests: XCTestCase {
     lazy var calendarAppProvider = makeCalendarAppProvider(clock: .immediate)
     lazy var workspace = MockWorkspaceServiceProvider(dateProvider: dateProvider)
 
-    override func setUp() {
+    init() {
         dateProvider.m_calendar.locale = Locale(identifier: "en_GB")
         dateProvider.m_calendar.firstWeekday = 1
     }
 
     // MARK: - Apple Calendar
 
-    func testOpenEvent_inCalendarApp() async {
+    @Test func testOpenEvent_inCalendarApp() async {
         let openExpectation = expectation(description: "Open")
 
         workspace.didOpenURL = { url in
-            XCTAssertEqual(url.absoluteString, "ical://ekevent/12345?method=show&options=more")
+            #expect(url.absoluteString == "ical://ekevent/12345?method=show&options=more")
             openExpectation.fulfill()
         }
 
@@ -45,14 +46,14 @@ class CalendarAppProviderTests: XCTestCase {
         await fulfillment(of: [openExpectation], timeout: 1)
     }
 
-    func testOpenEvent_withRecurrenceRules_inCalendarApp() async {
+    @Test func testOpenEvent_withRecurrenceRules_inCalendarApp() async {
         let openExpectation = expectation(description: "Open")
         let timeZone = TimeZone(abbreviation: "UTC+3")!
 
         dateProvider.m_calendar.timeZone = timeZone
 
         workspace.didOpenURL = { url in
-            XCTAssertEqual(url.absoluteString, "ical://ekevent/20210101T000000Z/12345?method=show&options=more")
+            #expect(url.absoluteString == "ical://ekevent/20210101T000000Z/12345?method=show&options=more")
             openExpectation.fulfill()
         }
 
@@ -69,14 +70,14 @@ class CalendarAppProviderTests: XCTestCase {
         await fulfillment(of: [openExpectation], timeout: 1)
     }
 
-    func testOpenAllDayEvent_withRecurrenceRules_inCalendarApp_shouldUseTimeZone() async {
+    @Test func testOpenAllDayEvent_withRecurrenceRules_inCalendarApp_shouldUseTimeZone() async {
         let openExpectation = expectation(description: "Open")
         let timeZone = TimeZone(abbreviation: "UTC+3")!
 
         dateProvider.m_calendar.timeZone = timeZone
 
         workspace.didOpenURL = { url in
-            XCTAssertEqual(url.absoluteString, "ical://ekevent/20210101T030000Z/12345?method=show&options=more")
+            #expect(url.absoluteString == "ical://ekevent/20210101T030000Z/12345?method=show&options=more")
             openExpectation.fulfill()
         }
 
@@ -94,11 +95,11 @@ class CalendarAppProviderTests: XCTestCase {
         await fulfillment(of: [openExpectation], timeout: 1)
     }
 
-    func testOpenReminder_inCalendarApp() async {
+    @Test func testOpenReminder_inCalendarApp() async {
         let openExpectation = expectation(description: "Open")
 
         workspace.didOpenURL = { url in
-            XCTAssertEqual(url.absoluteString, "x-apple-reminderkit://remcdreminder/12345")
+            #expect(url.absoluteString == "x-apple-reminderkit://remcdreminder/12345")
             openExpectation.fulfill()
         }
 
@@ -117,7 +118,7 @@ class CalendarAppProviderTests: XCTestCase {
 
     // MARK: - Notion Calendar
 
-    func testOpenEvent_inNotionApp() async throws {
+    @Test func testOpenEvent_inNotionApp() async {
         let openDateExpectation = expectation(description: "Open Date")
         let openEventExpectation = expectation(description: "Open Event")
 
@@ -125,7 +126,7 @@ class CalendarAppProviderTests: XCTestCase {
         let calendarAppProvider = makeCalendarAppProvider(clock: clock)
 
         workspace.didOpenURL = { url in
-            XCTAssertEqual(url.absoluteString.components(separatedBy: "?t=").first, "cron://./2025/1/1")
+            #expect(url.absoluteString.components(separatedBy: "?t=").first == "cron://./2025/1/1")
             openDateExpectation.fulfill()
         }
 
@@ -143,11 +144,11 @@ class CalendarAppProviderTests: XCTestCase {
 
         await fulfillment(of: [openDateExpectation], timeout: 1)
 
-        let bundleId = try XCTUnwrap(Bundle.main.bundleIdentifier)
+        let bundleId = BuildConfig.bundleIdentifier
 
         workspace.didOpenURL = { url in
-            XCTAssertEqual(
-                url.absoluteString,
+            #expect(
+                url.absoluteString ==
                 "cron://showEvent?accountEmail=test%40example.com&iCalUID=12345" +
                 "&startDate=2025-01-01T12:10:05.000Z&endDate=2025-01-01T15:25:55.000Z" +
                 "&title=Title&ref=\(bundleId)"
@@ -160,7 +161,7 @@ class CalendarAppProviderTests: XCTestCase {
         await fulfillment(of: [openEventExpectation], timeout: 1)
     }
 
-    func testOpenDay_inCalendarApp() async {
+    @Test func testOpenDay_inCalendarApp() async {
         let openExpectation = expectation(description: "Open")
         let dateExpectation = expectation(description: "Date")
 
@@ -168,7 +169,7 @@ class CalendarAppProviderTests: XCTestCase {
         let calendarAppProvider = makeCalendarAppProvider(clock: clock)
 
         appleScriptRunner.didRunScript = { source in
-            XCTAssertEqual(source, """
+            #expect(source == """
                 tell application "Calendar"
                 switch view to day view
                 end tell
@@ -181,7 +182,7 @@ class CalendarAppProviderTests: XCTestCase {
         await fulfillment(of: [openExpectation], timeout: 1)
 
         appleScriptRunner.didRunScript = { source in
-            XCTAssertEqual(source, """
+            #expect(source == """
                 set theDate to current date
                 set day of theDate to 1
                 set month of theDate to 1
@@ -199,7 +200,7 @@ class CalendarAppProviderTests: XCTestCase {
         await fulfillment(of: [dateExpectation], timeout: 1)
     }
 
-    func testOpenWeek_inCalendarApp() async {
+    @Test func testOpenWeek_inCalendarApp() async {
         let openExpectation = expectation(description: "Open")
         let dateExpectation = expectation(description: "Date")
 
@@ -207,7 +208,7 @@ class CalendarAppProviderTests: XCTestCase {
         let calendarAppProvider = makeCalendarAppProvider(clock: clock)
 
         appleScriptRunner.didRunScript = { source in
-            XCTAssertEqual(source, """
+            #expect(source == """
                 tell application "Calendar"
                 switch view to week view
                 end tell
@@ -220,7 +221,7 @@ class CalendarAppProviderTests: XCTestCase {
         await fulfillment(of: [openExpectation], timeout: 1)
 
         appleScriptRunner.didRunScript = { source in
-            XCTAssertEqual(source, """
+            #expect(source == """
                 set theDate to current date
                 set day of theDate to 29
                 set month of theDate to 12
@@ -238,12 +239,11 @@ class CalendarAppProviderTests: XCTestCase {
         await fulfillment(of: [dateExpectation], timeout: 1)
     }
 
-    func testOpenDate_inNotionApp() async {
+    @Test func testOpenDate_inNotionApp() async {
         let openExpectation = expectation(description: "Open")
-        openExpectation.assertForOverFulfill = false
 
         workspace.didOpenURL = { url in
-            XCTAssertEqual(url.absoluteString.components(separatedBy: "?t=").first, "cron://./2025/1/1")
+            #expect(url.absoluteString.components(separatedBy: "?t=").first == "cron://./2025/1/1")
             openExpectation.fulfill()
         }
 
@@ -252,11 +252,11 @@ class CalendarAppProviderTests: XCTestCase {
         await fulfillment(of: [openExpectation], timeout: 1)
     }
 
-    func testOpenReminder_inNotionApp_shouldFallbackToCalendarApp() async  {
+    @Test func testOpenReminder_inNotionApp_shouldFallbackToCalendarApp() async  {
         let openExpectation = expectation(description: "Open")
 
         workspace.didOpenURL = { url in
-            XCTAssertEqual(url.absoluteString, "x-apple-reminderkit://remcdreminder/12345")
+            #expect(url.absoluteString == "x-apple-reminderkit://remcdreminder/12345")
             openExpectation.fulfill()
         }
 

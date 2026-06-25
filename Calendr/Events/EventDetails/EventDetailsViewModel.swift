@@ -169,7 +169,9 @@ class EventDetailsViewModel {
                 do {
                     return try Regex(pattern).wholeMatch(in: location) == nil
                 } catch {
-                    print(error.localizedDescription)
+                    if !BuildConfig.isTesting {
+                        print(error.localizedDescription)
+                    }
                 }
             }
             return true
@@ -309,7 +311,7 @@ class EventDetailsViewModel {
 }
 
 private func parseNotesMeetingInfo(from notes: String?) -> (notes: String?, meetingInfo: String?) {
-    
+
     let marker = "-::~:~::~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~::~:~::-"
 
     guard

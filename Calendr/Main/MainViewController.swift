@@ -546,7 +546,8 @@ class MainViewController: NSViewController {
                 using: dateProvider
             ),
             dateProvider: dateProvider,
-            calendarService: calendarService
+            calendarService: calendarService,
+            scheduler: MainScheduler.instance
         )
         let viewController = EventEditorViewController(viewModel: viewModel)
 
@@ -570,7 +571,8 @@ class MainViewController: NSViewController {
                 adding: dateComponents,
                 using: dateProvider
             ),
-            calendarService: calendarService
+            calendarService: calendarService,
+            scheduler: MainScheduler.instance
         )
         let viewController = ReminderEditorViewController(viewModel: viewModel)
 

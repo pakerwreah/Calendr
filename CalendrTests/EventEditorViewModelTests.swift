@@ -5,175 +5,168 @@
 //  Created by Paker on 14/06/2026.
 //
 
-import XCTest
+import Foundation
 import RxSwift
+import Testing
 @testable import Calendr
 
-class EventEditorViewModelTests: XCTestCase {
+class EventEditorViewModelTests {
 
-    private var dateProvider: MockDateProvider!
+    let dateProvider = MockDateProvider(
+        now: .make(year: 2025, month: 10, day: 25, hour: 10, minute: 30)
+    )
 
-    override func setUp() {
-        super.setUp()
-        dateProvider = MockDateProvider()
-        dateProvider.now = .make(year: 2025, month: 10, day: 25, hour: 10, minute: 30)
-    }
-
-    func testViewModel_initialState() {
+    @Test func testViewModel_initialState() {
 
         let calendarService = MockCalendarServiceProvider()
         let start = dateProvider.now
 
-        let viewModel = EventEditorViewModel(
-            startDate: .init(date: start),
-            dateProvider: dateProvider,
+        let viewModel = makeViewModel(
+            startDate: start,
             calendarService: calendarService
         )
 
-        XCTAssertEqual(viewModel.title, "")
-        XCTAssertEqual(viewModel.startDate, .make(year: 2025, month: 10, day: 25, hour: 11, minute: 0))
-        XCTAssertEqual(viewModel.endDate, .make(year: 2025, month: 10, day: 25, hour: 12, minute: 0))
-        XCTAssertFalse(viewModel.isAllDay)
-        XCTAssertEqual(viewModel.location, "")
-        XCTAssertEqual(viewModel.url, "")
-        XCTAssertEqual(viewModel.notes, "")
-        XCTAssertNil(viewModel.error)
-        XCTAssertFalse(viewModel.isErrorVisible)
-        XCTAssertFalse(viewModel.hasValidInput)
-        XCTAssertFalse(viewModel.isCloseConfirmationVisible)
-        XCTAssertTrue(viewModel.calendarSections.isEmpty)
-        XCTAssertNil(viewModel.selectedCalendarId)
-        XCTAssertEqual(viewModel.selectedCalendarColor, .clear)
+        #expect(viewModel.title == "")
+        #expect(viewModel.startDate == .make(year: 2025, month: 10, day: 25, hour: 11, minute: 0))
+        #expect(viewModel.endDate == .make(year: 2025, month: 10, day: 25, hour: 12, minute: 0))
+        #expect(viewModel.isAllDay == false)
+        #expect(viewModel.location == "")
+        #expect(viewModel.url == "")
+        #expect(viewModel.notes == "")
+        #expect(viewModel.error == nil)
+        #expect(viewModel.isErrorVisible == false)
+        #expect(viewModel.hasValidInput == false)
+        #expect(viewModel.isCloseConfirmationVisible == false)
+        #expect(viewModel.calendarSections.isEmpty)
+        #expect(viewModel.selectedCalendarId == nil)
+        #expect(viewModel.selectedCalendarColor == .clear)
     }
 
-    func testViewModel_validTitle() {
+    @Test func testViewModel_validTitle() {
 
         let calendarService = MockCalendarServiceProvider()
         calendarService.m_calendars = [.make(id: "cal-1")]
 
-        let viewModel = EventEditorViewModel(dateProvider: dateProvider, calendarService: calendarService)
+        let viewModel = makeViewModel(calendarService: calendarService)
 
-        XCTAssertFalse(viewModel.hasValidInput)
+        #expect(viewModel.hasValidInput == false)
 
         viewModel.title = "   "
-        XCTAssertFalse(viewModel.hasValidInput)
+        #expect(viewModel.hasValidInput == false)
 
         viewModel.title = "Meeting"
-        XCTAssertTrue(viewModel.hasValidInput)
+        #expect(viewModel.hasValidInput)
     }
 
-    func testViewModel_dateRange_timed_endEqualStart_invalid() {
+    @Test func testViewModel_dateRange_timed_endEqualStart_invalid() {
 
         let calendarService = MockCalendarServiceProvider()
         calendarService.m_calendars = [.make(id: "cal-1")]
 
-        let viewModel = EventEditorViewModel(dateProvider: dateProvider, calendarService: calendarService)
+        let viewModel = makeViewModel(calendarService: calendarService)
 
         viewModel.title = "Meeting"
         viewModel.endDate = viewModel.startDate
 
-        XCTAssertFalse(viewModel.hasValidDateRange)
-        XCTAssertFalse(viewModel.hasValidInput)
+        #expect(viewModel.hasValidDateRange == false)
+        #expect(viewModel.hasValidInput == false)
     }
 
-    func testViewModel_dateRange_timed_endAfterStart_valid() {
+    @Test func testViewModel_dateRange_timed_endAfterStart_valid() {
 
         let calendarService = MockCalendarServiceProvider()
         calendarService.m_calendars = [.make(id: "cal-1")]
 
-        let viewModel = EventEditorViewModel(
+        let viewModel = makeViewModel(
             startDate: .make(year: 2025, month: 10, day: 25, hour: 10, minute: 30),
-            dateProvider: dateProvider,
             calendarService: calendarService
         )
 
         viewModel.title = "Meeting"
         viewModel.endDate = .make(year: 2025, month: 10, day: 25, hour: 13, minute: 0)
 
-        XCTAssertTrue(viewModel.hasValidDateRange)
-        XCTAssertTrue(viewModel.hasValidInput)
+        #expect(viewModel.hasValidDateRange)
+        #expect(viewModel.hasValidInput)
     }
 
-    func testViewModel_dateRange_allDay_sameDay_valid() {
+    @Test func testViewModel_dateRange_allDay_sameDay_valid() {
 
         let calendarService = MockCalendarServiceProvider()
         calendarService.m_calendars = [.make(id: "cal-1")]
 
-        let viewModel = EventEditorViewModel(dateProvider: dateProvider, calendarService: calendarService)
+        let viewModel = makeViewModel(calendarService: calendarService)
 
         viewModel.title = "Holiday"
         viewModel.isAllDay = true
         viewModel.startDate = .make(year: 2025, month: 10, day: 25, at: .start)
         viewModel.endDate = .make(year: 2025, month: 10, day: 25, at: .start)
 
-        XCTAssertTrue(viewModel.hasValidDateRange)
-        XCTAssertTrue(viewModel.hasValidInput)
+        #expect(viewModel.hasValidDateRange)
+        #expect(viewModel.hasValidInput)
     }
 
-    func testViewModel_dateRange_allDay_endBeforeStart_invalid() {
+    @Test func testViewModel_dateRange_allDay_endBeforeStart_invalid() {
 
         let calendarService = MockCalendarServiceProvider()
         calendarService.m_calendars = [.make(id: "cal-1")]
 
-        let viewModel = EventEditorViewModel(dateProvider: dateProvider, calendarService: calendarService)
+        let viewModel = makeViewModel(calendarService: calendarService)
 
         viewModel.title = "Holiday"
         viewModel.isAllDay = true
         viewModel.startDate = .make(year: 2025, month: 10, day: 25, at: .start)
         viewModel.endDate = .make(year: 2025, month: 10, day: 24, at: .start)
 
-        XCTAssertFalse(viewModel.hasValidDateRange)
-        XCTAssertFalse(viewModel.hasValidInput)
+        #expect(viewModel.hasValidDateRange == false)
+        #expect(viewModel.hasValidInput == false)
     }
 
-    func testViewModel_isAllDay_toggleOn_stripsTimeAndFixesEnd() {
+    @Test func testViewModel_isAllDay_toggleOn_stripsTimeAndFixesEnd() {
 
-        let viewModel = EventEditorViewModel(
-            startDate: .make(year: 2025, month: 10, day: 25, hour: 14, minute: 30),
-            dateProvider: dateProvider
+        let viewModel = makeViewModel(
+            startDate: .make(year: 2025, month: 10, day: 25, hour: 14, minute: 30)
         )
 
         viewModel.endDate = .make(year: 2025, month: 10, day: 24, hour: 16)
 
         viewModel.isAllDay = true
 
-        XCTAssertEqual(viewModel.startDate, .make(year: 2025, month: 10, day: 25, at: .start))
-        XCTAssertEqual(viewModel.endDate, .make(year: 2025, month: 10, day: 25, at: .start))
+        #expect(viewModel.startDate == .make(year: 2025, month: 10, day: 25, at: .start))
+        #expect(viewModel.endDate == .make(year: 2025, month: 10, day: 25, at: .start))
     }
 
-    func testViewModel_isAllDay_toggleOff_setsEndOneHourAfterStartWhenNeeded() {
+    @Test func testViewModel_isAllDay_toggleOff_setsEndOneHourAfterStartWhenNeeded() {
 
-        let viewModel = EventEditorViewModel(
-            startDate: .make(year: 2025, month: 10, day: 25, hour: 14),
-            dateProvider: dateProvider
+        let viewModel = makeViewModel(
+            startDate: .make(year: 2025, month: 10, day: 25, hour: 14)
         )
 
         viewModel.isAllDay = true
         viewModel.isAllDay = false
 
-        XCTAssertEqual(viewModel.endDate, .make(year: 2025, month: 10, day: 25, hour: 1, minute: 0))
+        #expect(viewModel.endDate == .make(year: 2025, month: 10, day: 25, hour: 1, minute: 0))
     }
 
-    func testViewModel_saveEvent_withInvalidInput_shouldNotCallService() {
+    @Test func testViewModel_saveEvent_withInvalidInput_shouldNotCallService() {
 
         let calendarService = MockCalendarServiceProvider()
         calendarService.m_calendars = [.make(id: "cal-1")]
 
-        let viewModel = EventEditorViewModel(dateProvider: dateProvider, calendarService: calendarService)
+        let viewModel = makeViewModel(calendarService: calendarService)
 
         var lastValue: CreateEventArgs?
         _ = calendarService.spyCreateEventObservable.bind { lastValue = $0 }
 
         viewModel.saveEvent()
-        XCTAssertNil(lastValue)
+        #expect(lastValue == nil)
 
         viewModel.title = "Meeting"
         viewModel.endDate = viewModel.startDate
         viewModel.saveEvent()
-        XCTAssertNil(lastValue)
+        #expect(lastValue == nil)
     }
 
-    func testViewModel_saveEvent_withValidInput() {
+    @Test func testViewModel_saveEvent_withValidInput() {
 
         let calendarService = MockCalendarServiceProvider()
         calendarService.m_calendars = [.make(id: "cal-1")]
@@ -181,11 +174,7 @@ class EventEditorViewModelTests: XCTestCase {
         let start: Date = .make(year: 2025, month: 10, day: 25, hour: 11, minute: 0)
         let end: Date = .make(year: 2025, month: 10, day: 25, hour: 12, minute: 30)
 
-        let viewModel = EventEditorViewModel(
-            startDate: .init(date: start),
-            dateProvider: dateProvider,
-            calendarService: calendarService
-        )
+        let viewModel = makeViewModel(startDate: start, calendarService: calendarService)
 
         var lastValue: CreateEventArgs?
         _ = calendarService.spyCreateEventObservable.bind { lastValue = $0 }
@@ -198,34 +187,34 @@ class EventEditorViewModelTests: XCTestCase {
         viewModel.selectedCalendarId = "cal-1"
         viewModel.saveEvent()
 
-        XCTAssertEqual(lastValue?.title, "Team sync")
-        XCTAssertEqual(lastValue?.calendar, "cal-1")
-        XCTAssertEqual(lastValue?.start, start)
-        XCTAssertEqual(lastValue?.end, end)
-        XCTAssertEqual(lastValue?.isAllDay, false)
-        XCTAssertEqual(lastValue?.location, "Office")
-        XCTAssertEqual(lastValue?.url?.absoluteString, "https://example.com")
-        XCTAssertEqual(lastValue?.notes, "Agenda")
-        XCTAssertNil(lastValue?.alertOffset)
-        XCTAssertEqual(lastValue?.timeZone, dateProvider.calendar.timeZone)
+        #expect(lastValue?.title == "Team sync")
+        #expect(lastValue?.calendar == "cal-1")
+        #expect(lastValue?.start == start)
+        #expect(lastValue?.end == end)
+        #expect(lastValue?.isAllDay == false)
+        #expect(lastValue?.location == "Office")
+        #expect(lastValue?.url?.absoluteString == "https://example.com")
+        #expect(lastValue?.notes == "Agenda")
+        #expect(lastValue?.alertOffset == nil)
+        #expect(lastValue?.timeZone == dateProvider.calendar.timeZone)
     }
 
-    func testViewModel_initialState_selectedTimeZoneIsDateProviderTimeZone() {
+    @Test func testViewModel_initialState_selectedTimeZoneIsDateProviderTimeZone() {
 
         let timeZone = TimeZone(secondsFromGMT: -5 * 3600)!
         dateProvider.m_calendar = Calendar.gregorian.with(timeZone: timeZone)
 
-        let viewModel = EventEditorViewModel(dateProvider: dateProvider)
+        let viewModel = makeViewModel()
 
-        XCTAssertEqual(viewModel.selectedTimeZoneIdentifier, timeZone.identifier)
+        #expect(viewModel.selectedTimeZoneIdentifier == timeZone.identifier)
     }
 
-    func testViewModel_saveEvent_passesSelectedTimeZone() {
+    @Test func testViewModel_saveEvent_passesSelectedTimeZone() {
 
         let calendarService = MockCalendarServiceProvider()
         calendarService.m_calendars = [.make(id: "cal-1")]
 
-        let viewModel = EventEditorViewModel(dateProvider: dateProvider, calendarService: calendarService)
+        let viewModel = makeViewModel(calendarService: calendarService)
 
         var lastValue: CreateEventArgs?
         _ = calendarService.spyCreateEventObservable.bind { lastValue = $0 }
@@ -234,66 +223,55 @@ class EventEditorViewModelTests: XCTestCase {
         viewModel.selectedTimeZoneIdentifier = "America/Sao_Paulo"
         viewModel.saveEvent()
 
-        XCTAssertEqual(lastValue?.timeZone.identifier, "America/Sao_Paulo")
+        #expect(lastValue?.timeZone.identifier == "America/Sao_Paulo")
     }
 
-    func testViewModel_changingTimeZone_preservesWallClockTime() {
+    @Test func testViewModel_changingTimeZone_preservesWallClockTime() {
 
         let oldTimeZone = TimeZone(secondsFromGMT: 3 * 3600)!
         dateProvider.m_calendar = Calendar.gregorian.with(timeZone: oldTimeZone)
 
         let start: Date = .make(year: 2025, month: 10, day: 25, hour: 14, minute: 30, timeZone: oldTimeZone)
 
-        let viewModel = EventEditorViewModel(
-            startDate: start,
-            dateProvider: dateProvider
-        )
+        let viewModel = makeViewModel(startDate: start)
 
-        XCTAssertEqual(viewModel.startDate, .make(year: 2025, month: 10, day: 25, hour: 15, minute: 0, timeZone: oldTimeZone))
+        #expect(viewModel.startDate == .make(year: 2025, month: 10, day: 25, hour: 15, minute: 0, timeZone: oldTimeZone))
 
         viewModel.selectedTimeZoneIdentifier = "UTC"
 
-        XCTAssertEqual(viewModel.startDate, .make(year: 2025, month: 10, day: 25, hour: 15, minute: 0, timeZone: .utc))
-        XCTAssertEqual(viewModel.endDate, .make(year: 2025, month: 10, day: 25, hour: 16, minute: 0, timeZone: .utc))
+        #expect(viewModel.startDate == .make(year: 2025, month: 10, day: 25, hour: 15, minute: 0, timeZone: .utc))
+        #expect(viewModel.endDate == .make(year: 2025, month: 10, day: 25, hour: 16, minute: 0, timeZone: .utc))
     }
 
-    func testViewModel_init_roundsStartUpToNextHour() {
+    @Test func testViewModel_init_roundsStartUpToNextHour() {
 
         let onTheHour: Date = .make(year: 2025, month: 10, day: 25, hour: 10, minute: 0)
         let withMinutes: Date = .make(year: 2025, month: 10, day: 25, hour: 10, minute: 30)
 
-        let onTheHourViewModel = EventEditorViewModel(
-            startDate: onTheHour,
-            dateProvider: dateProvider
-        )
-        let withMinutesViewModel = EventEditorViewModel(
-            startDate: withMinutes,
-            dateProvider: dateProvider
-        )
+        let onTheHourViewModel = makeViewModel(startDate: onTheHour)
+        let withMinutesViewModel = makeViewModel(startDate: withMinutes)
 
-        XCTAssertEqual(onTheHourViewModel.startDate, onTheHour)
-        XCTAssertEqual(withMinutesViewModel.startDate, .make(year: 2025, month: 10, day: 25, hour: 11, minute: 0))
+        #expect(onTheHourViewModel.startDate == onTheHour)
+        #expect(withMinutesViewModel.startDate == .make(year: 2025, month: 10, day: 25, hour: 11, minute: 0))
     }
 
-    func testViewModel_changingEndDate_tracksDuration() {
+    @Test func testViewModel_changingEndDate_tracksDuration() {
 
-        let viewModel = EventEditorViewModel(
-            startDate: .make(year: 2025, month: 10, day: 25, hour: 10),
-            dateProvider: dateProvider
+        let viewModel = makeViewModel(
+            startDate: .make(year: 2025, month: 10, day: 25, hour: 10)
         )
 
         viewModel.endDate = .make(year: 2025, month: 10, day: 25, hour: 12, minute: 0)
 
         viewModel.startDate = .make(year: 2025, month: 10, day: 25, hour: 13, minute: 0)
 
-        XCTAssertEqual(viewModel.endDate, .make(year: 2025, month: 10, day: 25, hour: 15, minute: 0))
+        #expect(viewModel.endDate == .make(year: 2025, month: 10, day: 25, hour: 15, minute: 0))
     }
 
-    func testViewModel_changingEndDate_invalid_doesNotUpdateDuration() {
+    @Test func testViewModel_changingEndDate_invalid_doesNotUpdateDuration() {
 
-        let viewModel = EventEditorViewModel(
-            startDate: .make(year: 2025, month: 10, day: 25, hour: 10),
-            dateProvider: dateProvider
+        let viewModel = makeViewModel(
+            startDate: .make(year: 2025, month: 10, day: 25, hour: 10)
         )
 
         viewModel.endDate = .make(year: 2025, month: 10, day: 25, hour: 12, minute: 0)
@@ -301,52 +279,50 @@ class EventEditorViewModelTests: XCTestCase {
 
         viewModel.startDate = .make(year: 2025, month: 10, day: 25, hour: 13, minute: 0)
 
-        XCTAssertEqual(viewModel.endDate, .make(year: 2025, month: 10, day: 25, hour: 15, minute: 0))
+        #expect(viewModel.endDate == .make(year: 2025, month: 10, day: 25, hour: 15, minute: 0))
     }
 
-    func testViewModel_isAllDay_changingStartDate_fixesInvalidEnd() {
+    @Test func testViewModel_isAllDay_changingStartDate_fixesInvalidEnd() {
 
-        let viewModel = EventEditorViewModel(
-            startDate: .make(year: 2025, month: 10, day: 25, hour: 10),
-            dateProvider: dateProvider
+        let viewModel = makeViewModel(
+            startDate: .make(year: 2025, month: 10, day: 25, hour: 10)
         )
 
         viewModel.isAllDay = true
         viewModel.startDate = .make(year: 2025, month: 10, day: 26, at: .start)
 
-        XCTAssertEqual(viewModel.startDate, .make(year: 2025, month: 10, day: 26, at: .start))
-        XCTAssertEqual(viewModel.endDate, .make(year: 2025, month: 10, day: 26, at: .start))
+        #expect(viewModel.startDate == .make(year: 2025, month: 10, day: 26, at: .start))
+        #expect(viewModel.endDate == .make(year: 2025, month: 10, day: 26, at: .start))
     }
 
-    func testViewModel_isAllDay_changingStartDate_keepsValidEnd() {
+    @Test func testViewModel_isAllDay_changingStartDate_keepsValidEnd() {
 
-        let viewModel = EventEditorViewModel(
-            startDate: .make(year: 2025, month: 10, day: 25, hour: 10),
-            dateProvider: dateProvider
+        let viewModel = makeViewModel(
+            startDate: .make(year: 2025, month: 10, day: 25, hour: 10)
         )
 
         viewModel.isAllDay = true
 
-        XCTAssertEqual(viewModel.endDate, .make(year: 2025, month: 10, day: 25, at: .start))
+        #expect(viewModel.endDate == .make(year: 2025, month: 10, day: 25, at: .start))
 
         viewModel.startDate = .make(year: 2025, month: 10, day: 26, at: .start)
 
-        XCTAssertEqual(viewModel.endDate, .make(year: 2025, month: 10, day: 26, at: .start))
+        #expect(viewModel.endDate == .make(year: 2025, month: 10, day: 26, at: .start))
     }
 
-    func testViewModel_initialState_selectedAlertIsNone() {
+    @Test func testViewModel_initialState_selectedAlertIsNone() {
 
-        let viewModel = EventEditorViewModel(dateProvider: dateProvider)
+        let viewModel = makeViewModel()
 
-        XCTAssertEqual(viewModel.selectedAlert, .none)
+        #expect(viewModel.selectedAlert == .none)
     }
 
-    func testViewModel_saveEvent_withNoAlertSelected() {
+    @Test func testViewModel_saveEvent_withNoAlertSelected() {
 
         let calendarService = MockCalendarServiceProvider()
         calendarService.m_calendars = [.make(id: "cal-1")]
 
-        let viewModel = EventEditorViewModel(dateProvider: dateProvider, calendarService: calendarService)
+        let viewModel = makeViewModel(calendarService: calendarService)
 
         var lastValue: CreateEventArgs?
         _ = calendarService.spyCreateEventObservable.bind { lastValue = $0 }
@@ -354,15 +330,15 @@ class EventEditorViewModelTests: XCTestCase {
         viewModel.title = "Meeting"
         viewModel.saveEvent()
 
-        XCTAssertNil(lastValue?.alertOffset)
+        #expect(lastValue?.alertOffset == nil)
     }
 
-    func testViewModel_saveEvent_withAlertSelected() {
+    @Test func testViewModel_saveEvent_withAlertSelected() {
 
         let calendarService = MockCalendarServiceProvider()
         calendarService.m_calendars = [.make(id: "cal-1")]
 
-        let viewModel = EventEditorViewModel(dateProvider: dateProvider, calendarService: calendarService)
+        let viewModel = makeViewModel(calendarService: calendarService)
 
         var lastValue: CreateEventArgs?
         _ = calendarService.spyCreateEventObservable.bind { lastValue = $0 }
@@ -371,15 +347,15 @@ class EventEditorViewModelTests: XCTestCase {
         viewModel.selectedAlert = .tenMinutesBefore
         viewModel.saveEvent()
 
-        XCTAssertEqual(lastValue?.alertOffset, -600)
+        #expect(lastValue?.alertOffset == -600)
     }
 
-    func testViewModel_saveEvent_withAtTimeOfEventAlert() {
+    @Test func testViewModel_saveEvent_withAtTimeOfEventAlert() {
 
         let calendarService = MockCalendarServiceProvider()
         calendarService.m_calendars = [.make(id: "cal-1")]
 
-        let viewModel = EventEditorViewModel(dateProvider: dateProvider, calendarService: calendarService)
+        let viewModel = makeViewModel(calendarService: calendarService)
 
         var lastValue: CreateEventArgs?
         _ = calendarService.spyCreateEventObservable.bind { lastValue = $0 }
@@ -388,44 +364,44 @@ class EventEditorViewModelTests: XCTestCase {
         viewModel.selectedAlert = .atTimeOfEvent
         viewModel.saveEvent()
 
-        XCTAssertEqual(lastValue?.alertOffset, 0)
+        #expect(lastValue?.alertOffset == 0)
     }
 
-    func testViewModel_saveEvent_withError() {
+    @Test func testViewModel_saveEvent_withError() {
 
         let calendarService = FailingEventCalendarService()
         calendarService.m_calendars = [.make()]
 
-        let viewModel = EventEditorViewModel(dateProvider: dateProvider, calendarService: calendarService)
+        let viewModel = makeViewModel(calendarService: calendarService)
 
         viewModel.title = "Meeting"
         viewModel.saveEvent()
 
-        XCTAssertTrue(viewModel.isErrorVisible)
-        XCTAssertEqual(viewModel.error?.localizedDescription, "Creation failed")
+        #expect(viewModel.isErrorVisible)
+        #expect(viewModel.error?.localizedDescription == "Creation failed")
 
         viewModel.dismissError()
-        XCTAssertFalse(viewModel.isErrorVisible)
-        XCTAssertNil(viewModel.error)
+        #expect(viewModel.isErrorVisible == false)
+        #expect(viewModel.error == nil)
     }
 
-    func testViewModel_saveEvent_withSuccess_shouldCloseWindow() {
+    @Test func testViewModel_saveEvent_withSuccess_shouldCloseWindow() async {
 
         let calendarService = MockCalendarServiceProvider()
         calendarService.m_calendars = [.make()]
 
         let expectation = expectation(description: "Should close window")
 
-        let viewModel = EventEditorViewModel(dateProvider: dateProvider, calendarService: calendarService)
+        let viewModel = makeViewModel(calendarService: calendarService)
 
         viewModel.onCloseConfirmed = expectation.fulfill
         viewModel.title = "Meeting"
         viewModel.saveEvent()
 
-        waitForExpectations(timeout: 0.1)
+        await fulfillment(of: [expectation])
     }
 
-    func testViewModel_saveEvent_withError_shouldNotCloseWindow() {
+    @Test func testViewModel_saveEvent_withError_shouldNotCloseWindow() async {
 
         let calendarService = FailingEventCalendarService()
         calendarService.m_calendars = [.make()]
@@ -433,31 +409,31 @@ class EventEditorViewModelTests: XCTestCase {
         let expectation = expectation(description: "Should not close window")
         expectation.isInverted = true
 
-        let viewModel = EventEditorViewModel(dateProvider: dateProvider, calendarService: calendarService)
+        let viewModel = makeViewModel(calendarService: calendarService)
 
         viewModel.onCloseConfirmed = expectation.fulfill
         viewModel.title = "Meeting"
         viewModel.saveEvent()
 
-        waitForExpectations(timeout: 0.1)
+        await fulfillment(of: [expectation])
     }
 
-    func testViewModel_withCloseRequested_withInvalidInput_shouldCloseWindow() {
+    @Test func testViewModel_withCloseRequested_withInvalidInput_shouldCloseWindow() async {
 
         let expectation = expectation(description: "Should not call confirmation callback")
         expectation.isInverted = true
 
-        let viewModel = EventEditorViewModel(dateProvider: dateProvider)
+        let viewModel = makeViewModel()
 
         viewModel.onCloseConfirmed = expectation.fulfill
 
-        XCTAssertTrue(viewModel.requestWindowClose())
-        XCTAssertFalse(viewModel.isCloseConfirmationVisible)
+        #expect(viewModel.requestWindowClose())
+        #expect(viewModel.isCloseConfirmationVisible == false)
 
-        waitForExpectations(timeout: 0.1)
+        await fulfillment(of: [expectation])
     }
 
-    func testViewModel_withCloseRequested_withValidInput_shouldAskForConfirmation() {
+    @Test func testViewModel_withCloseRequested_withValidInput_shouldAskForConfirmation() async {
 
         let notCloseExpectation = expectation(description: "Should not close window")
         notCloseExpectation.isInverted = true
@@ -467,24 +443,24 @@ class EventEditorViewModelTests: XCTestCase {
         let calendarService = MockCalendarServiceProvider()
         calendarService.m_calendars = [.make(id: "cal-1")]
 
-        let viewModel = EventEditorViewModel(dateProvider: dateProvider, calendarService: calendarService)
+        let viewModel = makeViewModel(calendarService: calendarService)
 
         viewModel.onCloseConfirmed = notCloseExpectation.fulfill
         viewModel.title = "Meeting"
 
-        XCTAssertFalse(viewModel.requestWindowClose())
-        XCTAssertTrue(viewModel.isCloseConfirmationVisible)
+        #expect(viewModel.requestWindowClose() == false)
+        #expect(viewModel.isCloseConfirmationVisible)
 
-        wait(for: [notCloseExpectation], timeout: 0.1)
+        await fulfillment(of: [notCloseExpectation])
 
         viewModel.onCloseConfirmed = closeExpectation.fulfill
         viewModel.confirmClose()
 
-        wait(for: [closeExpectation], timeout: 0.1)
-        XCTAssertFalse(viewModel.isCloseConfirmationVisible)
+        await fulfillment(of: [closeExpectation])
+        #expect(viewModel.isCloseConfirmationVisible == false)
     }
 
-    func testViewModel_withCloseRequested_withInvalidDateRange_shouldAskForConfirmation() {
+    @Test func testViewModel_withCloseRequested_withInvalidDateRange_shouldAskForConfirmation() async {
 
         let notCloseExpectation = expectation(description: "Should not close window")
         notCloseExpectation.isInverted = true
@@ -492,70 +468,70 @@ class EventEditorViewModelTests: XCTestCase {
         let calendarService = MockCalendarServiceProvider()
         calendarService.m_calendars = [.make(id: "cal-1")]
 
-        let viewModel = EventEditorViewModel(dateProvider: dateProvider, calendarService: calendarService)
+        let viewModel = makeViewModel(calendarService: calendarService)
 
         viewModel.onCloseConfirmed = notCloseExpectation.fulfill
         viewModel.title = "Meeting"
         viewModel.notes = "Agenda"
         viewModel.endDate = viewModel.startDate
 
-        XCTAssertFalse(viewModel.hasValidInput)
-        XCTAssertFalse(viewModel.requestWindowClose())
-        XCTAssertTrue(viewModel.isCloseConfirmationVisible)
+        #expect(viewModel.hasValidInput == false)
+        #expect(viewModel.requestWindowClose() == false)
+        #expect(viewModel.isCloseConfirmationVisible)
 
-        wait(for: [notCloseExpectation], timeout: 0.1)
+        await fulfillment(of: [notCloseExpectation])
     }
 
-    func testViewModel_withCloseRequested_withNotesOnly_shouldAskForConfirmation() {
+    @Test func testViewModel_withCloseRequested_withNotesOnly_shouldAskForConfirmation() async {
 
         let notCloseExpectation = expectation(description: "Should not close window")
         notCloseExpectation.isInverted = true
 
-        let viewModel = EventEditorViewModel(dateProvider: dateProvider)
+        let viewModel = makeViewModel()
 
         viewModel.onCloseConfirmed = notCloseExpectation.fulfill
         viewModel.notes = "Some notes"
 
-        XCTAssertFalse(viewModel.requestWindowClose())
-        XCTAssertTrue(viewModel.isCloseConfirmationVisible)
+        #expect(viewModel.requestWindowClose() == false)
+        #expect(viewModel.isCloseConfirmationVisible)
 
-        wait(for: [notCloseExpectation], timeout: 0.1)
+        await fulfillment(of: [notCloseExpectation])
     }
 
-    func testViewModel_withCloseRequested_withLocationOnly_shouldAskForConfirmation() {
+    @Test func testViewModel_withCloseRequested_withLocationOnly_shouldAskForConfirmation() async {
 
         let notCloseExpectation = expectation(description: "Should not close window")
         notCloseExpectation.isInverted = true
 
-        let viewModel = EventEditorViewModel(dateProvider: dateProvider)
+        let viewModel = makeViewModel()
 
         viewModel.onCloseConfirmed = notCloseExpectation.fulfill
         viewModel.location = "Office"
 
-        XCTAssertFalse(viewModel.requestWindowClose())
-        XCTAssertTrue(viewModel.isCloseConfirmationVisible)
+        #expect(viewModel.requestWindowClose() == false)
+        #expect(viewModel.isCloseConfirmationVisible)
 
-        wait(for: [notCloseExpectation], timeout: 0.1)
+        await fulfillment(of: [notCloseExpectation])
     }
 
-    func testViewModel_withCloseRequested_withWhitespaceOnly_shouldCloseWindow() {
+    @Test func testViewModel_withCloseRequested_withWhitespaceOnly_shouldCloseWindow() async {
 
         let expectation = expectation(description: "Should not call confirmation callback")
         expectation.isInverted = true
 
-        let viewModel = EventEditorViewModel(dateProvider: dateProvider)
+        let viewModel = makeViewModel()
 
         viewModel.onCloseConfirmed = expectation.fulfill
         viewModel.title = "   "
         viewModel.notes = "   "
 
-        XCTAssertTrue(viewModel.requestWindowClose())
-        XCTAssertFalse(viewModel.isCloseConfirmationVisible)
+        #expect(viewModel.requestWindowClose())
+        #expect(viewModel.isCloseConfirmationVisible == false)
 
-        waitForExpectations(timeout: 0.1)
+        await fulfillment(of: [expectation])
     }
 
-    func testViewModel_calendars_withDefault_shouldSelectDefaultCalendar() {
+    @Test func testViewModel_calendars_withDefault_shouldSelectDefaultCalendar() {
 
         let calendarService = MockCalendarServiceProvider()
         calendarService.m_calendars = [
@@ -564,12 +540,12 @@ class EventEditorViewModelTests: XCTestCase {
         ]
         calendarService.m_defaultCalendarId = "cal-2"
 
-        let viewModel = EventEditorViewModel(dateProvider: dateProvider, calendarService: calendarService)
+        let viewModel = makeViewModel(calendarService: calendarService)
 
-        XCTAssertEqual(viewModel.selectedCalendarId, "cal-2")
+        #expect(viewModel.selectedCalendarId == "cal-2")
     }
 
-    func testViewModel_calendars_shouldGroupByAccount() {
+    @Test func testViewModel_calendars_shouldGroupByAccount() {
 
         let calendarService = MockCalendarServiceProvider()
         calendarService.m_calendars = [
@@ -578,14 +554,14 @@ class EventEditorViewModelTests: XCTestCase {
             .make(id: "cal-3", account: "Google", title: "Tasks"),
         ]
 
-        let viewModel = EventEditorViewModel(dateProvider: dateProvider, calendarService: calendarService)
+        let viewModel = makeViewModel(calendarService: calendarService)
 
-        XCTAssertEqual(viewModel.calendarSections.count, 2)
-        XCTAssertEqual(viewModel.calendarSections[0].account.title, "Google")
-        XCTAssertEqual(viewModel.calendarSections[1].account.title, "iCloud")
+        #expect(viewModel.calendarSections.count == 2)
+        #expect(viewModel.calendarSections[0].account.title == "Google")
+        #expect(viewModel.calendarSections[1].account.title == "iCloud")
     }
 
-    func testViewModel_saveEvent_shouldPassSelectedCalendar() {
+    @Test func testViewModel_saveEvent_shouldPassSelectedCalendar() {
 
         let calendarService = MockCalendarServiceProvider()
         calendarService.m_calendars = [
@@ -594,7 +570,7 @@ class EventEditorViewModelTests: XCTestCase {
         ]
         calendarService.m_defaultCalendarId = "cal-1"
 
-        let viewModel = EventEditorViewModel(dateProvider: dateProvider, calendarService: calendarService)
+        let viewModel = makeViewModel(calendarService: calendarService)
 
         var lastValue: CreateEventArgs?
         _ = calendarService.spyCreateEventObservable.bind { lastValue = $0 }
@@ -603,7 +579,22 @@ class EventEditorViewModelTests: XCTestCase {
         viewModel.selectedCalendarId = "cal-2"
         viewModel.saveEvent()
 
-        XCTAssertEqual(lastValue?.calendar, "cal-2")
+        #expect(lastValue?.calendar == "cal-2")
+    }
+
+    // MARK: - Factory
+
+    func makeViewModel(
+        startDate: Date? = nil,
+        dateProvider: DateProviding? = nil,
+        calendarService: CalendarServiceProviding = MockCalendarServiceProvider()
+    ) -> EventEditorViewModel {
+        EventEditorViewModel(
+            startDate: .init(date: startDate ?? self.dateProvider.now),
+            dateProvider: dateProvider ?? self.dateProvider,
+            calendarService: calendarService,
+            scheduler: CurrentThreadScheduler.instance
+        )
     }
 }
 
@@ -622,20 +613,5 @@ private class FailingEventCalendarService: MockCalendarServiceProvider {
         timeZone: TimeZone
     ) -> Completable {
         .error(.unexpected("Creation failed"))
-    }
-}
-
-private extension EventEditorViewModel {
-
-    convenience init(
-        startDate: Date = .now,
-        dateProvider: DateProviding = MockDateProvider(),
-        calendarService: CalendarServiceProviding = MockCalendarServiceProvider()
-    ) {
-        self.init(
-            startDate: .init(date: startDate),
-            dateProvider: dateProvider,
-            calendarService: calendarService
-        )
     }
 }

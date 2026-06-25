@@ -5,11 +5,12 @@
 //  Created by Paker on 19/06/2026.
 //
 
-import XCTest
+import AppKit
 import RxSwift
+import Testing
 @testable import Calendr
 
-class MainViewModelTests: XCTestCase {
+class MainViewModelTests {
 
     let disposeBag = DisposeBag()
 
@@ -29,32 +30,32 @@ class MainViewModelTests: XCTestCase {
         workspace: workspace
     )
 
-    override func setUp() {
+    init() {
         dateProvider.m_calendar.locale = Locale(identifier: "en_US")
         dateProvider.now = .make(year: 2021, month: 1, day: 5)
     }
 
-    func testCalendarDayChanged_resetsSelectedDateToCurrentDate() {
+    @Test func testCalendarDayChanged_resetsSelectedDateToCurrentDate() {
 
         viewModel.selectDateObserver.onNext(.make(year: 2021, month: 1, day: 10))
 
         dateProvider.now = .make(year: 2021, month: 1, day: 20)
         notificationCenter.post(name: .NSCalendarDayChanged, object: nil)
 
-        XCTAssertEqual(viewModel.currentSelectedDate, dateProvider.now)
+        #expect(viewModel.currentSelectedDate == dateProvider.now)
     }
 
-    func testDidWake_resetsSelectedDateToCurrentDate() {
+    @Test func testDidWake_resetsSelectedDateToCurrentDate() {
 
         viewModel.selectDateObserver.onNext(.make(year: 2021, month: 1, day: 10))
 
         dateProvider.now = .make(year: 2021, month: 1, day: 20)
         workspace.notificationCenter.post(name: NSWorkspace.didWakeNotification, object: nil)
 
-        XCTAssertEqual(viewModel.currentSelectedDate, dateProvider.now)
+        #expect(viewModel.currentSelectedDate == dateProvider.now)
     }
 
-    func testViewDidDisappear_preservesSelectedDateWhenEnabled() {
+    @Test func testViewDidDisappear_preservesSelectedDateWhenEnabled() {
 
         settings.togglePreserveSelectedDate.onNext(true)
 
@@ -65,10 +66,10 @@ class MainViewModelTests: XCTestCase {
         dateProvider.now = .make(year: 2021, month: 1, day: 20)
         viewModel.viewDidDisappearObserver.onNext(())
 
-        XCTAssertEqual(viewModel.currentSelectedDate, selectedDate)
+        #expect(viewModel.currentSelectedDate == selectedDate)
     }
 
-    func testSearchSuggestion_becomesVisibleWhenInputIsFocused() throws {
+    @Test func testSearchSuggestion_becomesVisibleWhenInputIsFocused() throws {
 
         var searchSuggestionText: String?
         var isSearchInputSuggestionHidden: Bool?
@@ -86,15 +87,15 @@ class MainViewModelTests: XCTestCase {
         viewModel.showSearchInputObserver.onNext(())
         viewModel.searchInputTextObserver.onNext("2021-01-10 lunch")
 
-        XCTAssertEqual(isSearchInputSuggestionHidden, true)
+        #expect(isSearchInputSuggestionHidden == true)
 
         viewModel.searchInputFocusObserver.onNext(true)
 
-        XCTAssertEqual(searchSuggestionText, "January 10, 2021")
-        XCTAssertEqual(isSearchInputSuggestionHidden, false)
+        #expect(searchSuggestionText == "January 10, 2021")
+        #expect(isSearchInputSuggestionHidden == false)
     }
 
-    func testAcceptSearchSuggestion_updatesSelectedDateAndSearchText() throws {
+    @Test func testAcceptSearchSuggestion_updatesSelectedDateAndSearchText() throws {
 
         var searchInputText: String?
 
@@ -108,11 +109,11 @@ class MainViewModelTests: XCTestCase {
         viewModel.searchInputTextObserver.onNext("2021-01-10 lunch")
         viewModel.acceptSearchInputSuggestionObserver.onNext(())
 
-        XCTAssertEqual(viewModel.currentSelectedDate, .make(year: 2021, month: 1, day: 10))
-        XCTAssertEqual(searchInputText, "")
+        #expect(viewModel.currentSelectedDate == .make(year: 2021, month: 1, day: 10))
+        #expect(searchInputText == "")
     }
 
-    func testViewDidDisappear_resetsSearchInputWhenViewDisappear() {
+    @Test func testViewDidDisappear_resetsSearchInputWhenViewDisappear() {
 
         var searchInputText: String?
         var isSearchInputHidden: Bool?
@@ -137,12 +138,12 @@ class MainViewModelTests: XCTestCase {
         viewModel.searchInputTextObserver.onNext("2021-01-10 lunch")
         viewModel.viewDidDisappearObserver.onNext(())
 
-        XCTAssertEqual(searchInputText, "")
-        XCTAssertEqual(isSearchInputHidden, true)
-        XCTAssertEqual(isSearchInputSuggestionHidden, true)
+        #expect(searchInputText == "")
+        #expect(isSearchInputHidden == true)
+        #expect(isSearchInputSuggestionHidden == true)
     }
 
-    func testCreateButtonHidden_forPastDatesOnly() {
+    @Test func testCreateButtonHidden_forPastDatesOnly() {
 
         var isCreateButtonHidden: Bool?
 
@@ -151,16 +152,16 @@ class MainViewModelTests: XCTestCase {
         }
         .disposed(by: disposeBag)
 
-        XCTAssertEqual(isCreateButtonHidden, false)
+        #expect(isCreateButtonHidden == false)
 
         viewModel.selectDateObserver.onNext(.make(year: 2021, month: 1, day: 4))
-        XCTAssertEqual(isCreateButtonHidden, true)
+        #expect(isCreateButtonHidden == true)
 
         viewModel.selectDateObserver.onNext(.make(year: 2021, month: 1, day: 5, hour: 8))
-        XCTAssertEqual(isCreateButtonHidden, false)
+        #expect(isCreateButtonHidden == false)
     }
 
-    func testDeeplink_updatesSelectedDateAndShowsMainPopover() throws {
+    @Test func testDeeplink_updatesSelectedDateAndShowsMainPopover() async throws {
 
         let mainPopoverExpectation = expectation(description: "Main Popover")
 
@@ -169,14 +170,14 @@ class MainViewModelTests: XCTestCase {
         }
         .disposed(by: disposeBag)
 
-        viewModel.deeplinkObserver.onNext(try XCTUnwrap(URL(string: "calendr://date/2021-01-20")))
+        viewModel.deeplinkObserver.onNext(try #require(URL(string: "calendr://date/2021-01-20")))
 
-        XCTAssertEqual(viewModel.currentSelectedDate, .make(year: 2021, month: 1, day: 20))
+        #expect(viewModel.currentSelectedDate == .make(year: 2021, month: 1, day: 20))
 
-        waitForExpectations(timeout: 0.1)
+        await fulfillment(of: [mainPopoverExpectation])
     }
 
-    func testUpdateAction_autoUpdaterNewVersionNotification_defaultAction() {
+    @Test func testUpdateAction_autoUpdaterNewVersionNotification_defaultAction() {
 
         var updateAction: MainViewModel.UpdateAction?
 
@@ -187,10 +188,10 @@ class MainViewModelTests: XCTestCase {
 
         autoUpdater.notificationTapObserver.onNext(.newVersion(.default))
 
-        XCTAssertEqual(updateAction, .openSettings(.about))
+        #expect(updateAction == .openSettings(.about))
     }
 
-    func testUpdateAction_autoUpdaterNewVersionNotification_installAction() {
+    @Test func testUpdateAction_autoUpdaterNewVersionNotification_installAction() {
 
         var updateAction: MainViewModel.UpdateAction?
 
@@ -201,10 +202,10 @@ class MainViewModelTests: XCTestCase {
 
         autoUpdater.notificationTapObserver.onNext(.newVersion(.install))
 
-        XCTAssertEqual(updateAction, .installUpdate)
+        #expect(updateAction == .installUpdate)
     }
 
-    func testUpdateAction_autoUpdaterUpdatedNotification_defaultAction() {
+    @Test func testUpdateAction_autoUpdaterUpdatedNotification_defaultAction() {
 
         var updateAction: MainViewModel.UpdateAction?
 
@@ -215,10 +216,10 @@ class MainViewModelTests: XCTestCase {
 
         autoUpdater.notificationTapObserver.onNext(.updated)
 
-        XCTAssertEqual(updateAction, .openReleasePage)
+        #expect(updateAction == .openReleasePage)
     }
 
-    func testKeyboardModifiers_resetsOnViewDidDisappear() {
+    @Test func testKeyboardModifiers_resetsOnViewDidDisappear() {
 
         var lastModifiers: NSEvent.ModifierFlags?
 
@@ -227,13 +228,13 @@ class MainViewModelTests: XCTestCase {
             .disposed(by: disposeBag)
 
         viewModel.keyboardModifiersObserver.onNext([.command, .shift])
-        XCTAssertEqual(lastModifiers, [.command, .shift])
+        #expect(lastModifiers == [.command, .shift])
 
         viewModel.viewDidDisappearObserver.onNext(())
-        XCTAssertEqual(lastModifiers, [])
+        #expect(lastModifiers == [])
     }
 
-    func testKeyboardModifiers_resetsWhenAppBecomesInactive() {
+    @Test func testKeyboardModifiers_resetsWhenAppBecomesInactive() {
 
         var lastModifiers: NSEvent.ModifierFlags?
 
@@ -242,13 +243,13 @@ class MainViewModelTests: XCTestCase {
             .disposed(by: disposeBag)
 
         viewModel.keyboardModifiersObserver.onNext([.command, .shift])
-        XCTAssertEqual(lastModifiers, [.command, .shift])
+        #expect(lastModifiers == [.command, .shift])
 
         isAppActive.onNext(false)
-        XCTAssertEqual(lastModifiers, [])
+        #expect(lastModifiers == [])
     }
 
-    func testOpenCalendarInDayView_opensDayViewInWorkspace() {
+    @Test func testOpenCalendarInDayView_opensDayViewInWorkspace() {
 
         let expectedDate = Date.make(year: 2021, month: 1, day: 10)
         var date: Date?
@@ -261,11 +262,11 @@ class MainViewModelTests: XCTestCase {
 
         viewModel.openCalendarDateObserver.onNext(expectedDate)
 
-        XCTAssertEqual(date, expectedDate)
-        XCTAssertEqual(mode, .day)
+        #expect(date == expectedDate)
+        #expect(mode == .day)
     }
 
-    func testOpenCalendar_opensPreferredViewInWorkspace() {
+    @Test func testOpenCalendar_opensPreferredViewInWorkspace() {
 
         let expectedDate = Date.make(year: 2021, month: 1, day: 10)
         var date: Date?
@@ -279,31 +280,32 @@ class MainViewModelTests: XCTestCase {
         viewModel.selectDateObserver.onNext(expectedDate)
         viewModel.openCalendarObserver.onNext(())
 
-        XCTAssertEqual(date, expectedDate)
-        XCTAssertEqual(mode, .month)
+        #expect(date == expectedDate)
+        #expect(mode == .month)
     }
 
-    func testCreateMenuItems_includesQuickRemindersForToday() {
+    @Test func testCreateMenuItems_includesQuickRemindersForToday() {
 
         let items = viewModel.createMenuItems
 
-        XCTAssertEqual(items.count, 7)
-        XCTAssertEqual(items[0], .newEvent)
-        XCTAssertEqual(items[1], .separator)
+        #expect(items.count == 7)
+        #expect(items[0] == .newEvent)
+        #expect(items[1] == .separator)
 
         guard case .quickReminder(_, let firstOffset) = items[2],
               case .quickReminder(_, let lastOffset) = items[6] else {
-            return XCTFail("Expected quick reminder items")
+            Issue.record("Expected quick reminder items")
+            return
         }
 
-        XCTAssertEqual(firstOffset.minute, 5)
-        XCTAssertEqual(lastOffset.day, 1)
+        #expect(firstOffset.minute == 5)
+        #expect(lastOffset.day == 1)
     }
 
-    func testCreateMenuItems_includesSingleReminderForOtherDates() {
+    @Test func testCreateMenuItems_includesSingleReminderForOtherDates() {
 
         viewModel.selectDateObserver.onNext(.make(year: 2021, month: 1, day: 10))
 
-        XCTAssertEqual(viewModel.createMenuItems, [.newEvent, .newReminder])
+        #expect(viewModel.createMenuItems == [.newEvent, .newReminder])
     }
 }
