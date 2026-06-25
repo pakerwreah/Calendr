@@ -19,7 +19,7 @@ viewModel.load()
 DispatchQueue.main.async {
     exp.fulfill()
 }
-await fulfillment(of: [exp], timeout: 0.1)
+await fulfillment(of: [exp])
 
 // Good — fulfill in the subscription/callback that represents the result
 let exp = expectation(description: "Done")
@@ -29,14 +29,18 @@ viewModel.items.bind { items in
 }
 .disposed(by: disposeBag)
 viewModel.load()
-await fulfillment(of: [exp], timeout: 0.1)
+await fulfillment(of: [exp])
 
 // Good — wire the expectation to the completion handler
 let exp = expectation(description: "Should close window")
 viewModel.onCloseConfirmed = exp.fulfill
 viewModel.saveEvent()
-await fulfillment(of: [exp], timeout: 0.1)
+await fulfillment(of: [exp])
 ```
+
+The default expectation timeout is 100ms. There should be no need to use a higher value.
+If a test is taking too long to fulfill an expectation, that means we probably missed a scheduler injection somewhere.
+Sometimes tests fail due to heavy concurrency. Run them again to see if it's a real issue.
 
 When testing Rx chains, subscribe (or bind) in the test, capture/assert the value there, and fulfill inside that handler.
 

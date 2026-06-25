@@ -5,8 +5,8 @@
 //  Created by Paker on 24/06/2026.
 //
 
-import Testing
 import Foundation
+import Testing
 
 class Expectation: CustomStringConvertible {
 
@@ -17,11 +17,15 @@ class Expectation: CustomStringConvertible {
 
     private let comment: Comment
     private let sourceLocation: SourceLocation
+
     private var sleep: Task<(), Error>?
     private var confirm: Confirmation?
-
-    private(set) var fulfilledAt: Date?
     private var fulfillmentCount = 0
+    private var finished = false
+
+    fileprivate var fulfilledAt: Date?
+
+    private let timeout: Duration = .milliseconds(100)
 
     init(description: Comment, sourceLocation: SourceLocation = #_sourceLocation) {
         self.comment = description
@@ -29,13 +33,14 @@ class Expectation: CustomStringConvertible {
     }
 
     func fulfill() {
-        fulfillmentCount += 1
+        guard !finished else { return }
         sleep?.cancel()
-        confirm?()
         fulfilledAt = .now
+        fulfillmentCount += 1
+        confirm?()
     }
 
-    fileprivate func wait(timeout: Double) async -> Void {
+    fileprivate func wait() async {
 
         let expectedCount = isInverted ? 0 : expectedFulfillmentCount
 
@@ -44,6 +49,8 @@ class Expectation: CustomStringConvertible {
             expectedCount: expectedCount,
             sourceLocation: sourceLocation,
         ) { confirm in
+            defer { finished = true }
+            self.confirm = confirm
 
             for _ in 0..<fulfillmentCount {
                 confirm()
@@ -51,10 +58,8 @@ class Expectation: CustomStringConvertible {
 
             guard expectedCount == 0 || fulfillmentCount < expectedCount else { return }
 
-            self.confirm = confirm
-
             self.sleep = Task {
-                try await Task.sleep(for: .milliseconds(timeout * 1000))
+                try await Task.sleep(for: timeout)
             }
             try? await sleep?.value
         }
@@ -66,15 +71,22 @@ typealias expectation = Expectation
 func fulfillment(
     of expectations: [Expectation],
     enforceOrder: Bool = false,
-    timeout: Double = 0.1,
     sourceLocation: SourceLocation = #_sourceLocation
 ) async {
+
+    await withTaskGroup { group in
+        for expectation in expectations {
+            group.addTask {
+                await expectation.wait()
+            }
+        }
+    }
+    guard enforceOrder else { return }
+
     var previous: Expectation?
 
     for expectation in expectations {
-        await expectation.wait(timeout: timeout)
-
-        guard enforceOrder, let fulfilledAt = expectation.fulfilledAt else { continue }
+        guard let fulfilledAt = expectation.fulfilledAt else { continue }
 
         if let previous, fulfilledAt < previous.fulfilledAt ?? .distantPast {
             Issue.record(

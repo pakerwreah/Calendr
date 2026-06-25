@@ -304,7 +304,7 @@ class EventDetailsViewModelTests {
 
         viewModel.skipTapped.onNext(())
 
-        await fulfillment(of: [expectation], timeout: 1)
+        await fulfillment(of: [expectation])
 
         #expect(action == .event(event, .skip))
     }
@@ -334,7 +334,7 @@ class EventDetailsViewModelTests {
 
         contextMenu?.triggerAction(.status(.accept))
 
-        await fulfillment(of: [expectation], timeout: 1)
+        await fulfillment(of: [expectation])
 
         #expect(action == .event(event, .status(.accept)))
     }
@@ -380,7 +380,7 @@ class EventDetailsViewModelTests {
 
         viewModel.linkTapped.onNext(())
 
-        await fulfillment(of: [defaultBrowserExpectation], timeout: 1)
+        await fulfillment(of: [defaultBrowserExpectation])
 
         #expect(localStorage.defaultBrowserPerCalendar == [:])
 
@@ -398,7 +398,7 @@ class EventDetailsViewModelTests {
 
         viewModel.linkTapped.onNext(())
 
-        await fulfillment(of: [selectedBrowserExpectation], timeout: 1)
+        await fulfillment(of: [selectedBrowserExpectation])
     }
 
     func mockBrowsers() {
