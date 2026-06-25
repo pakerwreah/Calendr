@@ -43,7 +43,7 @@ class CalendarAppProviderTests {
 
         await calendarAppProvider.open(.make(id: "12345"), preferring: .calendar, using: workspace)
 
-        await fulfillment(of: [openExpectation], timeout: 1)
+        await fulfillment(of: [openExpectation])
     }
 
     @Test func testOpenEvent_withRecurrenceRules_inCalendarApp() async {
@@ -67,7 +67,7 @@ class CalendarAppProviderTests {
             using: workspace
         )
 
-        await fulfillment(of: [openExpectation], timeout: 1)
+        await fulfillment(of: [openExpectation])
     }
 
     @Test func testOpenAllDayEvent_withRecurrenceRules_inCalendarApp_shouldUseTimeZone() async {
@@ -92,7 +92,7 @@ class CalendarAppProviderTests {
             using: workspace
         )
 
-        await fulfillment(of: [openExpectation], timeout: 1)
+        await fulfillment(of: [openExpectation])
     }
 
     @Test func testOpenReminder_inCalendarApp() async {
@@ -113,7 +113,7 @@ class CalendarAppProviderTests {
             using: workspace
         )
 
-        await fulfillment(of: [openExpectation], timeout: 1)
+        await fulfillment(of: [openExpectation])
     }
 
     // MARK: - Notion Calendar
@@ -142,7 +142,7 @@ class CalendarAppProviderTests {
             using: workspace
         )
 
-        await fulfillment(of: [openDateExpectation], timeout: 1)
+        await fulfillment(of: [openDateExpectation])
 
         let bundleId = BuildConfig.bundleIdentifier
 
@@ -158,7 +158,7 @@ class CalendarAppProviderTests {
 
         await clock.advance(by: .seconds(1))
 
-        await fulfillment(of: [openEventExpectation], timeout: 1)
+        await fulfillment(of: [openEventExpectation])
     }
 
     @Test func testOpenDay_inCalendarApp() async {
@@ -179,7 +179,7 @@ class CalendarAppProviderTests {
 
         async let _ = calendarAppProvider.open(.calendar, at: .make(year: 2025, month: 1, day: 1), mode: .day, using: workspace)
 
-        await fulfillment(of: [openExpectation], timeout: 1)
+        await fulfillment(of: [openExpectation])
 
         appleScriptRunner.didRunScript = { source in
             #expect(source == """
@@ -197,7 +197,7 @@ class CalendarAppProviderTests {
 
         await clock.advance(by: .seconds(0.3))
 
-        await fulfillment(of: [dateExpectation], timeout: 1)
+        await fulfillment(of: [dateExpectation])
     }
 
     @Test func testOpenWeek_inCalendarApp() async {
@@ -218,7 +218,7 @@ class CalendarAppProviderTests {
 
         async let _ = calendarAppProvider.open(.calendar, at: .make(year: 2025, month: 1, day: 1), mode: .week, using: workspace)
 
-        await fulfillment(of: [openExpectation], timeout: 1)
+        await fulfillment(of: [openExpectation])
 
         appleScriptRunner.didRunScript = { source in
             #expect(source == """
@@ -236,7 +236,7 @@ class CalendarAppProviderTests {
 
         await clock.advance(by: .seconds(0.3))
 
-        await fulfillment(of: [dateExpectation], timeout: 1)
+        await fulfillment(of: [dateExpectation])
     }
 
     @Test func testOpenDate_inNotionApp() async {
@@ -249,7 +249,7 @@ class CalendarAppProviderTests {
 
         async let _ = calendarAppProvider.open(.notion, at: .make(year: 2025, month: 1, day: 1), mode: .day, using: workspace)
 
-        await fulfillment(of: [openExpectation], timeout: 1)
+        await fulfillment(of: [openExpectation])
     }
 
     @Test func testOpenReminder_inNotionApp_shouldFallbackToCalendarApp() async  {
@@ -270,6 +270,6 @@ class CalendarAppProviderTests {
             using: workspace
         )
 
-        await fulfillment(of: [openExpectation], timeout: 1)
+        await fulfillment(of: [openExpectation])
     }
 }

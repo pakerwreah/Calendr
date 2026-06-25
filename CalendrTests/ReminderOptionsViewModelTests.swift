@@ -114,7 +114,8 @@ class ReminderOptionsViewModelTests {
         }
 
         viewModel.triggerAction(.open)
-        await fulfillment(of: [openExpectation], timeout: 1)
+
+        await fulfillment(of: [openExpectation])
     }
 
     @Test func testReminder_rescheduleBy1Hour() throws {

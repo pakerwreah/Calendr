@@ -177,7 +177,7 @@ class EventOptionsViewModelTests {
         }
 
         viewModel.triggerAction(.open)
-        await fulfillment(of: [openExpectation], timeout: 1)
+        await fulfillment(of: [openExpectation])
     }
 
     @Test func testEventLinkAction_isMeeting() {

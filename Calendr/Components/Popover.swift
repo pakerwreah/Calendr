@@ -114,6 +114,9 @@ class Popover: NSObject, PopoverWindowDelegate {
     }
 
     static func closeAll() {
+        guard !popovers.isEmpty else {
+            return
+        }
         guard Thread.isMainThread else {
             DispatchQueue.main.sync { closeAll() }
             return

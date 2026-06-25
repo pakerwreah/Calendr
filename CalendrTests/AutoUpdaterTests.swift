@@ -10,7 +10,6 @@ import RxSwift
 import Testing
 @testable import Calendr
 
-@MainActor
 class AutoUpdaterTests {
 
     let disposeBag = DisposeBag()
@@ -147,7 +146,7 @@ class AutoUpdaterTests {
             }
             .disposed(by: disposeBag)
 
-        updater.checkRelease()
+        await updater.checkRelease()
 
         await fulfillment(of: [initialExpectation, unexpected])
     }
@@ -175,7 +174,7 @@ class AutoUpdaterTests {
             }
             .disposed(by: disposeBag)
 
-        updater.checkRelease()
+        await updater.checkRelease()
 
         await fulfillment(of: [initialExpectation, fetchExpectation, rollbackExpectation])
 
@@ -208,7 +207,7 @@ class AutoUpdaterTests {
             }
             .disposed(by: disposeBag)
 
-        updater.checkRelease()
+        await updater.checkRelease()
 
         await fulfillment(of: [initialExpectation, fetchExpectation, newVersionExpectation])
     }
@@ -229,7 +228,7 @@ class AutoUpdaterTests {
             }
             .disposed(by: disposeBag)
 
-        updater.checkRelease()
+        await updater.checkRelease()
 
         await fulfillment(of: [newVersionExpectation])
 
@@ -253,7 +252,7 @@ class AutoUpdaterTests {
             }
             .disposed(by: disposeBag)
 
-        updater.checkRelease()
+        await updater.checkRelease()
 
         await fulfillment(of: [errorExpectation])
 
@@ -301,7 +300,7 @@ class AutoUpdaterTests {
             }
             .disposed(by: disposeBag)
 
-        updater.checkRelease()
+        await updater.checkRelease()
 
         await fulfillment(of: [initialExpectation, fetchExpectation, rollbackExpectation, errorExpectation])
 
@@ -357,7 +356,7 @@ class AutoUpdaterTests {
             }
             .disposed(by: disposeBag)
 
-        updater.checkRelease()
+        await updater.checkRelease()
 
         await fulfillment(of: [initialExpectation, fetchExpectation, rollbackExpectation, errorExpectation])
 
@@ -384,7 +383,7 @@ class AutoUpdaterTests {
             }
             .disposed(by: disposeBag)
 
-        updater.downloadAndInstall()
+        await updater.downloadAndInstall()
 
         await fulfillment(of: [initialExpectation])
     }
@@ -429,13 +428,13 @@ class AutoUpdaterTests {
             }
             .disposed(by: disposeBag)
 
-        updater.checkRelease()
+        await updater.checkRelease()
 
         await fulfillment(of: [initialExpectation, fetchExpectation, newVersionExpectation])
 
         #expect(error == nil)
 
-        updater.downloadAndInstall()
+        await updater.downloadAndInstall()
 
         await fulfillment(of: [downloadingExpectation, errorExpectation, rollbackExpectation])
 
@@ -497,11 +496,11 @@ class AutoUpdaterTests {
             }
             .disposed(by: localBag)
 
-        updater.checkRelease()
+        await updater.checkRelease()
 
         await fulfillment(of: [initialExpectation, fetchExpectation, newVersionExpectation])
 
-        updater.downloadAndInstall()
+        await updater.downloadAndInstall()
 
         await fulfillment(of: [downloadingExpectation, errorExpectation, rollbackExpectation])
     }
@@ -542,11 +541,11 @@ class AutoUpdaterTests {
             }
             .disposed(by: disposeBag)
 
-        updater.checkRelease()
+        await updater.checkRelease()
 
         await fulfillment(of: [initialExpectation, fetchExpectation, newVersionExpectation])
 
-        updater.downloadAndInstall()
+        await updater.downloadAndInstall()
 
         await fulfillment(of: [downloadingExpectation, backToNewVersionExpectation])
 
@@ -583,7 +582,7 @@ class AutoUpdaterTests {
             }
             .disposed(by: disposeBag)
 
-        updater.downloadAndInstall()
+        await updater.downloadAndInstall()
 
         await fulfillment(of: [errorExpectation])
 
@@ -628,7 +627,7 @@ class AutoUpdaterTests {
             }
             .disposed(by: disposeBag)
 
-        updater.downloadAndInstall()
+        await updater.downloadAndInstall()
 
         await fulfillment(of: [errorExpectation])
 
@@ -694,11 +693,11 @@ class AutoUpdaterTests {
             }
             .disposed(by: disposeBag)
 
-        updater.checkRelease()
+        await updater.checkRelease()
 
         await fulfillment(of: [initialExpectation, fetchExpectation, newVersionExpectation])
 
-        updater.downloadAndInstall()
+        await updater.downloadAndInstall()
 
         await fulfillment(of: [downloadingExpectation, errorExpectation, rollbackExpectation])
 
@@ -733,7 +732,7 @@ class AutoUpdaterTests {
             relaunchExpectation.fulfill()
         }
 
-        updater.downloadAndInstall()
+        await updater.downloadAndInstall()
 
         await fulfillment(of: [relaunchExpectation])
 
@@ -899,11 +898,9 @@ class AutoUpdaterTests {
             return json
         }
 
-        updater.start()
+        await updater.start()
 
-        DispatchQueue.main.async {
-            self.updater.stop()
-        }
+        await updater.stop()
 
         await fulfillment(of: [expectation])
     }
@@ -944,7 +941,7 @@ class AutoUpdaterTests {
             if case .newVersion = $0 { newVersionExpectation.fulfill() }
         })
 
-        updater.checkRelease()
+        await updater.checkRelease()
 
         await fulfillment(of: [newVersionExpectation])
 
