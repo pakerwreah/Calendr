@@ -143,27 +143,27 @@
 "event.editor.alert.1_day_before" = "1日前";
 "event.editor.alert.2_days_before" = "2日前";
 
-"reminder.editor.headline" = "新しいリマインダー";
+"reminder.editor.headline" = "新規リマインダー";
 
 "map_black_list.headline" = "以下の語が含まれる場合に地図を非表示にする";
-"map_black_list.new_item_text" = "新しい除外ワード";
+"map_black_list.new_item_text" = "新規除外ワード";
 
 "event.details.participant.organizer" = "主催者";
 "event.details.participant.me" = "自分";
 
-"event.all_day" = "全日";
+"event.all_day" = "終日";
 
-"event.status.accepted" = "出席";
+"event.status.accepted" = "参加";
 "event.status.maybe" = "仮承諾";
-"event.status.declined" = "欠席";
-"event.status.pending" = "未回答";
+"event.status.declined" = "辞退";
+"event.status.pending" = "未返信";
 
 "event.action.open" = "開く";
-"event.action.join" = "参加する";
+"event.action.join" = "参加";
 "event.action.skip" = "スキップ";
-"event.action.accept" = "出席";
+"event.action.accept" = "参加";
 "event.action.maybe" = "仮承諾";
-"event.action.decline" = "欠席";
+"event.action.decline" = "辞退";
 
 "event_list.summary.agenda" = "今日";
 
