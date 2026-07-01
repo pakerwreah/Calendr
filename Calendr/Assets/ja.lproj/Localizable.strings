@@ -109,7 +109,7 @@
 "formatter.date.relative.ago" = "%@前";
 "formatter.date.relative.left" = "残り%@";
 
-"formatter.events.plural" = "%@件のイベント";
+"formatter.events.plural" = "%@件の予定";
 "formatter.reminders.plural" = "%@件のリマインダー";
 
 "reminder.status.overdue" = "期限超過";
@@ -123,7 +123,7 @@
 "editor.confirm.continue" = "作成を続ける";
 "editor.confirm.discard" = "変更を破棄";
 
-"event.editor.headline" = "新規イベント";
+"event.editor.headline" = "新規予定";
 "event.editor.start" = "開始";
 "event.editor.end" = "終了";
 "event.editor.time_zone" = "タイムゾーン";
@@ -153,17 +153,17 @@
 
 "event.all_day" = "終日";
 
-"event.status.accepted" = "参加";
+"event.status.accepted" = "承諾";
 "event.status.maybe" = "仮承諾";
 "event.status.declined" = "辞退";
 "event.status.pending" = "未返信";
 
 "event.action.open" = "開く";
-"event.action.join" = "参加";
+"event.action.join" = "参加する";
 "event.action.skip" = "スキップ";
-"event.action.accept" = "参加";
+"event.action.accept" = "承諾する";
 "event.action.maybe" = "仮承諾";
-"event.action.decline" = "辞退";
+"event.action.decline" = "辞退する";
 
 "event_list.summary.agenda" = "今日";
 
