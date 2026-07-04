@@ -243,6 +243,7 @@ class SettingsViewModel:
     private let autoLauncher: AutoLaunching
     private let dateProvider: DateProviding
     private let localStorage: LocalStorageProvider
+    private let scheduler: SchedulerType
 
     init(
         autoLauncher: some AutoLaunching,
@@ -256,6 +257,7 @@ class SettingsViewModel:
         self.autoLauncher = autoLauncher
         self.dateProvider = dateProvider
         self.localStorage = localStorage
+        self.scheduler = scheduler
 
         // MARK: - Observers
 
@@ -493,6 +495,6 @@ class SettingsViewModel:
     }
 
     func mapBlackListViewModel() -> MapBlackListViewModel {
-        MapBlackListViewModel(localStorage: localStorage)
+        MapBlackListViewModel(localStorage: localStorage, scheduler: scheduler)
     }
 }

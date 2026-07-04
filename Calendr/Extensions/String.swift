@@ -78,6 +78,8 @@ extension StringProtocol {
             .replacingOccurrences(of: "?", with: "%3F")
             .replacingOccurrences(of: "&", with: "%26")
     }
+
+    var isNotBlank: Bool { !trimmed.isEmpty }
 }
 
 extension Optional where Wrapped: StringProtocol {

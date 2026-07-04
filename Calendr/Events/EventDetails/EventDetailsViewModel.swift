@@ -165,9 +165,9 @@ class EventDetailsViewModel {
 
             guard !isBlacklisted else { return false }
 
-            if let pattern = localStorage.showMapBlacklistRegex {
+            if let pattern = localStorage.showMapBlacklistRegex, pattern.isNotBlank {
                 do {
-                    return try Regex(pattern).wholeMatch(in: location) == nil
+                    return try Regex(pattern).firstMatch(in: location) == nil
                 } catch {
                     if !BuildConfig.isTesting {
                         print(error.localizedDescription)

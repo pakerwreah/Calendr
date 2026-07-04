@@ -62,7 +62,7 @@ class ReminderEditorViewModel: HostingWindowControllerDelegate {
     }
 
     var hasValidInput: Bool {
-        !title.trimmed.isEmpty
+        title.isNotBlank
     }
 
     func saveReminder() {

@@ -62,11 +62,3 @@ It has limited support to relative dates like: `today`, `yesterday`, `tomorrow` 
 
 That's how `NSDataDetector` works ¯\\_\(ツ\)\_/¯
 
-## Regex to prevent showing the map/weather https://github.com/pakerwreah/Calendr/issues/377
-
-Since **v1.19.0** the app has a built-in blacklist editor in settings that uses plain text.
-
-To filter more complex locations, like office room codes, you can add a regex via terminal.
-
-`defaults write br.paker.Calendr "show_map_blacklist_regex" -string "([A-Z0-9]+\-){5}.+"`
-
