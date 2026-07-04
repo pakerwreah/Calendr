@@ -132,6 +132,87 @@ class EventDetailsViewModelTests {
         #expect(viewModel.notes == "Notes")
     }
 
+    @Test func testCanShowMap_showMapDisabled_shouldBeFalse() {
+
+        settings.toggleShowMap.onNext(false)
+
+        let viewModel = mock(
+            event: .make(location: "221B Baker Street")
+        )
+
+        #expect(viewModel.canShowMap == false)
+    }
+
+    @Test func testCanShowMap_showMapEnabled_withAddress_shouldBeTrue() {
+
+        settings.toggleShowMap.onNext(true)
+
+        let viewModel = mock(
+            event: .make(location: "221B Baker Street")
+        )
+
+        #expect(viewModel.canShowMap == true)
+    }
+
+    @Test func testCanShowMap_showMapEnabled_withLinkLocation_shouldBeFalse() {
+
+        settings.toggleShowMap.onNext(true)
+
+        let viewModel = mock(
+            event: .make(location: "https://example.com")
+        )
+
+        #expect(viewModel.canShowMap == false)
+    }
+
+    @Test func testCanShowMap_showMapEnabled_withBlacklistedItem_shouldBeFalse() {
+
+        settings.toggleShowMap.onNext(true)
+        localStorage.showMapBlacklistItems = ["Conference Room"]
+
+        let viewModel = mock(
+            event: .make(location: "Conference Room 2")
+        )
+
+        #expect(viewModel.canShowMap == false)
+    }
+
+    @Test func testCanShowMap_showMapEnabled_withMatchingBlacklistRegex_shouldBeFalse() {
+
+        settings.toggleShowMap.onNext(true)
+        localStorage.showMapBlacklistRegex = "\\d{5}"
+
+        let viewModel = mock(
+            event: .make(location: "12345 Main Street")
+        )
+
+        #expect(viewModel.canShowMap == false)
+    }
+
+    @Test func testCanShowMap_showMapEnabled_withAnchoredBlacklistRegex_shouldNotMatchSubstring() {
+
+        settings.toggleShowMap.onNext(true)
+        localStorage.showMapBlacklistRegex = "^\\d{5}$"
+
+        let viewModel = mock(
+            event: .make(location: "12345 Main Street")
+        )
+
+        #expect(viewModel.canShowMap == true)
+    }
+
+    @Test func testCanShowMap_showMapEnabled_withAnchoredBlacklistRegex_shouldMatchWholeLocation() {
+
+        settings.toggleShowMap.onNext(true)
+        localStorage.showMapBlacklistRegex = "^\\d{5}$"
+
+        let viewModel = mock(
+            event: .make(location: "12345")
+        )
+
+        #expect(viewModel.canShowMap == false)
+    }
+
     @Test func testDetails_withUrl_isNotBirthday_shouldShowURL() {
 
         let viewModel = mock(

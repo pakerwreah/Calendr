@@ -39,6 +39,8 @@ The project follows **MVVM (Model-View-ViewModel)** with **RxSwift** for reactiv
 - Inject all services (providers) into ViewModels via initialiser parameters — do not reference singletons directly from ViewModels
 - Dispose RxSwift subscriptions with a `DisposeBag` stored on the owner
 - Localised strings are code-generated via **swiftgen** into `Calendr/Constants/Strings.generated.swift` — always reference `Strings.*` constants instead of raw string literals for UI text
+- Avoid default parameters for values forwarded by a parent component (e.g. `scheduler`, `dateProvider`). If it's unclear whether the dependency is truly scoped, ask the user before adding a default.
+- Prefer file-scoped functions (placed at the bottom of the file) over class/static.
 
 ## File / folder organisation
 

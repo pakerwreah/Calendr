@@ -6,15 +6,17 @@
 //
 
 import Foundation
+import RxSwift
 import Testing
 @testable import Calendr
 
 class MapBlackListViewModelTests {
 
     let localStorage = MockLocalStorageProvider()
+    let scheduler = HistoricalScheduler()
 
     func makeViewModel() -> GenericMapBlackListViewModel<IntIDProvider> {
-        .init(localStorage: localStorage, idProvider: IntIDProvider())
+        .init(localStorage: localStorage, idProvider: IntIDProvider(), scheduler: scheduler)
     }
 
     @Test func testViewModel_initialState() {
@@ -54,6 +56,7 @@ class MapBlackListViewModelTests {
         viewModel.selection = [1, 3]
         viewModel.removeSelected()
 
+        #expect(viewModel.canRemove == false)
         #expect(viewModel.items.map(\.id) == [2, 4])
         #expect(localStorage.showMapBlacklistItems == ["Test 2", "Test 4"])
     }
@@ -78,6 +81,107 @@ class MapBlackListViewModelTests {
         viewModel.save()
 
         #expect(localStorage.showMapBlacklistItems == ["Edited Item", .newItemText])
+    }
+
+    @Test func testViewModel_loadsExistingRegex() {
+
+        localStorage.showMapBlacklistRegex = "([A-Z0-9]+\\-){5}.+"
+
+        let viewModel = makeViewModel()
+
+        #expect(viewModel.regexText == "([A-Z0-9]+\\-){5}.+")
+        #expect(viewModel.isRegexInvalid == false)
+        #expect(viewModel.isRegexVisible)
+    }
+
+    @Test func testViewModel_noRegex_defaultsToEmptyAndValid() {
+
+        let viewModel = makeViewModel()
+
+        #expect(viewModel.regexText.isEmpty)
+        #expect(viewModel.isRegexInvalid == false)
+        #expect(viewModel.isRegexVisible == false)
+    }
+
+    @Test func testViewModel_blankRegex_defaultsToHidden() {
+
+        localStorage.showMapBlacklistRegex = "   "
+
+        let viewModel = makeViewModel()
+
+        #expect(viewModel.isRegexVisible == false)
+    }
+
+    @Test func testViewModel_regexTyping_isNotFlaggedInvalidBeforeDebounce() {
+
+        let viewModel = makeViewModel()
+
+        viewModel.regexText = "("
+
+        #expect(viewModel.isRegexInvalid == false)
+    }
+
+    @Test func testViewModel_regexTyping_debouncedInvalidState() {
+
+        let viewModel = makeViewModel()
+
+        viewModel.regexText = "("
+
+        scheduler.advance(.milliseconds(299))
+        #expect(viewModel.isRegexInvalid == false)
+
+        scheduler.advance(.milliseconds(1))
+        #expect(viewModel.isRegexInvalid)
+    }
+
+    @Test func testViewModel_regexTyping_debouncedValidState() {
+
+        let viewModel = makeViewModel()
+
+        viewModel.regexText = "("
+        scheduler.advance(.milliseconds(300))
+        #expect(viewModel.isRegexInvalid)
+
+        viewModel.regexText = "[A-Z]+"
+        scheduler.advance(.milliseconds(300))
+        #expect(viewModel.isRegexInvalid == false)
+    }
+
+    @Test func testViewModel_save_validRegex_isPersistedImmediately() {
+
+        let viewModel = makeViewModel()
+
+        viewModel.regexText = "[A-Z]+"
+        viewModel.save()
+
+        #expect(viewModel.isRegexInvalid == false)
+        #expect(localStorage.showMapBlacklistRegex == "[A-Z]+")
+    }
+
+    @Test func testViewModel_save_invalidRegex_isNotPersisted() {
+
+        localStorage.showMapBlacklistRegex = "[A-Z]+"
+
+        let viewModel = makeViewModel()
+
+        viewModel.regexText = "("
+        viewModel.save()
+
+        #expect(viewModel.isRegexInvalid)
+        #expect(localStorage.showMapBlacklistRegex == "[A-Z]+")
+    }
+
+    @Test func testViewModel_save_emptyRegex_clearsStoredValue() {
+
+        localStorage.showMapBlacklistRegex = "[A-Z]+"
+
+        let viewModel = makeViewModel()
+
+        viewModel.regexText = ""
+        viewModel.save()
+
+        #expect(viewModel.isRegexInvalid == false)
+        #expect(localStorage.showMapBlacklistRegex == nil)
     }
 }
 

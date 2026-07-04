@@ -128,11 +128,11 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
     }
 
     var hasValidInput: Bool {
-        !title.trimmed.isEmpty && hasValidDateRange && selectedCalendarId != nil
+        title.isNotBlank && hasValidDateRange && selectedCalendarId != nil
     }
 
     var hasUnsavedChanges: Bool {
-        [title, location, url, notes].contains(where: \.trimmed.isEmpty.isFalse)
+        [title, location, url, notes].contains(where: \.isNotBlank)
     }
 
     func saveEvent() {
