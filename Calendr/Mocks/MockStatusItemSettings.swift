@@ -13,7 +13,7 @@ class MockStatusItemSettings: StatusItemSettings {
 
     let toggleIcon: AnyObserver<Bool>
     let toggleDate: AnyObserver<Bool>
-    let toggleBackground: AnyObserver<Bool>
+    let statusItemBackgroundStyleObserver: AnyObserver<StatusItemBackgroundStyle>
     let statusItemIconStyleObserver: AnyObserver<StatusItemIconStyle>
     let statusItemDateStyleObserver: AnyObserver<StatusItemDateStyle>
     let statusItemDateFormatObserver: AnyObserver<String>
@@ -21,7 +21,7 @@ class MockStatusItemSettings: StatusItemSettings {
 
     let showStatusItemIcon: Observable<Bool>
     let showStatusItemDate: Observable<Bool>
-    let showStatusItemBackground: Observable<Bool>
+    let statusItemBackgroundStyle: Observable<StatusItemBackgroundStyle>
     let statusItemIconStyle: Observable<StatusItemIconStyle>
     let statusItemDateStyle: Observable<StatusItemDateStyle>
     let statusItemDateFormat: Observable<String>
@@ -33,7 +33,7 @@ class MockStatusItemSettings: StatusItemSettings {
     init(
         showIcon: Bool = true,
         showDate: Bool = true,
-        showBackground: Bool = false,
+        backgroundStyle: StatusItemBackgroundStyle = .transparent,
         iconStyle: StatusItemIconStyle = .calendar,
         dateStyle: StatusItemDateStyle = .short,
         dateFormat: String = "",
@@ -42,7 +42,7 @@ class MockStatusItemSettings: StatusItemSettings {
     ) {
         (showStatusItemIcon, toggleIcon) = BehaviorSubject.pipe(value: showIcon)
         (showStatusItemDate, toggleDate) = BehaviorSubject.pipe(value: showDate)
-        (showStatusItemBackground, toggleBackground) = BehaviorSubject.pipe(value: showBackground)
+        (statusItemBackgroundStyle, statusItemBackgroundStyleObserver) = BehaviorSubject.pipe(value: backgroundStyle)
         (statusItemIconStyle, statusItemIconStyleObserver) = BehaviorSubject.pipe(value: iconStyle)
         (statusItemDateStyle, statusItemDateStyleObserver) = BehaviorSubject.pipe(value: dateStyle)
         (statusItemDateFormat, statusItemDateFormatObserver) = BehaviorSubject.pipe(value: dateFormat)

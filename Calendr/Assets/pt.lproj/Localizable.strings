@@ -41,11 +41,17 @@
 "settings.menu_bar.auto_launch" = "Iniciar no login";
 "settings.menu_bar.launch_agent" = "Reiniciar automaticamente";
 "settings.menu_bar.launch_agent_tooltip" = "Reinicia o aplicativo caso o macOS decida encerrá-lo devido à falta de memória ou espaço em disco.";
+
+"settings.menu_bar.open_on_hover" = "Abrir ao passar o mouse";
+
 "settings.menu_bar.show_icon" = "Mostrar ícone";
 "settings.menu_bar.show_date" = "Mostrar data";
-"settings.menu_bar.show_background" = "Mostrar fundo opaco";
 "settings.menu_bar.date_format_custom" = "Personalizado";
-"settings.menu_bar.open_on_hover" = "Abrir ao passar o mouse";
+
+"settings.menu_bar.background" = "Fundo";
+"settings.menu_bar.background.transparent" = "transparente";
+"settings.menu_bar.background.opaque" = "opaco";
+"settings.menu_bar.background.outline" = "contorno";
 
 "settings.next_event" = "Próximo Evento";
 "settings.next_event.show_next_event" = "Mostrar próximo evento";

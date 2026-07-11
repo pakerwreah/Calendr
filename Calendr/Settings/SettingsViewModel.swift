@@ -11,7 +11,7 @@ import RxSwift
 protocol StatusItemSettings {
     var showStatusItemIcon: Observable<Bool> { get }
     var showStatusItemDate: Observable<Bool> { get }
-    var showStatusItemBackground: Observable<Bool> { get }
+    var statusItemBackgroundStyle: Observable<StatusItemBackgroundStyle> { get }
     var openOnHover: Observable<Bool> { get }
     var statusItemIconStyle: Observable<StatusItemIconStyle> { get }
     var statusItemDateStyle: Observable<StatusItemDateStyle> { get }
@@ -102,7 +102,7 @@ class SettingsViewModel:
     let toggleLaunchAgent: AnyObserver<Bool>
     let toggleStatusItemIcon: AnyObserver<Bool>
     let toggleStatusItemDate: AnyObserver<Bool>
-    let toggleStatusItemBackground: AnyObserver<Bool>
+    let statusItemBackgroundStyleObserver: AnyObserver<StatusItemBackgroundStyle>
     let toggleOpenOnHover: AnyObserver<Bool>
     let statusItemTextScalingObserver: AnyObserver<Double>
     let statusItemIconStyleObserver: AnyObserver<StatusItemIconStyle>
@@ -150,7 +150,7 @@ class SettingsViewModel:
     let launchAgent: Observable<Bool>
     let showStatusItemIcon: Observable<Bool>
     let showStatusItemDate: Observable<Bool>
-    let showStatusItemBackground: Observable<Bool>
+    let statusItemBackgroundStyle: Observable<StatusItemBackgroundStyle>
     let openOnHover: Observable<Bool>
     let statusItemIconStyle: Observable<StatusItemIconStyle>
     let statusItemDateStyle: Observable<StatusItemDateStyle>
@@ -265,7 +265,7 @@ class SettingsViewModel:
         toggleLaunchAgent = autoLauncher.rx.observer(for: \.isLaunchAgentEnabled)
         toggleStatusItemIcon = localStorage.rx.observer(for: \.statusItemIconEnabled)
         toggleStatusItemDate = localStorage.rx.observer(for: \.statusItemDateEnabled)
-        toggleStatusItemBackground = localStorage.rx.observer(for: \.statusItemBackgroundEnabled)
+        statusItemBackgroundStyleObserver = localStorage.rx.observer(for: \.statusItemBackgroundStyle).mapObserver(\.rawValue)
         toggleOpenOnHover = localStorage.rx.observer(for: \.statusItemOpenOnHover)
         statusItemIconStyleObserver = localStorage.rx.observer(for: \.statusItemIconStyle).mapObserver(\.rawValue)
         statusItemDateStyleObserver = localStorage.rx.observer(for: \.statusItemDateStyle).mapObserver(\.rawValue)
@@ -315,7 +315,7 @@ class SettingsViewModel:
         openOnHover = localStorage.rx.observe(\.statusItemOpenOnHover)
         showStatusItemIcon = localStorage.rx.observe(\.statusItemIconEnabled)
         showStatusItemDate = localStorage.rx.observe(\.statusItemDateEnabled)
-        showStatusItemBackground = localStorage.rx.observe(\.statusItemBackgroundEnabled)
+        statusItemBackgroundStyle = localStorage.rx.observe(\.statusItemBackgroundStyle).map { .init(rawValue: $0) ?? .transparent }
         statusItemIconStyle = localStorage.rx.observe(\.statusItemIconStyle).map { .init(rawValue: $0) ?? .calendar }
         statusItemDateStyle = localStorage.rx.observe(\.statusItemDateStyle).map { .init(rawValue: $0) ?? .none }
         statusItemDateFormat = localStorage.rx.observe(\.statusItemDateFormat)

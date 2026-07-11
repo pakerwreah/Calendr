@@ -350,7 +350,7 @@ class StatusItemViewModelTests {
         #expect(lastText == "02:00 | 05:30 | 21:00")
     }
 
-    @Test func testBackground() {
+    @Test func testBackgroundStyles() {
 
         var image: NSImage?
 
@@ -362,13 +362,11 @@ class StatusItemViewModelTests {
         #expect(image != nil)
 
         image = nil
-        settings.toggleBackground.onNext(true)
-        scheduler.advance(.nanoseconds(1))
-        #expect(image != nil)
-
-        image = nil
-        settings.toggleBackground.onNext(false)
-        scheduler.advance(.nanoseconds(1))
-        #expect(image != nil)
+        for style in StatusItemBackgroundStyle.allCases {
+            image = nil
+            settings.statusItemBackgroundStyleObserver.onNext(style)
+            scheduler.advance(.nanoseconds(1))
+            #expect(image != nil)
+        }
     }
 }

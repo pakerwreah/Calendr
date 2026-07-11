@@ -138,12 +138,12 @@ class StatusItemViewModel {
 
         self.image = Observable.combineLatest(
             iconsAndText,
-            settings.showStatusItemBackground,
+            settings.statusItemBackgroundStyle,
             settings.statusItemDateFormat,
             settings.statusItemTextScaling
         )
         .debounce(.nanoseconds(1), scheduler: scheduler)
-        .map { iconsAndText, showBackground, dateFormat, textScaling in
+        .map { iconsAndText, backgroundStyle, dateFormat, textScaling in
 
             let (birthdayIcon, calendarIcon, text) = iconsAndText
 
@@ -204,16 +204,34 @@ class StatusItemViewModel {
 
             textImage.isTemplate = true
 
-            guard showBackground else {
+            guard backgroundStyle != .transparent else {
                 return textImage
             }
 
             size.width += 2 * padding
 
-            let image = NSImage(size: size, flipped: false) {
-                NSBezierPath(roundedRect: $0, xRadius: radius, yRadius: radius).addClip()
-                NSColor.red.drawSwatch(in: $0)
-                textImage.draw(at: .init(x: padding, y: 0), from: $0, operation: .destinationOut, fraction: 1)
+            let image = NSImage(size: size, flipped: false) { rect in
+
+                switch backgroundStyle {
+                    case .transparent:
+                        break
+
+                    case .opaque:
+                        NSBezierPath(roundedRect: rect, xRadius: radius, yRadius: radius).addClip()
+                        NSColor.red.drawSwatch(in: rect)
+                        textImage.draw(at: .init(x: padding, y: 0), from: rect, operation: .destinationOut, fraction: 1)
+
+                    case .outline:
+                        NSColor.red.setStroke()
+                        let inset = NSBezierPath.defaultLineWidth / 2
+                        let path = NSBezierPath(
+                            roundedRect: rect.insetBy(dx: inset, dy: inset),
+                            xRadius: radius,
+                            yRadius: radius
+                        )
+                        path.stroke()
+                        textImage.draw(at: .init(x: padding, y: 0), from: rect, operation: .sourceOver, fraction: 1)
+                }
                 return true
             }
 

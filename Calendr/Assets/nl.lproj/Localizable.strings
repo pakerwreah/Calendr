@@ -39,11 +39,17 @@
 "settings.menu_bar.auto_launch" = "Starten bij inloggen";
 //"settings.menu_bar.launch_agent" = "Relaunch automatically";
 //"settings.menu_bar.launch_agent_tooltip" = "Relaunch the app in case macOS decides to kill it due to low memory or disk space.";
+
+"settings.menu_bar.open_on_hover" = "Openen bij aanwijzen";
+
 "settings.menu_bar.show_icon" = "Pictogram tonen";
 "settings.menu_bar.show_date" = "Datum tonen";
-"settings.menu_bar.show_background" = "Ondoorzichtige achtergrond tonen";
 "settings.menu_bar.date_format_custom" = "Aangepast";
-"settings.menu_bar.open_on_hover" = "Openen bij aanwijzen";
+
+//"settings.menu_bar.background" = "Background";
+//"settings.menu_bar.background.transparent" = "transparent";
+//"settings.menu_bar.background.opaque" = "opaque";
+//"settings.menu_bar.background.outline" = "outline";
 
 "settings.next_event" = "Volgende gebeurtenis";
 "settings.next_event.show_next_event" = "Volgende gebeurtenis tonen";

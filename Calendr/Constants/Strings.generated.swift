@@ -339,6 +339,8 @@ internal enum Strings {
     internal enum MenuBar {
       /// Launch at login
       internal static let autoLaunch = Strings.tr("Localizable", "settings.menu_bar.auto_launch", fallback: "Launch at login")
+      /// Background
+      internal static let background = Strings.tr("Localizable", "settings.menu_bar.background", fallback: "Background")
       /// Custom
       internal static let dateFormatCustom = Strings.tr("Localizable", "settings.menu_bar.date_format_custom", fallback: "Custom")
       /// Relaunch automatically
@@ -347,12 +349,18 @@ internal enum Strings {
       internal static let launchAgentTooltip = Strings.tr("Localizable", "settings.menu_bar.launch_agent_tooltip", fallback: "Relaunch the app in case macOS decides to kill it due to low memory or disk space.")
       /// Open on mouse hover
       internal static let openOnHover = Strings.tr("Localizable", "settings.menu_bar.open_on_hover", fallback: "Open on mouse hover")
-      /// Show opaque background
-      internal static let showBackground = Strings.tr("Localizable", "settings.menu_bar.show_background", fallback: "Show opaque background")
       /// Show date
       internal static let showDate = Strings.tr("Localizable", "settings.menu_bar.show_date", fallback: "Show date")
       /// Show icon
       internal static let showIcon = Strings.tr("Localizable", "settings.menu_bar.show_icon", fallback: "Show icon")
+      internal enum Background {
+        /// opaque
+        internal static let opaque = Strings.tr("Localizable", "settings.menu_bar.background.opaque", fallback: "opaque")
+        /// outline
+        internal static let outline = Strings.tr("Localizable", "settings.menu_bar.background.outline", fallback: "outline")
+        /// transparent
+        internal static let transparent = Strings.tr("Localizable", "settings.menu_bar.background.transparent", fallback: "transparent")
+      }
     }
     internal enum NextEvent {
       /// Shorten if 'notch' is present
