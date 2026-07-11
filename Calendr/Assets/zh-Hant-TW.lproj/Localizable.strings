@@ -41,11 +41,17 @@
 "settings.menu_bar.auto_launch" = "登入時啟動";
 //"settings.menu_bar.launch_agent" = "Relaunch automatically";
 //"settings.menu_bar.launch_agent_tooltip" = "Relaunch the app in case macOS decides to kill it due to low memory or disk space.";
+
+//"settings.menu_bar.open_on_hover" = "Open on mouse hover";
+
 "settings.menu_bar.show_icon" = "顯示圖示";
 "settings.menu_bar.show_date" = "顯示日期";
-"settings.menu_bar.show_background" = "顯示不透明背景";
 "settings.menu_bar.date_format_custom" = "自訂";
-//"settings.menu_bar.open_on_hover" = "Open on mouse hover";
+
+//"settings.menu_bar.background" = "Background";
+//"settings.menu_bar.background.transparent" = "transparent";
+//"settings.menu_bar.background.opaque" = "opaque";
+//"settings.menu_bar.background.outline" = "outline";
 
 "settings.next_event" = "下一個事件";
 "settings.next_event.show_next_event" = "顯示下一個事件";

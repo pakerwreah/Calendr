@@ -19,7 +19,8 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     private let launchAgentCheckbox = Checkbox(title: Strings.Settings.MenuBar.launchAgent)
     private let showMenuBarIconCheckbox = Checkbox(title: Strings.Settings.MenuBar.showIcon)
     private let showMenuBarDateCheckbox = Checkbox(title: Strings.Settings.MenuBar.showDate)
-    private let showMenuBarBackgroundCheckbox = Checkbox(title: Strings.Settings.MenuBar.showBackground)
+    private let statusItemBackgroundLabel = Label(text: Strings.Settings.MenuBar.background)
+    private let statusItemBackgroundDropdown = Dropdown()
     private let openOnHoverCheckbox = Checkbox(title: Strings.Settings.MenuBar.openOnHover)
     private let iconStyleDropdown = Dropdown()
     private let dateFormatDropdown = Dropdown()
@@ -129,6 +130,8 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         iconStyleDropdown.isBordered = false
         iconStyleDropdown.setContentHuggingPriority(.required, for: .horizontal)
 
+        statusItemBackgroundDropdown.isBordered = false
+
         let iconStyle = NSStackView(views: [
             showMenuBarIconCheckbox,
             iconStyleDropdown
@@ -146,11 +149,11 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         return NSStackView(views: [
             autoLaunchCheckbox,
             NSStackView(views: [launchAgentCheckbox, launchAgentTooltip]),
+            openOnHoverCheckbox,
             iconStyle,
             showMenuBarDateCheckbox,
             dateFormat,
-            showMenuBarBackgroundCheckbox,
-            openOnHoverCheckbox,
+            NSStackView(views: [statusItemBackgroundLabel, statusItemBackgroundDropdown]),
             .spacer
         ])
         .with(orientation: .vertical)
@@ -307,12 +310,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
 
         setUpDateFormat()
 
-        bind(
-            control: showMenuBarBackgroundCheckbox,
-            observable: viewModel.showStatusItemBackground,
-            observer: viewModel.toggleStatusItemBackground
-        )
-        .disposed(by: disposeBag)
+        setUpStatusItemBackgroundStyle()
 
         bind(
             control: openOnHoverCheckbox,
@@ -409,6 +407,28 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         viewModel.showStatusItemIcon
             .map(!)
             .bind(to: iconStyleDropdown.rx.isHidden)
+            .disposed(by: disposeBag)
+    }
+
+    private func setUpStatusItemBackgroundStyle() {
+
+        let options = StatusItemBackgroundStyle.allCases
+        statusItemBackgroundDropdown.addItems(withTitles: options.map { "\($0.title) " })
+
+        let backgroundStyleControl = statusItemBackgroundDropdown.rx.controlProperty(
+            getter: \.indexOfSelectedItem,
+            setter: { $0.selectItem(at: $1) }
+        )
+
+        backgroundStyleControl
+            .skip(1)
+            .map { options[$0] }
+            .bind(to: viewModel.statusItemBackgroundStyleObserver)
+            .disposed(by: disposeBag)
+
+        viewModel.statusItemBackgroundStyle
+            .compactMap(options.firstIndex(of:))
+            .bind(to: backgroundStyleControl)
             .disposed(by: disposeBag)
     }
 

@@ -41,11 +41,17 @@
 "settings.menu_bar.auto_launch" = "ログイン時に起動";
 "settings.menu_bar.launch_agent" = "自動的にアプリを再起動";
 "settings.menu_bar.launch_agent_tooltip" = "メモリ不足やディスク容量不足を理由にmacOSがアプリを強制終了した場合、アプリを再起動します。";
+
+"settings.menu_bar.open_on_hover" = "マウスホバーで開く";
+
 "settings.menu_bar.show_icon" = "アイコンを表示";
 "settings.menu_bar.show_date" = "日付を表示";
-"settings.menu_bar.show_background" = "不透明な背景";
 "settings.menu_bar.date_format_custom" = "カスタム";
-"settings.menu_bar.open_on_hover" = "マウスホバーで開く";
+
+//"settings.menu_bar.background" = "Background";
+//"settings.menu_bar.background.transparent" = "transparent";
+//"settings.menu_bar.background.opaque" = "opaque";
+//"settings.menu_bar.background.outline" = "outline";
 
 "settings.next_event" = "次の予定";
 "settings.next_event.show_next_event" = "次の予定をメニューバーに表示";

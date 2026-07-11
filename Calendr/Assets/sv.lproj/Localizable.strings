@@ -41,11 +41,17 @@
 "settings.menu_bar.auto_launch" = "Öppna vid inloggning";
 //"settings.menu_bar.launch_agent" = "Relaunch automatically";
 //"settings.menu_bar.launch_agent_tooltip" = "Relaunch the app in case macOS decides to kill it due to low memory or disk space.";
+
+//"settings.menu_bar.open_on_hover" = "Open on mouse hover";
+
 "settings.menu_bar.show_icon" = "Visa ikon";
 "settings.menu_bar.show_date" = "Visa datum";
-"settings.menu_bar.show_background" = "Show ogenomskinlig bakgrund";
 "settings.menu_bar.date_format_custom" = "Anpassad";
-//"settings.menu_bar.open_on_hover" = "Open on mouse hover";
+
+//"settings.menu_bar.background" = "Background";
+//"settings.menu_bar.background.transparent" = "transparent";
+//"settings.menu_bar.background.opaque" = "opaque";
+//"settings.menu_bar.background.outline" = "outline";
 
 "settings.next_event" = "Nästa händelse";
 "settings.next_event.show_next_event" = "Visa nästa händelse";

@@ -41,11 +41,17 @@
 "settings.menu_bar.auto_launch" = "로그인 시 실행";
 //"settings.menu_bar.launch_agent" = "Relaunch automatically";
 //"settings.menu_bar.launch_agent_tooltip" = "Relaunch the app in case macOS decides to kill it due to low memory or disk space.";
+
+"settings.menu_bar.open_on_hover" = "마우스 호버 시 열기";
+
 "settings.menu_bar.show_icon" = "아이콘 표시";
 "settings.menu_bar.show_date" = "날짜 표시";
-"settings.menu_bar.show_background" = "불투명한 배경 표시";
 "settings.menu_bar.date_format_custom" = "사용자 지정";
-"settings.menu_bar.open_on_hover" = "마우스 호버 시 열기";
+
+//"settings.menu_bar.background" = "Background";
+//"settings.menu_bar.background.transparent" = "transparent";
+//"settings.menu_bar.background.opaque" = "opaque";
+//"settings.menu_bar.background.outline" = "outline";
 
 "settings.next_event" = "다음 일정";
 "settings.next_event.show_next_event" = "다음 일정 표시";

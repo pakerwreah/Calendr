@@ -17,7 +17,8 @@ enum Prefs {
     static let statusItemDateEnabled = "status_item_date_enabled"
     static let statusItemDateStyle = "status_item_date_style"
     static let statusItemDateFormat = "status_item_date_format"
-    static let statusItemBackgroundEnabled = "status_item_background_enabled"
+    static let statusItemBackgroundStyle = "status_item_background_style"
+    static let legacyStatusItemBackgroundEnabled = "status_item_background_enabled"
     static let statusItemTextScaling = "status_item_text_scaling"
     static let statusItemOpenOnHover = "status_item_open_on_hover"
 
@@ -86,6 +87,8 @@ enum Prefs {
 
 func registerDefaultPrefs(in localStorage: LocalStorageProvider, calendar: Calendar = .current) {
 
+    migrateStatusItemBackgroundStyle(in: localStorage)
+
     localStorage.register(defaults: [
         // Menu Bar
         Prefs.launchAgentEnabled: false,
@@ -94,7 +97,7 @@ func registerDefaultPrefs(in localStorage: LocalStorageProvider, calendar: Calen
         Prefs.statusItemDateEnabled: true,
         Prefs.statusItemDateStyle: StatusItemDateStyle.short.rawValue,
         Prefs.statusItemDateFormat: AppConstants.defaultCustomDateFormat,
-        Prefs.statusItemBackgroundEnabled: false,
+        Prefs.statusItemBackgroundStyle: StatusItemBackgroundStyle.transparent.rawValue,
         Prefs.statusItemTextScaling: 1.2,
         Prefs.statusItemOpenOnHover: false,
 
@@ -156,6 +159,14 @@ func registerDefaultPrefs(in localStorage: LocalStorageProvider, calendar: Calen
     ])
 }
 
+private func migrateStatusItemBackgroundStyle(in localStorage: LocalStorageProvider) {
+
+    guard localStorage.bool(forKey: Prefs.legacyStatusItemBackgroundEnabled) else { return }
+
+    localStorage.statusItemBackgroundStyle = StatusItemBackgroundStyle.opaque.rawValue
+    localStorage.removeObject(forKey: Prefs.legacyStatusItemBackgroundEnabled)
+}
+
 extension LocalStorageProvider {
 
     // Menu Bar
@@ -200,9 +211,9 @@ extension LocalStorageProvider {
         set { set(newValue, forKey: Prefs.statusItemDateFormat) }
     }
 
-    @objc dynamic var statusItemBackgroundEnabled: Bool {
-        get { bool(forKey: Prefs.statusItemBackgroundEnabled) }
-        set { set(newValue, forKey: Prefs.statusItemBackgroundEnabled) }
+    @objc dynamic var statusItemBackgroundStyle: String {
+        get { string(forKey: Prefs.statusItemBackgroundStyle) ?? "" }
+        set { set(newValue, forKey: Prefs.statusItemBackgroundStyle) }
     }
 
     @objc dynamic var statusItemTextScaling: Double {

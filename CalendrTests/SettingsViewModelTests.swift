@@ -35,7 +35,7 @@ class SettingsViewModelTests {
 
     var localStorageStatusItemIconEnabled: Bool? { localStorage.object(forKey: Prefs.statusItemIconEnabled) as? Bool }
     var localStorageStatusItemDateEnabled: Bool? { localStorage.object(forKey: Prefs.statusItemDateEnabled) as? Bool }
-    var localStorageStatusItemBackgroundEnabled: Bool? { localStorage.object(forKey: Prefs.statusItemBackgroundEnabled) as? Bool }
+    var localStorageStatusItemBackgroundStyle: String? { localStorage.object(forKey: Prefs.statusItemBackgroundStyle) as? String }
     var localStorageStatusItemDateStyle: NSNumber? { localStorage.object(forKey: Prefs.statusItemDateStyle) as? NSNumber }
     var localStorageStatusItemTextScaling: NSNumber? { localStorage.object(forKey: Prefs.statusItemTextScaling) as? NSNumber }
     var localStorageShowEventStatusItem: Bool? { localStorage.object(forKey: Prefs.showEventStatusItem) as? Bool }
@@ -74,7 +74,7 @@ class SettingsViewModelTests {
 
         #expect(localStorageStatusItemIconEnabled == nil)
         #expect(localStorageStatusItemDateEnabled == nil)
-        #expect(localStorageStatusItemBackgroundEnabled == nil)
+        #expect(localStorageStatusItemBackgroundStyle == nil)
         #expect(localStorageStatusItemDateStyle == nil)
         #expect(localStorageStatusItemTextScaling == nil)
         #expect(localStorageShowEventStatusItem == nil)
@@ -113,7 +113,7 @@ class SettingsViewModelTests {
 
         #expect(viewModel.showStatusItemIcon.lastValue() == true)
         #expect(viewModel.showStatusItemDate.lastValue() == true)
-        #expect(viewModel.showStatusItemBackground.lastValue() == false)
+        #expect(viewModel.statusItemBackgroundStyle.lastValue() == .transparent)
         #expect(viewModel.statusItemDateStyle.lastValue() == .short)
         #expect(viewModel.statusItemTextScaling.lastValue() == 1.2)
         #expect(viewModel.showEventStatusItem.lastValue() == false)
@@ -148,7 +148,7 @@ class SettingsViewModelTests {
 
         #expect(localStorageStatusItemIconEnabled == true)
         #expect(localStorageStatusItemDateEnabled == true)
-        #expect(localStorageStatusItemBackgroundEnabled == false)
+        #expect(localStorageStatusItemBackgroundStyle == StatusItemBackgroundStyle.transparent.rawValue)
         #expect(localStorageStatusItemTextScaling == 1.2)
         #expect(localStorageStatusItemDateStyle == 1)
         #expect(localStorageShowEventStatusItem == false)
@@ -178,6 +178,40 @@ class SettingsViewModelTests {
         #expect(localStorageFutureEventsDays == 0)
         #expect(localStorageShowMonthOutline == true)
         #expect(localStorageAutoCheckForUpdates == true)
+    }
+
+    @Test func testMigratesLegacyStatusItemBackgroundStyle() {
+
+        let storage = MockLocalStorageProvider()
+        storage.set(true, forKey: Prefs.legacyStatusItemBackgroundEnabled)
+
+        registerDefaultPrefs(in: storage)
+
+        #expect(storage.statusItemBackgroundStyle == StatusItemBackgroundStyle.opaque.rawValue)
+        #expect(storage.object(forKey: Prefs.legacyStatusItemBackgroundEnabled) == nil)
+    }
+
+    @Test func testDoesNotMigrateLegacyStatusItemBackgroundStyleWhenFalse() {
+
+        let storage = MockLocalStorageProvider()
+        storage.set(false, forKey: Prefs.legacyStatusItemBackgroundEnabled)
+
+        registerDefaultPrefs(in: storage)
+
+        #expect(storage.statusItemBackgroundStyle == StatusItemBackgroundStyle.transparent.rawValue)
+        #expect(storage.object(forKey: Prefs.legacyStatusItemBackgroundEnabled) as? Bool == false)
+    }
+
+    @Test func testMigrationOverridesExistingStatusItemBackgroundStyleWhenLegacyTrue() {
+
+        let storage = MockLocalStorageProvider()
+        storage.statusItemBackgroundStyle = StatusItemBackgroundStyle.outline.rawValue
+        storage.set(true, forKey: Prefs.legacyStatusItemBackgroundEnabled)
+
+        registerDefaultPrefs(in: storage)
+
+        #expect(storage.statusItemBackgroundStyle == StatusItemBackgroundStyle.opaque.rawValue)
+        #expect(storage.object(forKey: Prefs.legacyStatusItemBackgroundEnabled) == nil)
     }
 
     @Test func testSetStatusItemsInitialPositions() {
@@ -1028,28 +1062,28 @@ class SettingsViewModelTests {
         #expect(localStorageStatusItemDateEnabled == false)
     }
 
-    @Test func testToggleShowStatusItemBackground() {
+    @Test func testChangeStatusItemBackgroundStyle() {
 
-        localStorage.statusItemBackgroundEnabled = true
+        localStorage.statusItemBackgroundStyle = StatusItemBackgroundStyle.opaque.rawValue
 
-        var showBackground: Bool?
+        var backgroundStyle: StatusItemBackgroundStyle?
 
-        viewModel.showStatusItemBackground
-            .bind { showBackground = $0 }
+        viewModel.statusItemBackgroundStyle
+            .bind { backgroundStyle = $0 }
             .disposed(by: disposeBag)
 
-        #expect(showBackground == true)
-        #expect(localStorageStatusItemBackgroundEnabled == true)
+        #expect(backgroundStyle == .opaque)
+        #expect(localStorageStatusItemBackgroundStyle == StatusItemBackgroundStyle.opaque.rawValue)
 
-        viewModel.toggleStatusItemBackground.onNext(false)
+        viewModel.statusItemBackgroundStyleObserver.onNext(.outline)
 
-        #expect(showBackground == false)
-        #expect(localStorageStatusItemBackgroundEnabled == false)
+        #expect(backgroundStyle == .outline)
+        #expect(localStorageStatusItemBackgroundStyle == StatusItemBackgroundStyle.outline.rawValue)
 
-        viewModel.toggleStatusItemBackground.onNext(true)
+        viewModel.statusItemBackgroundStyleObserver.onNext(.transparent)
 
-        #expect(showBackground == true)
-        #expect(localStorageStatusItemBackgroundEnabled == true)
+        #expect(backgroundStyle == .transparent)
+        #expect(localStorageStatusItemBackgroundStyle == StatusItemBackgroundStyle.transparent.rawValue)
     }
 
     @Test func testChangeAppearance() {
