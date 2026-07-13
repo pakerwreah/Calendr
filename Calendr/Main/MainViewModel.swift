@@ -236,9 +236,9 @@ class MainViewModel {
 
         Observable.merge(
             openCalendarDate.map { ($0, CalendarViewMode.day) },
-            Observable
+            openCalendar.withLatestFrom(Observable
                 .combineLatest(selectedDate, settings.calendarAppViewMode)
-                .sample(openCalendar)
+            )
         )
         .bind { date, mode in
             workspace.open(date, mode: mode)
