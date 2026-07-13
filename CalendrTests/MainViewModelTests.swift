@@ -272,16 +272,21 @@ class MainViewModelTests {
         var date: Date?
         var mode: CalendarViewMode?
 
-        workspace.didOpenDate = { openedDate, openedMode in
-            date = openedDate
-            mode = openedMode
+        for expectedMode in CalendarViewMode.allCases {
+
+            settings.calendarAppViewModeObserver.onNext(expectedMode)
+
+            workspace.didOpenDate = { openedDate, openedMode in
+                date = openedDate
+                mode = openedMode
+            }
+
+            viewModel.selectDateObserver.onNext(expectedDate)
+            viewModel.openCalendarObserver.onNext(())
+
+            #expect(date == expectedDate)
+            #expect(mode == expectedMode)
         }
-
-        viewModel.selectDateObserver.onNext(expectedDate)
-        viewModel.openCalendarObserver.onNext(())
-
-        #expect(date == expectedDate)
-        #expect(mode == .month)
     }
 
     @Test func testCreateMenuItems_includesQuickRemindersForToday() {
