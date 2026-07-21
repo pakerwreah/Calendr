@@ -30,12 +30,12 @@ Hey 🙋🏻‍♂️ if you like my app, please consider buying me a coffee to 
 
 <table>
 <tr>
-  <td>
+  <td width=705>
     <a href="https://star-history.com/#pakerwreah/Calendr&Date">
      <picture>
-       <source width=679 media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=pakerwreah/Calendr&type=Date&theme=dark" />
-       <source width=679 media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=pakerwreah/Calendr&type=Date" />
-       <img width=679 alt="Star History Chart" src="https://api.star-history.com/svg?repos=pakerwreah/Calendr&type=Date" />
+       <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=pakerwreah/Calendr&type=date&theme=dark&legend=top-left&sealed_token=mvkZlfxVPa9BweSicqzRp--3MkM3Cy9txA0LRYspThrigEh9pw1riRZBs7tDO74cYZdH280gDv9bS7sb28LCryGGndDoe5tNnFAW9qdygd1hawGSSh-V4DS9lSB0iGT3IUyRq9kC_16a0soziQX2AoNriqy3pTXAiq1lB8CwDJqKTwCqhl8AvGo0vxit" />
+       <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=pakerwreah/Calendr&type=date&legend=top-left&sealed_token=mvkZlfxVPa9BweSicqzRp--3MkM3Cy9txA0LRYspThrigEh9pw1riRZBs7tDO74cYZdH280gDv9bS7sb28LCryGGndDoe5tNnFAW9qdygd1hawGSSh-V4DS9lSB0iGT3IUyRq9kC_16a0soziQX2AoNriqy3pTXAiq1lB8CwDJqKTwCqhl8AvGo0vxit" />
+       <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=pakerwreah/Calendr&type=date&legend=top-left&sealed_token=mvkZlfxVPa9BweSicqzRp--3MkM3Cy9txA0LRYspThrigEh9pw1riRZBs7tDO74cYZdH280gDv9bS7sb28LCryGGndDoe5tNnFAW9qdygd1hawGSSh-V4DS9lSB0iGT3IUyRq9kC_16a0soziQX2AoNriqy3pTXAiq1lB8CwDJqKTwCqhl8AvGo0vxit" />
      </picture>
     </a>
   </td>
