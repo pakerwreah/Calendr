@@ -7,6 +7,7 @@
 
 #if DEBUG
 
+import Foundation
 import ObjectiveC
 
 func inspect(_ obj: AnyObject) {
