@@ -109,6 +109,7 @@
 "settings.keyboard.global_shortcuts.open_next_event_options" = "Možnosti ďalšej udalosti";
 "settings.keyboard.global_shortcuts.open_next_reminder" = "Otvoriť ďalšiu pripomienku";
 "settings.keyboard.global_shortcuts.open_next_reminder_options" = "Možnosti ďalšej pripomienky";
+"settings.keyboard.global_shortcuts.join_next_event" = "Otvoriť odkaz ďalšej udalosti";
 
 "formatter.date.today" = "Dnes";
 "formatter.date.relative.in" = "za %@";

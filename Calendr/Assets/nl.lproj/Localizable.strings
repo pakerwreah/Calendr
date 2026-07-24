@@ -107,6 +107,7 @@
 "settings.keyboard.global_shortcuts.open_next_event_options" = "Opties volgende gebeurtenis";
 "settings.keyboard.global_shortcuts.open_next_reminder" = "Volgende herinnering openen";
 "settings.keyboard.global_shortcuts.open_next_reminder_options" = "Opties volgende herinnering";
+"settings.keyboard.global_shortcuts.join_next_event" = "Link van volgende gebeurtenis openen";
 
 "formatter.date.today" = "Vandaag";
 "formatter.date.relative.in" = "over %@";

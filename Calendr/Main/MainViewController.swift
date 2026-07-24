@@ -892,6 +892,10 @@ class MainViewController: NSViewController {
                 self?.reminderStatusItemClickHandler.rightClick.onNext(())
             }
         }
+
+        KeyboardShortcuts.onKeyUp(for: .joinNextEvent) { [weak self] in
+            self?.nextEventViewModel.openNextEventLink()
+        }
     }
 
     private func setUpDeeplink() {

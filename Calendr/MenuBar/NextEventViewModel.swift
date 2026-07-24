@@ -418,6 +418,17 @@ class NextEventViewModel {
         restoreStatusItemPreferredPosition(statusItemName, in: localStorage)
     }
 
+    // Reuses the event currently shown by the status item, so it's a no-op while the item
+    // is hidden and naturally skips conflicting events (their merged group has no link).
+    func openNextEventLink() {
+        guard
+            let event = try? nextEvent.value()?.event,
+            let link = event.detectLink(using: workspace)
+        else { return }
+
+        workspace.open(link)
+    }
+
     func makeContextMenuViewModel() -> (any ContextMenuViewModel)? {
         guard
             let event = try? nextEvent.value()?.event,

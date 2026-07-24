@@ -111,6 +111,7 @@
 "settings.keyboard.global_shortcuts.open_next_event_options" = "Открыть настройки следующего события";
 "settings.keyboard.global_shortcuts.open_next_reminder" = "Открыть следующее напоминание";
 "settings.keyboard.global_shortcuts.open_next_reminder_options" = "Открыть настройки следующего напоминания";
+"settings.keyboard.global_shortcuts.join_next_event" = "Открыть ссылку следующего события";
 
 "formatter.date.today" = "Сегодня";
 "formatter.date.relative.in" = "через %@";

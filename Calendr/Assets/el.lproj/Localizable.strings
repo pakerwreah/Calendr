@@ -109,6 +109,7 @@
 "settings.keyboard.global_shortcuts.open_next_event_options" = "Επιλογές επόμενου συμβάντος";
 "settings.keyboard.global_shortcuts.open_next_reminder" = "Άνοιγμα επόμενης υπενθύμισης";
 "settings.keyboard.global_shortcuts.open_next_reminder_options" = "Επιλογές επόμενης υπενθύμισης";
+"settings.keyboard.global_shortcuts.join_next_event" = "Άνοιγμα συνδέσμου επόμενου συμβάντος";
 
 "formatter.date.today" = "Σήμερα";
 "formatter.date.relative.in" = "σε %@";

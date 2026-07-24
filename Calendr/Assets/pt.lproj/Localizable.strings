@@ -109,6 +109,7 @@
 "settings.keyboard.global_shortcuts.open_next_event_options" = "Opções do próximo evento";
 "settings.keyboard.global_shortcuts.open_next_reminder" = "Abrir próximo lembrete";
 "settings.keyboard.global_shortcuts.open_next_reminder_options" = "Opções do próximo lembrete";
+"settings.keyboard.global_shortcuts.join_next_event" = "Abrir link do próximo evento";
 
 "formatter.date.today" = "Hoje";
 "formatter.date.relative.in" = "em %@";

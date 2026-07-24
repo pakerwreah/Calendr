@@ -109,6 +109,7 @@
 "settings.keyboard.global_shortcuts.open_next_event_options" = "Opsionet e ngjarjes së ardhshme";
 "settings.keyboard.global_shortcuts.open_next_reminder" = "Hap kujtesën tjetër";
 "settings.keyboard.global_shortcuts.open_next_reminder_options" = "Opsionet e ardhshme përkujtues";
+"settings.keyboard.global_shortcuts.join_next_event" = "Hap lidhjen e ngjarjes së radhës";
 
 "formatter.date.today" = "Sot";
 "formatter.date.relative.in" = "në %@";
