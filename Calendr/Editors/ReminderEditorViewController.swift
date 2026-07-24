@@ -46,6 +46,9 @@ struct ReminderEditorView: ViewModelView {
                     .toggleStyle(.checkbox)
             }
 
+            TextArea(placeholder: Strings.Event.Editor.notes, text: $viewModel.notes)
+                .frame(height: 60)
+
             HStack {
                 Spacer()
                 Button(Strings.Editor.save) {

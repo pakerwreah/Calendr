@@ -80,6 +80,8 @@ extension StringProtocol {
     }
 
     var isNotBlank: Bool { !trimmed.isEmpty }
+
+    var notEmpty: Self? { isEmpty ? nil : self }
 }
 
 extension Optional where Wrapped: StringProtocol {

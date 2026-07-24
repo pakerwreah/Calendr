@@ -138,18 +138,15 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
     func saveEvent() {
         guard hasValidInput, let selectedCalendarId else { return }
 
-        let trimmedLocation = location.trimmed
-        let trimmedNotes = notes.trimmed
-
         calendarService.createEvent(
             title: title.trimmed,
             calendar: selectedCalendarId,
             start: startDate,
             end: endDate,
             isAllDay: isAllDay,
-            location: trimmedLocation.isEmpty ? nil : trimmedLocation,
+            location: location.trimmed.notEmpty,
             url: parsedUrl,
-            notes: trimmedNotes.isEmpty ? nil : trimmedNotes,
+            notes: notes.trimmed.notEmpty,
             alertOffset: selectedAlert.relativeOffset,
             timeZone: selectedTimeZone
         )
