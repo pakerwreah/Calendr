@@ -1052,22 +1052,9 @@ class NextEventViewModelTests {
 
         // The shortcut reuses whatever the status item is showing, so it stays a no-op while
         // the item is hidden, matching the maintainer's requested behavior.
-        let settings = MockNextEventSettings(showItem: false)
-        let viewModel = NextEventViewModel(
-            type: .event,
-            localStorage: localStorage,
-            settings: settings,
-            nextEventCalendars: calendarsSubject,
-            dateProvider: dateProvider,
-            calendarService: calendarService,
-            geocoder: geocoder,
-            weatherService: weatherService,
-            workspace: workspace,
-            screenProvider: screenProvider,
-            isShowingDetailsModal: .init(value: false),
-            scheduler: scheduler,
-            soundPlayer: soundPlayer
-        )
+        let viewModel = makeViewModel(type: .event)
+
+        settings.toggleStatusItem.onNext(false)
 
         var hasEvent: Bool?
         viewModel.hasEvent
