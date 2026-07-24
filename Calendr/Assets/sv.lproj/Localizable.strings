@@ -109,6 +109,7 @@
 "settings.keyboard.global_shortcuts.open_next_event_options" = "Nästa händelsealternativ";
 "settings.keyboard.global_shortcuts.open_next_reminder" = "Öppna nästa påminnelse";
 "settings.keyboard.global_shortcuts.open_next_reminder_options" = "Nästa påminnelsealternativ";
+"settings.keyboard.global_shortcuts.join_next_event" = "Öppna länk för nästa händelse";
 
 "formatter.date.today" = "Idag";
 "formatter.date.relative.in" = "om %@";

@@ -109,6 +109,7 @@
 "settings.keyboard.global_shortcuts.open_next_event_options" = "次の予定のオプションを表示";
 "settings.keyboard.global_shortcuts.open_next_reminder" = "次のリマインダーを展開";
 "settings.keyboard.global_shortcuts.open_next_reminder_options" = "次のリマインダーのオプションを表示";
+"settings.keyboard.global_shortcuts.join_next_event" = "次の予定のリンクを展開";
 
 "formatter.date.today" = "今日";
 "formatter.date.relative.in" = "%@後";

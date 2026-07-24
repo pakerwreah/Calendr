@@ -997,6 +997,138 @@ class NextEventViewModelTests {
         #expect(hasEvent == false)
     }
 
+    @Test func testOpenNextEventLink_withMeetingLink_opensLink() {
+
+        let viewModel = makeViewModel(type: .event)
+
+        var openedURL: URL?
+        workspace.didOpenURL = { openedURL = $0 }
+
+        calendarService.changeEvents([
+            .make(start: now, end: now + 1, url: URL(string: "https://meet.google.com/abc-defg-hij")!)
+        ])
+        scheduler.advance(.seconds(1))
+
+        viewModel.openNextEventLink()
+
+        #expect(openedURL?.absoluteString == "https://meet.google.com/abc-defg-hij")
+    }
+
+    @Test func testOpenNextEventLink_withPlainLink_opensLink() {
+
+        let viewModel = makeViewModel(type: .event)
+
+        var openedURL: URL?
+        workspace.didOpenURL = { openedURL = $0 }
+
+        calendarService.changeEvents([
+            .make(start: now, end: now + 1, url: URL(string: "https://someurl.com")!)
+        ])
+        scheduler.advance(.seconds(1))
+
+        viewModel.openNextEventLink()
+
+        #expect(openedURL?.absoluteString == "https://someurl.com")
+    }
+
+    @Test func testOpenNextEventLink_withoutLink_doesNothing() {
+
+        let viewModel = makeViewModel(type: .event)
+
+        var openedURL: URL?
+        workspace.didOpenURL = { openedURL = $0 }
+
+        calendarService.changeEvents([
+            .make(start: now, end: now + 1, location: "some location")
+        ])
+        scheduler.advance(.seconds(1))
+
+        viewModel.openNextEventLink()
+
+        #expect(openedURL == nil)
+    }
+
+    @Test func testOpenNextEventLink_statusItemDisabled_doesNothing() {
+
+        let viewModel = makeViewModel(type: .event)
+
+        settings.toggleStatusItem.onNext(false)
+
+        var hasEvent: Bool?
+        viewModel.hasEvent
+            .bind { hasEvent = $0 }
+            .disposed(by: disposeBag)
+
+        var openedURL: URL?
+        workspace.didOpenURL = { openedURL = $0 }
+
+        calendarService.changeEvents([
+            .make(start: now, end: now + 1, url: URL(string: "https://meet.google.com/abc-defg-hij")!)
+        ])
+        scheduler.advance(.seconds(1))
+
+        #expect(hasEvent == false)
+
+        viewModel.openNextEventLink()
+
+        #expect(openedURL == nil)
+    }
+
+    @Test func testOpenNextEventLink_skippedEvent_opensFollowingEvent() throws {
+
+        let viewModel = makeViewModel(type: .event)
+
+        var openedURL: URL?
+        workspace.didOpenURL = { openedURL = $0 }
+
+        calendarService.changeEvents([
+            .make(id: "1", start: now, end: now + 1, url: URL(string: "https://meet.google.com/first")!),
+            .make(id: "2", start: now + 1, end: now + 2, url: URL(string: "https://meet.google.com/second")!)
+        ])
+        scheduler.advance(.seconds(1))
+
+        // skip the nearest event, so the status item advances past it
+        try #require(viewModel.makeContextMenuViewModel() as? EventOptionsViewModel).triggerAction(.skip)
+        scheduler.advance(.seconds(1))
+
+        // the shortcut must honor the skip and open the following event's link
+        viewModel.openNextEventLink()
+
+        #expect(openedURL?.absoluteString == "https://meet.google.com/second")
+    }
+
+    @Test func testOpenNextEventLink_conflictingEvents_doesNothing() {
+
+        let viewModel = makeViewModel(type: .event)
+
+        var openedURL: URL?
+        workspace.didOpenURL = { openedURL = $0 }
+
+        // two events starting at the same time are merged into a single group event with no
+        // link, so the shortcut must not just open the first one
+        calendarService.changeEvents([
+            .make(id: "1", start: now, end: now + 1, url: URL(string: "https://meet.google.com/first")!),
+            .make(id: "2", start: now, end: now + 1, url: URL(string: "https://meet.google.com/second")!)
+        ])
+        scheduler.advance(.seconds(1))
+
+        viewModel.openNextEventLink()
+
+        #expect(openedURL == nil)
+    }
+
+    @Test func testOpenNextEventLink_withoutEvent_doesNothing() {
+
+        let viewModel = makeViewModel(type: .event)
+
+        var openedURL: URL?
+        workspace.didOpenURL = { openedURL = $0 }
+
+        viewModel.openNextEventLink()
+
+        #expect(openedURL == nil)
+    }
+
     @Test func testNextEvent_skipped_fromEventDetails() throws {
 
         let viewModel = makeViewModel(type: .event)

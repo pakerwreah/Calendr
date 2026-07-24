@@ -78,6 +78,7 @@ class KeyboardViewController: NSViewController, SettingsUI {
             makeGlobalShortcut(text: GlobalShortcuts.openCalendar, for: .showMainPopover),
             makeGlobalShortcut(text: GlobalShortcuts.openNextEvent, for: .showNextEventPopover),
             makeGlobalShortcut(text: GlobalShortcuts.openNextEventOptions, for: .showNextEventOptions),
+            makeGlobalShortcut(text: GlobalShortcuts.joinNextEvent, for: .joinNextEvent),
             makeGlobalShortcut(text: GlobalShortcuts.openNextReminder, for: .showNextReminderPopover),
             makeGlobalShortcut(text: GlobalShortcuts.openNextReminderOptions, for: .showNextReminderOptions)
         ])
@@ -134,4 +135,5 @@ extension KeyboardShortcuts.Name {
     static let showNextEventOptions = Self("showNextEventOptions")
     static let showNextReminderPopover = Self("showNextReminderPopover")
     static let showNextReminderOptions = Self("showNextReminderOptions")
+    static let joinNextEvent = Self("joinNextEvent")
 }

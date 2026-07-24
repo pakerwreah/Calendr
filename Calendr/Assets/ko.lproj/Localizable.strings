@@ -109,6 +109,7 @@
 "settings.keyboard.global_shortcuts.open_next_event_options" = "다음 일정 옵션";
 "settings.keyboard.global_shortcuts.open_next_reminder" = "다음 미리 알림 열기";
 "settings.keyboard.global_shortcuts.open_next_reminder_options" = "다음 미리 알림 옵션";
+"settings.keyboard.global_shortcuts.join_next_event" = "다음 일정 링크 열기";
 
 "formatter.date.today" = "오늘";
 "formatter.date.relative.in" = "%@ 후";

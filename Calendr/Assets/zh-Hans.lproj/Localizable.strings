@@ -109,6 +109,7 @@
 "settings.keyboard.global_shortcuts.open_next_event_options" = "下一个事件选项";
 "settings.keyboard.global_shortcuts.open_next_reminder" = "打开下一个提醒";
 "settings.keyboard.global_shortcuts.open_next_reminder_options" = "下一个提醒选项";
+"settings.keyboard.global_shortcuts.join_next_event" = "打开下一个事件链接";
 
 "formatter.date.today" = "今日";
 "formatter.date.relative.in" = "在 %@ 内";

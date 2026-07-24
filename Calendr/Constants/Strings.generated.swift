@@ -300,6 +300,8 @@ internal enum Strings {
     }
     internal enum Keyboard {
       internal enum GlobalShortcuts {
+        /// Open next event link
+        internal static let joinNextEvent = Strings.tr("Localizable", "settings.keyboard.global_shortcuts.join_next_event", fallback: "Open next event link")
         /// Open calendar
         internal static let openCalendar = Strings.tr("Localizable", "settings.keyboard.global_shortcuts.open_calendar", fallback: "Open calendar")
         /// Open next event
