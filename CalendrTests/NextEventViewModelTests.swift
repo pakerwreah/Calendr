@@ -1050,8 +1050,6 @@ class NextEventViewModelTests {
 
     @Test func testOpenNextEventLink_statusItemDisabled_doesNothing() {
 
-        // The shortcut reuses whatever the status item is showing, so it stays a no-op while
-        // the item is hidden, matching the maintainer's requested behavior.
         let viewModel = makeViewModel(type: .event)
 
         settings.toggleStatusItem.onNext(false)
