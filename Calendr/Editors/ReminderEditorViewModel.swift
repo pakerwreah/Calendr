@@ -15,6 +15,7 @@ class ReminderEditorViewModel: HostingWindowControllerDelegate {
     var title = ""
     var dueDate: Date
     var isAllDay = false
+    var notes = ""
     var isCloseConfirmationVisible = false
     var isErrorVisible = false
 
@@ -72,7 +73,8 @@ class ReminderEditorViewModel: HostingWindowControllerDelegate {
             title: title,
             calendar: selectedCalendarId,
             date: dueDate,
-            isAllDay: isAllDay
+            isAllDay: isAllDay,
+            notes: notes.trimmed.notEmpty
         )
         .observe(on: scheduler)
         .subscribe(onCompleted: { [weak self] in
@@ -84,7 +86,7 @@ class ReminderEditorViewModel: HostingWindowControllerDelegate {
     }
 
     func requestWindowClose() -> Bool {
-        if hasValidInput {
+        if [title, notes].contains(where: \.isNotBlank) {
             isCloseConfirmationVisible = true
         }
         return !isCloseConfirmationVisible

@@ -23,7 +23,7 @@ protocol CalendarServiceProviding {
     func defaultCalendar(forNew type: CalendarEntityType) -> CalendarModel?
     func events(from start: Date, to end: Date, calendars: [String]) -> Single<[EventModel]>
 
-    func createReminder(title: String, calendar: String, date: Date, isAllDay: Bool) -> Completable
+    func createReminder(title: String, calendar: String, date: Date, isAllDay: Bool, notes: String?) -> Completable
     func createEvent(
         title: String,
         calendar: String,
@@ -280,7 +280,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
         }
     }
 
-    func createReminder(title: String, calendar calendarId: String, date: Date, isAllDay: Bool) -> Completable {
+    func createReminder(title: String, calendar calendarId: String, date: Date, isAllDay: Bool, notes: String?) -> Completable {
 
         let dateComponents = dueDateComponents(for: date, isAllDay: isAllDay)
 
@@ -293,6 +293,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
                 reminder.calendar = calendar
                 reminder.title = title
                 reminder.dueDateComponents = dateComponents
+                reminder.notes = notes
                 if !isAllDay {
                     reminder.addAlarm(EKAlarm(absoluteDate: date))
                 }

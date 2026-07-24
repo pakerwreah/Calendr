@@ -36,6 +36,7 @@ class ReminderEditorViewModelTests {
 
         #expect(viewModel.title == "")
         #expect(viewModel.dueDate == dueDate)
+        #expect(viewModel.notes == "")
         #expect(viewModel.error == nil)
         #expect(viewModel.isErrorVisible == false)
         #expect(viewModel.hasValidInput == false)
@@ -78,12 +79,14 @@ class ReminderEditorViewModelTests {
         #expect(lastValue == nil)
 
         viewModel.title = "valid"
+        viewModel.notes = "  Remember to bring the report  "
         viewModel.saveReminder()
 
         #expect(lastValue?.title == "valid")
         #expect(lastValue?.calendar == "cal-1")
         #expect(lastValue?.date == dueDate)
         #expect(lastValue?.isAllDay == false)
+        #expect(lastValue?.notes == "Remember to bring the report")
     }
 
     @Test func testViewModel_saveReminder_allDay() {
@@ -105,6 +108,7 @@ class ReminderEditorViewModelTests {
         #expect(lastValue?.calendar == "cal-1")
         #expect(lastValue?.date == dueDate)
         #expect(lastValue?.isAllDay == true)
+        #expect(lastValue?.notes == nil)
     }
 
     @Test func testViewModel_saveReminder_withError() {
@@ -225,6 +229,22 @@ class ReminderEditorViewModelTests {
         await fulfillment(of: [closeExpectation])
 
         #expect(viewModel.isCloseConfirmationVisible == false)
+    }
+
+    @Test func testViewModel_withCloseRequested_withNotesOnly_shouldAskForConfirmation() async {
+
+        let expectation = expectation(description: "Should not close window")
+        expectation.isInverted = true
+
+        let viewModel = makeViewModel()
+
+        viewModel.onCloseConfirmed = expectation.fulfill
+        viewModel.notes = "Remember to bring the report"
+
+        #expect(viewModel.requestWindowClose() == false)
+        #expect(viewModel.isCloseConfirmationVisible)
+
+        await fulfillment(of: [expectation])
     }
 
     // MARK: - Calendar selection
@@ -385,6 +405,7 @@ class ReminderEditorViewModelTests {
         #expect(lastValue?.calendar == "cal-2")
         #expect(lastValue?.date == dueDate)
         #expect(lastValue?.isAllDay == false)
+        #expect(lastValue?.notes == nil)
     }
 
     @Test func testViewModel_calendars_empty_shouldHaveNoSections() {
@@ -415,7 +436,7 @@ class ReminderEditorViewModelTests {
 
 private class FailingCalendarService: MockCalendarServiceProvider {
 
-    override func createReminder(title: String, calendar: String, date: Date, isAllDay: Bool) -> Completable {
+    override func createReminder(title: String, calendar: String, date: Date, isAllDay: Bool, notes: String?) -> Completable {
         return .error(.unexpected("Creation failed"))
     }
 }

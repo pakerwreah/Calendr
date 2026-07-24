@@ -11,7 +11,7 @@ import Foundation
 import RxSwift
 
 typealias RescheduleReminderArgs = (date: Date, isAllDay: Bool)
-typealias CreateReminderArgs = (title: String, calendar: String, date: Date, isAllDay: Bool)
+typealias CreateReminderArgs = (title: String, calendar: String, date: Date, isAllDay: Bool, notes: String?)
 typealias CreateEventArgs = (
     title: String,
     calendar: String,
@@ -103,8 +103,8 @@ class MockCalendarServiceProvider: CalendarServiceProviding {
         return .empty()
     }
 
-    func createReminder(title: String, calendar: String, date: Date, isAllDay: Bool) -> Completable {
-        spyCreateReminderObserver.onNext((title, calendar, date, isAllDay))
+    func createReminder(title: String, calendar: String, date: Date, isAllDay: Bool, notes: String?) -> Completable {
+        spyCreateReminderObserver.onNext((title, calendar, date, isAllDay, notes))
         return .empty()
     }
 
