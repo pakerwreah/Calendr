@@ -531,7 +531,9 @@ private func fakeEvent(
         timeZone: nil,
         hasRecurrenceRules: false,
         priority: nil,
-        attachments: []
+        attachments: [],
+        flagged: false,
+        tags: []
     )
 }
 
