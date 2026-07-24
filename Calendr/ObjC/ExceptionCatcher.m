@@ -9,13 +9,14 @@
 
 @implementation ExceptionCatcher
 
-+ (void)tryBlock:(void (^_Nonnull)(void))tryBlock
-      catchBlock:(void (^_Nonnull)(NSException * _Nullable exception))catchBlock
-{
++ (nullable id)safeValueForKey:(NSString * _Nonnull)key in:(id _Nonnull)object keyExists:(BOOL * _Nonnull)keyExists {
     @try {
-        tryBlock();
+        id value = [object valueForKey:key];
+        *keyExists = YES;
+        return value;
     } @catch (NSException *exception) {
-        catchBlock(exception);
+        *keyExists = NO;
+        return nil;
     }
 }
 

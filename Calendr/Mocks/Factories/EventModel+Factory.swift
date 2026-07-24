@@ -26,7 +26,9 @@ extension EventModel {
         participants: [Participant] = [],
         timeZone: TimeZone? = nil,
         hasRecurrenceRules: Bool = false,
-        priority: Priority? = nil
+        priority: Priority? = nil,
+        flagged: Bool = false,
+        tags: [String] = []
     ) -> EventModel {
 
         .init(
@@ -46,7 +48,9 @@ extension EventModel {
             timeZone: timeZone,
             hasRecurrenceRules: hasRecurrenceRules,
             priority: priority,
-            attachments: []
+            attachments: [],
+            flagged: flagged,
+            tags: tags
         )
     }
 }

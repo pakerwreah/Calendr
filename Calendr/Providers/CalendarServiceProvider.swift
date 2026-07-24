@@ -706,7 +706,9 @@ private extension EventModel {
             timeZone: calendar.isSubscribed || calendar.isDelegate ? nil : event.timeZone,
             hasRecurrenceRules: event.hasRecurrenceRules || event.isDetached,
             priority: nil,
-            attachments: event.attachments
+            attachments: event.attachments,
+            flagged: false,
+            tags: []
         )
     }
 
@@ -717,6 +719,8 @@ private extension EventModel {
             let date = dateProvider.calendar.date(from: dueDateComponents)
         else { return nil }
 
+        let remReminder = try? REMReminder(from: reminder)
+
         self.init(
             id: reminder.calendarItemIdentifier,
             externalId: reminder.calendarItemExternalIdentifier,
@@ -726,7 +730,7 @@ private extension EventModel {
             location: reminder.location, // doesn't work
             coordinates: nil,
             notes: reminder.notes,
-            url: reminder.url, // doesn't work
+            url: remReminder?.url ?? reminder.url,
             isAllDay: dueDateComponents.hour == nil,
             type: .reminder(completed: reminder.isCompleted),
             calendar: .init(from: calendar),
@@ -734,8 +738,39 @@ private extension EventModel {
             timeZone: calendar.isSubscribed || calendar.isDelegate ? nil : reminder.timeZone,
             hasRecurrenceRules: reminder.hasRecurrenceRules,
             priority: .init(from: reminder.priority),
-            attachments: reminder.attachments // doesn't work
+            attachments: reminder.attachments, // not worth it (private api)
+            flagged: remReminder?.flagged ?? false,
+            tags: remReminder?.tags ?? []
         )
+    }
+}
+
+/**
+ * This is a reverse-engineered subset of the reminder class from `ReminderKit.framework`, which is a private api.
+ */
+private struct REMReminder {
+
+    let url: URL?
+    let flagged: Bool
+    let tags: [String]
+
+    init(from ekrem: EKReminder) throws {
+        let object = try ekrem.safeValue(forKey: "persistentObject") as NSObject
+        let reminder = try object.safeValue(forKey: "reminder") as NSObject
+
+        self.flagged = (try? reminder.safeValue(forKey: "flagged")) ?? false
+
+        let hashtags = try? reminder.safeValue(forKey: "hashtags") as Set<NSObject>
+
+        self.tags = hashtags?.compactMap { try? $0.safeValue(forKey: "name") as String }.sorted() ?? []
+
+        let attachments = try? reminder.safeValue(forKey: "attachments") as [NSObject]
+
+        self.url = try? attachments?.first { $0.className == "REMURLAttachment" }?.safeValue(forKey: "url")
+
+        // We could technically also get all "REMImageAttachment" here,
+        // but they are stored in a folder different than regular EventKit attachments,
+        // so we would have to ask the user for another permission.
     }
 }
 

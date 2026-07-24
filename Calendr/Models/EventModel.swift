@@ -25,6 +25,8 @@ struct EventModel: Equatable {
     let hasRecurrenceRules: Bool
     let priority: Priority?
     let attachments: [Attachment]
+    let flagged: Bool
+    let tags: [String]
 }
 
 enum EventStatus: Comparable {

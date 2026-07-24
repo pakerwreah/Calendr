@@ -18,10 +18,12 @@ class EventView: NSView {
 
     private let birthdayIcon = NSImageView()
     private let recurrenceIcon = NSImageView()
+    private let flaggedIcon = NSImageView()
     private let priority = Label()
     private let title = Label()
     private let subtitle = Label()
     private let subtitleLink = Label(align: .left)
+    private let tags = Label()
     private let duration = Label()
     private let relativeDuration = Label()
     private let progress = NSView()
@@ -66,6 +68,11 @@ class EventView: NSView {
                 priority.textColor = viewModel.color
                 priority.stringValue = viewModel.priority ?? ""
                 priority.isHidden = viewModel.priority == nil
+
+                flaggedIcon.isHidden = !viewModel.flagged
+
+                tags.isHidden = viewModel.tags.isEmpty
+                tags.stringValue = viewModel.tags.map { "#\($0)" }.joined(separator: " ")
 
                 completeBtn.contentTintColor = viewModel.color
                 completeBtn.isHidden = false
@@ -113,7 +120,7 @@ class EventView: NSView {
         hoverLayer.cornerRadius = cornerRadius
         layer?.addSublayer(hoverLayer)
 
-        [birthdayIcon, recurrenceIcon, completeBtn, priority, relativeDuration].forEach {
+        [birthdayIcon, recurrenceIcon, flaggedIcon, completeBtn, priority, relativeDuration].forEach {
             $0.setContentHuggingPriority(.required, for: .horizontal)
             $0.setContentCompressionResistancePriority(.required, for: .horizontal)
         }
@@ -122,6 +129,9 @@ class EventView: NSView {
 
         priority.isHidden = true
         priority.font = .systemFont(ofSize: 13)
+
+        flaggedIcon.isHidden = true
+        flaggedIcon.contentTintColor = .systemOrange
 
         birthdayIcon.isHidden = true
         birthdayIcon.contentTintColor = .systemRed
@@ -149,6 +159,13 @@ class EventView: NSView {
         subtitleLink.textColor = .secondaryLabelColor
         subtitleLink.font = .systemFont(ofSize: 11)
 
+        tags.isHidden = true
+        tags.lineBreakMode = .byWordWrapping
+        tags.maximumNumberOfLines = 2
+        tags.cell?.truncatesLastVisibleLine = true
+        tags.textColor = viewModel.color
+        tags.font = .systemFont(ofSize: 10)
+
         colorBar.wantsLayer = true
         colorBar.layer?.cornerRadius = 2
 
@@ -159,7 +176,7 @@ class EventView: NSView {
         colorBar.center(in: colorBarContainer, orientation: .vertical)
         colorBar.height(equalTo: colorBarContainer, constant: -(cornerRadius + 4))
 
-        let titleStackView = NSStackView(views: [birthdayIcon, completeBtn, priority, title, recurrenceIcon])
+        let titleStackView = NSStackView(views: [birthdayIcon, completeBtn, priority, title, flaggedIcon, recurrenceIcon])
             .with(spacing: 3)
             .with(alignment: .firstBaseline)
 
@@ -177,6 +194,13 @@ class EventView: NSView {
             .bind(to: linkStackView.rx.isHidden)
             .disposed(by: disposeBag)
 
+        viewModel.showDetails
+            .map { [viewModel] in
+                !$0 || viewModel.tags.isEmpty
+            }
+            .bind(to: tags.rx.isHidden)
+            .disposed(by: disposeBag)
+
         let durationStackView = NSStackView(views: [duration, relativeDuration])
         duration.setContentHuggingPriority(.fittingSizeCompression, for: .horizontal)
         durationStackView.setHuggingPriority(.defaultHigh, for: .horizontal)
@@ -185,7 +209,7 @@ class EventView: NSView {
             .bind(to: durationStackView.rx.isHidden)
             .disposed(by: disposeBag)
 
-        let eventStackView = NSStackView(views: [titleStackView, subtitle, linkStackView, durationStackView])
+        let eventStackView = NSStackView(views: [titleStackView, subtitle, linkStackView, durationStackView, tags])
             .with(orientation: .vertical)
             .with(spacing: 3)
             .with(insets: .init(vertical: cornerRadius / 2))
@@ -353,6 +377,11 @@ class EventView: NSView {
                     return icon.with(pointSize: 12 * scaling)
                 }
                 .bind(to: completeBtn.rx.image)
+                .disposed(by: disposeBag)
+
+            Scaling.observable
+                .map { Icons.Event.flagged.with(pointSize: 10 * $0) }
+                .bind(to: flaggedIcon.rx.image)
                 .disposed(by: disposeBag)
 
             viewModel.relativeDuration

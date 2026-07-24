@@ -22,6 +22,8 @@ class EventViewModel {
     let end: Date
     let link: EventLink?
     let priority: String?
+    let flagged: Bool
+    let tags: [String]
 
     let duration: Observable<String>
     let isInProgress: Observable<Bool>
@@ -93,6 +95,8 @@ class EventViewModel {
         end = event.end
         barStyle = event.status ~= .maybe ? .bordered : .filled
         link = event.detectLink(using: workspace)
+        flagged = event.flagged
+        tags = event.tags
 
         priority = switch event.priority {
             case .high: "!!!"

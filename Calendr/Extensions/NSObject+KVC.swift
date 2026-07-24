@@ -27,16 +27,12 @@ enum KVCError: LocalizedError {
 extension NSObject {
 
     func safeValue<T>(forKey key: String) throws -> T {
-        var result: Any?
-        var exception: NSException?
 
-        ExceptionCatcher.try {
-            result = self.value(forKey: key)
-        } catch: { ex in
-            exception = ex
-        }
+        var keyExists = ObjCBool(false)
 
-        guard exception == nil else {
+        let result = ExceptionCatcher.safeValue(forKey: key, in: self, keyExists: &keyExists)
+
+        guard keyExists.boolValue else {
             throw KVCError.unknownKey(key: key, in: typeName(self))
         }
 
