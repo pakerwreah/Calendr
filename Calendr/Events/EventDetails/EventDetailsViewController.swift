@@ -593,6 +593,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         for participant in viewModel.participants {
 
             let status = NSImageView()
+            status.setContentCompressionResistancePriority(.required, for: .horizontal)
 
             var info: String = participant.name
 
@@ -607,6 +608,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
             let label = Label(text: info, font: .small)
             label.lineBreakMode = .byTruncatingMiddle
             label.isSelectable = true
+            label.setContentCompressionResistancePriority(.required, for: .vertical)
 
             switch participant.status {
             case .accepted:
@@ -628,7 +630,6 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
 
             let stack = NSStackView(views: [status, label])
             stack.setHuggingPriority(.required, for: .vertical)
-            label.setContentCompressionResistancePriority(.required, for: .vertical)
 
             participantsStackView.addArrangedSubview(stack)
         }
