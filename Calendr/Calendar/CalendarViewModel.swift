@@ -171,7 +171,7 @@ class CalendarViewModel {
                 &&
                 (showAllDayEvents || !$0.isAllDay)
                 &&
-                (searchTerm.isEmpty || $0.propertiesContain(searchTerm))
+                (searchTerm.isEmpty || EventSearch.search(searchTerm, in: $0))
             }
         }
         .optional()
@@ -364,23 +364,4 @@ private enum Constants {
 
     static let cellSize: CGFloat = 25
     static let weekNumberCellRatio: CGFloat = 0.85
-}
-
-private extension EventModel {
-
-    func propertiesContain(_ searchTerm: String) -> Bool {
-
-        let searchTerm = searchTerm.trimmingCharacters(in: .whitespaces)
-
-        return [
-            title,
-            location,
-            url?.absoluteString,
-            notes,
-            participants.map(\.name).joined(separator: " ")
-        ]
-        .contains {
-            $0?.range(of: searchTerm, options: [.caseInsensitive, .diacriticInsensitive]) != nil
-        }
-    }
 }

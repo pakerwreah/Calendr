@@ -1,5 +1,5 @@
 //
-//  EventUtils.swift
+//  EventDuration.swift
 //  Calendr
 //
 //  Created by Paker on 28/02/23.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum EventUtils {
+enum EventDuration {
 
     static func duration(
         from start: Date,
@@ -71,7 +71,7 @@ enum EventUtils {
                 formatter.dateStyle = .medium
             }
 
-            return EventUtils.duration(
+            return duration(
                 from: event.start,
                 to: end,
                 timeZone: timeZone,

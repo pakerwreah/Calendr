@@ -128,7 +128,7 @@ class EventDetailsViewModel {
 
         showSkip = source == .menubar && type.isEvent
 
-        duration = EventUtils.duration(
+        duration = EventDuration.duration(
             for: event,
             using: dateProvider,
             preferredDateStyle: .medium,
