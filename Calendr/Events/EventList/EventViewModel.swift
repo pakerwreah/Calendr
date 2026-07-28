@@ -176,7 +176,7 @@ class EventViewModel {
                     end = event.end
                 }
 
-                return EventUtils.duration(
+                return EventDuration.duration(
                     from: event.start,
                     to: end,
                     timeZone: timeZone,
@@ -190,13 +190,13 @@ class EventViewModel {
                 formatter.calendar = dateProvider.calendar
 
                 return [
-                    EventUtils.duration(
+                    EventDuration.duration(
                         from: event.start,
                         to: event.start,
                         timeZone: timeZone,
                         formatter: formatter
                     ),
-                    EventUtils.duration(
+                    EventDuration.duration(
                         from: range.fixedEnd,
                         to: range.fixedEnd,
                         timeZone: timeZone,

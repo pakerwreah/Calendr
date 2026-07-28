@@ -90,7 +90,7 @@ class EventFullScreenViewModel {
 
         self.title = event.title
 
-        self.duration = EventUtils.duration(
+        self.duration = EventDuration.duration(
             for: event,
             using: dateProvider,
             preferredDateStyle: .none,
