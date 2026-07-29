@@ -564,7 +564,7 @@ class CalendarViewModelTests {
         var events: [EventModel]?
 
         viewModel
-            .focusedDateEventsObservable
+            .eventListObservable
             .bind { events = $0.events }
             .disposed(by: disposeBag)
 
@@ -592,7 +592,7 @@ class CalendarViewModelTests {
         var events: [EventModel]?
 
         viewModel
-            .focusedDateEventsObservable
+            .eventListObservable
             .bind { events = $0.events }
             .disposed(by: disposeBag)
 
@@ -763,7 +763,7 @@ class CalendarViewModelTests {
         var events: [EventModel]?
 
         viewModel
-            .focusedDateEventsObservable
+            .eventListObservable
             .bind { events = $0.events }
             .disposed(by: disposeBag)
 
@@ -794,7 +794,7 @@ class CalendarViewModelTests {
         var events: [EventModel]?
 
         viewModel
-            .focusedDateEventsObservable
+            .eventListObservable
             .bind { events = $0.events }
             .disposed(by: disposeBag)
 
@@ -830,7 +830,7 @@ class CalendarViewModelTests {
         var events: [EventModel]?
 
         viewModel
-            .focusedDateEventsObservable
+            .eventListObservable
             .bind { events = $0.events }
             .disposed(by: disposeBag)
 
@@ -908,11 +908,13 @@ class CalendarViewModelTests {
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
         dateSubject.onNext(.make(year: 2021, month: 1, day: 2))
         dateSubject.onNext(.make(year: 2021, month: 2, day: 1))
+        dateSubject.onNext(.make(year: 2022, month: 1, day: 1))
 
-        #expect(ranges == [
-            [.make(year: 2020, month: 12, day: 27), .make(year: 2021, month: 2, day: 6, at: .end)], // calendar
-            [.make(year: 2021, month: 1, day: 31), .make(year: 2021, month: 3, day: 13, at: .end)] // month change
-        ])
+        #expect(ranges.count == 2)
+
+        // fetch range is year interval -7 days +1 month
+        #expect(ranges.first == [.make(year: 2020, month: 12, day: 25), .make(year: 2022, month: 2, day: 1, at: .end)]) // calendar
+        #expect(ranges.last == [.make(year: 2021, month: 12, day: 25), .make(year: 2023, month: 2, day: 1, at: .end)]) // year change
     }
 
     @Test func testServiceProviderEventsCalendars() {
@@ -926,13 +928,11 @@ class CalendarViewModelTests {
 
         calendarsSubject.onNext(["1", "2", "3"])
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
-        dateSubject.onNext(.make(year: 2021, month: 2, day: 1))
         calendarsSubject.onNext(["1", "3"])
 
         #expect(calendars == [
-            ["1", "2", "3"], // calendar
-            ["1", "2", "3"], // month change
-            ["1", "3"] // calendar
+            ["1", "2", "3"],
+            ["1", "3"]
         ])
     }
 

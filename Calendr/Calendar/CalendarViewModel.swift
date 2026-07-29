@@ -11,7 +11,7 @@ import RxSwift
 class CalendarViewModel {
 
     let cellViewModelsObservable: Observable<[CalendarCellViewModel]>
-    let focusedDateEventsObservable: Observable<DateEvents>
+    let eventListObservable: Observable<DateEvents>
 
     let title: Observable<String>
     let weekCount: Observable<Int>
@@ -124,27 +124,30 @@ class CalendarViewModel {
         }
         .share(replay: 1)
 
-        let dateRange = Observable
-            .combineLatest(dateCellsObservable, settings.futureEventsDays)
-            .compactMap { cells, futureEventsDays -> (start: Date, end: Date)? in
-                guard
-                    let firstVisibleDate = cells.first?.date,
-                    let lastVisibleDate = cells.last?.date,
-                    let endDate = dateProvider.calendar.date(
-                        byAdding: DateComponents(day: futureEventsDays),
-                        to: lastVisibleDate
-                    )
-                else {
-                    return nil
-                }
-                return (firstVisibleDate, endDate)
+        // Range for fetching events in the focused year
+        let fetchRangeObservable = dateObservable
+            .compactMap {
+                dateProvider.calendar.dateInterval(of: .year, for: $0)
             }
-            .distinctUntilChanged(==)
-            .share(replay: 1)
+            .distinctUntilChanged()
+            .compactMap { interval -> (start: Date, end: Date)? in
+                guard
+                    let startDate = dateProvider.calendar.date(
+                        byAdding: DateComponents(day: -7),
+                        to: interval.start
+                    ),
+                    let endDate = dateProvider.calendar.date(
+                        byAdding: DateComponents(month: +1),
+                        to: interval.end
+                    )
+                else { return nil }
+
+                return (startDate, endDate)
+            }
 
         // Get events for current dates
         let eventsObservable = Observable.combineLatest(
-            dateRange,
+            fetchRangeObservable,
             enabledCalendars.startWith([])
         )
         .repeat(when: calendarService.changeObservable)
@@ -308,8 +311,14 @@ class CalendarViewModel {
             .distinctUntilChanged()
             .share(replay: 1)
 
-        focusedDateEventsObservable = cellViewModelsObservable
-            .compactMap { cellViewModels in
+        eventListObservable = Observable
+            .combineLatest(cellViewModelsObservable, searchObservable.map(\.isNotBlank), filteredEventsObservable)
+            .compactMap { cellViewModels, hasSearch, filteredEvents in
+
+                if hasSearch, let filteredEvents {
+                    return DateEvents(date: .distantPast, events: filteredEvents.suffix(Constants.maxSearchResults))
+                }
+
                 guard
                     let focused = cellViewModels.first(where: \.isHovered) ?? cellViewModels.first(where: \.isSelected)
                 else { return nil }
@@ -364,4 +373,5 @@ private enum Constants {
 
     static let cellSize: CGFloat = 25
     static let weekNumberCellRatio: CGFloat = 0.85
+    static let maxSearchResults: Int = 12
 }

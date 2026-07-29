@@ -179,7 +179,7 @@ class MainViewController: NSViewController {
 
         titleLabel = Label(scaling: calendarViewModel.textScaling)
 
-        let eventListEventsObservable = calendarViewModel.focusedDateEventsObservable
+        let eventListEventsObservable = calendarViewModel.eventListObservable
             .debounce(.milliseconds(50), scheduler: MainScheduler.instance)
             .share(replay: 1)
 
