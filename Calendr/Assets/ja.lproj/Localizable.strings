@@ -55,6 +55,7 @@
 
 "settings.next_event" = "次の予定";
 "settings.next_event.show_next_event" = "次の予定をメニューバーに表示";
+//"settings.next_event.show_next_event_title" = "Show next event title";
 "settings.next_event.grab_attention" = "予定が近づいたら";
 "settings.next_event.grab_attention.flashing" = "点滅させる";
 "settings.next_event.grab_attention.sound" = "音を鳴らす";
@@ -117,7 +118,9 @@
 "formatter.date.relative.left" = "残り%@";
 
 "formatter.events.plural" = "%@件の予定";
+//"formatter.events.singular" = "1 event";
 "formatter.reminders.plural" = "%@件のリマインダー";
+//"formatter.reminders.singular" = "1 reminder";
 
 "reminder.status.overdue" = "期限超過";
 

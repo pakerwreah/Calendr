@@ -55,6 +55,7 @@
 
 "settings.next_event" = "Nächstes Ereignis";
 "settings.next_event.show_next_event" = "Zeige nächstes Ereignis";
+//"settings.next_event.show_next_event_title" = "Show next event title";
 "settings.next_event.grab_attention" = "Aufmerksamkeit erzeugen, wenn Ereignis kurz bevorsteht";
 "settings.next_event.grab_attention.flashing" = "Blinken";
 "settings.next_event.grab_attention.sound" = "Ton abspielen";
@@ -117,7 +118,9 @@
 "formatter.date.relative.left" = "%@ verbleibend";
 
 //"formatter.events.plural" = "%@ events";
+//"formatter.events.singular" = "1 event";
 //"formatter.reminders.plural" = "%@ reminders";
+//"formatter.reminders.singular" = "1 reminder";
 
 "reminder.status.overdue" = "Überfällig";
 

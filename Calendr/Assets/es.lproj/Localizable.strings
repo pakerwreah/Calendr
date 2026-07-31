@@ -55,6 +55,7 @@
 
 "settings.next_event" = "Próximo evento";
 "settings.next_event.show_next_event" = "Mostrar próximo evento";
+//"settings.next_event.show_next_event_title" = "Show next event title";
 "settings.next_event.grab_attention" = "Captar la atención cuando el acontecimiento está cerca";
 "settings.next_event.grab_attention.flashing" = "Intermitente";
 "settings.next_event.grab_attention.sound" = "Reproducir sonido";
@@ -117,7 +118,9 @@
 "formatter.date.relative.left" = "%@ rest.";
 
 //"formatter.events.plural" = "%@ events";
+//"formatter.events.singular" = "1 event";
 //"formatter.reminders.plural" = "%@ reminders";
+//"formatter.reminders.singular" = "1 reminder";
 
 //"reminder.status.overdue" = "Overdue";
 

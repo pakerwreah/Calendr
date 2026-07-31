@@ -195,12 +195,16 @@ internal enum Strings {
       internal static func plural(_ p1: Any) -> String {
         return Strings.tr("Localizable", "formatter.events.plural", String(describing: p1), fallback: "%@ events")
       }
+      /// 1 event
+      internal static let singular = Strings.tr("Localizable", "formatter.events.singular", fallback: "1 event")
     }
     internal enum Reminders {
       /// %@ reminders
       internal static func plural(_ p1: Any) -> String {
         return Strings.tr("Localizable", "formatter.reminders.plural", String(describing: p1), fallback: "%@ reminders")
       }
+      /// 1 reminder
+      internal static let singular = Strings.tr("Localizable", "formatter.reminders.singular", fallback: "1 reminder")
     }
   }
   internal enum MapBlackList {
@@ -373,6 +377,8 @@ internal enum Strings {
       internal static let showFullScreenAlert = Strings.tr("Localizable", "settings.next_event.show_full_screen_alert", fallback: "Show full screen alert")
       /// Show next event
       internal static let showNextEvent = Strings.tr("Localizable", "settings.next_event.show_next_event", fallback: "Show next event")
+      /// Show next event title
+      internal static let showNextEventTitle = Strings.tr("Localizable", "settings.next_event.show_next_event_title", fallback: "Show next event title")
       internal enum GrabAttention {
         /// Flashing
         internal static let flashing = Strings.tr("Localizable", "settings.next_event.grab_attention.flashing", fallback: "Flashing")

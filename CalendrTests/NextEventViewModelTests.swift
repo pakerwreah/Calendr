@@ -238,6 +238,68 @@ class NextEventViewModelTests {
         #expect(title == "This is an.")
     }
 
+    @Test func testNextEventTitleCanBeHidden() {
+
+        let viewModel = makeViewModel(type: .event)
+
+        var title: String?
+
+        viewModel.title
+            .bind { title = $0 }
+            .disposed(by: disposeBag)
+
+        calendarService.changeEvents([
+            .make(start: now, title: "Team meeting")
+        ])
+
+        #expect(title == "Team meeting")
+
+        settings.toggleEventStatusItemTitle.onNext(false)
+
+        #expect(title == "1 event")
+    }
+
+    @Test func testNextReminderTitleCanBeHidden() {
+
+        let viewModel = makeViewModel(type: .reminder)
+
+        var title: String?
+
+        viewModel.title
+            .bind { title = $0 }
+            .disposed(by: disposeBag)
+
+        calendarService.changeEvents([
+            .make(start: now, title: "Buy milk", type: .reminder(completed: false))
+        ])
+
+        #expect(title == "Buy milk")
+
+        settings.toggleEventStatusItemTitle.onNext(false)
+
+        #expect(title == "1 reminder")
+    }
+
+    @Test func testGroupedNextEventsKeepTheirExistingTitleWhenSingleTitlesAreHidden() {
+
+        let viewModel = makeViewModel(type: .event)
+
+        var title: String?
+
+        viewModel.title
+            .bind { title = $0 }
+            .disposed(by: disposeBag)
+
+        settings.toggleEventStatusItemTitle.onNext(false)
+
+        calendarService.changeEvents([
+            .make(id: "1", start: now, title: "Team meeting"),
+            .make(id: "2", start: now, title: "Planning")
+        ])
+
+        #expect(title == "2 events")
+    }
+
     @Test func testNextEventLengthWithNotch() {
 
         let viewModel = makeViewModel(type: .event)

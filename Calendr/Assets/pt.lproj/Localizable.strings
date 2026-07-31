@@ -55,6 +55,7 @@
 
 "settings.next_event" = "Próximo Evento";
 "settings.next_event.show_next_event" = "Mostrar próximo evento";
+"settings.next_event.show_next_event_title" = "Mostrar título do próximo evento";
 "settings.next_event.grab_attention" = "Chamar atenção quando o evento estiver próximo";
 "settings.next_event.grab_attention.flashing" = "Piscando";
 "settings.next_event.grab_attention.sound" = "Tocar som";
@@ -117,7 +118,9 @@
 "formatter.date.relative.left" = "%@ rest.";
 
 "formatter.events.plural" = "%@ eventos";
+"formatter.events.singular" = "1 evento";
 "formatter.reminders.plural" = "%@ lembretes";
+"formatter.reminders.singular" = "1 lembrete";
 
 "reminder.status.overdue" = "Atrasado";
 
