@@ -28,6 +28,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
 
     // Next Event
     private let showNextEventCheckbox = Checkbox(title: Strings.Settings.NextEvent.showNextEvent)
+    private let showNextEventTitleCheckbox = Checkbox(title: Strings.Settings.NextEvent.showNextEventTitle)
     private let nextEventRangeStepperLabel = Label()
     private let nextEventRangeStepper = NSStepper()
     private let nextEventGrabAttentionLabel = Label(text: Strings.Settings.NextEvent.grabAttention)
@@ -176,6 +177,8 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         let grabAttentionStack = NSStackView(views: [nextEventFlashingCheckbox, nextEventSoundCheckbox]).with(insets: .init(horizontal: 16))
         return NSStackView(views: [
             showNextEventStack,
+            showNextEventTitleCheckbox,
+            .spacer(height: 0),
             nextEventGrabAttentionLabel,
             grabAttentionStack,
             .spacer(height: 0),
@@ -326,6 +329,13 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             control: showNextEventCheckbox,
             observable: viewModel.showEventStatusItem,
             observer: viewModel.toggleEventStatusItem
+        )
+        .disposed(by: disposeBag)
+
+        bind(
+            control: showNextEventTitleCheckbox,
+            observable: viewModel.showEventStatusItemTitle,
+            observer: viewModel.toggleEventStatusItemTitle
         )
         .disposed(by: disposeBag)
 

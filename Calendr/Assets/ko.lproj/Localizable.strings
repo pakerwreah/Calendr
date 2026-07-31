@@ -55,6 +55,7 @@
 
 "settings.next_event" = "다음 일정";
 "settings.next_event.show_next_event" = "다음 일정 표시";
+//"settings.next_event.show_next_event_title" = "Show next event title";
 "settings.next_event.grab_attention" = "일정이 가까워지면 주의 끌기";
 "settings.next_event.grab_attention.flashing" = "깜빡임";
 "settings.next_event.grab_attention.sound" = "소리 재생";
@@ -117,7 +118,9 @@
 "formatter.date.relative.left" = "%@ 남음";
 
 "formatter.events.plural" = "일정 %@개";
+//"formatter.events.singular" = "1 event";
 "formatter.reminders.plural" = "미리 알림 %@개";
+//"formatter.reminders.singular" = "1 reminder";
 
 "reminder.status.overdue" = "기한 지남";
 

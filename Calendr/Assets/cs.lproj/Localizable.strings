@@ -55,6 +55,7 @@
 
 "settings.next_event" = "Další událost";
 "settings.next_event.show_next_event" = "Zobrazit další událost";
+//"settings.next_event.show_next_event_title" = "Show next event title";
 "settings.next_event.grab_attention" = "Upoutejte pozornost, když je událost blízko";
 "settings.next_event.grab_attention.flashing" = "Blikání";
 "settings.next_event.grab_attention.sound" = "Přehrát zvuk";
@@ -117,7 +118,9 @@
 "formatter.date.relative.left" = "zbývá %@";
 
 //"formatter.events.plural" = "%@ events";
+//"formatter.events.singular" = "1 event";
 //"formatter.reminders.plural" = "%@ reminders";
+//"formatter.reminders.singular" = "1 reminder";
 
 //"reminder.status.overdue" = "Overdue";
 

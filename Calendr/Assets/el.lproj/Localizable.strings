@@ -55,6 +55,7 @@
 
 "settings.next_event" = "Επόμενο συμβάν";
 "settings.next_event.show_next_event" = "Εμφάνιση επόμενου συμβάντος";
+//"settings.next_event.show_next_event_title" = "Show next event title";
 "settings.next_event.grab_attention" = "Τράβηξε την προσοχή όταν το συμβάν είναι κοντά";
 "settings.next_event.grab_attention.flashing" = "Αναβοσβήνει";
 "settings.next_event.grab_attention.sound" = "Αναπαραγωγή ήχου";
@@ -117,7 +118,9 @@
 "formatter.date.relative.left" = "%@ μείνανε";
 
 //"formatter.events.plural" = "%@ events";
+//"formatter.events.singular" = "1 event";
 //"formatter.reminders.plural" = "%@ reminders";
+//"formatter.reminders.singular" = "1 reminder";
 
 //"reminder.status.overdue" = "Overdue";
 

@@ -55,6 +55,7 @@
 
 "settings.next_event" = "אירוע הבא";
 "settings.next_event.show_next_event" = "הצג אירוע הבא";
+//"settings.next_event.show_next_event_title" = "Show next event title";
 "settings.next_event.grab_attention" = "הסב תשומת לב כאשר האירוע קרוב";
 "settings.next_event.grab_attention.flashing" = "הבהוב";
 "settings.next_event.grab_attention.sound" = "ניגון צליל";
@@ -117,7 +118,9 @@
 "formatter.date.relative.left" = "‏%@ נותרו";
 
 //"formatter.events.plural" = "%@ events";
+//"formatter.events.singular" = "1 event";
 //"formatter.reminders.plural" = "%@ reminders";
+//"formatter.reminders.singular" = "1 reminder";
 
 "reminder.status.overdue" = "עבר זמן ביצוע";
 

@@ -39,6 +39,7 @@ class SettingsViewModelTests {
     var localStorageStatusItemDateStyle: NSNumber? { localStorage.object(forKey: Prefs.statusItemDateStyle) as? NSNumber }
     var localStorageStatusItemTextScaling: NSNumber? { localStorage.object(forKey: Prefs.statusItemTextScaling) as? NSNumber }
     var localStorageShowEventStatusItem: Bool? { localStorage.object(forKey: Prefs.showEventStatusItem) as? Bool }
+    var localStorageShowEventStatusItemTitle: Bool? { localStorage.object(forKey: Prefs.showEventStatusItemTitle) as? Bool }
     var localStorageEventStatusItemCheckRange: NSNumber? { localStorage.object(forKey: Prefs.eventStatusItemCheckRange) as? NSNumber }
     var localStorageEventStatusItemSound: Bool? { localStorage.object(forKey: Prefs.eventStatusItemSound) as? Bool }
     var localStorageEventStatusItemFlashing: Bool? { localStorage.object(forKey: Prefs.eventStatusItemFlashing) as? Bool }
@@ -78,6 +79,7 @@ class SettingsViewModelTests {
         #expect(localStorageStatusItemDateStyle == nil)
         #expect(localStorageStatusItemTextScaling == nil)
         #expect(localStorageShowEventStatusItem == nil)
+        #expect(localStorageShowEventStatusItemTitle == nil)
         #expect(localStorageEventStatusItemCheckRange == nil)
         #expect(localStorageEventStatusItemSound == nil)
         #expect(localStorageEventStatusItemFlashing == nil)
@@ -117,6 +119,7 @@ class SettingsViewModelTests {
         #expect(viewModel.statusItemDateStyle.lastValue() == .short)
         #expect(viewModel.statusItemTextScaling.lastValue() == 1.2)
         #expect(viewModel.showEventStatusItem.lastValue() == false)
+        #expect(viewModel.showEventStatusItemTitle.lastValue() == true)
         #expect(viewModel.eventStatusItemTextScaling.lastValue() == 1.2)
         #expect(viewModel.eventStatusItemCheckRange.lastValue() == 6)
         #expect(viewModel.eventStatusItemSound.lastValue() == false)
@@ -152,6 +155,7 @@ class SettingsViewModelTests {
         #expect(localStorageStatusItemTextScaling == 1.2)
         #expect(localStorageStatusItemDateStyle == 1)
         #expect(localStorageShowEventStatusItem == false)
+        #expect(localStorageShowEventStatusItemTitle == true)
         #expect(localStorageEventStatusItemTextScaling == 1.2)
         #expect(localStorageEventStatusItemCheckRange == 6)
         #expect(localStorageEventStatusItemSound == false)
@@ -878,6 +882,30 @@ class SettingsViewModelTests {
 
         #expect(showOverdueReminders == false)
         #expect(localStorageShowOverdueReminders == false)
+    }
+
+    @Test func testToggleShowEventStatusItemTitle() {
+
+        localStorage.showEventStatusItemTitle = false
+
+        var showEventStatusItemTitle: Bool?
+
+        viewModel.showEventStatusItemTitle
+            .bind { showEventStatusItemTitle = $0 }
+            .disposed(by: disposeBag)
+
+        #expect(showEventStatusItemTitle == false)
+        #expect(localStorageShowEventStatusItemTitle == false)
+
+        viewModel.toggleEventStatusItemTitle.onNext(true)
+
+        #expect(showEventStatusItemTitle == true)
+        #expect(localStorageShowEventStatusItemTitle == true)
+
+        viewModel.toggleEventStatusItemTitle.onNext(false)
+
+        #expect(showEventStatusItemTitle == false)
+        #expect(localStorageShowEventStatusItemTitle == false)
     }
 
     @Test func testToggleShowAllDayEvents() {

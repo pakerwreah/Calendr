@@ -55,6 +55,7 @@
 
 "settings.next_event" = "Наступна подія";
 "settings.next_event.show_next_event" = "Показувати наступну подію";
+//"settings.next_event.show_next_event_title" = "Show next event title";
 "settings.next_event.grab_attention" = "Сповіщати про наближення події";
 "settings.next_event.grab_attention.flashing" = "Миготінням";
 "settings.next_event.grab_attention.sound" = "Звуком";
@@ -117,7 +118,9 @@
 "formatter.date.relative.left" = "Залишилося %@";
 
 //"formatter.events.plural" = "%@ events";
+//"formatter.events.singular" = "1 event";
 //"formatter.reminders.plural" = "%@ reminders";
+//"formatter.reminders.singular" = "1 reminder";
 
 "reminder.status.overdue" = "Прострочено";
 

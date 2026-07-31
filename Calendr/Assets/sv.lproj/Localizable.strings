@@ -55,6 +55,7 @@
 
 "settings.next_event" = "Nästa händelse";
 "settings.next_event.show_next_event" = "Visa nästa händelse";
+//"settings.next_event.show_next_event_title" = "Show next event title";
 "settings.next_event.grab_attention" = "Fånga uppmärksamheten när evenemanget är nära";
 "settings.next_event.grab_attention.flashing" = "Blinkande";
 "settings.next_event.grab_attention.sound" = "Spela ljud";
@@ -117,7 +118,9 @@
 "formatter.date.relative.left" = "%@ kvar";
 
 //"formatter.events.plural" = "%@ events";
+//"formatter.events.singular" = "1 event";
 //"formatter.reminders.plural" = "%@ reminders";
+//"formatter.reminders.singular" = "1 reminder";
 
 //"reminder.status.overdue" = "Overdue";
 

@@ -61,6 +61,7 @@ protocol EventListSettings: EventSettings {
 
 protocol NextEventSettings: EventListSettings {
     var showEventStatusItem: Observable<Bool> { get }
+    var showEventStatusItemTitle: Observable<Bool> { get }
     var eventStatusItemCheckRange: Observable<Int> { get }
     var eventStatusItemFlashing: Observable<Bool> { get }
     var eventStatusItemSound: Observable<Bool> { get }
@@ -109,6 +110,7 @@ class SettingsViewModel:
     let statusItemDateStyleObserver: AnyObserver<StatusItemDateStyle>
     let statusItemDateFormatObserver: AnyObserver<String>
     let toggleEventStatusItem: AnyObserver<Bool>
+    let toggleEventStatusItemTitle: AnyObserver<Bool>
     let eventStatusItemCheckRangeObserver: AnyObserver<Int>
     let toggleEventStatusItemFlashing: AnyObserver<Bool>
     let toggleEventStatusItemSound: AnyObserver<Bool>
@@ -159,6 +161,7 @@ class SettingsViewModel:
     let statusItemDateFormat: Observable<String>
     let isDateFormatInputVisible: Observable<Bool>
     let showEventStatusItem: Observable<Bool>
+    let showEventStatusItemTitle: Observable<Bool>
     let statusItemTextScaling: Observable<Double>
     let eventStatusItemCheckRange: Observable<Int>
     let eventStatusItemCheckRangeLabel: Observable<String>
@@ -271,6 +274,7 @@ class SettingsViewModel:
         statusItemDateStyleObserver = localStorage.rx.observer(for: \.statusItemDateStyle).mapObserver(\.rawValue)
         statusItemDateFormatObserver = localStorage.rx.observer(for: \.statusItemDateFormat)
         toggleEventStatusItem = localStorage.rx.observer(for: \.showEventStatusItem)
+        toggleEventStatusItemTitle = localStorage.rx.observer(for: \.showEventStatusItemTitle)
         statusItemTextScalingObserver = localStorage.rx.observer(for: \.statusItemTextScaling)
         eventStatusItemCheckRangeObserver = localStorage.rx.observer(for: \.eventStatusItemCheckRange)
         toggleEventStatusItemFlashing = localStorage.rx.observer(for: \.eventStatusItemFlashing)
@@ -320,6 +324,7 @@ class SettingsViewModel:
         statusItemDateStyle = localStorage.rx.observe(\.statusItemDateStyle).map { .init(rawValue: $0) ?? .none }
         statusItemDateFormat = localStorage.rx.observe(\.statusItemDateFormat)
         showEventStatusItem = localStorage.rx.observe(\.showEventStatusItem)
+        showEventStatusItemTitle = localStorage.rx.observe(\.showEventStatusItemTitle)
         statusItemTextScaling = localStorage.rx.observe(\.statusItemTextScaling)
         eventStatusItemCheckRange = localStorage.rx.observe(\.eventStatusItemCheckRange)
         eventStatusItemFlashing = localStorage.rx.observe(\.eventStatusItemFlashing)

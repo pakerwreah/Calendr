@@ -296,14 +296,25 @@ class NextEventViewModel {
             .map { $0 && $1 }
             .distinctUntilChanged()
 
+        let singular = switch type {
+            case .event: Strings.Formatter.Events.singular
+            case .reminder: Strings.Formatter.Reminders.singular
+        }
+
         title = Observable
             .combineLatest(
-                event.skipNil().map(\.title),
+                nextEvent.skipNil(),
+                settings.showEventStatusItemTitle,
                 settings.eventStatusItemLength,
                 shouldCompact,
                 settings.eventStatusItemNotchLength
             )
-            .map { title, length, shouldCompact, notchLength in
+            .map { next, showTitle, length, shouldCompact, notchLength in
+
+                let isGrouped = next.grouped.count > 1
+
+                let title = showTitle || isGrouped ? next.event.title : singular
+
                 let maxLength = shouldCompact ? notchLength : length
 
                 guard title.count > maxLength else { return title }

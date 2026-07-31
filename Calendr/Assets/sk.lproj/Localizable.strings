@@ -55,6 +55,7 @@
 
 "settings.next_event" = "Ďalšia udalosť";
 "settings.next_event.show_next_event" = "Zobraziť ďalšiu udalosť";
+//"settings.next_event.show_next_event_title" = "Show next event title";
 "settings.next_event.grab_attention" = "Upútať pozornosť na blížiacu sa udalosť";
 "settings.next_event.grab_attention.flashing" = "Blikaním";
 "settings.next_event.grab_attention.sound" = "Prehrať zvuk";
@@ -117,7 +118,9 @@
 "formatter.date.relative.left" = "zostáva %@";
 
 //"formatter.events.plural" = "%@ events";
+//"formatter.events.singular" = "1 event";
 //"formatter.reminders.plural" = "%@ reminders";
+//"formatter.reminders.singular" = "1 reminder";
 
 "reminder.status.overdue" = "Po termíne";
 

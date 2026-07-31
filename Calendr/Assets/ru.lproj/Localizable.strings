@@ -57,6 +57,7 @@
 
 "settings.next_event" = "Следующее событие";
 "settings.next_event.show_next_event" = "Показывать следующее событие";
+//"settings.next_event.show_next_event_title" = "Show next event title";
 "settings.next_event.grab_attention" = "Оповещать о приближающемся событии";
 "settings.next_event.grab_attention.flashing" = "Миганием";
 "settings.next_event.grab_attention.sound" = "Звуком";
@@ -119,7 +120,9 @@
 "formatter.date.relative.left" = "осталось %@";
 
 //"formatter.events.plural" = "%@ events";
+//"formatter.events.singular" = "1 event";
 //"formatter.reminders.plural" = "%@ reminders";
+//"formatter.reminders.singular" = "1 reminder";
 
 "reminder.status.overdue" = "Просрочено";
 

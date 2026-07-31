@@ -55,6 +55,7 @@
 
 "settings.next_event" = "Ngjarja e Radhës";
 "settings.next_event.show_next_event" = "Shfaq ngjarjen e radhës";
+//"settings.next_event.show_next_event_title" = "Show next event title";
 "settings.next_event.grab_attention" = "Tërhiq vëmendjen kur ngjarja është afër";
 "settings.next_event.grab_attention.flashing" = "Vezullim";
 "settings.next_event.grab_attention.sound" = "Luaj zërin";
@@ -117,7 +118,9 @@
 "formatter.date.relative.left" = "%@ mbeten";
 
 //"formatter.events.plural" = "%@ events";
+//"formatter.events.singular" = "1 event";
 //"formatter.reminders.plural" = "%@ reminders";
+//"formatter.reminders.singular" = "1 reminder";
 
 //"reminder.status.overdue" = "Overdue";
 

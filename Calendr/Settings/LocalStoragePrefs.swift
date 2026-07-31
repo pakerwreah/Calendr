@@ -24,6 +24,7 @@ enum Prefs {
 
     // Next Event
     static let showEventStatusItem = "show_event_status_item"
+    static let showEventStatusItemTitle = "show_event_status_item_title"
     static let eventStatusItemCheckRange = "event_status_item_check_range"
     static let eventStatusItemFlashing = "event_status_item_flashing"
     static let eventStatusItemSound = "event_status_item_sound"
@@ -103,6 +104,7 @@ func registerDefaultPrefs(in localStorage: LocalStorageProvider, calendar: Calen
 
         // Next Event
         Prefs.showEventStatusItem: false,
+        Prefs.showEventStatusItemTitle: true,
         Prefs.eventStatusItemCheckRange: 6,
         Prefs.eventStatusItemFlashing: false,
         Prefs.eventStatusItemSound: false,
@@ -231,6 +233,11 @@ extension LocalStorageProvider {
     @objc dynamic var showEventStatusItem: Bool {
         get { bool(forKey: Prefs.showEventStatusItem) }
         set { set(newValue, forKey: Prefs.showEventStatusItem) }
+    }
+
+    @objc dynamic var showEventStatusItemTitle: Bool {
+        get { bool(forKey: Prefs.showEventStatusItemTitle) }
+        set { set(newValue, forKey: Prefs.showEventStatusItemTitle) }
     }
 
     @objc dynamic var eventStatusItemCheckRange: Int {
