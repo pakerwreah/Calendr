@@ -39,10 +39,10 @@ enum StatusItemIconFactory {
                 drawCalendarDots(rect: rect, borderWidth: borderWidth, headerHeight: headerHeight)
 
             case .date:
-                drawDate(rect: rect, headerHeight: headerHeight, textScaling: textScaling, dateProvider: dateProvider)
+                drawDate(rect: rect, dateProvider: dateProvider)
 
             case .dayOfWeek:
-                drawDayOfWeekAndDate(rect: rect, insetX: insetX, textScaling: textScaling, dateProvider: dateProvider)
+                drawDayOfWeekAndDate(rect: rect, insetX: insetX, dateProvider: dateProvider)
             }
 
             return true
@@ -91,7 +91,7 @@ enum StatusItemIconFactory {
         }
     }
 
-    static func drawDate(rect: CGRect, headerHeight: CGFloat, textScaling: Double, dateProvider: DateProviding) {
+    static func drawDate(rect: CGRect, dateProvider: DateProviding) {
         let formatter = DateFormatter(format: "d", calendar: dateProvider.calendar)
         let date = formatter.string(from: dateProvider.now)
         let paragraph = NSMutableParagraphStyle()
@@ -105,7 +105,7 @@ enum StatusItemIconFactory {
         ]).draw(in: rect.offsetBy(dx: 0, dy: middleY))
     }
 
-    static func drawDayOfWeekAndDate(rect: CGRect, insetX: CGFloat, textScaling: Double, dateProvider: DateProviding) {
+    static func drawDayOfWeekAndDate(rect: CGRect, insetX: CGFloat, dateProvider: DateProviding) {
         func run(fn: () -> Void) { fn() }
 
         let formatter = DateFormatter(calendar: dateProvider.calendar)
