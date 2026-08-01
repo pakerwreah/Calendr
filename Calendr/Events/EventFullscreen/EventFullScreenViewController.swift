@@ -191,7 +191,7 @@ private struct SliderPopupView: View {
 }
 
 private struct DesktopWallpaper: View {
-    let imageURL = NSWorkspace.shared.desktopImageURL(for: .main!)
+    let imageURL = URL(string: "https://picsum.photos/id/289/367/267")
 
     var body: some View {
         GeometryReader { geometry in
