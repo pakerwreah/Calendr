@@ -72,6 +72,7 @@
 "settings.calendar.week_count" = "Semanas visíveis";
 "settings.calendar.calendar_app_view_mode" = "Visualização do app Calendário";
 "settings.calendar.default_calendar_app" = "App de calendário padrão";
+"settings.calendar.preferred_browser" = "Navegador preferido";
 
 "settings.calendar.event_dots" = "Indicadores de eventos";
 "settings.calendar.event_dots.none" = "nenhum";

@@ -15,7 +15,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
     private let disposeBag = DisposeBag()
 
     private let scrollView = NSScrollView()
-    private let browserDropdown = Dropdown()
+    private let browserPicker: BrowserPicker
     private let contentStackView = NSStackView(.vertical)
     private let participantsStackView = NSStackView(.vertical)
     private let detailsStackView = NSStackView(.vertical)
@@ -43,6 +43,8 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
     init(viewModel: EventDetailsViewModel) {
 
         self.viewModel = viewModel
+
+        browserPicker = BrowserPicker(viewModel: viewModel.browserPickerViewModel)
 
         super.init(nibName: nil, bundle: nil)
 
@@ -91,7 +93,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         meetingInfoScrollView.contentView.trailing(equalTo: meetingInfoTextView, constant: 10)
         meetingInfoScrollView.contentView.height(equalTo: meetingInfoTextView, priority: .defaultHigh)
 
-        setUpBrowser()
+
         setUpLink()
         setUpOpen()
         setUpSkip()
@@ -105,52 +107,11 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         addFooter()
     }
 
-    private func setUpBrowser() {
-
-        browserDropdown.isBordered = false
-        browserDropdown.imagePosition = .imageOnly
-        browserDropdown.setContentHuggingPriority(.required, for: .horizontal)
-
-        let menu = NSMenu()
-
-        for (index, option) in viewModel.browserOptions.enumerated() {
-            let item = NSMenuItem()
-            item.image = option.icon.with(size: .init(width: 16, height: 16))
-            item.title = option.name
-            item.tag = index
-            menu.addItem(item)
-        }
-
-        menu.insertItem(.separator(), at: 1)
-
-        browserDropdown.menu = menu
-
-        // hack to hide the icon
-        let constraint = browserDropdown.width(equalTo: 15)
-
-        // selected index counts separators, so we have to use tags
-        let browserControl = browserDropdown.rx.controlProperty(
-            getter: { $0.selectedItem?.tag ?? 0 },
-            setter: {
-                constraint.isActive = $1 == 0
-                $0.selectItem(withTag: $1)
-            }
-        )
-
-        browserControl.skip(1)
-            .bind(to: viewModel.selectedBrowserObserver)
-            .disposed(by: disposeBag)
-
-        viewModel.selectedBrowserIndex
-            .bind(to: browserControl)
-            .disposed(by: disposeBag)
-    }
-
     private func setUpLink() {
 
         guard let link = viewModel.link else {
             linkBtn.isHidden = true
-            browserDropdown.isHidden = true
+            browserPicker.isHidden = true
             return
         }
 
@@ -383,7 +344,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         if !viewModel.url.isEmpty {
             urlLabel.stringValue = viewModel.url
 
-            let urlStackView = NSStackView(views: [urlLabel, browserDropdown])
+            let urlStackView = NSStackView(views: [urlLabel, browserPicker])
             urlStackView.setHuggingPriority(.required, for: .vertical)
 
             detailsStackView.addArrangedSubview(makeLine())

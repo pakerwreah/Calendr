@@ -70,6 +70,7 @@
 "settings.calendar.week_count" = "Zichtbare weken";
 "settings.calendar.calendar_app_view_mode" = "Weergave in Agenda-app";
 "settings.calendar.default_calendar_app" = "Standaard Agenda-app";
+//"settings.calendar.preferred_browser" = "Preferred browser";
 
 //"settings.calendar.event_dots" = "Event dots";
 //"settings.calendar.event_dots.none" = "none";

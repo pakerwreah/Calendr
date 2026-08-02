@@ -72,6 +72,7 @@
 "settings.calendar.week_count" = "Görünür hafta sayısı";
 "settings.calendar.calendar_app_view_mode" = "Takvim uygulaması görünüm modu";
 "settings.calendar.default_calendar_app" = "Varsayılan takvim uygulaması";
+//"settings.calendar.preferred_browser" = "Preferred browser";
 
 "settings.calendar.event_dots" = "Etkinlik göstergeleri";
 "settings.calendar.event_dots.none" = "yok";

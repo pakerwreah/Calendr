@@ -15,7 +15,7 @@ class MainViewController: NSViewController {
     // ViewControllers
     private lazy var settingsViewController = SettingsViewController(
         settingsViewModel: settingsViewModel,
-        calendarsViewModel: calendarPickerViewModel,
+        calendarsViewModel: calendarListViewModel,
         notificationCenter: notificationCenter,
         autoUpdater: autoUpdater,
         launchServices: launchServices
@@ -49,7 +49,7 @@ class MainViewController: NSViewController {
     private let statusItemViewModel: StatusItemViewModel
     private let nextEventViewModel: NextEventViewModel
     private let nextReminderViewModel: NextEventViewModel
-    private let calendarPickerViewModel: CalendarPickerViewModel
+    private let calendarListViewModel: CalendarListViewModel
     private let eventListViewModel: EventListViewModel
 
     // Reactive
@@ -124,8 +124,9 @@ class MainViewController: NSViewController {
             scheduler: MainScheduler.instance
         )
 
-        calendarPickerViewModel = CalendarPickerViewModel(
+        calendarListViewModel = CalendarListViewModel(
             calendarService: calendarService,
+            workspace: workspace,
             localStorage: localStorage
         )
 
@@ -140,8 +141,8 @@ class MainViewController: NSViewController {
 
         let nextEventCalendars = Observable
             .combineLatest(
-                calendarPickerViewModel.enabledCalendars,
-                calendarPickerViewModel.nextEventCalendars
+                calendarListViewModel.enabledCalendars,
+                calendarListViewModel.nextEventCalendars
             )
             .map { $0.filter($1.contains) }
             .share(replay: 1)
@@ -163,7 +164,7 @@ class MainViewController: NSViewController {
             dateObservable: mainViewModel.selectedDate,
             hoverObservable: hoveredDate,
             keyboardModifiers: mainViewModel.keyboardModifiers,
-            enabledCalendars: calendarPickerViewModel.enabledCalendars,
+            enabledCalendars: calendarListViewModel.enabledCalendars,
             calendarService: calendarService,
             dateProvider: dateProvider,
             settings: settingsViewModel,
@@ -488,6 +489,21 @@ class MainViewController: NSViewController {
         workspace.open(URL(string: "https://github.com/pakerwreah/Calendr/releases/latest")!)
     }
 
+    private func makeCalendarListMenu() -> NSMenu {
+
+        let calendarListViewController = CalendarListViewController(
+            viewModel: calendarListViewModel,
+            source: .menu
+        )
+        let menuItem = NSMenuItem()
+        menuItem.view = calendarListViewController.view.forAutoLayout()
+        addChild(calendarListViewController)
+
+        let menu = NSMenu()
+        menu.addItem(menuItem)
+        return menu
+    }
+
     private func setUpSettings() {
 
         let settingsMenu = TrackedMenu()
@@ -496,15 +512,8 @@ class MainViewController: NSViewController {
 
         settingsMenu.addItem(.separator())
 
-        let pickerMenuItem = settingsMenu.addItem(withTitle: Strings.Settings.Tab.calendars, action: nil, keyEquivalent: "")
-        let pickerSubmenu = NSMenu()
-        let pickerSubmenuItem = NSMenuItem()
-        pickerSubmenu.addItem(pickerSubmenuItem)
-        pickerMenuItem.submenu = pickerSubmenu
-
-        let pickerViewController = CalendarPickerViewController(viewModel: calendarPickerViewModel, configuration: .picker)
-        pickerSubmenuItem.view = pickerViewController.view.forAutoLayout()
-        addChild(pickerViewController)
+        let calendarListMenuItem = settingsMenu.addItem(withTitle: Strings.Settings.Tab.calendars, action: nil, keyEquivalent: "")
+        calendarListMenuItem.submenu = makeCalendarListMenu()
 
         settingsMenu.addItem(withTitle: Strings.search, action: #selector(showSearchInput), keyEquivalent: "f").target = self
 

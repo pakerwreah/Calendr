@@ -15,13 +15,6 @@ enum EventDetailsSource {
 
 class EventDetailsViewModel {
 
-    struct BrowserOption {
-        let icon: NSImage
-        let name: String
-        let url: URL
-        let isDefault: Bool
-    }
-
     let type: EventType
     let status: EventStatus
     let title: String
@@ -34,7 +27,6 @@ class EventDetailsViewModel {
     let link: EventLink?
     let settings: EventSettings
     let showSkip: Bool
-    let browserOptions: [BrowserOption]
     let optimisticLoadTime: DispatchTimeInterval
     let attachments: [Attachment]
 
@@ -51,8 +43,7 @@ class EventDetailsViewModel {
     let openMaps: AnyObserver<Coordinates>
     let isShowingObserver: AnyObserver<Bool>
 
-    let selectedBrowserObserver: AnyObserver<Int>
-    let selectedBrowserIndex: Observable<Int>
+    let browserPickerViewModel: BrowserPickerViewModel
 
     private let event: EventModel
     private let dateProvider: DateProviding
@@ -83,6 +74,13 @@ class EventDetailsViewModel {
         self.settings = settings
         self.isShowingObserver = isShowingObserver
         self.workspace = workspace
+
+        browserPickerViewModel = BrowserPickerViewModel(
+            calendarId: event.calendar.id,
+            workspace: workspace,
+            localStorage: localStorage,
+            source: .event
+        )
 
         type = event.type
         status = event.status
@@ -222,58 +220,6 @@ class EventDetailsViewModel {
         weather.subscribe().disposed(by: disposeBag)
 
         optimisticLoadTime = .milliseconds(canShowMap && !event.location.isNilOrEmpty ? 50 : 0)
-
-        let defaultBrowserURL = workspace.urlForDefaultBrowserApplication()
-
-        let browserOptions: [BrowserOption] = workspace.urlsForBrowsersApplications().compactMap { url in
-            guard
-                url.lastPathComponent.hasSuffix(".app"),
-                url.deletingLastPathComponent().lastPathComponent == "Applications",
-                let res = try? url.resourceValues(forKeys: [.nameKey, .effectiveIconKey]),
-                let icon = res.effectiveIcon as? NSImage,
-                let name = res.name
-            else {
-                return nil
-            }
-            return .init(
-                icon: icon,
-                name: String(name.dropLast(4)),
-                url: url,
-                isDefault: url == defaultBrowserURL
-            )
-        }
-        .sorted {
-            if $0.isDefault && !$1.isDefault {
-                return true // $0 is default, so it should come first
-            }
-            if !$0.isDefault && $1.isDefault {
-                return false // $1 is default, so it should come first
-            }
-            return $0.name < $1.name // Otherwise, sort by name
-        }
-
-        selectedBrowserIndex = localStorage.rx.observe(\.defaultBrowserPerCalendar)
-            .map {
-                let url = if let path = $0[event.calendar.id], let pathUrl = URL(string: path) {
-                    pathUrl
-                } else {
-                    defaultBrowserURL
-                }
-                return browserOptions.firstIndex { $0.url == url } ?? 0
-            }
-
-        selectedBrowserObserver = localStorage.rx.observer(for: \.defaultBrowserPerCalendar)
-            .mapObserver { index in
-                var mapping = localStorage.defaultBrowserPerCalendar
-                if index > 0 {
-                    mapping[event.calendar.id] = browserOptions[index].url.absoluteString
-                } else {
-                    mapping.removeValue(forKey: event.calendar.id)
-                }
-                return mapping
-            }
-
-        self.browserOptions = browserOptions
 
         func distance(to date: Date) -> Int {
             Int(dateProvider.now.distance(to: date).rounded(.up))

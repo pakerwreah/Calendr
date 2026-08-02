@@ -1,5 +1,5 @@
 //
-//  CalendarPickerViewController.swift
+//  CalendarListViewController.swift
 //  Calendr
 //
 //  Created by Paker on 28/01/21.
@@ -8,26 +8,26 @@
 import Cocoa
 import RxSwift
 
-enum CalendarPickerConfiguration {
+enum CalendarListSource {
     case settings
-    case picker
+    case menu
 }
 
-class CalendarPickerViewController: NSViewController, SettingsUI {
+class CalendarListViewController: NSViewController, SettingsUI {
 
     private let pickerDisposeBag = DisposeBag()
     private var itemsDisposeBag: DisposeBag!
 
-    private let viewModel: CalendarPickerViewModel
+    private let viewModel: CalendarListViewModel
 
     private let contentStackView = NSStackView(.vertical)
 
-    private let configuration: CalendarPickerConfiguration
+    private let source: CalendarListSource
 
-    init(viewModel: CalendarPickerViewModel, configuration: CalendarPickerConfiguration) {
+    init(viewModel: CalendarListViewModel, source: CalendarListSource) {
 
         self.viewModel = viewModel
-        self.configuration = configuration
+        self.source = source
 
         super.init(nibName: nil, bundle: nil)
 
@@ -42,7 +42,7 @@ class CalendarPickerViewController: NSViewController, SettingsUI {
 
         view.addSubview(scrollView)
 
-        scrollView.edges(equalTo: view, margins: configuration.margins)
+        scrollView.edges(equalTo: view, margins: source.margins)
 
         scrollView.drawsBackground = false
         scrollView.documentView = contentStackView.forAutoLayout()
@@ -53,13 +53,13 @@ class CalendarPickerViewController: NSViewController, SettingsUI {
         scrollView.contentView.trailing(equalTo: contentStackView)
         let height = scrollView.contentView.height(equalTo: contentStackView)
 
-        switch configuration {
+        switch source {
 
             case .settings:
                 height.priority = .dragThatCanResizeWindow
                 scrollView.contentView.height(lessThanOrEqualTo: 600)
 
-            case .picker:
+            case .menu:
                 view.width(equalTo: 250)
         }
 
@@ -108,7 +108,8 @@ class CalendarPickerViewController: NSViewController, SettingsUI {
                             calendarItem,
                             $0.isSubscribed ? makeCalendarItemSubscribedIcon() : nil,
                             .spacer,
-                            showNextEvent ? makeCalendarItemNextEvent($0) : nil
+                            showNextEvent ? makeCalendarItemNextEvent($0) : nil,
+                            makeCalendarItemSettingsButton($0)
                         ]
                         .compact()
                     )
@@ -159,15 +160,15 @@ class CalendarPickerViewController: NSViewController, SettingsUI {
     }
 
     private func makeCalendarItemSubscribedIcon() -> NSView {
-        let imageView = NSImageView(image: Icons.CalendarPicker.subscribed.with(scale: .small))
+        let imageView = NSImageView(image: Icons.CalendarList.subscribed.with(scale: .small))
         imageView.contentTintColor = .secondaryLabelColor
         return imageView
     }
 
     private func makeCalendarItemNextEvent(_ calendar: CalendarModel) -> NSView {
 
-        let selectedIcon = Icons.CalendarPicker.nextEventEnabled.with(pointSize: 11)
-        let unselectedIcon = Icons.CalendarPicker.nextEventSilenced.with(pointSize: 11)
+        let selectedIcon = Icons.CalendarList.nextEventEnabled.with(pointSize: 11)
+        let unselectedIcon = Icons.CalendarList.nextEventSilenced.with(pointSize: 11)
         let button = ImageButton()
         button.setButtonType(.toggle)
 
@@ -193,6 +194,29 @@ class CalendarPickerViewController: NSViewController, SettingsUI {
         return button
     }
 
+    private func makeCalendarItemSettingsButton(_ calendar: CalendarModel) -> NSView? {
+        // FIXME: For some reason, dropdowns don't work when presented from a popover
+        //        so we have to restrict this feature to the settings window only
+        guard source == .settings else { return nil }
+
+        let button = ImageButton(image: Icons.CalendarList.settings.with(pointSize: 12))
+        button.contentTintColor = .textColor
+
+        let calendarSettingsViewModel = viewModel.calendarSettingsViewModel(for: calendar)
+
+        button.rx.tap
+            .bind { [weak self] in
+                self?.presentAsSheet(
+                    CalendarSettingsViewController(
+                        viewModel: calendarSettingsViewModel
+                    )
+                )
+            }
+            .disposed(by: itemsDisposeBag)
+
+        return button
+    }
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -200,13 +224,13 @@ class CalendarPickerViewController: NSViewController, SettingsUI {
 
 // MARK: - Extensions
 
-extension CalendarPickerConfiguration {
+extension CalendarListSource {
 
     var margins: NSEdgeInsets {
         switch self {
         case .settings:
             return .init()
-        case .picker:
+        case .menu:
             return .init(top: 16, left: 16, bottom: 16, right: 20)
         }
     }

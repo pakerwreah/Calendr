@@ -62,6 +62,7 @@ protocol EventListSettings: EventSettings {
 protocol NextEventSettings: EventListSettings {
     var showEventStatusItem: Observable<Bool> { get }
     var showEventStatusItemTitle: Observable<Bool> { get }
+    var hiddenEventStatusItemTitleCalendars: Observable<[String]> { get }
     var eventStatusItemCheckRange: Observable<Int> { get }
     var eventStatusItemFlashing: Observable<Bool> { get }
     var eventStatusItemSound: Observable<Bool> { get }
@@ -162,6 +163,7 @@ class SettingsViewModel:
     let isDateFormatInputVisible: Observable<Bool>
     let showEventStatusItem: Observable<Bool>
     let showEventStatusItemTitle: Observable<Bool>
+    let hiddenEventStatusItemTitleCalendars: Observable<[String]>
     let statusItemTextScaling: Observable<Double>
     let eventStatusItemCheckRange: Observable<Int>
     let eventStatusItemCheckRangeLabel: Observable<String>
@@ -325,6 +327,7 @@ class SettingsViewModel:
         statusItemDateFormat = localStorage.rx.observe(\.statusItemDateFormat)
         showEventStatusItem = localStorage.rx.observe(\.showEventStatusItem)
         showEventStatusItemTitle = localStorage.rx.observe(\.showEventStatusItemTitle)
+        hiddenEventStatusItemTitleCalendars = localStorage.rx.observe(\.hiddenEventStatusItemTitleCalendars)
         statusItemTextScaling = localStorage.rx.observe(\.statusItemTextScaling)
         eventStatusItemCheckRange = localStorage.rx.observe(\.eventStatusItemCheckRange)
         eventStatusItemFlashing = localStorage.rx.observe(\.eventStatusItemFlashing)

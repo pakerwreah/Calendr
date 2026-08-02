@@ -420,26 +420,6 @@ class EventDetailsViewModelTests {
         #expect(action == .event(event, .status(.accept)))
     }
 
-    @Test func testBrowserOptions() {
-
-        mockBrowsers()
-
-        #expect(workspace.urlForDefaultBrowserApplication() == makeUrl("Default"))
-
-        let urlsForBrowsers = workspace.urlsForBrowsersApplications()
-
-        let expectedURLs = [makeUrl("Browser 2"), makeUrl("Browser 1"), makeUrl("Default"), makeUrl("Browser 3")]
-
-        #expect(urlsForBrowsers.count == 4)
-        #expect(expectedURLs.allSatisfy(urlsForBrowsers.contains))
-
-        let viewModel = mock(event: .make(location: "https://example.com"))
-
-        let sortedBrowserNames = viewModel.browserOptions.map(\.name)
-
-        #expect(sortedBrowserNames == ["Default", "Browser 1", "Browser 2", "Browser 3"])
-    }
-
     @Test func testOpenLinkWithSelectedBrowser() async {
 
         mockBrowsers()
@@ -465,9 +445,9 @@ class EventDetailsViewModelTests {
 
         #expect(localStorage.defaultBrowserPerCalendar == [:])
 
-        viewModel.selectedBrowserObserver.onNext(2)
+        viewModel.browserPickerViewModel.selectedIndexObserver.onNext(2)
 
-        let browser2Url = makeUrl("Browser 2").absoluteString
+        let browser2Url = mockAppUrl("Browser 2").absoluteString
 
         #expect(localStorage.defaultBrowserPerCalendar == ["1": browser2Url])
 
@@ -483,11 +463,11 @@ class EventDetailsViewModelTests {
     }
 
     func mockBrowsers() {
-        workspace.m_urlForApplicationToOpenURL = makeUrl("Default")
-        workspace.m_urlForApplicationToOpenContentType = makeUrl("Default")
+        workspace.m_urlForApplicationToOpenURL = mockAppUrl("Default")
+        workspace.m_urlForApplicationToOpenContentType = mockAppUrl("Default")
 
-        workspace.m_urlsForApplicationsToOpenURL = [makeUrl("Browser 2"), makeUrl("Browser 1"), makeUrl("Default"), makeUrl("Browser 3")]
-        workspace.m_urlsForApplicationsToOpenContentType = [makeUrl("Browser 2"), makeUrl("Browser 1"), makeUrl("Default"), makeUrl("Browser 3"), makeUrl("Not a real browser 4")]
+        workspace.m_urlsForApplicationsToOpenURL = [mockAppUrl("Browser 2"), mockAppUrl("Browser 1"), mockAppUrl("Default"), mockAppUrl("Browser 3")]
+        workspace.m_urlsForApplicationsToOpenContentType = [mockAppUrl("Browser 2"), mockAppUrl("Browser 1"), mockAppUrl("Default"), mockAppUrl("Browser 3"), mockAppUrl("Not a real browser 4")]
     }
 
     func mock(event: EventModel, source: EventDetailsSource = .calendar, callback: @escaping (ContextCallbackAction?) -> Void = { _ in }) -> EventDetailsViewModel {
@@ -507,21 +487,4 @@ class EventDetailsViewModelTests {
             scheduler: scheduler
         )
     }
-}
-
-private class MockedURL: NSURL, @unchecked Sendable {
-
-    var resourceValues: [URLResourceKey : Any] = [:]
-
-    override func resourceValues(forKeys keys: [URLResourceKey]) throws -> [URLResourceKey : Any] {
-        return resourceValues
-    }
-}
-
-private func makeUrl(_ name: String) -> URL {
-    let path = "/path/Applications/\(name).app".addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!
-    let url = MockedURL(string: path)!
-    url.resourceValues[.nameKey] = "\(name).app"
-    url.resourceValues[.effectiveIconKey] = NSImage()
-    return url as URL
 }
