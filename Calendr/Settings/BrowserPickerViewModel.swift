@@ -80,6 +80,6 @@ class BrowserPickerViewModel {
                 return mapping
             }
 
-        controlShowIcon = source != .event ? .just(true) : selectedIndex.map { $0 > 0 }
+        controlShowIcon = selectedIndex.map { source != .event || $0 > 0 }.take(until: \.isTrue, behavior: .inclusive)
     }
 }
