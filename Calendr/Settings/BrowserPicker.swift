@@ -52,8 +52,9 @@ class BrowserPicker: NSView {
         let constraint = dropdown.width(equalTo: 15)
 
         viewModel.controlShowIcon
-            .map(!)
-            .bind(to: constraint.rx.isActive)
+            .bind { visible in
+                constraint.isActive = !visible
+            }
             .disposed(by: disposeBag)
 
         browserControl.skip(1)
