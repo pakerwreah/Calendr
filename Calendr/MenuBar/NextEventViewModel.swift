@@ -296,24 +296,21 @@ class NextEventViewModel {
             .map { $0 && $1 }
             .distinctUntilChanged()
 
-        let singular = switch type {
-            case .event: Strings.Formatter.Events.singular
-            case .reminder: Strings.Formatter.Reminders.singular
-        }
-
         title = Observable
             .combineLatest(
                 nextEvent.skipNil(),
                 settings.showEventStatusItemTitle,
+                settings.hiddenEventStatusItemTitleCalendars,
                 settings.eventStatusItemLength,
                 shouldCompact,
                 settings.eventStatusItemNotchLength
             )
-            .map { next, showTitle, length, shouldCompact, notchLength in
+            .map { next, showTitle, hiddenCalendars, length, shouldCompact, notchLength in
 
-                let isGrouped = next.grouped.count > 1
-
-                let title = showTitle || isGrouped ? next.event.title : singular
+                let isTitleEnabled = showTitle && !next.grouped.contains {
+                    hiddenCalendars.contains($0.calendar.id)
+                }
+                let title = isTitleEnabled ? next.event.title : eventTitle(for: type, count: next.grouped.count)
 
                 let maxLength = shouldCompact ? notchLength : length
 
@@ -576,10 +573,7 @@ private func makeEventsGroup(
     }
 
     let title = if items.distinct(by: \.title).count == 1 { first.title } else {
-        switch type {
-            case .event: Strings.Formatter.Events.plural(items.count)
-            case .reminder: Strings.Formatter.Reminders.plural(items.count)
-        }
+        eventTitle(for: type, count: items.count)
     }
 
     // to show distict fullscreen events
@@ -593,4 +587,18 @@ private func makeEventsGroup(
         type: first.type,
         color: color,
     )
+}
+
+private func eventTitle(for type: NextEventType, count: Int) -> String {
+    switch (count, type) {
+        case (1, .event):
+            Strings.Formatter.Events.singular
+        case (_, .event):
+            Strings.Formatter.Events.plural(count)
+
+        case (1, .reminder):
+            Strings.Formatter.Reminders.singular
+        case (_, .reminder):
+            Strings.Formatter.Reminders.plural(count)
+    }
 }

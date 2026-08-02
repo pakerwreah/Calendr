@@ -1,5 +1,5 @@
 //
-//  CalendarPickerViewModel.swift
+//  CalendarListViewModel.swift
 //  Calendr
 //
 //  Created by Paker on 14/01/21.
@@ -8,7 +8,7 @@
 import Foundation
 import RxSwift
 
-class CalendarPickerViewModel {
+class CalendarListViewModel {
 
     // Observers
     let toggleCalendar: AnyObserver<String>
@@ -22,15 +22,18 @@ class CalendarPickerViewModel {
     private(set) lazy var nextEventCalendars = selectedObservable(notIn: \.silencedCalendars)
 
     private let localStorage: LocalStorageProvider
+    private let workspace: WorkspaceServiceProviding
     private let toggleCalendarSubject = PublishSubject<String>()
     private let toggleNextEventSubject = PublishSubject<String>()
     private let disposeBag = DisposeBag()
 
     init(
         calendarService: CalendarServiceProviding,
+        workspace: WorkspaceServiceProviding,
         localStorage: LocalStorageProvider
     ) {
         self.localStorage = localStorage
+        self.workspace = workspace
 
         self.calendars = calendarService.changeObservable
             .startWith(())
@@ -67,6 +70,8 @@ class CalendarPickerViewModel {
                 // clean up removed calendars
                 localStorage.disabledCalendars = localStorage.disabledCalendars.filter(calendars.contains)
                 localStorage.silencedCalendars = localStorage.silencedCalendars.filter(calendars.contains)
+                localStorage.hiddenEventStatusItemTitleCalendars = localStorage.hiddenEventStatusItemTitleCalendars.filter(calendars.contains)
+                localStorage.defaultBrowserPerCalendar = localStorage.defaultBrowserPerCalendar.filter { calendars.contains($0.key) }
             }
             .disposed(by: disposeBag)
     }
@@ -97,5 +102,9 @@ class CalendarPickerViewModel {
             calendars.filter { !unselected.contains($0) }
         }
         .share(replay: 1)
+    }
+
+    func calendarSettingsViewModel(for calendar: CalendarModel) -> CalendarSettingsViewModel {
+        .init(calendar: calendar, workspace: workspace, localStorage: localStorage)
     }
 }

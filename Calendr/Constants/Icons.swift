@@ -27,10 +27,15 @@ enum Icons {
         static let create = NSImage(systemName: "plus")
     }
 
-    enum CalendarPicker {
+    enum CalendarList {
         static let nextEventEnabled = NSImage(systemName: "alarm")
         static let nextEventSilenced = NSImage(systemName: "moon.zzz")
+        static let settings = NSImage(systemName: "gearshape")
         static let subscribed = NSImage(systemName: "wave.3.right")
+    }
+
+    enum CalendarSettings {
+        static let close = NSImage(systemName: "xmark.circle.fill")
     }
 
     enum Settings {

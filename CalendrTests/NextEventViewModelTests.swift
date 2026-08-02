@@ -280,6 +280,27 @@ class NextEventViewModelTests {
         #expect(title == "1 reminder")
     }
 
+    @Test func testNextEventTitleCanBeHiddenForCalendar() {
+
+        let viewModel = makeViewModel(type: .event)
+
+        var title: String?
+
+        viewModel.title
+            .bind { title = $0 }
+            .disposed(by: disposeBag)
+
+        calendarService.changeEvents([
+            .make(start: now, title: "Team meeting", calendar: .make(id: "private"))
+        ])
+
+        #expect(title == "Team meeting")
+
+        settings.hiddenEventStatusItemTitleCalendarsObserver.onNext(["private"])
+
+        #expect(title == "1 event")
+    }
+
     @Test func testGroupedNextEventsKeepTheirExistingTitleWhenSingleTitlesAreHidden() {
 
         let viewModel = makeViewModel(type: .event)
@@ -295,6 +316,46 @@ class NextEventViewModelTests {
         calendarService.changeEvents([
             .make(id: "1", start: now, title: "Team meeting"),
             .make(id: "2", start: now, title: "Planning")
+        ])
+
+        #expect(title == "2 events")
+    }
+
+    @Test func testGroupedNextEventsHideSharedTitleWhenTitlesAreDisabled() {
+
+        let viewModel = makeViewModel(type: .event)
+
+        var title: String?
+
+        viewModel.title
+            .bind { title = $0 }
+            .disposed(by: disposeBag)
+
+        settings.toggleEventStatusItemTitle.onNext(false)
+
+        calendarService.changeEvents([
+            .make(id: "1", start: now, title: "Team meeting"),
+            .make(id: "2", start: now, title: "Team meeting")
+        ])
+
+        #expect(title == "2 events")
+    }
+
+    @Test func testGroupedNextEventsHideSharedTitleForSilencedCalendar() {
+
+        let viewModel = makeViewModel(type: .event)
+
+        var title: String?
+
+        viewModel.title
+            .bind { title = $0 }
+            .disposed(by: disposeBag)
+
+        settings.hiddenEventStatusItemTitleCalendarsObserver.onNext(["private"])
+
+        calendarService.changeEvents([
+            .make(id: "1", start: now, title: "Team meeting", calendar: .make(id: "private")),
+            .make(id: "2", start: now, title: "Team meeting", calendar: .make(id: "work"))
         ])
 
         #expect(title == "2 events")

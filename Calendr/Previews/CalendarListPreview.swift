@@ -1,5 +1,5 @@
 //
-//  CalendarPickerPreview.swift
+//  CalendarListPreview.swift
 //  Calendr
 //
 //  Created by Paker on 11/11/24.
@@ -9,7 +9,7 @@
 
 import SwiftUI
 
-struct CalendarPickerPreview: PreviewProvider {
+struct CalendarListPreview: PreviewProvider {
 
     static let localStorage = {
         let localStorage: LocalStorageProvider = .shared
@@ -24,14 +24,16 @@ struct CalendarPickerPreview: PreviewProvider {
     }()
 
     static let calendarService = MockCalendarServiceProvider(calendars: .mock)
+    static let workspace = MockWorkspaceServiceProvider(localStorage: localStorage)
 
     static var previews: some View {
-        CalendarPickerViewController(
-            viewModel: CalendarPickerViewModel(
+        CalendarListViewController(
+            viewModel: CalendarListViewModel(
                 calendarService: calendarService,
+                workspace: workspace,
                 localStorage: localStorage
             ),
-            configuration: .picker
+            source: .menu
         )
         .view.preview()
         .frame(minWidth: 250)

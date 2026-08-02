@@ -1,5 +1,5 @@
 //
-//  CalendarPickerViewModelTests.swift
+//  CalendarListViewModelTests.swift
 //  CalendrTests
 //
 //  Created by Paker on 19/01/21.
@@ -10,15 +10,17 @@ import RxSwift
 import Testing
 @testable import Calendr
 
-class CalendarPickerViewModelTests {
+class CalendarListViewModelTests {
 
     let disposeBag = DisposeBag()
 
     let localStorage = MockLocalStorageProvider()
     let calendarService = MockCalendarServiceProvider()
+    let workspace = MockWorkspaceServiceProvider()
 
-    lazy var viewModel = CalendarPickerViewModel(
+    lazy var viewModel = CalendarListViewModel(
         calendarService: calendarService,
+        workspace: workspace,
         localStorage: localStorage
     )
 
@@ -251,5 +253,23 @@ class CalendarPickerViewModelTests {
 
         #expect(nextEvent == ["2", "3"])
         #expect(localStorage.silencedCalendars == [])
+    }
+
+    @Test func testRemoveCalendar_shouldRemoveCalendarSpecificSettings() {
+
+        viewModel.calendars
+            .subscribe()
+            .disposed(by: disposeBag)
+
+        localStorage.hiddenEventStatusItemTitleCalendars = ["1", "2"]
+        localStorage.defaultBrowserPerCalendar = ["1": "browser-1", "2": "browser-2"]
+
+        calendarService.changeObserver.onNext(())
+
+        calendarService.m_calendars.removeFirst()
+        calendarService.changeObserver.onNext(())
+
+        #expect(localStorage.hiddenEventStatusItemTitleCalendars == ["2"])
+        #expect(localStorage.defaultBrowserPerCalendar == ["2": "browser-2"])
     }
 }

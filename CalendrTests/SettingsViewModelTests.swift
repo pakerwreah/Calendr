@@ -120,6 +120,7 @@ class SettingsViewModelTests {
         #expect(viewModel.statusItemTextScaling.lastValue() == 1.2)
         #expect(viewModel.showEventStatusItem.lastValue() == false)
         #expect(viewModel.showEventStatusItemTitle.lastValue() == true)
+        #expect(viewModel.hiddenEventStatusItemTitleCalendars.lastValue() == [])
         #expect(viewModel.eventStatusItemTextScaling.lastValue() == 1.2)
         #expect(viewModel.eventStatusItemCheckRange.lastValue() == 6)
         #expect(viewModel.eventStatusItemSound.lastValue() == false)

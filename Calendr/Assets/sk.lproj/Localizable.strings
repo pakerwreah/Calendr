@@ -72,6 +72,7 @@
 "settings.calendar.week_count" = "Počet zobrazených týždňov";
 "settings.calendar.calendar_app_view_mode" = "Pohľad v kalendári";
 "settings.calendar.default_calendar_app" = "Predvolená apka kalendára";
+//"settings.calendar.preferred_browser" = "Preferred browser";
 
 "settings.calendar.event_dots" = "Bodky udalostí";
 "settings.calendar.event_dots.none" = "žiadne";

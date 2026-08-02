@@ -74,6 +74,7 @@
 "settings.calendar.week_count" = "Видимые недели";
 "settings.calendar.calendar_app_view_mode" = "Просмотр приложения «Календарь»";
 "settings.calendar.default_calendar_app" = "Приложение календаря по умолчанию";
+//"settings.calendar.preferred_browser" = "Preferred browser";
 
 "settings.calendar.event_dots" = "Индикаторы событий";
 "settings.calendar.event_dots.none" = "отключены";

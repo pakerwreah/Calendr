@@ -16,6 +16,8 @@ class MockNextEventSettings: MockEventListSettings, NextEventSettings {
 
     let toggleEventStatusItemTitle: AnyObserver<Bool>
     let showEventStatusItemTitle: Observable<Bool>
+    let hiddenEventStatusItemTitleCalendarsObserver: AnyObserver<[String]>
+    let hiddenEventStatusItemTitleCalendars: Observable<[String]>
 
     let eventStatusItemCheckRangeObserver: AnyObserver<Int>
     let eventStatusItemCheckRange: Observable<Int>
@@ -43,6 +45,7 @@ class MockNextEventSettings: MockEventListSettings, NextEventSettings {
     init(
         showItem: Bool = true,
         showTitle: Bool = true,
+        hiddenTitleCalendars: [String] = [],
         checkRange: Int = 18,
         flashing: Bool = false,
         sound: Bool = false,
@@ -57,6 +60,7 @@ class MockNextEventSettings: MockEventListSettings, NextEventSettings {
     ) {
         (showEventStatusItem, toggleStatusItem) = BehaviorSubject.pipe(value: showItem)
         (showEventStatusItemTitle, toggleEventStatusItemTitle) = BehaviorSubject.pipe(value: showTitle)
+        (hiddenEventStatusItemTitleCalendars, hiddenEventStatusItemTitleCalendarsObserver) = BehaviorSubject.pipe(value: hiddenTitleCalendars)
         (eventStatusItemCheckRange, eventStatusItemCheckRangeObserver) = BehaviorSubject.pipe(value: checkRange)
         (eventStatusItemFlashing, toggleEventStatusItemFlashing) = BehaviorSubject.pipe(value: flashing)
         (eventStatusItemSound, toggleEventStatusItemSound) = BehaviorSubject.pipe(value: sound)
