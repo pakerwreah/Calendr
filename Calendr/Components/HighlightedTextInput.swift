@@ -16,17 +16,45 @@ struct HighlightedTextInput: View {
     let placeholder: String
     @Binding var text: String
     let highlights: [EventTitleHighlight]
-    var focus: FocusState<Bool>.Binding
+    @Binding var focus: Bool
 
     var body: some View {
         HighlightedTextField(
             placeholder: placeholder,
             text: $text,
             highlights: highlights,
-            focus: focus
+            focus: $focus
         )
         .padding(4)
         .overlay { InputBorder() }
+    }
+}
+
+private class FocusTextField: NSTextField {
+
+    @Binding private var focus: Bool
+
+    init(focus: Binding<Bool>) {
+        _focus = focus
+        super.init(frame: .zero)
+    }
+
+    // textDidBeginEditing only triggers after a key press
+    override func becomeFirstResponder() -> Bool {
+        let became = super.becomeFirstResponder()
+        if became {
+            focus = true
+        }
+        return became
+    }
+
+    override func textDidEndEditing(_ notification: Notification) {
+        super.textDidEndEditing(notification)
+        focus = false
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }
 
@@ -35,14 +63,14 @@ private struct HighlightedTextField: NSViewRepresentable {
     let placeholder: String
     @Binding var text: String
     let highlights: [EventTitleHighlight]
-    var focus: FocusState<Bool>.Binding
+    @Binding var focus: Bool
 
     func makeCoordinator() -> Coordinator {
         Coordinator(parent: self)
     }
 
     func makeNSView(context: Context) -> NSTextField {
-        let textField = NSTextField()
+        let textField = FocusTextField(focus: $focus)
         textField.delegate = context.coordinator
         textField.placeholderString = placeholder
         textField.font = .systemFont(ofSize: 13)
@@ -68,7 +96,7 @@ private struct HighlightedTextField: NSViewRepresentable {
         }
         applyHighlights(highlights, to: textField)
 
-        if focus.wrappedValue, textField.currentEditor() == nil {
+        if focus, textField.currentEditor() == nil {
             DispatchQueue.main.async {
                 textField.window?.makeFirstResponder(textField)
             }
@@ -83,13 +111,11 @@ private struct HighlightedTextField: NSViewRepresentable {
         }
 
         func controlTextDidBeginEditing(_ notification: Notification) {
-            parent.focus.wrappedValue = true
             guard let textField = notification.object as? NSTextField else { return }
             reapplyHighlights(to: textField)
         }
 
         func controlTextDidEndEditing(_ notification: Notification) {
-            parent.focus.wrappedValue = false
             guard let textField = notification.object as? NSTextField else { return }
             reapplyHighlights(to: textField)
         }

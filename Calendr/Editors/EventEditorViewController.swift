@@ -11,7 +11,7 @@ import RxSwift
 typealias EventEditorViewController = HostingViewModelController<EventEditorView>
 
 struct EventEditorView: ViewModelView {
-    @FocusState private var autoFocus: Bool
+    @State private var autoFocus: Bool = false
     @State private var viewModel: EventEditorViewModel
 
     init(viewModel: EventEditorViewModel) {
