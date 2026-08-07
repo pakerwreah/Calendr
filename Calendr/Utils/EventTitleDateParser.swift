@@ -67,6 +67,7 @@ struct EventTitleParseResult: Equatable {
     let duration: EventTitleDuration?
     let isAllDay: Bool
     let calendarQuery: String?
+    let hasConflicts: Bool
     let tokens: [EventTitleToken]
 }
 
@@ -75,58 +76,52 @@ enum EventTitleDateParser {
     static func parse(_ text: String, calendar: Calendar = .current) -> EventTitleParseResult {
         let fullRange = NSRange(text.startIndex..., in: text)
         let protectedRange = firstWordRange(in: text, range: fullRange)
-        let calendarMatch = calendarExpression
-            .firstMatch(in: text, range: fullRange)
-            .flatMap { overlaps($0.range(at: 1), protectedRange) ? nil : $0 }
-        let calendarRange = calendarMatch.flatMap { validRange($0.range(at: 1)) }
-        let calendarQuery = calendarMatch
-            .flatMap { Range($0.range(at: 2), in: text) }
-            .map { String(text[$0]).trimmed }
-            .flatMap(\.notEmpty)
+        let calendarMatches = calendarExpression
+            .matches(in: text, range: fullRange)
+            .compactMap { match -> CalendarMatch? in
+                guard
+                    let range = validRange(match.range(at: 1)),
+                    !overlaps(range, protectedRange),
+                    let queryRange = Range(match.range(at: 2), in: text),
+                    let query = String(text[queryRange]).trimmed.notEmpty
+                else {
+                    return nil
+                }
+                return (range, query)
+            }
+        let calendarMatch = calendarMatches.last
+        let calendarRanges = calendarMatches.map(\.range)
+        let excludedRanges = calendarRanges + [protectedRange].compactMap { $0 }
 
-        var tokens: [EventTitleToken] = calendarRange.map {
-            [.init(kind: .calendar, range: $0)]
-        } ?? []
-
-        let dateMatch = firstDateMatch(
+        let dateMatches = dateMatches(
             in: text,
             range: fullRange,
             calendar: calendar,
-            excluding: [calendarRange, protectedRange].compactMap { $0 }
-        )
-        if let dateMatch {
-            tokens.append(.init(kind: .date, range: dateMatch.range))
-        }
-
-        let excludedRanges = [calendarRange, protectedRange].compactMap { $0 }
-        let timeMatch = firstTimeMatch(in: text, range: fullRange, excluding: excludedRanges)
-        if let timeMatch {
-            tokens.append(.init(kind: .time, range: timeMatch.range))
-        }
-
-        let relativeStartMatch = firstRelativeStartMatch(
-            in: text,
-            range: fullRange,
-            excluding: excludedRanges + tokens.map(\.range)
-        )
-        if let relativeStartMatch {
-            tokens.append(.init(kind: .time, range: relativeStartMatch.range))
-        }
-
-        let durationMatch = firstDurationMatch(in: text, range: fullRange, excluding: excludedRanges)
-        if let durationMatch {
-            tokens.append(.init(kind: .duration, range: durationMatch.range))
-        }
-
-        let allDayRange = firstMatch(
-            using: allDayExpression,
-            in: text,
-            range: fullRange,
             excluding: excludedRanges
-        )?.range
-        if let allDayRange {
-            tokens.append(.init(kind: .allDay, range: allDayRange))
-        }
+        )
+        let timeMatches = timeMatches(in: text, range: fullRange, excluding: excludedRanges)
+        let relativeStartMatches = relativeStartMatches(
+            in: text,
+            range: fullRange,
+            excluding: excludedRanges + dateMatches.map(\.range) + timeMatches.map(\.range)
+        )
+        let durationMatches = durationMatches(in: text, range: fullRange, excluding: excludedRanges)
+        let allDayRanges = allDayExpression
+            .matches(in: text, range: fullRange)
+            .map(\.range)
+            .filter { !isExcluded($0, by: excludedRanges) }
+
+        let dateMatch = dateMatches.first
+        let timeMatch = timeMatches.first
+        let relativeStartMatch = relativeStartMatches.first
+        let durationMatch = durationMatches.first
+
+        var tokens = calendarRanges.map { EventTitleToken(kind: .calendar, range: $0) }
+        tokens += dateMatches.map { EventTitleToken(kind: .date, range: $0.range) }
+        tokens += timeMatches.map { EventTitleToken(kind: .time, range: $0.range) }
+        tokens += relativeStartMatches.map { EventTitleToken(kind: .time, range: $0.range) }
+        tokens += durationMatches.map { EventTitleToken(kind: .duration, range: $0.range) }
+        tokens += allDayRanges.map { EventTitleToken(kind: .allDay, range: $0) }
 
         return .init(
             cleanedTitle: removing(tokens: tokens, from: text),
@@ -137,8 +132,16 @@ enum EventTitleDateParser {
             endTime: timeMatch?.endTime,
             relativeStart: relativeStartMatch?.relativeStart,
             duration: durationMatch?.duration,
-            isAllDay: allDayRange != nil,
-            calendarQuery: calendarQuery,
+            isAllDay: !allDayRanges.isEmpty,
+            calendarQuery: calendarMatch?.query,
+            hasConflicts: hasConflicts(
+                dateMatches: dateMatches,
+                timeMatches: timeMatches,
+                relativeStartMatches: relativeStartMatches,
+                durationMatches: durationMatches,
+                isAllDay: !allDayRanges.isEmpty,
+                calendarMatches: calendarMatches
+            ),
             tokens: tokens.sorted { $0.range.location < $1.range.location }
         )
     }
@@ -159,9 +162,10 @@ private struct TimeMatch {
 
 private typealias RelativeStartMatch = (range: NSRange, relativeStart: EventTitleRelativeStart)
 private typealias DurationMatch = (range: NSRange, duration: EventTitleDuration)
+private typealias CalendarMatch = (range: NSRange, query: String)
 
 private let calendarExpression = try! NSRegularExpression(
-    pattern: #"(?:^|\s)(/([^/\n]+?))\s*$"#,
+    pattern: #"(?:^|\s)(/([^/\n]+?))(?=\s+(?=/)|\s*$)"#,
     options: [.caseInsensitive]
 )
 
@@ -246,22 +250,25 @@ private let allDayExpression = try! NSRegularExpression(
     options: [.caseInsensitive]
 )
 
-private func firstDateMatch(
+private func dateMatches(
     in text: String,
     range: NSRange,
     calendar: Calendar,
     excluding excludedRanges: [NSRange]
-) -> DateMatch? {
+) -> [DateMatch] {
+    var results: [DateMatch] = []
+
     for candidate in dateExpressions {
         let matches = candidate.expression.matches(in: text, range: range)
-        for match in matches where !isExcluded(match.range, by: excludedRanges) {
+        for match in matches where !isExcluded(match.range, by: excludedRanges + results.map(\.range)) {
             if let offset = candidate.offset(match, text) {
-                return .init(range: match.range, dayOffset: offset, numericDate: nil, weekday: nil)
+                results.append(.init(range: match.range, dayOffset: offset, numericDate: nil, weekday: nil))
             }
         }
     }
 
-    for match in numericDateExpression.matches(in: text, range: range) where !isExcluded(match.range, by: excludedRanges) {
+    for match in numericDateExpression.matches(in: text, range: range)
+        where !isExcluded(match.range, by: excludedRanges + results.map(\.range)) {
         guard
             let firstRange = Range(match.range(at: 1), in: text),
             let secondRange = Range(match.range(at: 2), in: text),
@@ -279,7 +286,7 @@ private func firstDateMatch(
             : EventTitleNumericDate(month: first, day: second, year: year)
 
         guard (1...12).contains(date.month), (1...31).contains(date.day) else { continue }
-        return .init(range: match.range, dayOffset: nil, numericDate: date, weekday: nil)
+        results.append(.init(range: match.range, dayOffset: nil, numericDate: date, weekday: nil))
     }
 
     let namedDateExpressions = [
@@ -287,7 +294,8 @@ private func firstDateMatch(
         (namedDayFirstExpression, 2, 1, 3),
     ]
     for (expression, monthGroup, dayGroup, yearGroup) in namedDateExpressions {
-        for match in expression.matches(in: text, range: range) where !isExcluded(match.range, by: excludedRanges) {
+        for match in expression.matches(in: text, range: range)
+            where !isExcluded(match.range, by: excludedRanges + results.map(\.range)) {
             guard
                 let monthRange = Range(match.range(at: monthGroup), in: text),
                 let dayRange = Range(match.range(at: dayGroup), in: text),
@@ -300,11 +308,12 @@ private func firstDateMatch(
 
             let year = Range(match.range(at: yearGroup), in: text).flatMap { Int(text[$0]) }
             let date = EventTitleNumericDate(month: month, day: day, year: year)
-            return .init(range: match.range, dayOffset: nil, numericDate: date, weekday: nil)
+            results.append(.init(range: match.range, dayOffset: nil, numericDate: date, weekday: nil))
         }
     }
 
-    for match in weekdayExpression.matches(in: text, range: range) where !isExcluded(match.range, by: excludedRanges) {
+    for match in weekdayExpression.matches(in: text, range: range)
+        where !isExcluded(match.range, by: excludedRanges + results.map(\.range)) {
         guard
             let occurrenceRange = Range(match.range(at: 1), in: text),
             let weekdayRange = Range(match.range(at: 2), in: text),
@@ -315,19 +324,22 @@ private func firstDateMatch(
         let occurrence: EventTitleWeekdayOccurrence = text[occurrenceRange].lowercased() == "next"
             ? .following
             : .nearest
-        return .init(
+        results.append(.init(
             range: match.range,
             dayOffset: nil,
             numericDate: nil,
             weekday: .init(weekday: weekday, occurrence: occurrence)
-        )
+        ))
     }
 
-    return nil
+    return results
 }
 
-private func firstTimeMatch(in text: String, range: NSRange, excluding excludedRanges: [NSRange]) -> TimeMatch? {
-    for match in timeRangeExpression.matches(in: text, range: range) where !isExcluded(match.range, by: excludedRanges) {
+private func timeMatches(in text: String, range: NSRange, excluding excludedRanges: [NSRange]) -> [TimeMatch] {
+    var results: [TimeMatch] = []
+
+    for match in timeRangeExpression.matches(in: text, range: range)
+        where !isExcluded(match.range, by: excludedRanges + results.map(\.range)) {
         guard
             let startRange = Range(match.range(at: 1), in: text),
             let endRange = Range(match.range(at: 2), in: text),
@@ -336,47 +348,53 @@ private func firstTimeMatch(in text: String, range: NSRange, excluding excludedR
         else {
             continue
         }
-        return .init(range: match.range, time: startTime, endTime: endTime)
+        results.append(.init(range: match.range, time: startTime, endTime: endTime))
     }
 
-    for match in timeExpression.matches(in: text, range: range) where !isExcluded(match.range, by: excludedRanges) {
+    for match in timeExpression.matches(in: text, range: range)
+        where !isExcluded(match.range, by: excludedRanges + results.map(\.range)) {
         guard
             let timeRange = Range(match.range(at: 1), in: text),
             let time = parseTime(String(text[timeRange]))
         else {
             continue
         }
-        return .init(range: match.range, time: time, endTime: nil)
+        results.append(.init(range: match.range, time: time, endTime: nil))
     }
 
-    for match in linkedDayPeriodExpression.matches(in: text, range: range) where !isExcluded(match.range, by: excludedRanges) {
+    for match in linkedDayPeriodExpression.matches(in: text, range: range)
+        where !isExcluded(match.range(at: 1), by: excludedRanges + results.map(\.range)) {
         guard
             let periodRange = Range(match.range(at: 1), in: text),
             let time = parseDayPeriod(String(text[periodRange]))
         else {
             continue
         }
-        return .init(range: match.range(at: 1), time: time, endTime: nil)
+        results.append(.init(range: match.range(at: 1), time: time, endTime: nil))
     }
 
-    for match in dayPeriodExpression.matches(in: text, range: range) where !isExcluded(match.range, by: excludedRanges) {
+    for match in dayPeriodExpression.matches(in: text, range: range)
+        where !isExcluded(match.range, by: excludedRanges + results.map(\.range)) {
         guard
             let periodRange = Range(match.range(at: 1), in: text),
             let time = parseDayPeriod(String(text[periodRange]))
         else {
             continue
         }
-        return .init(range: match.range, time: time, endTime: nil)
+        results.append(.init(range: match.range, time: time, endTime: nil))
     }
-    return nil
+    return results
 }
 
-private func firstRelativeStartMatch(
+private func relativeStartMatches(
     in text: String,
     range: NSRange,
     excluding excludedRanges: [NSRange]
-) -> RelativeStartMatch? {
-    for match in relativeStartExpression.matches(in: text, range: range) where !isExcluded(match.range, by: excludedRanges) {
+) -> [RelativeStartMatch] {
+    var results: [RelativeStartMatch] = []
+
+    for match in relativeStartExpression.matches(in: text, range: range)
+        where !isExcluded(match.range, by: excludedRanges + results.map(\.range)) {
         guard
             let valueRange = Range(match.range(at: 1), in: text),
             let unitRange = Range(match.range(at: 2), in: text),
@@ -386,13 +404,16 @@ private func firstRelativeStartMatch(
         else {
             continue
         }
-        return (match.range, .init(value: value, unit: unit))
+        results.append((match.range, .init(value: value, unit: unit)))
     }
-    return nil
+    return results
 }
 
-private func firstDurationMatch(in text: String, range: NSRange, excluding excludedRanges: [NSRange]) -> DurationMatch? {
-    for match in durationExpression.matches(in: text, range: range) where !isExcluded(match.range, by: excludedRanges) {
+private func durationMatches(in text: String, range: NSRange, excluding excludedRanges: [NSRange]) -> [DurationMatch] {
+    var results: [DurationMatch] = []
+
+    for match in durationExpression.matches(in: text, range: range)
+        where !isExcluded(match.range, by: excludedRanges + results.map(\.range)) {
         guard
             let valueRange = Range(match.range(at: 1), in: text),
             let unitRange = Range(match.range(at: 2), in: text),
@@ -402,18 +423,45 @@ private func firstDurationMatch(in text: String, range: NSRange, excluding exclu
         else {
             continue
         }
-        return (match.range, .init(value: value, unit: unit))
+        results.append((match.range, .init(value: value, unit: unit)))
     }
-    return nil
+    return results
 }
 
-private func firstMatch(
-    using expression: NSRegularExpression,
-    in text: String,
-    range: NSRange,
-    excluding excludedRanges: [NSRange]
-) -> NSTextCheckingResult? {
-    expression.matches(in: text, range: range).first { !isExcluded($0.range, by: excludedRanges) }
+private func hasConflicts(
+    dateMatches: [DateMatch],
+    timeMatches: [TimeMatch],
+    relativeStartMatches: [RelativeStartMatch],
+    durationMatches: [DurationMatch],
+    isAllDay: Bool,
+    calendarMatches: [CalendarMatch]
+) -> Bool {
+    if dateMatches.count > 1
+        || timeMatches.count > 1
+        || relativeStartMatches.count > 1
+        || durationMatches.count > 1
+        || calendarMatches.count > 1 {
+        return true
+    }
+
+    if !relativeStartMatches.isEmpty, !dateMatches.isEmpty || !timeMatches.isEmpty {
+        return true
+    }
+
+    if !durationMatches.isEmpty, timeMatches.contains(where: { $0.endTime != nil }) {
+        return true
+    }
+
+    if isAllDay {
+        if !timeMatches.isEmpty || !relativeStartMatches.isEmpty {
+            return true
+        }
+        if durationMatches.contains(where: { [.minute, .hour].contains($0.duration.unit) }) {
+            return true
+        }
+    }
+
+    return false
 }
 
 private func parseTime(_ text: String) -> EventTitleTime? {

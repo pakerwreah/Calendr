@@ -152,6 +152,127 @@ class EventEditorViewModelTests {
         #expect(viewModel.endDate == .make(year: 2025, month: 10, day: 29, hour: 11))
     }
 
+    @Test func testViewModel_naturalLanguageTitle_conflictingDurationAndEndTimePreventsSaving() {
+
+        let calendarService = MockCalendarServiceProvider()
+        calendarService.m_calendars = [.make(id: "cal-1")]
+        let viewModel = makeViewModel(calendarService: calendarService)
+
+        var lastValue: CreateEventArgs?
+        _ = calendarService.spyCreateEventObservable.bind { lastValue = $0 }
+
+        viewModel.title = "Workshop from 10 to 12 for 3 hours"
+
+        #expect(viewModel.hasConflicts)
+        #expect(viewModel.hasValidInput == false)
+
+        viewModel.saveEvent()
+
+        #expect(lastValue == nil)
+    }
+
+    @Test func testViewModel_naturalLanguageTitle_removingConflictingDurationRestoresValidity() {
+
+        let calendarService = MockCalendarServiceProvider()
+        calendarService.m_calendars = [.make(id: "cal-1")]
+        let viewModel = makeViewModel(calendarService: calendarService)
+
+        viewModel.title = "Workshop from 10 to 12 for 3 hours"
+        viewModel.title = "Workshop from 10 to 12"
+
+        #expect(viewModel.hasConflicts == false)
+        #expect(viewModel.hasValidInput)
+        #expect(viewModel.endDate == .make(year: 2025, month: 10, day: 25, hour: 12))
+    }
+
+    @Test func testViewModel_naturalLanguageTitle_removingConflictingEndTimeRestoresValidity() {
+
+        let calendarService = MockCalendarServiceProvider()
+        calendarService.m_calendars = [.make(id: "cal-1")]
+        let viewModel = makeViewModel(calendarService: calendarService)
+
+        viewModel.title = "Workshop from 10 to 12 for 3 hours"
+        viewModel.title = "Workshop at 10 for 3 hours"
+
+        #expect(viewModel.hasConflicts == false)
+        #expect(viewModel.hasValidInput)
+        #expect(viewModel.endDate == .make(year: 2025, month: 10, day: 25, hour: 13))
+    }
+
+    @Test(arguments: [
+        "Planning tomorrow next Monday 9.9. at 11",
+        "Planning at 10 at 11",
+        "Planning in 2 hours at 11",
+        "Planning tomorrow in 2 hours",
+        "Planning for 2 hours for 3 hours",
+        "Planning all day at 11",
+        "Planning all day in 2 hours",
+        "Planning all day for 2 hours",
+        "Planning /work /home",
+    ])
+    func testViewModel_naturalLanguageTitle_conflictingInstructionsPreventSaving(_ title: String) {
+
+        let calendarService = MockCalendarServiceProvider()
+        calendarService.m_calendars = [
+            .make(id: "cal-1", title: "Work"),
+            .make(id: "cal-2", title: "Home"),
+        ]
+        let viewModel = makeViewModel(calendarService: calendarService)
+
+        viewModel.title = title
+
+        #expect(viewModel.hasConflicts)
+        #expect(viewModel.hasValidInput == false)
+    }
+
+    @Test(arguments: [
+        "Planning tomorrow at 11 for 2 hours",
+        "Planning tomorrow all day for 2 days",
+        "Planning in 2 hours for 30 minutes",
+        "Planning tomorrow from 10 to 12 /work",
+    ])
+    func testViewModel_naturalLanguageTitle_compatibleInstructionsRemainValid(_ title: String) {
+
+        let calendarService = MockCalendarServiceProvider()
+        calendarService.m_calendars = [.make(id: "cal-1", title: "Work")]
+        let viewModel = makeViewModel(calendarService: calendarService)
+
+        viewModel.title = title
+
+        #expect(viewModel.hasConflicts == false)
+        #expect(viewModel.hasValidInput)
+    }
+
+    @Test func testViewModel_naturalLanguageTitle_highlightsEveryConflictingDateInstruction() {
+
+        let viewModel = makeViewModel()
+
+        viewModel.title = "Dinner tomorrow next Monday 9.9. at 11"
+
+        #expect(viewModel.hasConflicts)
+        #expect(viewModel.parsedEventTitle == "Dinner")
+        #expect(viewModel.titleHighlights.map(\.color) == [
+            .systemBlue,
+            .systemBlue,
+            .systemBlue,
+            .systemOrange,
+        ])
+    }
+
+    @Test func testViewModel_naturalLanguageTitle_removingCompetingDatesRestoresValidity() {
+
+        let calendarService = MockCalendarServiceProvider()
+        calendarService.m_calendars = [.make(id: "cal-1")]
+        let viewModel = makeViewModel(calendarService: calendarService)
+
+        viewModel.title = "Dinner tomorrow next Monday 9.9. at 11"
+        viewModel.title = "Dinner tomorrow at 11"
+
+        #expect(viewModel.hasConflicts == false)
+        #expect(viewModel.hasValidInput)
+        #expect(viewModel.startDate == .make(year: 2025, month: 10, day: 26, hour: 11))
+    }
+
     @Test func testViewModel_naturalLanguageTitle_allDayDurationUsesInclusiveEndDate() {
 
         let viewModel = makeViewModel()

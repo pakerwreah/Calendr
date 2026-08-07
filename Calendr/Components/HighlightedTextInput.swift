@@ -17,6 +17,7 @@ struct HighlightedTextInput: View {
     @Binding var text: String
     let highlights: [EventTitleHighlight]
     @Binding var focus: Bool
+    let isInvalid: Bool
 
     var body: some View {
         HighlightedTextField(
@@ -26,7 +27,7 @@ struct HighlightedTextInput: View {
             focus: $focus
         )
         .padding(4)
-        .overlay { InputBorder() }
+        .overlay { InputBorder(isInvalid: isInvalid) }
     }
 }
 

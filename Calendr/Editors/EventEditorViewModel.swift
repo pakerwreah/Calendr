@@ -142,10 +142,14 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
     }
 
     var hasValidInput: Bool {
-        parsedEventTitle.isNotBlank && hasValidDateRange && selectedCalendarId != nil
+        parsedEventTitle.isNotBlank && hasValidDateRange && selectedCalendarId != nil && !hasConflicts
     }
 
     var parsedEventTitle: String { parsedTitle.cleanedTitle }
+
+    var hasConflicts: Bool {
+        parsedTitle.hasConflicts
+    }
 
     var hasUnsavedChanges: Bool {
         [title, location, url, notes].contains(where: \.isNotBlank)
