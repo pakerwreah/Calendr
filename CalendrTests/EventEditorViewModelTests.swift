@@ -666,6 +666,17 @@ class EventEditorViewModelTests {
         #expect(eveningViewModel.startDate == .make(year: 2025, month: 10, day: 26, hour: 18))
     }
 
+    @Test func testViewModel_naturalLanguageTitle_linkedDayPeriodAfterTitleStillParses() {
+
+        let viewModel = makeViewModel()
+
+        viewModel.title = "Conference tomorrow morning"
+
+        #expect(viewModel.parsedEventTitle == "Conference")
+        #expect(viewModel.startDate == .make(year: 2025, month: 10, day: 26, hour: 9))
+        #expect(viewModel.titleHighlights.map(\.color) == [.systemBlue, .systemOrange])
+    }
+
     @Test func testViewModel_naturalLanguageTitle_eveningCanQualifyNumericTime() {
 
         let viewModel = makeViewModel()
@@ -769,6 +780,7 @@ class EventEditorViewModelTests {
             "In 2 hours call",
             "Full day workshop",
             "For 2 hours lecture",
+            "Tomorrow morning conference",
         ] {
             let viewModel = makeViewModel()
 

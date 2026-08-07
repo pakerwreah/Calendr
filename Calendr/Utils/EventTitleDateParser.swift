@@ -363,7 +363,7 @@ private func timeMatches(in text: String, range: NSRange, excluding excludedRang
     }
 
     for match in linkedDayPeriodExpression.matches(in: text, range: range)
-        where !isExcluded(match.range(at: 1), by: excludedRanges + results.map(\.range)) {
+        where !isExcluded(match.range, by: excludedRanges + results.map(\.range)) {
         guard
             let periodRange = Range(match.range(at: 1), in: text),
             let time = parseDayPeriod(String(text[periodRange]))
