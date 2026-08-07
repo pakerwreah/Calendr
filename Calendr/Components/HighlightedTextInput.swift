@@ -111,26 +111,9 @@ private struct HighlightedTextField: NSViewRepresentable {
             self.parent = parent
         }
 
-        func controlTextDidBeginEditing(_ notification: Notification) {
-            guard let textField = notification.object as? NSTextField else { return }
-            reapplyHighlights(to: textField)
-        }
-
-        func controlTextDidEndEditing(_ notification: Notification) {
-            guard let textField = notification.object as? NSTextField else { return }
-            reapplyHighlights(to: textField)
-        }
-
         func controlTextDidChange(_ notification: Notification) {
             guard let textField = notification.object as? NSTextField else { return }
             parent.text = textField.stringValue
-        }
-
-        private func reapplyHighlights(to textField: NSTextField) {
-            DispatchQueue.main.async { [weak self, weak textField] in
-                guard let self, let textField else { return }
-                applyHighlights(parent.highlights, to: textField)
-            }
         }
     }
 }
