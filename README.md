@@ -43,6 +43,26 @@ Hey 🙋🏻‍♂️ if you like my app, please consider buying me a coffee to 
 </table>
 <br>
 
+### Natural-language event entry
+
+Create events faster by typing the title together with optional date, time, duration, all-day, and calendar instructions. Calendr highlights recognized instructions while you type, immediately updates the event fields, and removes the instructions from the saved event title.
+
+For example:
+
+`Pickleball with Tom next Friday from 10 to 12 /sport`
+
+- Dates: `today`, `tomorrow`, `yesterday`, `in a week`, `in 3 days`, `on Friday`, `at Friday`, `next Friday`, or `August 12`
+- Times: `at 14`, `at 2pm`, `at noon`, `tomorrow morning`, `from 10 to 12`, or `at 22 until 1`
+- Relative starts and durations: `in 2 hours`, `for 30 minutes`, `for 2 hours`, or `for 4 days`
+- All-day events: `all day` or `full day`
+- Calendars: add `/` followed by part of a calendar name, such as `/sport`, to fuzzy-match and select it
+
+Natural-language instructions are currently English-only. Numeric dates follow the date order configured by the active locale, and the first word is always preserved as event title text.
+
+<p align="center">
+  <img width="650" src="resources/smart-event-entry.png" alt="Natural-language event entry with highlighted date, time, and calendar instructions" />
+</p>
+
 ### Hidden features 🔍
 
 ## Display multiple timezones in the menu bar
@@ -61,4 +81,3 @@ date|encoded
 It has limited support to relative dates like: `today`, `yesterday`, `tomorrow` but will not work with `next week`, `last month`, etc.
 
 That's how `NSDataDetector` works ¯\\_\(ツ\)\_/¯
-

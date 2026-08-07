@@ -26,17 +26,33 @@ struct EventEditorView: ViewModelView {
                 .font(.title2)
                 .bold()
 
-            HStack(spacing: 8) {
-                TextInput(
-                    placeholder: Strings.Editor.title,
-                    text: $viewModel.title,
-                    focus: $autoFocus
-                )
-                CalendarPicker(
-                    calendarSections: viewModel.calendarSections,
-                    selectedCalendarId: $viewModel.selectedCalendarId,
-                    selectedCalendarColor: viewModel.selectedCalendarColor
-                )
+            VStack(alignment: .leading, spacing: 4) {
+                HStack(spacing: 8) {
+                    HighlightedTextInput(
+                        placeholder: Strings.Editor.title,
+                        text: $viewModel.title,
+                        highlights: viewModel.titleHighlights,
+                        focus: $autoFocus
+                    )
+                    .frame(maxWidth: .infinity)
+                    .layoutPriority(1)
+
+                    CalendarPicker(
+                        calendarSections: viewModel.calendarSections,
+                        selectedCalendarId: $viewModel.selectedCalendarId,
+                        selectedCalendarColor: viewModel.selectedCalendarColor
+                    )
+                }
+
+                if let matchedCalendarTitle = viewModel.matchedCalendarTitle {
+                    HStack(spacing: 4) {
+                        Image(systemName: "circle.fill")
+                        Text(matchedCalendarTitle)
+                    }
+                    .font(.system(size: 11))
+                    .foregroundStyle(Color(nsColor: viewModel.selectedCalendarColor))
+                    .padding(.leading, 4)
+                }
             }
 
             Grid(horizontalSpacing: 12, verticalSpacing: 12) {
@@ -107,7 +123,7 @@ struct EventEditorView: ViewModelView {
             }
         }
         .padding(20)
-        .frame(width: 380)
+        .frame(width: 480)
         .fixedSize()
         .onAppear {
             autoFocus = true
