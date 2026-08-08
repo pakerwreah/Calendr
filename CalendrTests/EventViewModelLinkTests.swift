@@ -68,6 +68,42 @@ class EventViewModelLinkTests {
         #expect(link.url.absoluteString == "https://someurl.com")
     }
 
+    @Test func testLink_withUrlNotes_shouldShowLinkButton() throws {
+
+        let viewModel = mock(
+            event: .make(notes: "https://someurl.com")
+        )
+
+        let link = try #require(viewModel.link)
+
+        #expect(link.isMeeting == false)
+        #expect(link.url.absoluteString == "https://someurl.com")
+    }
+
+    @Test func testLink_withUrlNotes_withDiacriticText_shouldShowLinkButton() throws {
+
+        let viewModel = mock(
+            event: .make(notes: "Café https://someurl.com")
+        )
+
+        let link = try #require(viewModel.link)
+
+        #expect(link.isMeeting == false)
+        #expect(link.url.absoluteString == "https://someurl.com")
+    }
+
+    @Test func testLink_withUrlNotes_withMultiByteText_shouldShowLinkButton() throws {
+
+        let viewModel = mock(
+            event: .make(notes: "𠮷 https://someurl.com")
+        )
+
+        let link = try #require(viewModel.link)
+
+        #expect(link.isMeeting == false)
+        #expect(link.url.absoluteString == "https://someurl.com")
+    }
+
     @Test func testLink_withInvalidURL_shouldNotShowLinkButton() {
 
         let viewModel = mock(

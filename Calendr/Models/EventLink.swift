@@ -47,7 +47,7 @@ private func detectLinks(_ texts: [String?]) -> [URL] {
 
     return texts.compact().flatMap { text in
         detector
-            .matches(in: text, options: [], range: NSRange(location: 0, length: text.count))
+            .matches(in: text, options: [], range: text.nsRange)
             .filter { text[Range($0.range, in: text)!].contains("://") }
             .compactMap(\.url)
     }

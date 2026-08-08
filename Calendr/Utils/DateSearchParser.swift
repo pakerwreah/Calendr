@@ -41,7 +41,7 @@ private func makeResult(_ text: String, _ match: DateSuggestionMatch) -> DateSug
 
 private func searchMatchDate(text: String, dateProvider: DateProviding) -> DateSuggestionMatch? {
     let detector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.date.rawValue)
-    let matches = detector?.matches(in: text, options: [], range: NSRange(location: 0, length: text.count))
+    let matches = detector?.matches(in: text, options: [], range: text.nsRange)
     guard
         let match = matches?.first(where: \.date.isNotNil),
         let date = match.date.map(dateProvider.calendar.startOfDay),
