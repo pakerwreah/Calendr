@@ -163,6 +163,7 @@ struct EventEditorView: ViewModelView {
                     .make(id: "2", account: "iCloud", title: "Personal", color: .systemRed),
                 ]
             ),
+            naturalLanguageEventInputEnabled: true,
             scheduler: MainScheduler.instance
         )
     )

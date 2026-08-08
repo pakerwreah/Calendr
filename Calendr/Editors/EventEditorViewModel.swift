@@ -81,6 +81,7 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
 
     private let calendarService: CalendarServiceProviding
     private let dateProvider: DateProviding
+    private let naturalLanguageEventInputEnabled: Bool
     private let scheduler: ImmediateSchedulerType
 
     private let disposeBag = DisposeBag()
@@ -102,7 +103,13 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
         TimeZone(identifier: selectedTimeZoneIdentifier) ?? dateProvider.calendar.timeZone
     }
 
-    init(startDate: DueDate, dateProvider: DateProviding, calendarService: CalendarServiceProviding, scheduler: ImmediateSchedulerType) {
+    init(
+        startDate: DueDate,
+        dateProvider: DateProviding,
+        calendarService: CalendarServiceProviding,
+        naturalLanguageEventInputEnabled: Bool,
+        scheduler: ImmediateSchedulerType
+    ) {
         self.dateProvider = dateProvider
         let roundedStart = roundUpToNextHour(startDate.date, using: dateProvider)
         let defaultDuration: TimeInterval = 3600
@@ -110,6 +117,7 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
         self.eventDuration = defaultDuration
         self.endDate = roundedStart.addingTimeInterval(defaultDuration)
         self.calendarService = calendarService
+        self.naturalLanguageEventInputEnabled = naturalLanguageEventInputEnabled
         self.scheduler = scheduler
         self.selectedTimeZoneIdentifier = dateProvider.calendar.timeZone.identifier
 
@@ -145,10 +153,12 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
         parsedEventTitle.isNotBlank && hasValidDateRange && selectedCalendarId != nil && !hasConflicts
     }
 
-    var parsedEventTitle: String { parsedTitle.cleanedTitle }
+    var parsedEventTitle: String {
+        naturalLanguageEventInputEnabled ? parsedTitle.cleanedTitle : title.trimmed
+    }
 
     var hasConflicts: Bool {
-        parsedTitle.hasConflicts
+        naturalLanguageEventInputEnabled && parsedTitle.hasConflicts
     }
 
     var hasUnsavedChanges: Bool {
@@ -224,6 +234,8 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
     }
 
     private func parseTitleInstructions() {
+        guard naturalLanguageEventInputEnabled else { return }
+
         let previousParsedTitle = parsedTitle
         let newParsedTitle = EventTitleDateParser.parse(title, calendar: calendar)
 

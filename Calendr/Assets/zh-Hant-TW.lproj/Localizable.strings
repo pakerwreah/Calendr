@@ -90,6 +90,7 @@
 "settings.events.force_local_time_zone" = "以當地時區顯示所有活動";
 //"settings.events.show_event_list_summary" = "Show event list summary";
 //"settings.events.show_future_events" = "Show future events";
+//"settings.events.natural_language_input" = "Natural-language input (English only)";
 
 "settings.appearance.transparency" = "透明度";
 "settings.appearance.accessibility" = "輔助功能";

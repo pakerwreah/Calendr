@@ -57,7 +57,7 @@ For example:
 - All-day events: `all day` or `full day`
 - Calendars: add `/` followed by part of a calendar name, such as `/sport`, to fuzzy-match and select it
 
-Natural-language instructions are currently English-only. Numeric dates follow the date order configured by the active locale, and the first word is always preserved as event title text.
+Natural-language instructions are currently English-only. The feature can be enabled or disabled in Settings and defaults to enabled when Calendr's preferred localization is English. Numeric dates follow the date order configured by the active locale, and the first word is always preserved as event title text.
 
 <p align="center">
   <img width="650" src="resources/smart-event-entry.png" alt="Natural-language event entry with highlighted date, time, and calendar instructions" />

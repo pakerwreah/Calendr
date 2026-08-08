@@ -793,6 +793,41 @@ class EventEditorViewModelTests {
         }
     }
 
+    @Test func testViewModel_naturalLanguageTitle_whenDisabledTreatsEntireInputAsTitle() {
+
+        let calendarService = MockCalendarServiceProvider()
+        calendarService.m_calendars = [
+            .make(id: "work", title: "Work"),
+            .make(id: "personal", title: "Personal"),
+        ]
+        calendarService.m_defaultCalendarId = "personal"
+        let viewModel = makeViewModel(
+            calendarService: calendarService,
+            naturalLanguageEventInputEnabled: false
+        )
+        let title = "Dinner tomorrow next Monday at 14 full day for 3 hours /work"
+
+        var lastValue: CreateEventArgs?
+        _ = calendarService.spyCreateEventObservable.bind { lastValue = $0 }
+
+        viewModel.title = title
+
+        #expect(viewModel.parsedEventTitle == title)
+        #expect(viewModel.startDate == .make(year: 2025, month: 10, day: 25, hour: 11))
+        #expect(viewModel.endDate == .make(year: 2025, month: 10, day: 25, hour: 12))
+        #expect(viewModel.isAllDay == false)
+        #expect(viewModel.selectedCalendarId == "personal")
+        #expect(viewModel.matchedCalendarTitle == nil)
+        #expect(viewModel.titleHighlights.isEmpty)
+        #expect(viewModel.hasConflicts == false)
+        #expect(viewModel.hasValidInput)
+
+        viewModel.saveEvent()
+
+        #expect(lastValue?.title == title)
+        #expect(lastValue?.calendar == "personal")
+    }
+
     @Test func testViewModel_dateRange_timed_endEqualStart_invalid() {
 
         let calendarService = MockCalendarServiceProvider()
@@ -1322,12 +1357,14 @@ class EventEditorViewModelTests {
     func makeViewModel(
         startDate: Date? = nil,
         dateProvider: DateProviding? = nil,
-        calendarService: CalendarServiceProviding = MockCalendarServiceProvider()
+        calendarService: CalendarServiceProviding = MockCalendarServiceProvider(),
+        naturalLanguageEventInputEnabled: Bool = true
     ) -> EventEditorViewModel {
         EventEditorViewModel(
             startDate: .init(date: startDate ?? self.dateProvider.now),
             dateProvider: dateProvider ?? self.dateProvider,
             calendarService: calendarService,
+            naturalLanguageEventInputEnabled: naturalLanguageEventInputEnabled,
             scheduler: CurrentThreadScheduler.instance
         )
     }
