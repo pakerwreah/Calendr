@@ -65,6 +65,28 @@ class DateSearchParserTests {
         #expect(result == "Search term")
     }
 
+    @Test func testResultWithDiacriticSearchTerm() throws {
+        let text = "Café 6 december 2022"
+        let (date, result) = try #require(DateSearchParser.parse(text: text, using: dateProvider), "\(text)")
+
+        let formatter = DateFormatter(calendar: dateProvider.calendar)
+        formatter.dateStyle = .short
+
+        #expect(formatter.string(from: date) == "06/12/2022")
+        #expect(result == "Café")
+    }
+
+    @Test func testResultWithMultiByteSearchTerm() throws {
+        let text = "𠮷 6 december 2022"
+        let (date, result) = try #require(DateSearchParser.parse(text: text, using: dateProvider), "\(text)")
+
+        let formatter = DateFormatter(calendar: dateProvider.calendar)
+        formatter.dateStyle = .short
+
+        #expect(formatter.string(from: date) == "06/12/2022")
+        #expect(result == "𠮷")
+    }
+
     @Test func testInvalidDates() throws {
 
         let dateStrings: [String] = [
