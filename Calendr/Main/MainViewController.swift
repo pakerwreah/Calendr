@@ -556,7 +556,7 @@ class MainViewController: NSViewController {
             ),
             dateProvider: dateProvider,
             calendarService: calendarService,
-            naturalLanguageEventInputEnabled: localStorage.naturalLanguageEventInputEnabled,
+            settings: settingsViewModel,
             scheduler: MainScheduler.instance
         )
         let viewController = EventEditorViewController(viewModel: viewModel)

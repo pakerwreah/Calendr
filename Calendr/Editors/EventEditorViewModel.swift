@@ -107,7 +107,7 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
         startDate: DueDate,
         dateProvider: DateProviding,
         calendarService: CalendarServiceProviding,
-        naturalLanguageEventInputEnabled: Bool,
+        settings: EventEditorSettings,
         scheduler: ImmediateSchedulerType
     ) {
         self.dateProvider = dateProvider
@@ -117,7 +117,7 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
         self.eventDuration = defaultDuration
         self.endDate = roundedStart.addingTimeInterval(defaultDuration)
         self.calendarService = calendarService
-        self.naturalLanguageEventInputEnabled = naturalLanguageEventInputEnabled
+        self.naturalLanguageEventInputEnabled = settings.naturalLanguageEventInputEnabled.lastValue() ?? false
         self.scheduler = scheduler
         self.selectedTimeZoneIdentifier = dateProvider.calendar.timeZone.identifier
 
@@ -276,7 +276,9 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
             }
         } else if hasCalendarInstruction {
             hasCalendarInstruction = false
-            selectedCalendarId = defaultCalendarId
+            if let defaultCalendarId {
+                selectedCalendarId = defaultCalendarId
+            }
         }
 
         titleHighlights = parsedTitle.tokens.map { token in

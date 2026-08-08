@@ -45,6 +45,10 @@ protocol AppearanceSettings {
     var textScaling: Observable<Double> { get }
 }
 
+protocol EventEditorSettings {
+    var naturalLanguageEventInputEnabled: Observable<Bool> { get }
+}
+
 protocol EventSettings: AppearanceSettings {
     var showRecurrenceIndicator: Observable<Bool> { get }
     var forceLocalTimeZone: Observable<Bool> { get }
@@ -74,6 +78,7 @@ protocol NextEventSettings: EventListSettings {
 }
 
 class SettingsViewModel:
+    EventEditorSettings,
     StatusItemSettings, NextEventSettings, CalendarSettings,
     EventListSettings, EventSettings, AppearanceSettings {
 
