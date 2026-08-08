@@ -62,6 +62,9 @@ class SettingsViewModelTests {
     var localStorageShowAllDayDetails: Bool? { localStorage.object(forKey: Prefs.showAllDayDetails) as? Bool }
     var localStorageShowRecurrenceIndicator: Bool? { localStorage.object(forKey: Prefs.showRecurrenceIndicator) as? Bool }
     var localStorageShowEventListSummary: Bool? { localStorage.object(forKey: Prefs.showEventListSummary) as? Bool }
+    var localStorageNaturalLanguageEventInputEnabled: Bool? {
+        localStorage.object(forKey: Prefs.naturalLanguageEventInputEnabled) as? Bool
+    }
     var localStorageTransparency: NSNumber? { localStorage.object(forKey: Prefs.transparencyLevel) as? NSNumber }
     var localStorageAppearanceMode: NSNumber? { localStorage.object(forKey: Prefs.appearanceMode) as? NSNumber }
     var localStorageEventDotsStyle: String? { localStorage.object(forKey: Prefs.eventDotsStyle) as! String? }
@@ -102,13 +105,18 @@ class SettingsViewModelTests {
         #expect(localStorageShowAllDayDetails == nil)
         #expect(localStorageShowRecurrenceIndicator == nil)
         #expect(localStorageShowEventListSummary == nil)
+        #expect(localStorageNaturalLanguageEventInputEnabled == nil)
         #expect(localStorageTransparency == nil)
         #expect(localStorageEventDotsStyle == nil)
         #expect(localStorageFutureEventsDays == nil)
         #expect(localStorageShowMonthOutline == nil)
         #expect(localStorageAutoCheckForUpdates == nil)
 
-        registerDefaultPrefs(in: localStorage, calendar: .gregorian.with(firstWeekday: 3))
+        registerDefaultPrefs(
+            in: localStorage,
+            calendar: .gregorian.with(firstWeekday: 3),
+            preferredLocalizations: ["en"]
+        )
     }
 
     @Test func testDefaultSettings() {
@@ -142,6 +150,7 @@ class SettingsViewModelTests {
         #expect(viewModel.showAllDayDetails.lastValue() == true)
         #expect(viewModel.showRecurrenceIndicator.lastValue() == true)
         #expect(viewModel.showEventListSummary.lastValue() == true)
+        #expect(viewModel.naturalLanguageEventInputEnabled.lastValue() == true)
         #expect(viewModel.popoverTransparency.lastValue() == 2)
         #expect(viewModel.popoverMaterial.lastValue() == .headerView)
         #expect(viewModel.appearanceMode.lastValue() == .automatic)
@@ -176,6 +185,7 @@ class SettingsViewModelTests {
         #expect(localStorageShowOverdueReminders == true)
         #expect(localStorageShowRecurrenceIndicator == true)
         #expect(localStorageShowEventListSummary == true)
+        #expect(localStorageNaturalLanguageEventInputEnabled == true)
         #expect(localStorageTransparency == 2)
         #expect(localStorageFullScreenEventTransparencyLevel == 2)
         #expect(localStorageAppearanceMode == 0)
@@ -183,6 +193,34 @@ class SettingsViewModelTests {
         #expect(localStorageFutureEventsDays == 0)
         #expect(localStorageShowMonthOutline == true)
         #expect(localStorageAutoCheckForUpdates == true)
+    }
+
+    @Test func testNaturalLanguageEventInputDefaultsOnForRegionalEnglishLocalization() {
+
+        let storage = MockLocalStorageProvider()
+
+        registerDefaultPrefs(in: storage, preferredLocalizations: ["en-GB"])
+
+        #expect(storage.naturalLanguageEventInputEnabled)
+    }
+
+    @Test func testNaturalLanguageEventInputDefaultsOffForNonEnglishLocalization() {
+
+        let storage = MockLocalStorageProvider()
+
+        registerDefaultPrefs(in: storage, preferredLocalizations: ["cs"])
+
+        #expect(storage.naturalLanguageEventInputEnabled == false)
+    }
+
+    @Test func testNaturalLanguageEventInputKeepsExplicitUserPreference() {
+
+        let storage = MockLocalStorageProvider()
+        storage.naturalLanguageEventInputEnabled = true
+
+        registerDefaultPrefs(in: storage, preferredLocalizations: ["cs"])
+
+        #expect(storage.naturalLanguageEventInputEnabled)
     }
 
     @Test func testMigratesLegacyStatusItemBackgroundStyle() {
@@ -835,6 +873,29 @@ class SettingsViewModelTests {
 
         #expect(showMap == false)
         #expect(localStorageShowMap == false)
+    }
+
+    @Test func testToggleNaturalLanguageEventInput() {
+
+        localStorage.naturalLanguageEventInputEnabled = false
+
+        var isEnabled: Bool?
+
+        viewModel.naturalLanguageEventInputEnabled
+            .bind { isEnabled = $0 }
+            .disposed(by: disposeBag)
+
+        #expect(isEnabled == false)
+
+        viewModel.toggleNaturalLanguageEventInput.onNext(true)
+
+        #expect(isEnabled == true)
+        #expect(localStorageNaturalLanguageEventInputEnabled == true)
+
+        viewModel.toggleNaturalLanguageEventInput.onNext(false)
+
+        #expect(isEnabled == false)
+        #expect(localStorageNaturalLanguageEventInputEnabled == false)
     }
 
     @Test func testToggleShowPastEvents() {

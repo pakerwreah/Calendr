@@ -65,6 +65,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     private let showRecurrenceCheckbox = Checkbox(title: Strings.Settings.Events.showRecurrenceIndicator)
     private let forceLocalTimeZoneCheckbox = Checkbox(title: Strings.Settings.Events.forceLocalTimeZone)
     private let showEventListSummaryCheckbox = Checkbox(title: Strings.Settings.Events.showEventListSummary)
+    private let naturalLanguageEventInputCheckbox = Checkbox(title: Strings.Settings.Events.naturalLanguageInput)
     private let futureEventsLabel = Label(text: Strings.Settings.Events.showFutureEvents)
     private let futureEventsStepperLabel = Label()
     private let futureEventsStepper = NSStepper()
@@ -258,6 +259,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         let futureEventsStack = NSStackView(views: [futureEventsLabel, .spacer, futureEventsStepperLabel, futureEventsStepper])
 
         return NSStackView(views: [
+            naturalLanguageEventInputCheckbox,
             NSStackView(views: [showMapCheckbox, mapBlacklistButton]),
             showFinishedEventsCheckbox,
             showOverdueCheckbox,
@@ -768,6 +770,13 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             control: showEventListSummaryCheckbox,
             observable: viewModel.showEventListSummary,
             observer: viewModel.toggleEventListSummary
+        )
+        .disposed(by: disposeBag)
+
+        bind(
+            control: naturalLanguageEventInputCheckbox,
+            observable: viewModel.naturalLanguageEventInputEnabled,
+            observer: viewModel.toggleNaturalLanguageEventInput
         )
         .disposed(by: disposeBag)
     }

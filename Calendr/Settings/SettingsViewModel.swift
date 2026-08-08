@@ -45,6 +45,10 @@ protocol AppearanceSettings {
     var textScaling: Observable<Double> { get }
 }
 
+protocol EventEditorSettings {
+    var naturalLanguageEventInputEnabled: Observable<Bool> { get }
+}
+
 protocol EventSettings: AppearanceSettings {
     var showRecurrenceIndicator: Observable<Bool> { get }
     var forceLocalTimeZone: Observable<Bool> { get }
@@ -74,6 +78,7 @@ protocol NextEventSettings: EventListSettings {
 }
 
 class SettingsViewModel:
+    EventEditorSettings,
     StatusItemSettings, NextEventSettings, CalendarSettings,
     EventListSettings, EventSettings, AppearanceSettings {
 
@@ -139,6 +144,7 @@ class SettingsViewModel:
     let toggleRecurrenceIndicator: AnyObserver<Bool>
     let toggleForceLocalTimeZone: AnyObserver<Bool>
     let toggleEventListSummary: AnyObserver<Bool>
+    let toggleNaturalLanguageEventInput: AnyObserver<Bool>
     let transparencyObserver: AnyObserver<Int>
     let textScalingObserver: AnyObserver<Double>
     let calendarTextScalingObserver: AnyObserver<Double>
@@ -194,6 +200,7 @@ class SettingsViewModel:
     let showRecurrenceIndicator: Observable<Bool>
     let forceLocalTimeZone: Observable<Bool>
     let showEventListSummary: Observable<Bool>
+    let naturalLanguageEventInputEnabled: Observable<Bool>
     let popoverTransparency: Observable<Int>
     let popoverMaterial: Observable<PopoverMaterial>
     let textScaling: Observable<Double>
@@ -305,6 +312,7 @@ class SettingsViewModel:
         toggleRecurrenceIndicator = localStorage.rx.observer(for: \.showRecurrenceIndicator)
         toggleForceLocalTimeZone = localStorage.rx.observer(for: \.forceLocalTimeZone)
         toggleEventListSummary = localStorage.rx.observer(for: \.showEventListSummary)
+        toggleNaturalLanguageEventInput = localStorage.rx.observer(for: \.naturalLanguageEventInputEnabled)
         transparencyObserver = localStorage.rx.observer(for: \.transparencyLevel)
         textScalingObserver = localStorage.rx.observer(for: \.textScaling)
         calendarTextScalingObserver = localStorage.rx.observer(for: \.calendarTextScaling)
@@ -355,6 +363,7 @@ class SettingsViewModel:
         showRecurrenceIndicator = localStorage.rx.observe(\.showRecurrenceIndicator)
         forceLocalTimeZone = localStorage.rx.observe(\.forceLocalTimeZone)
         showEventListSummary = localStorage.rx.observe(\.showEventListSummary)
+        naturalLanguageEventInputEnabled = localStorage.rx.observe(\.naturalLanguageEventInputEnabled)
         popoverTransparency = localStorage.rx.observe(\.transparencyLevel)
         textScaling = localStorage.rx.observe(\.textScaling)
         calendarTextScaling = localStorage.rx.observe(\.calendarTextScaling)

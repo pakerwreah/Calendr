@@ -66,6 +66,7 @@ enum Prefs {
     static let forceLocalTimeZone = "force_local_time_zone"
     static let showEventListSummary = "show_event_list_summary"
     static let futureEventsDays = "future_events_days"
+    static let naturalLanguageEventInputEnabled = "natural_language_event_input_enabled"
 
     // Appearance
     static let appearanceMode = "appearance_mode"
@@ -87,7 +88,11 @@ enum Prefs {
     static let statusItemPreferredPosition = "NSStatusItem Preferred Position"
 }
 
-func registerDefaultPrefs(in localStorage: LocalStorageProvider, calendar: Calendar = .current) {
+func registerDefaultPrefs(
+    in localStorage: LocalStorageProvider,
+    calendar: Calendar = .current,
+    preferredLocalizations: [String] = Bundle.main.preferredLocalizations
+) {
 
     migrateStatusItemBackgroundStyle(in: localStorage)
 
@@ -151,6 +156,7 @@ func registerDefaultPrefs(in localStorage: LocalStorageProvider, calendar: Calen
         Prefs.forceLocalTimeZone: false,
         Prefs.showEventListSummary: true,
         Prefs.futureEventsDays: 0,
+        Prefs.naturalLanguageEventInputEnabled: isEnglishLocalization(preferredLocalizations),
 
         // Appearance
         Prefs.appearanceMode: 0,
@@ -161,6 +167,14 @@ func registerDefaultPrefs(in localStorage: LocalStorageProvider, calendar: Calen
         Prefs.defaultBrowserPerCalendar: [:],
         Prefs.autoCheckForUpdates: true
     ])
+}
+
+private func isEnglishLocalization(_ preferredLocalizations: [String]) -> Bool {
+    preferredLocalizations.first?
+        .replacingOccurrences(of: "_", with: "-")
+        .split(separator: "-")
+        .first?
+        .lowercased() == "en"
 }
 
 private func migrateStatusItemBackgroundStyle(in localStorage: LocalStorageProvider) {
@@ -416,6 +430,11 @@ extension LocalStorageProvider {
     @objc dynamic var futureEventsDays: Int {
         get { integer(forKey: Prefs.futureEventsDays) }
         set { set(newValue, forKey: Prefs.futureEventsDays) }
+    }
+
+    @objc dynamic var naturalLanguageEventInputEnabled: Bool {
+        get { bool(forKey: Prefs.naturalLanguageEventInputEnabled) }
+        set { set(newValue, forKey: Prefs.naturalLanguageEventInputEnabled) }
     }
 
     // Appearance

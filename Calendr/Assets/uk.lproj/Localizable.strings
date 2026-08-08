@@ -90,6 +90,7 @@
 "settings.events.force_local_time_zone" = "Показувати всі події в місцевому часовому поясі";
 //"settings.events.show_event_list_summary" = "Show event list summary";
 //"settings.events.show_future_events" = "Show future events";
+//"settings.events.natural_language_input" = "Natural-language input (English only)";
 
 "settings.appearance.transparency" = "Прозорість";
 "settings.appearance.accessibility" = "Доступність";
