@@ -19,7 +19,6 @@ Language|Count
 [Russian - русский - (ru)](Calendr/Assets/ru.lproj/Localizable.strings)|44
 [French - français - (fr)](Calendr/Assets/fr.lproj/Localizable.strings)|56
 [Dutch - Nederlands - (nl)](Calendr/Assets/nl.lproj/Localizable.strings)|58
-[Portuguese - português - (pt)](Calendr/Assets/pt.lproj/Localizable.strings)|8
 
 Feel free to open a new issue or pull request with the missing values.
 

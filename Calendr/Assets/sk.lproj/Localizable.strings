@@ -90,7 +90,7 @@
 "settings.events.force_local_time_zone" = "Zobraziť všetky udalosti v miestnom čase";
 "settings.events.show_event_list_summary" = "Zobraziť súhrn zoznamu udalostí";
 "settings.events.show_future_events" = "Zobraziť budúce udalosti";
-//"settings.events.natural_language_input" = "Natural-language input (English only)";
+//"settings.events.natural_language_input" = "Natural-language input (English)";
 
 "settings.appearance.transparency" = "Priehľadnosť";
 "settings.appearance.accessibility" = "Prístupnosť";

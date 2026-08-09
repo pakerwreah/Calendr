@@ -90,7 +90,7 @@
 "settings.events.force_local_time_zone" = "Pokaż wszystkie wydarzenia w lokalnej strefie czasowej";
 "settings.events.show_event_list_summary" = "Pokaż podsumowanie listy wydarzeń";
 "settings.events.show_future_events" = "Pokaż przyszłe wydarzenia";
-//"settings.events.natural_language_input" = "Natural-language input (English only)";
+//"settings.events.natural_language_input" = "Natural-language input (English)";
 
 "settings.appearance.transparency" = "Przezroczystość";
 "settings.appearance.accessibility" = "Dostępność";

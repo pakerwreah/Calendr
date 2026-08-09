@@ -90,7 +90,7 @@
 "settings.events.force_local_time_zone" = "Εμφάνιση όλων των συμβάντων στην τοπική ζώνη ώρας";
 //"settings.events.show_event_list_summary" = "Show event list summary";
 //"settings.events.show_future_events" = "Show future events";
-//"settings.events.natural_language_input" = "Natural-language input (English only)";
+//"settings.events.natural_language_input" = "Natural-language input (English)";
 
 "settings.appearance.transparency" = "Διαφάνεια";
 "settings.appearance.accessibility" = "Προσβασιμότητα";

@@ -303,8 +303,8 @@ internal enum Strings {
     internal enum Events {
       /// Show all events in local time zone
       internal static let forceLocalTimeZone = Strings.tr("Localizable", "settings.events.force_local_time_zone", fallback: "Show all events in local time zone")
-      /// Natural-language input (English only)
-      internal static let naturalLanguageInput = Strings.tr("Localizable", "settings.events.natural_language_input", fallback: "Natural-language input (English only)")
+      /// Natural-language input (English)
+      internal static let naturalLanguageInput = Strings.tr("Localizable", "settings.events.natural_language_input", fallback: "Natural-language input (English)")
       /// Show all-day events details
       internal static let showAllDayDetails = Strings.tr("Localizable", "settings.events.show_all_day_details", fallback: "Show all-day events details")
       /// Show all-day events
