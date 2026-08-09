@@ -442,6 +442,36 @@ class EventEditorViewModelTests {
         #expect(viewModel.startDate == .make(year: 2026, month: 7, day: 8, hour: 11))
     }
 
+    @Test func testViewModel_naturalLanguageTitle_numericDateUsesDayFirstLocale_withTimeOverlap() {
+
+        let calendar = Calendar.gregorian.with(locale: Locale(identifier: "cs_CZ"))
+        let dateProvider = MockDateProvider(
+            calendar: calendar,
+            now: .make(year: 2026, month: 8, day: 6, hour: 10, minute: 30)
+        )
+        let viewModel = makeViewModel(dateProvider: dateProvider)
+
+        viewModel.title = "Dinner at 7.8."
+
+        #expect(viewModel.parsedEventTitle == "Dinner")
+        #expect(viewModel.startDate == .make(year: 2026, month: 8, day: 7, hour: 7))
+    }
+
+    @Test func testViewModel_naturalLanguageTitle_numericDateUsesMonthFirstLocale_withTimeOverlap() {
+
+        let calendar = Calendar.gregorian.with(locale: Locale(identifier: "en_US"))
+        let dateProvider = MockDateProvider(
+            calendar: calendar,
+            now: .make(year: 2026, month: 8, day: 6, hour: 10, minute: 30)
+        )
+        let viewModel = makeViewModel(dateProvider: dateProvider)
+
+        viewModel.title = "Dinner at 7.8."
+
+        #expect(viewModel.parsedEventTitle == "Dinner")
+        #expect(viewModel.startDate == .make(year: 2026, month: 7, day: 8, hour: 7))
+    }
+
     @Test func testViewModel_naturalLanguageTitle_onWeekdayUsesNearestOccurrence() {
 
         let viewModel = makeViewModel()

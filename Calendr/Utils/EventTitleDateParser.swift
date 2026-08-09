@@ -623,26 +623,22 @@ private func editDistance(_ lhs: String, _ rhs: String) -> Int {
     return previous[rhs.count]
 }
 
+// TODO: use `removingSubranges` when we drop support for macOS 14
 private func removing(tokens: [EventTitleToken], from text: String) -> String {
-    let result = NSMutableString(string: text)
-    let textLength = result.length
 
-    // Different matchers can claim overlapping ranges for the same characters,
-    // e.g. "at 9" (time) and "9.30" (numeric date) both cover the "9" in
-    // "Meeting at 9.30". Deleting such ranges one by one in descending order
-    // throws NSRangeException once an earlier range extends past the end of the
-    // string after a later range was removed. Merge the ranges into a disjoint
-    // union and clamp each to the string bounds before deleting.
-    let ranges = tokens
-        .map(\.range)
-        .filter { $0.location != NSNotFound && $0.location < textLength }
-        .map { NSRange(location: $0.location, length: min($0.length, textLength - $0.location)) }
+    // Different matchers can claim overlapping ranges for the same characters
+    // e.g. "at 9" (time) and "9.30" (numeric date) both cover the "9" in "Meeting at 9.30"
+    let ranges = mergeRanges(tokens.map(\.range))
 
-    for range in mergeRanges(ranges).sorted(by: { $0.location > $1.location }) {
-        result.deleteCharacters(in: range)
+    var result = text
+
+    for nsRange in ranges.sorted(by: { $0.location > $1.location }) {
+        if let range = Range(nsRange, in: text) {
+            result.removeSubrange(range)
+        }
     }
 
-    return String(result)
+    return result
         .replacingOccurrences(of: #"\s+"#, with: " ", options: .regularExpression)
         .trimmingCharacters(in: .whitespacesAndNewlines)
 }
@@ -653,12 +649,10 @@ private func mergeRanges(_ ranges: [NSRange]) -> [NSRange] {
 
     var merged: [NSRange] = [first]
     for range in sorted.dropFirst() {
-        let last = merged[merged.count - 1]
-        // Adjacent or overlapping ranges collapse into a single span so each
-        // character is removed exactly once.
-        if range.location <= last.location + last.length {
-            let end = max(last.location + last.length, range.location + range.length)
-            merged[merged.count - 1] = NSRange(location: last.location, length: end - last.location)
+        let last = merged.last!
+
+        if range.location <= NSMaxRange(last) {
+            merged[merged.count - 1] = NSUnionRange(last, range)
         } else {
             merged.append(range)
         }
