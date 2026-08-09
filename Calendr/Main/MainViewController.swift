@@ -411,7 +411,7 @@ class MainViewController: NSViewController {
                 createMenu.addItem(.separator())
 
             case .newEvent:
-                createMenu.addItem(withTitle: Strings.Event.Editor.headline, action: #selector(openEventEditor), keyEquivalent: "")
+                createMenu.addItem(withTitle: Strings.Event.Editor.headline, action: #selector(openEventEditor(_:)), keyEquivalent: "")
                     .target = self
 
             case .quickReminder(let title, let offset):
@@ -546,19 +546,13 @@ class MainViewController: NSViewController {
 
     @objc private func openEventEditor(_ sender: NSMenuItem? = nil) {
 
-        let dateComponents = sender?.representedObject as? DateComponents ?? .init()
-
-        openEventEditor(at: mainViewModel.currentSelectedDate, adding: dateComponents)
+        openEventEditor(at: mainViewModel.currentSelectedDate.withCurrentTime(using: dateProvider))
     }
 
-    private func openEventEditor(at date: Date, adding dateComponents: DateComponents = .init()) {
+    private func openEventEditor(at date: Date) {
 
         let viewModel = EventEditorViewModel(
-            startDate: .withCurrentTime(
-                at: date,
-                adding: dateComponents,
-                using: dateProvider
-            ),
+            startDate: date,
             dateProvider: dateProvider,
             calendarService: calendarService,
             settings: settingsViewModel,
@@ -581,8 +575,7 @@ class MainViewController: NSViewController {
         let dateComponents = sender?.representedObject as? DateComponents ?? .init()
 
         let viewModel = ReminderEditorViewModel(
-            dueDate: .withCurrentTime(
-                at: mainViewModel.currentSelectedDate,
+            dueDate: mainViewModel.currentSelectedDate.withCurrentTime(
                 adding: dateComponents,
                 using: dateProvider
             ),

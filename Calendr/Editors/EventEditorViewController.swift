@@ -155,7 +155,7 @@ struct EventEditorView: ViewModelView {
 #Preview {
     EventEditorView(
         viewModel: .init(
-            startDate: .init(date: .now),
+            startDate: .now,
             dateProvider: MockDateProvider(calendar: .current),
             calendarService: MockCalendarServiceProvider(
                 calendars: [

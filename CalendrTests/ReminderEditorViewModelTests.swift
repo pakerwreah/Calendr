@@ -18,13 +18,12 @@ class ReminderEditorViewModelTests {
 
         dateProvider.now = .make(year: 2025, month: 10, day: 25, hour: 10, minute: 30, second: 50)
 
-        let dueDate = DueDate.withCurrentTime(
-            at: .make(year: 2025, month: 10, day: 5, at: .start),
+        let dueDate: Date = .make(year: 2025, month: 10, day: 5, at: .start).withCurrentTime(
             adding: .init(hour: 5, minute: 10),
             using: dateProvider
         )
 
-        #expect(dueDate.date == .make(year: 2025, month: 10, day: 5, hour: 15, minute: 40, second: 0))
+        #expect(dueDate == .make(year: 2025, month: 10, day: 5, hour: 15, minute: 40, second: 0))
     }
 
     @Test func testViewModel_initialState() {
@@ -427,7 +426,7 @@ class ReminderEditorViewModelTests {
         calendarService: CalendarServiceProviding = MockCalendarServiceProvider()
     ) -> ReminderEditorViewModel {
         ReminderEditorViewModel(
-            dueDate: .init(date: dueDate),
+            dueDate: dueDate,
             calendarService: calendarService,
             scheduler: CurrentThreadScheduler.instance
         )

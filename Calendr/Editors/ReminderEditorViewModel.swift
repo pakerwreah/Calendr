@@ -42,8 +42,8 @@ class ReminderEditorViewModel: HostingWindowControllerDelegate {
 
     private let disposeBag = DisposeBag()
 
-    init(dueDate: DueDate, calendarService: CalendarServiceProviding, scheduler: ImmediateSchedulerType) {
-        self.dueDate = dueDate.date
+    init(dueDate: Date, calendarService: CalendarServiceProviding, scheduler: ImmediateSchedulerType) {
+        self.dueDate = dueDate
         self.calendarService = calendarService
         self.scheduler = scheduler
 

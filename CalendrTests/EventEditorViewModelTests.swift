@@ -1391,7 +1391,7 @@ class EventEditorViewModelTests {
         naturalLanguageEventInputEnabled: Bool = true
     ) -> EventEditorViewModel {
         EventEditorViewModel(
-            startDate: .init(date: startDate ?? self.dateProvider.now),
+            startDate: startDate ?? self.dateProvider.now,
             dateProvider: dateProvider ?? self.dateProvider,
             calendarService: calendarService,
             settings: MockEventEditorSettings(

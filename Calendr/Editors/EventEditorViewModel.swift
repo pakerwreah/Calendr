@@ -104,14 +104,14 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
     }
 
     init(
-        startDate: DueDate,
+        startDate: Date,
         dateProvider: DateProviding,
         calendarService: CalendarServiceProviding,
         settings: EventEditorSettings,
         scheduler: ImmediateSchedulerType
     ) {
         self.dateProvider = dateProvider
-        let roundedStart = roundUpToNextHour(startDate.date, using: dateProvider)
+        let roundedStart = roundUpToNextHour(startDate, using: dateProvider)
         let defaultDuration: TimeInterval = 3600
         self.startDate = roundedStart
         self.eventDuration = defaultDuration
