@@ -90,7 +90,7 @@
 "settings.events.force_local_time_zone" = "הצג את כל האירועים באזור הזמן המקומי";
 //"settings.events.show_event_list_summary" = "Show event list summary";
 "settings.events.show_future_events" = "הצג אירועים עתידיים";
-//"settings.events.natural_language_input" = "Natural-language input (English only)";
+//"settings.events.natural_language_input" = "Natural-language input (English)";
 
 "settings.appearance.transparency" = "שקיפות";
 "settings.appearance.accessibility" = "נגישות";
