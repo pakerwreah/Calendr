@@ -90,7 +90,7 @@ struct ReminderEditorView: ViewModelView {
 #Preview {
     ReminderEditorView(
         viewModel: .init(
-            dueDate: .init(date: .now),
+            dueDate: .now,
             calendarService: MockCalendarServiceProvider(
                 calendars: [
                     .make(id: "1", account: "iCloud", title: "Reminders", color: .systemBlue),
