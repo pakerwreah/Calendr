@@ -623,41 +623,11 @@ private func editDistance(_ lhs: String, _ rhs: String) -> Int {
     return previous[rhs.count]
 }
 
-// TODO: use `removingSubranges` when we drop support for macOS 14
 private func removing(tokens: [EventTitleToken], from text: String) -> String {
 
-    // Different matchers can claim overlapping ranges for the same characters
-    // e.g. "at 9" (time) and "9.30" (numeric date) both cover the "9" in "Meeting at 9.30"
-    let ranges = mergeRanges(tokens.map(\.range))
-
-    var result = text
-
-    for nsRange in ranges.sorted(by: { $0.location > $1.location }) {
-        if let range = Range(nsRange, in: text) {
-            result.removeSubrange(range)
-        }
-    }
-
-    return result
+    String(text.removingSubranges(RangeSet(tokens.compactMap { Range($0.range, in: text) })))
         .replacingOccurrences(of: #"\s+"#, with: " ", options: .regularExpression)
         .trimmingCharacters(in: .whitespacesAndNewlines)
-}
-
-private func mergeRanges(_ ranges: [NSRange]) -> [NSRange] {
-    let sorted = ranges.sorted(by: { $0.location < $1.location })
-    guard let first = sorted.first else { return [] }
-
-    var merged: [NSRange] = [first]
-    for range in sorted.dropFirst() {
-        let last = merged.last!
-
-        if range.location <= NSMaxRange(last) {
-            merged[merged.count - 1] = NSUnionRange(last, range)
-        } else {
-            merged.append(range)
-        }
-    }
-    return merged
 }
 
 private func firstWordRange(in text: String, range: NSRange) -> NSRange? {
