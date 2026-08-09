@@ -76,6 +76,7 @@ class KeyboardViewController: NSViewController, SettingsUI {
 
         return NSStackView(views: [
             makeGlobalShortcut(text: GlobalShortcuts.openCalendar, for: .showMainPopover),
+            makeGlobalShortcut(text: Strings.Event.Editor.headline, for: .newEvent),
             makeGlobalShortcut(text: GlobalShortcuts.openNextEvent, for: .showNextEventPopover),
             makeGlobalShortcut(text: GlobalShortcuts.openNextEventOptions, for: .showNextEventOptions),
             makeGlobalShortcut(text: GlobalShortcuts.joinNextEvent, for: .joinNextEvent),
@@ -131,6 +132,7 @@ private extension Strings.Settings.Keyboard.LocalShortcuts {
 
 extension KeyboardShortcuts.Name {
     static let showMainPopover = Self("showMainPopover")
+    static let newEvent = Self("newEvent")
     static let showNextEventPopover = Self("showNextEventPopover")
     static let showNextEventOptions = Self("showNextEventOptions")
     static let showNextReminderPopover = Self("showNextReminderPopover")
