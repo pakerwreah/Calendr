@@ -548,9 +548,14 @@ class MainViewController: NSViewController {
 
         let dateComponents = sender?.representedObject as? DateComponents ?? .init()
 
+        openEventEditor(at: mainViewModel.currentSelectedDate, adding: dateComponents)
+    }
+
+    private func openEventEditor(at date: Date, adding dateComponents: DateComponents = .init()) {
+
         let viewModel = EventEditorViewModel(
             startDate: .withCurrentTime(
-                at: mainViewModel.currentSelectedDate,
+                at: date,
                 adding: dateComponents,
                 using: dateProvider
             ),
@@ -877,6 +882,11 @@ class MainViewController: NSViewController {
             self?.closeModals {
                 self?.mainStatusItemClickHandler.leftClick.onNext(())
             }
+        }
+
+        KeyboardShortcuts.onKeyUp(for: .newEvent) { [weak self] in
+            guard let self else { return }
+            openEventEditor(at: dateProvider.now)
         }
 
         KeyboardShortcuts.onKeyUp(for: .showNextEventPopover) { [weak self] in
