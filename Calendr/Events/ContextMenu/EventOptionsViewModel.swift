@@ -199,10 +199,11 @@ final class EventDeletionConfirmation: EventDeletionConfirming {
         alert.buttons[1].hasDestructiveAction = true
         alert.buttons[2].keyEquivalent = "\u{1b}"
 
-        switch alert.runModal() {
-        case .alertFirstButtonReturn: return .thisEvent
-        case .alertSecondButtonReturn: return .futureEvents
-        default: return nil
+        return switch alert.runModal() {
+            case .alertFirstButtonReturn: .thisEvent
+            case .alertSecondButtonReturn: .futureEvents
+            default: nil
+        }
         }
     }
 }
