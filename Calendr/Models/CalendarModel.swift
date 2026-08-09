@@ -18,4 +18,5 @@ struct CalendarModel: Equatable {
     let title: String
     let color: NSColor
     let isSubscribed: Bool
+    let allowsContentModifications: Bool
 }

@@ -14,6 +14,11 @@ enum CalendarEntityType {
     case reminder
 }
 
+enum EventDeletionScope: Equatable {
+    case thisEvent
+    case futureEvents
+}
+
 protocol CalendarServiceProviding {
 
     var changeObservable: Observable<Void> { get }
@@ -40,6 +45,7 @@ protocol CalendarServiceProviding {
     func rescheduleReminder(id: String, to: Date, isAllDay: Bool) -> Completable
 
     func changeEventStatus(id: String, date: Date, to: EventStatus) -> Completable
+    func deleteEvent(id: String, date: Date, scope: EventDeletionScope) -> Completable
 
     @MainActor func requestAccess()
 }
@@ -404,11 +410,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
             let disposable = Disposables.create()
 
             do {
-                let predicate = store.predicateForEvents(withStart: date, end: date + 1, calendars: nil)
-
-                guard let event = store.events(matching: predicate).first(where: { $0.calendarItemIdentifier == id }) else {
-                    throw .unexpected("🔥 Event not found")
-                }
+                let event = try findEvent(id: id, date: date, in: store)
 
                 guard let user = event.currentUser else {
                     throw .unexpected("🔥 User not found")
@@ -461,6 +463,27 @@ class CalendarServiceProvider: CalendarServiceProviding {
         .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
     }
 
+    func deleteEvent(id: String, date: Date, scope: EventDeletionScope) -> Completable {
+
+        Completable.create { [store] observer in
+            do {
+                let event = try findEvent(id: id, date: date, in: store)
+
+                guard event.calendar.allowsContentModifications else {
+                    throw .unexpected("Calendar does not allow event deletion")
+                }
+
+                try store.remove(event, span: scope.eventKitSpan, commit: true)
+                observer(.completed)
+            } catch {
+                observer(.error(error))
+            }
+
+            return Disposables.create()
+        }
+        .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+    }
+
     private func dueDateComponents(for date: Date, isAllDay: Bool) -> DateComponents {
         // The components calendar must be Gregorian, otherwise an exception is raised.
         var components = date.dateComponents(using: dateProvider, calendar: .gregorian)
@@ -483,6 +506,27 @@ class CalendarServiceProvider: CalendarServiceProviding {
 
         return (startDay, exclusiveEnd)
     }
+}
+
+private extension EventDeletionScope {
+
+    var eventKitSpan: EKSpan {
+        switch self {
+        case .thisEvent: .thisEvent
+        case .futureEvents: .futureEvents
+        }
+    }
+}
+
+private func findEvent(id: String, date: Date, in store: EKEventStore) throws -> EKEvent {
+    let predicate = store.predicateForEvents(withStart: date, end: date + 1, calendars: nil)
+
+    guard let event = store.events(matching: predicate).first(where: {
+        $0.calendarItemIdentifier == id && $0.startDate == date
+    }) else {
+        throw .unexpected("🔥 Event not found")
+    }
+    return event
 }
 
 private class EventStore: EKEventStore {
@@ -623,7 +667,8 @@ private extension CalendarModel {
             account: .init(from: calendar),
             title: calendar.title,
             color: calendar.color,
-            isSubscribed: calendar.isSubscribed || calendar.isDelegate
+            isSubscribed: calendar.isSubscribed || calendar.isDelegate,
+            allowsContentModifications: calendar.allowsContentModifications
         )
     }
 }
