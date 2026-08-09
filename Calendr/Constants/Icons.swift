@@ -65,6 +65,7 @@ enum Icons {
         static let video = NSImage(systemName: "video")
         static let video_fill = NSImage(systemName: "video.fill")
         static let skip = NSImage(systemName: "forward")
+        static let delete = NSImage(systemName: "trash")
         static let recurrence = NSImage(systemName: "repeat")
         static let flagged = NSImage(systemName: "flag.fill")
     }

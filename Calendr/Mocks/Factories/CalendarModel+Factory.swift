@@ -17,7 +17,8 @@ extension CalendarModel {
         email: String? = nil,
         title: String = "",
         color: NSColor = .clear,
-        isSubscribed: Bool = false
+        isSubscribed: Bool = false,
+        allowsContentModifications: Bool = true
     ) -> CalendarModel {
 
         .init(
@@ -25,7 +26,8 @@ extension CalendarModel {
             account: .init(title: account, email: email),
             title: title,
             color: color,
-            isSubscribed: isSubscribed
+            isSubscribed: isSubscribed,
+            allowsContentModifications: allowsContentModifications
         )
     }
 }

@@ -79,7 +79,7 @@ class EventOptionsViewModelTests {
     @Test func testOptions_fromList_withUnknownInvitationStatus() {
 
         let viewModel = mock(event: .make(type: .event(.unknown)), source: .calendar)
-        #expect(viewModel.items == [.action(.open)])
+        #expect(viewModel.items == [.action(.open), .separator, .action(.delete)])
     }
 
     @Test func testOptions_fromList_withUnknownInvitationStatus_withLink() {
@@ -88,7 +88,9 @@ class EventOptionsViewModelTests {
         #expect(viewModel.items == [
             .action(.open),
             .separator,
-            .action(.link(.zoomLink, isInProgress: false))
+            .action(.link(.zoomLink, isInProgress: false)),
+            .separator,
+            .action(.delete)
         ])
     }
 
@@ -100,7 +102,9 @@ class EventOptionsViewModelTests {
             .separator,
             .action(.status(.accept)),
             .action(.status(.maybe)),
-            .action(.status(.decline))
+            .action(.status(.decline)),
+            .separator,
+            .action(.delete)
         ])
     }
 
@@ -114,7 +118,9 @@ class EventOptionsViewModelTests {
             .separator,
             .action(.status(.accept)),
             .action(.status(.maybe)),
-            .action(.status(.decline))
+            .action(.status(.decline)),
+            .separator,
+            .action(.delete)
         ])
     }
 
@@ -166,6 +172,132 @@ class EventOptionsViewModelTests {
         ])
     }
 
+    @Test func testOptions_fromList_withReadOnlyCalendar_doesNotIncludeDelete() {
+
+        let event = EventModel.make(
+            type: .event(.unknown),
+            calendar: .make(allowsContentModifications: false)
+        )
+
+        let viewModel = mock(event: event, source: .calendar)
+
+        #expect(viewModel.items == [.action(.open)])
+    }
+
+    @Test func testOptions_fromList_withBirthday_doesNotIncludeDelete() {
+
+        let viewModel = mock(event: .make(type: .birthday), source: .calendar)
+
+        #expect(viewModel.items == [.action(.open)])
+    }
+
+    @Test func testDeleteStandaloneEvent_withConfirmation_deletesOnlyThatEvent() {
+        let start: Date = .make(year: 2026, month: 8, day: 9, hour: 14)
+        let confirmation = MockEventDeletionConfirmation(scope: .futureEvents)
+        var deletedEvent: DeleteEventArgs?
+
+        calendarService.spyDeleteEventObservable
+            .bind { deletedEvent = $0 }
+            .disposed(by: disposeBag)
+
+        let viewModel = mock(
+            event: .make(id: "event-id", start: start, type: .event(.unknown)),
+            source: .calendar,
+            deletionConfirmation: confirmation
+        )
+
+        viewModel.triggerAction(.delete)
+
+        #expect(confirmation.callCount == 1)
+        #expect(confirmation.receivedIsRecurring == false)
+        #expect(deletedEvent?.id == "event-id")
+        #expect(deletedEvent?.date == start)
+        #expect(deletedEvent?.scope == .thisEvent)
+    }
+
+    @Test func testDeleteStandaloneEvent_withCancelledConfirmation_doesNotDelete() {
+        let confirmation = MockEventDeletionConfirmation(scope: nil)
+        var deletedEvent: DeleteEventArgs?
+
+        calendarService.spyDeleteEventObservable
+            .bind { deletedEvent = $0 }
+            .disposed(by: disposeBag)
+
+        let viewModel = mock(
+            event: .make(type: .event(.unknown)),
+            source: .calendar,
+            deletionConfirmation: confirmation
+        )
+
+        viewModel.triggerAction(.delete)
+
+        #expect(confirmation.callCount == 1)
+        #expect(confirmation.receivedIsRecurring == false)
+        #expect(deletedEvent == nil)
+    }
+
+    @Test func testDeleteRecurringEvent_withThisEventConfirmation() {
+        let start: Date = .make(year: 2026, month: 8, day: 9, hour: 14)
+        let confirmation = MockEventDeletionConfirmation(scope: .thisEvent)
+        var deletedEvent: DeleteEventArgs?
+
+        calendarService.spyDeleteEventObservable
+            .bind { deletedEvent = $0 }
+            .disposed(by: disposeBag)
+
+        let viewModel = mock(
+            event: .make(id: "event-id", start: start, type: .event(.unknown), hasRecurrenceRules: true),
+            source: .calendar,
+            deletionConfirmation: confirmation
+        )
+
+        viewModel.triggerAction(.delete)
+
+        #expect(confirmation.callCount == 1)
+        #expect(confirmation.receivedIsRecurring == true)
+        #expect(deletedEvent?.scope == .thisEvent)
+    }
+
+    @Test func testDeleteRecurringEvent_withFutureEventsConfirmation() {
+        let confirmation = MockEventDeletionConfirmation(scope: .futureEvents)
+        var deletedEvent: DeleteEventArgs?
+
+        calendarService.spyDeleteEventObservable
+            .bind { deletedEvent = $0 }
+            .disposed(by: disposeBag)
+
+        let viewModel = mock(
+            event: .make(type: .event(.unknown), hasRecurrenceRules: true),
+            source: .calendar,
+            deletionConfirmation: confirmation
+        )
+
+        viewModel.triggerAction(.delete)
+
+        #expect(confirmation.callCount == 1)
+        #expect(deletedEvent?.scope == .futureEvents)
+    }
+
+    @Test func testDeleteRecurringEvent_withCancelledConfirmation_doesNotDelete() {
+        let confirmation = MockEventDeletionConfirmation(scope: nil)
+        var deletedEvent: DeleteEventArgs?
+
+        calendarService.spyDeleteEventObservable
+            .bind { deletedEvent = $0 }
+            .disposed(by: disposeBag)
+
+        let viewModel = mock(
+            event: .make(type: .event(.unknown), hasRecurrenceRules: true),
+            source: .calendar,
+            deletionConfirmation: confirmation
+        )
+
+        viewModel.triggerAction(.delete)
+
+        #expect(confirmation.callCount == 1)
+        #expect(deletedEvent == nil)
+    }
+
     @Test func testOptions_withOpenTriggered() async {
         let openExpectation = expectation(description: "Open")
 
@@ -202,11 +334,17 @@ class EventOptionsViewModelTests {
         )
     }
 
+    @Test func testDeleteAction() {
+        #expect(EventAction.delete.title == Strings.Event.Action.delete)
+        #expect(EventAction.delete.icon == Icons.Event.delete)
+    }
+
     func mock(
         event: EventModel,
         source: ContextMenuSource,
-        callback: @escaping (EventAction?) -> Void = { _ in }
-    ) -> some ContextMenuViewModel<EventAction> {
+        callback: @escaping (EventAction?) -> Void = { _ in },
+        deletionConfirmation: EventDeletionConfirming = MockEventDeletionConfirmation()
+    ) -> EventOptionsViewModel {
 
         EventOptionsViewModel(
             event: event,
@@ -214,8 +352,26 @@ class EventOptionsViewModelTests {
             calendarService: calendarService,
             workspace: workspace,
             source: source,
-            callback: .init { callback($0.element) }
+            callback: .init { callback($0.element) },
+            deletionConfirmation: deletionConfirmation
         )!
+    }
+}
+
+private final class MockEventDeletionConfirmation: EventDeletionConfirming {
+
+    private let scope: EventDeletionScope?
+    private(set) var callCount = 0
+    private(set) var receivedIsRecurring: Bool?
+
+    init(scope: EventDeletionScope? = nil) {
+        self.scope = scope
+    }
+
+    func confirmDeletion(isRecurring: Bool) -> EventDeletionScope? {
+        callCount += 1
+        receivedIsRecurring = isRecurring
+        return scope
     }
 }
 

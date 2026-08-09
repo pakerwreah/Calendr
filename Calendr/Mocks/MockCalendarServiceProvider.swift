@@ -25,6 +25,7 @@ typealias CreateEventArgs = (
     timeZone: TimeZone
 )
 typealias EventsArgs = (start: Date, end: Date, calendars: [String])
+typealias DeleteEventArgs = (id: String, date: Date, scope: EventDeletionScope)
 
 class MockCalendarServiceProvider: CalendarServiceProviding {
 
@@ -36,6 +37,7 @@ class MockCalendarServiceProvider: CalendarServiceProviding {
     let (spyCompleteReminderObservable, spyCompleteReminderObserver) = PublishSubject<Bool>.pipe()
     let (spyRescheduleReminderObservable, spyRescheduleReminderObserver) = PublishSubject<RescheduleReminderArgs>.pipe()
     let (spyChangeEventStatusObservable, spyChangeEventStatusObserver) = PublishSubject<EventStatus>.pipe()
+    let (spyDeleteEventObservable, spyDeleteEventObserver) = PublishSubject<DeleteEventArgs>.pipe()
 
     var didRequestAccess: (() -> Void)?
 
@@ -100,6 +102,11 @@ class MockCalendarServiceProvider: CalendarServiceProviding {
 
     func changeEventStatus(id: String, date: Date, to status: EventStatus) -> Completable {
         spyChangeEventStatusObserver.onNext(status)
+        return .empty()
+    }
+
+    func deleteEvent(id: String, date: Date, scope: EventDeletionScope) -> Completable {
+        spyDeleteEventObserver.onNext((id, date, scope))
         return .empty()
     }
 

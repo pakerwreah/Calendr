@@ -176,6 +176,14 @@
 "event.action.accept" = "Přijmout";
 "event.action.maybe" = "Možná";
 "event.action.decline" = "Odmítnout";
+"event.action.delete" = "Smazat";
+
+"event.delete.title" = "Smazat událost";
+"event.delete.message" = "Chcete smazat tento a všechny budoucí výskyty této události, nebo pouze vybraný výskyt?";
+"event.delete.single_message" = "Opravdu chcete tuto událost smazat?";
+"event.delete.this_event" = "Smazat pouze tuto událost";
+"event.delete.future_events" = "Smazat všechny budoucí události";
+"event.delete.cancel" = "Zrušit";
 
 "event_list.summary.agenda" = "Agenda";
 

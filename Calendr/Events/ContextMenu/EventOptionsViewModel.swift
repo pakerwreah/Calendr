@@ -13,6 +13,7 @@ enum EventAction: Equatable {
     case link(EventLink, isInProgress: Bool)
     case skip
     case status(EventStatusAction)
+    case delete
 }
 
 enum EventStatusAction: Equatable {
@@ -27,6 +28,7 @@ class EventOptionsViewModel: BaseContextMenuViewModel<EventAction> {
     private let dateProvider: DateProviding
     private let calendarService: CalendarServiceProviding
     private let workspace: WorkspaceServiceProviding
+    private let deletionConfirmation: EventDeletionConfirming
 
     init?(
         event: EventModel,
@@ -34,12 +36,14 @@ class EventOptionsViewModel: BaseContextMenuViewModel<EventAction> {
         calendarService: CalendarServiceProviding,
         workspace: WorkspaceServiceProviding,
         source: ContextMenuSource,
-        callback: AnyObserver<EventAction>
+        callback: AnyObserver<EventAction>,
+        deletionConfirmation: EventDeletionConfirming = EventDeletionConfirmation()
     ) {
         self.event = event
         self.dateProvider = dateProvider
         self.calendarService = calendarService
         self.workspace = workspace
+        self.deletionConfirmation = deletionConfirmation
 
         super.init(callback: callback)
 
@@ -71,6 +75,11 @@ class EventOptionsViewModel: BaseContextMenuViewModel<EventAction> {
             }
         }
 
+        if source ~= .calendar, event.type.isEvent, event.calendar.allowsContentModifications {
+            addSeparator()
+            addItem(.delete)
+        }
+
         guard !items.isEmpty else { return nil }
     }
 
@@ -85,12 +94,23 @@ class EventOptionsViewModel: BaseContextMenuViewModel<EventAction> {
             break // handled by callback
         case .status(let action):
             return changeEventStatus(to: action.status)
+        case .delete:
+            return deleteEvent()
         }
         return .empty()
     }
 
     private func changeEventStatus(to status: EventStatus) -> Completable {
         calendarService.changeEventStatus(id: event.id, date: event.start, to: status)
+    }
+
+    private func deleteEvent() -> Completable {
+        guard let confirmedScope = deletionConfirmation.confirmDeletion(isRecurring: event.hasRecurrenceRules) else {
+            return .empty()
+        }
+
+        let scope = event.hasRecurrenceRules ? confirmedScope : .thisEvent
+        return calendarService.deleteEvent(id: event.id, date: event.start, scope: scope)
     }
 }
 
@@ -131,6 +151,8 @@ extension EventAction: ContextMenuAction {
             return Icons.EventStatus.maybe.with(color: .systemOrange)
         case .status(.decline):
             return Icons.EventStatus.declined.with(color: .systemRed)
+        case .delete:
+            return Icons.Event.delete
         }
     }
 
@@ -148,6 +170,42 @@ extension EventAction: ContextMenuAction {
             return Strings.Event.Action.maybe
         case .status(.decline):
             return Strings.Event.Action.decline
+        case .delete:
+            return Strings.Event.Action.delete
+        }
+    }
+}
+
+protocol EventDeletionConfirming {
+    func confirmDeletion(isRecurring: Bool) -> EventDeletionScope?
+}
+
+final class EventDeletionConfirmation: EventDeletionConfirming {
+
+    func confirmDeletion(isRecurring: Bool) -> EventDeletionScope? {
+        let alert = NSAlert()
+        alert.alertStyle = .warning
+        alert.messageText = Strings.Event.Delete.title
+
+        if isRecurring {
+            alert.informativeText = Strings.Event.Delete.message
+            alert.addButton(withTitle: Strings.Event.Delete.thisEvent)
+            alert.addButton(withTitle: Strings.Event.Delete.futureEvents)
+            alert.addButton(withTitle: Strings.Event.Delete.cancel)
+            alert.buttons[1].hasDestructiveAction = true
+            alert.buttons[2].keyEquivalent = "\u{1b}"
+        } else {
+            alert.informativeText = Strings.Event.Delete.singleMessage
+            alert.addButton(withTitle: Strings.Event.Action.delete)
+            alert.addButton(withTitle: Strings.Event.Delete.cancel)
+            alert.buttons[0].hasDestructiveAction = true
+            alert.buttons[1].keyEquivalent = "\u{1b}"
+        }
+
+        return switch (isRecurring, alert.runModal()) {
+        case (_, .alertFirstButtonReturn): .thisEvent
+        case (true, .alertSecondButtonReturn): .futureEvents
+        default: nil
         }
     }
 }

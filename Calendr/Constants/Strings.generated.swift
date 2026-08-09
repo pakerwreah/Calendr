@@ -97,6 +97,8 @@ internal enum Strings {
       internal static let accept = Strings.tr("Localizable", "event.action.accept", fallback: "Accept")
       /// Decline
       internal static let decline = Strings.tr("Localizable", "event.action.decline", fallback: "Decline")
+      /// Delete
+      internal static let delete = Strings.tr("Localizable", "event.action.delete", fallback: "Delete")
       /// Join
       internal static let join = Strings.tr("Localizable", "event.action.join", fallback: "Join")
       /// Maybe
@@ -105,6 +107,20 @@ internal enum Strings {
       internal static let `open` = Strings.tr("Localizable", "event.action.open", fallback: "Open")
       /// Skip
       internal static let skip = Strings.tr("Localizable", "event.action.skip", fallback: "Skip")
+    }
+    internal enum Delete {
+      /// Cancel
+      internal static let cancel = Strings.tr("Localizable", "event.delete.cancel", fallback: "Cancel")
+      /// Delete All Future Events
+      internal static let futureEvents = Strings.tr("Localizable", "event.delete.future_events", fallback: "Delete All Future Events")
+      /// Do you want to delete this and all future occurrences of this event, or only the selected occurrence?
+      internal static let message = Strings.tr("Localizable", "event.delete.message", fallback: "Do you want to delete this and all future occurrences of this event, or only the selected occurrence?")
+      /// Are you sure you want to delete this event?
+      internal static let singleMessage = Strings.tr("Localizable", "event.delete.single_message", fallback: "Are you sure you want to delete this event?")
+      /// Delete Only This Event
+      internal static let thisEvent = Strings.tr("Localizable", "event.delete.this_event", fallback: "Delete Only This Event")
+      /// Delete Event
+      internal static let title = Strings.tr("Localizable", "event.delete.title", fallback: "Delete Event")
     }
     internal enum Details {
       internal enum Participant {

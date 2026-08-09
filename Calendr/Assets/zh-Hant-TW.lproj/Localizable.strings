@@ -176,6 +176,14 @@
 "event.action.accept" = "接受";
 "event.action.maybe" = "可能";
 "event.action.decline" = "拒絕";
+//"event.action.delete" = "Delete";
+
+//"event.delete.title" = "Delete Event";
+//"event.delete.message" = "Do you want to delete this and all future occurrences of this event, or only the selected occurrence?";
+//"event.delete.single_message" = "Are you sure you want to delete this event?";
+//"event.delete.this_event" = "Delete Only This Event";
+//"event.delete.future_events" = "Delete All Future Events";
+//"event.delete.cancel" = "Cancel";
 
 "event_list.summary.agenda" = "今天";
 

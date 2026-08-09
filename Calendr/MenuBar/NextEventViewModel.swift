@@ -533,7 +533,8 @@ private func fakeEvent(
             account: .init(title: "", email: nil),
             title: "",
             color: color,
-            isSubscribed: false
+            isSubscribed: false,
+            allowsContentModifications: false
         ),
         participants: [],
         timeZone: nil,
