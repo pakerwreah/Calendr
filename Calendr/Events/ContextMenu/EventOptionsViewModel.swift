@@ -105,17 +105,11 @@ class EventOptionsViewModel: BaseContextMenuViewModel<EventAction> {
     }
 
     private func deleteEvent() -> Completable {
-        let scope: EventDeletionScope
-
-        if event.hasRecurrenceRules {
-            guard let confirmedScope = deletionConfirmation.confirmDeletion() else {
-                return .empty()
-            }
-            scope = confirmedScope
-        } else {
-            scope = .thisEvent
+        guard let confirmedScope = deletionConfirmation.confirmDeletion(isRecurring: event.hasRecurrenceRules) else {
+            return .empty()
         }
 
+        let scope = event.hasRecurrenceRules ? confirmedScope : .thisEvent
         return calendarService.deleteEvent(id: event.id, date: event.start, scope: scope)
     }
 }
@@ -183,27 +177,35 @@ extension EventAction: ContextMenuAction {
 }
 
 protocol EventDeletionConfirming {
-    func confirmDeletion() -> EventDeletionScope?
+    func confirmDeletion(isRecurring: Bool) -> EventDeletionScope?
 }
 
 final class EventDeletionConfirmation: EventDeletionConfirming {
 
-    func confirmDeletion() -> EventDeletionScope? {
+    func confirmDeletion(isRecurring: Bool) -> EventDeletionScope? {
         let alert = NSAlert()
         alert.alertStyle = .warning
         alert.messageText = Strings.Event.Delete.title
-        alert.informativeText = Strings.Event.Delete.message
-        alert.addButton(withTitle: Strings.Event.Delete.thisEvent)
-        alert.addButton(withTitle: Strings.Event.Delete.futureEvents)
-        alert.addButton(withTitle: Strings.Event.Delete.cancel)
-        alert.buttons[1].hasDestructiveAction = true
-        alert.buttons[2].keyEquivalent = "\u{1b}"
 
-        return switch alert.runModal() {
-            case .alertFirstButtonReturn: .thisEvent
-            case .alertSecondButtonReturn: .futureEvents
-            default: nil
+        if isRecurring {
+            alert.informativeText = Strings.Event.Delete.message
+            alert.addButton(withTitle: Strings.Event.Delete.thisEvent)
+            alert.addButton(withTitle: Strings.Event.Delete.futureEvents)
+            alert.addButton(withTitle: Strings.Event.Delete.cancel)
+            alert.buttons[1].hasDestructiveAction = true
+            alert.buttons[2].keyEquivalent = "\u{1b}"
+        } else {
+            alert.informativeText = Strings.Event.Delete.singleMessage
+            alert.addButton(withTitle: Strings.Event.Action.delete)
+            alert.addButton(withTitle: Strings.Event.Delete.cancel)
+            alert.buttons[0].hasDestructiveAction = true
+            alert.buttons[1].keyEquivalent = "\u{1b}"
         }
+
+        return switch (isRecurring, alert.runModal()) {
+        case (_, .alertFirstButtonReturn): .thisEvent
+        case (true, .alertSecondButtonReturn): .futureEvents
+        default: nil
         }
     }
 }

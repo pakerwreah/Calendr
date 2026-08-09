@@ -115,6 +115,8 @@ internal enum Strings {
       internal static let futureEvents = Strings.tr("Localizable", "event.delete.future_events", fallback: "Delete All Future Events")
       /// Do you want to delete this and all future occurrences of this event, or only the selected occurrence?
       internal static let message = Strings.tr("Localizable", "event.delete.message", fallback: "Do you want to delete this and all future occurrences of this event, or only the selected occurrence?")
+      /// Are you sure you want to delete this event?
+      internal static let singleMessage = Strings.tr("Localizable", "event.delete.single_message", fallback: "Are you sure you want to delete this event?")
       /// Delete Only This Event
       internal static let thisEvent = Strings.tr("Localizable", "event.delete.this_event", fallback: "Delete Only This Event")
       /// Delete Event

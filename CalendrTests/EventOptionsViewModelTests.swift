@@ -191,7 +191,7 @@ class EventOptionsViewModelTests {
         #expect(viewModel.items == [.action(.open)])
     }
 
-    @Test func testDeleteStandaloneEvent_deletesOnlyThatEventWithoutConfirmation() {
+    @Test func testDeleteStandaloneEvent_withConfirmation_deletesOnlyThatEvent() {
         let start: Date = .make(year: 2026, month: 8, day: 9, hour: 14)
         let confirmation = MockEventDeletionConfirmation(scope: .futureEvents)
         var deletedEvent: DeleteEventArgs?
@@ -208,10 +208,32 @@ class EventOptionsViewModelTests {
 
         viewModel.triggerAction(.delete)
 
-        #expect(confirmation.callCount == 0)
+        #expect(confirmation.callCount == 1)
+        #expect(confirmation.receivedIsRecurring == false)
         #expect(deletedEvent?.id == "event-id")
         #expect(deletedEvent?.date == start)
         #expect(deletedEvent?.scope == .thisEvent)
+    }
+
+    @Test func testDeleteStandaloneEvent_withCancelledConfirmation_doesNotDelete() {
+        let confirmation = MockEventDeletionConfirmation(scope: nil)
+        var deletedEvent: DeleteEventArgs?
+
+        calendarService.spyDeleteEventObservable
+            .bind { deletedEvent = $0 }
+            .disposed(by: disposeBag)
+
+        let viewModel = mock(
+            event: .make(type: .event(.unknown)),
+            source: .calendar,
+            deletionConfirmation: confirmation
+        )
+
+        viewModel.triggerAction(.delete)
+
+        #expect(confirmation.callCount == 1)
+        #expect(confirmation.receivedIsRecurring == false)
+        #expect(deletedEvent == nil)
     }
 
     @Test func testDeleteRecurringEvent_withThisEventConfirmation() {
@@ -232,6 +254,7 @@ class EventOptionsViewModelTests {
         viewModel.triggerAction(.delete)
 
         #expect(confirmation.callCount == 1)
+        #expect(confirmation.receivedIsRecurring == true)
         #expect(deletedEvent?.scope == .thisEvent)
     }
 
@@ -339,13 +362,15 @@ private final class MockEventDeletionConfirmation: EventDeletionConfirming {
 
     private let scope: EventDeletionScope?
     private(set) var callCount = 0
+    private(set) var receivedIsRecurring: Bool?
 
     init(scope: EventDeletionScope? = nil) {
         self.scope = scope
     }
 
-    func confirmDeletion() -> EventDeletionScope? {
+    func confirmDeletion(isRecurring: Bool) -> EventDeletionScope? {
         callCount += 1
+        receivedIsRecurring = isRecurring
         return scope
     }
 }
