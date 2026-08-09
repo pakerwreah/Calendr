@@ -625,13 +625,45 @@ private func editDistance(_ lhs: String, _ rhs: String) -> Int {
 
 private func removing(tokens: [EventTitleToken], from text: String) -> String {
     let result = NSMutableString(string: text)
-    for token in tokens.sorted(by: { $0.range.location > $1.range.location }) {
-        result.deleteCharacters(in: token.range)
+    let textLength = result.length
+
+    // Different matchers can claim overlapping ranges for the same characters,
+    // e.g. "at 9" (time) and "9.30" (numeric date) both cover the "9" in
+    // "Meeting at 9.30". Deleting such ranges one by one in descending order
+    // throws NSRangeException once an earlier range extends past the end of the
+    // string after a later range was removed. Merge the ranges into a disjoint
+    // union and clamp each to the string bounds before deleting.
+    let ranges = tokens
+        .map(\.range)
+        .filter { $0.location != NSNotFound && $0.location < textLength }
+        .map { NSRange(location: $0.location, length: min($0.length, textLength - $0.location)) }
+
+    for range in mergeRanges(ranges).sorted(by: { $0.location > $1.location }) {
+        result.deleteCharacters(in: range)
     }
 
     return String(result)
         .replacingOccurrences(of: #"\s+"#, with: " ", options: .regularExpression)
         .trimmingCharacters(in: .whitespacesAndNewlines)
+}
+
+private func mergeRanges(_ ranges: [NSRange]) -> [NSRange] {
+    let sorted = ranges.sorted(by: { $0.location < $1.location })
+    guard let first = sorted.first else { return [] }
+
+    var merged: [NSRange] = [first]
+    for range in sorted.dropFirst() {
+        let last = merged[merged.count - 1]
+        // Adjacent or overlapping ranges collapse into a single span so each
+        // character is removed exactly once.
+        if range.location <= last.location + last.length {
+            let end = max(last.location + last.length, range.location + range.length)
+            merged[merged.count - 1] = NSRange(location: last.location, length: end - last.location)
+        } else {
+            merged.append(range)
+        }
+    }
+    return merged
 }
 
 private func firstWordRange(in text: String, range: NSRange) -> NSRange? {
