@@ -885,10 +885,8 @@ class MainViewController: NSViewController {
         }
 
         KeyboardShortcuts.onKeyUp(for: .newEvent) { [weak self] in
-            self?.closeModals { [weak self] in
-                guard let self else { return }
-                openEventEditor(at: dateProvider.now)
-            }
+            guard let self else { return }
+            openEventEditor(at: dateProvider.now)
         }
 
         KeyboardShortcuts.onKeyUp(for: .showNextEventPopover) { [weak self] in
