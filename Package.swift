@@ -1,11 +1,11 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 6.3
 import PackageDescription
 
 let package = Package(
     name: "Calendr",
     defaultLocalization: "en",
     platforms: [
-        .macOS(.v14)
+        .macOS(.v15)
     ],
     dependencies: [
         .package(url: "https://github.com/ReactiveX/RxSwift", from: "6.10.2"),
@@ -58,5 +58,6 @@ let package = Package(
                 "CLAUDE.md",
             ]
         )
-    ]
+    ],
+    swiftLanguageModes: [.v5]
 )
