@@ -13,6 +13,13 @@ class KeyboardViewController: NSViewController, SettingsUI {
 
     private let disposeBag = DisposeBag()
 
+    private lazy var shortcutsControl = NSSegmentedControl(
+        labels: [LocalShortcuts.title, GlobalShortcuts.title],
+        trackingMode: .selectOne,
+        target: self,
+        action: #selector(shortcutsControlChanged)
+    )
+
     typealias LocalShortcuts = Strings.Settings.Keyboard.LocalShortcuts
     typealias GlobalShortcuts = Strings.Settings.Keyboard.GlobalShortcuts
 
@@ -24,13 +31,25 @@ class KeyboardViewController: NSViewController, SettingsUI {
 
         view.addLayoutGuide(commandCharWidth)
 
-        let stackView = NSStackView(
-            views: Sections.create([
-                makeSection(title: LocalShortcuts.title, content: localContent),
-                makeSection(title: GlobalShortcuts.title, content: globalContent),
-            ])
-            .disposed(by: disposeBag)
-        )
+        shortcutsControl.selectedSegment = 0
+
+        globalContent.isHidden = true
+
+        let contentStackView = NSStackView(views: [localContent, globalContent])
+            .with(orientation: .vertical)
+
+        let scrollView = NSScrollView()
+        scrollView.drawsBackground = false
+        scrollView.documentView = contentStackView.forAutoLayout()
+
+        scrollView.contentView.edges(equalTo: scrollView)
+        scrollView.contentView.top(equalTo: contentStackView)
+        scrollView.contentView.leading(equalTo: contentStackView)
+        scrollView.contentView.trailing(equalTo: contentStackView)
+        scrollView.contentView.height(equalTo: contentStackView)
+            .priority = .dragThatCanResizeWindow
+
+        let stackView = NSStackView(views: [shortcutsControl, scrollView])
         .with(spacing: Constants.contentSpacing)
         .with(orientation: .vertical)
 
@@ -42,6 +61,12 @@ class KeyboardViewController: NSViewController, SettingsUI {
             .map { CGFloat(16 * $0) }
             .bind(to: commandCharWidth.width(equalTo: 1).rx.constant)
             .disposed(by: disposeBag)
+    }
+
+    @objc private func shortcutsControlChanged() {
+
+        localContent.isHidden = shortcutsControl.selectedSegment != 0
+        globalContent.isHidden = shortcutsControl.selectedSegment != 1
     }
 
     private lazy var localContent: NSView = {
