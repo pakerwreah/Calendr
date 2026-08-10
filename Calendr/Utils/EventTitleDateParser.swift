@@ -4,7 +4,9 @@
 //
 
 import Foundation
+import FoundationModels
 
+@Generable
 enum EventTitleTokenKind: Equatable {
     case date
     case time
@@ -13,32 +15,50 @@ enum EventTitleTokenKind: Equatable {
     case calendar
 }
 
+@Generable
+struct EventTitleTokenLLM: Equatable {
+    @Guide(description: "The type of the extracted instruction")
+    let kind: EventTitleTokenKind
+
+    @Guide(description: "The exact string snippet extracted from the original text")
+    let snippet: String
+}
+
 struct EventTitleToken: Equatable {
     let kind: EventTitleTokenKind
     let range: NSRange
 }
 
+@Generable
 struct EventTitleTime: Equatable {
+    @Guide(description: "Hour in 24-hour format (0-23)")
     let hour: Int
+
+    @Guide(description: "Minute (0-59)")
     let minute: Int
 }
 
+@Generable
 struct EventTitleNumericDate: Equatable {
     let month: Int
     let day: Int
     let year: Int?
 }
 
+@Generable
 enum EventTitleWeekdayOccurrence: Equatable {
     case nearest
     case following
 }
 
+@Generable
 struct EventTitleWeekday: Equatable {
+    @Guide(description: "Weekday representation (e.g., 1 for Sunday, 7 for Saturday)")
     let weekday: Int
     let occurrence: EventTitleWeekdayOccurrence
 }
 
+@Generable
 enum EventTitleDurationUnit: Equatable {
     case minute
     case hour
@@ -46,32 +66,106 @@ enum EventTitleDurationUnit: Equatable {
     case week
 }
 
+@Generable
 struct EventTitleDuration: Equatable {
     let value: Int
     let unit: EventTitleDurationUnit
 }
 
+@Generable
 struct EventTitleRelativeStart: Equatable {
     let value: Int
     let unit: EventTitleDurationUnit
 }
 
+@Generable
 struct EventTitleParseResult: Equatable {
-    let cleanedTitle: String
+    @Guide(description: "The original text in the prompt, with all tokens included")
+    fileprivate let title: String
+
+    lazy var cleanedTitle = removing(tokens: tokens, from: title)
+
+    @Guide(description: "Relative day offset from today (e.g., today = 0, tomorrow = 1, yesterday = -1)")
     let dayOffset: Int?
+
+    @Guide(description: "Specific date mentioned (e.g., 'August 12')")
     let numericDate: EventTitleNumericDate?
+
+    @Guide(description: "Specific weekday mentioned (e.g., 'next Friday')")
     let weekday: EventTitleWeekday?
+
+    @Guide(description: "The start time of the event (e.g., 'at 14', 'at 2pm')")
     let time: EventTitleTime?
+
+    @Guide(description: "The end time of the event (e.g., 'to 12', 'until 1')")
     let endTime: EventTitleTime?
+
+    @Guide(description: "Ignore this field") // it confuses the model
     let relativeStart: EventTitleRelativeStart?
+
+    @Guide(description: "Duration of the event (e.g., 'for 1 hour', 'for 30 minutes', 'for 4 days')")
     let duration: EventTitleDuration?
+
+    @Guide(description: "True if instructions include 'all day' or 'full day'")
     let isAllDay: Bool
+
+    @Guide(description: "The text immediately following a slash forward character")
     let calendarQuery: String?
+
+    @Guide(description: "Indicates that the input text contains conflicting durations, like 'from 5pm to 6pm for 2 hours'")
     let hasConflicts: Bool
-    let tokens: [EventTitleToken]
+
+    @Guide(description: "A list of all exact string snippets that were detected")
+    fileprivate let llmTokens: [EventTitleTokenLLM]
+
+    lazy var tokens = resolveRanges(for: llmTokens, in: title)
+}
+
+func resolveRanges(for tokens: [EventTitleTokenLLM], in originalText: String) -> [EventTitleToken] {
+    var resolved: [EventTitleToken] = []
+    var searchRange = originalText.startIndex..<originalText.endIndex
+
+    for token in tokens {
+        if let swiftRange = originalText.range(of: token.snippet, range: searchRange) {
+            resolved.append(.init(kind: token.kind, range: NSRange(swiftRange, in: originalText)))
+
+            // Move the search starting point past the current match
+            searchRange = swiftRange.upperBound..<originalText.endIndex
+        }
+    }
+
+    return resolved.sorted { $0.range.location < $1.range.location }
 }
 
 enum EventTitleDateParser {
+
+    private static let model = SystemLanguageModel.default
+
+    static func parseEventString(_ input: String) async throws -> EventTitleParseResult {
+
+        // 1. Correctly check if Apple Intelligence is available and ready
+        guard case .available = model.availability else {
+            throw .unexpected("Apple Intelligence is not available on this device")
+        }
+
+        // 2. Configure the session behavior
+        let session = LanguageModelSession(model: model, instructions: """
+            You are an natural language parser for creating a calendar event.
+            Detect and populate all matching fields with the information from the prompt.
+            Never return tokens that are not included in the prompt below.
+        """)
+
+        // 3. The model returns your Swift struct directly
+        let result = try await session.respond(
+            to: "Prompt: \(input) ",
+            generating: EventTitleParseResult.self,
+            options: .init(sampling: .greedy, temperature: 0)
+        )
+
+        print("content", result.content)
+
+        return result.content
+    }
 
     static func parse(_ text: String, calendar: Calendar = .current) -> EventTitleParseResult {
         let fullRange = NSRange(text.startIndex..., in: text)
@@ -124,6 +218,7 @@ enum EventTitleDateParser {
         tokens += allDayRanges.map { EventTitleToken(kind: .allDay, range: $0) }
 
         return .init(
+            title: text,
             cleanedTitle: removing(tokens: tokens, from: text),
             dayOffset: dateMatch?.dayOffset,
             numericDate: dateMatch?.numericDate,
@@ -142,6 +237,7 @@ enum EventTitleDateParser {
                 isAllDay: !allDayRanges.isEmpty,
                 calendarMatches: calendarMatches
             ),
+            llmTokens: [],
             tokens: tokens.sorted { $0.range.location < $1.range.location }
         )
     }

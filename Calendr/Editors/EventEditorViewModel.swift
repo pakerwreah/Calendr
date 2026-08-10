@@ -233,11 +233,23 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
         }
     }
 
+    var debounceTask: Task<Void, Error>?
+
     private func parseTitleInstructions() {
         guard naturalLanguageEventInputEnabled else { return }
 
+        debounceTask?.cancel()
+        debounceTask = Task { @MainActor in
+            try await Task.sleep(for: .milliseconds(500))
+            try await parseTitleInstructionsAsync()
+        }
+    }
+
+    @MainActor
+    private func parseTitleInstructionsAsync() async throws {
+
         let previousParsedTitle = parsedTitle
-        let newParsedTitle = EventTitleDateParser.parse(title, calendar: calendar)
+        let newParsedTitle = try await EventTitleDateParser.parseEventString(title)
 
         if previousParsedTitle.duration != nil, newParsedTitle.duration == nil {
             restoreParsedDuration()
