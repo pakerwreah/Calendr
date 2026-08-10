@@ -12,6 +12,18 @@ import KeyboardShortcuts
 class KeyboardViewController: NSViewController, SettingsUI {
 
     private let disposeBag = DisposeBag()
+    private let scaling: Observable<Double>
+
+    init(scaling: Observable<Double> = Scaling.observable) {
+
+        self.scaling = scaling
+
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     private lazy var shortcutsControl = NSSegmentedControl(
         labels: [LocalShortcuts.title, GlobalShortcuts.title],
@@ -38,16 +50,7 @@ class KeyboardViewController: NSViewController, SettingsUI {
         let contentStackView = NSStackView(views: [localContent, globalContent])
             .with(orientation: .vertical)
 
-        let scrollView = NSScrollView()
-        scrollView.drawsBackground = false
-        scrollView.documentView = contentStackView.forAutoLayout()
-
-        scrollView.contentView.edges(equalTo: scrollView)
-        scrollView.contentView.top(equalTo: contentStackView)
-        scrollView.contentView.leading(equalTo: contentStackView)
-        scrollView.contentView.trailing(equalTo: contentStackView)
-
-        let stackView = NSStackView(views: [shortcutsControl, scrollView])
+        let stackView = NSStackView(views: [shortcutsControl, contentStackView])
         .with(spacing: Constants.contentSpacing)
         .with(orientation: .vertical)
 
@@ -55,7 +58,7 @@ class KeyboardViewController: NSViewController, SettingsUI {
 
         stackView.edges(equalTo: view, margins: .init(bottom: 1))
 
-        Scaling.observable
+        scaling
             .map { CGFloat(16 * $0) }
             .bind(to: commandCharWidth.width(equalTo: 1).rx.constant)
             .disposed(by: disposeBag)
@@ -116,13 +119,18 @@ class KeyboardViewController: NSViewController, SettingsUI {
 
     private func makeLabel(text: String) -> NSView {
 
-        Label(text: text, font: .systemFont(ofSize: 13))
+        Label(text: text, font: .systemFont(ofSize: 13), scaling: scaling)
     }
 
     private func makeCommand(text: String) -> NSView {
 
         let charViews = text.split(separator: " ").map {
-            Label(text: String($0), font: .systemFont(ofSize: 13, weight: .regular), align: .center)
+            Label(
+                text: String($0),
+                font: .systemFont(ofSize: 13, weight: .regular),
+                align: .center,
+                scaling: scaling
+            )
         }
 
         // defer until after they are in the same hierarchy
