@@ -46,8 +46,10 @@ class KeyboardViewController: NSViewController, SettingsUI {
         scrollView.contentView.top(equalTo: contentStackView)
         scrollView.contentView.leading(equalTo: contentStackView)
         scrollView.contentView.trailing(equalTo: contentStackView)
-        scrollView.contentView.height(equalTo: contentStackView)
-            .priority = .dragThatCanResizeWindow
+        scrollView.contentView.height(
+            equalTo: contentStackView,
+            priority: .dragThatCanResizeWindow
+        )
 
         let stackView = NSStackView(views: [shortcutsControl, scrollView])
         .with(spacing: Constants.contentSpacing)
