@@ -12,20 +12,6 @@ import Testing
 
 class ReminderEditorViewModelTests {
 
-    @Test func testDueDate() {
-
-        let dateProvider = MockDateProvider()
-
-        dateProvider.now = .make(year: 2025, month: 10, day: 25, hour: 10, minute: 30, second: 50)
-
-        let dueDate: Date = .make(year: 2025, month: 10, day: 5, at: .start).withCurrentTime(
-            adding: .init(hour: 5, minute: 10),
-            using: dateProvider
-        )
-
-        #expect(dueDate == .make(year: 2025, month: 10, day: 5, hour: 15, minute: 40, second: 0))
-    }
-
     @Test func testViewModel_initialState() {
 
         let calendarService = MockCalendarServiceProvider()

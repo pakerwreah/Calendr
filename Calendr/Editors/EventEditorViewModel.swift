@@ -86,9 +86,9 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
 
     private let disposeBag = DisposeBag()
 
-    private var eventDuration: TimeInterval = 3600
+    private var eventDuration: TimeInterval
     private var isSyncingDates = false
-    private var parsedTitle = EventTitleDateParser.parse("")
+    private var parsedTitle: EventTitleParseResult = .empty()
     private var defaultCalendarId: String?
     private var hasCalendarInstruction = false
     private var parserAllDayRestoreState: ParserAllDayRestoreState?
@@ -111,11 +111,10 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
         scheduler: ImmediateSchedulerType
     ) {
         self.dateProvider = dateProvider
-        let roundedStart = roundUpToNextHour(startDate, using: dateProvider)
         let defaultDuration: TimeInterval = 3600
-        self.startDate = roundedStart
+        self.startDate = startDate
         self.eventDuration = defaultDuration
-        self.endDate = roundedStart.addingTimeInterval(defaultDuration)
+        self.endDate = startDate.addingTimeInterval(defaultDuration)
         self.calendarService = calendarService
         self.naturalLanguageEventInputEnabled = settings.naturalLanguageEventInputEnabled.lastValue() ?? false
         self.scheduler = scheduler
@@ -660,13 +659,6 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
 
         parseTitleInstructions()
     }
-}
-
-private func roundUpToNextHour(_ date: Date, using dateProvider: DateProviding) -> Date {
-    let calendar = dateProvider.calendar
-    guard let interval = calendar.dateInterval(of: .hour, for: date) else { return date }
-    if date == interval.start { return date }
-    return calendar.date(byAdding: .hour, value: 1, to: interval.start)!
 }
 
 private struct ParserAllDayRestoreState {

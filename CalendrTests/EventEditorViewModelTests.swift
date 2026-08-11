@@ -13,7 +13,7 @@ import Testing
 class EventEditorViewModelTests {
 
     let dateProvider = MockDateProvider(
-        now: .make(year: 2025, month: 10, day: 25, hour: 10, minute: 30)
+        now: .make(year: 2025, month: 10, day: 25, hour: 11, minute: 0)
     )
 
     @Test func testViewModel_initialState() {
@@ -724,8 +724,8 @@ class EventEditorViewModelTests {
         viewModel.title = "Call in 2 hours"
 
         #expect(viewModel.parsedEventTitle == "Call")
-        #expect(viewModel.startDate == .make(year: 2025, month: 10, day: 25, hour: 12, minute: 30))
-        #expect(viewModel.endDate == .make(year: 2025, month: 10, day: 25, hour: 13, minute: 30))
+        #expect(viewModel.startDate == .make(year: 2025, month: 10, day: 25, hour: 13, minute: 00))
+        #expect(viewModel.endDate == .make(year: 2025, month: 10, day: 25, hour: 14, minute: 00))
         #expect(viewModel.titleHighlights.map(\.color) == [.systemOrange])
     }
 
@@ -1031,7 +1031,7 @@ class EventEditorViewModelTests {
         let oldTimeZone = TimeZone(secondsFromGMT: 3 * 3600)!
         dateProvider.m_calendar = Calendar.gregorian.with(timeZone: oldTimeZone)
 
-        let start: Date = .make(year: 2025, month: 10, day: 25, hour: 14, minute: 30, timeZone: oldTimeZone)
+        let start: Date = .make(year: 2025, month: 10, day: 25, hour: 15, minute: 00, timeZone: oldTimeZone)
 
         let viewModel = makeViewModel(startDate: start)
 
@@ -1041,18 +1041,6 @@ class EventEditorViewModelTests {
 
         #expect(viewModel.startDate == .make(year: 2025, month: 10, day: 25, hour: 15, minute: 0, timeZone: .utc))
         #expect(viewModel.endDate == .make(year: 2025, month: 10, day: 25, hour: 16, minute: 0, timeZone: .utc))
-    }
-
-    @Test func testViewModel_init_roundsStartUpToNextHour() {
-
-        let onTheHour: Date = .make(year: 2025, month: 10, day: 25, hour: 10, minute: 0)
-        let withMinutes: Date = .make(year: 2025, month: 10, day: 25, hour: 10, minute: 30)
-
-        let onTheHourViewModel = makeViewModel(startDate: onTheHour)
-        let withMinutesViewModel = makeViewModel(startDate: withMinutes)
-
-        #expect(onTheHourViewModel.startDate == onTheHour)
-        #expect(withMinutesViewModel.startDate == .make(year: 2025, month: 10, day: 25, hour: 11, minute: 0))
     }
 
     @Test func testViewModel_changingEndDate_tracksDuration() {

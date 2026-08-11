@@ -310,4 +310,34 @@ class MainViewModel {
             .bind(to: selectDateObserver)
             .disposed(by: disposeBag)
     }
+
+    func dateForNewEvent() -> Date {
+
+        if dateProvider.isDateInToday(currentSelectedDate) {
+            currentSelectedDate
+                .withCurrentTime(using: dateProvider)
+                .rounded(toNext: .hour, using: dateProvider)
+        }
+        else {
+            dateProvider.calendar.date(bySettingHour: 8, minute: 0, second: 0, of: currentSelectedDate)!
+        }
+    }
+
+    func dateForNewReminder(adding dateComponents: DateComponents? = nil) -> Date {
+
+        if let dateComponents {
+            currentSelectedDate
+                .withCurrentTime(using: dateProvider)
+                .start(of: .minute, using: dateProvider)
+                .adding(dateComponents, using: dateProvider)
+        }
+        else if dateProvider.isDateInToday(currentSelectedDate) {
+            currentSelectedDate
+                .withCurrentTime(using: dateProvider)
+                .rounded(toNext: .hour, using: dateProvider)
+        }
+        else {
+            dateProvider.calendar.date(bySettingHour: 8, minute: 0, second: 0, of: currentSelectedDate)!
+        }
+    }
 }

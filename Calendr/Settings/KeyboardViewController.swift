@@ -9,12 +9,12 @@ import Cocoa
 import RxSwift
 import KeyboardShortcuts
 
+private typealias LocalShortcuts = Strings.Settings.Keyboard.LocalShortcuts
+private typealias GlobalShortcuts = Strings.Settings.Keyboard.GlobalShortcuts
+
 class KeyboardViewController: NSViewController, SettingsUI {
 
     private let disposeBag = DisposeBag()
-
-    typealias LocalShortcuts = Strings.Settings.Keyboard.LocalShortcuts
-    typealias GlobalShortcuts = Strings.Settings.Keyboard.GlobalShortcuts
 
     private var commandCharWidth = NSLayoutGuide()
 
@@ -72,11 +72,11 @@ class KeyboardViewController: NSViewController, SettingsUI {
         return NSStackView(views: [makeLabel(text: text), keysView])
     }
 
-    private lazy var globalContent: NSView = {
-
-        return NSStackView(views: [
+    private lazy var globalContent: NSView = NSStackView(
+        views: [
             makeGlobalShortcut(text: GlobalShortcuts.openCalendar, for: .showMainPopover),
-            makeGlobalShortcut(text: Strings.Event.Editor.headline, for: .newEvent),
+            makeGlobalShortcut(text: GlobalShortcuts.newEvent, for: .newEvent),
+            makeGlobalShortcut(text: GlobalShortcuts.newReminder, for: .newReminder),
             makeGlobalShortcut(text: GlobalShortcuts.openNextEvent, for: .showNextEventPopover),
             makeGlobalShortcut(text: GlobalShortcuts.openNextEventOptions, for: .showNextEventOptions),
             makeGlobalShortcut(text: GlobalShortcuts.joinNextEvent, for: .joinNextEvent),
@@ -84,11 +84,10 @@ class KeyboardViewController: NSViewController, SettingsUI {
             makeGlobalShortcut(text: GlobalShortcuts.openNextReminderOptions, for: .showNextReminderOptions)
         ])
         .with(orientation: .vertical)
-    }()
 
     private func makeGlobalShortcut(text: String, for shortcut: KeyboardShortcuts.Name) -> NSView {
 
-        return NSStackView(views: [makeLabel(text: text), makeRecorder(for: shortcut)])
+        NSStackView(views: [makeLabel(text: text), makeRecorder(for: shortcut)])
     }
 
     private func makeLabel(text: String) -> NSView {
@@ -122,17 +121,22 @@ class KeyboardViewController: NSViewController, SettingsUI {
     }
 }
 
-private extension Strings.Settings.Keyboard.LocalShortcuts {
-
+private extension LocalShortcuts {
     static let showWeekNumbers = Strings.Settings.Calendar.showWeekNumbers
     static let showDeclinedEvents = Strings.Settings.Calendar.showDeclinedEvents
     static let settings = Strings.Settings.title
     static let quit = Strings.quit
 }
 
+private extension GlobalShortcuts {
+    static let newEvent = Strings.Event.Editor.headline
+    static let newReminder = Strings.Reminder.Editor.headline
+}
+
 extension KeyboardShortcuts.Name {
     static let showMainPopover = Self("showMainPopover")
     static let newEvent = Self("newEvent")
+    static let newReminder = Self("newReminder")
     static let showNextEventPopover = Self("showNextEventPopover")
     static let showNextEventOptions = Self("showNextEventOptions")
     static let showNextReminderPopover = Self("showNextReminderPopover")

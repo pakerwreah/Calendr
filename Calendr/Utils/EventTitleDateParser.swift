@@ -69,6 +69,23 @@ struct EventTitleParseResult: Equatable {
     let calendarQuery: String?
     let hasConflicts: Bool
     let tokens: [EventTitleToken]
+
+    static func empty() -> Self {
+        .init(
+            cleanedTitle: "",
+            dayOffset: nil,
+            numericDate: nil,
+            weekday: nil,
+            time: nil,
+            endTime: nil,
+            relativeStart: nil,
+            duration: nil,
+            isAllDay: false,
+            calendarQuery: nil,
+            hasConflicts: false,
+            tokens: []
+        )
+    }
 }
 
 enum EventTitleDateParser {
