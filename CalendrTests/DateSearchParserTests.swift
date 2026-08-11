@@ -87,9 +87,45 @@ class DateSearchParserTests {
         #expect(result == "𠮷")
     }
 
-    @Test func testInvalidDates() throws {
+    @Test func testYearIsNotExtractedFromTrailingNumber() throws {
+        // An unrelated 4-digit number after the month (room/issue id, etc.) must
+        // not be parsed as the year. With no year present, it falls back to the
+        // current year (2021, from the fixed `dateProvider.now`).
+        let formatter = DateFormatter(calendar: dateProvider.calendar)
+        formatter.dateStyle = .short
 
-        let dateStrings: [String] = [
+        for text in ["Dec room 1234", "Dec #1234", "Dec sync 1234"] {
+            let (date, _) = try #require(DateSearchParser.parse(text: text, using: dateProvider), "\(text)")
+            #expect(formatter.string(from: date) == "18/12/2021", "\(text)")
+        }
+    }
+
+    @Test func testYearIsNotExtractedFromLongerNumberRun() throws {
+        // A 4-digit year must not be matched inside a longer digit run. No valid
+        // year is found, so only the month token is consumed and the run stays in
+        // the remaining search text.
+        let (date, result) = try #require(DateSearchParser.parse(text: "Dec 20215", using: dateProvider))
+
+        let formatter = DateFormatter(calendar: dateProvider.calendar)
+        formatter.dateStyle = .short
+
+        #expect(formatter.string(from: date) == "18/12/2021")
+        #expect(result == "20215")
+    }
+
+    @Test func testAdjacentYearIsStillExtracted() throws {
+        // A standalone 4-digit year directly after the month keeps working, even
+        // when trailing text follows it.
+        let formatter = DateFormatter(calendar: dateProvider.calendar)
+        formatter.dateStyle = .short
+
+        for text in ["Dec 2021", "Dec 2021 Suffix", "Prefix Dec 2021"] {
+            let (date, _) = try #require(DateSearchParser.parse(text: text, using: dateProvider), "\(text)")
+            #expect(formatter.string(from: date) == "18/12/2021", "\(text)")
+        }
+    }
+
+    @Test func testInvalidDates() throws {        let dateStrings: [String] = [
             "2021-12-118",
             "Decembers 18, 2021",
             "18 Decembers 2021",

@@ -74,14 +74,20 @@ private func searchMatchMonth(text: String, symbols: [String], dateProvider: Dat
 
             components.month = index + 1
 
-            // extract year if it exists after the month
+            // extract a year only from a standalone 4-digit number that directly
+            // follows the month (separated only by whitespace), so unrelated
+            // trailing numbers — room numbers, issue ids, or a longer digit run —
+            // are not mistaken for the year
             var extendedRange = range
-            if let yearRange = text[range.upperBound...].range(of: #"(\d{4})"#, options: .regularExpression) {
-                if let yearStr = Int(text[yearRange].trimmingCharacters(in: .whitespaces)) {
-                    components.year = yearStr
-                    // Extend the range to include the year
-                    extendedRange = range.lowerBound..<yearRange.upperBound
-                }
+            let tail = text[range.upperBound...].drop(while: { $0.isWhitespace })
+            if
+                let yearRange = tail.range(of: #"\d{4}(?!\d)"#, options: .regularExpression),
+                yearRange.lowerBound == tail.startIndex,
+                let yearStr = Int(tail[yearRange])
+            {
+                components.year = yearStr
+                // Extend the range to include the year
+                extendedRange = range.lowerBound..<yearRange.upperBound
             }
 
             // create the date from components
