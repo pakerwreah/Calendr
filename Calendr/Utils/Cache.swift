@@ -52,6 +52,11 @@ class LRUCache<Key: Hashable, Value>: Cache {
     }
 
     private func unsafe_set(_ key: Key, _ value: Value) {
+        // A non-positive capacity cache holds nothing; bail out before reaching
+        // the eviction branch, whose `order.removeFirst()` would trap on the
+        // empty ordering array.
+        guard capacity > 0 else { return }
+
         if cache[key] != nil {
             // If the key already exists, update the value and move it to the end
             if let index = order.firstIndex(of: key) {

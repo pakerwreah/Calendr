@@ -52,4 +52,22 @@ class CacheTests {
         #expect(cache.get("K3") == "V3")
         #expect(cache.get("K5") == "V5")
     }
+
+    @Test func testZeroCapacityDoesNotCrash() {
+
+        let cache = LRUCache<String, String>(capacity: 0)
+
+        cache.set("K1", "V1")
+
+        #expect(cache.get("K1") == nil)
+    }
+
+    @Test func testNegativeCapacityDoesNotCrash() {
+
+        let cache = LRUCache<String, String>(capacity: -1)
+
+        cache.set("K1", "V1")
+
+        #expect(cache.get("K1") == nil)
+    }
 }
