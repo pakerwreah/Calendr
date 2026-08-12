@@ -44,8 +44,6 @@ struct EventFullScreenView: ViewModelView {
 
                 Spacer().frame(height: 64)
 
-                let buttonWidth = CGFloat(200)
-
                 VStack(spacing: 16) {
                     if let link = viewModel.link {
                         Button(action: viewModel.join) {
@@ -59,13 +57,13 @@ struct EventFullScreenView: ViewModelView {
                                      : link.url.host()
                                      ?? Strings.Event.Action.open)
                             }
-                            .frame(width: buttonWidth)
+                            .frame(maxWidth: .infinity)
                         }
                         .keyboardShortcut(.defaultAction)
                     } else {
                         Button(action: viewModel.performClose) {
                             Text("OK")
-                                .frame(width: buttonWidth)
+                                .frame(maxWidth: .infinity)
                         }
                         .keyboardShortcut(.defaultAction)
                     }
@@ -76,10 +74,11 @@ struct EventFullScreenView: ViewModelView {
                                 Image(nsImage: Icons.Event.skip)
                                 Text(Strings.Event.Action.skip)
                             }
-                            .frame(width: buttonWidth)
+                            .frame(maxWidth: .infinity)
                         }
                     }
                 }
+                .frame(width: 200)
                 .disabled(viewModel.isDismissLocked)
                 .controlSize(.extraLarge)
 
@@ -88,11 +87,19 @@ struct EventFullScreenView: ViewModelView {
             .frame(maxWidth: 1024)
             .padding(100)
 
+            Button(action: viewModel.performClose) {
+                Image(systemName: "xmark")
+            }
+            .disabled(viewModel.isDismissLocked)
+            .buttonBorderShape(.circle)
+            .controlSize(.large)
+            .imageScale(.small)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+
             SliderPopupButton(value: $viewModel.transparencyLevel)
                 .controlSize(.large)
                 .imageScale(.large)
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
-                .padding(32)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
 
         }
         .focusable()
@@ -100,6 +107,7 @@ struct EventFullScreenView: ViewModelView {
         .onExitCommand(perform: viewModel.performClose)
         .onAppear(perform: viewModel.onAppear)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(16)
         .background(viewModel.material.value)
         .colorScheme(.dark)
     }
@@ -158,7 +166,7 @@ private struct SliderPopupButton: View {
             Image(systemName: "gear")
         }
         .buttonBorderShape(.circle)
-        .popover(isPresented: $isPopupPresented, arrowEdge: .trailing) {
+        .popover(isPresented: $isPopupPresented) {
             SliderPopupView(value: $value)
         }
     }
