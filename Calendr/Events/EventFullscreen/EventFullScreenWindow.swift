@@ -9,18 +9,18 @@ import AppKit
 
 class EventFullScreenWindow: NSWindow {
 
+    override var canBecomeKey: Bool { true }
+
     init(viewController: EventFullScreenViewController) {
         super.init(
             contentRect: .zero,
-            styleMask: [.titled, .fullSizeContentView],
+            styleMask: [.borderless],
             backing: .buffered,
             defer: false
         )
         level = .modalPanel
         isMovable = false
         isReleasedWhenClosed = false
-        titlebarAppearsTransparent = true
-        titleVisibility = .hidden
         isOpaque = false
         backgroundColor = .clear
         hasShadow = false
