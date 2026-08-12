@@ -9,7 +9,7 @@ import Foundation
 
 extension Date {
 
-    func dateComponents(using dateProvider: DateProviding, calendar identifier: Calendar.Identifier? = nil) -> DateComponents {
+    func components(using dateProvider: DateProviding, calendar identifier: Calendar.Identifier? = nil) -> DateComponents {
 
         let calendarToUse: Calendar
 
@@ -22,24 +22,55 @@ extension Date {
         return calendarToUse.dateComponents(in: calendarToUse.timeZone, from: self)
     }
 
-    func withCurrentTime(
-        adding increment: DateComponents = .init(),
-        using dateProvider: DateProviding
-    ) -> Self {
-
-        let calendar = dateProvider.calendar
-        let currentTime = calendar.dateComponents([.hour, .minute], from: dateProvider.now)
+    func start(of component: Calendar.Component, using dateProvider: DateProviding) -> Self {
 
         guard
-            let hour = currentTime.hour,
-            let minute = currentTime.minute,
-            let combined = calendar.date(bySettingHour: hour, minute: minute, second: 0, of: self),
-            let result = calendar.date(byAdding: increment, to: combined)
+            let result = dateProvider.calendar.dateInterval(of: component, for: self)?.start
         else {
-            print("🔥 Could not calculate date with current time")
+            print("🔥 Could not truncate date \(self) to \(component)")
             return self
         }
 
+        return result
+    }
+
+    func adding(_ components: DateComponents, using dateProvider: DateProviding) -> Self {
+
+        guard
+            let result = dateProvider.calendar.date(byAdding: components, to: self)
+        else {
+            print("🔥 Could not calculate date by adding \(components) to \(self)")
+            return self
+        }
+        return result
+    }
+
+    func withCurrentTime(using dateProvider: DateProviding) -> Self {
+
+        let date = dateProvider.calendar.startOfDay(for: self)
+        let time = dateProvider.calendar.dateComponents([.hour, .minute, .second], from: dateProvider.now)
+
+        guard
+            let result = dateProvider.calendar.date(byAdding: time, to: date)
+        else {
+            print("🔥 Could not calculate date by adding \(time) to \(self)")
+            return self
+        }
+
+        return result
+    }
+
+    func rounded(toNext component: Calendar.Component, using dateProvider: DateProviding) -> Self {
+
+        let calendar = dateProvider.calendar
+
+        guard
+            let interval = calendar.dateInterval(of: component, for: self),
+            let result = calendar.date(byAdding: component, value: 1, to: interval.start)
+        else {
+            print("🔥 Could not calculate date \(self) rounded to next \(component)")
+            return self
+        }
         return result
     }
 }

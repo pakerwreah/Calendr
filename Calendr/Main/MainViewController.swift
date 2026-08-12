@@ -407,20 +407,32 @@ class MainViewController: NSViewController {
 
         for item in items {
             switch item {
-            case .separator:
-                createMenu.addItem(.separator())
+                case .separator:
+                    createMenu.addItem(.separator())
 
-            case .newEvent:
-                createMenu.addItem(withTitle: Strings.Event.Editor.headline, action: #selector(openEventEditor(_:)), keyEquivalent: "")
+                case .newEvent:
+                    createMenu.addItem(
+                        withTitle: Strings.Event.Editor.headline,
+                        action: #selector(openEventEditor(_:)),
+                        keyEquivalent: ""
+                    )
                     .target = self
 
-            case .quickReminder(let title, let offset):
-                let menuItem = createMenu.addItem(withTitle: title, action: #selector(openReminderEditor), keyEquivalent: "")
-                menuItem.representedObject = offset
-                menuItem.target = self
+                case .quickReminder(let title, let offset):
+                    let menuItem = createMenu.addItem(
+                        withTitle: title,
+                        action: #selector(openReminderEditor(_:)),
+                        keyEquivalent: ""
+                    )
+                    menuItem.representedObject = offset
+                    menuItem.target = self
 
-            case .newReminder:
-                createMenu.addItem(withTitle: Strings.Reminder.Editor.headline, action: #selector(openReminderEditor), keyEquivalent: "")
+                case .newReminder:
+                    createMenu.addItem(
+                        withTitle: Strings.Reminder.Editor.headline,
+                        action: #selector(openReminderEditor(_:)),
+                        keyEquivalent: ""
+                    )
                     .target = self
             }
         }
@@ -546,13 +558,15 @@ class MainViewController: NSViewController {
 
     @objc private func openEventEditor(_ sender: NSMenuItem? = nil) {
 
-        openEventEditor(at: mainViewModel.currentSelectedDate.withCurrentTime(using: dateProvider))
+        let startDate = mainViewModel.dateForNewEvent()
+
+        openEventEditor(at: startDate)
     }
 
-    private func openEventEditor(at date: Date) {
+    private func openEventEditor(at startDate: Date) {
 
         let viewModel = EventEditorViewModel(
-            startDate: date,
+            startDate: startDate,
             dateProvider: dateProvider,
             calendarService: calendarService,
             settings: settingsViewModel,
@@ -572,13 +586,16 @@ class MainViewController: NSViewController {
 
     @objc private func openReminderEditor(_ sender: NSMenuItem? = nil) {
 
-        let dateComponents = sender?.representedObject as? DateComponents ?? .init()
+        let dateComponents = sender?.representedObject as? DateComponents
+        let dueDate = mainViewModel.dateForNewReminder(adding: dateComponents)
+
+        openReminderEditor(at: dueDate)
+    }
+
+    @objc private func openReminderEditor(at dueDate: Date) {
 
         let viewModel = ReminderEditorViewModel(
-            dueDate: mainViewModel.currentSelectedDate.withCurrentTime(
-                adding: dateComponents,
-                using: dateProvider
-            ),
+            dueDate: dueDate,
             calendarService: calendarService,
             scheduler: MainScheduler.instance
         )
@@ -879,7 +896,12 @@ class MainViewController: NSViewController {
 
         KeyboardShortcuts.onKeyUp(for: .newEvent) { [weak self] in
             guard let self else { return }
-            openEventEditor(at: dateProvider.now)
+            openEventEditor(at: dateProvider.now.rounded(toNext: .hour, using: dateProvider))
+        }
+
+        KeyboardShortcuts.onKeyUp(for: .newReminder) { [weak self] in
+            guard let self else { return }
+            openReminderEditor(at: dateProvider.now.rounded(toNext: .hour, using: dateProvider))
         }
 
         KeyboardShortcuts.onKeyUp(for: .showNextEventPopover) { [weak self] in

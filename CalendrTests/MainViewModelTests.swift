@@ -313,4 +313,65 @@ class MainViewModelTests {
 
         #expect(viewModel.createMenuItems == [.newEvent, .newReminder])
     }
+
+    @Test func testDateForNewEvent_withTodaySelected_roundToNextHour() {
+
+        dateProvider.now = .make(year: 2026, month: 1, day: 1, hour: 10, minute: 30, second: 50)
+
+        viewModel.resetObserver.onNext(())
+
+        dateProvider.now.addTimeInterval(3600)
+
+        let startDate = viewModel.dateForNewEvent()
+
+        #expect(startDate == .make(year: 2026, month: 1, day: 1, hour: 12))
+    }
+
+    @Test func testDateForNewEvent_withTomorrowSelected_useDefaultTime() {
+
+        dateProvider.now = .make(year: 2026, month: 1, day: 1)
+
+        viewModel.selectDateObserver.onNext(.make(year: 2026, month: 1, day: 2))
+
+        let dueDate = viewModel.dateForNewEvent()
+
+        #expect(dueDate == .make(year: 2026, month: 1, day: 2, hour: 8))
+    }
+
+    @Test func testDateForNewReminder_addingDateComponents() {
+
+        dateProvider.now = .make(year: 2026, month: 1, day: 1, hour: 10, minute: 30, second: 50)
+
+        viewModel.resetObserver.onNext(())
+
+        dateProvider.now.addTimeInterval(3600)
+
+        let dueDate = viewModel.dateForNewReminder(adding: .init(minute: 15))
+
+        #expect(dueDate == .make(year: 2026, month: 1, day: 1, hour: 11, minute: 45))
+    }
+
+    @Test func testDateForNewReminder_withTodaySelected_roundToNextHour() {
+
+        dateProvider.now = .make(year: 2026, month: 1, day: 1, hour: 10, minute: 30, second: 50)
+
+        viewModel.resetObserver.onNext(())
+
+        dateProvider.now.addTimeInterval(3600)
+
+        let dueDate = viewModel.dateForNewReminder()
+
+        #expect(dueDate == .make(year: 2026, month: 1, day: 1, hour: 12))
+    }
+
+    @Test func testDateForNewReminder_withTomorrowSelected_useDefaultTime() {
+
+        dateProvider.now = .make(year: 2026, month: 1, day: 1)
+
+        viewModel.selectDateObserver.onNext(.make(year: 2026, month: 1, day: 2))
+
+        let dueDate = viewModel.dateForNewReminder()
+
+        #expect(dueDate == .make(year: 2026, month: 1, day: 2, hour: 8))
+    }
 }

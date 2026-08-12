@@ -486,7 +486,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
 
     private func dueDateComponents(for date: Date, isAllDay: Bool) -> DateComponents {
         // The components calendar must be Gregorian, otherwise an exception is raised.
-        var components = date.dateComponents(using: dateProvider, calendar: .gregorian)
+        var components = date.components(using: dateProvider, calendar: .gregorian)
         if isAllDay {
             components.hour = nil
             components.minute = nil

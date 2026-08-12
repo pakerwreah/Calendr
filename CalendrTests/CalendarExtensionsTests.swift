@@ -1,5 +1,5 @@
 //
-//  CalendarExtensionTests.swift
+//  CalendarExtensionsTests.swift
 //  CalendrTests
 //
 //  Created by Paker on 01/01/21.
@@ -9,7 +9,7 @@ import Foundation
 import Testing
 @testable import Calendr
 
-class CalendarExtensionTests {
+class CalendarExtensionsTests {
 
     @Test func testDateInRange() {
         let date: Date = .make(day: 5)

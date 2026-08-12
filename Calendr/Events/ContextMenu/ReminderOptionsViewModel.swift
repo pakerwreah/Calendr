@@ -81,7 +81,7 @@ class ReminderOptionsViewModel: BaseContextMenuViewModel<ReminderAction> {
     }
 
     private func combine(date: Date, time: Date) -> Date? {
-        let c = time.dateComponents(using: dateProvider)
+        let c = time.components(using: dateProvider)
         guard let hour = c.hour, let minute = c.minute else {
             return nil
         }
