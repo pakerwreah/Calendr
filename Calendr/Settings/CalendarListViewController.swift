@@ -42,8 +42,9 @@ class CalendarListViewController: NSViewController, SettingsUI {
 
         view.addSubview(scrollView)
 
-        scrollView.edges(equalTo: view, margins: source.margins)
+        scrollView.edges(equalTo: view, margins: .init(right: source == .menu ? 4 : -Constants.scrollbarWidth))
 
+        scrollView.scrollerStyle = .overlay
         scrollView.drawsBackground = false
         scrollView.documentView = contentStackView.forAutoLayout()
 
@@ -51,19 +52,36 @@ class CalendarListViewController: NSViewController, SettingsUI {
         scrollView.contentView.top(equalTo: contentStackView)
         scrollView.contentView.leading(equalTo: contentStackView)
         scrollView.contentView.trailing(equalTo: contentStackView)
-        let height = scrollView.contentView.height(equalTo: contentStackView)
+
+        scrollView.contentView.height(equalTo: contentStackView, priority: .dragThatCanResizeWindow)
+        scrollView.contentView.height(lessThanOrEqualTo: 500)
 
         switch source {
 
             case .settings:
-                height.priority = .dragThatCanResizeWindow
-                scrollView.contentView.height(lessThanOrEqualTo: 600)
+                contentStackView.alignment = .width
+                contentStackView.edgeInsets = .init(right: Constants.scrollbarWidth)
 
             case .menu:
                 view.width(equalTo: 250)
+                contentStackView.edgeInsets = .init(16)
         }
 
         contentStackView.spacing = 16
+    }
+
+    override func viewWillAppear() {
+
+        super.viewWillAppear()
+
+        contentStackView.scrollTop()
+    }
+
+    override func viewDidAppear() {
+
+        super.viewDidAppear()
+
+        contentStackView.showVerticalScroller()
     }
 
     private func setUpBindings() {
@@ -219,19 +237,5 @@ class CalendarListViewController: NSViewController, SettingsUI {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-}
-
-// MARK: - Extensions
-
-extension CalendarListSource {
-
-    var margins: NSEdgeInsets {
-        switch self {
-        case .settings:
-            return .init()
-        case .menu:
-            return .init(top: 16, left: 16, bottom: 16, right: 20)
-        }
     }
 }

@@ -688,18 +688,3 @@ private extension NSFont {
         font.withSize(font.pointSize * Scaling.current)
     }
 }
-
-private extension NSView {
-
-    func hideVerticalScroller() {
-        guard let enclosingScrollView else { return }
-        enclosingScrollView.hasVerticalScroller = false
-    }
-
-    func showVerticalScroller() {
-        guard let enclosingScrollView else { return }
-        enclosingScrollView.hasVerticalScroller = true
-        enclosingScrollView.reflectScrolledClipView(enclosingScrollView.contentView)
-        enclosingScrollView.flashScrollers()
-    }
-}

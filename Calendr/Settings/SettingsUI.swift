@@ -138,4 +138,5 @@ enum SettingsUIConstants {
 
     static let sectionSpacing: CGFloat = 24
     static let contentSpacing: CGFloat = 12
+    static let scrollbarWidth: CGFloat = 16
 }
