@@ -75,14 +75,14 @@ class AboutViewController: NSViewController, SettingsUI {
             .spacer(height: 4),
             Label(text: "© 2020 - \(BuildConfig.date.suffix(4)) Carlos Enumo", align: .center),
             linkView,
-            .spacer(height: 16),
+            .spacer(height: Constants.sectionSpacing),
             newVersionButton,
             .spacer(height: 0),
             autoCheckForUpdatesCheckbox,
-            .spacer(height: 16),
+            .spacer(height: Constants.sectionSpacing),
             quitButton
         ])
-        .with(insets: .init(bottom: 8))
+        .with(insets: .init(vertical: Constants.sectionSpacing))
         .with(orientation: .vertical)
         .with(alignment: .centerX)
 

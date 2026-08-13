@@ -42,7 +42,7 @@ class CalendarSettingsViewController: NSViewController, SettingsUI {
 
         let content = NSStackView(views: [nextEventContent, browserContent])
             .with(orientation: .vertical)
-            .with(spacing: Constants.contentSpacing)
+            .with(spacing: Constants.sectionSpacing)
 
         view.addSubview(content)
 

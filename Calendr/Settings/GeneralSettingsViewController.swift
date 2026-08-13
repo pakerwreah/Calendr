@@ -84,7 +84,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         super.viewDidLoad()
 
         let stackView = NSStackView()
-            .with(spacing: Constants.contentSpacing)
+            .with(spacing: Constants.sectionSpacing)
             .with(orientation: .horizontal)
             .with(alignment: .top)
             .with(distribution: .fillEqually)
@@ -110,7 +110,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             let sections = Sections.create(column).disposed(by: disposeBag)
 
             let columnStack = NSStackView(views: sections)
-                .with(spacing: Constants.contentSpacing)
+                .with(spacing: Constants.sectionSpacing)
                 .with(orientation: .vertical)
 
             stackView.addArrangedSubview(columnStack)
