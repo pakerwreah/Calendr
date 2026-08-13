@@ -87,7 +87,7 @@ class SettingsViewController: NSTabViewController, NSWindowDelegate {
 
         view.addSubview(contentView)
 
-        contentView.edges(equalTo: view, margin: Constants.padding)
+        contentView.edges(equalTo: view, margins: Constants.padding)
     }
 
     override func viewWillAppear() {
@@ -133,7 +133,7 @@ class SettingsViewController: NSTabViewController, NSWindowDelegate {
 
         guard
             let tabViewItem,
-            let itemViewController = tabViewItem.viewController as? SettingsUI,
+            let itemViewController = tabViewItem.viewController,
             let itemView = tabViewItem.view,
             let window = view.window
         else { return }
@@ -143,7 +143,7 @@ class SettingsViewController: NSTabViewController, NSWindowDelegate {
         DispatchQueue.main.async {
 
             let contentSize = sizeWithPadding(
-                itemViewController.fittingSize(minWidth: Constants.minWidth),
+                itemViewController.view.fittingSize,
                 minWidth: Constants.minWidth
             )
 
@@ -163,10 +163,6 @@ class SettingsViewController: NSTabViewController, NSWindowDelegate {
 
         for (i, vc) in tabViewItems.compactMap(\.viewController).enumerated() {
 
-            guard let ui = vc as? SettingsUI else {
-                fatalError()
-            }
-
             Observable.merge(
                 vc.rx.viewDidLayout,
                 Scaling.observable.void()
@@ -174,7 +170,7 @@ class SettingsViewController: NSTabViewController, NSWindowDelegate {
             .withLatestFrom(rx.observe(\.selectedTabViewItemIndex))
             .matching(i)
             .void()
-            .map { ui.fittingSize(minWidth: Constants.minWidth) }
+            .map { vc.view.fittingSize }
             .distinctUntilChanged()
             .skip(i > 0 ? 1 : 0)
             .map { sizeWithPadding($0, minWidth: Constants.minWidth) }
@@ -206,13 +202,13 @@ class SettingsViewController: NSTabViewController, NSWindowDelegate {
 
 private func sizeWithPadding(_ size: NSSize, minWidth: CGFloat) -> NSSize {
     NSSize(
-        width: max(size.width, minWidth) + 2 * Constants.padding,
-        height: size.height + 2 * Constants.padding
+        width: max(size.width, minWidth) + Constants.padding.horizontal,
+        height: size.height + Constants.padding.vertical
     )
 }
 
 private enum Constants {
 
-    static let padding: CGFloat = 24
+    static let padding: NSEdgeInsets = .init(top: 16, left: 24, bottom: 24, right: 24)
     static let minWidth: CGFloat = 500
 }

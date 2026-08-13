@@ -44,12 +44,6 @@ class AppearanceViewController: NSViewController, SettingsUI {
         setUpBindings()
     }
 
-    func fittingSize(minWidth: CGFloat) -> NSSize {
-        // FIXME: this is glitching like hell
-        // .init(width: minWidth, height: view.fittingSize.height)
-        view.fittingSize
-    }
-
     override func viewDidLoad() {
 
         super.viewDidLoad()
@@ -65,7 +59,7 @@ class AppearanceViewController: NSViewController, SettingsUI {
             ])
             .disposed(by: disposeBag)
         )
-        .with(spacing: Constants.contentSpacing)
+        .with(spacing: Constants.sectionSpacing)
         .with(orientation: .vertical)
 
         stackView.setHuggingPriority(.defaultHigh, for: .horizontal)
@@ -103,7 +97,7 @@ class AppearanceViewController: NSViewController, SettingsUI {
 
         let container = NSStackView(views: [divider, btnStack])
             .with(orientation: .vertical)
-            .with(spacing: Constants.contentSpacing / 2)
+            .with(spacing: Constants.contentSpacing)
 
         return .init(value: container, disposable: disposable)
     }
