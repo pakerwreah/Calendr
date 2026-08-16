@@ -47,6 +47,7 @@ protocol AppearanceSettings {
 
 protocol EventEditorSettings {
     var naturalLanguageEventInputEnabled: Observable<Bool> { get }
+    var naturalLanguageEventInputLanguage: Observable<EventTitleParserLanguage> { get }
 }
 
 protocol EventSettings: AppearanceSettings {
@@ -201,6 +202,7 @@ class SettingsViewModel:
     let forceLocalTimeZone: Observable<Bool>
     let showEventListSummary: Observable<Bool>
     let naturalLanguageEventInputEnabled: Observable<Bool>
+    let naturalLanguageEventInputLanguage: Observable<EventTitleParserLanguage>
     let popoverTransparency: Observable<Int>
     let popoverMaterial: Observable<PopoverMaterial>
     let textScaling: Observable<Double>
@@ -378,6 +380,8 @@ class SettingsViewModel:
             .void()
             .startWith(())
             .share(replay: 1)
+
+        naturalLanguageEventInputLanguage = localeChangeObservable.map { .current }
 
         let calendarChangeObservable = Observable
             .merge(

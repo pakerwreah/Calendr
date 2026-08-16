@@ -823,6 +823,261 @@ class EventEditorViewModelTests {
         }
     }
 
+    @Test func testViewModel_czechNaturalLanguageTitle_parsesDateTimeAndDuration() {
+
+        let viewModel = makeViewModel(naturalLanguage: .czech)
+
+        viewModel.title = "Večeře s mámou zítra v 14 na 2 hodiny"
+
+        #expect(viewModel.parsedEventTitle == "Večeře s mámou")
+        #expect(viewModel.startDate == .make(year: 2025, month: 10, day: 26, hour: 14))
+        #expect(viewModel.endDate == .make(year: 2025, month: 10, day: 26, hour: 16))
+        #expect(viewModel.titleHighlights.map(\.color) == [.systemBlue, .systemOrange, .systemGreen])
+    }
+
+    @Test func testViewModel_czechNaturalLanguageTitle_parsesRelativeStart() {
+
+        let viewModel = makeViewModel(naturalLanguage: .czech)
+
+        viewModel.title = "Volání za 2 hodiny"
+
+        #expect(viewModel.parsedEventTitle == "Volání")
+        #expect(viewModel.startDate == .make(year: 2025, month: 10, day: 25, hour: 12, minute: 30))
+        #expect(viewModel.endDate == .make(year: 2025, month: 10, day: 25, hour: 13, minute: 30))
+    }
+
+    @Test func testViewModel_czechNaturalLanguageTitle_parsesAllDayDuration() {
+
+        let viewModel = makeViewModel(naturalLanguage: .czech)
+
+        viewModel.title = "Dovolená za týden celý den na 4 dny"
+
+        #expect(viewModel.parsedEventTitle == "Dovolená")
+        #expect(viewModel.isAllDay)
+        #expect(viewModel.startDate == .make(year: 2025, month: 11, day: 1, at: .start))
+        #expect(viewModel.endDate == .make(year: 2025, month: 11, day: 4, at: .start))
+    }
+
+    @Test func testViewModel_czechNaturalLanguageTitle_parsesNamedDate() {
+
+        let viewModel = makeViewModel(naturalLanguage: .czech)
+
+        viewModel.title = "Konference 12. srpna 2027 v 9"
+
+        #expect(viewModel.parsedEventTitle == "Konference")
+        #expect(viewModel.startDate == .make(year: 2027, month: 8, day: 12, hour: 9))
+    }
+
+    @Test func testViewModel_czechNaturalLanguageTitle_parsesNearestAndFollowingWeekdays() {
+
+        let nearestViewModel = makeViewModel(naturalLanguage: .czech)
+        nearestViewModel.title = "Tenis v sobotu v 10"
+
+        #expect(nearestViewModel.parsedEventTitle == "Tenis")
+        #expect(nearestViewModel.startDate == .make(year: 2025, month: 10, day: 25, hour: 10))
+
+        let followingViewModel = makeViewModel(naturalLanguage: .czech)
+        followingViewModel.title = "Tenis příští sobotu v 10"
+
+        #expect(followingViewModel.parsedEventTitle == "Tenis")
+        #expect(followingViewModel.startDate == .make(year: 2025, month: 11, day: 1, hour: 10))
+    }
+
+    @Test func testViewModel_czechNaturalLanguageTitle_parsesDayPeriodWithWeekday() {
+
+        let viewModel = makeViewModel(naturalLanguage: .czech)
+
+        viewModel.title = "Večeře příští pátek ráno"
+
+        #expect(viewModel.parsedEventTitle == "Večeře")
+        #expect(viewModel.startDate == .make(year: 2025, month: 11, day: 7, hour: 9))
+        #expect(viewModel.titleHighlights.map(\.color) == [.systemBlue, .systemOrange])
+    }
+
+    @Test func testViewModel_czechNaturalLanguageTitle_fuzzyMatchesMisspelledWeekday() {
+
+        let viewModel = makeViewModel(naturalLanguage: .czech)
+
+        viewModel.title = "Tenis v sobtu v 10"
+
+        #expect(viewModel.parsedEventTitle == "Tenis")
+        #expect(viewModel.startDate == .make(year: 2025, month: 10, day: 25, hour: 10))
+    }
+
+    @Test func testViewModel_czechNaturalLanguageTitle_parsesDayPeriodsAndNamedTimes() {
+
+        let morningViewModel = makeViewModel(naturalLanguage: .czech)
+        morningViewModel.title = "Káva zítra ráno"
+
+        #expect(morningViewModel.parsedEventTitle == "Káva")
+        #expect(morningViewModel.startDate == .make(year: 2025, month: 10, day: 26, hour: 9))
+
+        let noonViewModel = makeViewModel(naturalLanguage: .czech)
+        noonViewModel.title = "Oběd zítra v poledne"
+
+        #expect(noonViewModel.parsedEventTitle == "Oběd")
+        #expect(noonViewModel.startDate == .make(year: 2025, month: 10, day: 26, hour: 12))
+    }
+
+    @Test func testViewModel_czechNaturalLanguageTitle_parsesTimeRange() {
+
+        let viewModel = makeViewModel(naturalLanguage: .czech)
+
+        viewModel.title = "Workshop zítra od 10 do 12"
+
+        #expect(viewModel.parsedEventTitle == "Workshop")
+        #expect(viewModel.startDate == .make(year: 2025, month: 10, day: 26, hour: 10))
+        #expect(viewModel.endDate == .make(year: 2025, month: 10, day: 26, hour: 12))
+    }
+
+    @Test func testViewModel_czechNaturalLanguageTitle_parsesDottedTimeWithoutTreatingItAsDate() {
+
+        let calendar = Calendar.gregorian.with(locale: Locale(identifier: "cs_CZ"))
+        let dateProvider = MockDateProvider(
+            calendar: calendar,
+            now: .make(year: 2025, month: 10, day: 25, hour: 10, minute: 30)
+        )
+        let viewModel = makeViewModel(dateProvider: dateProvider, naturalLanguage: .czech)
+
+        viewModel.title = "Schůzka v 9.10"
+
+        #expect(viewModel.parsedEventTitle == "Schůzka")
+        #expect(viewModel.startDate == .make(year: 2025, month: 10, day: 25, hour: 9, minute: 10))
+        #expect(viewModel.endDate == .make(year: 2025, month: 10, day: 25, hour: 10, minute: 10))
+        #expect(viewModel.hasConflicts == false)
+    }
+
+    @Test func testViewModel_czechNaturalLanguageTitle_ignoresInvalidNamedDateAndAppliesValidTime() {
+
+        let calendarService = MockCalendarServiceProvider()
+        calendarService.m_calendars = [.make(id: "cal-1")]
+        let viewModel = makeViewModel(calendarService: calendarService, naturalLanguage: .czech)
+
+        viewModel.title = "Schůzka 31. února v 9"
+
+        #expect(viewModel.parsedEventTitle == "Schůzka 31. února")
+        #expect(viewModel.startDate == .make(year: 2025, month: 10, day: 25, hour: 9))
+        #expect(viewModel.endDate == .make(year: 2025, month: 10, day: 25, hour: 10))
+        #expect(viewModel.hasValidInput)
+    }
+
+    @Test func testViewModel_czechNaturalLanguageTitle_ignoresOutOfRangeNumericDateAndAppliesValidTime() {
+
+        let calendarService = MockCalendarServiceProvider()
+        calendarService.m_calendars = [.make(id: "cal-1")]
+        let viewModel = makeViewModel(calendarService: calendarService, naturalLanguage: .czech)
+
+        viewModel.title = "Schůzka 40.10. v 9"
+
+        #expect(viewModel.parsedEventTitle == "Schůzka 40.10.")
+        #expect(viewModel.startDate == .make(year: 2025, month: 10, day: 25, hour: 9))
+        #expect(viewModel.endDate == .make(year: 2025, month: 10, day: 25, hour: 10))
+        #expect(viewModel.hasValidInput)
+    }
+
+    @Test func testViewModel_czechNaturalLanguageTitle_parsesMidnightInInstrumentalCase() {
+
+        let viewModel = makeViewModel(naturalLanguage: .czech)
+
+        viewModel.title = "Schůzka zítra o půlnoci"
+
+        #expect(viewModel.parsedEventTitle == "Schůzka")
+        #expect(viewModel.startDate == .make(year: 2025, month: 10, day: 26, at: .start))
+        #expect(viewModel.endDate == .make(year: 2025, month: 10, day: 26, hour: 1))
+    }
+
+    @Test func testViewModel_czechNaturalLanguageTitle_consumesDottedUnitAbbreviations() {
+
+        let durationViewModel = makeViewModel(naturalLanguage: .czech)
+        durationViewModel.title = "Schůzka zítra na 2 hod."
+
+        #expect(durationViewModel.parsedEventTitle == "Schůzka")
+        #expect(durationViewModel.startDate == .make(year: 2025, month: 10, day: 26, hour: 11))
+        #expect(durationViewModel.endDate == .make(year: 2025, month: 10, day: 26, hour: 13))
+
+        let relativeStartViewModel = makeViewModel(naturalLanguage: .czech)
+        relativeStartViewModel.title = "Volání za 30 min."
+
+        #expect(relativeStartViewModel.parsedEventTitle == "Volání")
+        #expect(relativeStartViewModel.startDate == .make(year: 2025, month: 10, day: 25, hour: 11))
+        #expect(relativeStartViewModel.endDate == .make(year: 2025, month: 10, day: 25, hour: 12))
+    }
+
+    @Test func testViewModel_czechNaturalLanguageTitle_consumesAllDayPreposition() {
+
+        let viewModel = makeViewModel(naturalLanguage: .czech)
+
+        viewModel.title = "Dovolená zítra na celý den"
+
+        #expect(viewModel.parsedEventTitle == "Dovolená")
+        #expect(viewModel.isAllDay)
+        #expect(viewModel.startDate == .make(year: 2025, month: 10, day: 26, at: .start))
+        #expect(viewModel.endDate == .make(year: 2025, month: 10, day: 26, at: .start))
+    }
+
+    @Test func testViewModel_czechNaturalLanguageTitle_supportsInputWithoutDiacritics() {
+
+        let viewModel = makeViewModel(naturalLanguage: .czech)
+
+        viewModel.title = "Tenis pristi sobotu v 7 vecer na 2 hodiny"
+
+        #expect(viewModel.parsedEventTitle == "Tenis")
+        #expect(viewModel.startDate == .make(year: 2025, month: 11, day: 1, hour: 19))
+        #expect(viewModel.endDate == .make(year: 2025, month: 11, day: 1, hour: 21))
+    }
+
+    @Test func testViewModel_czechNaturalLanguageTitle_preservesOrdinaryDayPeriodWord() {
+
+        let viewModel = makeViewModel(naturalLanguage: .czech)
+        let title = "Filmový večer"
+
+        viewModel.title = title
+
+        #expect(viewModel.parsedEventTitle == title)
+        #expect(viewModel.startDate == .make(year: 2025, month: 10, day: 25, hour: 11))
+    }
+
+    @Test func testViewModel_czechNaturalLanguageTitle_conflictingInstructionsPreventSaving() {
+
+        let viewModel = makeViewModel(naturalLanguage: .czech)
+
+        viewModel.title = "Schůzka zítra příští pondělí v 11"
+
+        #expect(viewModel.hasConflicts)
+        #expect(viewModel.hasValidInput == false)
+    }
+
+    @Test func testViewModel_czechNaturalLanguageTitle_neverParsesFirstInstruction() {
+
+        for title in [
+            "Zítra plánování",
+            "Ráno káva",
+            "Za 2 hodiny volání",
+            "Celý den workshop",
+            "Příští sobotu tenis",
+        ] {
+            let viewModel = makeViewModel(naturalLanguage: .czech)
+
+            viewModel.title = title
+
+            #expect(viewModel.parsedEventTitle == title)
+            #expect(viewModel.startDate == .make(year: 2025, month: 10, day: 25, hour: 11))
+            #expect(viewModel.endDate == .make(year: 2025, month: 10, day: 25, hour: 12))
+            #expect(viewModel.titleHighlights.isEmpty)
+        }
+    }
+
+    @Test func testViewModel_czechNaturalLanguageTitle_doesNotParseEnglishInstructions() {
+
+        let viewModel = makeViewModel(naturalLanguage: .czech)
+        let title = "Večeře tomorrow at 14"
+
+        viewModel.title = title
+
+        #expect(viewModel.parsedEventTitle == title)
+        #expect(viewModel.startDate == .make(year: 2025, month: 10, day: 25, hour: 11))
+    }
+
     @Test func testViewModel_naturalLanguageTitle_whenDisabledTreatsEntireInputAsTitle() {
 
         let calendarService = MockCalendarServiceProvider()
@@ -1376,14 +1631,16 @@ class EventEditorViewModelTests {
         startDate: Date? = nil,
         dateProvider: DateProviding? = nil,
         calendarService: CalendarServiceProviding = MockCalendarServiceProvider(),
-        naturalLanguageEventInputEnabled: Bool = true
+        naturalLanguageEventInputEnabled: Bool = true,
+        naturalLanguage: EventTitleParserLanguage = .english
     ) -> EventEditorViewModel {
         EventEditorViewModel(
             startDate: startDate ?? self.dateProvider.now,
             dateProvider: dateProvider ?? self.dateProvider,
             calendarService: calendarService,
             settings: MockEventEditorSettings(
-                naturalLanguage: naturalLanguageEventInputEnabled
+                naturalLanguage: naturalLanguageEventInputEnabled,
+                language: naturalLanguage
             ),
             scheduler: CurrentThreadScheduler.instance
         )

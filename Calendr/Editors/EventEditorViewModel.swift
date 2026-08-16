@@ -82,6 +82,7 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
     private let calendarService: CalendarServiceProviding
     private let dateProvider: DateProviding
     private let naturalLanguageEventInputEnabled: Bool
+    private let naturalLanguageEventInputLanguage: EventTitleParserLanguage
     private let scheduler: ImmediateSchedulerType
 
     private let disposeBag = DisposeBag()
@@ -117,6 +118,7 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
         self.endDate = startDate.addingTimeInterval(defaultDuration)
         self.calendarService = calendarService
         self.naturalLanguageEventInputEnabled = settings.naturalLanguageEventInputEnabled.lastValue() ?? false
+        self.naturalLanguageEventInputLanguage = settings.naturalLanguageEventInputLanguage.lastValue() ?? .english
         self.scheduler = scheduler
         self.selectedTimeZoneIdentifier = dateProvider.calendar.timeZone.identifier
 
@@ -149,7 +151,10 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
     }
 
     var hasValidInput: Bool {
-        parsedEventTitle.isNotBlank && hasValidDateRange && selectedCalendarId != nil && !hasConflicts
+        parsedEventTitle.isNotBlank
+            && hasValidDateRange
+            && selectedCalendarId != nil
+            && !hasConflicts
     }
 
     var parsedEventTitle: String {
@@ -236,7 +241,12 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
         guard naturalLanguageEventInputEnabled else { return }
 
         let previousParsedTitle = parsedTitle
-        let newParsedTitle = EventTitleDateParser.parse(title, calendar: calendar)
+        let newParsedTitle = EventTitleDateParser.parse(
+            title,
+            calendar: calendar,
+            referenceDate: dateProvider.now,
+            language: naturalLanguageEventInputLanguage
+        )
 
         if previousParsedTitle.duration != nil, newParsedTitle.duration == nil {
             restoreParsedDuration()

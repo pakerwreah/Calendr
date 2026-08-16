@@ -13,9 +13,14 @@ import RxSwift
 class MockEventEditorSettings: EventEditorSettings {
 
     let naturalLanguageEventInputEnabled: Observable<Bool>
+    let naturalLanguageEventInputLanguage: Observable<EventTitleParserLanguage>
 
-    init(naturalLanguage: Bool = false) {
+    init(
+        naturalLanguage: Bool = false,
+        language: EventTitleParserLanguage = .english
+    ) {
         naturalLanguageEventInputEnabled = .just(naturalLanguage)
+        naturalLanguageEventInputLanguage = .just(language)
     }
 }
 
