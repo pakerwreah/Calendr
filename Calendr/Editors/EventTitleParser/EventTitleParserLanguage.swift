@@ -34,9 +34,9 @@ enum EventTitleParserLanguage: CaseIterable, Equatable {
     static var preferredLocalizations: [String] {
         let bundle: Bundle
         #if SWIFT_PACKAGE
-        bundle = Bundle.module
+            bundle = Bundle.module
         #else
-        bundle = Bundle(for: EventTitleParserBundleToken.self)
+            bundle = Bundle(for: EventTitleParserBundleToken.self)
         #endif
         return resolvePreferredLocalizations(
             availableLocalizations: bundle.localizations,
@@ -59,7 +59,9 @@ enum EventTitleParserLanguage: CaseIterable, Equatable {
     }
 
     private static func matching(_ preferredLocalizations: [String]) -> EventTitleParserLanguage? {
-        guard let languageCode = preferredLocalizations.first.map(localizationLanguageCode) else { return nil }
+        guard let languageCode = preferredLocalizations.first.map(localizationLanguageCode) else {
+            return nil
+        }
         return allCases.first { $0.languageCode == languageCode }
     }
 }

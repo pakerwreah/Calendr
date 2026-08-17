@@ -1,5 +1,5 @@
 //
-//  EventTitleDateParser.swift
+//  EventTitleParser.swift
 //  Calendr
 //
 
@@ -120,26 +120,7 @@ struct EventTitleInstructions {
     var allDayRanges: [NSRange] = []
 }
 
-/// Languages differ in more than vocabulary — which instructions take
-/// precedence, and when a word counts as an instruction at all, are part of the
-/// grammar. So each language recognises its instructions on its own terms and
-/// decides the order it matches them in. Fixing one language cannot disturb
-/// another.
-///
-/// What stays shared is everything that is not language: protecting the first
-/// word, `/calendar` matching, removing instructions from the saved title, and
-/// deciding when instructions contradict each other.
-protocol EventTitleParsing {
-
-    static func instructions(
-        in text: String,
-        range: NSRange,
-        calendar: Calendar,
-        excluding excludedRanges: [NSRange]
-    ) -> EventTitleInstructions
-}
-
-enum EventTitleDateParser {
+enum EventTitleParser {
 
     static func parse(
         _ text: String,
@@ -147,10 +128,10 @@ enum EventTitleDateParser {
         referenceDate: Date = Date(),
         language: EventTitleParserLanguage = .english
     ) -> EventTitleParseResult {
-        let fullRange = NSRange(text.startIndex..., in: text)
-        let protectedRange = firstWordRange(in: text, range: fullRange)
-        let calendarMatches = calendarExpression
-            .matches(in: text, range: fullRange)
+        let protectedRange = firstWordRange(in: text)
+        let calendarMatches =
+            calendarExpression
+            .matches(in: text, range: text.nsRange)
             .compactMap { match -> CalendarMatch? in
                 guard
                     let range = validRange(match.range(at: 1)),
@@ -168,7 +149,6 @@ enum EventTitleDateParser {
 
         var instructions = language.parser.instructions(
             in: text,
-            range: fullRange,
             calendar: calendar,
             excluding: excludedRanges
         )
@@ -240,11 +220,14 @@ private func hasConflicts(_ instructions: EventTitleInstructions, calendarMatche
         || instructions.times.count > 1
         || instructions.relativeStarts.count > 1
         || instructions.durations.count > 1
-        || calendarMatches > 1 {
+        || calendarMatches > 1
+    {
         return true
     }
 
-    if !instructions.relativeStarts.isEmpty, !instructions.dates.isEmpty || !instructions.times.isEmpty {
+    if !instructions.relativeStarts.isEmpty,
+        !instructions.dates.isEmpty || !instructions.times.isEmpty
+    {
         return true
     }
 
@@ -271,8 +254,17 @@ private func removing(tokens: [EventTitleToken], from text: String) -> String {
         .trimmingCharacters(in: .whitespacesAndNewlines)
 }
 
-private func firstWordRange(in text: String, range: NSRange) -> NSRange? {
+private func firstWordRange(in text: String) -> NSRange? {
     try! NSRegularExpression(pattern: #"\S+"#)
-        .firstMatch(in: text, range: range)
+        .firstMatch(in: text, range: text.nsRange)
         .map(\.range)
+}
+
+private func overlaps(_ range: NSRange, _ excludedRange: NSRange?) -> Bool {
+    guard let excludedRange else { return false }
+    return NSIntersectionRange(range, excludedRange).length > 0
+}
+
+private func validRange(_ range: NSRange) -> NSRange? {
+    range.location == NSNotFound ? nil : range
 }

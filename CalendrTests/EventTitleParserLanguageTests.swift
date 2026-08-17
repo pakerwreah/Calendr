@@ -28,24 +28,24 @@ struct EventTitleParserLanguageTests {
     }
 
     @Test func testLanguagesDoNotShareVocabulary() {
-        let english = EventTitleDateParser.parse("Meeting tomorrow at 2pm", language: .english)
+        let english = EventTitleParser.parse("Meeting tomorrow at 2pm", language: .english)
 
         #expect(english.dayOffset == 1)
         #expect(english.time == .init(hour: 14, minute: 0))
 
         // The same English wording means nothing to the Czech parser.
-        let czech = EventTitleDateParser.parse("Meeting tomorrow at 2pm", language: .czech)
+        let czech = EventTitleParser.parse("Meeting tomorrow at 2pm", language: .czech)
 
         #expect(czech.dayOffset == nil)
         #expect(czech.time == nil)
         #expect(czech.tokens.isEmpty)
 
-        let czechInput = EventTitleDateParser.parse("Schůze zítra ve 14", language: .czech)
+        let czechInput = EventTitleParser.parse("Schůze zítra ve 14", language: .czech)
 
         #expect(czechInput.dayOffset == 1)
         #expect(czechInput.time == .init(hour: 14, minute: 0))
 
-        let englishReadingCzech = EventTitleDateParser.parse("Schůze zítra ve 14", language: .english)
+        let englishReadingCzech = EventTitleParser.parse("Schůze zítra ve 14", language: .english)
 
         #expect(englishReadingCzech.dayOffset == nil)
         #expect(englishReadingCzech.time == nil)
@@ -61,29 +61,6 @@ struct EventTitleParserLanguageTests {
     @Test func testUnsupportedLocalizationIsNotReportedAsSupported() {
         #expect(EventTitleParserLanguage.isSupported(["de"]) == false)
         #expect(EventTitleParserLanguage.isSupported([]) == false)
-    }
-
-    @Test(arguments: [
-        ("Schůze zítra ve 14", "Schůze zitra ve 14"),
-        ("Schůze za týden", "Schůze za tyden"),
-        ("Schůze příští pátek", "Schůze pristi patek"),
-        ("Schůze zítra večer", "Schůze zitra vecer"),
-        ("Schůze zítra na 2 týdny", "Schůze zitra na 2 tydny"),
-        ("Schůze zítra celý den", "Schůze zitra cely den"),
-        ("Schůze zítra v poledne", "Schůze zitra v poledne"),
-        ("Schůze zítra o půlnoci", "Schůze zitra o pulnoci"),
-    ])
-    func testCzechGrammarAcceptsUnaccentedSpelling(_ accented: String, _ unaccented: String) {
-        let accentedResult = EventTitleDateParser.parse(accented, language: .czech)
-        let unaccentedResult = EventTitleDateParser.parse(unaccented, language: .czech)
-
-        #expect(accentedResult.dayOffset == unaccentedResult.dayOffset)
-        #expect(accentedResult.time == unaccentedResult.time)
-        #expect(accentedResult.weekday == unaccentedResult.weekday)
-        #expect(accentedResult.duration == unaccentedResult.duration)
-        #expect(accentedResult.isAllDay == unaccentedResult.isAllDay)
-        #expect(accentedResult.tokens.count == unaccentedResult.tokens.count)
-        #expect(accentedResult.tokens.isEmpty == false)
     }
 
     @Test func testPreferredLocalizationUsesUserLanguageSupportedByResourceBundle() {

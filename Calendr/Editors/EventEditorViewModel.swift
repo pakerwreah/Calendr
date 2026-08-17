@@ -241,7 +241,7 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
         guard naturalLanguageEventInputEnabled else { return }
 
         let previousParsedTitle = parsedTitle
-        let newParsedTitle = EventTitleDateParser.parse(
+        let newParsedTitle = EventTitleParser.parse(
             title,
             calendar: calendar,
             referenceDate: dateProvider.now,
