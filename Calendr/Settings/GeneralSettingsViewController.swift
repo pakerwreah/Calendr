@@ -176,8 +176,10 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
 
         // Next event stack view
         let showNextEventStack = NSStackView(views: [showNextEventCheckbox, .spacer, nextEventRangeStepperLabel, nextEventRangeStepper])
-        let grabAttentionStack = NSStackView(views: [.dummy, nextEventFlashingCheckbox, nextEventSoundCheckbox, nextEventAttentionStartAt5minCheckbox])
+
+        let grabAttentionStack = NSStackView(views: [nextEventFlashingCheckbox, nextEventSoundCheckbox, nextEventAttentionStartAt5minCheckbox])
             .with(distribution: .fillProportionally)
+            .with(insets: .init(left: 8))
 
         return NSStackView(views: [
             showNextEventStack,
