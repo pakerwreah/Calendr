@@ -102,6 +102,15 @@ struct EventTitleParserCzechTests {
         #expect(result.hasConflicts == false)
     }
 
+    @Test func preservesOrdinaryDayPeriodWithDottedTime() {
+        let result = parse("Filmový večer v 9.10")
+
+        #expect(result.cleanedTitle == "Filmový večer")
+        #expect(result.numericDate == nil)
+        #expect(result.time == .init(hour: 9, minute: 10))
+        #expect(result.hasConflicts == false)
+    }
+
     @Test func ignoresInvalidNamedDateAndParsesValidTime() {
         let result = parse("Schůzka 31. února v 9")
 

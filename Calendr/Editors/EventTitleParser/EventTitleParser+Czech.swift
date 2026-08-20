@@ -18,14 +18,22 @@ enum CzechEventTitleParser: EventTitleParsing {
         instructions.dates = dateMatches(in: text, calendar: calendar, excluding: excludedRanges)
         instructions.times = timeMatches(
             in: text,
-            // `ráno` and `večer` are ordinary words in Czech, so on their own
-            // they only mean a time when the title already names a day.
-            hasDateInstruction: !instructions.dates.isEmpty,
+            hasDateInstruction: false,
             excluding: excludedRanges
         )
         let timeRanges = instructions.times.map(\.range)
         instructions.dates.removeAll { date in
             timeRanges.contains { NSIntersectionRange(date.range, $0).length == date.range.length }
+        }
+        if !instructions.dates.isEmpty {
+            // `ráno` and `večer` are ordinary words in Czech, so on their own
+            // they only mean a time when the title names a real day. Numeric
+            // matches contained in dotted clock times have been removed above.
+            instructions.times += timeMatches(
+                in: text,
+                hasDateInstruction: true,
+                excluding: excludedRanges + timeRanges
+            )
         }
         instructions.relativeStarts = relativeStartMatches(
             in: text,
