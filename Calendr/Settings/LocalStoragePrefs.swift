@@ -91,7 +91,7 @@ enum Prefs {
 func registerDefaultPrefs(
     in localStorage: LocalStorageProvider,
     calendar: Calendar = .current,
-    preferredLocalizations: [String] = Bundle.main.preferredLocalizations
+    preferredLocalizations: [String] = EventTitleParserLanguage.preferredLocalizations
 ) {
 
     migrateStatusItemBackgroundStyle(in: localStorage)
@@ -156,7 +156,7 @@ func registerDefaultPrefs(
         Prefs.forceLocalTimeZone: false,
         Prefs.showEventListSummary: true,
         Prefs.futureEventsDays: 0,
-        Prefs.naturalLanguageEventInputEnabled: isEnglishLocalization(preferredLocalizations),
+        Prefs.naturalLanguageEventInputEnabled: EventTitleParserLanguage.isSupported(preferredLocalizations),
 
         // Appearance
         Prefs.appearanceMode: 0,
@@ -167,14 +167,6 @@ func registerDefaultPrefs(
         Prefs.defaultBrowserPerCalendar: [:],
         Prefs.autoCheckForUpdates: true
     ])
-}
-
-private func isEnglishLocalization(_ preferredLocalizations: [String]) -> Bool {
-    preferredLocalizations.first?
-        .replacingOccurrences(of: "_", with: "-")
-        .split(separator: "-")
-        .first?
-        .lowercased() == "en"
 }
 
 private func migrateStatusItemBackgroundStyle(in localStorage: LocalStorageProvider) {

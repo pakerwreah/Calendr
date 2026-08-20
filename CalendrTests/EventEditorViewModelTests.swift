@@ -1376,14 +1376,16 @@ class EventEditorViewModelTests {
         startDate: Date? = nil,
         dateProvider: DateProviding? = nil,
         calendarService: CalendarServiceProviding = MockCalendarServiceProvider(),
-        naturalLanguageEventInputEnabled: Bool = true
+        naturalLanguageEventInputEnabled: Bool = true,
+        naturalLanguageEventInputLanguage: EventTitleParserLanguage = .english
     ) -> EventEditorViewModel {
         EventEditorViewModel(
             startDate: startDate ?? self.dateProvider.now,
             dateProvider: dateProvider ?? self.dateProvider,
             calendarService: calendarService,
             settings: MockEventEditorSettings(
-                naturalLanguage: naturalLanguageEventInputEnabled
+                naturalLanguage: naturalLanguageEventInputEnabled,
+                language: naturalLanguageEventInputLanguage
             ),
             scheduler: CurrentThreadScheduler.instance
         )

@@ -204,11 +204,20 @@ class SettingsViewModelTests {
         #expect(storage.naturalLanguageEventInputEnabled)
     }
 
-    @Test func testNaturalLanguageEventInputDefaultsOffForNonEnglishLocalization() {
+    @Test func testNaturalLanguageEventInputDefaultsOnForCzechLocalization() {
 
         let storage = MockLocalStorageProvider()
 
         registerDefaultPrefs(in: storage, preferredLocalizations: ["cs"])
+
+        #expect(storage.naturalLanguageEventInputEnabled)
+    }
+
+    @Test func testNaturalLanguageEventInputDefaultsOffForUnsupportedLocalization() {
+
+        let storage = MockLocalStorageProvider()
+
+        registerDefaultPrefs(in: storage, preferredLocalizations: ["de"])
 
         #expect(storage.naturalLanguageEventInputEnabled == false)
     }
@@ -216,11 +225,11 @@ class SettingsViewModelTests {
     @Test func testNaturalLanguageEventInputKeepsExplicitUserPreference() {
 
         let storage = MockLocalStorageProvider()
-        storage.naturalLanguageEventInputEnabled = true
+        storage.naturalLanguageEventInputEnabled = false
 
         registerDefaultPrefs(in: storage, preferredLocalizations: ["cs"])
 
-        #expect(storage.naturalLanguageEventInputEnabled)
+        #expect(storage.naturalLanguageEventInputEnabled == false)
     }
 
     @Test func testMigratesLegacyStatusItemBackgroundStyle() {
@@ -896,6 +905,21 @@ class SettingsViewModelTests {
 
         #expect(isEnabled == false)
         #expect(localStorageNaturalLanguageEventInputEnabled == false)
+    }
+
+    @Test func testNaturalLanguageEventInputLanguageFollowsLocaleChange() {
+
+        var emissions: [EventTitleParserLanguage] = []
+
+        viewModel.naturalLanguageEventInputLanguage
+            .bind { emissions.append($0) }
+            .disposed(by: disposeBag)
+
+        #expect(emissions == [.current])
+
+        notificationCenter.post(name: NSLocale.currentLocaleDidChangeNotification, object: nil)
+
+        #expect(emissions == [.current, .current])
     }
 
     @Test func testToggleShowPastEvents() {
