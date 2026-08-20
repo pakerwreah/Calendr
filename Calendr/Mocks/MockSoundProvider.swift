@@ -11,7 +11,11 @@ import Foundation
 
 class MockSoundProvider: SoundProviding {
 
-    func play(_ name: SystemSound) { }
+    private(set) var played: [SystemSound] = []
+
+    func play(_ name: SystemSound) {
+        played.append(name)
+    }
 }
 
 #endif

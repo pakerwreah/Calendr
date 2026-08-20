@@ -29,6 +29,7 @@ enum Prefs {
     static let eventStatusItemCheckRange = "event_status_item_check_range"
     static let eventStatusItemFlashing = "event_status_item_flashing"
     static let eventStatusItemSound = "event_status_item_sound"
+    static let eventStatusItemAttentionStartAt5min = "event_status_item_attention_start_at_5min"
     static let eventStatusItemLength = "event_status_item_length"
     static let eventStatusItemDetectNotch = "event_status_item_detect_notch"
     static let eventStatusItemNotchLength = "event_status_item_notch_length"
@@ -115,6 +116,7 @@ func registerDefaultPrefs(
         Prefs.eventStatusItemCheckRange: 6,
         Prefs.eventStatusItemFlashing: false,
         Prefs.eventStatusItemSound: false,
+        Prefs.eventStatusItemAttentionStartAt5min: true,
         Prefs.showFullScreenEvent: false,
         Prefs.fullScreenEventTransparencyLevel: 2,
         Prefs.eventStatusItemTextScaling: 1.2,
@@ -266,6 +268,11 @@ extension LocalStorageProvider {
     @objc dynamic var eventStatusItemSound: Bool {
         get { bool(forKey: Prefs.eventStatusItemSound) }
         set { set(newValue, forKey: Prefs.eventStatusItemSound) }
+    }
+
+    @objc dynamic var eventStatusItemAttentionStartAt5min: Bool {
+        get { bool(forKey: Prefs.eventStatusItemAttentionStartAt5min) }
+        set { set(newValue, forKey: Prefs.eventStatusItemAttentionStartAt5min) }
     }
 
     @objc dynamic var showFullScreenEvent: Bool {

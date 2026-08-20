@@ -43,6 +43,7 @@ class SettingsViewModelTests {
     var localStorageEventStatusItemCheckRange: NSNumber? { localStorage.object(forKey: Prefs.eventStatusItemCheckRange) as? NSNumber }
     var localStorageEventStatusItemSound: Bool? { localStorage.object(forKey: Prefs.eventStatusItemSound) as? Bool }
     var localStorageEventStatusItemFlashing: Bool? { localStorage.object(forKey: Prefs.eventStatusItemFlashing) as? Bool }
+    var localStorageEventStatusItemAttentionStartAt5min: Bool? { localStorage.object(forKey: Prefs.eventStatusItemAttentionStartAt5min) as? Bool }
     var localStorageShowFullScreenEvent: Bool? { localStorage.object(forKey: Prefs.showFullScreenEvent) as? Bool }
     var localStorageFullScreenEventTransparencyLevel: NSNumber? { localStorage.object(forKey: Prefs.fullScreenEventTransparencyLevel) as? NSNumber }
     var localStorageEventStatusItemTextScaling: NSNumber? { localStorage.object(forKey: Prefs.eventStatusItemTextScaling) as? NSNumber }
@@ -86,6 +87,7 @@ class SettingsViewModelTests {
         #expect(localStorageEventStatusItemCheckRange == nil)
         #expect(localStorageEventStatusItemSound == nil)
         #expect(localStorageEventStatusItemFlashing == nil)
+        #expect(localStorageEventStatusItemAttentionStartAt5min == nil)
         #expect(localStorageShowFullScreenEvent == nil)
         #expect(localStorageFullScreenEventTransparencyLevel == nil)
         #expect(localStorageEventStatusItemTextScaling == nil)
@@ -133,6 +135,7 @@ class SettingsViewModelTests {
         #expect(viewModel.eventStatusItemCheckRange.lastValue() == 6)
         #expect(viewModel.eventStatusItemSound.lastValue() == false)
         #expect(viewModel.eventStatusItemFlashing.lastValue() == false)
+        #expect(viewModel.eventStatusItemAttentionStartAt5min.lastValue() == true)
         #expect(viewModel.showFullScreenEvent.lastValue() == false)
         #expect(viewModel.eventStatusItemLength.lastValue() == 18)
         #expect(viewModel.eventStatusItemDetectNotch.lastValue() == false)
@@ -170,6 +173,7 @@ class SettingsViewModelTests {
         #expect(localStorageEventStatusItemCheckRange == 6)
         #expect(localStorageEventStatusItemSound == false)
         #expect(localStorageEventStatusItemFlashing == false)
+        #expect(localStorageEventStatusItemAttentionStartAt5min == true)
         #expect(localStorageShowFullScreenEvent == false)
         #expect(localStorageEventStatusItemLength == 18)
         #expect(localStorageEventStatusItemDetectNotch == false)
@@ -586,6 +590,30 @@ class SettingsViewModelTests {
 
         #expect(eventStatusItemFlashing == true)
         #expect(localStorageEventStatusItemFlashing == true)
+    }
+
+    @Test func testToggleEventStatusItemAttentionStartAt5min() {
+
+        localStorage.eventStatusItemAttentionStartAt5min = false
+
+        var eventStatusItemAttentionStartAt5min: Bool?
+
+        viewModel.eventStatusItemAttentionStartAt5min
+            .bind { eventStatusItemAttentionStartAt5min = $0 }
+            .disposed(by: disposeBag)
+
+        #expect(eventStatusItemAttentionStartAt5min == false)
+        #expect(localStorageEventStatusItemAttentionStartAt5min == false)
+
+        viewModel.toggleEventStatusItemAttentionStartAt5min.onNext(true)
+
+        #expect(eventStatusItemAttentionStartAt5min == true)
+        #expect(localStorageEventStatusItemAttentionStartAt5min == true)
+
+        viewModel.toggleEventStatusItemAttentionStartAt5min.onNext(false)
+
+        #expect(eventStatusItemAttentionStartAt5min == false)
+        #expect(localStorageEventStatusItemAttentionStartAt5min == false)
     }
 
     @Test func testToggleShowFullScreenEvent() {

@@ -404,6 +404,8 @@ internal enum Strings {
         internal static let flashing = Strings.tr("Localizable", "settings.next_event.grab_attention.flashing", fallback: "Flashing")
         /// Play sound
         internal static let sound = Strings.tr("Localizable", "settings.next_event.grab_attention.sound", fallback: "Play sound")
+        /// Start at 5 min
+        internal static let startAt5min = Strings.tr("Localizable", "settings.next_event.grab_attention.start_at_5min", fallback: "Start at 5 min")
       }
     }
     internal enum Tab {

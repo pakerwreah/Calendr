@@ -34,6 +34,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     private let nextEventGrabAttentionLabel = Label(text: Strings.Settings.NextEvent.grabAttention)
     private let nextEventFlashingCheckbox = Checkbox(title: Strings.Settings.NextEvent.GrabAttention.flashing)
     private let nextEventSoundCheckbox = Checkbox(title: Strings.Settings.NextEvent.GrabAttention.sound)
+    private let nextEventAttentionStartAt5minCheckbox = Checkbox(title: Strings.Settings.NextEvent.GrabAttention.startAt5min)
     private let nextEventFullScreenCheckbox = Checkbox(title: Strings.Settings.NextEvent.showFullScreenAlert)
 
     // Calendar
@@ -175,7 +176,9 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
 
         // Next event stack view
         let showNextEventStack = NSStackView(views: [showNextEventCheckbox, .spacer, nextEventRangeStepperLabel, nextEventRangeStepper])
-        let grabAttentionStack = NSStackView(views: [nextEventFlashingCheckbox, nextEventSoundCheckbox]).with(insets: .init(horizontal: 16))
+        let grabAttentionStack = NSStackView(views: [.dummy, nextEventFlashingCheckbox, nextEventSoundCheckbox, nextEventAttentionStartAt5minCheckbox])
+            .with(distribution: .fillProportionally)
+
         return NSStackView(views: [
             showNextEventStack,
             showNextEventTitleCheckbox,
@@ -354,6 +357,13 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             control: nextEventSoundCheckbox,
             observable: viewModel.eventStatusItemSound,
             observer: viewModel.toggleEventStatusItemSound
+        )
+        .disposed(by: disposeBag)
+
+        bind(
+            control: nextEventAttentionStartAt5minCheckbox,
+            observable: viewModel.eventStatusItemAttentionStartAt5min,
+            observer: viewModel.toggleEventStatusItemAttentionStartAt5min
         )
         .disposed(by: disposeBag)
 

@@ -59,6 +59,7 @@
 "settings.next_event.grab_attention" = "Upoutat pozornost před začátkem události";
 "settings.next_event.grab_attention.flashing" = "Blikat";
 "settings.next_event.grab_attention.sound" = "Přehrát zvuk";
+//"settings.next_event.grab_attention.start_at_5min" = "Start at 5 min";
 "settings.next_event.show_full_screen_alert" = "Zobrazit upozornění na celé obrazovce";
 "settings.next_event.detect_notch" = "Zkrátit, pokud je přítomen výřez";
 
