@@ -28,6 +28,9 @@ class MockNextEventSettings: MockEventListSettings, NextEventSettings {
     let toggleEventStatusItemSound: AnyObserver<Bool>
     let eventStatusItemSound: Observable<Bool>
 
+    let toggleEventStatusItemAttentionStartAt5min: AnyObserver<Bool>
+    let eventStatusItemAttentionStartAt5min: Observable<Bool>
+
     let toggleFullScreenEvent: AnyObserver<Bool>
     let showFullScreenEvent: Observable<Bool>
 
@@ -49,6 +52,7 @@ class MockNextEventSettings: MockEventListSettings, NextEventSettings {
         checkRange: Int = 18,
         flashing: Bool = false,
         sound: Bool = false,
+        attentionStartAt5min: Bool = true,
         fullScreen: Bool = false,
         textScaling: Double = 1,
         length: Int = 18,
@@ -64,6 +68,7 @@ class MockNextEventSettings: MockEventListSettings, NextEventSettings {
         (eventStatusItemCheckRange, eventStatusItemCheckRangeObserver) = BehaviorSubject.pipe(value: checkRange)
         (eventStatusItemFlashing, toggleEventStatusItemFlashing) = BehaviorSubject.pipe(value: flashing)
         (eventStatusItemSound, toggleEventStatusItemSound) = BehaviorSubject.pipe(value: sound)
+        (eventStatusItemAttentionStartAt5min, toggleEventStatusItemAttentionStartAt5min) = BehaviorSubject.pipe(value: attentionStartAt5min)
         (showFullScreenEvent, toggleFullScreenEvent) = BehaviorSubject.pipe(value: fullScreen)
         (eventStatusItemLength, eventStatusItemLengthObserver) = BehaviorSubject.pipe(value: length)
         (eventStatusItemDetectNotch, toggleEventStatusItemDetectNotch) = BehaviorSubject.pipe(value: detectNotch)

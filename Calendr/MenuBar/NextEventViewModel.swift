@@ -249,9 +249,10 @@ class NextEventViewModel {
             .combineLatest(
                 nextEventTickingObservable,
                 settings.eventStatusItemFlashing,
-                settings.eventStatusItemSound
+                settings.eventStatusItemSound,
+                settings.eventStatusItemAttentionStartAt5min
             )
-            .map { [dateProvider] nextEvent, flashing, sound in
+            .map { [dateProvider] nextEvent, flashing, sound, startAt5min in
 
                 guard let nextEvent, nextEvent.event.status != .pending else { return .clear }
 
@@ -265,24 +266,24 @@ class NextEventViewModel {
 
                 if sound {
                     // play at 5 minutes
-                    if minutes == 5 && seconds == 0 {
+                    if minutes == 5, seconds == 0, startAt5min {
                         soundPlayer.play(.ping)
                     }
 
                     // play at 30 seconds to start
-                    if minutes == 0 && seconds == 30 {
+                    if minutes == 0, seconds == 30 {
                         soundPlayer.play(.ping)
                     }
                 }
 
                 if flashing {
                     // flash continuously under 30 seconds to start
-                    if minutes == 0 && seconds <= 30 {
+                    if minutes == 0, seconds <= 30 {
                         return seconds % 2 == 0 ? .systemRed : .clear
                     }
 
                     // flash 5x every minute
-                    if minutes <= 5 {
+                    if minutes <= 5, startAt5min {
                         return seconds > 50 && seconds % 2 == 1 ? .systemRed : .clear
                     }
                 }

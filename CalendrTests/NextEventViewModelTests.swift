@@ -548,6 +548,248 @@ class NextEventViewModelTests {
         #expect(color == .clear)
     }
 
+    @Test func testNextEvent_flashingDisabled_shouldNotFlash() {
+
+        settings.toggleEventStatusItemFlashing.onNext(false)
+
+        let viewModel = makeViewModel(type: .event)
+
+        var color: NSColor?
+
+        viewModel.backgroundColor
+            .bind { color = $0 }
+            .disposed(by: disposeBag)
+
+        calendarService.changeEvents([
+            .make(start: now + 30, end: now + 60)
+        ])
+
+        #expect(color == .clear)
+    }
+
+    @Test func testNextEvent_flashing_30SecondsEven_shouldBeRed() {
+
+        settings.toggleEventStatusItemFlashing.onNext(true)
+
+        let viewModel = makeViewModel(type: .event)
+
+        var color: NSColor?
+
+        viewModel.backgroundColor
+            .bind { color = $0 }
+            .disposed(by: disposeBag)
+
+        calendarService.changeEvents([
+            .make(start: now + 30, end: now + 60)
+        ])
+
+        #expect(color == .systemRed)
+    }
+
+    @Test func testNextEvent_flashing_29SecondsOdd_shouldBeClear() {
+
+        settings.toggleEventStatusItemFlashing.onNext(true)
+
+        let viewModel = makeViewModel(type: .event)
+
+        var color: NSColor?
+
+        viewModel.backgroundColor
+            .bind { color = $0 }
+            .disposed(by: disposeBag)
+
+        calendarService.changeEvents([
+            .make(start: now + 29, end: now + 60)
+        ])
+
+        #expect(color == .clear)
+    }
+
+    @Test func testNextEvent_flashing_30Seconds_withoutAttentionStartAt5min_shouldStillFlash() {
+
+        settings.toggleEventStatusItemFlashing.onNext(true)
+        settings.toggleEventStatusItemAttentionStartAt5min.onNext(false)
+
+        let viewModel = makeViewModel(type: .event)
+
+        var color: NSColor?
+
+        viewModel.backgroundColor
+            .bind { color = $0 }
+            .disposed(by: disposeBag)
+
+        calendarService.changeEvents([
+            .make(start: now + 30, end: now + 60)
+        ])
+
+        #expect(color == .systemRed)
+    }
+
+    @Test func testNextEvent_flashing_5Minutes51Seconds_withAttentionStartAt5min_shouldBeRed() {
+
+        settings.toggleEventStatusItemFlashing.onNext(true)
+        settings.toggleEventStatusItemAttentionStartAt5min.onNext(true)
+
+        let viewModel = makeViewModel(type: .event)
+
+        var color: NSColor?
+
+        viewModel.backgroundColor
+            .bind { color = $0 }
+            .disposed(by: disposeBag)
+
+        calendarService.changeEvents([
+            .make(start: now + 5 * 60 + 51, end: now + 10 * 60)
+        ])
+
+        #expect(color == .systemRed)
+    }
+
+    @Test func testNextEvent_flashing_5Minutes50Seconds_withAttentionStartAt5min_shouldBeClear() {
+
+        settings.toggleEventStatusItemFlashing.onNext(true)
+        settings.toggleEventStatusItemAttentionStartAt5min.onNext(true)
+
+        let viewModel = makeViewModel(type: .event)
+
+        var color: NSColor?
+
+        viewModel.backgroundColor
+            .bind { color = $0 }
+            .disposed(by: disposeBag)
+
+        calendarService.changeEvents([
+            .make(start: now + 5 * 60 + 50, end: now + 10 * 60)
+        ])
+
+        #expect(color == .clear)
+    }
+
+    @Test func testNextEvent_flashing_5Minutes51Seconds_withoutAttentionStartAt5min_shouldBeClear() {
+
+        settings.toggleEventStatusItemFlashing.onNext(true)
+        settings.toggleEventStatusItemAttentionStartAt5min.onNext(false)
+
+        let viewModel = makeViewModel(type: .event)
+
+        var color: NSColor?
+
+        viewModel.backgroundColor
+            .bind { color = $0 }
+            .disposed(by: disposeBag)
+
+        calendarService.changeEvents([
+            .make(start: now + 5 * 60 + 51, end: now + 10 * 60)
+        ])
+
+        #expect(color == .clear)
+    }
+
+    @Test func testNextEvent_soundDisabled_shouldNotPlay() {
+
+        settings.toggleEventStatusItemSound.onNext(false)
+
+        let viewModel = makeViewModel(type: .event)
+
+        viewModel.backgroundColor
+            .bind { _ in }
+            .disposed(by: disposeBag)
+
+        calendarService.changeEvents([
+            .make(start: now + 30, end: now + 60)
+        ])
+
+        #expect(soundPlayer.played.isEmpty)
+    }
+
+    @Test func testNextEvent_sound_30Seconds_shouldPlay() {
+
+        settings.toggleEventStatusItemSound.onNext(true)
+
+        let viewModel = makeViewModel(type: .event)
+
+        viewModel.backgroundColor
+            .bind { _ in }
+            .disposed(by: disposeBag)
+
+        calendarService.changeEvents([
+            .make(start: now + 30, end: now + 60)
+        ])
+
+        #expect(soundPlayer.played == [.ping])
+    }
+
+    @Test func testNextEvent_sound_29Seconds_shouldNotPlay() {
+
+        settings.toggleEventStatusItemSound.onNext(true)
+
+        let viewModel = makeViewModel(type: .event)
+
+        viewModel.backgroundColor
+            .bind { _ in }
+            .disposed(by: disposeBag)
+
+        calendarService.changeEvents([
+            .make(start: now + 29, end: now + 60)
+        ])
+
+        #expect(soundPlayer.played.isEmpty)
+    }
+
+    @Test func testNextEvent_sound_30Seconds_withoutAttentionStartAt5min_shouldStillPlay() {
+
+        settings.toggleEventStatusItemSound.onNext(true)
+        settings.toggleEventStatusItemAttentionStartAt5min.onNext(false)
+
+        let viewModel = makeViewModel(type: .event)
+
+        viewModel.backgroundColor
+            .bind { _ in }
+            .disposed(by: disposeBag)
+
+        calendarService.changeEvents([
+            .make(start: now + 30, end: now + 60)
+        ])
+
+        #expect(soundPlayer.played == [.ping])
+    }
+
+    @Test func testNextEvent_sound_5Minutes_withAttentionStartAt5min_shouldPlay() {
+
+        settings.toggleEventStatusItemSound.onNext(true)
+        settings.toggleEventStatusItemAttentionStartAt5min.onNext(true)
+
+        let viewModel = makeViewModel(type: .event)
+
+        viewModel.backgroundColor
+            .bind { _ in }
+            .disposed(by: disposeBag)
+
+        calendarService.changeEvents([
+            .make(start: now + 5 * 60, end: now + 10 * 60)
+        ])
+
+        #expect(soundPlayer.played == [.ping])
+    }
+
+    @Test func testNextEvent_sound_5Minutes_withoutAttentionStartAt5min_shouldNotPlay() {
+
+        settings.toggleEventStatusItemSound.onNext(true)
+        settings.toggleEventStatusItemAttentionStartAt5min.onNext(false)
+
+        let viewModel = makeViewModel(type: .event)
+
+        viewModel.backgroundColor
+            .bind { _ in }
+            .disposed(by: disposeBag)
+
+        calendarService.changeEvents([
+            .make(start: now + 5 * 60, end: now + 10 * 60)
+        ])
+
+        #expect(soundPlayer.played.isEmpty)
+    }
+
     @Test func testNextEvent_isAllDay_shouldNotAppear() {
 
         let viewModel = makeViewModel(type: .event)
