@@ -35,4 +35,18 @@ extension NSView {
     func preview() -> some NSViewRepresentable { ViewWrapper(view: self) }
 }
 
+private struct ViewControllerWrapper: NSViewControllerRepresentable {
+
+    let viewController: NSViewController
+
+    func makeNSViewController(context: Context) -> some NSViewController { viewController }
+
+    func updateNSViewController(_ nsViewController: some NSViewController, context: Context) { }
+}
+
+extension NSViewController {
+
+    func preview() -> some NSViewControllerRepresentable { ViewControllerWrapper(viewController: self) }
+}
+
 #endif

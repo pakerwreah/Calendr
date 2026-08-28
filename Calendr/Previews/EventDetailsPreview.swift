@@ -18,7 +18,6 @@ struct EventDetailsPreview: PreviewProvider {
     static let weatherService = MockWeatherServiceProvider()
     static let workspace = MockWorkspaceServiceProvider()
     static let settings = MockEventSettings()
-    static var vcs: [NSViewController] = []
 
     static func makeMeeting() -> some View {
         let vc = EventDetailsViewController(
@@ -48,9 +47,8 @@ struct EventDetailsPreview: PreviewProvider {
         )
         vc.view.width(equalTo: 300)
         vc.view.height(lessThanOrEqualTo: 500)
-        vcs.append(vc)
 
-        return vc.view.preview().fixedSize()
+        return vc.preview().fixedSize()
     }
 
     static func makeEvent() -> some View {
@@ -79,9 +77,8 @@ struct EventDetailsPreview: PreviewProvider {
         )
         vc.view.width(equalTo: 300)
         vc.view.height(lessThanOrEqualTo: 500)
-        vcs.append(vc)
 
-        return vc.view.preview().fixedSize()
+        return vc.preview().fixedSize()
     }
 
     static func makeBirthday() -> some View {
@@ -105,9 +102,8 @@ struct EventDetailsPreview: PreviewProvider {
             )
         )
         vc.view.width(equalTo: 250)
-        vcs.append(vc)
 
-        return vc.view.preview().fixedSize()
+        return vc.preview().fixedSize()
     }
 
     static func makeReminder() -> some View {
@@ -131,9 +127,8 @@ struct EventDetailsPreview: PreviewProvider {
             )
         )
         vc.view.width(equalTo: 250)
-        vcs.append(vc)
 
-        return vc.view.preview().fixedSize()
+        return vc.preview().fixedSize()
     }
 
     static var previews: some View {

@@ -38,7 +38,9 @@ class BrowserPicker: NSView {
             menu.addItem(item)
         }
 
-        menu.insertItem(.separator(), at: 1)
+        if viewModel.options.count > 1 {
+            menu.insertItem(.separator(), at: 1)
+        }
 
         dropdown.menu = menu
 
