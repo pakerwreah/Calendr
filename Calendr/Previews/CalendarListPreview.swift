@@ -35,8 +35,7 @@ struct CalendarListPreview: PreviewProvider {
             ),
             source: .menu
         )
-        .view.preview()
-        .frame(minWidth: 250)
+        .preview()
         .fixedSize()
     }
 }

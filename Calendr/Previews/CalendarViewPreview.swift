@@ -46,7 +46,6 @@ struct CalendarViewPreview: PreviewProvider {
             doubleClickObserver: .dummy()
         )
         .preview()
-        .fixedSize()
     }
 }
 
