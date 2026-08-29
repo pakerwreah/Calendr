@@ -20,6 +20,7 @@ class CalendarViewModel {
     let calendarScaling: Observable<Double>
     let textScaling: Observable<Double>
     let cellSize: Observable<Double>
+    let cellHeight: Observable<Double>
     let weekNumbersWidth: Observable<Double>
     let showMonthOutline: Observable<Bool>
 
@@ -84,9 +85,12 @@ class CalendarViewModel {
                 debouncedWeekCount,
                 dateRangeObservable,
                 calendarUpdated,
-                settings.eventDotsStyle
+                settings.eventDotsStyle,
+                settings.showLunarCalendar,
+                settings.showMainlandHolidays,
+                settings.showSolarTerms
             )
-            .map { weeksCount, month, calendar, dotsStyle -> [CalendarCellViewModel] in
+            .map { weeksCount, month, calendar, dotsStyle, showLunar, showHolidays, showTerms -> [CalendarCellViewModel] in
 
                 let monthStartWeekDay = calendar.component(.weekday, from: month.start)
 
@@ -108,7 +112,10 @@ class CalendarViewModel {
                         isHovered: false,
                         events: [],
                         dotsStyle: dotsStyle,
-                        calendar: calendar
+                        calendar: calendar,
+                        showLunarCalendar: showLunar,
+                        showMainlandHolidays: showHolidays,
+                        showSolarTerms: showTerms
                     )
                 }
             }
@@ -300,8 +307,29 @@ class CalendarViewModel {
             .map(*)
             .share(replay: 1)
 
-        cellSize = calendarScaling
-            .map { Constants.cellSize * $0 + 10 * ($0 - 1) }
+        let usesSecondaryLine = Observable.combineLatest(
+            settings.showLunarCalendar,
+            settings.showMainlandHolidays,
+            settings.showSolarTerms
+        )
+        .map { $0 || $1 || $2 }
+        .share(replay: 1)
+
+        cellSize = Observable
+            .combineLatest(calendarScaling, usesSecondaryLine)
+            .map { scale, expanded -> Double in
+                let base = Constants.cellSize * scale + 10 * (scale - 1)
+                return expanded ? base + Constants.lunarCellWidthExtra * scale : base
+            }
+            .distinctUntilChanged()
+            .share(replay: 1)
+
+        cellHeight = Observable
+            .combineLatest(calendarScaling, usesSecondaryLine)
+            .map { scale, expanded -> Double in
+                let base = Constants.cellSize * scale + 10 * (scale - 1)
+                return expanded ? base + Constants.lunarCellExtra * scale : base
+            }
             .distinctUntilChanged()
             .share(replay: 1)
 
@@ -364,7 +392,10 @@ private extension CalendarCellViewModel {
             isHovered: isHovered ?? self.isHovered,
             events: events ?? self.events,
             dotsStyle: dotsStyle,
-            calendar: calendar ?? self.calendar
+            calendar: calendar ?? self.calendar,
+            showLunarCalendar: showLunarCalendar,
+            showMainlandHolidays: showMainlandHolidays,
+            showSolarTerms: showSolarTerms
         )
     }
 }
@@ -372,6 +403,8 @@ private extension CalendarCellViewModel {
 private enum Constants {
 
     static let cellSize: CGFloat = 25
+    static let lunarCellWidthExtra: CGFloat = 6
+    static let lunarCellExtra: CGFloat = 13
     static let weekNumberCellRatio: CGFloat = 0.85
     static let maxSearchResults: Int = 12
 }

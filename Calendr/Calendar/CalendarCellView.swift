@@ -20,8 +20,13 @@ class CalendarCellView: NSView {
     private let textScaling: Observable<Double>
 
     private let label: Label
+    private let lunarLabel: Label
     private let eventsStackView = NSStackView()
     private let borderLayer = CALayer()
+    private let restDayLayer = CALayer()
+    private var contentStackView: NSStackView!
+    private var contentTopConstraint: NSLayoutConstraint!
+    private var contentCenterYConstraint: NSLayoutConstraint!
 
     init(
         viewModel: Observable<CalendarCellViewModel>,
@@ -40,6 +45,7 @@ class CalendarCellView: NSView {
         self.textScaling = textScaling
 
         label = Label(font: .systemFont(ofSize: Constants.fontSize), scaling: textScaling)
+        lunarLabel = Label(font: .systemFont(ofSize: Constants.lunarFontSize), scaling: textScaling)
 
         super.init(frame: .zero)
 
@@ -53,11 +59,23 @@ class CalendarCellView: NSView {
         forAutoLayout()
 
         wantsLayer = true
+        clipsToBounds = false
+        restDayLayer.cornerRadius = Constants.cornerRadius
+        layer!.addSublayer(restDayLayer)
         borderLayer.cornerRadius = Constants.cornerRadius
         layer!.addSublayer(borderLayer)
 
         label.alignment = .center
         label.textColor = .headerTextColor
+        label.setContentHuggingPriority(.required, for: .vertical)
+        label.setContentCompressionResistancePriority(.required, for: .vertical)
+
+        lunarLabel.alignment = .center
+        lunarLabel.textColor = .secondaryLabelColor
+        lunarLabel.maximumNumberOfLines = 1
+        lunarLabel.lineBreakMode = .byClipping
+        lunarLabel.setContentHuggingPriority(.required, for: .vertical)
+        lunarLabel.setContentCompressionResistancePriority(.required, for: .vertical)
 
         let eventsContainer = NSView()
         eventsContainer.addSubview(eventsStackView)
@@ -68,13 +86,46 @@ class CalendarCellView: NSView {
         eventsStackView.center(in: eventsContainer, orientation: .horizontal)
         eventsStackView.width(lessThanOrEqualTo: eventsContainer)
 
-        let contentStackView = NSStackView(views: [label, eventsContainer])
+        let stack = NSStackView(views: [label, lunarLabel, eventsContainer])
             .with(orientation: .vertical)
-            .with(spacing: 2)
+            .with(alignment: .centerX)
+            .with(spacing: 0)
 
-        addSubview(contentStackView)
+        contentStackView = stack
+        addSubview(stack)
+        stack.clipsToBounds = false
 
-        contentStackView.center(in: self)
+        stack.center(in: self, orientation: .horizontal)
+        stack.width(lessThanOrEqualTo: self)
+        contentTopConstraint = stack.top(equalTo: self, constant: Constants.contentInset)
+        contentTopConstraint.isActive = false
+        contentCenterYConstraint = stack.center(in: self, orientation: .vertical)
+    }
+
+    private func applySecondaryLineLayout(_ expanded: Bool) {
+        if expanded {
+            contentCenterYConstraint.isActive = false
+            contentTopConstraint.isActive = true
+        } else {
+            contentTopConstraint.isActive = false
+            contentCenterYConstraint.isActive = true
+        }
+        contentStackView.spacing = expanded ? Constants.contentSpacing : 0
+        eventsStackView.spacing = expanded ? Constants.contentSpacing : 2
+        contentStackView.setHuggingPriority(expanded ? .required : .defaultLow, for: .vertical)
+        needsLayout = true
+        layoutSubtreeIfNeeded()
+        updateBorderLayers()
+    }
+
+    private func updateBorderLayers() {
+        borderLayer.frame = bounds
+        restDayLayer.frame = bounds.insetBy(dx: 1, dy: 1)
+    }
+
+    override func layout() {
+        super.layout()
+        updateBorderLayers()
     }
 
     private func setUpBindings() {
@@ -96,6 +147,78 @@ class CalendarCellView: NSView {
             .map(\.alpha)
             .distinctUntilChanged()
             .bind(to: label.rx.alpha)
+            .disposed(by: disposeBag)
+
+        viewModel
+            .map(\.usesSecondaryLine)
+            .distinctUntilChanged()
+            .bind { [weak self] in
+                self?.applySecondaryLineLayout($0)
+            }
+            .disposed(by: disposeBag)
+
+        viewModel
+            .map { vm -> String in
+                if let text = vm.lunarText { return text }
+                return vm.usesSecondaryLine ? " " : ""
+            }
+            .distinctUntilChanged()
+            .bind(to: lunarLabel.rx.text)
+            .disposed(by: disposeBag)
+
+        viewModel
+            .map(\.isLunarMonthStart)
+            .distinctUntilChanged()
+            .bind { [lunarLabel] isMonthStart in
+                lunarLabel.font = .systemFont(
+                    ofSize: Constants.lunarFontSize,
+                    weight: isMonthStart ? .semibold : .regular
+                )
+            }
+            .disposed(by: disposeBag)
+
+        viewModel
+            .map { vm in !vm.usesSecondaryLine }
+            .distinctUntilChanged()
+            .bind(to: lunarLabel.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        viewModel
+            .map { vm -> CGFloat in
+                guard vm.usesSecondaryLine else { return 0 }
+                guard vm.lunarText != nil else { return 0 }
+                return vm.alpha * (vm.isStatutoryRestDay || vm.holidayName != nil ? 0.9 : 0.7)
+            }
+            .distinctUntilChanged()
+            .bind(to: lunarLabel.rx.alpha)
+            .disposed(by: disposeBag)
+
+        viewModel
+            .map { vm -> NSColor in
+                if vm.isStatutoryRestDay {
+                    return NSColor.systemRed.withAlphaComponent(0.8)
+                }
+                if vm.isSolarTermDay {
+                    return NSColor.systemBrown.withAlphaComponent(0.85)
+                }
+                if vm.holidayName != nil {
+                    return NSColor.systemRed.withAlphaComponent(0.65)
+                }
+                return .secondaryLabelColor
+            }
+            .bind { [lunarLabel] in
+                lunarLabel.textColor = $0
+            }
+            .disposed(by: disposeBag)
+
+        viewModel
+            .map(\.isStatutoryRestDay)
+            .distinctUntilChanged()
+            .bind { [restDayLayer] isRest in
+                restDayLayer.backgroundColor = isRest
+                    ? NSColor.systemRed.withAlphaComponent(0.08).cgColor
+                    : nil
+            }
             .disposed(by: disposeBag)
 
         viewModel
@@ -169,7 +292,7 @@ class CalendarCellView: NSView {
 
     override func updateLayer() {
         super.updateLayer()
-        borderLayer.frame = bounds
+        updateBorderLayers()
     }
 
     override func acceptsFirstMouse(for event: NSEvent?) -> Bool {
@@ -234,7 +357,11 @@ private func makeEventDot(color: NSColor, scaling: Double) -> NSView {
 private enum Constants {
 
     static let fontSize: CGFloat = 12
+    static let lunarFontSize: CGFloat = 9
     static let eventDotSize: CGFloat = 3
+    static let contentSpacing: CGFloat = 1
+    static let contentInset: CGFloat = 2
+    static let bottomInset: CGFloat = 2
 
     static let borderWidth: CGFloat = 2
     static let cornerRadius: CGFloat = 5

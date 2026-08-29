@@ -70,11 +70,12 @@ class StatusItemViewModel {
         let dateTextObservable = Observable
             .combineLatest(
                 settings.showStatusItemDate,
+                settings.showStatusItemLunarDate,
                 settings.statusItemDateStyle,
                 settings.statusItemDateFormat
             )
             .repeat(when: localeChangeObservable)
-            .flatMapLatest { showDate, style, format -> Observable<String> in
+            .flatMapLatest { showDate, showLunar, style, format -> Observable<String> in
 
                 guard showDate else { return .just("") }
 
@@ -84,7 +85,7 @@ class StatusItemViewModel {
                 let ticker = Observable<Int>.interval(.seconds(1), scheduler: scheduler).void().startWith(())
 
                 return ticker.map {
-                    let text = if style.isCustom {
+                    var text = if style.isCustom {
                         DateFormatRenderer.render(
                             format: format,
                             date: dateProvider.now,
@@ -92,6 +93,9 @@ class StatusItemViewModel {
                         )
                     } else {
                         formatter.string(from: dateProvider.now)
+                    }
+                    if showLunar, let lunar = chineseLunarFullDateString(from: dateProvider.now, calendar: dateProvider.calendar) {
+                        text = text.isEmpty ? lunar : text + " " + lunar
                     }
                     return text.isEmpty ? "???" : text
                 }

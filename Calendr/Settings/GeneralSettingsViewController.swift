@@ -19,6 +19,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     private let launchAgentCheckbox = Checkbox(title: Strings.Settings.MenuBar.launchAgent)
     private let showMenuBarIconCheckbox = Checkbox(title: Strings.Settings.MenuBar.showIcon)
     private let showMenuBarDateCheckbox = Checkbox(title: Strings.Settings.MenuBar.showDate)
+    private let showMenuBarLunarDateCheckbox = Checkbox(title: Strings.Settings.MenuBar.showLunarDate)
     private let statusItemBackgroundLabel = Label(text: Strings.Settings.MenuBar.background)
     private let statusItemBackgroundDropdown = Dropdown()
     private let openOnHoverCheckbox = Checkbox(title: Strings.Settings.MenuBar.openOnHover)
@@ -46,6 +47,9 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     private let weekCountStepper = NSStepper()
     private let showMonthOutlineCheckbox = Checkbox(title: Strings.Settings.Calendar.showMonthOutline)
     private let showWeekNumbersCheckbox = Checkbox(title: Strings.Settings.Calendar.showWeekNumbers)
+    private let showLunarCalendarCheckbox = Checkbox(title: Strings.Settings.Calendar.showLunarCalendar)
+    private let showMainlandHolidaysCheckbox = Checkbox(title: Strings.Settings.Calendar.showMainlandHolidays)
+    private let showSolarTermsCheckbox = Checkbox(title: Strings.Settings.Calendar.showSolarTerms)
     private let showDeclinedEventsCheckbox = Checkbox(title: Strings.Settings.Calendar.showDeclinedEvents)
     private let preserveSelectedDateCheckbox = Checkbox(title: Strings.Settings.Calendar.preserveSelectedDate)
     private let dateHoverOptionCheckbox = Checkbox(title: Strings.Settings.Calendar.dateHoverOption)
@@ -155,6 +159,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             openOnHoverCheckbox,
             iconStyle,
             showMenuBarDateCheckbox,
+            showMenuBarLunarDateCheckbox,
             dateFormat,
             NSStackView(views: [statusItemBackgroundLabel, statusItemBackgroundDropdown]),
             .spacer
@@ -229,6 +234,9 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             .dummy,
             showMonthOutlineCheckbox,
             showWeekNumbersCheckbox,
+            showLunarCalendarCheckbox,
+            showMainlandHolidaysCheckbox,
+            showSolarTermsCheckbox,
             NSStackView(views: [showDeclinedEventsCheckbox, showDeclinedEventsTooltip]),
             preserveSelectedDateCheckbox,
             dateHoverOptionCheckbox,
@@ -317,6 +325,17 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             observer: viewModel.toggleStatusItemDate
         )
         .disposed(by: disposeBag)
+
+        bind(
+            control: showMenuBarLunarDateCheckbox,
+            observable: viewModel.showStatusItemLunarDate,
+            observer: viewModel.toggleStatusItemLunarDate
+        )
+        .disposed(by: disposeBag)
+
+        viewModel.showStatusItemDate
+            .bind(to: showMenuBarLunarDateCheckbox.rx.isEnabled)
+            .disposed(by: disposeBag)
 
         setUpDateFormat()
 
@@ -616,6 +635,27 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             control: showWeekNumbersCheckbox,
             observable: viewModel.showWeekNumbers,
             observer: viewModel.toggleWeekNumbers
+        )
+        .disposed(by: disposeBag)
+
+        bind(
+            control: showLunarCalendarCheckbox,
+            observable: viewModel.showLunarCalendar,
+            observer: viewModel.toggleLunarCalendar
+        )
+        .disposed(by: disposeBag)
+
+        bind(
+            control: showMainlandHolidaysCheckbox,
+            observable: viewModel.showMainlandHolidays,
+            observer: viewModel.toggleMainlandHolidays
+        )
+        .disposed(by: disposeBag)
+
+        bind(
+            control: showSolarTermsCheckbox,
+            observable: viewModel.showSolarTerms,
+            observer: viewModel.toggleSolarTerms
         )
         .disposed(by: disposeBag)
 
