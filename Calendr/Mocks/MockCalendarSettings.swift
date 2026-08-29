@@ -55,6 +55,10 @@ class MockCalendarSettings: CalendarSettings {
     let textScaling: Observable<Double>
     let textScalingObserver: AnyObserver<Double>
 
+    let showLunarCalendar: Observable<Bool>
+    let showMainlandHolidays: Observable<Bool>
+    let showSolarTerms: Observable<Bool>
+
     init(
         calendarScaling: Double = 1,
         textScaling: Double = 1,
@@ -89,6 +93,9 @@ class MockCalendarSettings: CalendarSettings {
 
         self.showMonthOutline = .just(showMonthOutline)
         defaultCalendarApp = .just(.calendar)
+        showLunarCalendar = .just(true)
+        showMainlandHolidays = .just(true)
+        showSolarTerms = .just(true)
     }
 }
 

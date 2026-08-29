@@ -99,10 +99,10 @@ class CalendarView: NSView {
 
         guard let gridView else { return }
 
-        viewModel.cellSize
-            .bind { [gridView] cellSize in
+        Observable.combineLatest(viewModel.cellSize, viewModel.cellHeight)
+            .bind { [gridView] cellSize, cellHeight in
                 for row in 0..<gridView.numberOfRows {
-                    gridView.row(at: row).height = cellSize
+                    gridView.row(at: row).height = cellHeight
                     /// skip week number column, because it has dynamic width
                     for col in 1..<gridView.numberOfColumns {
                         gridView.column(at: col).width = cellSize
@@ -126,10 +126,11 @@ class CalendarView: NSView {
         Observable.combineLatest(
             viewModel.weekNumbersWidth,
             viewModel.weekDays,
-            viewModel.cellSize
+            viewModel.cellSize,
+            viewModel.cellHeight
         )
         .repeat(when: rx.updateLayer)
-        .map { offset, weekDays, cellSize -> [CALayer] in
+        .map { offset, weekDays, cellSize, cellHeight -> [CALayer] in
 
             let weekends = weekDays
                 .enumerated()
@@ -142,7 +143,7 @@ class CalendarView: NSView {
                     x: offset + CGFloat(range.startIndex) * cellSize,
                     y: 0,
                     width: CGFloat(range.count) * cellSize,
-                    height: CGFloat(weekCount) * cellSize
+                    height: CGFloat(weekCount) * cellHeight
                 )
                 layer.backgroundColor = Colors.weekendBackground
                 layer.cornerRadius = Constants.cornerRadius

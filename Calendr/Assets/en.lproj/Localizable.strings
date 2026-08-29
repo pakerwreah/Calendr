@@ -46,6 +46,7 @@
 
 "settings.menu_bar.show_icon" = "Show icon";
 "settings.menu_bar.show_date" = "Show date";
+"settings.menu_bar.show_lunar_date" = "Show lunar date";
 "settings.menu_bar.date_format_custom" = "Custom";
 
 "settings.menu_bar.background" = "Background";
@@ -66,6 +67,9 @@
 "settings.calendar" = "Calendar";
 "settings.calendar.show_month_outline" = "Show month outline";
 "settings.calendar.show_week_numbers" = "Show week numbers";
+"settings.calendar.show_lunar_calendar" = "Show Chinese lunar dates";
+"settings.calendar.show_mainland_holidays" = "Show mainland holidays";
+"settings.calendar.show_solar_terms" = "Show solar terms";
 "settings.calendar.preserve_selected_date" = "Preserve selected date on hide";
 "settings.calendar.show_declined_events" = "Show declined events";
 "settings.calendar.show_declined_events_tooltip" = "This only works if it is also enabled in the native Calendar app.";

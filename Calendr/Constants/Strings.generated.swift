@@ -287,6 +287,12 @@ internal enum Strings {
       internal static let showMonthOutline = Strings.tr("Localizable", "settings.calendar.show_month_outline", fallback: "Show month outline")
       /// Show week numbers
       internal static let showWeekNumbers = Strings.tr("Localizable", "settings.calendar.show_week_numbers", fallback: "Show week numbers")
+      /// Show Chinese lunar dates
+      internal static let showLunarCalendar = Strings.tr("Localizable", "settings.calendar.show_lunar_calendar", fallback: "Show Chinese lunar dates")
+      /// Show mainland holidays
+      internal static let showMainlandHolidays = Strings.tr("Localizable", "settings.calendar.show_mainland_holidays", fallback: "Show mainland holidays")
+      /// Show solar terms
+      internal static let showSolarTerms = Strings.tr("Localizable", "settings.calendar.show_solar_terms", fallback: "Show solar terms")
       /// Visible weeks
       internal static let weekCount = Strings.tr("Localizable", "settings.calendar.week_count", fallback: "Visible weeks")
       internal enum EventDots {
@@ -377,6 +383,8 @@ internal enum Strings {
       internal static let openOnHover = Strings.tr("Localizable", "settings.menu_bar.open_on_hover", fallback: "Open on mouse hover")
       /// Show date
       internal static let showDate = Strings.tr("Localizable", "settings.menu_bar.show_date", fallback: "Show date")
+      /// Show lunar date
+      internal static let showLunarDate = Strings.tr("Localizable", "settings.menu_bar.show_lunar_date", fallback: "Show lunar date")
       /// Show icon
       internal static let showIcon = Strings.tr("Localizable", "settings.menu_bar.show_icon", fallback: "Show icon")
       internal enum Background {
