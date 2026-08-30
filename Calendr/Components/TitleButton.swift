@@ -1,14 +1,14 @@
 //
-//  Dropdown.swift
+//  TitleButton.swift
 //  Calendr
 //
-//  Created by Paker on 07/02/21.
+//  Created by Paker on 30/08/2026.
 //
 
 import AppKit
 import RxSwift
 
-class Dropdown: NSPopUpButton {
+class TitleButton: NSButton {
 
     private var baseFont = BehaviorSubject<NSFont>(value: .systemFont(ofSize: NSFont.systemFontSize))
 
@@ -34,7 +34,7 @@ class Dropdown: NSPopUpButton {
         setUpLayout()
         setUpBindings(scaling)
     }
-    
+
     private func setUpLayout() {
         setContentHuggingPriority(.fittingSizeCompression, for: .horizontal)
         refusesFirstResponder = true

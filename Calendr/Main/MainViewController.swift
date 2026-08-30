@@ -30,7 +30,7 @@ class MainViewController: NSViewController {
     private let nextReminderView: NextEventView
     private let calendarView: CalendarView
     private let eventListView: EventListView
-    private let titleLabel: Label
+    private let titleLabel: TitleButton
     private let searchInput = NSSearchField()
     private let searchInputSuggestionView = SearchSuggestionView()
     private let prevBtn = ImageButton()
@@ -178,7 +178,7 @@ class MainViewController: NSViewController {
             doubleClickObserver: mainViewModel.openCalendarDateObserver
         )
 
-        titleLabel = Label(scaling: calendarViewModel.textScaling)
+        titleLabel = HeaderTitleButton(scaling: calendarViewModel.textScaling)
 
         let eventListEventsObservable = calendarViewModel.eventListObservable
             .debounce(.milliseconds(50), scheduler: MainScheduler.instance)
@@ -364,7 +364,7 @@ class MainViewController: NSViewController {
             .disposed(by: disposeBag)
 
         calendarViewModel.title
-            .bind(to: titleLabel.rx.text)
+            .bind(to: titleLabel.rx.title)
             .disposed(by: disposeBag)
 
         remindersBtn.rx.tap.bind { [workspace] in
@@ -955,6 +955,38 @@ class MainViewController: NSViewController {
 
     }
 
+    private func setUpYearMonthPicker() {
+
+        let titleMenu = NSMenu()
+
+        let monthPicker = MonthPickerViewController(dateProvider: dateProvider)
+        addChild(monthPicker)
+
+        let menuItem = NSMenuItem()
+        menuItem.view = monthPicker.view.forAutoLayout()
+        titleMenu.items = [menuItem]
+
+        titleLabel.rx.tap
+            .withLatestFrom(mainViewModel.selectedDate)
+            .bind { [titleLabel] selectedDate in
+
+                titleLabel.isHighlighted = false
+
+                monthPicker.update(with: selectedDate)
+                monthPicker.view.layoutSubtreeIfNeeded()
+
+                let centerX = titleLabel.bounds.midX - monthPicker.view.bounds.midX
+                let point = CGPoint(x: centerX, y: 0)
+
+                titleMenu.popUp(positioning: nil, at: point, in: titleLabel)
+            }
+            .disposed(by: disposeBag)
+
+        monthPicker.onSelect = { [mainViewModel] selected in
+            mainViewModel.select(year: selected.year, month: selected.month)
+        }
+    }
+
     // MARK: - Factories
 
     private func makeEventListSummary() -> NSView {
@@ -1026,7 +1058,10 @@ class MainViewController: NSViewController {
     private func makeHeader() -> NSView {
 
         titleLabel.font = .systemFont(ofSize: 14, weight: .medium)
-        titleLabel.textColor = .headerTextColor
+        titleLabel.contentTintColor = .headerTextColor
+        titleLabel.showsBorderOnlyWhileMouseInside = true
+        titleLabel.bezelStyle = .flexiblePush
+        titleLabel.cell?.wraps = false
 
         [prevBtn, resetBtn, nextBtn].forEach { $0.size(equalTo: 22) }
 
@@ -1039,8 +1074,10 @@ class MainViewController: NSViewController {
         nextBtn.image = Icons.Calendar.next
         nextBtn.toolTip = Strings.Tooltips.Navigation.nextMonth
 
+        setUpYearMonthPicker()
+
         return NSStackView(views: [
-            .spacer(width: 5), titleLabel, .spacer, prevBtn, resetBtn, nextBtn
+            titleLabel, .spacer, prevBtn, resetBtn, nextBtn
         ])
         .with(spacing: 0)
     }
@@ -1118,5 +1155,14 @@ private extension NSMenu {
             // this is a blocking operation
             self.popUp(positioning: nil, at: .init(x: 0, y: offsetY), in: view)
         }
+    }
+}
+
+private class HeaderTitleButton: TitleButton {
+
+    override var intrinsicContentSize: NSSize {
+        var size = super.intrinsicContentSize
+        size.width -= 12 // remove default padding
+        return size
     }
 }
