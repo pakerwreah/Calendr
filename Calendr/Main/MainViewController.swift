@@ -982,22 +982,9 @@ class MainViewController: NSViewController {
             }
             .disposed(by: disposeBag)
 
-        monthPicker.selectedYearMonth
-            .withLatestFrom(mainViewModel.selectedDate) { ($0, $1) }
-            .compactMap { [dateProvider] selected, currentDate in
-
-                let currentDay = dateProvider.calendar.component(.day, from: currentDate)
-
-                return dateProvider.calendar.date(
-                    from: .init(
-                        year: selected.year,
-                        month: selected.month,
-                        day: currentDay
-                    )
-                )
-            }
-            .bind(to: mainViewModel.selectDateObserver)
-            .disposed(by: disposeBag)
+        monthPicker.onSelect = { [mainViewModel] selected in
+            mainViewModel.select(year: selected.year, month: selected.month)
+        }
     }
 
     // MARK: - Factories

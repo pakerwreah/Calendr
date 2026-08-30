@@ -374,4 +374,23 @@ class MainViewModelTests {
 
         #expect(dueDate == .make(year: 2026, month: 1, day: 2, hour: 8))
     }
+
+    @Test func testSelectYearMonth_withCurrentMonth_shouldSelectCurrentDate() {
+
+        dateProvider.now = .make(year: 2026, month: 1, day: 10)
+
+        #expect(viewModel.currentSelectedDate == dateProvider.now)
+
+        viewModel.select(year: 2026, month: 5)
+
+        #expect(viewModel.currentSelectedDate == .make(year: 2026, month: 5, day: 1))
+
+        viewModel.select(year: 2027, month: 10)
+
+        #expect(viewModel.currentSelectedDate == .make(year: 2027, month: 10, day: 1))
+
+        viewModel.select(year: 2026, month: 1)
+
+        #expect(viewModel.currentSelectedDate == dateProvider.now)
+    }
 }

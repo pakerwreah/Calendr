@@ -311,6 +311,21 @@ class MainViewModel {
             .disposed(by: disposeBag)
     }
 
+    func select(year: Int, month: Int) {
+
+        guard let date = dateProvider.calendar.date(
+            from: .init(year: year, month: month)
+        ) else { return }
+
+        let isCurrentMonth = dateProvider.calendar.isDate(
+            date,
+            equalTo: dateProvider.now,
+            toGranularity: .month
+        )
+
+        selectDateObserver.onNext(isCurrentMonth ? dateProvider.now : date)
+    }
+
     func dateForNewEvent() -> Date {
 
         if dateProvider.isDateInToday(currentSelectedDate) {

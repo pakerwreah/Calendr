@@ -6,7 +6,6 @@
 //
 
 import AppKit
-import RxSwift
 
 class MonthPickerViewController: NSViewController {
 
@@ -15,8 +14,7 @@ class MonthPickerViewController: NSViewController {
         let month: Int
     }
 
-    var selectedYearMonth: Observable<SelectedYearMonth>
-    private var selectedYearMonthObserver: AnyObserver<SelectedYearMonth>
+    var onSelect: ((SelectedYearMonth) -> Void)?
 
     private var updating = false
 
@@ -40,8 +38,6 @@ class MonthPickerViewController: NSViewController {
     init(dateProvider: DateProviding) {
 
         self.dateProvider = dateProvider
-
-        (selectedYearMonth, selectedYearMonthObserver) = PublishSubject.pipe()
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -142,7 +138,7 @@ class MonthPickerViewController: NSViewController {
     private func onChange() {
         updateUI()
         if !updating {
-            selectedYearMonthObserver.onNext(.init(year: selectedYear, month: selectedMonth))
+            onSelect?(.init(year: selectedYear, month: selectedMonth))
         }
     }
 
