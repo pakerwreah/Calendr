@@ -46,6 +46,7 @@
 
 "settings.menu_bar.show_icon" = "Zobraziť ikonu";
 "settings.menu_bar.show_date" = "Zobraziť dátum";
+//"settings.menu_bar.show_lunar_date" = "Show lunar date";
 "settings.menu_bar.date_format_custom" = "Vlastný";
 
 //"settings.menu_bar.background" = "Background";
@@ -66,6 +67,8 @@
 "settings.calendar" = "Kalendár";
 "settings.calendar.show_month_outline" = "Orámovať aktuálny mesiac";
 "settings.calendar.show_week_numbers" = "Zobraziť čísla týždňov";
+//"settings.calendar.show_lunar_calendar" = "Show lunar calendar";
+//"settings.calendar.show_solar_terms" = "Show solar terms";
 "settings.calendar.preserve_selected_date" = "Zachovať vybraný dátum pri skrytí";
 "settings.calendar.show_declined_events" = "Zobraziť odmietnuté udalosti";
 "settings.calendar.show_declined_events_tooltip" = "Funguje, len ak je to povolené aj v natívnej aplikácii Kalendár.";

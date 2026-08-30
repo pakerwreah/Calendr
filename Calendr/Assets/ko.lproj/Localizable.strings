@@ -46,6 +46,7 @@
 
 "settings.menu_bar.show_icon" = "아이콘 표시";
 "settings.menu_bar.show_date" = "날짜 표시";
+//"settings.menu_bar.show_lunar_date" = "Show lunar date";
 "settings.menu_bar.date_format_custom" = "사용자 지정";
 
 //"settings.menu_bar.background" = "Background";
@@ -66,6 +67,8 @@
 "settings.calendar" = "캘린더";
 "settings.calendar.show_month_outline" = "월 외곽선 표시";
 "settings.calendar.show_week_numbers" = "주 번호 표시";
+//"settings.calendar.show_lunar_calendar" = "Show lunar calendar";
+//"settings.calendar.show_solar_terms" = "Show solar terms";
 "settings.calendar.preserve_selected_date" = "숨길 때 선택한 날짜 유지";
 "settings.calendar.show_declined_events" = "거절한 일정 표시";
 "settings.calendar.show_declined_events_tooltip" = "기본 캘린더 앱에서도 활성화해야 작동합니다. (메뉴바 → 보기 → 거부된 이벤트 보기)";

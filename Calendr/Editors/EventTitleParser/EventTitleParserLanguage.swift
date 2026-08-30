@@ -28,30 +28,7 @@ enum EventTitleParserLanguage: CaseIterable, Equatable {
     }
 
     static var current: EventTitleParserLanguage {
-        .init(preferredLocalizations: preferredLocalizations)
-    }
-
-    static var preferredLocalizations: [String] {
-        let bundle: Bundle
-        #if SWIFT_PACKAGE
-            bundle = Bundle.module
-        #else
-            bundle = Bundle(for: EventTitleParserBundleToken.self)
-        #endif
-        return resolvePreferredLocalizations(
-            availableLocalizations: bundle.localizations,
-            userLanguages: Locale.preferredLanguages
-        )
-    }
-
-    static func resolvePreferredLocalizations(
-        availableLocalizations: [String],
-        userLanguages: [String]
-    ) -> [String] {
-        Bundle.preferredLocalizations(
-            from: availableLocalizations,
-            forPreferences: userLanguages
-        )
+        .init(preferredLocalizations: Localizations.preferredLocalizations)
     }
 
     static func isSupported(_ preferredLocalizations: [String]) -> Bool {
@@ -59,19 +36,12 @@ enum EventTitleParserLanguage: CaseIterable, Equatable {
     }
 
     private static func matching(_ preferredLocalizations: [String]) -> EventTitleParserLanguage? {
-        guard let languageCode = preferredLocalizations.first.map(localizationLanguageCode) else {
-            return nil
+
+        for languageCode in preferredLocalizations.lazy.map(Localizations.baseLanguageCode) {
+            if let language = allCases.first(where: { $0.languageCode == languageCode }) {
+                return language
+            }
         }
-        return allCases.first { $0.languageCode == languageCode }
+        return nil
     }
 }
-
-private func localizationLanguageCode(_ identifier: String) -> String {
-    identifier
-        .replacingOccurrences(of: "_", with: "-")
-        .split(separator: "-")
-        .first?
-        .lowercased() ?? ""
-}
-
-private final class EventTitleParserBundleToken {}

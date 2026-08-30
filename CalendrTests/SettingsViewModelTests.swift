@@ -236,6 +236,34 @@ class SettingsViewModelTests {
         #expect(storage.naturalLanguageEventInputEnabled == false)
     }
 
+    @Test func testChineseLunarCalendarDefaultsOnForChineseLocalization() {
+
+        let storage = MockLocalStorageProvider()
+
+        registerDefaultPrefs(in: storage, preferredLocalizations: ["zh"])
+
+        #expect(storage.showLunarCalendar)
+    }
+
+    @Test func testChineseLunarCalendarDefaultsOffForUnsupportedLocalization() {
+
+        let storage = MockLocalStorageProvider()
+
+        registerDefaultPrefs(in: storage, preferredLocalizations: ["en"])
+
+        #expect(storage.showLunarCalendar == false)
+    }
+
+    @Test func testChineseLunarCalendarKeepsExplicitUserPreference() {
+
+        let storage = MockLocalStorageProvider()
+        storage.showLunarCalendar = false
+
+        registerDefaultPrefs(in: storage, preferredLocalizations: ["zh"])
+
+        #expect(storage.showLunarCalendar == false)
+    }
+
     @Test func testMigratesLegacyStatusItemBackgroundStyle() {
 
         let storage = MockLocalStorageProvider()

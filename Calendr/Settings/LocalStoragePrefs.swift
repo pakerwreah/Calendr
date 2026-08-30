@@ -53,9 +53,8 @@ enum Prefs {
     static let defaultCalendarApp = "default_calendar_app"
     static let calendarTextScaling = "calendar_text_scaling"
     static let eventDotsStyle = "event_dots_style"
-    static let showLunarCalendar = "show_lunar_calendar"
-    static let showMainlandHolidays = "show_mainland_holidays"
-    static let showSolarTerms = "show_solar_terms"
+    static let showChineseLunarCalendar = "show_chinese_lunar_calendar"
+    static let showChineseSolarTerms = "show_chinese_solar_terms"
 
     // Event Details
     static let showMap = "show_map"
@@ -96,7 +95,7 @@ enum Prefs {
 func registerDefaultPrefs(
     in localStorage: LocalStorageProvider,
     calendar: Calendar = .current,
-    preferredLocalizations: [String] = EventTitleParserLanguage.preferredLocalizations
+    preferredLocalizations: [String] = Localizations.preferredLocalizations
 ) {
 
     migrateStatusItemBackgroundStyle(in: localStorage)
@@ -143,9 +142,8 @@ func registerDefaultPrefs(
         Prefs.calendarAppViewMode: CalendarViewMode.month.rawValue,
         Prefs.defaultCalendarApp: CalendarApp.calendar.rawValue,
         Prefs.calendarTextScaling: 1,
-        Prefs.showLunarCalendar: true,
-        Prefs.showMainlandHolidays: true,
-        Prefs.showSolarTerms: true,
+        Prefs.showChineseLunarCalendar: ChineseCalendarSupport.isSupported(preferredLocalizations),
+        Prefs.showChineseSolarTerms: ChineseCalendarSupport.isSupported(preferredLocalizations),
 
         // Event Details
         Prefs.showMap: true,
@@ -386,18 +384,13 @@ extension LocalStorageProvider {
     }
 
     @objc dynamic var showLunarCalendar: Bool {
-        get { bool(forKey: Prefs.showLunarCalendar) }
-        set { set(newValue, forKey: Prefs.showLunarCalendar) }
-    }
-
-    @objc dynamic var showMainlandHolidays: Bool {
-        get { bool(forKey: Prefs.showMainlandHolidays) }
-        set { set(newValue, forKey: Prefs.showMainlandHolidays) }
+        get { bool(forKey: Prefs.showChineseLunarCalendar) }
+        set { set(newValue, forKey: Prefs.showChineseLunarCalendar) }
     }
 
     @objc dynamic var showSolarTerms: Bool {
-        get { bool(forKey: Prefs.showSolarTerms) }
-        set { set(newValue, forKey: Prefs.showSolarTerms) }
+        get { bool(forKey: Prefs.showChineseSolarTerms) }
+        set { set(newValue, forKey: Prefs.showChineseSolarTerms) }
     }
 
     // Event Details

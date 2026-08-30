@@ -31,7 +31,6 @@ protocol CalendarSettings {
     var showMonthOutline: Observable<Bool> { get }
     var showWeekNumbers: Observable<Bool> { get }
     var showLunarCalendar: Observable<Bool> { get }
-    var showMainlandHolidays: Observable<Bool> { get }
     var showSolarTerms: Observable<Bool> { get }
     var showDeclinedEvents: Observable<Bool> { get }
     var preserveSelectedDate: Observable<Bool> { get }
@@ -141,7 +140,6 @@ class SettingsViewModel:
     let toggleMonthOutline: AnyObserver<Bool>
     let toggleWeekNumbers: AnyObserver<Bool>
     let toggleLunarCalendar: AnyObserver<Bool>
-    let toggleMainlandHolidays: AnyObserver<Bool>
     let toggleSolarTerms: AnyObserver<Bool>
     let toggleDeclinedEvents: AnyObserver<Bool>
     let togglePreserveSelectedDate: AnyObserver<Bool>
@@ -201,7 +199,6 @@ class SettingsViewModel:
     let showMonthOutline: Observable<Bool>
     let showWeekNumbers: Observable<Bool>
     let showLunarCalendar: Observable<Bool>
-    let showMainlandHolidays: Observable<Bool>
     let showSolarTerms: Observable<Bool>
     let showDeclinedEvents: Observable<Bool>
     let preserveSelectedDate: Observable<Bool>
@@ -320,7 +317,6 @@ class SettingsViewModel:
         toggleMonthOutline = localStorage.rx.observer(for: \.showMonthOutline)
         toggleWeekNumbers = localStorage.rx.observer(for: \.showWeekNumbers)
         toggleLunarCalendar = localStorage.rx.observer(for: \.showLunarCalendar)
-        toggleMainlandHolidays = localStorage.rx.observer(for: \.showMainlandHolidays)
         toggleSolarTerms = localStorage.rx.observer(for: \.showSolarTerms)
         toggleDeclinedEvents = localStorage.rx.observer(for: \.showDeclinedEvents)
         togglePreserveSelectedDate = localStorage.rx.observer(for: \.preserveSelectedDate)
@@ -376,7 +372,6 @@ class SettingsViewModel:
         showMonthOutline = localStorage.rx.observe(\.showMonthOutline)
         showWeekNumbers = localStorage.rx.observe(\.showWeekNumbers)
         showLunarCalendar = localStorage.rx.observe(\.showLunarCalendar)
-        showMainlandHolidays = localStorage.rx.observe(\.showMainlandHolidays)
         showSolarTerms = localStorage.rx.observe(\.showSolarTerms)
         showDeclinedEvents = localStorage.rx.observe(\.showDeclinedEvents)
         preserveSelectedDate = localStorage.rx.observe(\.preserveSelectedDate)

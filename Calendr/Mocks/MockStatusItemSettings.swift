@@ -13,6 +13,7 @@ class MockStatusItemSettings: StatusItemSettings {
 
     let toggleIcon: AnyObserver<Bool>
     let toggleDate: AnyObserver<Bool>
+    let toggleLunarDate: AnyObserver<Bool>
     let statusItemBackgroundStyleObserver: AnyObserver<StatusItemBackgroundStyle>
     let statusItemIconStyleObserver: AnyObserver<StatusItemIconStyle>
     let statusItemDateStyleObserver: AnyObserver<StatusItemDateStyle>
@@ -44,7 +45,7 @@ class MockStatusItemSettings: StatusItemSettings {
     ) {
         (showStatusItemIcon, toggleIcon) = BehaviorSubject.pipe(value: showIcon)
         (showStatusItemDate, toggleDate) = BehaviorSubject.pipe(value: showDate)
-        showStatusItemLunarDate = .just(showLunarDate)
+        (showStatusItemLunarDate, toggleLunarDate) = BehaviorSubject.pipe(value: showLunarDate)
         (statusItemBackgroundStyle, statusItemBackgroundStyleObserver) = BehaviorSubject.pipe(value: backgroundStyle)
         (statusItemIconStyle, statusItemIconStyleObserver) = BehaviorSubject.pipe(value: iconStyle)
         (statusItemDateStyle, statusItemDateStyleObserver) = BehaviorSubject.pipe(value: dateStyle)

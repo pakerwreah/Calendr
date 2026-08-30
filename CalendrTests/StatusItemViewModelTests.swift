@@ -76,6 +76,17 @@ class StatusItemViewModelTests {
         settings.statusItemIconStyleObserver.onNext(iconStyle)
     }
 
+    @Test func testText_withLunarCalendarEnabled() {
+
+        settings.toggleLunarDate.onNext(true)
+
+        #expect(lastText == "2021-01-01 冬月十八")
+
+        changeDate(.make(year: 2026, month: 2, day: 18))
+
+        #expect(lastText == "2026-02-18 正月初二")
+    }
+
     @Test func testText_withDateChange_shouldUpdateText() {
 
         setUp(showIcon: false, showDate: true, iconStyle: .calendar)

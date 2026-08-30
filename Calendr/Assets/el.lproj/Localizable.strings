@@ -46,6 +46,7 @@
 
 "settings.menu_bar.show_icon" = "Εμφάνιση εικονιδίου";
 "settings.menu_bar.show_date" = "Εμφάνιση ημερομηνίας";
+//"settings.menu_bar.show_lunar_date" = "Show lunar date";
 "settings.menu_bar.date_format_custom" = "Προσαρμοσμένη";
 
 //"settings.menu_bar.background" = "Background";
@@ -66,6 +67,8 @@
 "settings.calendar" = "Ημερολόγιο";
 //"settings.calendar.show_month_outline" = "Show month outline";
 "settings.calendar.show_week_numbers" = "Εμφάνιση αριθμών εβδομάδας";
+//"settings.calendar.show_lunar_calendar" = "Show lunar calendar";
+//"settings.calendar.show_solar_terms" = "Show solar terms";
 "settings.calendar.preserve_selected_date" = "Διατήρηση της επιλεγμένης ημερομηνίας κατά την απόκρυψη";
 "settings.calendar.show_declined_events" = "Εμφάνιση απορριφθέντων συμβάντων";
 "settings.calendar.show_declined_events_tooltip" = "Αυτό λειτουργεί μόνο εάν είναι επίσης ενεργοποιημένο στην εγγενή εφαρμογή Ημερολόγιο";

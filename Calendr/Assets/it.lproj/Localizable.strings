@@ -47,6 +47,7 @@
 
 "settings.menu_bar.show_icon" = "Mostra icona";
 "settings.menu_bar.show_date" = "Mostra data";
+//"settings.menu_bar.show_lunar_date" = "Show lunar date";
 "settings.menu_bar.date_format_custom" = "Personalizzato";
 
 //"settings.menu_bar.background" = "Background";
@@ -67,6 +68,8 @@
 "settings.calendar" = "Calendario";
 //"settings.calendar.show_month_outline" = "Show month outline";
 "settings.calendar.show_week_numbers" = "Mostra i numeri delle settimane";
+//"settings.calendar.show_lunar_calendar" = "Show lunar calendar";
+//"settings.calendar.show_solar_terms" = "Show solar terms";
 "settings.calendar.preserve_selected_date" = "Conserva la data selezionata quando la nascondi";
 "settings.calendar.show_declined_events" = "Mostra eventi rifiutati";
 "settings.calendar.show_declined_events_tooltip" = "Funziona solo se è abilitato anche nell'app Calendario nativa.";

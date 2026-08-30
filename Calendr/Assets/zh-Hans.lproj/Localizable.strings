@@ -68,7 +68,6 @@
 "settings.calendar.show_month_outline" = "显示月份轮廓";
 "settings.calendar.show_week_numbers" = "显示周数";
 "settings.calendar.show_lunar_calendar" = "显示农历";
-"settings.calendar.show_mainland_holidays" = "显示节假日";
 "settings.calendar.show_solar_terms" = "显示节气";
 "settings.calendar.preserve_selected_date" = "隐藏时保留所选日期";
 "settings.calendar.show_declined_events" = "显示拒绝的日程";
