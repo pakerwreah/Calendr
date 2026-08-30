@@ -17,6 +17,7 @@ enum Prefs {
     static let statusItemDateEnabled = "status_item_date_enabled"
     static let statusItemDateStyle = "status_item_date_style"
     static let statusItemDateFormat = "status_item_date_format"
+    static let statusItemLunarDateEnabled = "status_item_lunar_date_enabled"
     static let statusItemBackgroundStyle = "status_item_background_style"
     static let legacyStatusItemBackgroundEnabled = "status_item_background_enabled"
     static let statusItemTextScaling = "status_item_text_scaling"
@@ -52,6 +53,8 @@ enum Prefs {
     static let defaultCalendarApp = "default_calendar_app"
     static let calendarTextScaling = "calendar_text_scaling"
     static let eventDotsStyle = "event_dots_style"
+    static let showChineseLunarCalendar = "show_chinese_lunar_calendar"
+    static let showChineseSolarTerms = "show_chinese_solar_terms"
 
     // Event Details
     static let showMap = "show_map"
@@ -92,7 +95,7 @@ enum Prefs {
 func registerDefaultPrefs(
     in localStorage: LocalStorageProvider,
     calendar: Calendar = .current,
-    preferredLocalizations: [String] = EventTitleParserLanguage.preferredLocalizations
+    preferredLocalizations: [String] = Localizations.preferredLocalizations
 ) {
 
     migrateStatusItemBackgroundStyle(in: localStorage)
@@ -105,6 +108,7 @@ func registerDefaultPrefs(
         Prefs.statusItemDateEnabled: true,
         Prefs.statusItemDateStyle: StatusItemDateStyle.short.rawValue,
         Prefs.statusItemDateFormat: AppConstants.defaultCustomDateFormat,
+        Prefs.statusItemLunarDateEnabled: ChineseCalendarSupport.isSupported(preferredLocalizations),
         Prefs.statusItemBackgroundStyle: StatusItemBackgroundStyle.transparent.rawValue,
         Prefs.statusItemTextScaling: 1.2,
         Prefs.statusItemOpenOnHover: false,
@@ -138,6 +142,8 @@ func registerDefaultPrefs(
         Prefs.calendarAppViewMode: CalendarViewMode.month.rawValue,
         Prefs.defaultCalendarApp: CalendarApp.calendar.rawValue,
         Prefs.calendarTextScaling: 1,
+        Prefs.showChineseLunarCalendar: ChineseCalendarSupport.isSupported(preferredLocalizations),
+        Prefs.showChineseSolarTerms: ChineseCalendarSupport.isSupported(preferredLocalizations),
 
         // Event Details
         Prefs.showMap: true,
@@ -221,6 +227,11 @@ extension LocalStorageProvider {
     @objc dynamic var statusItemDateFormat: String {
         get { string(forKey: Prefs.statusItemDateFormat) ?? "" }
         set { set(newValue, forKey: Prefs.statusItemDateFormat) }
+    }
+
+    @objc dynamic var statusItemLunarDateEnabled: Bool {
+        get { bool(forKey: Prefs.statusItemLunarDateEnabled) }
+        set { set(newValue, forKey: Prefs.statusItemLunarDateEnabled) }
     }
 
     @objc dynamic var statusItemBackgroundStyle: String {
@@ -370,6 +381,16 @@ extension LocalStorageProvider {
     @objc dynamic var calendarTextScaling: Double {
         get { double(forKey: Prefs.calendarTextScaling) }
         set { set(newValue, forKey: Prefs.calendarTextScaling) }
+    }
+
+    @objc dynamic var showLunarCalendar: Bool {
+        get { bool(forKey: Prefs.showChineseLunarCalendar) }
+        set { set(newValue, forKey: Prefs.showChineseLunarCalendar) }
+    }
+
+    @objc dynamic var showSolarTerms: Bool {
+        get { bool(forKey: Prefs.showChineseSolarTerms) }
+        set { set(newValue, forKey: Prefs.showChineseSolarTerms) }
     }
 
     // Event Details

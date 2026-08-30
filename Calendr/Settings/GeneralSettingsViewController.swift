@@ -19,6 +19,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     private let launchAgentCheckbox = Checkbox(title: Strings.Settings.MenuBar.launchAgent)
     private let showMenuBarIconCheckbox = Checkbox(title: Strings.Settings.MenuBar.showIcon)
     private let showMenuBarDateCheckbox = Checkbox(title: Strings.Settings.MenuBar.showDate)
+    private let showMenuBarLunarDateCheckbox = Checkbox(title: Strings.Settings.MenuBar.showLunarDate)
     private let statusItemBackgroundLabel = Label(text: Strings.Settings.MenuBar.background)
     private let statusItemBackgroundDropdown = Dropdown()
     private let openOnHoverCheckbox = Checkbox(title: Strings.Settings.MenuBar.openOnHover)
@@ -46,7 +47,8 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     private let weekCountStepper = NSStepper()
     private let showMonthOutlineCheckbox = Checkbox(title: Strings.Settings.Calendar.showMonthOutline)
     private let showWeekNumbersCheckbox = Checkbox(title: Strings.Settings.Calendar.showWeekNumbers)
-    private let showDeclinedEventsCheckbox = Checkbox(title: Strings.Settings.Calendar.showDeclinedEvents)
+    private let showLunarCalendarCheckbox = Checkbox(title: Strings.Settings.Calendar.showLunarCalendar)
+    private let showSolarTermsCheckbox = Checkbox(title: Strings.Settings.Calendar.showSolarTerms)
     private let preserveSelectedDateCheckbox = Checkbox(title: Strings.Settings.Calendar.preserveSelectedDate)
     private let dateHoverOptionCheckbox = Checkbox(title: Strings.Settings.Calendar.dateHoverOption)
     private let eventDotsLabel = Label(text: Strings.Settings.Calendar.eventDots)
@@ -60,6 +62,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     private let showMapCheckbox = Checkbox(title: Strings.Settings.Events.showMap)
     private let mapBlacklistButton = ImageButton(image: Icons.Settings.blacklist)
     private let showFinishedEventsCheckbox = Checkbox(title: Strings.Settings.Events.showFinishedEvents)
+    private let showDeclinedEventsCheckbox = Checkbox(title: Strings.Settings.Calendar.showDeclinedEvents)
     private let showOverdueCheckbox = Checkbox(title: Strings.Settings.Events.showOverdueReminders)
     private let showAllDayEventsCheckbox = Checkbox(title: Strings.Settings.Events.showAllDayEvents)
     private let showAllDayDetailsCheckbox = Checkbox(title: Strings.Settings.Events.showAllDayDetails)
@@ -155,6 +158,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             openOnHoverCheckbox,
             iconStyle,
             showMenuBarDateCheckbox,
+            showMenuBarLunarDateCheckbox,
             dateFormat,
             NSStackView(views: [statusItemBackgroundLabel, statusItemBackgroundDropdown]),
             .spacer
@@ -217,10 +221,6 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         weekCountStepper.refusesFirstResponder = true
         weekCountStepper.focusRingType = .none
 
-        let showDeclinedEventsTooltip = makeToolTip(
-            Strings.Settings.Calendar.showDeclinedEventsTooltip
-        ).disposed(by: disposeBag)
-
         let is26 = if #available(macOS 26.0, *) { true } else { false }
 
         return NSStackView(views: [
@@ -229,7 +229,8 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             .dummy,
             showMonthOutlineCheckbox,
             showWeekNumbersCheckbox,
-            NSStackView(views: [showDeclinedEventsCheckbox, showDeclinedEventsTooltip]),
+            showLunarCalendarCheckbox,
+            showSolarTermsCheckbox,
             preserveSelectedDateCheckbox,
             dateHoverOptionCheckbox,
             is26 ? nil : .dummy,
@@ -263,10 +264,15 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         // Future events stack view
         let futureEventsStack = NSStackView(views: [futureEventsLabel, .spacer, futureEventsStepperLabel, futureEventsStepper])
 
+        let showDeclinedEventsTooltip = makeToolTip(
+            Strings.Settings.Calendar.showDeclinedEventsTooltip
+        ).disposed(by: disposeBag)
+
         return NSStackView(views: [
             naturalLanguageEventInputCheckbox,
             NSStackView(views: [showMapCheckbox, mapBlacklistButton]),
             showFinishedEventsCheckbox,
+            NSStackView(views: [showDeclinedEventsCheckbox, showDeclinedEventsTooltip]),
             showOverdueCheckbox,
             showAllDayEventsCheckbox,
             showAllDayDetailsCheckbox,
@@ -317,6 +323,17 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             observer: viewModel.toggleStatusItemDate
         )
         .disposed(by: disposeBag)
+
+        bind(
+            control: showMenuBarLunarDateCheckbox,
+            observable: viewModel.showStatusItemLunarDate,
+            observer: viewModel.toggleStatusItemLunarDate
+        )
+        .disposed(by: disposeBag)
+
+        viewModel.showStatusItemDate
+            .bind(to: showMenuBarLunarDateCheckbox.rx.isEnabled)
+            .disposed(by: disposeBag)
 
         setUpDateFormat()
 
@@ -620,9 +637,16 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         .disposed(by: disposeBag)
 
         bind(
-            control: showDeclinedEventsCheckbox,
-            observable: viewModel.showDeclinedEvents,
-            observer: viewModel.toggleDeclinedEvents
+            control: showLunarCalendarCheckbox,
+            observable: viewModel.showLunarCalendar,
+            observer: viewModel.toggleLunarCalendar
+        )
+        .disposed(by: disposeBag)
+
+        bind(
+            control: showSolarTermsCheckbox,
+            observable: viewModel.showSolarTerms,
+            observer: viewModel.toggleSolarTerms
         )
         .disposed(by: disposeBag)
 
@@ -736,6 +760,13 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             control: showFinishedEventsCheckbox,
             observable: viewModel.showPastEvents,
             observer: viewModel.togglePastEvents
+        )
+        .disposed(by: disposeBag)
+
+        bind(
+            control: showDeclinedEventsCheckbox,
+            observable: viewModel.showDeclinedEvents,
+            observer: viewModel.toggleDeclinedEvents
         )
         .disposed(by: disposeBag)
 

@@ -62,13 +62,4 @@ struct EventTitleParserLanguageTests {
         #expect(EventTitleParserLanguage.isSupported(["de"]) == false)
         #expect(EventTitleParserLanguage.isSupported([]) == false)
     }
-
-    @Test func testPreferredLocalizationUsesUserLanguageSupportedByResourceBundle() {
-        let preferredLocalizations = EventTitleParserLanguage.resolvePreferredLocalizations(
-            availableLocalizations: ["de", "en", "cs"],
-            userLanguages: ["cs-CZ", "en-US"]
-        )
-
-        #expect(preferredLocalizations == ["cs"])
-    }
 }

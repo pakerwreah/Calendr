@@ -21,6 +21,7 @@ struct CalendarCellViewModel: Equatable {
     let events: [EventModel]
     let dotsStyle: EventDotsStyle
     let calendar: Calendar
+    let plugin: AnyCalendarCellPlugin?
 }
 
 extension CalendarCellViewModel {

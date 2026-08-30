@@ -46,6 +46,7 @@
 
 "settings.menu_bar.show_icon" = "Afficher l'icône";
 "settings.menu_bar.show_date" = "Afficher la date";
+//"settings.menu_bar.show_lunar_date" = "Show lunar date";
 "settings.menu_bar.date_format_custom" = "Personnalisé";
 
 //"settings.menu_bar.background" = "Background";
@@ -66,6 +67,8 @@
 "settings.calendar" = "Calendrier";
 //"settings.calendar.show_month_outline" = "Show month outline";
 "settings.calendar.show_week_numbers" = "Afficher les numéros des semaines";
+//"settings.calendar.show_lunar_calendar" = "Show lunar calendar";
+//"settings.calendar.show_solar_terms" = "Show solar terms";
 "settings.calendar.preserve_selected_date" = "Conserver la date sélectionnée lors du masquage";
 "settings.calendar.show_declined_events" = "Afficher les événements refusés";
 "settings.calendar.show_declined_events_tooltip" = "Cela ne fonctionne que s'il est également activé dans l'application Calendrier native.";

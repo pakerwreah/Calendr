@@ -102,10 +102,10 @@ class CalendarView: NSView {
         viewModel.cellSize
             .bind { [gridView] cellSize in
                 for row in 0..<gridView.numberOfRows {
-                    gridView.row(at: row).height = cellSize
+                    gridView.row(at: row).height = cellSize.height
                     /// skip week number column, because it has dynamic width
                     for col in 1..<gridView.numberOfColumns {
-                        gridView.column(at: col).width = cellSize
+                        gridView.column(at: col).width = cellSize.width
                     }
                 }
             }
@@ -139,10 +139,10 @@ class CalendarView: NSView {
             return IndexSet(weekends).rangeView.map { range in
                 let layer = CALayer()
                 layer.frame = CGRect(
-                    x: offset + CGFloat(range.startIndex) * cellSize,
+                    x: offset + CGFloat(range.startIndex) * cellSize.width,
                     y: 0,
-                    width: CGFloat(range.count) * cellSize,
-                    height: CGFloat(weekCount) * cellSize
+                    width: CGFloat(range.count) * cellSize.width,
+                    height: CGFloat(weekCount) * cellSize.height
                 )
                 layer.backgroundColor = Colors.weekendBackground
                 layer.cornerRadius = Constants.cornerRadius

@@ -29,6 +29,10 @@ extension ObservableType {
         map { _ in value }
     }
 
+    func map<T>(_ transform: @escaping (Element) throws -> T?, or value: T) -> Observable<T> {
+        map { try transform($0) ?? value  }
+    }
+
     func optional() -> Observable<Element?> {
         map { value -> Element? in value }
     }

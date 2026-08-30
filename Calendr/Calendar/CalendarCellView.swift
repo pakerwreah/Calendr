@@ -20,8 +20,10 @@ class CalendarCellView: NSView {
     private let textScaling: Observable<Double>
 
     private let label: Label
+    private let pluginLabel: Label
     private let eventsStackView = NSStackView()
     private let borderLayer = CALayer()
+    private var contentStackView: NSStackView!
 
     init(
         viewModel: Observable<CalendarCellViewModel>,
@@ -40,6 +42,7 @@ class CalendarCellView: NSView {
         self.textScaling = textScaling
 
         label = Label(font: .systemFont(ofSize: Constants.fontSize), scaling: textScaling)
+        pluginLabel = Label(scaling: textScaling)
 
         super.init(frame: .zero)
 
@@ -58,6 +61,15 @@ class CalendarCellView: NSView {
 
         label.alignment = .center
         label.textColor = .headerTextColor
+        label.setContentHuggingPriority(.required, for: .vertical)
+        label.setContentCompressionResistancePriority(.required, for: .vertical)
+
+        pluginLabel.alignment = .center
+        pluginLabel.textColor = .secondaryLabelColor
+        pluginLabel.maximumNumberOfLines = 1
+        pluginLabel.lineBreakMode = .byClipping
+        pluginLabel.setContentHuggingPriority(.required, for: .vertical)
+        pluginLabel.setContentCompressionResistancePriority(.required, for: .vertical)
 
         let eventsContainer = NSView()
         eventsContainer.addSubview(eventsStackView)
@@ -68,13 +80,14 @@ class CalendarCellView: NSView {
         eventsStackView.center(in: eventsContainer, orientation: .horizontal)
         eventsStackView.width(lessThanOrEqualTo: eventsContainer)
 
-        let contentStackView = NSStackView(views: [label, eventsContainer])
+        let contentStackView = NSStackView(views: [label, pluginLabel, eventsContainer])
             .with(orientation: .vertical)
-            .with(spacing: 2)
 
+        self.contentStackView = contentStackView
         addSubview(contentStackView)
 
         contentStackView.center(in: self)
+        contentStackView.width(lessThanOrEqualTo: self)
     }
 
     private func setUpBindings() {
@@ -82,7 +95,7 @@ class CalendarCellView: NSView {
         calendarScaling
             .bind { [weak self, borderLayer] in
                 borderLayer.borderWidth = Constants.borderWidth * $0
-                self?.updateLayer()
+                self?.updateBorderLayer()
             }
             .disposed(by: disposeBag)
 
@@ -96,6 +109,42 @@ class CalendarCellView: NSView {
             .map(\.alpha)
             .distinctUntilChanged()
             .bind(to: label.rx.alpha)
+            .disposed(by: disposeBag)
+
+        viewModel
+            .map(\.alpha)
+            .distinctUntilChanged()
+            .bind(to: pluginLabel.rx.alpha)
+            .disposed(by: disposeBag)
+
+        viewModel
+            .map(\.plugin?.text)
+            .distinctUntilChanged()
+            .bind(to: pluginLabel.rx.text)
+            .disposed(by: disposeBag)
+
+        viewModel
+            .map(\.plugin?.font)
+            .distinctUntilChanged()
+            .bind(to: pluginLabel.rx.font)
+            .disposed(by: disposeBag)
+
+        viewModel
+            .map(\.plugin?.textColor,)
+            .distinctUntilChanged()
+            .bind(to: pluginLabel.rx.textColor)
+            .disposed(by: disposeBag)
+
+        viewModel
+            .map(\.plugin.isNil)
+            .distinctUntilChanged()
+            .bind(to: pluginLabel.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        viewModel
+            .map(\.plugin?.spacing, or: Constants.contentSpacing)
+            .distinctUntilChanged()
+            .bind(to: contentStackView.rx.spacing)
             .disposed(by: disposeBag)
 
         viewModel
@@ -167,9 +216,18 @@ class CalendarCellView: NSView {
             .disposed(by: disposeBag)
     }
 
+    private func updateBorderLayer() {
+        borderLayer.frame = bounds
+    }
+
+    override func layout() {
+        super.layout()
+        updateBorderLayer()
+    }
+
     override func updateLayer() {
         super.updateLayer()
-        borderLayer.frame = bounds
+        updateBorderLayer()
     }
 
     override func acceptsFirstMouse(for event: NSEvent?) -> Bool {
@@ -235,6 +293,7 @@ private enum Constants {
 
     static let fontSize: CGFloat = 12
     static let eventDotSize: CGFloat = 3
+    static let contentSpacing: CGFloat = 2
 
     static let borderWidth: CGFloat = 2
     static let cornerRadius: CGFloat = 5
