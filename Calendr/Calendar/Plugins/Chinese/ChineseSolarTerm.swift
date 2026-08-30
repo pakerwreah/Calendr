@@ -15,8 +15,8 @@ private let solarTermNames = [
     "立冬", "小雪", "大雪", "冬至"
 ]
 
-private let shanghaiTimeZone = TimeZone(identifier: "Asia/Shanghai") ?? TimeZone(secondsFromGMT: 8 * 3600)!
-private let shanghaiCalendar = Calendar.gregorian.with(timeZone: shanghaiTimeZone)
+private let gregorianCalendar = Calendar(identifier: .gregorian).with(timeZone: .utc)
+private let shanghaiCalendar = Calendar(identifier: .gregorian).with(timeZone: .shanghai)
 
 struct ChineseSolarTerm: Equatable {
     let text: String
@@ -69,7 +69,7 @@ private func sunApparentLongitude(julianDay jd: Double) -> Double {
 private func dateOfSolarTerm(year: Int, index: Int) -> Date? {
     guard solarTermNames.indices.contains(index) else { return nil }
     let target = normalizedDegrees(285 + 15 * Double(index))
-    guard var date = Calendar.gregorian.date(from: DateComponents(year: year, month: 1, day: 1, hour: 0)) else {
+    guard var date = gregorianCalendar.date(from: DateComponents(year: year, month: 1, day: 1, hour: 0)) else {
         return nil
     }
     let dayOfYear = ((target + 80).truncatingRemainder(dividingBy: 360)) / 0.985647
