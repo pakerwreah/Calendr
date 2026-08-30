@@ -243,6 +243,8 @@ class SettingsViewModelTests {
         registerDefaultPrefs(in: storage, preferredLocalizations: ["zh"])
 
         #expect(storage.showLunarCalendar)
+        #expect(storage.showSolarTerms)
+        #expect(storage.statusItemLunarDateEnabled)
     }
 
     @Test func testChineseLunarCalendarDefaultsOffForUnsupportedLocalization() {
@@ -252,16 +254,22 @@ class SettingsViewModelTests {
         registerDefaultPrefs(in: storage, preferredLocalizations: ["en"])
 
         #expect(storage.showLunarCalendar == false)
+        #expect(storage.showSolarTerms == false)
+        #expect(storage.statusItemLunarDateEnabled == false)
     }
 
     @Test func testChineseLunarCalendarKeepsExplicitUserPreference() {
 
         let storage = MockLocalStorageProvider()
         storage.showLunarCalendar = false
+        storage.showSolarTerms = false
+        storage.statusItemLunarDateEnabled = false
 
         registerDefaultPrefs(in: storage, preferredLocalizations: ["zh"])
 
         #expect(storage.showLunarCalendar == false)
+        #expect(storage.showSolarTerms == false)
+        #expect(storage.statusItemLunarDateEnabled == false)
     }
 
     @Test func testMigratesLegacyStatusItemBackgroundStyle() {

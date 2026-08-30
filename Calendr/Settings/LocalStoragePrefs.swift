@@ -108,7 +108,7 @@ func registerDefaultPrefs(
         Prefs.statusItemDateEnabled: true,
         Prefs.statusItemDateStyle: StatusItemDateStyle.short.rawValue,
         Prefs.statusItemDateFormat: AppConstants.defaultCustomDateFormat,
-        Prefs.statusItemLunarDateEnabled: true,
+        Prefs.statusItemLunarDateEnabled: ChineseCalendarSupport.isSupported(preferredLocalizations),
         Prefs.statusItemBackgroundStyle: StatusItemBackgroundStyle.transparent.rawValue,
         Prefs.statusItemTextScaling: 1.2,
         Prefs.statusItemOpenOnHover: false,
