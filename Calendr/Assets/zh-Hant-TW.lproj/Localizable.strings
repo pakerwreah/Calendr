@@ -68,7 +68,6 @@
 //"settings.calendar.show_month_outline" = "Show month outline";
 "settings.calendar.show_week_numbers" = "顯示週數";
 "settings.calendar.show_lunar_calendar" = "顯示農曆";
-"settings.calendar.show_solar_terms" = "顯示節氣";
 "settings.calendar.preserve_selected_date" = "隱藏時保留選定日期";
 "settings.calendar.show_declined_events" = "顯示已拒絕的事件";
 "settings.calendar.show_declined_events_tooltip" = "這僅在本機行事曆應用程式中也啟用時有效。";

@@ -54,7 +54,6 @@ enum Prefs {
     static let calendarTextScaling = "calendar_text_scaling"
     static let eventDotsStyle = "event_dots_style"
     static let showChineseLunarCalendar = "show_chinese_lunar_calendar"
-    static let showChineseSolarTerms = "show_chinese_solar_terms"
 
     // Event Details
     static let showMap = "show_map"
@@ -143,7 +142,6 @@ func registerDefaultPrefs(
         Prefs.defaultCalendarApp: CalendarApp.calendar.rawValue,
         Prefs.calendarTextScaling: 1,
         Prefs.showChineseLunarCalendar: ChineseCalendarSupport.isSupported(preferredLocalizations),
-        Prefs.showChineseSolarTerms: ChineseCalendarSupport.isSupported(preferredLocalizations),
 
         // Event Details
         Prefs.showMap: true,
@@ -386,11 +384,6 @@ extension LocalStorageProvider {
     @objc dynamic var showLunarCalendar: Bool {
         get { bool(forKey: Prefs.showChineseLunarCalendar) }
         set { set(newValue, forKey: Prefs.showChineseLunarCalendar) }
-    }
-
-    @objc dynamic var showSolarTerms: Bool {
-        get { bool(forKey: Prefs.showChineseSolarTerms) }
-        set { set(newValue, forKey: Prefs.showChineseSolarTerms) }
     }
 
     // Event Details

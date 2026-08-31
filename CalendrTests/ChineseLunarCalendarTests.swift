@@ -61,23 +61,15 @@ import Testing
     @Test func testLunarCalendarInViewModel_withLunarCalendarEnabled() {
         let date: Date = .make(year: 2026, month: 2, day: 17)
 
-        let plugin = makePlugin(for: date, showLunarCalendar: true, showSolarTerms: false)
+        let plugin = makePlugin(for: date)
 
         #expect(plugin.text == "正月")
     }
 
-    @Test func testLunarCalendarInViewModel_withLunarCalendarDisabled() {
-        let date: Date = .make(year: 2026, month: 2, day: 17)
-
-        let plugin = makePlugin(for: date, showLunarCalendar: false, showSolarTerms: false)
-
-        #expect(plugin.text == nil)
-    }
-    
     @Test func testGregorianDayNumberFormat() {
         let date: Date = .make(year: 2026, month: 2, day: 17)
 
-        let vm = makeViewModel(for: date, showLunarCalendar: true, showSolarTerms: false)
+        let vm = makeViewModel(for: date)
 
         // Gregorian day should still be 17
         #expect(vm.text == "17")
@@ -99,30 +91,16 @@ import Testing
     @Test func testSolarTermShouldSupersedeLunarDay() {
         let date: Date = .make(year: 2026, month: 2, day: 18)
 
-        let pluginSolarOff = makePlugin(for: date, showLunarCalendar: true, showSolarTerms: false)
-        #expect(pluginSolarOff.text == "初二")
-
-        let pluginSolarOn = makePlugin(for: date, showLunarCalendar: true, showSolarTerms: true)
-        #expect(pluginSolarOn.text == "雨水")
-
-        let pluginLunarOffSolarOn = makePlugin(for: date, showLunarCalendar: false, showSolarTerms: true)
-        #expect(pluginLunarOffSolarOn.text == "雨水")
+        let plugin = makePlugin(for: date)
+        #expect(plugin.text == "雨水")
     }
 
-    private func makePlugin(for date: Date, showLunarCalendar: Bool, showSolarTerms: Bool) -> ChineseCalendarCellPlugin {
-        ChineseCalendarCellPlugin(
-            for: date,
-            showLunarCalendar: showLunarCalendar,
-            showSolarTerms: showSolarTerms
-        )
+    private func makePlugin(for date: Date) -> ChineseCalendarCellPlugin {
+        ChineseCalendarCellPlugin(for: date)
     }
 
-    private func makeViewModel(for date: Date, showLunarCalendar: Bool, showSolarTerms: Bool) -> CalendarCellViewModel {
-        let plugin = makePlugin(
-            for: date,
-            showLunarCalendar: showLunarCalendar,
-            showSolarTerms: showSolarTerms
-        )
+    private func makeViewModel(for date: Date) -> CalendarCellViewModel {
+        let plugin = makePlugin(for: date)
         return CalendarCellViewModel(
             date: date,
             inMonth: true,
