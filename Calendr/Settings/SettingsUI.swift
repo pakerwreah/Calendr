@@ -43,7 +43,7 @@ extension SettingsUI {
         .with(spacing: 6)
         .with(spacing: 12, after: divider)
 
-        stackView.setHuggingPriority(.required, for: .horizontal)
+        stackView.setHuggingPriority(.defaultHigh, for: .horizontal)
 
         return .init(value: stackView, disposable: disposable)
     }
