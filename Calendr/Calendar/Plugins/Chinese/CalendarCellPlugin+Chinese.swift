@@ -13,10 +13,10 @@ struct ChineseCalendarCellPlugin: CalendarCellPlugin {
     let font: NSFont?
     let spacing: CGFloat? = 1
 
-    init(for date: Date, showLunarCalendar: Bool, showSolarTerms: Bool) {
+    init(for date: Date) {
 
-        let lunarDate = showLunarCalendar ? ChineseLunarDate(from: date) : nil
-        let solarTerm = showSolarTerms ? ChineseSolarTerm(from: date) : nil
+        let lunarDate = ChineseLunarDate(from: date)
+        let solarTerm = ChineseSolarTerm(from: date)
 
         let isMonthStart = lunarDate?.isMonthStart == true
 

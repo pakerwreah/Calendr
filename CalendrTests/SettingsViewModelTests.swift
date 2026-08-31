@@ -243,7 +243,6 @@ class SettingsViewModelTests {
         registerDefaultPrefs(in: storage, preferredLocalizations: ["zh"])
 
         #expect(storage.showLunarCalendar)
-        #expect(storage.showSolarTerms)
         #expect(storage.statusItemLunarDateEnabled)
     }
 
@@ -254,7 +253,6 @@ class SettingsViewModelTests {
         registerDefaultPrefs(in: storage, preferredLocalizations: ["en"])
 
         #expect(storage.showLunarCalendar == false)
-        #expect(storage.showSolarTerms == false)
         #expect(storage.statusItemLunarDateEnabled == false)
     }
 
@@ -262,13 +260,11 @@ class SettingsViewModelTests {
 
         let storage = MockLocalStorageProvider()
         storage.showLunarCalendar = false
-        storage.showSolarTerms = false
         storage.statusItemLunarDateEnabled = false
 
         registerDefaultPrefs(in: storage, preferredLocalizations: ["zh"])
 
         #expect(storage.showLunarCalendar == false)
-        #expect(storage.showSolarTerms == false)
         #expect(storage.statusItemLunarDateEnabled == false)
     }
 

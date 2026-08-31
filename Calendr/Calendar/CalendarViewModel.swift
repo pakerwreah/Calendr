@@ -85,10 +85,9 @@ class CalendarViewModel {
                 dateRangeObservable,
                 calendarUpdated,
                 settings.eventDotsStyle,
-                settings.showLunarCalendar,
-                settings.showSolarTerms
+                settings.showLunarCalendar
             )
-            .map { weeksCount, month, calendar, dotsStyle, showLunarCalendar, showSolarTerms -> [CalendarCellViewModel] in
+            .map { weeksCount, month, calendar, dotsStyle, showLunarCalendar -> [CalendarCellViewModel] in
 
                 let monthStartWeekDay = calendar.component(.weekday, from: month.start)
 
@@ -102,16 +101,9 @@ class CalendarViewModel {
                     let date = calendar.date(byAdding: .day, value: day, to: start)!
                     let inMonth = calendar.isDate(date, equalTo: month.start, toGranularity: .month)
 
-                    let plugin: (any CalendarCellPlugin)? = {
-                        if showLunarCalendar || showSolarTerms {
-                            return ChineseCalendarCellPlugin(
-                                for: date,
-                                showLunarCalendar: showLunarCalendar,
-                                showSolarTerms: showSolarTerms
-                            )
-                        }
-                        return nil
-                    }()
+                    let plugin: (any CalendarCellPlugin)? = showLunarCalendar
+                        ? ChineseCalendarCellPlugin(for: date)
+                        : nil
 
                     return CalendarCellViewModel(
                         date: date,
@@ -314,18 +306,10 @@ class CalendarViewModel {
             .map(*)
             .share(replay: 1)
 
-        let baseCellSize = Observable.combineLatest(
-            settings.showLunarCalendar,
-            settings.showSolarTerms
-        )
-        .map { showLunarCalendar, showSolarTerms in
-
-            if showLunarCalendar || showSolarTerms {
-                ChineseCalendarCellPlugin.cellSize
-            } else {
-                Constants.cellSize
+        let baseCellSize = settings.showLunarCalendar
+            .map { showLunarCalendar in
+                showLunarCalendar ? ChineseCalendarCellPlugin.cellSize : Constants.cellSize
             }
-        }
         .share(replay: 1)
 
         cellSize = Observable

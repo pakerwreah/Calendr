@@ -68,7 +68,6 @@
 //"settings.calendar.show_month_outline" = "Show month outline";
 "settings.calendar.show_week_numbers" = "Показувати номер тижня";
 //"settings.calendar.show_lunar_calendar" = "Show lunar calendar";
-//"settings.calendar.show_solar_terms" = "Show solar terms";
 "settings.calendar.preserve_selected_date" = "Зберігати вибрану дату при приховуванні";
 "settings.calendar.show_declined_events" = "Показувати відхилені події";
 "settings.calendar.show_declined_events_tooltip" = "Це працює лише у разі, якщо увімкнено в рідному додатку Календар.";

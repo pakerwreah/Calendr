@@ -68,7 +68,6 @@
 //"settings.calendar.show_month_outline" = "Show month outline";
 "settings.calendar.show_week_numbers" = "Zeige Kalenderwochen";
 //"settings.calendar.show_lunar_calendar" = "Show lunar calendar";
-//"settings.calendar.show_solar_terms" = "Show solar terms";
 "settings.calendar.preserve_selected_date" = "Ausgewähltes Datum beim Ausblenden beibehalten";
 "settings.calendar.show_declined_events" = "Abgelehnte Ereignisse anzeigen";
 "settings.calendar.show_declined_events_tooltip" = "Dies funktioniert nur, wenn es auch in der nativen Kalender-App aktiviert ist.";

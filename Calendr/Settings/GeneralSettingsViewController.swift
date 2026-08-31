@@ -48,7 +48,6 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     private let showMonthOutlineCheckbox = Checkbox(title: Strings.Settings.Calendar.showMonthOutline)
     private let showWeekNumbersCheckbox = Checkbox(title: Strings.Settings.Calendar.showWeekNumbers)
     private let showLunarCalendarCheckbox = Checkbox(title: Strings.Settings.Calendar.showLunarCalendar)
-    private let showSolarTermsCheckbox = Checkbox(title: Strings.Settings.Calendar.showSolarTerms)
     private let preserveSelectedDateCheckbox = Checkbox(title: Strings.Settings.Calendar.preserveSelectedDate)
     private let dateHoverOptionCheckbox = Checkbox(title: Strings.Settings.Calendar.dateHoverOption)
     private let eventDotsLabel = Label(text: Strings.Settings.Calendar.eventDots)
@@ -230,7 +229,6 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             showMonthOutlineCheckbox,
             showWeekNumbersCheckbox,
             showLunarCalendarCheckbox,
-            showSolarTermsCheckbox,
             preserveSelectedDateCheckbox,
             dateHoverOptionCheckbox,
             is26 ? nil : .dummy,
@@ -640,13 +638,6 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             control: showLunarCalendarCheckbox,
             observable: viewModel.showLunarCalendar,
             observer: viewModel.toggleLunarCalendar
-        )
-        .disposed(by: disposeBag)
-
-        bind(
-            control: showSolarTermsCheckbox,
-            observable: viewModel.showSolarTerms,
-            observer: viewModel.toggleSolarTerms
         )
         .disposed(by: disposeBag)
 

@@ -68,7 +68,6 @@
 "settings.calendar.show_month_outline" = "Mostrar contorno do mês";
 "settings.calendar.show_week_numbers" = "Mostrar números das semanas";
 "settings.calendar.show_lunar_calendar" = "Mostrar calendário lunar";
-"settings.calendar.show_solar_terms" = "Mostrar termos solares";
 "settings.calendar.preserve_selected_date" = "Preservar a data selecionada ao ocultar";
 "settings.calendar.show_declined_events" = "Mostrar eventos recusados";
 "settings.calendar.show_declined_events_tooltip" = "Isso só funciona se também estiver ativado no aplicativo Calendário nativo.";
