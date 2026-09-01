@@ -60,12 +60,10 @@ class CalendarCellView: NSView {
         layer!.addSublayer(borderLayer)
 
         label.alignment = .center
-        label.textColor = .headerTextColor
         label.setContentHuggingPriority(.required, for: .vertical)
         label.setContentCompressionResistancePriority(.required, for: .vertical)
 
         pluginLabel.alignment = .center
-        pluginLabel.textColor = .secondaryLabelColor
         pluginLabel.maximumNumberOfLines = 1
         pluginLabel.lineBreakMode = .byClipping
         pluginLabel.setContentHuggingPriority(.required, for: .vertical)
@@ -112,6 +110,13 @@ class CalendarCellView: NSView {
             .disposed(by: disposeBag)
 
         viewModel
+            .repeat(when: rx.updateLayer)
+            .map(\.textColor)
+            .distinctUntilChanged()
+            .bind(to: label.rx.textColor)
+            .disposed(by: disposeBag)
+
+        viewModel
             .map(\.alpha)
             .distinctUntilChanged()
             .bind(to: pluginLabel.rx.alpha)
@@ -130,7 +135,7 @@ class CalendarCellView: NSView {
             .disposed(by: disposeBag)
 
         viewModel
-            .map(\.plugin?.textColor,)
+            .map(\.plugin?.textColor)
             .distinctUntilChanged()
             .bind(to: pluginLabel.rx.textColor)
             .disposed(by: disposeBag)

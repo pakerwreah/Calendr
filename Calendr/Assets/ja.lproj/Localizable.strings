@@ -76,6 +76,7 @@
 "settings.calendar.calendar_app_view_mode" = "カレンダーの表示";
 "settings.calendar.default_calendar_app" = "使用するカレンダーアプリ";
 //"settings.calendar.preferred_browser" = "Preferred browser";
+//"settings.calendar.holiday_calendar" = "Holiday calendar";
 
 "settings.calendar.event_dots" = "予定のドット";
 "settings.calendar.event_dots.none" = "なし";

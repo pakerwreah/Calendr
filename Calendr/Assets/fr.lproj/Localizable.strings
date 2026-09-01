@@ -76,6 +76,7 @@
 "settings.calendar.calendar_app_view_mode" = "Vue de l'app Calendrier";
 "settings.calendar.default_calendar_app" = "Calendrier par défaut";
 //"settings.calendar.preferred_browser" = "Preferred browser";
+//"settings.calendar.holiday_calendar" = "Holiday calendar";
 
 //"settings.calendar.event_dots" = "Event dots";
 //"settings.calendar.event_dots.none" = "none";

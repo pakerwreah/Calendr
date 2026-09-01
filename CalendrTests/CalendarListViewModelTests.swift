@@ -262,6 +262,7 @@ class CalendarListViewModelTests {
             .disposed(by: disposeBag)
 
         localStorage.hiddenEventStatusItemTitleCalendars = ["1", "2"]
+        localStorage.holidayCalendars = ["1", "2"]
         localStorage.defaultBrowserPerCalendar = ["1": "browser-1", "2": "browser-2"]
 
         calendarService.changeObserver.onNext(())
@@ -270,6 +271,7 @@ class CalendarListViewModelTests {
         calendarService.changeObserver.onNext(())
 
         #expect(localStorage.hiddenEventStatusItemTitleCalendars == ["2"])
+        #expect(localStorage.holidayCalendars == ["2"])
         #expect(localStorage.defaultBrowserPerCalendar == ["2": "browser-2"])
     }
 }

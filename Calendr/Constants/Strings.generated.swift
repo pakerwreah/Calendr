@@ -275,6 +275,8 @@ internal enum Strings {
       internal static let defaultCalendarApp = Strings.tr("Localizable", "settings.calendar.default_calendar_app", fallback: "Default calendar app")
       /// Event dots
       internal static let eventDots = Strings.tr("Localizable", "settings.calendar.event_dots", fallback: "Event dots")
+      /// Holiday calendar
+      internal static let holidayCalendar = Strings.tr("Localizable", "settings.calendar.holiday_calendar", fallback: "Holiday calendar")
       /// Preferred browser
       internal static let preferredBrowser = Strings.tr("Localizable", "settings.calendar.preferred_browser", fallback: "Preferred browser")
       /// Preserve selected date on hide

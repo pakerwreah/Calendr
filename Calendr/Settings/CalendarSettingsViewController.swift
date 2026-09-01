@@ -11,6 +11,7 @@ import RxSwift
 class CalendarSettingsViewController: NSViewController, SettingsUI {
 
     private let disposeBag = DisposeBag()
+    private let holidayCalendarCheckbox = Checkbox(title: Strings.Settings.Calendar.holidayCalendar)
     private let showNextEventCheckbox = Checkbox(title: Strings.Settings.NextEvent.showNextEvent)
     private let showNextEventTitleCheckbox = Checkbox(title: Strings.Settings.NextEvent.showNextEventTitle)
     private let preferredBrowserLabel = Label(text: Strings.Settings.Calendar.preferredBrowser)
@@ -40,7 +41,7 @@ class CalendarSettingsViewController: NSViewController, SettingsUI {
             BrowserPicker(viewModel: viewModel.browserPickerViewModel)
         ])
 
-        let content = NSStackView(views: [nextEventContent, browserContent])
+        let content = NSStackView(views: [holidayCalendarCheckbox, nextEventContent, browserContent])
             .with(orientation: .vertical)
             .with(spacing: Constants.sectionSpacing)
 
@@ -90,6 +91,13 @@ class CalendarSettingsViewController: NSViewController, SettingsUI {
     }
 
     private func setUpBindings() {
+        bind(
+            control: holidayCalendarCheckbox,
+            observable: viewModel.isHolidayCalendar,
+            observer: viewModel.isHolidayCalendarObserver
+        )
+        .disposed(by: disposeBag)
+
         bind(
             control: showNextEventCheckbox,
             observable: viewModel.showNextEvent,

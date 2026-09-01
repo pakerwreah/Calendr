@@ -108,6 +108,7 @@ import Testing
             isSelected: false,
             isHovered: false,
             events: [],
+            isHoliday: false,
             dotsStyle: .none,
             calendar: calendar,
             plugin: plugin.eraseToAnyPlugin()

@@ -70,6 +70,7 @@ class CalendarListViewModel {
                 // clean up removed calendars
                 localStorage.disabledCalendars = localStorage.disabledCalendars.filter(calendars.contains)
                 localStorage.silencedCalendars = localStorage.silencedCalendars.filter(calendars.contains)
+                localStorage.holidayCalendars = localStorage.holidayCalendars.filter(calendars.contains)
                 localStorage.hiddenEventStatusItemTitleCalendars = localStorage.hiddenEventStatusItemTitleCalendars.filter(calendars.contains)
                 localStorage.defaultBrowserPerCalendar = localStorage.defaultBrowserPerCalendar.filter { calendars.contains($0.key) }
             }

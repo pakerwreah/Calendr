@@ -19,6 +19,7 @@ struct CalendarCellViewModel: Equatable {
     let isSelected: Bool
     let isHovered: Bool
     let events: [EventModel]
+    let isHoliday: Bool
     let dotsStyle: EventDotsStyle
     let calendar: Calendar
     let plugin: AnyCalendarCellPlugin?
@@ -32,6 +33,10 @@ extension CalendarCellViewModel {
 
     var alpha: CGFloat {
         inMonth ? 1 : 0.3
+    }
+
+    var textColor: NSColor {
+        isHoliday ? .systemRed : .headerTextColor
     }
 
     var borderColor: NSColor {

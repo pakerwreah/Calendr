@@ -12,6 +12,7 @@ enum Prefs {
     static let launchAgentEnabled = "launch_agent_enabled"
     static let disabledCalendars = "disabled_calendars"
     static let silencedCalendars = "silenced_calendars"
+    static let holidayCalendars = "holiday_calendars"
     static let statusItemIconEnabled = "status_item_icon_enabled"
     static let statusItemIconStyle = "status_item_icon_style"
     static let statusItemDateEnabled = "status_item_date_enabled"
@@ -142,6 +143,7 @@ func registerDefaultPrefs(
         Prefs.defaultCalendarApp: CalendarApp.calendar.rawValue,
         Prefs.calendarTextScaling: 1,
         Prefs.showChineseLunarCalendar: ChineseCalendarSupport.isSupported(preferredLocalizations),
+        Prefs.holidayCalendars: [],
 
         // Event Details
         Prefs.showMap: true,
@@ -200,6 +202,11 @@ extension LocalStorageProvider {
     @objc dynamic var silencedCalendars: [String] {
         get { stringArray(forKey: Prefs.silencedCalendars) ?? [] }
         set { set(newValue, forKey: Prefs.silencedCalendars) }
+    }
+
+    @objc dynamic var holidayCalendars: [String] {
+        get { stringArray(forKey: Prefs.holidayCalendars) ?? [] }
+        set { set(newValue, forKey: Prefs.holidayCalendars) }
     }
 
     @objc dynamic var statusItemIconEnabled: Bool {

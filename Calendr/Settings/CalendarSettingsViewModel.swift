@@ -14,9 +14,11 @@ class CalendarSettingsViewModel {
 
     let showNextEventObserver: AnyObserver<Bool>
     let showNextEventTitleObserver: AnyObserver<Bool>
+    let isHolidayCalendarObserver: AnyObserver<Bool>
 
     let showNextEvent: Observable<Bool>
     let showNextEventTitle: Observable<Bool>
+    let isHolidayCalendar: Observable<Bool>
 
     let browserPickerViewModel: BrowserPickerViewModel
 
@@ -40,12 +42,15 @@ class CalendarSettingsViewModel {
         showNextEventTitle = localStorage.rx.observe(\.hiddenEventStatusItemTitleCalendars)
             .map { !$0.contains(calendar.id) }
 
+        isHolidayCalendar = localStorage.rx.observe(\.holidayCalendars)
+            .map { $0.contains(calendar.id) }
+
         showNextEventObserver = .init {
             guard let isEnabled = $0.element else { return }
             localStorage.silencedCalendars = updating(
                 localStorage.silencedCalendars,
                 identifier: calendar.id,
-                isEnabled: isEnabled
+                included: !isEnabled
             )
         }
 
@@ -54,12 +59,21 @@ class CalendarSettingsViewModel {
             localStorage.hiddenEventStatusItemTitleCalendars = updating(
                 localStorage.hiddenEventStatusItemTitleCalendars,
                 identifier: calendar.id,
-                isEnabled: isEnabled
+                included: !isEnabled
+            )
+        }
+
+        isHolidayCalendarObserver = .init {
+            guard let isHoliday = $0.element else { return }
+            localStorage.holidayCalendars = updating(
+                localStorage.holidayCalendars,
+                identifier: calendar.id,
+                included: isHoliday
             )
         }
     }
 }
 
-private func updating(_ identifiers: [String], identifier: String, isEnabled: Bool) -> [String] {
-    isEnabled ? identifiers.filter { $0 != identifier } : identifiers + [identifier]
+private func updating(_ identifiers: [String], identifier: String, included: Bool) -> [String] {
+    included ? identifiers + [identifier] : identifiers.filter { $0 != identifier }
 }
