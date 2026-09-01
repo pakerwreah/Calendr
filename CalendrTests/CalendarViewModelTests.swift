@@ -895,6 +895,128 @@ class CalendarViewModelTests {
         ])
     }
 
+    @Test func testHolidayCalendars_shouldHighlightDatesWithHolidayEvents() {
+
+        let holidayCalendar: CalendarModel = .make(id: "100", account: "A10", title: "Holidays", color: .cyan)
+
+        calendarService.m_calendars.append(holidayCalendar)
+
+        calendarService.m_events.append(contentsOf: [
+            .make(
+                start: .make(year: 2021, month: 1, day: 1),
+                title: "H1",
+                calendar: holidayCalendar
+            ),
+            .make(
+                start: .make(year: 2021, month: 1, day: 5),
+                title: "H2",
+                calendar: holidayCalendar
+            )
+        ])
+
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+
+        settings.holidayCalendarsObserver.onNext(["100"])
+
+        let holidays = lastValue?.filter(\.isHoliday).map(\.date)
+
+        #expect(holidays == [
+            .make(year: 2021, month: 1, day: 1),
+            .make(year: 2021, month: 1, day: 5),
+        ])
+
+        let holidayCell = lastValue?.first { $0.date == .make(year: 2021, month: 1, day: 1) }
+        let regularCell = lastValue?.first { $0.date == .make(year: 2021, month: 1, day: 2) }
+
+        #expect(holidayCell?.textColor == .systemRed)
+        #expect(regularCell?.textColor == .headerTextColor)
+
+        settings.holidayCalendarsObserver.onNext([])
+
+        #expect(lastValue?.filter(\.isHoliday).isEmpty == true)
+    }
+
+    @Test func testHolidayCalendars_shouldNotHighlightTodayFromFutureHolidayEvents() {
+
+        let holidayCalendar: CalendarModel = .make(id: "100", account: "A10", title: "Holidays", color: .cyan)
+
+        calendarService.m_calendars.append(holidayCalendar)
+
+        calendarService.m_events = [
+            .make(
+                start: .make(year: 2021, month: 1, day: 2),
+                title: "H1",
+                calendar: holidayCalendar
+            )
+        ]
+
+        dateProvider.now = .make(year: 2021, month: 1, day: 1)
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+
+        settings.futureEventsDaysObserver.onNext(2)
+        settings.holidayCalendarsObserver.onNext(["100"])
+
+        let todayCell = lastValue?.first { $0.date == .make(year: 2021, month: 1, day: 1) }
+        let holidayCell = lastValue?.first { $0.date == .make(year: 2021, month: 1, day: 2) }
+
+        #expect(todayCell?.isHoliday == false)
+        #expect(holidayCell?.isHoliday == true)
+    }
+
+    @Test func testHolidayCalendars_withAllDayEventsDisabled_shouldStillHighlightHolidays() {
+
+        let holidayCalendar: CalendarModel = .make(id: "100", account: "A10", title: "Holidays", color: .cyan)
+
+        calendarService.m_calendars = [holidayCalendar]
+
+        calendarService.m_events = [
+            .make(
+                start: .make(year: 2021, month: 1, day: 1),
+                title: "H1",
+                isAllDay: true,
+                calendar: holidayCalendar
+            )
+        ]
+
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+
+        settings.toggleAllDayEvents.onNext(false)
+        settings.holidayCalendarsObserver.onNext(["100"])
+
+        let holidayCell = lastValue?.first { $0.date == .make(year: 2021, month: 1, day: 1) }
+
+        #expect(holidayCell?.isHoliday == true)
+        #expect(holidayCell?.events.isEmpty == true)
+    }
+
+    @Test func testHolidayCalendars_withSearch_shouldStillHighlightHolidays() {
+
+        let holidayCalendar: CalendarModel = .make(id: "100", account: "A10", title: "Holidays", color: .cyan)
+
+        calendarService.m_calendars = [holidayCalendar]
+
+        calendarService.m_events = [
+            .make(
+                start: .make(year: 2021, month: 1, day: 1),
+                title: "H1",
+                isAllDay: true,
+                calendar: holidayCalendar
+            )
+        ]
+
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+
+        settings.toggleAllDayEvents.onNext(false)
+        settings.holidayCalendarsObserver.onNext(["100"])
+
+        searchSubject.onNext("search term")
+
+        let holidayCell = lastValue?.first { $0.date == .make(year: 2021, month: 1, day: 1) }
+
+        #expect(holidayCell?.isHoliday == true)
+        #expect(holidayCell?.events.isEmpty == true)
+    }
+
     @Test func testServiceProviderEventsDateRange() {
 
         var ranges: [[Date]] = []

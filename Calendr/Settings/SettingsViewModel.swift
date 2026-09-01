@@ -31,6 +31,7 @@ protocol CalendarSettings {
     var showMonthOutline: Observable<Bool> { get }
     var showWeekNumbers: Observable<Bool> { get }
     var showLunarCalendar: Observable<Bool> { get }
+    var holidayCalendars: Observable<[String]> { get }
     var showDeclinedEvents: Observable<Bool> { get }
     var preserveSelectedDate: Observable<Bool> { get }
     var dateHoverOption: Observable<Bool> { get }
@@ -197,6 +198,7 @@ class SettingsViewModel:
     let showMonthOutline: Observable<Bool>
     let showWeekNumbers: Observable<Bool>
     let showLunarCalendar: Observable<Bool>
+    let holidayCalendars: Observable<[String]>
     let showDeclinedEvents: Observable<Bool>
     let preserveSelectedDate: Observable<Bool>
     let dateHoverOption: Observable<Bool>
@@ -368,6 +370,7 @@ class SettingsViewModel:
         showMonthOutline = localStorage.rx.observe(\.showMonthOutline)
         showWeekNumbers = localStorage.rx.observe(\.showWeekNumbers)
         showLunarCalendar = localStorage.rx.observe(\.showLunarCalendar)
+        holidayCalendars = localStorage.rx.observe(\.holidayCalendars)
         showDeclinedEvents = localStorage.rx.observe(\.showDeclinedEvents)
         preserveSelectedDate = localStorage.rx.observe(\.preserveSelectedDate)
         dateHoverOption = localStorage.rx.observe(\.dateHoverOption)

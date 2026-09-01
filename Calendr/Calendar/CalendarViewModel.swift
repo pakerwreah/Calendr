@@ -112,6 +112,7 @@ class CalendarViewModel {
                         isSelected: false,
                         isHovered: false,
                         events: [],
+                        isHoliday: false,
                         dotsStyle: dotsStyle,
                         calendar: calendar,
                         plugin: plugin?.eraseToAnyPlugin()
@@ -188,6 +189,26 @@ class CalendarViewModel {
         .distinctUntilChanged()
         .share(replay: 1)
 
+        // Check which cells are holidays
+        let cellsWithHolidays = Observable.combineLatest(
+            dateCellsObservable,
+            eventsObservable,
+            settings.holidayCalendars
+        )
+        .map { cellViewModels, events, holidayCalendars -> [CalendarCellViewModel] in
+
+            cellViewModels.map { vm in
+                vm.with(
+                    isHoliday: events.contains { event in
+                        holidayCalendars.contains(event.calendar.id)
+                        && dateProvider.calendar.isDay(vm.date, inDays: (event.start, event.end))
+                    }
+                )
+            }
+        }
+        .distinctUntilChanged()
+        .share(replay: 1)
+
         var timeZone = dateProvider.calendar.timeZone
 
         // Check if today has changed
@@ -204,7 +225,7 @@ class CalendarViewModel {
 
         // Check which cell is today
         let cellsWithIsToday = Observable.combineLatest(
-            dateCellsObservable, todayObservable
+            cellsWithHolidays, todayObservable
         )
         .map { cellViewModels, today -> [CalendarCellViewModel] in
 
@@ -214,6 +235,7 @@ class CalendarViewModel {
                 )
             }
         }
+        .distinctUntilChanged()
         .share(replay: 1)
 
         // Assign events to their respective cells
@@ -372,6 +394,7 @@ private extension CalendarCellViewModel {
         isSelected: Bool? = nil,
         isHovered: Bool? = nil,
         events: [EventModel]? = nil,
+        isHoliday: Bool? = nil,
         calendar: Calendar? = nil
     ) -> Self {
 
@@ -382,6 +405,7 @@ private extension CalendarCellViewModel {
             isSelected: isSelected ?? self.isSelected,
             isHovered: isHovered ?? self.isHovered,
             events: events ?? self.events,
+            isHoliday: isHoliday ?? self.isHoliday,
             dotsStyle: dotsStyle,
             calendar: calendar ?? self.calendar,
             plugin: plugin

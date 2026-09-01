@@ -76,6 +76,7 @@
 "settings.calendar.calendar_app_view_mode" = "Zobrazení v aplikaci Kalendář";
 "settings.calendar.default_calendar_app" = "Výchozí kalendářová aplikace";
 "settings.calendar.preferred_browser" = "Preferovaný prohlížeč";
+//"settings.calendar.holiday_calendar" = "Holiday calendar";
 
 "settings.calendar.event_dots" = "Tečky u událostí";
 "settings.calendar.event_dots.none" = "žádné";

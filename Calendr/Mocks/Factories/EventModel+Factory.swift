@@ -12,10 +12,10 @@ import Foundation
 extension EventModel {
 
     static func make(
-        id: String = "",
-        externalId: String = "",
+        id: String? = nil,
+        externalId: String? = nil,
         start: Date = Date(),
-        end: Date = Date(),
+        end: Date? = nil,
         title: String = "Title",
         location: String? = nil,
         notes: String? = nil,
@@ -31,11 +31,19 @@ extension EventModel {
         tags: [String] = []
     ) -> EventModel {
 
-        .init(
+        let id = id ?? UUID().uuidString
+
+        let externalId = externalId ?? UUID().uuidString
+
+        let end = type.isReminder
+        ? Calendar.gregorian.endOfDay(for: start)
+        : end ?? start.addingTimeInterval(3600)
+
+        return .init(
             id: id,
             externalId: externalId,
             start: start,
-            end: type.isReminder ? Calendar.gregorian.endOfDay(for: start) : end,
+            end: end,
             title: title,
             location: location,
             coordinates: nil,

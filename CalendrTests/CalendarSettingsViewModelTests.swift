@@ -39,4 +39,19 @@ class CalendarSettingsViewModelTests {
         #expect(localStorage.silencedCalendars == [])
         #expect(localStorage.hiddenEventStatusItemTitleCalendars == [])
     }
+
+    @Test func testHolidayCalendarSetting() {
+
+        #expect(viewModel.isHolidayCalendar.lastValue() == false)
+
+        viewModel.isHolidayCalendarObserver.onNext(true)
+
+        #expect(localStorage.holidayCalendars == ["calendar"])
+        #expect(viewModel.isHolidayCalendar.lastValue() == true)
+
+        viewModel.isHolidayCalendarObserver.onNext(false)
+
+        #expect(localStorage.holidayCalendars == [])
+        #expect(viewModel.isHolidayCalendar.lastValue() == false)
+    }
 }

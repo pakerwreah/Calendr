@@ -150,7 +150,7 @@ class NextEventViewModelFullScreenTests {
             .disposed(by: disposeBag)
 
         calendarService.changeEvents([
-            .make(id: "1", start: now, end: now + 1)
+            .make(id: "1", externalId: "1", start: now, end: now + 1)
         ])
 
         #expect(fullScreen != nil)
@@ -158,7 +158,7 @@ class NextEventViewModelFullScreenTests {
         let lastValue = fullScreen
 
         calendarService.changeEvents([
-            .make(id: "2", start: now, end: now + 1)
+            .make(id: "2", externalId: "1", start: now, end: now + 1)
         ])
 
         #expect(fullScreen === lastValue)
@@ -180,7 +180,7 @@ class NextEventViewModelFullScreenTests {
         let participants = [Participant.make(name: "John", status: .accepted)]
 
         calendarService.changeEvents([
-            .make(start: now, end: now + 1, participants: participants)
+            .make(id: "1", externalId: "1", start: now, end: now + 1, participants: participants)
         ])
 
         #expect(fullScreen != nil)
@@ -188,7 +188,7 @@ class NextEventViewModelFullScreenTests {
         let lastValue = fullScreen
 
         calendarService.changeEvents([
-            .make(start: now, end: now + 1, participants: [
+            .make(id: "1", externalId: "1", start: now, end: now + 1, participants: [
                 .make(name: "John", status: .declined)
             ])
         ])
@@ -210,7 +210,7 @@ class NextEventViewModelFullScreenTests {
             .disposed(by: disposeBag)
 
         calendarService.changeEvents([
-            .make(start: now, end: now + 1)
+            .make(id: "1", externalId: "1", start: now, end: now + 1)
         ])
 
         #expect(fullScreen != nil)
@@ -218,7 +218,7 @@ class NextEventViewModelFullScreenTests {
         let lastValue = fullScreen
 
         calendarService.changeEvents([
-            .make(start: now, end: now + 2)
+            .make(id: "1", externalId: "1", start: now, end: now + 2)
         ])
 
         #expect(fullScreen === lastValue)

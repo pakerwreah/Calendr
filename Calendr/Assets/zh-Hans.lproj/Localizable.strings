@@ -76,6 +76,7 @@
 "settings.calendar.calendar_app_view_mode" = "日历应用展示模式";
 "settings.calendar.default_calendar_app" = "默认日历应用";
 //"settings.calendar.preferred_browser" = "Preferred browser";
+//"settings.calendar.holiday_calendar" = "Holiday calendar";
 
 "settings.calendar.event_dots" = "日程标记";
 "settings.calendar.event_dots.none" = "不显示";
