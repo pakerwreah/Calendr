@@ -8,31 +8,40 @@
 import AppKit
 
 struct ChineseCalendarCellPlugin: CalendarCellPlugin {
-    let text: String?
-    let textColor: NSColor?
-    let font: NSFont?
+    private(set) var text: String?
+    private(set) var textColor: NSColor?
+    private(set) var font: NSFont?
+
+    let replaceHoliday = true
     let spacing: CGFloat? = 1
 
-    init(for date: Date) {
+    init(for date: Date, isHoliday: Bool, events: [String]) {
 
-        let lunarDate = ChineseLunarDate(from: date)
-        let solarTerm = ChineseSolarTerm(from: date)
-
-        let isMonthStart = lunarDate?.isMonthStart == true
-
-        text = solarTerm?.text ?? lunarDate?.text
-
-        textColor = solarTerm != nil
-        ? .systemBrown.withAlphaComponent(0.85)
-        : isMonthStart
-        ? .labelColor
-        : .secondaryLabelColor
+        guard let lunarDate = ChineseLunarDate(from: date) else { return }
 
         font = .systemFont(
-            ofSize: 9,
-            weight: isMonthStart ? .semibold : .regular
+            ofSize: Contants.fontSize,
+            weight: lunarDate.isMonthStart ? .semibold : .regular
         )
+
+        if isHoliday, let holiday = events.firstNonNil(ChineseHoliday.init) {
+            text = holiday.text
+            textColor = .systemRed
+        }
+        else if let solarTerm = ChineseSolarTerm(from: date) {
+            text = solarTerm.text
+            textColor = .systemBrown.withAlphaComponent(0.85)
+        }
+        else {
+            text = lunarDate.text
+            textColor = .secondaryLabelColor
+        }
     }
 
     static let cellSize: CGSize = .init(width: 30, height: 38)
+}
+
+private enum Contants {
+
+    static let fontSize: CGFloat = 9
 }

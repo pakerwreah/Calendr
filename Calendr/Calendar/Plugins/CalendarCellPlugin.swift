@@ -12,6 +12,8 @@ protocol CalendarCellPlugin: Equatable {
     var textColor: NSColor? { get }
     var font: NSFont? { get }
     var spacing: CGFloat? { get }
+    /// prevents default holiday highlight
+    var replaceHoliday: Bool { get }
 }
 
 extension CalendarCellPlugin {
@@ -19,6 +21,7 @@ extension CalendarCellPlugin {
     var textColor: NSColor? { nil }
     var font: NSFont? { nil }
     var spacing: CGFloat? { nil }
+    var replaceHoliday: Bool { false }
 }
 
 struct AnyCalendarCellPlugin: CalendarCellPlugin {
@@ -26,6 +29,7 @@ struct AnyCalendarCellPlugin: CalendarCellPlugin {
     let textColor: NSColor?
     let font: NSFont?
     let spacing: CGFloat?
+    let replaceHoliday: Bool
 }
 
 extension CalendarCellPlugin {
@@ -35,7 +39,8 @@ extension CalendarCellPlugin {
             text: text,
             textColor: textColor,
             font: font,
-            spacing: spacing
+            spacing: spacing,
+            replaceHoliday: replaceHoliday
         )
     }
 }

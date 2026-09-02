@@ -52,4 +52,13 @@ extension Collection {
         }
         return result
     }
+
+    func firstNonNil<T>(_ transform: (Element) throws -> T?) rethrows -> T? {
+        for value in self {
+            if let value = try transform(value) {
+                return value
+            }
+        }
+        return nil
+    }
 }

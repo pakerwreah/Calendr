@@ -36,7 +36,7 @@ extension CalendarCellViewModel {
     }
 
     var textColor: NSColor {
-        isHoliday ? .systemRed : .headerTextColor
+        isHoliday && plugin?.replaceHoliday != true ? .systemRed : .headerTextColor
     }
 
     var borderColor: NSColor {

@@ -69,7 +69,7 @@ class MockCalendarSettings: CalendarSettings {
         highlightedWeekdays: [Int] = [0, 6],
         showMonthOutline: Bool = false,
         showWeekNumbers: Bool = false,
-        showLunarCalendar: Bool = true,
+        showLunarCalendar: Bool = false,
         holidayCalendars: [String] = [],
         weekCount: Int = 6,
         eventDotsStyle: EventDotsStyle = .multiple,

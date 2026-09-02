@@ -32,60 +32,36 @@ extension ChineseLunarDate {
         let monthName = chineseMonthName(month: month, isLeapMonth: isLeapMonth)
         let dayName = chineseDayName(day: day)
 
+        self.fullText = monthName + dayName
+
         if day == 1 {
-            self.init(text: monthName, fullText: monthName + dayName, isMonthStart: true)
+            self.text = monthName
+            self.isMonthStart = true
         } else {
-            self.init(text: dayName, fullText: monthName + dayName, isMonthStart: false)
+            self.text = dayName
+            self.isMonthStart = false
         }
     }
 }
 
+private let monthNames = [
+    "正月", "二月", "三月", "四月", "五月", "六月",
+    "七月", "八月", "九月", "十月", "冬月", "腊月"
+]
+
+private let dayNames = [
+    "初一", "初二", "初三", "初四", "初五", "初六", "初七", "初八", "初九", "初十",
+    "十一", "十二", "十三", "十四", "十五", "十六", "十七", "十八", "十九", "二十",
+    "廿一", "廿二", "廿三", "廿四", "廿五", "廿六", "廿七", "廿八", "廿九", "三十"
+]
+
 /// Convert a lunar day number (1-30) to Chinese numerals.
 private func chineseDayName(day: Int) -> String {
-    switch day {
-    case 1: return "初一"
-    case 2: return "初二"
-    case 3: return "初三"
-    case 4: return "初四"
-    case 5: return "初五"
-    case 6: return "初六"
-    case 7: return "初七"
-    case 8: return "初八"
-    case 9: return "初九"
-    case 10: return "初十"
-    case 11: return "十一"
-    case 12: return "十二"
-    case 13: return "十三"
-    case 14: return "十四"
-    case 15: return "十五"
-    case 16: return "十六"
-    case 17: return "十七"
-    case 18: return "十八"
-    case 19: return "十九"
-    case 20: return "二十"
-    case 21: return "廿一"
-    case 22: return "廿二"
-    case 23: return "廿三"
-    case 24: return "廿四"
-    case 25: return "廿五"
-    case 26: return "廿六"
-    case 27: return "廿七"
-    case 28: return "廿八"
-    case 29: return "廿九"
-    case 30: return "三十"
-    default: return ""
-    }
+    dayNames[day - 1]
 }
 
 /// Convert a lunar month number (1-12) to Chinese month name.
 private func chineseMonthName(month: Int, isLeapMonth: Bool) -> String {
-    let monthNames = ["正月", "二月", "三月", "四月", "五月", "六月",
-                      "七月", "八月", "九月", "十月", "冬月", "腊月"]
-    
-    guard month >= 1 && month <= 12 else {
-        return ""
-    }
-    
     let monthName = monthNames[month - 1]
     return isLeapMonth ? "闰\(monthName)" : monthName
 }

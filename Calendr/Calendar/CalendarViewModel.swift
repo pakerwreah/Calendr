@@ -85,9 +85,8 @@ class CalendarViewModel {
                 dateRangeObservable,
                 calendarUpdated,
                 settings.eventDotsStyle,
-                settings.showLunarCalendar
             )
-            .map { weeksCount, month, calendar, dotsStyle, showLunarCalendar -> [CalendarCellViewModel] in
+            .map { weeksCount, month, calendar, dotsStyle -> [CalendarCellViewModel] in
 
                 let monthStartWeekDay = calendar.component(.weekday, from: month.start)
 
@@ -101,10 +100,6 @@ class CalendarViewModel {
                     let date = calendar.date(byAdding: .day, value: day, to: start)!
                     let inMonth = calendar.isDate(date, equalTo: month.start, toGranularity: .month)
 
-                    let plugin: (any CalendarCellPlugin)? = showLunarCalendar
-                        ? ChineseCalendarCellPlugin(for: date)
-                        : nil
-
                     return CalendarCellViewModel(
                         date: date,
                         inMonth: inMonth,
@@ -115,7 +110,7 @@ class CalendarViewModel {
                         isHoliday: false,
                         dotsStyle: dotsStyle,
                         calendar: calendar,
-                        plugin: plugin?.eraseToAnyPlugin()
+                        plugin: nil
                     )
                 }
             }
@@ -209,6 +204,45 @@ class CalendarViewModel {
         .distinctUntilChanged()
         .share(replay: 1)
 
+        // Apply plugins
+        let cellsWithPlugins = Observable.combineLatest(
+            cellsWithHolidays,
+            eventsObservable,
+            settings.showLunarCalendar
+        )
+        .map {
+            cellViewModels,
+            events,
+            showLunarCalendar -> [CalendarCellViewModel] in
+
+            cellViewModels.map { vm in
+
+                let events = events.filter {
+                    dateProvider.calendar.isDay(vm.date, inDays: ($0.start, $0.end))
+                }
+
+                let plugin: (any CalendarCellPlugin)? = {
+                    if showLunarCalendar {
+                        return ChineseCalendarCellPlugin(
+                            for: vm.date,
+                            isHoliday: vm.isHoliday,
+                            events: events.map(\.title)
+                        )
+                    }
+                    return nil
+                }()
+
+                guard let plugin else {
+                    return vm
+                }
+                return vm.with(
+                    plugin: plugin.eraseToAnyPlugin(),
+                )
+            }
+        }
+        .distinctUntilChanged()
+        .share(replay: 1)
+
         var timeZone = dateProvider.calendar.timeZone
 
         // Check if today has changed
@@ -225,7 +259,7 @@ class CalendarViewModel {
 
         // Check which cell is today
         let cellsWithIsToday = Observable.combineLatest(
-            cellsWithHolidays, todayObservable
+            cellsWithPlugins, todayObservable
         )
         .map { cellViewModels, today -> [CalendarCellViewModel] in
 
@@ -395,7 +429,8 @@ private extension CalendarCellViewModel {
         isHovered: Bool? = nil,
         events: [EventModel]? = nil,
         isHoliday: Bool? = nil,
-        calendar: Calendar? = nil
+        calendar: Calendar? = nil,
+        plugin: AnyCalendarCellPlugin? = nil
     ) -> Self {
 
         CalendarCellViewModel(
@@ -408,7 +443,7 @@ private extension CalendarCellViewModel {
             isHoliday: isHoliday ?? self.isHoliday,
             dotsStyle: dotsStyle,
             calendar: calendar ?? self.calendar,
-            plugin: plugin
+            plugin: plugin ?? self.plugin
         )
     }
 }
