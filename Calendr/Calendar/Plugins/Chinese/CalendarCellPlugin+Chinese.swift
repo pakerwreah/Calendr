@@ -15,7 +15,7 @@ struct ChineseCalendarCellPlugin: CalendarCellPlugin {
     let replaceHoliday = true
     let spacing: CGFloat? = 1
 
-    init(for date: Date, isHoliday: Bool, events: [String]) {
+    init(for date: Date, holidays: [String]) {
 
         guard let lunarDate = ChineseLunarDate(from: date) else { return }
 
@@ -24,7 +24,7 @@ struct ChineseCalendarCellPlugin: CalendarCellPlugin {
             weight: lunarDate.isMonthStart ? .semibold : .regular
         )
 
-        if isHoliday, let holiday = events.firstNonNil(ChineseHoliday.init) {
+        if let holiday = holidays.firstNonNil(ChineseHoliday.init) {
             text = holiday.text
             textColor = .systemRed
         }

@@ -184,19 +184,27 @@ class CalendarViewModel {
         .distinctUntilChanged()
         .share(replay: 1)
 
-        // Check which cells are holidays
-        let cellsWithHolidays = Observable.combineLatest(
-            dateCellsObservable,
+        let holidayEventsObservable = Observable.combineLatest(
             eventsObservable,
             settings.holidayCalendars
         )
-        .map { cellViewModels, events, holidayCalendars -> [CalendarCellViewModel] in
+        .map { events, holidayCalendars in
+            events.filter { holidayCalendars.contains($0.calendar.id) }
+        }
+        .distinctUntilChanged()
+        .share(replay: 1)
+
+        // Check which cells are holidays
+        let cellsWithHolidays = Observable.combineLatest(
+            dateCellsObservable,
+            holidayEventsObservable
+        )
+        .map { cellViewModels, holidays -> [CalendarCellViewModel] in
 
             cellViewModels.map { vm in
                 vm.with(
-                    isHoliday: events.contains { event in
-                        holidayCalendars.contains(event.calendar.id)
-                        && dateProvider.calendar.isDay(vm.date, inDays: (event.start, event.end))
+                    isHoliday: holidays.contains { event in
+                        dateProvider.calendar.isDay(vm.date, inDays: (event.start, event.end))
                     }
                 )
             }
@@ -207,17 +215,17 @@ class CalendarViewModel {
         // Apply plugins
         let cellsWithPlugins = Observable.combineLatest(
             cellsWithHolidays,
-            eventsObservable,
+            holidayEventsObservable,
             settings.showLunarCalendar
         )
         .map {
             cellViewModels,
-            events,
+            holidays,
             showLunarCalendar -> [CalendarCellViewModel] in
 
             cellViewModels.map { vm in
 
-                let events = events.filter {
+                let dateHolidays = holidays.filter {
                     dateProvider.calendar.isDay(vm.date, inDays: ($0.start, $0.end))
                 }
 
@@ -225,8 +233,7 @@ class CalendarViewModel {
                     if showLunarCalendar {
                         return ChineseCalendarCellPlugin(
                             for: vm.date,
-                            isHoliday: vm.isHoliday,
-                            events: events.map(\.title)
+                            holidays: dateHolidays.map(\.title)
                         )
                     }
                     return nil

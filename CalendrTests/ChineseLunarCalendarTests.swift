@@ -132,7 +132,7 @@ import Testing
         // 2026-02-17 is Chinese New Year (正月)
         let date: Date = .make(year: 2026, month: 2, day: 17)
 
-        let plugin = makePlugin(for: date, isHoliday: true, events: ["春节"])
+        let plugin = makePlugin(for: date, holidays: ["春节"])
         #expect(plugin.text == "春节")
         #expect(plugin.textColor == .systemRed)
     }
@@ -141,37 +141,45 @@ import Testing
         // 2026-02-18 is 雨水
         let date: Date = .make(year: 2026, month: 2, day: 18)
 
-        let plugin = makePlugin(for: date, isHoliday: true, events: ["春节"])
+        let plugin = makePlugin(for: date, holidays: ["春节"])
         #expect(plugin.text == "春节")
         #expect(plugin.textColor == .systemRed)
-    }
-
-    @Test func testHolidayIgnoredWhenCellIsNotHoliday() {
-        let date: Date = .make(year: 2026, month: 2, day: 17)
-
-        let plugin = makePlugin(for: date, isHoliday: false, events: ["春节"])
-        #expect(plugin.text == "正月")
-        #expect(plugin.textColor == .secondaryLabelColor)
     }
 
     @Test func testHolidayIgnoredWhenEventsDoNotMatch() {
         let date: Date = .make(year: 2026, month: 2, day: 17)
 
-        let plugin = makePlugin(for: date, isHoliday: true, events: ["Some event"])
+        let plugin = makePlugin(for: date, holidays: ["Some holiday"])
         #expect(plugin.text == "正月")
     }
 
     @Test func testHolidayUsesFirstMatchingEvent() {
         let date: Date = .make(year: 2026, month: 2, day: 17)
 
-        let plugin = makePlugin(for: date, isHoliday: true, events: ["Meeting", "春节补班", "春节", "元旦"])
+        let plugin = makePlugin(for: date, holidays: ["Meeting", "春节补班", "春节", "元旦"])
         #expect(plugin.text == "春节")
+    }
+
+    @Test func testHolidayPlugin_withChineseHolidayFromRegularCalendar_shouldNotDisplayChineseHoliday() {
+        let date: Date = .make(year: 2026, month: 2, day: 17)
+
+        let plugin = makeViewModel(for: date, events: ["春节"])
+        #expect(plugin.plugin?.text == "正月")
+        #expect(plugin.plugin?.textColor == .secondaryLabelColor)
+    }
+
+    @Test func testHolidayPlugin_withChineseHolidayFromRegularCalendar_withGregorianHoliday_shouldNotDisplayChineseHoliday() {
+        let date: Date = .make(year: 2026, month: 2, day: 17)
+
+        let plugin = makeViewModel(for: date, events: ["春节"], holidays: ["Holiday"])
+        #expect(plugin.plugin?.text == "正月")
+        #expect(plugin.plugin?.textColor == .secondaryLabelColor)
     }
 
     @Test func testHolidayPlugin_doesNotHighlightGregorianDay() {
         let date: Date = .make(year: 2026, month: 2, day: 17)
 
-        let vm = makeViewModel(for: date, isHoliday: true, events: ["春节"])
+        let vm = makeViewModel(for: date, holidays: ["春节"])
 
         #expect(vm.text == "17")
         #expect(vm.textColor == .headerTextColor)
@@ -182,29 +190,30 @@ import Testing
 
     private func makePlugin(
         for date: Date,
-        isHoliday: Bool = false,
-        events: [String] = []
+        holidays: [String] = []
     ) -> ChineseCalendarCellPlugin {
-        ChineseCalendarCellPlugin(for: date, isHoliday: isHoliday, events: events)
+        ChineseCalendarCellPlugin(for: date, holidays: holidays)
     }
 
     private func makeViewModel(
         for date: Date,
-        isHoliday: Bool = false,
-        events: [String] = []
+        events: [String] = [],
+        holidays: [String] = []
     ) -> CalendarCellViewModel {
-        let plugin = makePlugin(for: date, isHoliday: isHoliday, events: events)
-        return CalendarCellViewModel(
+        .init(
             date: date,
             inMonth: true,
             isToday: false,
             isSelected: false,
             isHovered: false,
-            events: [],
-            isHoliday: isHoliday,
+            events: events.map { .make(title: $0) },
+            isHoliday: !holidays.isEmpty,
             dotsStyle: .none,
             calendar: calendar,
-            plugin: plugin.eraseToAnyPlugin()
+            plugin: ChineseCalendarCellPlugin(
+                for: date,
+                holidays: holidays
+            ).eraseToAnyPlugin()
         )
     }
 }
