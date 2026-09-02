@@ -158,7 +158,7 @@
 //"event.editor.alert.1_day_before" = "1 day before";
 //"event.editor.alert.2_days_before" = "2 days before";
 
-//"reminder.editor.headline" = "Nuovo promemoria";
+"reminder.editor.headline" = "Nuovo promemoria";
 
 //"map_black_list.headline" = "Hide map if location contains any of these words";
 //"map_black_list.new_item_text" = "New Item";
