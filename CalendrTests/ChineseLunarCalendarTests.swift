@@ -6,6 +6,7 @@
 //  Authored by Boni (imboni)
 //
 
+import AppKit
 import Foundation
 import Testing
 @testable import Calendr
@@ -95,12 +96,104 @@ import Testing
         #expect(plugin.text == "雨水")
     }
 
-    private func makePlugin(for date: Date) -> ChineseCalendarCellPlugin {
-        ChineseCalendarCellPlugin(for: date)
+    @Test(arguments: [
+        ("元旦", "元旦"),
+        ("除夕", "除夕"),
+        ("春节", "春节"),
+        ("春节假期", "春节"),
+        ("清明", "清明"),
+        ("清明节", "清明"),
+        ("劳动", "劳动节"),
+        ("劳动节", "劳动节"),
+        ("端午", "端午节"),
+        ("端午节", "端午节"),
+        ("中秋", "中秋节"),
+        ("中秋节", "中秋节"),
+        ("国庆", "国庆节"),
+        ("国庆节", "国庆节"),
+    ])
+    func testHolidayMapping(_ title: String, _ expected: String) {
+        #expect(ChineseHoliday(from: title)?.text == expected)
     }
 
-    private func makeViewModel(for date: Date) -> CalendarCellViewModel {
-        let plugin = makePlugin(for: date)
+    @Test(arguments: [
+        "",
+        "圣诞节",
+        "Holiday",
+        "春节补班",
+        "国庆节调休上班",
+        "班",
+    ])
+    func testHolidayMapping_returnsNil(_ title: String) {
+        #expect(ChineseHoliday(from: title) == nil)
+    }
+
+    @Test func testHolidayShouldSupersedeLunarDay() {
+        // 2026-02-17 is Chinese New Year (正月)
+        let date: Date = .make(year: 2026, month: 2, day: 17)
+
+        let plugin = makePlugin(for: date, isHoliday: true, events: ["春节"])
+        #expect(plugin.text == "春节")
+        #expect(plugin.textColor == .systemRed)
+    }
+
+    @Test func testHolidayShouldSupersedeSolarTerm() {
+        // 2026-02-18 is 雨水
+        let date: Date = .make(year: 2026, month: 2, day: 18)
+
+        let plugin = makePlugin(for: date, isHoliday: true, events: ["春节"])
+        #expect(plugin.text == "春节")
+        #expect(plugin.textColor == .systemRed)
+    }
+
+    @Test func testHolidayIgnoredWhenCellIsNotHoliday() {
+        let date: Date = .make(year: 2026, month: 2, day: 17)
+
+        let plugin = makePlugin(for: date, isHoliday: false, events: ["春节"])
+        #expect(plugin.text == "正月")
+        #expect(plugin.textColor == .secondaryLabelColor)
+    }
+
+    @Test func testHolidayIgnoredWhenEventsDoNotMatch() {
+        let date: Date = .make(year: 2026, month: 2, day: 17)
+
+        let plugin = makePlugin(for: date, isHoliday: true, events: ["Some event"])
+        #expect(plugin.text == "正月")
+    }
+
+    @Test func testHolidayUsesFirstMatchingEvent() {
+        let date: Date = .make(year: 2026, month: 2, day: 17)
+
+        let plugin = makePlugin(for: date, isHoliday: true, events: ["Meeting", "春节补班", "春节", "元旦"])
+        #expect(plugin.text == "春节")
+    }
+
+    @Test func testHolidayPlugin_doesNotHighlightGregorianDay() {
+        let date: Date = .make(year: 2026, month: 2, day: 17)
+
+        let vm = makeViewModel(for: date, isHoliday: true, events: ["春节"])
+
+        #expect(vm.text == "17")
+        #expect(vm.textColor == .headerTextColor)
+        #expect(vm.plugin?.text == "春节")
+        #expect(vm.plugin?.textColor == .systemRed)
+        #expect(vm.plugin?.replaceHoliday == true)
+    }
+
+    private func makePlugin(
+        for date: Date,
+        isHoliday: Bool = false,
+        events: [String] = []
+    ) -> ChineseCalendarCellPlugin {
+        ChineseCalendarCellPlugin(for: date, isHoliday: isHoliday, events: events)
+    }
+
+    private func makeViewModel(
+        for date: Date,
+        isHoliday: Bool = false,
+        events: [String] = []
+    ) -> CalendarCellViewModel {
+        let plugin = makePlugin(for: date, isHoliday: isHoliday, events: events)
         return CalendarCellViewModel(
             date: date,
             inMonth: true,
@@ -108,7 +201,7 @@ import Testing
             isSelected: false,
             isHovered: false,
             events: [],
-            isHoliday: false,
+            isHoliday: isHoliday,
             dotsStyle: .none,
             calendar: calendar,
             plugin: plugin.eraseToAnyPlugin()

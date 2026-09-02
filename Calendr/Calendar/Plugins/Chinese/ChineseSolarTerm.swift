@@ -28,11 +28,13 @@ extension ChineseSolarTerm {
         let year = shanghaiCalendar.component(.year, from: date)
         for yearToCheck in [year - 1, year] {
             for index in solarTermNames.indices {
-                guard let termDate = dateOfSolarTerm(year: yearToCheck, index: index) else { continue }
-                if shanghaiCalendar.isDate(date, inSameDayAs: termDate) {
-                    self.init(text: solarTermNames[index])
-                    return
-                }
+                guard
+                    let termDate = dateOfSolarTerm(year: yearToCheck, index: index),
+                    shanghaiCalendar.isDate(date, inSameDayAs: termDate)
+                else { continue }
+
+                self.text = solarTermNames[index]
+                return
             }
         }
         return nil
