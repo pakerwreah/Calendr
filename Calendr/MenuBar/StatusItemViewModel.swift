@@ -62,6 +62,7 @@ class StatusItemViewModel {
                     .events(from: start, to: end, calendars: calendars)
                     .map { $0.contains(where: \.type.isBirthday) }
             }
+            .startWith(false)
 
         let localeChangeObservable = notificationCenter.rx
             .notification(NSLocale.currentLocaleDidChangeNotification)
