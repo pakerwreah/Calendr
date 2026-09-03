@@ -50,6 +50,7 @@ protocol CalendarServiceProviding {
     @MainActor func requestAccess()
 }
 
+// NOTE: make sure every public method responds on MainScheduler
 class CalendarServiceProvider: CalendarServiceProviding {
 
     private let dateProvider: DateProviding
@@ -175,7 +176,9 @@ class CalendarServiceProvider: CalendarServiceProviding {
 
     func calendars() -> Single<[CalendarModel]> {
 
-        storeCalendars().map { $0.map(CalendarModel.init(from:)) }
+        storeCalendars()
+            .map { $0.map(CalendarModel.init(from:)) }
+            .observe(on: MainScheduler.instance)
     }
 
     func calendars(forNew type: CalendarEntityType) -> Single<[CalendarModel]> {
@@ -202,6 +205,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
             return Disposables.create()
         }
         .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+        .observe(on: MainScheduler.instance)
     }
 
     func defaultCalendar(forNew type: CalendarEntityType) -> CalendarModel? {
@@ -224,6 +228,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
                 )
                 .map(+)
             }
+            .observe(on: MainScheduler.instance)
     }
 
     private func fetchEvents(from start: Date, to end: Date, calendars: [EKCalendar]) -> Single<[EventModel]> {
@@ -312,6 +317,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
             return Disposables.create()
         }
         .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+        .observe(on: MainScheduler.instance)
     }
 
     func createEvent(
@@ -356,6 +362,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
             return Disposables.create()
         }
         .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+        .observe(on: MainScheduler.instance)
     }
 
     func completeReminder(id: String, complete: Bool) -> Completable {
@@ -375,6 +382,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
             return Disposables.create()
         }
         .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+        .observe(on: MainScheduler.instance)
     }
 
     func rescheduleReminder(id: String, to date: Date, isAllDay: Bool) -> Completable {
@@ -401,6 +409,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
             return Disposables.create()
         }
         .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+        .observe(on: MainScheduler.instance)
     }
 
     func changeEventStatus(id: String, date: Date, to status: EventStatus) -> Completable {
@@ -461,6 +470,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
             return disposable
         }
         .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+        .observe(on: MainScheduler.instance)
     }
 
     func deleteEvent(id: String, date: Date, scope: EventDeletionScope) -> Completable {
@@ -482,6 +492,7 @@ class CalendarServiceProvider: CalendarServiceProviding {
             return Disposables.create()
         }
         .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+        .observe(on: MainScheduler.instance)
     }
 
     private func dueDateComponents(for date: Date, isAllDay: Bool) -> DateComponents {
