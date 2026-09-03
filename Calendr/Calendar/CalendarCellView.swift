@@ -183,13 +183,11 @@ class CalendarCellView: NSView {
         /// Because of that, we have to calculate the time difference between single clicks and trigger the double click ourselves:
         ///
         /// Expected behavior:
-        ///  - If the user clicked a date in the current month, immediately fire the single click and the double click later, if detected.
-        ///  - If the user clicked a date in another month, wait for the double click. If detected, cancel the single click.
-        ///
-        /// That avoids changing months during the double click, which ends up opening the system calendar in the wrong date.
+        ///  - Immediately fire single-click. Only double-click later if the cell date didn't change.
+        ///  - If the user clicks a date in another month, the date will change, so the double-click won't fire.
 
         var lastClickTimestamp: TimeInterval = 0
-        var workItem: DispatchWorkItem?
+        var lastClickDate: Date?
 
         rx.click
             .withLatestFrom(viewModel)
@@ -197,21 +195,14 @@ class CalendarCellView: NSView {
                 let currentTimestamp = CACurrentMediaTime()
                 let doubleClicked = currentTimestamp - lastClickTimestamp < NSEvent.doubleClickInterval
 
-                if vm.inMonth {
-                    clickObserver.onNext(vm.date)
-                } else if !doubleClicked {
-                    workItem = DispatchWorkItem {
-                        clickObserver.onNext(vm.date)
-                    }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + NSEvent.doubleClickInterval, execute: workItem!)
-                }
-
-                if doubleClicked {
-                    workItem?.cancel()
+                if doubleClicked, vm.date == lastClickDate {
                     doubleClickObserver.onNext(vm.date)
+                } else {
+                    clickObserver.onNext(vm.date)
                 }
 
                 lastClickTimestamp = currentTimestamp
+                lastClickDate = vm.date
             }
             .disposed(by: disposeBag)
 
