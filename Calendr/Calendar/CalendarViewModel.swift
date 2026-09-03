@@ -161,6 +161,8 @@ class CalendarViewModel {
                 calendars: calendars
             )
         }
+        .optional()
+        .startWith(nil)
         .distinctUntilChanged()
         .share(replay: 1)
 
@@ -171,7 +173,7 @@ class CalendarViewModel {
             searchObservable
         )
         .map { events, showDeclinedEvents, showAllDayEvents, searchTerm in
-            events.filter {
+            events?.filter {
                 (showDeclinedEvents || $0.status != .declined)
                 &&
                 (showAllDayEvents || !$0.isAllDay)
@@ -179,8 +181,6 @@ class CalendarViewModel {
                 (searchTerm.isEmpty || EventSearch.search(searchTerm, in: $0))
             }
         }
-        .optional()
-        .startWith(nil)
         .distinctUntilChanged()
         .share(replay: 1)
 
@@ -189,7 +189,7 @@ class CalendarViewModel {
             settings.holidayCalendars
         )
         .map { events, holidayCalendars in
-            events.filter { holidayCalendars.contains($0.calendar.id) }
+            events?.filter { holidayCalendars.contains($0.calendar.id) }
         }
         .distinctUntilChanged()
         .share(replay: 1)
@@ -201,7 +201,9 @@ class CalendarViewModel {
         )
         .map { cellViewModels, holidays -> [CalendarCellViewModel] in
 
-            cellViewModels.map { vm in
+            guard let holidays else { return cellViewModels }
+
+            return cellViewModels.map { vm in
                 vm.with(
                     isHoliday: holidays.contains { event in
                         dateProvider.calendar.isDay(vm.date, inDays: (event.start, event.end))
@@ -225,9 +227,9 @@ class CalendarViewModel {
 
             cellViewModels.map { vm in
 
-                let dateHolidays = holidays.filter {
+                let dateHolidays = holidays?.filter {
                     dateProvider.calendar.isDay(vm.date, inDays: ($0.start, $0.end))
-                }
+                } ?? []
 
                 let plugin: (any CalendarCellPlugin)? = {
                     if showLunarCalendar {
