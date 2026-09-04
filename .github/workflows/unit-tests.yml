@@ -33,8 +33,6 @@ jobs:
             .build
             ~/Library/Caches/org.swift.swiftpm
           key: ${{ runner.os }}-spm-${{ hashFiles('Package.resolved') }}
-          restore-keys: |
-            ${{ runner.os }}-spm-
 
       - name: Test
         run: |
