@@ -1,4 +1,4 @@
-name: Unit Tests
+name: Checks
 
 on:
   push:
@@ -13,9 +13,9 @@ concurrency:
 
 jobs:
   unit-tests:
-    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
-    name: ${{ github.workflow }}
-    runs-on: macos-26
+    if: &not-draft github.event_name != 'pull_request' || github.event.pull_request.draft == false
+    name: Unit Tests
+    runs-on: &macos macos-26
     permissions:
       checks: write
     env:
@@ -29,15 +29,23 @@ jobs:
         run: |
           set -o pipefail && swift test --xunit-output=./report.xml
 
-      - name: Check assemble.env
-        if: success() || failure()
-        run: |
-          ./assemble.sh env
-          git diff --exit-code -- assemble.env
-
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v6
         if: success() || failure()
         with:
           check_name: 'Test Report'
           report_paths: './report.xml'
+
+  assemble-env:
+    if: *not-draft
+    name: Assemble env
+    runs-on: *macos
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Check assemble.env
+        run: |
+          ./assemble.sh env
+          git diff --exit-code -- assemble.env
