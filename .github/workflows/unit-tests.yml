@@ -30,8 +30,7 @@ jobs:
         uses: actions/cache@v6
         with:
           path: |
-            .build/checkouts
-            .build/repositories
+            .build
             ~/Library/Caches/org.swift.swiftpm
           key: ${{ runner.os }}-spm-${{ hashFiles('Package.resolved') }}
           restore-keys: |
@@ -39,7 +38,7 @@ jobs:
 
       - name: Test
         run: |
-          set -o pipefail && swift test --skip-update --xunit-output=./report.xml
+          set -o pipefail && swift test --xunit-output=./report.xml
 
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v6
