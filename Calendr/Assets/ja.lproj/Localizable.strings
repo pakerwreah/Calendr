@@ -46,28 +46,28 @@
 
 "settings.menu_bar.show_icon" = "アイコンを表示";
 "settings.menu_bar.show_date" = "日付を表示";
-//"settings.menu_bar.show_lunar_date" = "Show lunar date";
+"settings.menu_bar.show_lunar_date" = "中国旧暦の日付を表示";
 "settings.menu_bar.date_format_custom" = "カスタム";
 
-//"settings.menu_bar.background" = "Background";
-//"settings.menu_bar.background.transparent" = "transparent";
-//"settings.menu_bar.background.opaque" = "opaque";
-//"settings.menu_bar.background.outline" = "outline";
+"settings.menu_bar.background" = "背景";
+"settings.menu_bar.background.transparent" = "透明";
+"settings.menu_bar.background.opaque" = "塗りつぶし";
+"settings.menu_bar.background.outline" = "枠線";
 
 "settings.next_event" = "次の予定";
 "settings.next_event.show_next_event" = "次の予定をメニューバーに表示";
-//"settings.next_event.show_next_event_title" = "Show next event title";
+"settings.next_event.show_next_event_title" = "次の予定のタイトルを表示";
 "settings.next_event.grab_attention" = "予定が近づいたら";
 "settings.next_event.grab_attention.flashing" = "点滅させる";
 "settings.next_event.grab_attention.sound" = "音を鳴らす";
-//"settings.next_event.grab_attention.start_at_5min" = "Start at 5 min";
+"settings.next_event.grab_attention.start_at_5min" = "5分前から通知";
 "settings.next_event.show_full_screen_alert" = "フルスクリーンの通知を表示";
 "settings.next_event.detect_notch" = "ノッチがある場合に短くする";
 
 "settings.calendar" = "カレンダー";
 "settings.calendar.show_month_outline" = "枠線を表示";
 "settings.calendar.show_week_numbers" = "週番号を表示";
-//"settings.calendar.show_lunar_calendar" = "Show lunar calendar";
+"settings.calendar.show_lunar_calendar" = "中国旧暦を表示";
 "settings.calendar.preserve_selected_date" = "選択した日付を保持";
 "settings.calendar.show_declined_events" = "辞退した予定を表示";
 "settings.calendar.show_declined_events_tooltip" = "ネイティブのカレンダーアプリでもこの設定が有効になっている必要があります。";
@@ -75,8 +75,8 @@
 "settings.calendar.week_count" = "表示する週の数";
 "settings.calendar.calendar_app_view_mode" = "カレンダーの表示";
 "settings.calendar.default_calendar_app" = "使用するカレンダーアプリ";
-//"settings.calendar.preferred_browser" = "Preferred browser";
-//"settings.calendar.holiday_calendar" = "Holiday calendar";
+"settings.calendar.preferred_browser" = "使用するブラウザ";
+"settings.calendar.holiday_calendar" = "祝日として表示";
 
 "settings.calendar.event_dots" = "予定のドット";
 "settings.calendar.event_dots.none" = "なし";
@@ -94,7 +94,7 @@
 "settings.events.force_local_time_zone" = "すべての予定を端末のタイムゾーンで表示";
 "settings.events.show_event_list_summary" = "件数の概要を表示";
 "settings.events.show_future_events" = "未来の予定を表示";
-//"settings.events.natural_language_input" = "Natural-language input (English)";
+"settings.events.natural_language_input" = "自然言語による入力 (英語)";
 
 "settings.appearance.transparency" = "透明度";
 "settings.appearance.accessibility" = "アクセシビリティ";
@@ -124,9 +124,9 @@
 "formatter.date.relative.left" = "残り%@";
 
 "formatter.events.plural" = "%@件の予定";
-//"formatter.events.singular" = "1 event";
+"formatter.events.singular" = "1件の予定";
 "formatter.reminders.plural" = "%@件のリマインダー";
-//"formatter.reminders.singular" = "1 reminder";
+"formatter.reminders.singular" = "1件のリマインダー";
 
 "reminder.status.overdue" = "期限超過";
 
@@ -180,14 +180,14 @@
 "event.action.accept" = "承諾する";
 "event.action.maybe" = "仮承諾";
 "event.action.decline" = "辞退する";
-//"event.action.delete" = "Delete";
+"event.action.delete" = "削除";
 
-//"event.delete.title" = "Delete Event";
-//"event.delete.message" = "Do you want to delete this and all future occurrences of this event, or only the selected occurrence?";
-//"event.delete.single_message" = "Are you sure you want to delete this event?";
-//"event.delete.this_event" = "Delete Only This Event";
-//"event.delete.future_events" = "Delete All Future Events";
-//"event.delete.cancel" = "Cancel";
+"event.delete.title" = "予定を削除";
+"event.delete.message" = "これは繰り返しの予定です。すべての今後の予定を削除しますか、それともこの予定のみ削除しますか？";
+"event.delete.single_message" = "この予定を削除してもよろしいですか？";
+"event.delete.this_event" = "この予定のみ削除";
+"event.delete.future_events" = "すべての今後の予定を削除";
+"event.delete.cancel" = "キャンセル";
 
 "event_list.summary.agenda" = "今日";
 
