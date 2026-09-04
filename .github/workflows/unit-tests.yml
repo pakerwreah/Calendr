@@ -25,6 +25,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Restore file mtimes
+        run: python3 .github/workflows/restore-mtimes.py
 
       - name: Cache SPM
         uses: actions/cache@v6
