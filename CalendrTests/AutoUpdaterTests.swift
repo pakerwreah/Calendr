@@ -934,9 +934,10 @@ class AutoUpdaterTests {
         await updater.checkRelease()
 
         #expect(statuses == [.initial, .fetching, .newVersion("v99.0.0")])
+        #expect(localStorage.lastCheckedVersion == "v99.0.0")
     }
 
-    @Test func testCheckRelease_withUnsupportedTargetOS_shouldSkipNewVersion() async {
+    @Test func testCheckRelease_withUnsupportedTargetOS_shouldSkipUpdate() async {
 
         var statuses: [UpdateStatus] = []
 
@@ -952,9 +953,10 @@ class AutoUpdaterTests {
         await updater.checkRelease()
 
         #expect(statuses == [.initial, .fetching, .initial])
+        #expect(localStorage.lastCheckedVersion == "v99.0.0")
     }
 
-    @Test func testCheckRelease_withOutdatedEnvFile_shouldSkipNewVersion() async {
+    @Test func testCheckRelease_withOutdatedEnvFile_shouldTemporarilySkipUpdate() async {
 
         var statuses: [UpdateStatus] = []
 
@@ -970,6 +972,7 @@ class AutoUpdaterTests {
         await updater.checkRelease()
 
         #expect(statuses == [.initial, .fetching, .initial])
+        #expect(localStorage.lastCheckedVersion == nil)
     }
 
     // MARK: - Helpers

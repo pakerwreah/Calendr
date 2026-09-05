@@ -308,11 +308,18 @@ class AutoUpdater: AutoUpdating {
 
         guard
             let marketingVersion = env[.MARKETING_VERSION],
-            release.name == "v\(marketingVersion)",
+            release.name == "v\(marketingVersion)"
+        else {
+            // env file is outdated, re-check later
+            statusObserver.onNext(.initial)
+            return
+        }
 
+        guard
             let targetOS = env[.MACOSX_DEPLOYMENT_TARGET],
             isOperatingSystemAtLeast(targetOS)
         else {
+            localStorage.lastCheckedVersion = release.name
             statusObserver.onNext(.initial)
             return
         }
