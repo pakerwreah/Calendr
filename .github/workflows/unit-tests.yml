@@ -34,9 +34,7 @@ jobs:
       - name: Cache SPM
         uses: actions/cache@v6
         with:
-          path: |
-            .build
-            ~/Library/Caches/org.swift.swiftpm
+          path: .build
           key: ${{ runner.os }}-spm-${{ hashFiles('Package.resolved') }}
 
       - name: Test
