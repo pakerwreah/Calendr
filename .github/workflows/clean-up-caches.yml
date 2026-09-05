@@ -14,6 +14,10 @@ jobs:
       - name: Delete PR Caches
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPOSITORY: ${{ github.repository }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
-          gh cache delete --ref "refs/pull/${PR_NUMBER}/merge" --all --succeed-on-no-caches
+          gh cache delete \
+          --repo ${REPOSITORY} \
+          --ref "refs/pull/${PR_NUMBER}/merge" \
+          --all --succeed-on-no-caches
