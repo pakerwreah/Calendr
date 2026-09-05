@@ -4,8 +4,8 @@ shopt -s extglob
 
 MODE=$1
 
-if [[ $MODE != "release" && $MODE != "debug" ]]; then
-    echo "❌ Invalid mode. Must be 'release' or 'debug'"
+if [[ $MODE != "release" && $MODE != "debug" && $MODE != "env" ]]; then
+    echo "❌ Invalid mode. Must be 'release', 'debug' or 'env'"
     exit 1
 fi
 
@@ -25,9 +25,7 @@ get_build_setting() {
     echo "$BUILD_SETTINGS" | awk -v key="$1" -F ' = ' '$1 == "    " key { print $2; exit }'
 }
 
-if has_xcode; then
-    echo -e "\n🔧 Xcode detected — generating assemble.env from Calendr.xcodeproj\n"
-
+generate_assemble_env() {
     BUILD_SETTINGS=$(xcodebuild -showBuildSettings \
         -project Calendr.xcodeproj \
         -target Calendr \
@@ -40,6 +38,23 @@ if has_xcode; then
         echo "CURRENT_PROJECT_VERSION=$(get_build_setting CURRENT_PROJECT_VERSION)"
         echo "MACOSX_DEPLOYMENT_TARGET=$(get_build_setting MACOSX_DEPLOYMENT_TARGET)"
     } > assemble.env
+}
+
+if [[ "$MODE" == "env" ]]; then
+    if ! has_xcode; then
+        echo "❌ Xcode is required to generate assemble.env"
+        exit 1
+    fi
+
+    echo -e "\n🔧 Generating assemble.env from Calendr.xcodeproj\n"
+    generate_assemble_env
+    echo "✅ assemble.env generated successfully!"
+    exit 0
+fi
+
+if has_xcode; then
+    echo -e "\n🔧 Xcode detected — generating assemble.env from Calendr.xcodeproj\n"
+    generate_assemble_env
 fi
 
 if [[ ! -f assemble.env ]]; then
