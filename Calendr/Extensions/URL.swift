@@ -8,6 +8,11 @@
 import Foundation
 
 extension URL {
+
+    init(parse string: String) throws {
+        try self.init(string, strategy: .url)
+    }
+
     /// Returns the relative path from the given base URL if the URL's path starts with the base URL's path.
     func relativePath(from base: URL) -> String? {
         // Ensure both URLs share the same scheme and host.

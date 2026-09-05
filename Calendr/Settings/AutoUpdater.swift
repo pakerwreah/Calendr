@@ -281,7 +281,7 @@ class AutoUpdater: AutoUpdating {
     private func fetchAssembleEnv(tag: String) async throws -> [AssembleEnv: String] {
 
         let url = "https://raw.githubusercontent.com/pakerwreah/Calendr/refs/tags/\(tag)/assemble.env"
-        let data = try await networkProvider.data(from: URL(string: url)!)
+        let data = try await networkProvider.data(from: try URL(parse: url))
 
         guard let contents = String(data: data, encoding: .utf8) else {
             throw .unexpected("Could not decode assemble.env")
