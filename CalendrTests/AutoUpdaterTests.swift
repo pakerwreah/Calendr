@@ -157,10 +157,10 @@ class AutoUpdaterTests {
         let fetchExpectation = expectation(description: "Fetching")
         let rollbackExpectation = expectation(description: "Rollback")
 
-        let version = BuildConfig.appVersion
-        let json = makeReleaseJSON(name: version, assetURL: "https://example.com/Calendr.zip")
+        let json = makeReleaseJSON(name: BuildConfig.appVersion)
+        let env = makeAssembleEnv(version: BuildConfig.shortVersion)
 
-        networkProvider.m_dataHandler = { _ in json }
+        networkProvider.m_dataHandler = mockResponses(release: json, assembleEnv: env)
 
         updater.status
             .enumerated()
@@ -178,7 +178,7 @@ class AutoUpdaterTests {
 
         await fulfillment(of: [initialExpectation, fetchExpectation, rollbackExpectation])
 
-        #expect(localStorage.lastCheckedVersion == version)
+        #expect(localStorage.lastCheckedVersion == BuildConfig.appVersion)
     }
 
     @Test func testCheckRelease_newVersion_updatesStatus() async {
@@ -187,9 +187,10 @@ class AutoUpdaterTests {
         let fetchExpectation = expectation(description: "Fetching")
         let newVersionExpectation = expectation(description: "New Version")
 
-        let json = makeReleaseJSON(name: "v99.0.0", assetURL: "https://example.com/Calendr.zip")
+        let json = makeReleaseJSON(name: "v99.0.0")
+        let env = makeAssembleEnv(version: "99.0.0")
 
-        networkProvider.m_dataHandler = { _ in json }
+        networkProvider.m_dataHandler = mockResponses(release: json, assembleEnv: env)
 
         updater.status
             .enumerated()
@@ -216,9 +217,10 @@ class AutoUpdaterTests {
 
         let newVersionExpectation = expectation(description: "New Version")
 
-        let json = makeReleaseJSON(name: "v99.0.0", assetURL: "https://example.com/Calendr.zip")
+        let json = makeReleaseJSON(name: "v99.0.0")
+        let env = makeAssembleEnv(version: "99.0.0")
 
-        networkProvider.m_dataHandler = { _ in json }
+        networkProvider.m_dataHandler = mockResponses(release: json, assembleEnv: env)
 
         updater.status
             .bind {
@@ -239,9 +241,10 @@ class AutoUpdaterTests {
 
         let errorExpectation = expectation(description: "Error")
 
-        let json = makeReleaseJSON(name: "v99.0.0", assetName: "Other.zip", assetURL: "https://example.com/Other.zip")
+        let json = makeReleaseJSON(name: "v99.0.0", assetName: "Other.zip")
+        let env = makeAssembleEnv(version: "99.0.0")
 
-        networkProvider.m_dataHandler = { _ in json }
+        networkProvider.m_dataHandler = mockResponses(release: json, assembleEnv: env)
 
         var error: UpdateError?
 
@@ -398,8 +401,10 @@ class AutoUpdaterTests {
         let errorExpectation = expectation(description: "Error")
 
         // First set up a release via checkRelease
-        let json = makeReleaseJSON(name: "v99.0.0", assetURL: "https://example.com/Calendr.zip")
-        networkProvider.m_dataHandler = { _ in json }
+        let json = makeReleaseJSON(name: "v99.0.0")
+        let env = makeAssembleEnv(version: "99.0.0")
+
+        networkProvider.m_dataHandler = mockResponses(release: json, assembleEnv: env)
 
         networkProvider.m_downloadHandler = { _ in
             throw UnexpectedError(message: "Download failed")
@@ -464,8 +469,10 @@ class AutoUpdaterTests {
         errorExpectation.isInverted = true
 
         // First set up a release via checkRelease
-        let json = makeReleaseJSON(name: "v99.0.0", assetURL: "https://example.com/Calendr.zip")
-        networkProvider.m_dataHandler = { _ in json }
+        let json = makeReleaseJSON(name: "v99.0.0")
+        let env = makeAssembleEnv(version: "99.0.0")
+
+        networkProvider.m_dataHandler = mockResponses(release: json, assembleEnv: env)
 
         networkProvider.m_downloadHandler = { $0 }
 
@@ -518,8 +525,10 @@ class AutoUpdaterTests {
         let downloadingExpectation = expectation(description: "Downloading")
         let backToNewVersionExpectation = expectation(description: "Back to New Version")
 
-        let json = makeReleaseJSON(name: "v99.0.0", assetURL: "https://example.com/Calendr.zip")
-        networkProvider.m_dataHandler = { _ in json }
+        let json = makeReleaseJSON(name: "v99.0.0")
+        let env = makeAssembleEnv(version: "99.0.0")
+
+        networkProvider.m_dataHandler = mockResponses(release: json, assembleEnv: env)
         networkProvider.m_downloadHandler = { $0 }
 
         saveModalFactory.response = .cancel
@@ -560,7 +569,7 @@ class AutoUpdaterTests {
         let containerURL = makeTempDir()
         let updater = makeInstallUpdater(containerURL: containerURL)
 
-        await primeRelease(updater, version: "v99.0.0")
+        await primeRelease(updater, version: "99.0.0")
 
         networkProvider.m_downloadHandler = { $0 }
         saveModalFactory.response = .OK
@@ -601,7 +610,7 @@ class AutoUpdaterTests {
         let containerURL = makeTempDir()
         let updater = makeInstallUpdater(containerURL: containerURL)
 
-        await primeRelease(updater, version: "v99.0.0")
+        await primeRelease(updater, version: "99.0.0")
 
         localStorage.installationBookmark = Data([1, 2, 3])
 
@@ -654,8 +663,10 @@ class AutoUpdaterTests {
         let rollbackExpectation = expectation(description: "Rollback")
         let errorExpectation = expectation(description: "Error")
 
-        let json = makeReleaseJSON(name: "v99.0.0", assetURL: "https://example.com/Calendr.zip")
-        networkProvider.m_dataHandler = { _ in json }
+        let json = makeReleaseJSON(name: "v99.0.0")
+        let env = makeAssembleEnv(version: "99.0.0")
+
+        networkProvider.m_dataHandler = mockResponses(release: json, assembleEnv: env)
 
         let archiveURL = makeTempDir().appendingPathComponent("Calendr.zip")
         networkProvider.m_downloadHandler = { _ in archiveURL }
@@ -715,7 +726,7 @@ class AutoUpdaterTests {
         let containerURL = makeTempDir()
         let updater = makeInstallUpdater(containerURL: containerURL)
 
-        await primeRelease(updater, version: "v99.0.0")
+        await primeRelease(updater, version: "99.0.0")
 
         let archiveURL = try makeAppZip(content: "v99.0.0")
         networkProvider.m_downloadHandler = { _ in archiveURL }
@@ -886,16 +897,14 @@ class AutoUpdaterTests {
             .bind { statuses.append($0) }
             .disposed(by: disposeBag)
 
-        // return valid JSON so the cancelled check ends cleanly without a decode error log
-        let json = makeReleaseJSON(name: BuildConfig.appVersion, assetURL: "https://example.com/Calendr.zip")
-
         networkProvider.m_dataHandler = { _ in
             do {
                 try await Task.sleep(for: .seconds(10))
             } catch {
                 expectation.fulfill()
+                throw error
             }
-            return json
+            return Data()
         }
 
         await updater.start()
@@ -903,6 +912,64 @@ class AutoUpdaterTests {
         await updater.stop()
 
         await fulfillment(of: [expectation])
+
+        #expect(statuses == [.initial, .fetching, .initial])
+    }
+
+    // MARK: - Target OS support
+
+    @Test func testCheckRelease_withSupportedTargetOS_shouldReportNewVersion() async {
+
+        var statuses: [UpdateStatus] = []
+
+        updater.status
+            .bind { statuses.append($0) }
+            .disposed(by: disposeBag)
+
+        let json = makeReleaseJSON(name: "v99.0.0")
+        let env = makeAssembleEnv(version: "99.0.0")
+
+        networkProvider.m_dataHandler = mockResponses(release: json, assembleEnv: env)
+
+        await updater.checkRelease()
+
+        #expect(statuses == [.initial, .fetching, .newVersion("v99.0.0")])
+    }
+
+    @Test func testCheckRelease_withUnsupportedTargetOS_shouldSkipNewVersion() async {
+
+        var statuses: [UpdateStatus] = []
+
+        updater.status
+            .bind { statuses.append($0) }
+            .disposed(by: disposeBag)
+
+        let json = makeReleaseJSON(name: "v99.0.0")
+        let env = makeAssembleEnv(version: "99.0.0", targetOS: "99.0")
+
+        networkProvider.m_dataHandler = mockResponses(release: json, assembleEnv: env)
+
+        await updater.checkRelease()
+
+        #expect(statuses == [.initial, .fetching, .initial])
+    }
+
+    @Test func testCheckRelease_withOutdatedEnvFile_shouldSkipNewVersion() async {
+
+        var statuses: [UpdateStatus] = []
+
+        updater.status
+            .bind { statuses.append($0) }
+            .disposed(by: disposeBag)
+
+        let json = makeReleaseJSON(name: "v99.0.0")
+        let env = makeAssembleEnv(version: "88.0.0")
+
+        networkProvider.m_dataHandler = mockResponses(release: json, assembleEnv: env)
+
+        await updater.checkRelease()
+
+        #expect(statuses == [.initial, .fetching, .initial])
     }
 
     // MARK: - Helpers
@@ -932,20 +999,36 @@ class AutoUpdaterTests {
 
     private func primeRelease(_ updater: AutoUpdater, version: String) async {
 
-        let json = makeReleaseJSON(name: version, assetURL: "https://example.com/Calendr.zip")
-        networkProvider.m_dataHandler = { _ in json }
+        let json = makeReleaseJSON(name: "v\(version)")
+        let env = makeAssembleEnv(version: version)
+
+        networkProvider.m_dataHandler = mockResponses(release: json, assembleEnv: env)
 
         let newVersionExpectation = expectation(description: "Primed New Version")
 
-        let token = updater.status.subscribe(onNext: {
+        _ = updater.status.subscribe(onNext: {
             if case .newVersion = $0 { newVersionExpectation.fulfill() }
         })
 
         await updater.checkRelease()
 
         await fulfillment(of: [newVersionExpectation])
+    }
 
-        token.dispose()
+    private func mockResponses(release: Data, assembleEnv: Data) -> (URL) async throws -> Data {
+        {
+            let url = $0.absoluteString
+
+            if url.hasSuffix("releases/latest") {
+                return release
+            }
+
+            if url.hasSuffix("assemble.env") {
+                return assembleEnv
+            }
+
+            throw .unexpected("Unexpected url: \(url)")
+        }
     }
 
     /// Builds a real zip containing a `Calendr.app` bundle so the install flow can extract it.
@@ -976,17 +1059,31 @@ class AutoUpdaterTests {
         return zipURL
     }
 
-    private func makeReleaseJSON(name: String, assetName: String = "Calendr.zip", assetURL: String) -> Data {
-        """
+    private func makeReleaseJSON(name: String, assetName: String = "Calendr.zip") -> Data {
+        assert(name.hasPrefix("v"))
+        return """
         {
             "name": "\(name)",
             "assets": [
                 {
                     "name": "\(assetName)",
-                    "browser_download_url": "\(assetURL)"
+                    "browser_download_url": "https://example.com/\(assetName)"
                 }
             ]
         }
         """.data(using: .utf8)!
     }
+
+    private func makeAssembleEnv(version: String, targetOS: String = operatingSystemVersion) -> Data {
+        assert(!version.hasPrefix("v"))
+        return """
+        # Generated by assemble.sh
+        PRODUCT_BUNDLE_IDENTIFIER=br.paker.Calendr
+        MARKETING_VERSION=\(version)
+        CURRENT_PROJECT_VERSION=1
+        MACOSX_DEPLOYMENT_TARGET=\(targetOS)
+        """.data(using: .utf8)!
+    }
 }
+
+private let operatingSystemVersion = ProcessInfo.processInfo.operatingSystemVersion.description

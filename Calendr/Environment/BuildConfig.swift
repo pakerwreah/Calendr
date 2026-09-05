@@ -14,7 +14,8 @@ enum BuildConfig {
 
     static let date = String(cString: BUILD_DATE)
     static let time = String(cString: BUILD_TIME)
-    static let appVersion = "v\((Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String) ?? "0.0.0")"
+    static let shortVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0.0.0"
+    static let appVersion = "v\(shortVersion)"
     static let bundleIdentifier = Bundle.main.bundleIdentifier ?? "br.paker.Calendr"
     static let isSandboxed = ProcessInfo.processInfo.environment.keys.contains("APP_SANDBOX_CONTAINER_ID")
     static let isPreview = ProcessInfo.processInfo.environment.keys.contains("XCODE_RUNNING_FOR_PREVIEWS")

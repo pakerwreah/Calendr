@@ -11,7 +11,7 @@ import RxSwift
 import ZIPFoundation
 import Sentry
 
-enum UpdateStatus {
+enum UpdateStatus: Equatable {
     case initial
     case fetching
     case newVersion(String)
@@ -111,6 +111,11 @@ class AutoUpdater: AutoUpdating {
         let downloadURL: URL
     }
 
+    private enum AssembleEnv: String {
+        case MARKETING_VERSION
+        case MACOSX_DEPLOYMENT_TARGET
+    }
+
     let notificationTap: Observable<NotificationAction>
 
     private let statusObserver: AnyObserver<UpdateStatus>
@@ -176,14 +181,14 @@ class AutoUpdater: AutoUpdating {
 
     func checkRelease() {
         Task {
-            await checkRelease(notify: false)
+            await checkRelease()
         }
     }
 
-    private func checkRelease(notify: Bool) async {
+    func checkRelease(notify: Bool = false) async {
         guard await notificationProvider.requestAuthorization() else { return }
         do {
-            try await checkReleaseAsync(notify: notify)
+            try await checkReleaseImpl(notify: notify)
         } catch {
             errorObserver.onNext(.check(error))
             statusObserver.onNext(.initial)
@@ -250,11 +255,7 @@ class AutoUpdater: AutoUpdating {
         notificationProvider.send(id: .uuid, content)
     }
 
-    private func checkReleaseAsync(notify: Bool) async throws {
-
-        guard !BuildConfig.isUITesting else { return }
-
-        statusObserver.onNext(.fetching)
+    private func fetchRelease() async throws -> Release {
 
         let url = "https://api.github.com/repos/pakerwreah/Calendr/releases/latest"
         let data = try await networkProvider.data(from: URL(string: url)!)
@@ -270,17 +271,53 @@ class AutoUpdater: AutoUpdating {
 
         let release = try JSONDecoder().decode(Response.self, from: data)
 
-        guard release.name != BuildConfig.appVersion else {
-            statusObserver.onNext(.initial)
-            localStorage.lastCheckedVersion = release.name
-            return
-        }
-
         guard let asset = release.assets.first(where: { $0.name == "Calendr.zip" }) else {
             throw .unexpected("Missing release asset")
         }
 
-        newRelease = Release(name: release.name, downloadURL: asset.browser_download_url)
+        return Release(name: release.name, downloadURL: asset.browser_download_url)
+    }
+
+    private func fetchAssembleEnv(tag: String) async throws -> [AssembleEnv: String] {
+
+        let url = "https://raw.githubusercontent.com/pakerwreah/Calendr/refs/tags/\(tag)/assemble.env"
+        let data = try await networkProvider.data(from: URL(string: url)!)
+
+        guard let contents = String(data: data, encoding: .utf8) else {
+            throw .unexpected("Could not decode assemble.env")
+        }
+
+        return EnvParser.parse(text: contents)
+    }
+
+    private func checkReleaseImpl(notify: Bool) async throws {
+
+        guard !BuildConfig.isUITesting else { return }
+
+        statusObserver.onNext(.fetching)
+
+        let release = try await fetchRelease()
+
+        guard release.name != BuildConfig.appVersion else {
+            localStorage.lastCheckedVersion = release.name
+            statusObserver.onNext(.initial)
+            return
+        }
+
+        let env = try await fetchAssembleEnv(tag: release.name)
+
+        guard
+            let marketingVersion = env[.MARKETING_VERSION],
+            release.name == "v\(marketingVersion)",
+
+            let targetOS = env[.MACOSX_DEPLOYMENT_TARGET],
+            isOperatingSystemAtLeast(targetOS)
+        else {
+            statusObserver.onNext(.initial)
+            return
+        }
+
+        newRelease = release
         statusObserver.onNext(.newVersion(release.name))
 
         guard notify else {
