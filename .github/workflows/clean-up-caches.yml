@@ -16,4 +16,4 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
-          gh cache delete --ref "refs/pull/${PR_NUMBER}/merge" --all
+          gh cache delete --ref "refs/pull/${PR_NUMBER}/merge" --all --succeed-on-no-caches
