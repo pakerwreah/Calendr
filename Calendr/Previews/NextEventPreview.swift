@@ -20,6 +20,7 @@ struct NextEventPreview: PreviewProvider {
     static let settings = MockNextEventSettings(showItem: true, textScaling: 1.1, length: 35, detectNotch: false)
     static let notificationCenter = NotificationCenter()
     static let workspace = MockWorkspaceServiceProvider()
+    static let networkProvider = MockNetworkServiceProvider()
     static let soundPlayer = MockSoundProvider()
 
     static let events: [EventModel] = [
@@ -44,6 +45,7 @@ struct NextEventPreview: PreviewProvider {
                 geocoder: geocoder,
                 weatherService: weatherService,
                 workspace: workspace,
+                networkProvider: networkProvider,
                 screenProvider: screenProvider,
                 isShowingDetailsModal: .init(value: false),
                 scheduler: MainScheduler.instance,

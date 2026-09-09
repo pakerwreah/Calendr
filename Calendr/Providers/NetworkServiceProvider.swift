@@ -14,7 +14,11 @@ protocol NetworkServiceProviding {
 
 class NetworkServiceProvider: NetworkServiceProviding {
 
-    private let session = URLSession(configuration: .ephemeral)
+    private let session: URLSession
+
+    init(session: URLSession) {
+        self.session = session
+    }
 
     func data(from url: URL) async throws -> Data {
         let (data, _) = try await session.data(from: url)

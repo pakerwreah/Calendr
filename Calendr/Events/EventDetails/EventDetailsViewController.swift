@@ -349,6 +349,10 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
 
             detailsStackView.addArrangedSubview(makeLine())
             detailsStackView.addArrangedSubview(urlStackView)
+
+            if viewModel.canShowThumbnail {
+                addThumbnail()
+            }
         }
 
         if !viewModel.location.isEmpty {
@@ -380,9 +384,49 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         }
     }
 
+    private enum Thumbnail {
+        static let corner = Constants.Embedded.cornerRadius
+        static let height = Constants.Embedded.height
+    }
+
+    private func addThumbnail() {
+        let imageBtn = ImageButton()
+        imageBtn.imageScaling = .scaleProportionallyDown
+        imageBtn.bezelStyle = .flexiblePush
+        imageBtn.wantsLayer = true
+        imageBtn.layer?.cornerRadius = Thumbnail.corner
+        imageBtn.height(lessThanOrEqualTo: Thumbnail.height)
+
+        let imageContainer = NSStackView(views: [imageBtn])
+        imageContainer.setHuggingPriority(.fittingSizeCompression, for: .horizontal)
+        imageContainer.setHuggingPriority(.required, for: .vertical)
+        imageContainer.alignment = .centerX
+        imageContainer.isHidden = true
+
+        imageBtn.rx.tap
+            .bind(to: viewModel.linkTapped)
+            .disposed(by: disposeBag)
+
+        detailsStackView.addArrangedSubview(imageContainer)
+
+        viewModel.fetchThumbnail()
+            .observe(on: MainScheduler.instance)
+            .subscribe(onSuccess: { [weak imageBtn, weak imageContainer] image in
+                guard let imageBtn, let imageContainer else { return }
+
+                imageBtn.image = image
+                imageContainer.isHidden = false
+                imageBtn.height(
+                    equalTo: imageBtn.widthAnchor,
+                    multiplier: image.size.height / image.size.width
+                )
+            })
+            .disposed(by: disposeBag)
+    }
+
     private enum Map {
-        static let corner: CGFloat = 6
-        static let height: CGFloat = 150
+        static let corner = Constants.Embedded.cornerRadius
+        static let height = Constants.Embedded.height
         static let distance: CLLocationDistance = 1000
 
         static func region(for center: Coordinates) -> MKCoordinateRegion {
@@ -686,5 +730,13 @@ private extension NSFont {
 
     static func scaled(_ font: NSFont) -> NSFont {
         font.withSize(font.pointSize * Scaling.current)
+    }
+}
+
+private enum Constants {
+
+    enum Embedded {
+        static let cornerRadius: CGFloat = 6
+        static let height: CGFloat = 150
     }
 }

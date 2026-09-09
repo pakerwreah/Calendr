@@ -19,6 +19,7 @@ class EventDetailsViewModelTests {
     let calendarService = MockCalendarServiceProvider()
     let geocoder = MockGeocodeServiceProvider()
     let weatherService = MockWeatherServiceProvider()
+    let networkProvider = MockNetworkServiceProvider()
     lazy var workspace = MockWorkspaceServiceProvider(localStorage: localStorage)
     let settings = MockEventSettings()
     let scheduler = HistoricalScheduler()
@@ -229,6 +230,46 @@ class EventDetailsViewModelTests {
         )
 
         #expect(viewModel.url == "")
+    }
+
+    @Test func testCanShowThumbnail_withSupportedURL_shouldBeTrue() {
+
+        let viewModel = mock(
+            event: .make(url: URL(string: "https://youtu.be/video-id")!)
+        )
+
+        #expect(viewModel.canShowThumbnail)
+    }
+
+    @Test func testCanShowThumbnail_withUnsupportedURL_shouldBeFalse() {
+
+        let viewModel = mock(
+            event: .make(url: URL(string: "https://example.com/video-id")!)
+        )
+
+        #expect(viewModel.canShowThumbnail == false)
+    }
+
+    @Test func testFetchThumbnail_withNetworkError_shouldNotReturnImage() async {
+
+        let expectation = expectation(description: "Thumbnail")
+        expectation.isInverted = true
+
+        let viewModel = mock(
+            event: .make(url: URL(string: "https://youtu.be/video-id")!)
+        )
+
+        networkProvider.m_dataHandler = { _ in
+            throw .unexpected("error")
+        }
+
+        #expect(viewModel.canShowThumbnail == true)
+
+        _ = viewModel.fetchThumbnail().subscribe(onSuccess: { _ in
+            expectation.fulfill()
+        })
+
+        await fulfillment(of: [expectation])
     }
 
     @Test func testDuration_isAllDay_isSingleDay_shouldShowOnlyDate() {
@@ -480,6 +521,7 @@ class EventDetailsViewModelTests {
             geocoder: geocoder,
             weatherService: weatherService,
             workspace: workspace,
+            networkProvider: networkProvider,
             localStorage: localStorage,
             settings: settings,
             isShowingObserver: .dummy(),

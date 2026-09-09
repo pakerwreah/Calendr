@@ -23,6 +23,7 @@ class NextEventViewModelFullScreenTests {
     let geocoder = MockGeocodeServiceProvider()
     let weatherService = MockWeatherServiceProvider()
     let workspace = MockWorkspaceServiceProvider()
+    let networkProvider = MockNetworkServiceProvider()
     let screenProvider = MockScreenProvider()
     let scheduler = HistoricalScheduler()
     let soundPlayer = MockSoundProvider()
@@ -38,6 +39,7 @@ class NextEventViewModelFullScreenTests {
             geocoder: geocoder,
             weatherService: weatherService,
             workspace: workspace,
+            networkProvider: networkProvider,
             screenProvider: screenProvider,
             isShowingDetailsModal: .init(value: false),
             scheduler: scheduler,

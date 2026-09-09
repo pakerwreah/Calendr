@@ -31,6 +31,7 @@ class EventDetailsViewModel {
     let attachments: [Attachment]
 
     let canShowMap: Bool
+    let canShowThumbnail: Bool
     let coordinates: Maybe<Coordinates>
     let weather: Maybe<(Weather, isAllDay: Bool)>
     let isInProgress: Observable<Bool>
@@ -49,6 +50,7 @@ class EventDetailsViewModel {
     private let dateProvider: DateProviding
     private let calendarService: CalendarServiceProviding
     private let workspace: WorkspaceServiceProviding
+    private let thumbnailProviders: [any ThumbnailProviding]
 
     private let callback: AnyObserver<ContextCallbackAction>
 
@@ -62,6 +64,7 @@ class EventDetailsViewModel {
         geocoder: GeocodeServiceProviding,
         weatherService: WeatherServiceProviding,
         workspace: WorkspaceServiceProviding,
+        networkProvider: NetworkServiceProviding,
         localStorage: LocalStorageProvider,
         settings: EventSettings,
         isShowingObserver: AnyObserver<Bool>,
@@ -74,6 +77,11 @@ class EventDetailsViewModel {
         self.settings = settings
         self.isShowingObserver = isShowingObserver
         self.workspace = workspace
+
+        let thumbnailProviders: [any ThumbnailProviding] = [
+            YouTubeThumbnailProvider(networkProvider: networkProvider)
+        ]
+        self.thumbnailProviders = thumbnailProviders
 
         browserPickerViewModel = BrowserPickerViewModel(
             calendarId: event.calendar.id,
@@ -88,6 +96,9 @@ class EventDetailsViewModel {
         attachments = event.attachments
         link = event.detectLink(using: workspace)
         url = type.isBirthday ? "" : link.map { $0.isNative ? "" : $0.original.absoluteString } ?? ""
+        canShowThumbnail = link.map { link in
+            thumbnailProviders.contains { $0.supports(url: link.url) }
+        } ?? false
         location = event.location ?? ""
         (notes, meetingInfo) = parseNotesMeetingInfo(from: event.notes)
         participants = event.participants.sorted {
@@ -253,6 +264,27 @@ class EventDetailsViewModel {
             source: .details,
             callback: callback
         )
+    }
+
+    func fetchThumbnail() -> Maybe<NSImage> {
+        guard
+            let url = link?.url,
+            let provider = thumbnailProviders.first(where: { $0.supports(url: url) })
+        else { return .empty() }
+
+        return .create { observer in
+            let task = Task {
+                if let thumbnail = await provider.fetchThumbnail(for: url) {
+                    observer(.success(thumbnail))
+                } else {
+                    observer(.completed)
+                }
+            }
+
+            return Disposables.create {
+                task.cancel()
+            }
+        }
     }
 }
 
