@@ -21,12 +21,20 @@ class NetworkServiceProvider: NetworkServiceProviding {
     }
 
     func data(from url: URL) async throws -> Data {
-        let (data, _) = try await session.data(from: url)
+        let (data, response) = try await session.data(from: url)
+        try assertSuccess(response)
         return data
     }
 
     func download(from url: URL) async throws -> URL {
-        let (url, _) = try await session.download(from: url)
+        let (url, response) = try await session.download(from: url)
+        try assertSuccess(response)
         return url
+    }
+}
+
+private func assertSuccess(_ response: URLResponse) throws {
+    guard let http = response as? HTTPURLResponse, http.statusCode == 200 else {
+        throw URLError(.badServerResponse)
     }
 }
