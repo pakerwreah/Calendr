@@ -17,6 +17,7 @@ struct EventListViewPreview: PreviewProvider {
     static let geocoder = MockGeocodeServiceProvider()
     static let weatherService = MockWeatherServiceProvider()
     static let workspace = MockWorkspaceServiceProvider()
+    static let networkProvider = MockNetworkServiceProvider()
     static let settings = MockEventListSettings(showAllDayDetails: false)
 
     static var now: Date { dateProvider.now }
@@ -67,6 +68,7 @@ struct EventListViewPreview: PreviewProvider {
                 geocoder: geocoder,
                 weatherService: weatherService,
                 workspace: workspace,
+                networkProvider: networkProvider,
                 localStorage: .shared,
                 settings: settings,
                 scheduler: MainScheduler.instance,

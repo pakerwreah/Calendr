@@ -21,6 +21,7 @@ class EventListViewModelTests {
     let calendarService = MockCalendarServiceProvider()
     let geocoder = MockGeocodeServiceProvider()
     let weatherService = MockWeatherServiceProvider()
+    let networkProvider = MockNetworkServiceProvider()
     let workspace = MockWorkspaceServiceProvider()
     let settings = MockEventListSettings()
     let localStorage = MockLocalStorageProvider()
@@ -41,6 +42,7 @@ class EventListViewModelTests {
         geocoder: geocoder,
         weatherService: weatherService,
         workspace: workspace,
+        networkProvider: networkProvider,
         localStorage: localStorage,
         settings: settings,
         scheduler: scheduler,

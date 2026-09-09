@@ -73,6 +73,7 @@ class NextEventViewModel {
     private let geocoder: GeocodeServiceProviding
     private let weatherService: WeatherServiceProviding
     private let workspace: WorkspaceServiceProviding
+    private let networkProvider: NetworkServiceProviding
     private let scheduler: SchedulerType
 
     init(
@@ -85,6 +86,7 @@ class NextEventViewModel {
         geocoder: GeocodeServiceProviding,
         weatherService: WeatherServiceProviding,
         workspace: WorkspaceServiceProviding,
+        networkProvider: NetworkServiceProviding,
         screenProvider: ScreenProviding,
         isShowingDetailsModal: BehaviorSubject<Bool>,
         scheduler: SchedulerType,
@@ -99,6 +101,7 @@ class NextEventViewModel {
         self.weatherService = weatherService
         self.settings = settings
         self.workspace = workspace
+        self.networkProvider = networkProvider
         self.isShowingDetailsModal = isShowingDetailsModal
         self.textScaling = settings.eventStatusItemTextScaling
         self.scheduler = scheduler
@@ -468,6 +471,7 @@ class NextEventViewModel {
             geocoder: geocoder,
             weatherService: weatherService,
             workspace: workspace,
+            networkProvider: networkProvider,
             localStorage: localStorage,
             settings: settings,
             isShowingObserver: isShowingDetailsModal.asObserver(),
@@ -499,6 +503,7 @@ class NextEventViewModel {
             geocoder: geocoder,
             weatherService: weatherService,
             workspace: workspace,
+            networkProvider: networkProvider,
             localStorage: localStorage,
             settings: settings,
             scheduler: MainScheduler.instance,

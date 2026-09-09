@@ -20,6 +20,7 @@ class EventViewModelTests {
     let geocoder = MockGeocodeServiceProvider()
     let weatherService = MockWeatherServiceProvider()
     let workspace = MockWorkspaceServiceProvider()
+    let networkProvider = MockNetworkServiceProvider()
     let settings = MockEventSettings()
     let scheduler = HistoricalScheduler()
 
@@ -547,6 +548,7 @@ class EventViewModelTests {
             geocoder: geocoder,
             weatherService: weatherService,
             workspace: workspace,
+            networkProvider: networkProvider,
             localStorage: localStorage,
             settings: settings,
             isShowingDetailsModal: .dummy(),

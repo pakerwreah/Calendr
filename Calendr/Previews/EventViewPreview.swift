@@ -17,6 +17,7 @@ struct EventViewPreview: PreviewProvider {
     static let geocoder = MockGeocodeServiceProvider()
     static let weatherService = MockWeatherServiceProvider()
     static let workspace = MockWorkspaceServiceProvider()
+    static let networkProvider = MockNetworkServiceProvider()
     static let settings = MockEventSettings()
 
     static var previews: some View {
@@ -37,6 +38,7 @@ struct EventViewPreview: PreviewProvider {
                 geocoder: geocoder,
                 weatherService: weatherService,
                 workspace: workspace,
+                networkProvider: networkProvider,
                 localStorage: .shared,
                 settings: settings,
                 isShowingDetailsModal: .dummy(),

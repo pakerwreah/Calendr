@@ -17,6 +17,7 @@ struct EventDetailsPreview: PreviewProvider {
     static let geocoder = MockGeocodeServiceProvider()
     static let weatherService = MockWeatherServiceProvider()
     static let workspace = MockWorkspaceServiceProvider()
+    static let networkProvider = MockNetworkServiceProvider()
     static let settings = MockEventSettings()
 
     static func makeMeeting() -> some View {
@@ -38,6 +39,7 @@ struct EventDetailsPreview: PreviewProvider {
                 geocoder: geocoder,
                 weatherService: weatherService,
                 workspace: workspace,
+                networkProvider: networkProvider,
                 localStorage: .shared,
                 settings: settings,
                 isShowingObserver: .dummy(),
@@ -68,6 +70,7 @@ struct EventDetailsPreview: PreviewProvider {
                 geocoder: geocoder,
                 weatherService: weatherService,
                 workspace: workspace,
+                networkProvider: networkProvider,
                 localStorage: .shared,
                 settings: settings,
                 isShowingObserver: .dummy(),
@@ -94,6 +97,7 @@ struct EventDetailsPreview: PreviewProvider {
                 geocoder: geocoder,
                 weatherService: weatherService,
                 workspace: workspace,
+                networkProvider: networkProvider,
                 localStorage: .shared,
                 settings: settings,
                 isShowingObserver: .dummy(),
@@ -119,6 +123,7 @@ struct EventDetailsPreview: PreviewProvider {
                 geocoder: geocoder,
                 weatherService: weatherService,
                 workspace: workspace,
+                networkProvider: networkProvider,
                 localStorage: .shared,
                 settings: settings,
                 isShowingObserver: .dummy(),

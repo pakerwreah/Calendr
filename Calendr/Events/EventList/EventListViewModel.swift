@@ -41,6 +41,7 @@ class EventListViewModel {
     private let geocoder: GeocodeServiceProviding
     private let weatherService: WeatherServiceProviding
     private let workspace: WorkspaceServiceProviding
+    private let networkProvider: NetworkServiceProviding
     private let localStorage: LocalStorageProvider
     private let settings: EventListSettings
     private let scheduler: SchedulerType
@@ -81,6 +82,7 @@ class EventListViewModel {
         geocoder: GeocodeServiceProviding,
         weatherService: WeatherServiceProviding,
         workspace: WorkspaceServiceProviding,
+        networkProvider: NetworkServiceProviding,
         localStorage: LocalStorageProvider,
         settings: EventListSettings,
         scheduler: SchedulerType,
@@ -95,6 +97,7 @@ class EventListViewModel {
         self.geocoder = geocoder
         self.weatherService = weatherService
         self.workspace = workspace
+        self.networkProvider = networkProvider
         self.localStorage = localStorage
         self.settings = settings
         self.scheduler = scheduler
@@ -246,6 +249,7 @@ class EventListViewModel {
             geocoder: geocoder,
             weatherService: weatherService,
             workspace: workspace,
+            networkProvider: networkProvider,
             localStorage: localStorage,
             settings: settings,
             isShowingDetailsModal: isShowingDetailsModal.asObserver(),

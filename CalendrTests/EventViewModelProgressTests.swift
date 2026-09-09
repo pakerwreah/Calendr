@@ -19,6 +19,7 @@ class EventViewModelProgressTests {
     let geocoder = MockGeocodeServiceProvider()
     let weatherService = MockWeatherServiceProvider()
     let workspace = MockWorkspaceServiceProvider()
+    let networkProvider = MockNetworkServiceProvider()
     let settings = MockEventSettings()
     let localStorage = MockLocalStorageProvider()
 
@@ -288,6 +289,7 @@ class EventViewModelProgressTests {
             geocoder: geocoder,
             weatherService: weatherService,
             workspace: workspace,
+            networkProvider: networkProvider,
             localStorage: localStorage,
             settings: settings,
             isShowingDetailsModal: .dummy(),

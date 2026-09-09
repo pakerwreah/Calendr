@@ -53,6 +53,7 @@ class EventViewModel {
     private let weatherService: WeatherServiceProviding
     private let settings: EventSettings
     private let workspace: WorkspaceServiceProviding
+    private let networkProvider: NetworkServiceProviding
     private let localStorage: LocalStorageProvider
 
     private let disposeBag = DisposeBag()
@@ -65,6 +66,7 @@ class EventViewModel {
         geocoder: GeocodeServiceProviding,
         weatherService: WeatherServiceProviding,
         workspace: WorkspaceServiceProviding,
+        networkProvider: NetworkServiceProviding,
         localStorage: LocalStorageProvider,
         settings: EventSettings,
         isShowingDetailsModal: AnyObserver<Bool>,
@@ -79,6 +81,7 @@ class EventViewModel {
         self.dateProvider = dateProvider
         self.calendarService = calendarService
         self.workspace = workspace
+        self.networkProvider = networkProvider
         self.localStorage = localStorage
         self.geocoder = geocoder
         self.weatherService = weatherService
@@ -317,6 +320,7 @@ class EventViewModel {
             geocoder: geocoder,
             weatherService: weatherService,
             workspace: workspace,
+            networkProvider: networkProvider,
             localStorage: localStorage,
             settings: settings,
             isShowingObserver: isShowingDetailsModal,

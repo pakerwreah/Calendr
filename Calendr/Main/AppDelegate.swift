@@ -50,13 +50,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let calendarAppProvider = CalendarAppProvider(dateProvider: dateProvider, appleScriptRunner: AppleScriptRunner(), clock: .continuous)
         let workspace = Workspace(localStorage: localStorage, dateProvider: dateProvider, calendarAppProvider: calendarAppProvider)
         let notificationProvider = LocalNotificationProvider()
-        let networkProvider = NetworkServiceProvider()
+        let sharedNetworkProvider = NetworkServiceProvider(session: .shared)
+        let ephemeralNetworkProvider = NetworkServiceProvider(session: .init(configuration: .ephemeral))
 
         let autoUpdater = AutoUpdater(
             launchServices: launchServices,
             localStorage: localStorage,
             notificationProvider: notificationProvider,
-            networkProvider: networkProvider,
+            networkProvider: ephemeralNetworkProvider,
             fileProvider: fileProvider,
             bundleInfo: .main
         )
@@ -82,7 +83,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 scheduler: MainScheduler.instance
             ),
             notificationProvider: notificationProvider,
-            networkProvider: networkProvider,
+            networkProvider: sharedNetworkProvider,
             localStorage: localStorage,
             notificationCenter: notificationCenter,
             fileProvider: fileProvider
