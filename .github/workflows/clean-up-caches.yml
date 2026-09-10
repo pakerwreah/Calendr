@@ -16,7 +16,15 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPOSITORY: ${{ github.repository }}
         run: |
-          PR_NUMBERS=$(gh pr list --state closed --limit 100 --json number,closedAt | jq -r '. | sort_by(.closedAt) | .[-5:] | .[].number')
+          PR_NUMBERS=$( \
+            gh pr list \
+            --repo ${REPOSITORY} \
+            --state closed \
+            --limit 100 \
+            --json number,closedAt \
+            | \
+            jq -r '. | sort_by(.closedAt) | .[-5:] | .[].number' \
+          )
 
           for PR_NUMBER in $PR_NUMBERS; do
             gh cache delete \
