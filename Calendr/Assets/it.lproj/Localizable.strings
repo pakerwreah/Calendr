@@ -13,7 +13,7 @@
 "access_required.cancel" = "Annulla";
 
 "auto_update.check_for_updates" = "Verifica aggiornamenti";
-//"auto_update.check_automatically" = "Automatically check for updates";
+"auto_update.check_automatically" = "Verifica aggiornamenti automaticamente";
 "auto_update.fetching_releases" = "Ottieni versioni";
 "auto_update.new_version" = "Nuova versione disponibile: %@";
 "auto_update.updated_to" = "Aggiornato alla versione %@";
@@ -139,12 +139,12 @@
 "editor.confirm.discard" = "Discard all changes";
 
 "event.editor.headline" = "Nuovo evento";
-"event.editor.start" = "Start";
-//"event.editor.end" = "End";
-//"event.editor.time_zone" = "Time Zone";
-//"event.editor.location" = "Location";
-//"event.editor.url" = "URL";
-//"event.editor.notes" = "Notes";
+"event.editor.start" = "Inizio";
+"event.editor.end" = "Fine";
+"event.editor.time_zone" = "Fuso orario";
+"event.editor.location" = "Luogo";
+"event.editor.url" = "URL";
+"event.editor.notes" = "Note";
 
 //"event.editor.alert" = "Alert";
 //"event.editor.alert.none" = "None";
@@ -179,14 +179,14 @@
 "event.action.accept" = "Accetta";
 "event.action.maybe" = "Forse";
 "event.action.decline" = "Rifiuta";
-//"event.action.delete" = "Delete";
+"event.action.delete" = "Elimina";
 
 //"event.delete.title" = "Delete Event";
 //"event.delete.message" = "Do you want to delete this and all future occurrences of this event, or only the selected occurrence?";
 //"event.delete.single_message" = "Are you sure you want to delete this event?";
 //"event.delete.this_event" = "Delete Only This Event";
 //"event.delete.future_events" = "Delete All Future Events";
-//"event.delete.cancel" = "Cancel";
+"event.delete.cancel" = "Annulla";
 
 "event_list.summary.agenda" = "Oggi";
 
