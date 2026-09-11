@@ -16,6 +16,7 @@ class EventListViewModelTests {
 
     let dateSubject = PublishSubject<Date>()
     let eventsSubject = PublishSubject<[EventModel]>()
+    let viewDidAppearSubject = PublishSubject<Void>()
 
     let dateProvider = MockDateProvider()
     let calendarService = MockCalendarServiceProvider()
@@ -34,7 +35,8 @@ class EventListViewModelTests {
         source: .calendar,
         eventsObservable: Observable.combineLatest(dateSubject, eventsSubject).map { date, events in
             DateEvents(date: date, events: events)
-        },
+        }
+        .share(replay: 1),
         isShowingDetailsModal: .init(value: false),
         callback: .dummy(),
         dateProvider: dateProvider,
@@ -45,6 +47,7 @@ class EventListViewModelTests {
         networkProvider: networkProvider,
         localStorage: localStorage,
         settings: settings,
+        viewDidAppear: viewDidAppearSubject,
         scheduler: scheduler,
         refreshScheduler: refreshScheduler,
         eventsScheduler: eventsScheduler
@@ -629,6 +632,92 @@ class EventListViewModelTests {
             .interval("3m"),
             .event("Event 4"),
         ])
+    }
+
+    @Test func testIndexToScroll_shouldTargetFirstUnfadedEventAndRepeatWhenViewAppears() {
+
+        var indices = [Int]()
+
+        viewModel.indexToScroll
+            .bind { indices.append($0) }
+            .disposed(by: disposeBag)
+
+        eventsSubject.onNext([
+            .make(start: .make(year: 2021, month: 1, day: 1), title: "All day", isAllDay: true),
+            .make(start: .make(year: 2021, month: 1, day: 1, minute: 1), title: "Completed", type: .reminder(completed: true)),
+            .make(start: .make(year: 2021, month: 1, day: 1, minute: 2), title: "Upcoming")
+        ])
+        scheduler.advance(.milliseconds(10))
+
+        #expect(indices == [4])
+
+        viewDidAppearSubject.onNext(())
+
+        #expect(indices == [4, 4])
+    }
+
+    @Test func testIndexToScroll_shouldFallBackToLastEventToday() {
+
+        var indices = [Int]()
+
+        viewModel.indexToScroll
+            .bind { indices.append($0) }
+            .disposed(by: disposeBag)
+
+        eventsSubject.onNext([
+            .make(start: .make(year: 2021, month: 1, day: 1), title: "All day", isAllDay: true),
+            .make(start: .make(year: 2021, month: 1, day: 1, minute: 1), title: "Completed", type: .reminder(completed: true))
+        ])
+        scheduler.advance(.milliseconds(10))
+
+        #expect(indices == [3])
+    }
+
+    @Test func testIndexToScroll_shouldScrollToTopWhenThereAreNoEventsToday() {
+
+        var indices = [Int]()
+
+        viewModel.indexToScroll
+            .bind { indices.append($0) }
+            .disposed(by: disposeBag)
+
+        eventsSubject.onNext([
+            .make(start: .make(year: 2021, month: 1, day: 2), title: "Tomorrow")
+        ])
+        scheduler.advance(.milliseconds(10))
+
+        #expect(indices == [0])
+    }
+
+    @Test func testIndexToScroll_shouldScrollToTopWhenSelectedDateIsNotToday() {
+
+        var indices = [Int]()
+
+        viewModel.indexToScroll
+            .bind { indices.append($0) }
+            .disposed(by: disposeBag)
+
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 2))
+        eventsSubject.onNext([
+            .make(start: .make(year: 2021, month: 1, day: 2), title: "Tomorrow")
+        ])
+        scheduler.advance(.milliseconds(10))
+
+        #expect(indices == [0])
+    }
+
+    @Test func testIndexToScroll_shouldNotEmitWhenItemsAreEmpty() {
+
+        var indices = [Int]()
+
+        viewModel.indexToScroll
+            .bind { indices.append($0) }
+            .disposed(by: disposeBag)
+
+        eventsSubject.onNext([])
+        scheduler.advance(.milliseconds(10))
+
+        #expect(indices.isEmpty)
     }
 }
 

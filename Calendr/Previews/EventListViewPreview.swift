@@ -71,6 +71,7 @@ struct EventListViewPreview: PreviewProvider {
                 networkProvider: networkProvider,
                 localStorage: .shared,
                 settings: settings,
+                viewDidAppear: .empty(),
                 scheduler: MainScheduler.instance,
                 refreshScheduler: MainScheduler.instance,
                 eventsScheduler: MainScheduler.instance

@@ -56,7 +56,6 @@ class MainViewController: NSViewController {
     private let disposeBag = DisposeBag()
     private var popoverDisposeBag = DisposeBag()
     private let hoveredDate = BehaviorSubject<Date?>(value: nil)
-    private let focusedDateObservable: Observable<Date>
     private let deeplink: Observable<URL>
 
     // Properties
@@ -184,7 +183,13 @@ class MainViewController: NSViewController {
             .debounce(.milliseconds(50), scheduler: MainScheduler.instance)
             .share(replay: 1)
 
-        focusedDateObservable = eventListEventsObservable.map(\.date)
+        let viewDidAppear = PublishSubject<Void>()
+
+        defer {
+            rx.viewDidAppear
+                .bind(to: viewDidAppear)
+                .disposed(by: disposeBag)
+        }
 
         eventListViewModel = EventListViewModel(
             source: .calendar,
@@ -199,6 +204,7 @@ class MainViewController: NSViewController {
             networkProvider: networkProvider,
             localStorage: localStorage,
             settings: settingsViewModel,
+            viewDidAppear: viewDidAppear,
             scheduler: MainScheduler.instance,
             refreshScheduler: WallTimeScheduler.instance,
             eventsScheduler: WallTimeScheduler.instance
@@ -1003,47 +1009,25 @@ class MainViewController: NSViewController {
 
         scrollView.drawsBackground = false
         scrollView.documentView = eventListView
+        scrollView.scrollerStyle = .overlay
 
         scrollView.contentView.edges(equalTo: scrollView)
         scrollView.contentView.edges(equalTo: eventListView).bottom.priority = .dragThatCanResizeWindow
 
-        rx.viewDidAppear.bind { [eventListView] in
-            eventListView.scrollTop()
-        }
-        .disposed(by: disposeBag)
+        eventListViewModel.indexToScroll.bind { [eventListView] index in
 
-        Observable.combineLatest(
-            eventListViewModel.items,
-            focusedDateObservable
-        )
-        .debounce(.milliseconds(10), scheduler: MainScheduler.instance)
-        .repeat(when: rx.viewDidAppear)
-        .bind { [dateProvider, eventListView] items, date in
-
-            guard !items.isEmpty, scrollView.bounds != .zero else {
+            guard scrollView.bounds != .zero else {
                 return
             }
 
-            let isToday = dateProvider.isDateInToday(date)
-
-            guard isToday else {
+            guard index > 0 else {
                 eventListView.scrollTop()
                 return
             }
 
-            let index = items.firstIndex {
-                guard
-                    case .event(let event) = $0,
-                    !event.isAllDay,
-                    dateProvider.isDateInToday(event.start),
-                    let isFinished = event.isFaded.lastValue()
-                else {
-                    return false
-                }
-                return !isFinished
-            } ?? items.count - 1
-
             guard let rect = eventListView.childRect(at: index) else { return }
+
+            eventListView.showVerticalScroller()
 
             let newOriginY = rect.midY - eventListView.bounds.height + scrollView.bounds.height / 2
             let newOrigin = NSPoint(x: 0, y: newOriginY)

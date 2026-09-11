@@ -506,6 +506,7 @@ class NextEventViewModel {
             networkProvider: networkProvider,
             localStorage: localStorage,
             settings: settings,
+            viewDidAppear: .empty(),
             scheduler: MainScheduler.instance,
             refreshScheduler: MainScheduler.instance,
             eventsScheduler: MainScheduler.instance
