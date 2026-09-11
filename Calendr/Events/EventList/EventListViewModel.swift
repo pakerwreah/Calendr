@@ -71,6 +71,7 @@ class EventListViewModel {
 
     let items: Observable<[EventListItem]>
     let summary: Observable<EventListSummary>
+    let indexToScroll: Observable<Int>
 
     init(
         source: EventDetailsSource,
@@ -85,6 +86,7 @@ class EventListViewModel {
         networkProvider: NetworkServiceProviding,
         localStorage: LocalStorageProvider,
         settings: EventListSettings,
+        viewDidAppear: Observable<Void>,
         scheduler: SchedulerType,
         refreshScheduler: SchedulerType,
         eventsScheduler: SchedulerType
@@ -216,6 +218,43 @@ class EventListViewModel {
                 }
                 return props
             }
+        }
+
+        indexToScroll = Observable.combineLatest(
+            items, eventsObservable.map(\.date)
+        )
+        .debounce(.milliseconds(10), scheduler: scheduler)
+        .repeat(when: viewDidAppear)
+        .compactMap { items, selectedDate in
+
+            guard !items.isEmpty, dateProvider.isDateInToday(selectedDate) else {
+                return nil
+            }
+
+            // find the first ongoing event today
+            return items.firstIndex {
+                guard
+                    case .event(let event) = $0,
+                    !event.isAllDay,
+                    dateProvider.isDateInToday(event.start),
+                    let isFinished = event.isFaded.lastValue()
+                else {
+                    return false
+                }
+                return !isFinished
+            }
+            // fallback to the last event today
+            ?? items.lastIndex {
+                guard
+                    case .event(let event) = $0,
+                    dateProvider.isDateInToday(event.start)
+                else {
+                    return false
+                }
+                return true
+            }
+            // scroll to top
+            ?? .zero
         }
 
         // build event list
