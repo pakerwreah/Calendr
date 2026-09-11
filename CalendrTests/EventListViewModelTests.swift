@@ -688,6 +688,37 @@ class EventListViewModelTests {
 
         #expect(indices == [0])
     }
+
+    @Test func testIndexToScroll_shouldScrollToTopWhenSelectedDateIsNotToday() {
+
+        var indices = [Int]()
+
+        viewModel.indexToScroll
+            .bind { indices.append($0) }
+            .disposed(by: disposeBag)
+
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 2))
+        eventsSubject.onNext([
+            .make(start: .make(year: 2021, month: 1, day: 2), title: "Tomorrow")
+        ])
+        scheduler.advance(.milliseconds(10))
+
+        #expect(indices == [0])
+    }
+
+    @Test func testIndexToScroll_shouldNotEmitWhenItemsAreEmpty() {
+
+        var indices = [Int]()
+
+        viewModel.indexToScroll
+            .bind { indices.append($0) }
+            .disposed(by: disposeBag)
+
+        eventsSubject.onNext([])
+        scheduler.advance(.milliseconds(10))
+
+        #expect(indices.isEmpty)
+    }
 }
 
 private extension CalendarModel {

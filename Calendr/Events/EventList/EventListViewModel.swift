@@ -227,8 +227,12 @@ class EventListViewModel {
         .repeat(when: viewDidAppear)
         .compactMap { items, selectedDate in
 
-            guard !items.isEmpty, dateProvider.isDateInToday(selectedDate) else {
+            guard !items.isEmpty else {
                 return nil
+            }
+
+            guard dateProvider.isDateInToday(selectedDate) else {
+                return .zero
             }
 
             // find the first ongoing event today
