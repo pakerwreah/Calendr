@@ -1019,7 +1019,6 @@ class MainViewController: NSViewController {
             guard scrollView.bounds != .zero else {
                 return
             }
-            eventListView.showVerticalScroller()
 
             guard index > 0 else {
                 eventListView.scrollTop()
@@ -1027,6 +1026,8 @@ class MainViewController: NSViewController {
             }
 
             guard let rect = eventListView.childRect(at: index) else { return }
+
+            eventListView.showVerticalScroller()
 
             let newOriginY = rect.midY - eventListView.bounds.height + scrollView.bounds.height / 2
             let newOrigin = NSPoint(x: 0, y: newOriginY)
