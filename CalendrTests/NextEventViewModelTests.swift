@@ -691,11 +691,7 @@ class NextEventViewModelTests {
 
         settings.toggleEventStatusItemSound.onNext(false)
 
-        let viewModel = makeViewModel(type: .event)
-
-        viewModel.backgroundColor
-            .bind { _ in }
-            .disposed(by: disposeBag)
+        let keep = makeViewModel(type: .event); _ = keep
 
         calendarService.changeEvents([
             .make(start: now + 30, end: now + 60)
@@ -708,11 +704,7 @@ class NextEventViewModelTests {
 
         settings.toggleEventStatusItemSound.onNext(true)
 
-        let viewModel = makeViewModel(type: .event)
-
-        viewModel.backgroundColor
-            .bind { _ in }
-            .disposed(by: disposeBag)
+        let keep = makeViewModel(type: .event); _ = keep
 
         calendarService.changeEvents([
             .make(start: now + 30, end: now + 60)
@@ -725,11 +717,7 @@ class NextEventViewModelTests {
 
         settings.toggleEventStatusItemSound.onNext(true)
 
-        let viewModel = makeViewModel(type: .event)
-
-        viewModel.backgroundColor
-            .bind { _ in }
-            .disposed(by: disposeBag)
+        let keep = makeViewModel(type: .event); _ = keep
 
         calendarService.changeEvents([
             .make(start: now + 29, end: now + 60)
@@ -743,11 +731,7 @@ class NextEventViewModelTests {
         settings.toggleEventStatusItemSound.onNext(true)
         settings.toggleEventStatusItemAttentionStartAt5min.onNext(false)
 
-        let viewModel = makeViewModel(type: .event)
-
-        viewModel.backgroundColor
-            .bind { _ in }
-            .disposed(by: disposeBag)
+        let keep = makeViewModel(type: .event); _ = keep
 
         calendarService.changeEvents([
             .make(start: now + 30, end: now + 60)
@@ -761,11 +745,7 @@ class NextEventViewModelTests {
         settings.toggleEventStatusItemSound.onNext(true)
         settings.toggleEventStatusItemAttentionStartAt5min.onNext(true)
 
-        let viewModel = makeViewModel(type: .event)
-
-        viewModel.backgroundColor
-            .bind { _ in }
-            .disposed(by: disposeBag)
+        let keep = makeViewModel(type: .event); _ = keep
 
         calendarService.changeEvents([
             .make(start: now + 5 * 60, end: now + 10 * 60)
@@ -779,17 +759,36 @@ class NextEventViewModelTests {
         settings.toggleEventStatusItemSound.onNext(true)
         settings.toggleEventStatusItemAttentionStartAt5min.onNext(false)
 
-        let viewModel = makeViewModel(type: .event)
-
-        viewModel.backgroundColor
-            .bind { _ in }
-            .disposed(by: disposeBag)
+        let keep = makeViewModel(type: .event); _ = keep
 
         calendarService.changeEvents([
             .make(start: now + 5 * 60, end: now + 10 * 60)
         ])
 
         #expect(soundPlayer.played.isEmpty)
+    }
+
+    @Test func testNextEvent_sound_shouldThrottlePlay() {
+
+        settings.toggleEventStatusItemSound.onNext(true)
+
+        let keep = makeViewModel(type: .event); _ = keep
+
+        calendarService.changeEvents([
+            .make(start: now + 30, end: now + 60)
+        ])
+
+        settings.toggleEventStatusItemSound.onNext(false)
+        settings.toggleEventStatusItemSound.onNext(true)
+
+        #expect(soundPlayer.played == [.ping])
+
+        scheduler.advance(.seconds(1))
+
+        settings.toggleEventStatusItemSound.onNext(false)
+        settings.toggleEventStatusItemSound.onNext(true)
+
+        #expect(soundPlayer.played == [.ping, .ping])
     }
 
     @Test func testNextEvent_isAllDay_shouldNotAppear() {
