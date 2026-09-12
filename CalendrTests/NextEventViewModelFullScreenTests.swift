@@ -138,6 +138,25 @@ class NextEventViewModelFullScreenTests {
         #expect(fullScreen != nil)
     }
 
+    @Test func testNextEvent_isInProgress_isOverdueReminder_shouldNotPublishFullScreenViewModel() {
+
+        settings.toggleFullScreenEvent.onNext(true)
+
+        let viewModel = makeViewModel(type: .reminder)
+
+        var fullScreen: EventFullScreenViewModel?
+
+        viewModel.fullScreenViewModel
+            .bind { fullScreen = $0 }
+            .disposed(by: disposeBag)
+
+        calendarService.changeEvents([
+            .make(start: now - 10, type: .reminder(completed: false))
+        ])
+
+        #expect(fullScreen == nil)
+    }
+
     // local id is not guaranteed to be stable
     @Test func testNextEvent_isInProgress_eventIdChanged_shouldNotReplayFullScreenViewModel() {
 
