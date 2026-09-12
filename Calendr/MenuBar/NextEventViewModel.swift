@@ -109,7 +109,7 @@ class NextEventViewModel {
         let throttledHoursToCheck = settings.eventStatusItemCheckRange
             .throttle(.seconds(1), scheduler: scheduler)
 
-        let nextEvents = Observable
+        let fetchedEvents = Observable
             .combineLatest(
                 settings.showEventStatusItem,
                 throttledHoursToCheck,
@@ -125,16 +125,20 @@ class NextEventViewModel {
                 // so we need to fetch ahead to cover the worst case scenario
                 let fetchAhead = 24
 
-                let start = dateProvider.calendar.startOfDay(for: dateProvider.now)
+                var start = dateProvider.calendar.startOfDay(for: dateProvider.now)
                 let end = dateProvider.calendar.date(byAdding: .hour, value: hoursToCheck + fetchAhead, to: start)!
-                let events = calendarService.events(from: start, to: end, calendars: calendars)
 
-                return events
+                if type == .reminder {
+                    start = dateProvider.calendar.date(byAdding: .day, value: -7, to: start)!
+                }
+
+                return calendarService.events(from: start, to: end, calendars: calendars)
             }
+            .share(replay: 1)
 
         let filteredEvents = Observable
             .combineLatest(
-                nextEvents, skippedEvents
+                fetchedEvents, skippedEvents
             )
             .map { events, skipped in
                 events.filter { event in
@@ -146,9 +150,24 @@ class NextEventViewModel {
                 }
             }
 
+        let overdueReminders = Observable
+            .combineLatest(
+                fetchedEvents, settings.showOverdueReminders
+            )
+            .map { events, showOverdueReminders -> [EventModel] in
+
+                guard type == .reminder, showOverdueReminders else { return [] }
+
+                return events.filter { event in
+                    event.type == .reminder(completed: false) &&
+                    dateProvider.calendar.isDate(event.start, lessThan: dateProvider.now, granularity: .day)
+                }
+            }
+
         let nextEventTickingObservable = Observable
-            .combineLatest(filteredEvents, settings.eventStatusItemCheckRange)
-            .flatMapLatest { [dateProvider] events, hoursToCheck -> Observable<NextEvent?> in
+            .combineLatest(filteredEvents, overdueReminders, settings.eventStatusItemCheckRange)
+            .distinctUntilChanged(==)
+            .flatMapLatest { [dateProvider] events, overdue, hoursToCheck -> Observable<NextEvent?> in
 
                 Observable<Int>.interval(.seconds(1), scheduler: scheduler)
                     .void()
@@ -165,9 +184,11 @@ class NextEventViewModel {
                                 now.distance(to: event.start) <= 3600 * max(0.5, Double(hoursToCheck))
                             }
 
-                        guard !eventsInRange.isEmpty else { return nil }
+                        let eligibleEvents = overdue + eventsInRange
 
-                        let upcoming = Dictionary(grouping: eventsInRange, by: \.start)
+                        guard !eligibleEvents.isEmpty else { return nil }
+
+                        let upcoming = Dictionary(grouping: eligibleEvents, by: \.start)
                             .sorted {
                                 abs($0.key.distance(to: now))
                             }
@@ -183,8 +204,11 @@ class NextEventViewModel {
                         guard let event else { return nil }
 
                         let isInProgress = dateProvider.calendar.isDate(
-                            now, greaterThanOrEqualTo: event.start, granularity: .second
+                            now,
+                            greaterThanOrEqualTo: event.start,
+                            granularity: .second
                         )
+
                         return NextEvent(event: event, grouped: upcoming, isInProgress: isInProgress)
                     }
             }
@@ -213,6 +237,14 @@ class NextEventViewModel {
             .map { [actionCallback] next, isEnabled, forceLocalTimeZone in
 
                 guard let next, next.isInProgress, isEnabled else { return nil }
+
+                let isOverdue = dateProvider.calendar.isDate(
+                    next.event.end,
+                    lessThan: dateProvider.now,
+                    granularity: .day
+                )
+
+                guard !isOverdue else { return nil }
 
                 return EventFullScreenViewModel(
                     event: next.event,
@@ -252,10 +284,9 @@ class NextEventViewModel {
             .combineLatest(
                 nextEventTickingObservable,
                 settings.eventStatusItemFlashing,
-                settings.eventStatusItemSound,
                 settings.eventStatusItemAttentionStartAt5min
             )
-            .map { [dateProvider] nextEvent, flashing, sound, startAt5min in
+            .map { [dateProvider] nextEvent, flashing, startAt5min in
 
                 guard let nextEvent, nextEvent.event.status != .pending else { return .clear }
 
@@ -263,37 +294,57 @@ class NextEventViewModel {
                     return nextEvent.event.calendar.color.withAlphaComponent(0.3)
                 }
 
+                guard flashing else { return .clear }
+
                 let diff = dateProvider.calendar.dateComponents([.minute, .second], from: dateProvider.now, to: nextEvent.event.start)
 
                 guard let minutes = diff.minute, let seconds = diff.second else { return .clear }
 
-                if sound {
-                    // play at 5 minutes
-                    if minutes == 5, seconds == 0, startAt5min {
-                        soundPlayer.play(.ping)
-                    }
-
-                    // play at 30 seconds to start
-                    if minutes == 0, seconds == 30 {
-                        soundPlayer.play(.ping)
-                    }
+                // flash continuously under 30 seconds to start
+                if minutes == 0, seconds <= 30 {
+                    return seconds % 2 == 0 ? .systemRed : .clear
                 }
 
-                if flashing {
-                    // flash continuously under 30 seconds to start
-                    if minutes == 0, seconds <= 30 {
-                        return seconds % 2 == 0 ? .systemRed : .clear
-                    }
-
-                    // flash 5x every minute
-                    if minutes <= 5, startAt5min {
-                        return seconds > 50 && seconds % 2 == 1 ? .systemRed : .clear
-                    }
+                // flash 5x every minute
+                if minutes <= 5, startAt5min {
+                    return seconds > 50 && seconds % 2 == 1 ? .systemRed : .clear
                 }
 
                 return .clear
             }
             .distinctUntilChanged()
+
+        Observable
+            .combineLatest(
+                nextEventTickingObservable,
+                settings.eventStatusItemSound,
+                settings.eventStatusItemAttentionStartAt5min
+            )
+            .compactMap { [dateProvider] nextEvent, soundEnabled, startAt5min -> SystemSound? in
+
+                guard soundEnabled, let nextEvent, !nextEvent.isInProgress, nextEvent.event.status != .pending else { return nil }
+
+                let diff = dateProvider.calendar.dateComponents([.minute, .second], from: dateProvider.now, to: nextEvent.event.start)
+
+                guard let minutes = diff.minute, let seconds = diff.second else { return nil }
+
+                // play at 5 minutes
+                if minutes == 5, seconds == 0, startAt5min {
+                    return .ping
+                }
+
+                // play at 30 seconds to start
+                if minutes == 0, seconds == 30 {
+                    return .ping
+                }
+
+                return nil
+            }
+            .throttle(.seconds(1), scheduler: scheduler)
+            .bind {
+                soundPlayer.play($0)
+            }
+            .disposed(by: disposeBag)
 
         let shouldCompact = Observable
             .combineLatest(settings.eventStatusItemDetectNotch, screenProvider.hasNotchObservable)
@@ -342,13 +393,12 @@ class NextEventViewModel {
 
                 var date = isInProgress && !event.type.isReminder ? event.end : event.start
 
-                let diff = dateProvider.calendar.dateComponents([.minute, .second], from: dateProvider.now, to: date)
+                let diff = dateProvider.calendar.dateComponents([.day, .minute, .second], from: dateProvider.now, to: date)
 
                 dateFormatter.allowedUnits = [.hour, .minute]
 
-                if diff.minute! >= 24 * 60 {
+                if abs(diff.day!) > 0 {
                     dateFormatter.allowedUnits = [.day]
-                    date = dateProvider.calendar.endOfDay(for: date)
                 }
                 else if diff.minute == 0, diff.second! <= 30 {
                     dateFormatter.allowedUnits = [.second]
