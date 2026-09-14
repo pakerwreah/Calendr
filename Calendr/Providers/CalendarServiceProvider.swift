@@ -677,7 +677,7 @@ private extension CalendarModel {
             id: calendar.calendarIdentifier,
             account: .init(from: calendar),
             title: calendar.title,
-            color: calendar.color,
+            color: calendar.color ?? .controlAccentColor,
             isSubscribed: calendar.isSubscribed || calendar.isDelegate,
             allowsContentModifications: calendar.allowsContentModifications
         )
