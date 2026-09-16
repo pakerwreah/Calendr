@@ -1009,6 +1009,12 @@ class MainViewController: NSViewController {
             set { super.scrollerStyle = .overlay }
             get { .overlay }
         }
+
+        override var verticalScroller: NSScroller? {
+            didSet {
+                verticalScroller?.controlSize = .mini
+            }
+        }
     }
 
     private func makeEventListScroll() -> NSScrollView {
@@ -1020,7 +1026,6 @@ class MainViewController: NSViewController {
         scrollView.scrollerStyle = .overlay
         scrollView.hasVerticalScroller = true
         scrollView.scrollerInsets.right = -2
-        scrollView.verticalScroller?.controlSize = .mini
 
         scrollView.contentView.edges(equalTo: scrollView)
         scrollView.contentView.edges(equalTo: eventListView).bottom.priority = .dragThatCanResizeWindow
