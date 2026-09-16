@@ -1003,13 +1003,24 @@ class MainViewController: NSViewController {
         EventListSummaryView(summary: eventListViewModel.summary, showSummary: settingsViewModel.showEventListSummary)
     }
 
+    private class EventListScrollView: NSScrollView {
+
+        override var scrollerStyle: NSScroller.Style {
+            set { super.scrollerStyle = .overlay }
+            get { .overlay }
+        }
+    }
+
     private func makeEventListScroll() -> NSScrollView {
 
-        let scrollView = NSScrollView()
+        let scrollView = EventListScrollView()
 
         scrollView.drawsBackground = false
         scrollView.documentView = eventListView
         scrollView.scrollerStyle = .overlay
+        scrollView.hasVerticalScroller = true
+        scrollView.scrollerInsets.right = -2
+        scrollView.verticalScroller?.controlSize = .mini
 
         scrollView.contentView.edges(equalTo: scrollView)
         scrollView.contentView.edges(equalTo: eventListView).bottom.priority = .dragThatCanResizeWindow
