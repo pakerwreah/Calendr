@@ -18,10 +18,22 @@ class EventOptionsViewModelTests {
     let calendarService = MockCalendarServiceProvider()
     lazy var workspace = MockWorkspaceServiceProvider(dateProvider: dateProvider)
 
+    @Test func testOptions_withDisallowedContentModifications() {
+
+        let viewModel = mock(
+            event: .make(
+                type: .event(.pending),
+                calendar: .make(allowsContentModifications: false)
+            ),
+            source: .details
+        )
+        #expect(viewModel == nil)
+    }
+
     @Test func testOptions_withPendingInvitationStatus() {
 
         let viewModel = mock(event: .make(type: .event(.pending)), source: .details)
-        #expect(viewModel.items == [
+        #expect(viewModel?.items == [
             .action(.status(.accept)),
             .action(.status(.maybe)),
             .action(.status(.decline))
@@ -31,7 +43,7 @@ class EventOptionsViewModelTests {
     @Test func testOptions_withAcceptedInvitationStatus() {
 
         let viewModel = mock(event: .make(type: .event(.accepted)), source: .details)
-        #expect(viewModel.items == [
+        #expect(viewModel?.items == [
             .action(.status(.maybe)),
             .action(.status(.decline))
         ])
@@ -40,7 +52,7 @@ class EventOptionsViewModelTests {
     @Test func testOptions_withMaybeInvitationStatus() {
 
         let viewModel = mock(event: .make(type: .event(.maybe)), source: .details)
-        #expect(viewModel.items == [
+        #expect(viewModel?.items == [
             .action(.status(.accept)),
             .action(.status(.decline))
         ])
@@ -49,7 +61,7 @@ class EventOptionsViewModelTests {
     @Test func testOptions_withDeclinedInvitationStatus() {
 
         let viewModel = mock(event: .make(type: .event(.declined)), source: .details)
-        #expect(viewModel.items == [
+        #expect(viewModel?.items == [
             .action(.status(.accept)),
             .action(.status(.maybe))
         ])
@@ -70,7 +82,7 @@ class EventOptionsViewModelTests {
 
         let action: EventAction = .status(.accept)
 
-        viewModel.triggerAction(action)
+        viewModel?.triggerAction(action)
 
         #expect(status == .accepted)
         #expect(callback == action)
@@ -79,13 +91,13 @@ class EventOptionsViewModelTests {
     @Test func testOptions_fromList_withUnknownInvitationStatus() {
 
         let viewModel = mock(event: .make(type: .event(.unknown)), source: .calendar)
-        #expect(viewModel.items == [.action(.open), .separator, .action(.delete)])
+        #expect(viewModel?.items == [.action(.open), .separator, .action(.delete)])
     }
 
     @Test func testOptions_fromList_withUnknownInvitationStatus_withLink() {
 
         let viewModel = mock(event: .make(url: EventLink.zoomLink.url, type: .event(.unknown)), source: .calendar)
-        #expect(viewModel.items == [
+        #expect(viewModel?.items == [
             .action(.open),
             .separator,
             .action(.link(.zoomLink, isInProgress: false)),
@@ -97,7 +109,7 @@ class EventOptionsViewModelTests {
     @Test func testOptions_fromList() {
 
         let viewModel = mock(event: .make(type: .event(.pending)), source: .calendar)
-        #expect(viewModel.items == [
+        #expect(viewModel?.items == [
             .action(.open),
             .separator,
             .action(.status(.accept)),
@@ -108,10 +120,24 @@ class EventOptionsViewModelTests {
         ])
     }
 
+    @Test func testOptions_fromList_withDisallowedContentModifications() {
+
+        let viewModel = mock(
+            event: .make(
+                type: .event(.pending),
+                calendar: .make(allowsContentModifications: false)
+            ),
+            source: .calendar
+        )
+        #expect(viewModel?.items == [
+            .action(.open)
+        ])
+    }
+
     @Test func testOptions_fromList_withLink() {
 
         let viewModel = mock(event: .make(url: EventLink.zoomLink.url, type: .event(.pending)), source: .calendar)
-        #expect(viewModel.items == [
+        #expect(viewModel?.items == [
             .action(.open),
             .separator,
             .action(.link(.zoomLink, isInProgress: false)),
@@ -127,13 +153,13 @@ class EventOptionsViewModelTests {
     @Test func testOptions_fromMenuBar_withUnknownInvitationStatus() {
 
         let viewModel = mock(event: .make(type: .event(.unknown)), source: .menubar)
-        #expect(viewModel.items == [.action(.open), .separator, .action(.skip)])
+        #expect(viewModel?.items == [.action(.open), .separator, .action(.skip)])
     }
 
     @Test func testOptions_fromMenuBar_withUnknownInvitationStatus_withLink() {
 
         let viewModel = mock(event: .make(url: EventLink.zoomLink.url, type: .event(.unknown)), source: .menubar)
-        #expect(viewModel.items == [
+        #expect(viewModel?.items == [
             .action(.open),
             .separator,
             .action(.link(.zoomLink, isInProgress: false)),
@@ -145,7 +171,7 @@ class EventOptionsViewModelTests {
     @Test func testOptions_fromMenuBar() {
 
         let viewModel = mock(event: .make(type: .event(.pending)), source: .menubar)
-        #expect(viewModel.items == [
+        #expect(viewModel?.items == [
             .action(.open),
             .separator,
             .action(.skip),
@@ -159,7 +185,7 @@ class EventOptionsViewModelTests {
     @Test func testOptions_fromMenuBar_withLink() {
 
         let viewModel = mock(event: .make(url: EventLink.zoomLink.url, type: .event(.pending)), source: .menubar)
-        #expect(viewModel.items == [
+        #expect(viewModel?.items == [
             .action(.open),
             .separator,
             .action(.link(.zoomLink, isInProgress: false)),
@@ -181,14 +207,14 @@ class EventOptionsViewModelTests {
 
         let viewModel = mock(event: event, source: .calendar)
 
-        #expect(viewModel.items == [.action(.open)])
+        #expect(viewModel?.items == [.action(.open)])
     }
 
     @Test func testOptions_fromList_withBirthday_doesNotIncludeDelete() {
 
         let viewModel = mock(event: .make(type: .birthday), source: .calendar)
 
-        #expect(viewModel.items == [.action(.open)])
+        #expect(viewModel?.items == [.action(.open)])
     }
 
     @Test func testDeleteStandaloneEvent_withConfirmation_deletesOnlyThatEvent() {
@@ -206,7 +232,7 @@ class EventOptionsViewModelTests {
             deletionConfirmation: confirmation
         )
 
-        viewModel.triggerAction(.delete)
+        viewModel?.triggerAction(.delete)
 
         #expect(confirmation.callCount == 1)
         #expect(confirmation.receivedIsRecurring == false)
@@ -229,7 +255,7 @@ class EventOptionsViewModelTests {
             deletionConfirmation: confirmation
         )
 
-        viewModel.triggerAction(.delete)
+        viewModel?.triggerAction(.delete)
 
         #expect(confirmation.callCount == 1)
         #expect(confirmation.receivedIsRecurring == false)
@@ -251,7 +277,7 @@ class EventOptionsViewModelTests {
             deletionConfirmation: confirmation
         )
 
-        viewModel.triggerAction(.delete)
+        viewModel?.triggerAction(.delete)
 
         #expect(confirmation.callCount == 1)
         #expect(confirmation.receivedIsRecurring == true)
@@ -272,7 +298,7 @@ class EventOptionsViewModelTests {
             deletionConfirmation: confirmation
         )
 
-        viewModel.triggerAction(.delete)
+        viewModel?.triggerAction(.delete)
 
         #expect(confirmation.callCount == 1)
         #expect(deletedEvent?.scope == .futureEvents)
@@ -292,7 +318,7 @@ class EventOptionsViewModelTests {
             deletionConfirmation: confirmation
         )
 
-        viewModel.triggerAction(.delete)
+        viewModel?.triggerAction(.delete)
 
         #expect(confirmation.callCount == 1)
         #expect(deletedEvent == nil)
@@ -308,7 +334,7 @@ class EventOptionsViewModelTests {
             openExpectation.fulfill()
         }
 
-        viewModel.triggerAction(.open)
+        viewModel?.triggerAction(.open)
         await fulfillment(of: [openExpectation])
     }
 
@@ -344,7 +370,7 @@ class EventOptionsViewModelTests {
         source: ContextMenuSource,
         callback: @escaping (EventAction?) -> Void = { _ in },
         deletionConfirmation: EventDeletionConfirming = MockEventDeletionConfirmation()
-    ) -> EventOptionsViewModel {
+    ) -> EventOptionsViewModel? {
 
         EventOptionsViewModel(
             event: event,
@@ -354,7 +380,7 @@ class EventOptionsViewModelTests {
             source: source,
             callback: .init { callback($0.element) },
             deletionConfirmation: deletionConfirmation
-        )!
+        )
     }
 }
 
