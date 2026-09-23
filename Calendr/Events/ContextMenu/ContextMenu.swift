@@ -98,6 +98,10 @@ private class ContextMenuItem<Action: ContextMenuAction>: NSMenuItem {
         super.init(title: action.title, action: #selector(selected), keyEquivalent: "")
         self.target = self
         self.image = action.icon
+
+        if #available(macOS 27.0, *) {
+            self.preferredImageVisibility = .visible
+        }
     }
 
     @objc private func selected() {
