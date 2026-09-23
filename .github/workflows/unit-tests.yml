@@ -15,7 +15,7 @@ jobs:
   unit-tests:
     if: &not-draft github.event_name != 'pull_request' || github.event.pull_request.draft == false
     name: Unit Tests
-    runs-on: &macos macos-27
+    runs-on: &macos xcode-27
     permissions:
       actions: write
       checks: write
