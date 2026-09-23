@@ -604,18 +604,6 @@ private extension EKEvent {
     }
 }
 
-private extension Participant {
-
-    init(from participant: EKParticipant, isOrganizer: Bool) {
-        self.init(
-            name: participant.name ?? participant.url.absoluteString.replacingOccurrences(of: "mailto:", with: ""),
-            status: .init(from: participant.participantStatus),
-            isOrganizer: isOrganizer,
-            isCurrentUser: participant.isCurrentUser
-        )
-    }
-}
-
 private extension EventStatus {
 
     init(from status: EKParticipantStatus?) {
@@ -716,7 +704,14 @@ private extension Array where Element == Participant {
             participants.append(organizer)
         }
         self.init(
-            participants.map { .init(from: $0, isOrganizer: $0.url == event.organizer?.url) }
+            participants.map {
+                .init(
+                    name: $0.name ?? $0.url.absoluteString.replacingOccurrences(of: "mailto:", with: ""),
+                    status: .init(from: $0.participantStatus),
+                    isOrganizer: $0.url == event.organizer?.url,
+                    isCurrentUser: $0.isCurrentUser && !event.calendar.isDelegate
+                )
+            }
         )
     }
 }
