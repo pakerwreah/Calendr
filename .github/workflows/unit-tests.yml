@@ -41,7 +41,7 @@ jobs:
 
       - name: Test
         run: |
-          set -o pipefail && swift test --xunit-output=./report.xml
+          set -o pipefail && swift test --disable-xctest --xunit-output=./report.xml
 
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v6
