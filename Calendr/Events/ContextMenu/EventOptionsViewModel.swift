@@ -61,7 +61,7 @@ class EventOptionsViewModel: BaseContextMenuViewModel<EventAction> {
             addItem(.skip)
         }
 
-        if event.status != .unknown {
+        if event.status != .unknown, event.calendar.allowsContentModifications {
             addSeparator()
 
             if event.status != .accepted {
