@@ -14,6 +14,7 @@ class EventDetailsViewModelTests {
 
     let disposeBag = DisposeBag()
 
+    let clipboard = MockClipboardProvider()
     let localStorage = MockLocalStorageProvider()
     let dateProvider = MockDateProvider()
     let calendarService = MockCalendarServiceProvider()
@@ -503,6 +504,23 @@ class EventDetailsViewModelTests {
         await fulfillment(of: [selectedBrowserExpectation])
     }
 
+    @Test func testCopyLink() {
+
+        let viewModel = mock(event: .make(url: URL(string: "https://example.com")!))
+
+        #expect(viewModel.copyLinkState.lastValue() == .copy)
+        #expect(clipboard.string == nil)
+
+        viewModel.copyLinkTapped.onNext(())
+
+        #expect(viewModel.copyLinkState.lastValue() == .copied)
+        #expect(clipboard.string == "https://example.com")
+
+        scheduler.advance(.milliseconds(1500))
+
+        #expect(viewModel.copyLinkState.lastValue() == .copy)
+    }
+
     func mockBrowsers() {
         workspace.m_urlForApplicationToOpenURL = mockAppUrl("Default")
         workspace.m_urlForApplicationToOpenContentType = mockAppUrl("Default")
@@ -523,6 +541,7 @@ class EventDetailsViewModelTests {
             workspace: workspace,
             networkProvider: networkProvider,
             localStorage: localStorage,
+            clipboard: clipboard,
             settings: settings,
             isShowingObserver: .dummy(),
             callback: .init { callback($0.element) },

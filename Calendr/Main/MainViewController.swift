@@ -203,6 +203,7 @@ class MainViewController: NSViewController {
             workspace: workspace,
             networkProvider: networkProvider,
             localStorage: localStorage,
+            clipboard: .shared,
             settings: settingsViewModel,
             viewDidAppear: viewDidAppear,
             scheduler: MainScheduler.instance,
@@ -218,6 +219,8 @@ class MainViewController: NSViewController {
         nextEventViewModel = NextEventViewModel(
             type: .event,
             localStorage: localStorage,
+            clipboard: .shared,
+            soundPlayer: .shared,
             settings: settingsViewModel,
             nextEventCalendars: nextEventCalendars,
             dateProvider: dateProvider,
@@ -228,13 +231,14 @@ class MainViewController: NSViewController {
             networkProvider: networkProvider,
             screenProvider: screenProvider,
             isShowingDetailsModal: mainViewModel.isShowingDetailsModal.asObserver(),
-            scheduler: MainScheduler.instance,
-            soundPlayer: .shared
+            scheduler: MainScheduler.instance
         )
 
         nextReminderViewModel = NextEventViewModel(
             type: .reminder,
             localStorage: localStorage,
+            clipboard: .shared,
+            soundPlayer: .shared,
             settings: settingsViewModel,
             nextEventCalendars: nextEventCalendars,
             dateProvider: dateProvider,
@@ -245,8 +249,7 @@ class MainViewController: NSViewController {
             networkProvider: networkProvider,
             screenProvider: screenProvider,
             isShowingDetailsModal: mainViewModel.isShowingDetailsModal.asObserver(),
-            scheduler: MainScheduler.instance,
-            soundPlayer: .shared
+            scheduler: MainScheduler.instance
         )
 
         nextEventView = NextEventView(viewModel: nextEventViewModel)

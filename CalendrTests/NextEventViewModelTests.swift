@@ -32,6 +32,8 @@ class NextEventViewModelTests {
         .init(
             type: type,
             localStorage: localStorage,
+            clipboard: .shared,
+            soundPlayer: soundPlayer,
             settings: settings,
             nextEventCalendars: calendarsSubject,
             dateProvider: dateProvider,
@@ -42,8 +44,7 @@ class NextEventViewModelTests {
             networkProvider: networkProvider,
             screenProvider: screenProvider,
             isShowingDetailsModal: .init(value: false),
-            scheduler: scheduler,
-            soundPlayer: soundPlayer
+            scheduler: scheduler
         )
     }
 

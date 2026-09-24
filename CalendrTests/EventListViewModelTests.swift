@@ -46,6 +46,7 @@ class EventListViewModelTests {
         workspace: workspace,
         networkProvider: networkProvider,
         localStorage: localStorage,
+        clipboard: .shared,
         settings: settings,
         viewDidAppear: viewDidAppearSubject,
         scheduler: scheduler,

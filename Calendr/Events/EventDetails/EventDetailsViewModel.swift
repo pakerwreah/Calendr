@@ -13,6 +13,11 @@ enum EventDetailsSource {
     case menubar
 }
 
+enum CopyLinkState {
+    case copy
+    case copied
+}
+
 class EventDetailsViewModel {
 
     let type: EventType
@@ -36,6 +41,9 @@ class EventDetailsViewModel {
     let weather: Maybe<(Weather, isAllDay: Bool)>
     let isInProgress: Observable<Bool>
     let close: Completable
+
+    let copyLinkTapped: AnyObserver<Void>
+    let copyLinkState: Observable<CopyLinkState>
 
     let linkTapped: AnyObserver<Void>
     let openTapped: AnyObserver<Void>
@@ -66,6 +74,7 @@ class EventDetailsViewModel {
         workspace: WorkspaceServiceProviding,
         networkProvider: NetworkServiceProviding,
         localStorage: LocalStorageProvider,
+        clipboard: ClipboardProviding,
         settings: EventSettings,
         isShowingObserver: AnyObserver<Bool>,
         callback: AnyObserver<ContextCallbackAction>,
@@ -111,6 +120,21 @@ class EventDetailsViewModel {
             if let link {
                 workspace.open(link)
             }
+        }
+
+        let (copyLinkState, copyLinkStateObserver) = BehaviorSubject<CopyLinkState>.pipe(value: .copy)
+        self.copyLinkState = copyLinkState
+
+        copyLinkState
+            .matching(.copied)
+            .debounce(.milliseconds(1500), scheduler: scheduler)
+            .map(.copy)
+            .bind(to: copyLinkStateObserver)
+            .disposed(by: disposeBag)
+
+        copyLinkTapped = copyLinkStateObserver.mapObserver { [url] in
+            clipboard.setString(url)
+            return .copied
         }
 
         openAttachment = .init { event in

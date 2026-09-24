@@ -55,6 +55,7 @@ class EventViewModel {
     private let workspace: WorkspaceServiceProviding
     private let networkProvider: NetworkServiceProviding
     private let localStorage: LocalStorageProvider
+    private let clipboard: ClipboardProviding
 
     private let disposeBag = DisposeBag()
 
@@ -68,6 +69,7 @@ class EventViewModel {
         workspace: WorkspaceServiceProviding,
         networkProvider: NetworkServiceProviding,
         localStorage: LocalStorageProvider,
+        clipboard: ClipboardProviding,
         settings: EventSettings,
         isShowingDetailsModal: AnyObserver<Bool>,
         callback: AnyObserver<ContextCallbackAction>,
@@ -78,6 +80,7 @@ class EventViewModel {
         self.source = source
         self.event = event
         self.settings = settings
+        self.clipboard = clipboard
         self.dateProvider = dateProvider
         self.calendarService = calendarService
         self.workspace = workspace
@@ -322,6 +325,7 @@ class EventViewModel {
             workspace: workspace,
             networkProvider: networkProvider,
             localStorage: localStorage,
+            clipboard: clipboard,
             settings: settings,
             isShowingObserver: isShowingDetailsModal,
             callback: callback,
