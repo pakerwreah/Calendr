@@ -43,6 +43,7 @@ class EventListViewModel {
     private let workspace: WorkspaceServiceProviding
     private let networkProvider: NetworkServiceProviding
     private let localStorage: LocalStorageProvider
+    private let clipboard: ClipboardProviding
     private let settings: EventListSettings
     private let scheduler: SchedulerType
     private let refreshScheduler: SchedulerType
@@ -85,6 +86,7 @@ class EventListViewModel {
         workspace: WorkspaceServiceProviding,
         networkProvider: NetworkServiceProviding,
         localStorage: LocalStorageProvider,
+        clipboard: ClipboardProviding,
         settings: EventListSettings,
         viewDidAppear: Observable<Void>,
         scheduler: SchedulerType,
@@ -101,6 +103,7 @@ class EventListViewModel {
         self.workspace = workspace
         self.networkProvider = networkProvider
         self.localStorage = localStorage
+        self.clipboard = clipboard
         self.settings = settings
         self.scheduler = scheduler
         self.refreshScheduler = refreshScheduler
@@ -294,6 +297,7 @@ class EventListViewModel {
             workspace: workspace,
             networkProvider: networkProvider,
             localStorage: localStorage,
+            clipboard: clipboard,
             settings: settings,
             isShowingDetailsModal: isShowingDetailsModal.asObserver(),
             callback: callback,

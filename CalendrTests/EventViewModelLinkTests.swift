@@ -252,6 +252,7 @@ class EventViewModelLinkTests {
             workspace: workspace,
             networkProvider: networkProvider,
             localStorage: localStorage,
+            clipboard: .shared,
             settings: settings,
             isShowingDetailsModal: .dummy(),
             callback: .dummy(),

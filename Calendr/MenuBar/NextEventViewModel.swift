@@ -67,6 +67,7 @@ class NextEventViewModel {
 
     private let type: NextEventType
     private let localStorage: LocalStorageProvider
+    private let clipboard: ClipboardProviding
     private let settings: NextEventSettings
     private let dateProvider: DateProviding
     private let calendarService: CalendarServiceProviding
@@ -79,6 +80,8 @@ class NextEventViewModel {
     init(
         type: NextEventType,
         localStorage: LocalStorageProvider,
+        clipboard: ClipboardProviding,
+        soundPlayer: SoundProviding,
         settings: NextEventSettings,
         nextEventCalendars: Observable<[String]>,
         dateProvider: DateProviding,
@@ -89,12 +92,12 @@ class NextEventViewModel {
         networkProvider: NetworkServiceProviding,
         screenProvider: ScreenProviding,
         isShowingDetailsModal: BehaviorSubject<Bool>,
-        scheduler: SchedulerType,
-        soundPlayer: SoundProviding
+        scheduler: SchedulerType
     ) {
 
         self.type = type
         self.localStorage = localStorage
+        self.clipboard = clipboard
         self.dateProvider = dateProvider
         self.calendarService = calendarService
         self.geocoder = geocoder
@@ -523,6 +526,7 @@ class NextEventViewModel {
             workspace: workspace,
             networkProvider: networkProvider,
             localStorage: localStorage,
+            clipboard: clipboard,
             settings: settings,
             isShowingObserver: isShowingDetailsModal.asObserver(),
             callback: actionCallback.asObserver(),
@@ -555,6 +559,7 @@ class NextEventViewModel {
             workspace: workspace,
             networkProvider: networkProvider,
             localStorage: localStorage,
+            clipboard: clipboard,
             settings: settings,
             viewDidAppear: .empty(),
             scheduler: MainScheduler.instance,

@@ -40,6 +40,7 @@ struct EventViewPreview: PreviewProvider {
                 workspace: workspace,
                 networkProvider: networkProvider,
                 localStorage: .shared,
+                clipboard: .shared,
                 settings: settings,
                 isShowingDetailsModal: .dummy(),
                 callback: .dummy(),

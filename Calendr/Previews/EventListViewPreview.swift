@@ -70,6 +70,7 @@ struct EventListViewPreview: PreviewProvider {
                 workspace: workspace,
                 networkProvider: networkProvider,
                 localStorage: .shared,
+                clipboard: .shared,
                 settings: settings,
                 viewDidAppear: .empty(),
                 scheduler: MainScheduler.instance,

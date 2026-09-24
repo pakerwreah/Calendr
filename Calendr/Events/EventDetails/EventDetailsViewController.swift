@@ -21,6 +21,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
     private let detailsStackView = NSStackView(.vertical)
     private let footerStackView = NSStackView(.horizontal)
     private let linkBtn = ImageButton()
+    private let copyLinkBtn = ImageButton()
 
     private let titleLabel = Label()
     private let urlLabel = Label(align: .left)
@@ -112,8 +113,28 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         guard let link = viewModel.link else {
             linkBtn.isHidden = true
             browserPicker.isHidden = true
+            copyLinkBtn.isHidden = true
             return
         }
+
+        copyLinkBtn.bezelStyle = .accessoryBar
+        copyLinkBtn.contentTintColor = .secondaryLabelColor
+        copyLinkBtn.refusesFirstResponder = true
+        copyLinkBtn.width(equalTo: 10)
+
+        copyLinkBtn.rx.tap
+            .bind(to: viewModel.copyLinkTapped)
+            .disposed(by: disposeBag)
+
+        viewModel.copyLinkState
+            .map {
+                switch $0 {
+                    case .copy: Icons.EventDetails.copy
+                    case .copied: Icons.EventDetails.copied
+                }
+            }
+            .bind(to: copyLinkBtn.rx.image)
+            .disposed(by: disposeBag)
 
         viewModel.isInProgress
             .observe(on: MainScheduler.instance)
@@ -344,7 +365,8 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         if !viewModel.url.isEmpty {
             urlLabel.stringValue = viewModel.url
 
-            let urlStackView = NSStackView(views: [urlLabel, browserPicker])
+            let urlStackView = NSStackView(views: [copyLinkBtn, urlLabel, browserPicker])
+            urlStackView.edgeInsets = .init(left: 2)
             urlStackView.setHuggingPriority(.required, for: .vertical)
 
             detailsStackView.addArrangedSubview(makeLine())

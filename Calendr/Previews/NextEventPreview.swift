@@ -38,6 +38,8 @@ struct NextEventPreview: PreviewProvider {
             viewModel: NextEventViewModel(
                 type: .event,
                 localStorage: .shared,
+                clipboard: .shared,
+                soundPlayer: soundPlayer,
                 settings: settings,
                 nextEventCalendars: .just([]),
                 dateProvider: dateProvider,
@@ -48,8 +50,7 @@ struct NextEventPreview: PreviewProvider {
                 networkProvider: networkProvider,
                 screenProvider: screenProvider,
                 isShowingDetailsModal: .init(value: false),
-                scheduler: MainScheduler.instance,
-                soundPlayer: soundPlayer
+                scheduler: MainScheduler.instance
             )
         )
         .preview()

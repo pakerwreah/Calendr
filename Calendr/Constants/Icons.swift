@@ -85,5 +85,7 @@ enum Icons {
     enum EventDetails {
         static let optionsArrow = NSImage(systemName: "chevron.down")
         static let map = NSImage(systemName: "map.fill")
+        static let copy = NSImage(systemName: "document.on.document")
+        static let copied = NSImage(systemName: "checkmark")
     }
 }
