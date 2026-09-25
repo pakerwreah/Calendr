@@ -95,6 +95,7 @@
 "settings.events.show_event_list_summary" = "Zobrazit souhrn seznamu událostí";
 "settings.events.show_future_events" = "Zobrazit budoucí události";
 "settings.events.natural_language_input" = "Zadávání v přirozeném jazyce";
+//"settings.events.natural_language_input.universal" = "Universal";
 
 "settings.appearance.transparency" = "Průhlednost";
 "settings.appearance.accessibility" = "Přístupnost";

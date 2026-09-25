@@ -19,7 +19,7 @@ struct EventTitleParserLanguageTests {
     }
 
     @Test func testUnsupportedLocalizationFallsBackToEnglishParser() {
-        #expect(EventTitleParserLanguage(preferredLocalizations: ["de-DE"]) == .english)
+        #expect(EventTitleParserLanguage(preferredLocalizations: ["de-DE"]) == .universal)
     }
 
     @Test func testEachLanguageResolvesToItsOwnParser() {
@@ -52,15 +52,14 @@ struct EventTitleParserLanguageTests {
     }
 
     @Test func testEverySupportedLanguageIsRecognizedByItsLanguageCode() {
-        for language in EventTitleParserLanguage.allCases where language != .universal {
-            #expect(EventTitleParserLanguage.isSupported([language.languageCode]))
-            #expect(EventTitleParserLanguage(preferredLocalizations: [language.languageCode]) == language)
+        for language in EventTitleParserLanguage.allCases {
+            #expect(EventTitleParserLanguage(preferredLocalizations: [language.rawValue]) == language)
         }
     }
 
-    @Test func testUnsupportedLocalizationIsNotReportedAsSupported() {
-        #expect(EventTitleParserLanguage.isSupported(["de"]) == false)
-        #expect(EventTitleParserLanguage.isSupported([]) == false)
+    @Test func testUnsupportedLocalizationDefaultsToUniversal() {
+        #expect(EventTitleParserLanguage(preferredLocalizations: ["de"]) == .universal)
+        #expect(EventTitleParserLanguage(preferredLocalizations: []) == .universal)
     }
 }
 

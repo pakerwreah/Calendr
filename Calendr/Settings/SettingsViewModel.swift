@@ -109,6 +109,11 @@ class SettingsViewModel:
         let name: String
     }
 
+    struct EventTitleParserLanguageOption: Equatable {
+        let language: EventTitleParserLanguage
+        let title: String
+    }
+
     // Observers
     let toggleAutoLaunch: AnyObserver<Bool>
     let toggleLaunchAgent: AnyObserver<Bool>
@@ -153,6 +158,7 @@ class SettingsViewModel:
     let toggleForceLocalTimeZone: AnyObserver<Bool>
     let toggleEventListSummary: AnyObserver<Bool>
     let toggleNaturalLanguageEventInput: AnyObserver<Bool>
+    let naturalLanguageEventInputLanguageObserver: AnyObserver<EventTitleParserLanguage>
     let transparencyObserver: AnyObserver<Int>
     let textScalingObserver: AnyObserver<Double>
     let calendarTextScalingObserver: AnyObserver<Double>
@@ -263,6 +269,8 @@ class SettingsViewModel:
 
     let calendarAppOptions: [CalendarAppOption]
 
+    let eventTitleParserLanguageOptions: [EventTitleParserLanguageOption]
+
     let dateFormatPlaceholder = AppConstants.defaultCustomDateFormat
 
     private let autoLauncher: AutoLaunching
@@ -329,6 +337,7 @@ class SettingsViewModel:
         toggleForceLocalTimeZone = localStorage.rx.observer(for: \.forceLocalTimeZone)
         toggleEventListSummary = localStorage.rx.observer(for: \.showEventListSummary)
         toggleNaturalLanguageEventInput = localStorage.rx.observer(for: \.naturalLanguageEventInputEnabled)
+        naturalLanguageEventInputLanguageObserver = localStorage.rx.observer(for: \.naturalLanguageEventInputLanguage).mapObserver(\.rawValue)
         transparencyObserver = localStorage.rx.observer(for: \.transparencyLevel)
         textScalingObserver = localStorage.rx.observer(for: \.textScaling)
         calendarTextScalingObserver = localStorage.rx.observer(for: \.calendarTextScaling)
@@ -384,6 +393,7 @@ class SettingsViewModel:
         forceLocalTimeZone = localStorage.rx.observe(\.forceLocalTimeZone)
         showEventListSummary = localStorage.rx.observe(\.showEventListSummary)
         naturalLanguageEventInputEnabled = localStorage.rx.observe(\.naturalLanguageEventInputEnabled)
+        naturalLanguageEventInputLanguage = localStorage.rx.observe(\.naturalLanguageEventInputLanguage).map { .init(rawValue: $0) ?? .universal }
         popoverTransparency = localStorage.rx.observe(\.transparencyLevel)
         textScaling = localStorage.rx.observe(\.textScaling)
         calendarTextScaling = localStorage.rx.observe(\.calendarTextScaling)
@@ -398,8 +408,6 @@ class SettingsViewModel:
             .void()
             .startWith(())
             .share(replay: 1)
-
-        naturalLanguageEventInputLanguage = localeChangeObservable.map { .current }
 
         let calendarChangeObservable = Observable
             .merge(
@@ -527,6 +535,19 @@ class SettingsViewModel:
                 }
             }
             .disposed(by: disposeBag)
+
+        eventTitleParserLanguageOptions = EventTitleParserLanguage.allCases.compactMap {
+            let title = switch $0 {
+                case .universal:
+                    Strings.Settings.Events.NaturalLanguageInput.universal
+                default:
+                    dateProvider.calendar.locale?.localizedString(forLanguageCode: $0.rawValue)
+            }
+            guard let title else {
+                return nil
+            }
+            return .init(language: $0, title: title)
+        }
     }
 
     func windowDidBecomeKey() {
