@@ -2,6 +2,8 @@
 //  EventTitleParser+Universal.swift
 //  Calendr
 //
+//  Created by Paker on 25/09/2026.
+//
 
 import Foundation
 import NaturalLanguage
