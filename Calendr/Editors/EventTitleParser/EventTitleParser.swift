@@ -124,10 +124,11 @@ enum EventTitleParser {
 
     static func parse(
         _ text: String,
-        calendar: Calendar = .current,
-        referenceDate: Date = Date(),
+        dateProvider: DateProviding,
+        calendar: Calendar,
         language: EventTitleParserLanguage = .english
     ) -> EventTitleParseResult {
+        let referenceDate = dateProvider.now
         let protectedRange = firstWordRange(in: text)
         let calendarMatches =
             calendarExpression
@@ -149,6 +150,7 @@ enum EventTitleParser {
 
         var instructions = language.parser.instructions(
             in: text,
+            dateProvider: dateProvider,
             calendar: calendar,
             excluding: excludedRanges
         )

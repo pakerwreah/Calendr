@@ -9,6 +9,7 @@ enum EnglishEventTitleParser: EventTitleParsing {
 
     static func instructions(
         in text: String,
+        dateProvider: DateProviding,
         calendar: Calendar,
         excluding excludedRanges: [NSRange]
     ) -> EventTitleInstructions {

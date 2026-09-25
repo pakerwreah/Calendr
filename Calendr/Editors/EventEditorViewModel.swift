@@ -243,8 +243,8 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
         let previousParsedTitle = parsedTitle
         let newParsedTitle = EventTitleParser.parse(
             title,
+            dateProvider: dateProvider,
             calendar: calendar,
-            referenceDate: dateProvider.now,
             language: naturalLanguageEventInputLanguage
         )
 

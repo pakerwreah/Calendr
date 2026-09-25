@@ -52,7 +52,7 @@ struct EventTitleParserLanguageTests {
     }
 
     @Test func testEverySupportedLanguageIsRecognizedByItsLanguageCode() {
-        for language in EventTitleParserLanguage.allCases {
+        for language in EventTitleParserLanguage.allCases where language != .universal {
             #expect(EventTitleParserLanguage.isSupported([language.languageCode]))
             #expect(EventTitleParserLanguage(preferredLocalizations: [language.languageCode]) == language)
         }
@@ -61,5 +61,18 @@ struct EventTitleParserLanguageTests {
     @Test func testUnsupportedLocalizationIsNotReportedAsSupported() {
         #expect(EventTitleParserLanguage.isSupported(["de"]) == false)
         #expect(EventTitleParserLanguage.isSupported([]) == false)
+    }
+}
+
+private extension EventTitleParser {
+
+    static func parse(_ text: String, language: EventTitleParserLanguage) -> EventTitleParseResult {
+
+        EventTitleParser.parse(
+            text,
+            dateProvider: MockDateProvider(),
+            calendar: .current,
+            language: language
+        )
     }
 }

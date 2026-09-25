@@ -230,10 +230,15 @@ struct EventTitleParserCzechTests {
         calendar.locale = Locale(identifier: "cs_CZ")
         calendar.timeZone = TimeZone(identifier: "Europe/Prague")!
 
+        let dateProvider = MockDateProvider(
+            calendar: calendar,
+            now: .make(year: 2025, month: 10, day: 25, hour: 10, minute: 30)
+        )
+
         return EventTitleParser.parse(
             title,
+            dateProvider: dateProvider,
             calendar: calendar,
-            referenceDate: .make(year: 2025, month: 10, day: 25, hour: 10, minute: 30),
             language: .czech
         )
     }
