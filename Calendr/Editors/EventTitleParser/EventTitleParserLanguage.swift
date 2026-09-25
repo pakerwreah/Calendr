@@ -30,6 +30,7 @@ enum EventTitleParserLanguage: CaseIterable, Equatable {
         // FIXME: remove after finishing tests
         if BuildConfig.isDebug, !BuildConfig.isTesting {
             self = .universal
+            return
         }
         // FIXME: fallback to .universal after finishing tests
         self = Self.matching(preferredLocalizations) ?? .english
