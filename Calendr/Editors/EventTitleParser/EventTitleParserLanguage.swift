@@ -36,9 +36,9 @@ enum EventTitleParserLanguage: CaseIterable, Equatable {
         self = Self.matching(preferredLocalizations) ?? .english
     }
 
-    static var current: EventTitleParserLanguage {
-        .init(preferredLocalizations: Localizations.preferredLocalizations)
-    }
+    static let current = EventTitleParserLanguage(
+        preferredLocalizations: Localizations.preferredLocalizations
+    )
 
     static func isSupported(_ preferredLocalizations: [String]) -> Bool {
         matching(preferredLocalizations) != nil
