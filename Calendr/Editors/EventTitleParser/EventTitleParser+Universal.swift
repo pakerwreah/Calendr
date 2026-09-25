@@ -32,22 +32,21 @@ enum UniversalEventTitleParser: EventTitleParsing {
             let tokenizer = NLTokenizer(unit: .word)
             tokenizer.string = dateText
 
-            //
-            // NSDataDetector is very greedy and tends to group terms together like "dinner tomorrow"
-            // as being a temporal token, which is not really what we want.
-            //
-            // To fix that we have to run a tokenizer and check individual terms.
-            //
-            // FIXME: This is not working. It still detects "dinner" / "lunch" as a date token 😔
-            //
+            /**
+             * NOTE:
+             *  NSDataDetector is very greedy and tends to group terms together like "dinner tomorrow"
+             *  as being a temporal term, which is not really what we want, but it's better than nothing.
+             *
+             * To mitigate that we have to run a tokenizer and check individual terms.
+             * That way we can at least filter out excluded ranges from the start/end.
+             */
             tokenizer.enumerateTokens(in: dateText.range) { tokenRange, _ in
                 let subTokenStr = String(dateText[tokenRange])
                 let globalNSRange = translateRange(tokenRange, from: dateText, offsetBy: match.range.location)
 
-                // This helps ignoring "dinner" / "lunch" at the beginning, but I'd rather not rely on this
+                // This helps ignoring "dinner" / "lunch" at the beginning
                 guard !isExcluded(globalNSRange, by: excludedRanges) else { return true }
 
-                // 3. Evaluate type structural signals completely without string matching
                 if let assignedType = evaluateAgnosticType(
                     tokenStr: subTokenStr,
                     components: components,
@@ -62,11 +61,9 @@ enum UniversalEventTitleParser: EventTitleParsing {
                             var titleWeekday: EventTitleWeekday? = nil
 
                             if let weekday = weekday {
-                                // Default to nearest occurrence
                                 var occurrence: EventTitleWeekdayOccurrence = .nearest
 
-                                // If the system's calculated day gap spans a week or more,
-                                // it structurally flags a "following" layout indicator (e.g., "next Friday")
+                                // e.g. "next Friday"
                                 if let offset = dayOffset, offset >= 7 {
                                     occurrence = .following
                                 }
