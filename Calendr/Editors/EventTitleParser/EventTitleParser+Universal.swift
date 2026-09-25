@@ -126,52 +126,6 @@ enum UniversalEventTitleParser: EventTitleParsing {
                                     endTime: endTime
                                 )
                             )
-
-                        case let .duration(seconds):
-                            // Determine the unit scale completely language-agnostically using basic time math
-                            let absoluteSeconds = Int(abs(seconds))
-
-                            let unit: EventTitleDurationUnit
-                            let value: Int
-
-                            let secondsInMinute = 60
-                            let secondsInHour = 3600
-                            let secondsInDay = 86400
-                            let secondsInWeek = 604800
-
-                            if absoluteSeconds % secondsInWeek == 0 {
-                                unit = .week
-                                value = absoluteSeconds / secondsInWeek
-                            } else if absoluteSeconds % secondsInDay == 0 {
-                                unit = .day
-                                value = absoluteSeconds / secondsInDay
-                            } else if absoluteSeconds % secondsInHour == 0 {
-                                unit = .hour
-                                value = absoluteSeconds / secondsInHour
-                            } else {
-                                unit = .minute
-                                value = absoluteSeconds / secondsInMinute
-                            }
-
-                            let titleDuration = EventTitleDuration(value: max(1, value), unit: unit)
-
-                            let existingIndex = instructions.durations.firstIndex {
-                                $0.duration == titleDuration
-                            }
-
-                            let instructionRange = if let existingIndex {
-                                NSUnionRange(instructions.durations.remove(at: existingIndex).range, globalNSRange)
-                            } else {
-                                globalNSRange
-                            }
-
-                            instructions.durations.append(
-                                EventTitleDurationMatch(
-                                    range: instructionRange,
-                                    duration: titleDuration
-                                )
-                            )
-
                     }
                 }
                 return true
@@ -185,7 +139,6 @@ enum UniversalEventTitleParser: EventTitleParsing {
 private enum AgnosticTemporalType {
     case relativeDate(dayOffset: Int?, weekday: Int?)
     case startTime(hour: Int, minute: Int, duration: TimeInterval?)
-    case duration(value: TimeInterval)
 }
 
 private func evaluateAgnosticType(
@@ -233,15 +186,6 @@ private func evaluateAgnosticType(
             }
 
             return .relativeDate(dayOffset: calculatedOffset, weekday: weekdayTarget)
-        }
-    }
-
-    if match.duration > 0 {
-        let textPositionIndex = dateText.distance(from: dateText.startIndex, to: tokenRange.lowerBound)
-        let midPoint = dateText.count / 2
-
-        if isNumeric || textPositionIndex >= midPoint {
-            return .duration(value: match.duration)
         }
     }
 
