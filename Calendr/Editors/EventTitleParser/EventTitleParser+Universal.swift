@@ -52,7 +52,7 @@ enum UniversalEventTitleParser: EventTitleParsing {
                 let globalNSRange = translateRange(tokenRange, from: dateText, offsetBy: match.range.location)
 
                 // This helps ignoring "dinner" / "lunch" at the beginning
-                guard !isExcluded(globalNSRange, by: excludedRanges) else { return true }
+                guard !globalNSRange.intersects(excludedRanges) else { return true }
 
                 if let assignedType = evaluateAgnosticType(
                     tokenStr: subTokenStr,
@@ -80,24 +80,13 @@ enum UniversalEventTitleParser: EventTitleParsing {
                                 )
                             }
 
-                            let existingIndex = instructions.dates.firstIndex {
-                                $0.dayOffset == dayOffset && $0.weekday == titleWeekday
-                            }
-
-                            let instructionRange = if let existingIndex {
-                                NSUnionRange(instructions.dates.remove(at: existingIndex).range, globalNSRange)
-                            } else {
-                                globalNSRange
-                            }
-
-                            instructions.dates.append(
-                                EventTitleDateMatch(
-                                    range: instructionRange,
-                                    dayOffset: dayOffset,
-                                    numericDate: nil,
-                                    weekday: titleWeekday
-                                )
+                            let dateMatch = EventTitleDateMatch(
+                                dayOffset: dayOffset,
+                                numericDate: nil,
+                                weekday: titleWeekday
                             )
+
+                            insert(dateMatch, with: globalNSRange, into: &instructions.dates)
 
                         case let .startTime(hour, minute, durationWindow):
                             var endTime: EventTitleTime? = nil
@@ -111,24 +100,9 @@ enum UniversalEventTitleParser: EventTitleParsing {
                             }
 
                             let time = EventTitleTime(hour: hour, minute: minute)
+                            let timeMatch = EventTitleTimeMatch(time: time, endTime: endTime)
 
-                            let existingIndex = instructions.times.firstIndex {
-                                $0.time == time && $0.endTime == endTime
-                            }
-
-                            let instructionRange = if let existingIndex {
-                                NSUnionRange(instructions.times.remove(at: existingIndex).range, globalNSRange)
-                            } else {
-                                globalNSRange
-                            }
-
-                            instructions.times.append(
-                                EventTitleTimeMatch(
-                                    range: instructionRange,
-                                    time: time,
-                                    endTime: endTime
-                                )
-                            )
+                            insert(timeMatch, with: globalNSRange, into: &instructions.times)
                     }
                 }
                 return true
@@ -137,6 +111,22 @@ enum UniversalEventTitleParser: EventTitleParsing {
 
         return instructions
     }
+}
+
+private func insert<Info: Equatable>(
+    _ info: Info,
+    with range: NSRange,
+    into items: inout [EventTitleInstructions.Item<Info>]
+) {
+    let existingIndex = items.map(\.info).firstIndex(of: info)
+
+    let instructionRange = if let existingIndex {
+        NSUnionRange(items.remove(at: existingIndex).range, range)
+    } else {
+        range
+    }
+
+    items.append(.init(range: instructionRange, info: info))
 }
 
 private enum AgnosticTemporalType {

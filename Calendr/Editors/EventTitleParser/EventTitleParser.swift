@@ -89,34 +89,43 @@ struct EventTitleParseResult: Equatable {
 }
 
 struct EventTitleDateMatch: Equatable {
-    let range: NSRange
     let dayOffset: Int?
     let numericDate: EventTitleNumericDate?
     let weekday: EventTitleWeekday?
 }
 
 struct EventTitleTimeMatch: Equatable {
-    let range: NSRange
     let time: EventTitleTime
     let endTime: EventTitleTime?
 }
 
 struct EventTitleRelativeStartMatch: Equatable {
-    let range: NSRange
     let relativeStart: EventTitleRelativeStart
 }
 
 struct EventTitleDurationMatch: Equatable {
-    let range: NSRange
     let duration: EventTitleDuration
 }
 
+extension EventTitleInstructions {
+
+    struct Item<Info: Equatable>: Equatable {
+        let range: NSRange
+        let info: Info
+    }
+}
+
+typealias EventTitleDateMatchItem = EventTitleInstructions.Item<EventTitleDateMatch>
+typealias EventTitleTimeMatchItem = EventTitleInstructions.Item<EventTitleTimeMatch>
+typealias EventTitleRelativeStartMatchItem = EventTitleInstructions.Item<EventTitleRelativeStartMatch>
+typealias EventTitleDurationMatchItem = EventTitleInstructions.Item<EventTitleDurationMatch>
+
 /// Everything a language recognised in a title.
 struct EventTitleInstructions {
-    var dates: [EventTitleDateMatch] = []
-    var times: [EventTitleTimeMatch] = []
-    var relativeStarts: [EventTitleRelativeStartMatch] = []
-    var durations: [EventTitleDurationMatch] = []
+    var dates: [EventTitleDateMatchItem] = []
+    var times: [EventTitleTimeMatchItem] = []
+    var relativeStarts: [EventTitleRelativeStartMatchItem] = []
+    var durations: [EventTitleDurationMatchItem] = []
     var allDayRanges: [NSRange] = []
 }
 
@@ -154,14 +163,14 @@ enum EventTitleParser {
             excluding: excludedRanges
         )
         instructions.dates.removeAll { match in
-            guard let numericDate = match.numericDate else { return false }
+            guard let numericDate = match.info.numericDate else { return false }
             return !isValid(numericDate, calendar: calendar, referenceDate: referenceDate)
         }
 
-        let dateMatch = instructions.dates.first
-        let timeMatch = instructions.times.first
-        let relativeStartMatch = instructions.relativeStarts.first
-        let durationMatch = instructions.durations.first
+        let dateMatch = instructions.dates.first?.info
+        let timeMatch = instructions.times.first?.info
+        let relativeStartMatch = instructions.relativeStarts.first?.info
+        let durationMatch = instructions.durations.first?.info
         let isAllDay = !instructions.allDayRanges.isEmpty
 
         var tokens = calendarRanges.map { EventTitleToken(kind: .calendar, range: $0) }
@@ -232,7 +241,7 @@ private func hasConflicts(_ instructions: EventTitleInstructions, calendarMatche
         return true
     }
 
-    if !instructions.durations.isEmpty, instructions.times.contains(where: { $0.endTime != nil }) {
+    if !instructions.durations.isEmpty, instructions.times.contains(where: { $0.info.endTime != nil }) {
         return true
     }
 
@@ -240,7 +249,7 @@ private func hasConflicts(_ instructions: EventTitleInstructions, calendarMatche
         if !instructions.times.isEmpty || !instructions.relativeStarts.isEmpty {
             return true
         }
-        if instructions.durations.contains(where: { [.minute, .hour].contains($0.duration.unit) }) {
+        if instructions.durations.contains(where: { [.minute, .hour].contains($0.info.duration.unit) }) {
             return true
         }
     }
