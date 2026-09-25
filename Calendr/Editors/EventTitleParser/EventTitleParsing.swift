@@ -13,8 +13,8 @@ protocol EventTitleParsing {
 
     static func instructions(
         in text: String,
-        dateProvider: DateProviding,
-        calendar: Calendar,
+        calendar: Calendar, // with selected time zone (do not replace this with dateProvider)
+        referenceDate: Date,
         excluding excludedRanges: [NSRange]
     ) -> EventTitleInstructions
 }

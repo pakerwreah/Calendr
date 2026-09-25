@@ -12,8 +12,8 @@ enum UniversalEventTitleParser: EventTitleParsing {
 
     static func instructions(
         in text: String,
-        dateProvider: DateProviding,
         calendar: Calendar,
+        referenceDate: Date,
         excluding excludedRanges: [NSRange]
     ) -> EventTitleInstructions {
 
@@ -23,15 +23,20 @@ enum UniversalEventTitleParser: EventTitleParsing {
             return instructions
         }
 
-        let referenceDate = dateProvider.now
-
         let matches = detector.matches(in: text, range: text.nsRange)
 
-        for match in matches {
-            let components = match.date?.components(using: dateProvider, calendar: calendar.identifier)
+        let tokenizer = NLTokenizer(unit: .word)
 
-            let dateText = String(text[Range(match.range, in: text)!])
-            let tokenizer = NLTokenizer(unit: .word)
+        for match in matches {
+            guard
+                let matchDate = match.date,
+                let matchRangeInText = Range(match.range, in: text)
+            else { continue }
+
+            let components = calendar.dateComponents(in: calendar.timeZone, from: matchDate)
+
+            let dateText = String(text[matchRangeInText])
+
             tokenizer.string = dateText
 
             /**
@@ -52,9 +57,8 @@ enum UniversalEventTitleParser: EventTitleParsing {
                 if let assignedType = evaluateAgnosticType(
                     tokenStr: subTokenStr,
                     components: components,
-                    tokenRange: tokenRange,
-                    dateText: dateText,
-                    match: match,
+                    matchDate: matchDate,
+                    matchDuration: match.duration,
                     referenceDate: referenceDate,
                     calendar: calendar
                 ) {
@@ -142,10 +146,9 @@ private enum AgnosticTemporalType {
 
 private func evaluateAgnosticType(
     tokenStr: String,
-    components: DateComponents?,
-    tokenRange: Range<String.Index>,
-    dateText: String,
-    match: NSTextCheckingResult,
+    components: DateComponents,
+    matchDate: Date,
+    matchDuration: TimeInterval,
     referenceDate: Date,
     calendar: Calendar
 ) -> AgnosticTemporalType? {
@@ -155,37 +158,32 @@ private func evaluateAgnosticType(
 
     let isNumeric = cleanedToken.rangeOfCharacter(from: .decimalDigits) != nil
 
-    if let components {
+    // Scenario A: Precise Clock Extraction (Hours / Minutes)
+    if let hour = components.hour {
+        let minute = components.minute ?? 0
+
+        if isNumeric || cleanedToken.count <= 4 {
+            let totalDuration = matchDuration > 0 ? matchDuration : nil
+            return .startTime(hour: hour, minute: minute, duration: totalDuration)
+        }
+    }
+
+    let definesDateOffset = components.day != nil || components.weekday != nil
+
+    // Scenario B: Relative Day & Weekday Offsets
+    if !isNumeric && definesDateOffset {
+        var calculatedOffset: Int? = nil
+        var weekdayTarget: Int? = nil
+
         let today = calendar.startOfDay(for: referenceDate)
+        let targetDay = calendar.startOfDay(for: matchDate)
+        calculatedOffset = calendar.dateComponents([.day], from: today, to: targetDay).day
 
-        // Scenario A: Precise Clock Extraction (Hours / Minutes)
-        if let hour = components.hour {
-            let minute = components.minute ?? 0
-
-            if isNumeric || cleanedToken.count <= 4 {
-                let totalDuration = match.duration > 0 ? match.duration : nil
-                return .startTime(hour: hour, minute: minute, duration: totalDuration)
-            }
+        if let systemWeekday = components.weekday {
+            weekdayTarget = systemWeekday
         }
 
-        let definesDateOffset = components.day != nil || components.weekday != nil
-
-        // Scenario B: Relative Day & Weekday Offsets
-        if !isNumeric && definesDateOffset {
-            var calculatedOffset: Int? = nil
-            var weekdayTarget: Int? = nil
-
-            if let absoluteTargetDate = match.date {
-                let targetDay = calendar.startOfDay(for: absoluteTargetDate)
-                calculatedOffset = calendar.dateComponents([.day], from: today, to: targetDay).day
-            }
-
-            if let systemWeekday = components.weekday {
-                weekdayTarget = systemWeekday
-            }
-
-            return .relativeDate(dayOffset: calculatedOffset, weekday: weekdayTarget)
-        }
+        return .relativeDate(dayOffset: calculatedOffset, weekday: weekdayTarget)
     }
 
     return nil

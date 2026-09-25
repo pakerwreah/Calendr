@@ -69,8 +69,8 @@ private extension EventTitleParser {
 
         EventTitleParser.parse(
             text,
-            dateProvider: MockDateProvider(),
             calendar: .current,
+            referenceDate: .now,
             language: language
         )
     }
