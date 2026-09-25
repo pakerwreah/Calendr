@@ -38,11 +38,14 @@ enum UniversalEventTitleParser: EventTitleParsing {
             //
             // To fix that we have to run a tokenizer and check individual terms.
             //
-            // FIXME: This is not working. It still detects "dinner" as a date token 😔
+            // FIXME: This is not working. It still detects "dinner" / "lunch" as a date token 😔
             //
             tokenizer.enumerateTokens(in: dateText.range) { tokenRange, _ in
                 let subTokenStr = String(dateText[tokenRange])
                 let globalNSRange = translateRange(tokenRange, from: dateText, offsetBy: match.range.location)
+
+                // This helps ignoring "dinner" / "lunch" at the beginning, but I'd rather not rely on this
+                guard !isExcluded(globalNSRange, by: excludedRanges) else { return true }
 
                 // 3. Evaluate type structural signals completely without string matching
                 if let assignedType = evaluateAgnosticType(
