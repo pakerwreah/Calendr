@@ -25,6 +25,8 @@ extension NSControl {
     }
 
     func blur() {
-        window?.makeFirstResponder(nil)
+        if hasFocus {
+            window?.makeFirstResponder(nil)
+        }
     }
 }
