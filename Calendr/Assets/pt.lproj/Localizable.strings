@@ -94,7 +94,7 @@
 "settings.events.force_local_time_zone" = "Mostrar todos os eventos no horário local";
 "settings.events.show_event_list_summary" = "Mostrar resumo da lista de eventos";
 "settings.events.show_future_events" = "Mostrar eventos futuros";
-"settings.events.natural_language_input" = "Entrada em linguagem natural (inglês)";
+"settings.events.natural_language_input" = "Entrada em linguagem natural";
 "settings.events.natural_language_input.universal" = "Universal";
 
 "settings.appearance.transparency" = "Transparência";

@@ -94,7 +94,7 @@
 "settings.events.force_local_time_zone" = "すべての予定を端末のタイムゾーンで表示";
 "settings.events.show_event_list_summary" = "件数の概要を表示";
 "settings.events.show_future_events" = "未来の予定を表示";
-"settings.events.natural_language_input" = "自然言語による入力 (英語)";
+"settings.events.natural_language_input" = "自然言語による入力";
 //"settings.events.natural_language_input.universal" = "Universal";
 
 "settings.appearance.transparency" = "透明度";
