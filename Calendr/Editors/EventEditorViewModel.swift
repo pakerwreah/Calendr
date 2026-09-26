@@ -151,12 +151,12 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
     }
 
     var hasValidInput: Bool {
-        parsedEventTitle.isNotBlank
+        cleanTitle.isNotBlank
             && hasValidDateRange
             && selectedCalendarId != nil
     }
 
-    var parsedEventTitle: String {
+    var cleanTitle: String {
         naturalLanguageEventInputEnabled ? parsedTitle.cleanedTitle : title.trimmed
     }
 
@@ -168,7 +168,7 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
         guard hasValidInput, let selectedCalendarId else { return }
 
         calendarService.createEvent(
-            title: parsedEventTitle,
+            title: cleanTitle,
             calendar: selectedCalendarId,
             start: startDate,
             end: endDate,
@@ -235,19 +235,19 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
     private var parseTask: Task<Void, Never>?
 
     private func parseTitleInstructions() {
+        guard naturalLanguageEventInputEnabled else { return }
+
         parseTask?.cancel()
-        parseTask = Task {
-            await parseTitleInstructionsAsync()
-        }
+        parseTask = Task { await parseTitleInstructionsAsync() }
     }
 
     var parseTitleFinished: (() -> Void)?
 
     @MainActor
     private func parseTitleInstructionsAsync() async {
-        guard naturalLanguageEventInputEnabled else { return }
 
         let previousParsedTitle = parsedTitle
+
         let newParsedTitle = await EventTitleParser.parse(
             title,
             calendar: calendar,
