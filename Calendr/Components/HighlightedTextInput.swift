@@ -82,7 +82,7 @@ private struct HighlightedTextField: NSViewRepresentable {
 
         if focus, !textField.hasFocus {
             DispatchQueue.main.async {
-                textField.becomeFirstResponder()
+                textField.focus()
             }
         }
     }

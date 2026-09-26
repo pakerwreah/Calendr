@@ -14,14 +14,17 @@ extension NSControl {
         set { newValue ? focus() : blur() }
     }
 
-    func focus() {
-        let oldValue = refusesFirstResponder
+    func focus(force: Bool = true) {
+        guard refusesFirstResponder, force else {
+            window?.makeFirstResponder(self)
+            return
+        }
         refusesFirstResponder = false
-        becomeFirstResponder()
-        refusesFirstResponder = oldValue
+        window?.makeFirstResponder(self)
+        refusesFirstResponder = true
     }
 
     func blur() {
-        resignFirstResponder()
+        window?.makeFirstResponder(nil)
     }
 }
