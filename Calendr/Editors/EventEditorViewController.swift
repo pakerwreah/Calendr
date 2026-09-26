@@ -29,10 +29,10 @@ struct EventEditorView: ViewModelView {
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 8) {
                     HighlightedTextInput(
-                        placeholder: Strings.Editor.title,
                         text: $viewModel.title,
-                        highlights: viewModel.titleHighlights,
-                        focus: $autoFocus
+                        focus: $autoFocus,
+                        placeholder: Strings.Editor.title,
+                        highlights: viewModel.titleHighlights
                     )
                     .frame(maxWidth: .infinity)
                     .layoutPriority(1)
