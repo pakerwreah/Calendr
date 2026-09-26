@@ -307,8 +307,8 @@ internal enum Strings {
     internal enum Events {
       /// Show all events in local time zone
       internal static let forceLocalTimeZone = Strings.tr("Localizable", "settings.events.force_local_time_zone", fallback: "Show all events in local time zone")
-      /// Natural-language input (English)
-      internal static let naturalLanguageInput = Strings.tr("Localizable", "settings.events.natural_language_input", fallback: "Natural-language input (English)")
+      /// Natural-language input
+      internal static let naturalLanguageInput = Strings.tr("Localizable", "settings.events.natural_language_input", fallback: "Natural-language input")
       /// Show all-day events details
       internal static let showAllDayDetails = Strings.tr("Localizable", "settings.events.show_all_day_details", fallback: "Show all-day events details")
       /// Show all-day events
@@ -325,6 +325,10 @@ internal enum Strings {
       internal static let showOverdueReminders = Strings.tr("Localizable", "settings.events.show_overdue_reminders", fallback: "Show overdue reminders")
       /// Show recurrence indicator
       internal static let showRecurrenceIndicator = Strings.tr("Localizable", "settings.events.show_recurrence_indicator", fallback: "Show recurrence indicator")
+      internal enum NaturalLanguageInput {
+        /// Universal
+        internal static let universal = Strings.tr("Localizable", "settings.events.natural_language_input.universal", fallback: "Universal")
+      }
     }
     internal enum Keyboard {
       internal enum GlobalShortcuts {

@@ -13,9 +13,11 @@ protocol EventTitleParsing {
 
     static func instructions(
         in text: String,
-        calendar: Calendar,
-        excluding excludedRanges: [NSRange]
-    ) -> EventTitleInstructions
+        calendar: Calendar, // with selected time zone (do not replace this with dateProvider)
+        referenceDate: Date,
+        excluding excludedRanges: [NSRange],
+        firstWordRange: NSRange?
+    ) async -> EventTitleInstructions
 }
 
 enum EventTitleMeridiem {
@@ -46,12 +48,12 @@ extension EventTitleParsing {
         in text: String,
         calendar: Calendar,
         excluding excludedRanges: [NSRange]
-    ) -> [EventTitleDateMatch] {
-        var results: [EventTitleDateMatch] = []
+    ) -> [EventTitleDateMatchItem] {
+        var results: [EventTitleDateMatchItem] = []
 
-        for match in numericDateExpression.matches(in: text, range: text.nsRange)
-        where !isExcluded(match.range, by: excludedRanges + results.map(\.range)) {
+        for match in numericDateExpression.matches(in: text, range: text.nsRange) {
             guard
+                !match.range.intersects(excludedRanges + results.map(\.range)),
                 let firstRange = Range(match.range(at: 1), in: text),
                 let secondRange = Range(match.range(at: 2), in: text),
                 let first = Int(text[firstRange]),
@@ -69,7 +71,10 @@ extension EventTitleParsing {
                 : EventTitleNumericDate(month: first, day: second, year: year)
 
             guard (1...12).contains(date.month), (1...31).contains(date.day) else { continue }
-            results.append(.init(range: match.range, dayOffset: nil, numericDate: date, weekday: nil))
+
+            let info = EventTitleDateMatch(dayOffset: nil, time: nil, numericDate: date, weekday: nil)
+
+            results.append(.init(range: match.range, info: info))
         }
 
         return results
@@ -168,10 +173,6 @@ extension EventTitleParsing {
         normalizedParserWord(value)
             .replacingOccurrences(of: " ", with: "")
             .replacingOccurrences(of: ".", with: "")
-    }
-
-    static func isExcluded(_ range: NSRange, by excludedRanges: [NSRange]) -> Bool {
-        excludedRanges.contains { NSIntersectionRange(range, $0).length > 0 }
     }
 }
 

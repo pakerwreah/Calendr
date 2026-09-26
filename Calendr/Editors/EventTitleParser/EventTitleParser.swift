@@ -67,7 +67,6 @@ struct EventTitleParseResult: Equatable {
     let duration: EventTitleDuration?
     let isAllDay: Bool
     let calendarQuery: String?
-    let hasConflicts: Bool
     let tokens: [EventTitleToken]
 
     static func empty() -> Self {
@@ -82,41 +81,50 @@ struct EventTitleParseResult: Equatable {
             duration: nil,
             isAllDay: false,
             calendarQuery: nil,
-            hasConflicts: false,
             tokens: []
         )
     }
 }
 
 struct EventTitleDateMatch: Equatable {
-    let range: NSRange
     let dayOffset: Int?
+    let time: EventTitleTime?
     let numericDate: EventTitleNumericDate?
     let weekday: EventTitleWeekday?
 }
 
 struct EventTitleTimeMatch: Equatable {
-    let range: NSRange
     let time: EventTitleTime
     let endTime: EventTitleTime?
 }
 
 struct EventTitleRelativeStartMatch: Equatable {
-    let range: NSRange
     let relativeStart: EventTitleRelativeStart
 }
 
 struct EventTitleDurationMatch: Equatable {
-    let range: NSRange
     let duration: EventTitleDuration
 }
 
+extension EventTitleInstructions {
+
+    struct Item<Info: Equatable>: Equatable {
+        let range: NSRange
+        let info: Info
+    }
+}
+
+typealias EventTitleDateMatchItem = EventTitleInstructions.Item<EventTitleDateMatch>
+typealias EventTitleTimeMatchItem = EventTitleInstructions.Item<EventTitleTimeMatch>
+typealias EventTitleRelativeStartMatchItem = EventTitleInstructions.Item<EventTitleRelativeStartMatch>
+typealias EventTitleDurationMatchItem = EventTitleInstructions.Item<EventTitleDurationMatch>
+
 /// Everything a language recognised in a title.
 struct EventTitleInstructions {
-    var dates: [EventTitleDateMatch] = []
-    var times: [EventTitleTimeMatch] = []
-    var relativeStarts: [EventTitleRelativeStartMatch] = []
-    var durations: [EventTitleDurationMatch] = []
+    var dates: [EventTitleDateMatchItem] = []
+    var times: [EventTitleTimeMatchItem] = []
+    var relativeStarts: [EventTitleRelativeStartMatchItem] = []
+    var durations: [EventTitleDurationMatchItem] = []
     var allDayRanges: [NSRange] = []
 }
 
@@ -124,18 +132,18 @@ enum EventTitleParser {
 
     static func parse(
         _ text: String,
-        calendar: Calendar = .current,
-        referenceDate: Date = Date(),
-        language: EventTitleParserLanguage = .english
-    ) -> EventTitleParseResult {
-        let protectedRange = firstWordRange(in: text)
+        calendar: Calendar,
+        referenceDate: Date,
+        language: EventTitleParserLanguage
+    ) async -> EventTitleParseResult {
+        let firstWordRange = firstWordRange(in: text)
         let calendarMatches =
             calendarExpression
             .matches(in: text, range: text.nsRange)
             .compactMap { match -> CalendarMatch? in
                 guard
                     let range = validRange(match.range(at: 1)),
-                    !overlaps(range, protectedRange),
+                    !overlaps(range, firstWordRange),
                     let queryRange = Range(match.range(at: 2), in: text),
                     let query = String(text[queryRange]).trimmed.notEmpty
                 else {
@@ -145,22 +153,24 @@ enum EventTitleParser {
             }
         let calendarMatch = calendarMatches.last
         let calendarRanges = calendarMatches.map(\.range)
-        let excludedRanges = calendarRanges + [protectedRange].compactMap { $0 }
+        let excludedRanges = calendarRanges + [firstWordRange].compactMap { $0 }
 
-        var instructions = language.parser.instructions(
+        var instructions = await language.parser.instructions(
             in: text,
             calendar: calendar,
-            excluding: excludedRanges
+            referenceDate: referenceDate,
+            excluding: excludedRanges,
+            firstWordRange: firstWordRange
         )
         instructions.dates.removeAll { match in
-            guard let numericDate = match.numericDate else { return false }
+            guard let numericDate = match.info.numericDate else { return false }
             return !isValid(numericDate, calendar: calendar, referenceDate: referenceDate)
         }
 
-        let dateMatch = instructions.dates.first
-        let timeMatch = instructions.times.first
-        let relativeStartMatch = instructions.relativeStarts.first
-        let durationMatch = instructions.durations.first
+        let dateMatch = instructions.dates.first?.info
+        let timeMatch = instructions.times.first?.info
+        let relativeStartMatch = instructions.relativeStarts.first?.info
+        let durationMatch = instructions.durations.first?.info
         let isAllDay = !instructions.allDayRanges.isEmpty
 
         var tokens = calendarRanges.map { EventTitleToken(kind: .calendar, range: $0) }
@@ -175,13 +185,12 @@ enum EventTitleParser {
             dayOffset: dateMatch?.dayOffset,
             numericDate: dateMatch?.numericDate,
             weekday: dateMatch?.weekday,
-            time: timeMatch?.time,
+            time: timeMatch?.time ?? dateMatch?.time,
             endTime: timeMatch?.endTime,
             relativeStart: relativeStartMatch?.relativeStart,
             duration: durationMatch?.duration,
             isAllDay: isAllDay,
             calendarQuery: calendarMatch?.query,
-            hasConflicts: hasConflicts(instructions, calendarMatches: calendarMatches.count),
             tokens: tokens.sorted { $0.range.location < $1.range.location }
         )
     }
@@ -211,41 +220,6 @@ private let calendarExpression = try! NSRegularExpression(
     pattern: #"(?:^|\s)(/([^/\n]+?))(?=\s+(?=/)|\s*$)"#,
     options: [.caseInsensitive]
 )
-
-private func hasConflicts(_ instructions: EventTitleInstructions, calendarMatches: Int) -> Bool {
-
-    let isAllDay = !instructions.allDayRanges.isEmpty
-
-    if instructions.dates.count > 1
-        || instructions.times.count > 1
-        || instructions.relativeStarts.count > 1
-        || instructions.durations.count > 1
-        || calendarMatches > 1
-    {
-        return true
-    }
-
-    if !instructions.relativeStarts.isEmpty,
-        !instructions.dates.isEmpty || !instructions.times.isEmpty
-    {
-        return true
-    }
-
-    if !instructions.durations.isEmpty, instructions.times.contains(where: { $0.endTime != nil }) {
-        return true
-    }
-
-    if isAllDay {
-        if !instructions.times.isEmpty || !instructions.relativeStarts.isEmpty {
-            return true
-        }
-        if instructions.durations.contains(where: { [.minute, .hour].contains($0.duration.unit) }) {
-            return true
-        }
-    }
-
-    return false
-}
 
 private func removing(tokens: [EventTitleToken], from text: String) -> String {
 

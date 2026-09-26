@@ -154,15 +154,10 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
         parsedEventTitle.isNotBlank
             && hasValidDateRange
             && selectedCalendarId != nil
-            && !hasConflicts
     }
 
     var parsedEventTitle: String {
         naturalLanguageEventInputEnabled ? parsedTitle.cleanedTitle : title.trimmed
-    }
-
-    var hasConflicts: Bool {
-        naturalLanguageEventInputEnabled && parsedTitle.hasConflicts
     }
 
     var hasUnsavedChanges: Bool {
@@ -237,16 +232,32 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
         }
     }
 
+    private var parseTask: Task<Void, Never>?
+
     private func parseTitleInstructions() {
+        parseTask?.cancel()
+        parseTask = Task {
+            await parseTitleInstructionsAsync()
+        }
+    }
+
+    var parseTitleFinished: (() -> Void)?
+
+    @MainActor
+    private func parseTitleInstructionsAsync() async {
         guard naturalLanguageEventInputEnabled else { return }
 
         let previousParsedTitle = parsedTitle
-        let newParsedTitle = EventTitleParser.parse(
+        let newParsedTitle = await EventTitleParser.parse(
             title,
             calendar: calendar,
             referenceDate: dateProvider.now,
             language: naturalLanguageEventInputLanguage
         )
+
+        guard !Task.isCancelled else { return }
+
+        defer { parseTitleFinished?() }
 
         if previousParsedTitle.duration != nil, newParsedTitle.duration == nil {
             restoreParsedDuration()

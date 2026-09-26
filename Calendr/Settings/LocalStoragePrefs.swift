@@ -71,6 +71,7 @@ enum Prefs {
     static let showEventListSummary = "show_event_list_summary"
     static let futureEventsDays = "future_events_days"
     static let naturalLanguageEventInputEnabled = "natural_language_event_input_enabled"
+    static let naturalLanguageEventInputLanguage = "natural_language_event_input_language"
 
     // Appearance
     static let appearanceMode = "appearance_mode"
@@ -97,6 +98,7 @@ func registerDefaultPrefs(
     calendar: Calendar = .current,
     preferredLocalizations: [String] = Localizations.preferredLocalizations
 ) {
+    let eventTitleParserLanguage = EventTitleParserLanguage(preferredLocalizations: preferredLocalizations)
 
     migrateStatusItemBackgroundStyle(in: localStorage)
 
@@ -164,7 +166,8 @@ func registerDefaultPrefs(
         Prefs.forceLocalTimeZone: false,
         Prefs.showEventListSummary: true,
         Prefs.futureEventsDays: 0,
-        Prefs.naturalLanguageEventInputEnabled: EventTitleParserLanguage.isSupported(preferredLocalizations),
+        Prefs.naturalLanguageEventInputEnabled: eventTitleParserLanguage != .universal,
+        Prefs.naturalLanguageEventInputLanguage: eventTitleParserLanguage.rawValue,
 
         // Appearance
         Prefs.appearanceMode: 0,
@@ -455,6 +458,11 @@ extension LocalStorageProvider {
     @objc dynamic var naturalLanguageEventInputEnabled: Bool {
         get { bool(forKey: Prefs.naturalLanguageEventInputEnabled) }
         set { set(newValue, forKey: Prefs.naturalLanguageEventInputEnabled) }
+    }
+
+    @objc dynamic var naturalLanguageEventInputLanguage: String {
+        get { string(forKey: Prefs.naturalLanguageEventInputLanguage) ?? "" }
+        set { set(newValue, forKey: Prefs.naturalLanguageEventInputLanguage) }
     }
 
     // Appearance

@@ -69,6 +69,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     private let forceLocalTimeZoneCheckbox = Checkbox(title: Strings.Settings.Events.forceLocalTimeZone)
     private let showEventListSummaryCheckbox = Checkbox(title: Strings.Settings.Events.showEventListSummary)
     private let naturalLanguageEventInputCheckbox = Checkbox(title: Strings.Settings.Events.naturalLanguageInput)
+    private let naturalLanguageEventInputDropdown = Dropdown()
     private let futureEventsLabel = Label(text: Strings.Settings.Events.showFutureEvents)
     private let futureEventsStepperLabel = Label()
     private let futureEventsStepper = NSStepper()
@@ -229,6 +230,9 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
 
     private lazy var eventsContent: NSView = {
 
+        naturalLanguageEventInputDropdown.isBordered = false
+        naturalLanguageEventInputDropdown.setContentHuggingPriority(.required, for: .horizontal)
+
         // Future events range
 
         futureEventsStepper.minValue = 0
@@ -247,7 +251,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         ).disposed(by: disposeBag)
 
         return NSStackView(views: [
-            naturalLanguageEventInputCheckbox,
+            NSStackView(views: [naturalLanguageEventInputCheckbox, naturalLanguageEventInputDropdown]),
             NSStackView(views: [showMapCheckbox, mapBlacklistButton]),
             showFinishedEventsCheckbox,
             NSStackView(views: [showDeclinedEventsCheckbox, showDeclinedEventsTooltip]),
@@ -707,6 +711,8 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
 
     private func setUpEvents() {
 
+        setUpNaturalLanguageInput()
+
         setUpFutureEventsStepper()
 
         mapBlacklistButton.rx.tap.bind { [weak self] in
@@ -786,6 +792,9 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             observer: viewModel.toggleEventListSummary
         )
         .disposed(by: disposeBag)
+    }
+
+    private func setUpNaturalLanguageInput() {
 
         bind(
             control: naturalLanguageEventInputCheckbox,
@@ -793,6 +802,25 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             observer: viewModel.toggleNaturalLanguageEventInput
         )
         .disposed(by: disposeBag)
+
+        let languageControl = naturalLanguageEventInputDropdown.rx.controlProperty(
+            getter: \.indexOfSelectedItem,
+            setter: { $0.selectItem(at: $1) }
+        )
+
+        let options = viewModel.eventTitleParserLanguageOptions
+        naturalLanguageEventInputDropdown.addItems(withTitles: options.map { "\($0.title) " })
+
+        languageControl
+            .skip(1)
+            .compactMap { options[$0].language }
+            .bind(to: viewModel.naturalLanguageEventInputLanguageObserver)
+            .disposed(by: disposeBag)
+
+        viewModel.naturalLanguageEventInputLanguage
+            .compactMap(options.map(\.language).firstIndex(of:))
+            .bind(to: languageControl)
+            .disposed(by: disposeBag)
     }
 
     private func setUpFutureEventsStepper() {

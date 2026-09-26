@@ -32,8 +32,7 @@ struct EventEditorView: ViewModelView {
                         placeholder: Strings.Editor.title,
                         text: $viewModel.title,
                         highlights: viewModel.titleHighlights,
-                        focus: $autoFocus,
-                        isInvalid: viewModel.hasConflicts
+                        focus: $autoFocus
                     )
                     .frame(maxWidth: .infinity)
                     .layoutPriority(1)

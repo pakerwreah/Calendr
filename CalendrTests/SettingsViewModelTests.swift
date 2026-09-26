@@ -63,12 +63,11 @@ class SettingsViewModelTests {
     var localStorageShowAllDayDetails: Bool? { localStorage.object(forKey: Prefs.showAllDayDetails) as? Bool }
     var localStorageShowRecurrenceIndicator: Bool? { localStorage.object(forKey: Prefs.showRecurrenceIndicator) as? Bool }
     var localStorageShowEventListSummary: Bool? { localStorage.object(forKey: Prefs.showEventListSummary) as? Bool }
-    var localStorageNaturalLanguageEventInputEnabled: Bool? {
-        localStorage.object(forKey: Prefs.naturalLanguageEventInputEnabled) as? Bool
-    }
+    var localStorageNaturalLanguageEventInputEnabled: Bool? { localStorage.object(forKey: Prefs.naturalLanguageEventInputEnabled) as? Bool }
+    var localStorageNaturalLanguageEventInputLanguage: String? { localStorage.object(forKey: Prefs.naturalLanguageEventInputEnabled) as? String }
     var localStorageTransparency: NSNumber? { localStorage.object(forKey: Prefs.transparencyLevel) as? NSNumber }
     var localStorageAppearanceMode: NSNumber? { localStorage.object(forKey: Prefs.appearanceMode) as? NSNumber }
-    var localStorageEventDotsStyle: String? { localStorage.object(forKey: Prefs.eventDotsStyle) as! String? }
+    var localStorageEventDotsStyle: String? { localStorage.object(forKey: Prefs.eventDotsStyle) as? String }
     var localStorageFutureEventsDays: NSNumber? { localStorage.object(forKey: Prefs.futureEventsDays) as? NSNumber }
     var localStorageShowMonthOutline: Bool? { localStorage.object(forKey: Prefs.showMonthOutline) as? Bool }
     var localStorageAutoCheckForUpdates: Bool? { localStorage.object(forKey: Prefs.autoCheckForUpdates) as? Bool }
@@ -108,6 +107,7 @@ class SettingsViewModelTests {
         #expect(localStorageShowRecurrenceIndicator == nil)
         #expect(localStorageShowEventListSummary == nil)
         #expect(localStorageNaturalLanguageEventInputEnabled == nil)
+        #expect(localStorageNaturalLanguageEventInputLanguage == nil)
         #expect(localStorageTransparency == nil)
         #expect(localStorageEventDotsStyle == nil)
         #expect(localStorageFutureEventsDays == nil)
@@ -154,6 +154,7 @@ class SettingsViewModelTests {
         #expect(viewModel.showRecurrenceIndicator.lastValue() == true)
         #expect(viewModel.showEventListSummary.lastValue() == true)
         #expect(viewModel.naturalLanguageEventInputEnabled.lastValue() == true)
+        #expect(viewModel.naturalLanguageEventInputLanguage.lastValue() == .english)
         #expect(viewModel.popoverTransparency.lastValue() == 2)
         #expect(viewModel.popoverMaterial.lastValue() == .headerView)
         #expect(viewModel.appearanceMode.lastValue() == .automatic)
@@ -190,6 +191,7 @@ class SettingsViewModelTests {
         #expect(localStorageShowRecurrenceIndicator == true)
         #expect(localStorageShowEventListSummary == true)
         #expect(localStorageNaturalLanguageEventInputEnabled == true)
+        #expect(localStorageNaturalLanguageEventInputLanguage == nil)
         #expect(localStorageTransparency == 2)
         #expect(localStorageFullScreenEventTransparencyLevel == 2)
         #expect(localStorageAppearanceMode == 0)
@@ -206,6 +208,7 @@ class SettingsViewModelTests {
         registerDefaultPrefs(in: storage, preferredLocalizations: ["en-GB"])
 
         #expect(storage.naturalLanguageEventInputEnabled)
+        #expect(storage.naturalLanguageEventInputLanguage == EventTitleParserLanguage.english.rawValue)
     }
 
     @Test func testNaturalLanguageEventInputDefaultsOnForCzechLocalization() {
@@ -215,6 +218,7 @@ class SettingsViewModelTests {
         registerDefaultPrefs(in: storage, preferredLocalizations: ["cs"])
 
         #expect(storage.naturalLanguageEventInputEnabled)
+        #expect(storage.naturalLanguageEventInputLanguage == EventTitleParserLanguage.czech.rawValue)
     }
 
     @Test func testNaturalLanguageEventInputDefaultsOffForUnsupportedLocalization() {
@@ -224,6 +228,7 @@ class SettingsViewModelTests {
         registerDefaultPrefs(in: storage, preferredLocalizations: ["de"])
 
         #expect(storage.naturalLanguageEventInputEnabled == false)
+        #expect(storage.naturalLanguageEventInputLanguage == EventTitleParserLanguage.universal.rawValue)
     }
 
     @Test func testNaturalLanguageEventInputKeepsExplicitUserPreference() {
@@ -234,6 +239,7 @@ class SettingsViewModelTests {
         registerDefaultPrefs(in: storage, preferredLocalizations: ["cs"])
 
         #expect(storage.naturalLanguageEventInputEnabled == false)
+        #expect(storage.naturalLanguageEventInputLanguage == EventTitleParserLanguage.czech.rawValue)
     }
 
     @Test func testChineseLunarCalendarDefaultsOnForChineseLocalization() {
@@ -967,19 +973,23 @@ class SettingsViewModelTests {
         #expect(localStorageNaturalLanguageEventInputEnabled == false)
     }
 
-    @Test func testNaturalLanguageEventInputLanguageFollowsLocaleChange() {
+    @Test func testNaturalLanguageEventInputLanguageChange() {
 
-        var emissions: [EventTitleParserLanguage] = []
+        var language: EventTitleParserLanguage?
 
         viewModel.naturalLanguageEventInputLanguage
-            .bind { emissions.append($0) }
+            .bind { language = $0 }
             .disposed(by: disposeBag)
 
-        #expect(emissions == [.current])
+        #expect(language == .english)
 
-        notificationCenter.post(name: NSLocale.currentLocaleDidChangeNotification, object: nil)
+        viewModel.naturalLanguageEventInputLanguageObserver.onNext(.czech)
 
-        #expect(emissions == [.current, .current])
+        #expect(language == .czech)
+
+        viewModel.naturalLanguageEventInputLanguageObserver.onNext(.universal)
+
+        #expect(language == .universal)
     }
 
     @Test func testToggleShowPastEvents() {

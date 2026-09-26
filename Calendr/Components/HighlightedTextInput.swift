@@ -17,7 +17,7 @@ struct HighlightedTextInput: View {
     @Binding var text: String
     let highlights: [EventTitleHighlight]
     @Binding var focus: Bool
-    let isInvalid: Bool
+    let isInvalid: Bool = false
 
     var body: some View {
         HighlightedTextField(

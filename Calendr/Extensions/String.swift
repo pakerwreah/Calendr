@@ -17,6 +17,8 @@ extension StringProtocol {
 
     var nsRange: NSRange { .init(startIndex..., in: self) }
 
+    var range: Range<Index> { startIndex..<endIndex }
+
     var trimmed: String {
         trimmingCharacters(in: .whitespacesAndNewlines)
     }
