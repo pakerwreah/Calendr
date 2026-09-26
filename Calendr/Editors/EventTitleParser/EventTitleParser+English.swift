@@ -11,7 +11,8 @@ enum EnglishEventTitleParser: EventTitleParsing {
         in text: String,
         calendar: Calendar,
         referenceDate: Date,
-        excluding excludedRanges: [NSRange]
+        excluding excludedRanges: [NSRange],
+        firstWordRange: NSRange?
     ) -> EventTitleInstructions {
 
         var instructions = EventTitleInstructions()
@@ -100,7 +101,7 @@ private func dateMatches(
             else {
                 continue
             }
-            let info = EventTitleDateMatch(dayOffset: offset, numericDate: nil, weekday: nil)
+            let info = EventTitleDateMatch(dayOffset: offset, time: nil, numericDate: nil, weekday: nil)
 
             results.append(.init(range: match.range, info: info))
         }
@@ -135,7 +136,7 @@ private func dateMatches(
 
             let year = Range(match.range(at: yearGroup), in: text).flatMap { Int(text[$0]) }
             let date = EventTitleNumericDate(month: month, day: day, year: year)
-            let info = EventTitleDateMatch(dayOffset: nil, numericDate: date, weekday: nil)
+            let info = EventTitleDateMatch(dayOffset: nil, time: nil, numericDate: date, weekday: nil)
 
             results.append(.init(range: match.range, info: info))
         }
@@ -165,6 +166,7 @@ private func dateMatches(
 
         let info = EventTitleDateMatch(
             dayOffset: nil,
+            time: nil,
             numericDate: nil,
             weekday: .init(weekday: weekday, occurrence: occurrence)
         )

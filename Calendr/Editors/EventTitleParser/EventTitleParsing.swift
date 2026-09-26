@@ -15,8 +15,9 @@ protocol EventTitleParsing {
         in text: String,
         calendar: Calendar, // with selected time zone (do not replace this with dateProvider)
         referenceDate: Date,
-        excluding excludedRanges: [NSRange]
-    ) -> EventTitleInstructions
+        excluding excludedRanges: [NSRange],
+        firstWordRange: NSRange?
+    ) async -> EventTitleInstructions
 }
 
 enum EventTitleMeridiem {
@@ -71,7 +72,9 @@ extension EventTitleParsing {
 
             guard (1...12).contains(date.month), (1...31).contains(date.day) else { continue }
 
-            results.append(.init(range: match.range, info: .init(dayOffset: nil, numericDate: date, weekday: nil)))
+            let info = EventTitleDateMatch(dayOffset: nil, time: nil, numericDate: date, weekday: nil)
+
+            results.append(.init(range: match.range, info: info))
         }
 
         return results

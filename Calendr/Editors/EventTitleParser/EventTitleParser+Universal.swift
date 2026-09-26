@@ -7,25 +7,114 @@
 
 import Foundation
 import NaturalLanguage
+import DataDetection
 
-enum UniversalEventTitleParser: EventTitleParsing {
+private enum CalendarEventDetector {
 
-    static func instructions(
+    struct MatchResult {
+        let range: NSRange
+        let date: Date?
+        let duration: TimeInterval
+        let allDay: Bool
+    }
+
+    static func matches(
         in text: String,
         calendar: Calendar,
-        referenceDate: Date,
-        excluding excludedRanges: [NSRange]
-    ) -> EventTitleInstructions {
+        referenceDate: Date
+    ) async -> [MatchResult] {
 
-        var instructions = EventTitleInstructions()
+        if #available(macOS 26.0, *) {
+            await matches26(in: text, calendar: calendar, referenceDate: referenceDate)
+        } else {
+            matches15(in: text)
+        }
+    }
+
+    @available(macOS 26.0, *)
+    static func matches26(
+        in text: String,
+        calendar: Calendar,
+        referenceDate: Date
+    ) async -> [MatchResult] {
+
+        var results: [MatchResult] = []
+
+        var options = DataDetector.Options()
+        options.documentDate = referenceDate
+        options.documentTimeZone = calendar.timeZone
+        let matches = text.dataDetectorMatches(.calendarEvent, options: options)
+
+        for await match in matches {
+            guard let range = match.range, case .calendarEvent(let details) = match.details else { continue }
+
+            let duration: TimeInterval
+
+            if let starDate = details.startDate, let endDate = details.endDate {
+                duration = starDate.distance(to: endDate)
+            } else {
+                duration = 0
+            }
+
+            results.append(
+                MatchResult(
+                    range: NSRange(range, in: text),
+                    date: details.startDate,
+                    duration: duration,
+                    allDay: details.allDay
+                )
+            )
+        }
+
+        return results
+    }
+
+    static func matches15(in text: String) -> [MatchResult] {
 
         guard let detector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.date.rawValue) else {
-            return instructions
+            return []
         }
 
         let matches = detector.matches(in: text, range: text.nsRange)
 
+        return matches.map {
+            MatchResult(
+                range: $0.range,
+                date: $0.date,
+                duration: $0.duration,
+                allDay: false
+            )
+        }
+    }
+}
+
+enum UniversalEventTitleParser: EventTitleParsing {
+
+    static func instructions(
+        in originalText: String,
+        calendar: Calendar,
+        referenceDate: Date,
+        excluding excludedRanges: [NSRange],
+        firstWordRange: NSRange?
+    ) async -> EventTitleInstructions {
+
+        var instructions = EventTitleInstructions()
+
+        let text = String(
+            originalText.removingSubranges(
+                RangeSet(excludedRanges.compactMap { Range($0, in: originalText) })
+            )
+        )
+
+        let matches = await CalendarEventDetector.matches(
+            in: text,
+            calendar: calendar,
+            referenceDate: referenceDate
+        )
+
         let tokenizer = NLTokenizer(unit: .word)
+
+        let globalOffset = firstWordRange?.length ?? 0
 
         for match in matches {
             guard
@@ -45,14 +134,20 @@ enum UniversalEventTitleParser: EventTitleParsing {
              *  as being a temporal term, which is not really what we want, but it's better than nothing.
              *
              * To mitigate that we have to run a tokenizer and check individual terms.
-             * That way we can at least filter out excluded ranges from the start/end.
              */
-            tokenizer.enumerateTokens(in: dateText.range) { tokenRange, _ in
-                let subTokenStr = String(dateText[tokenRange])
-                let globalNSRange = translateRange(tokenRange, from: dateText, offsetBy: match.range.location)
+            for tokenRange in tokenizer.tokens(for: dateText.range) {
 
-                // This helps ignoring "dinner" / "lunch" at the beginning
-                guard !globalNSRange.intersects(excludedRanges) else { return true }
+                let subTokenStr = String(dateText[tokenRange])
+
+                let globalNSRange = translateRange(
+                    tokenRange,
+                    from: dateText,
+                    offsetBy: globalOffset + match.range.location
+                )
+
+                if match.allDay {
+                    instructions.allDayRanges.append(globalNSRange)
+                }
 
                 if let assignedType = evaluateAgnosticType(
                     tokenStr: subTokenStr,
@@ -80,8 +175,13 @@ enum UniversalEventTitleParser: EventTitleParsing {
                                 )
                             }
 
+                            let time = components.hour.map {
+                                EventTitleTime(hour: $0, minute: components.minute ?? 0)
+                            }
+
                             let dateMatch = EventTitleDateMatch(
                                 dayOffset: dayOffset,
+                                time: time,
                                 numericDate: nil,
                                 weekday: titleWeekday
                             )
@@ -105,7 +205,6 @@ enum UniversalEventTitleParser: EventTitleParsing {
                             insert(timeMatch, with: globalNSRange, into: &instructions.times)
                     }
                 }
-                return true
             }
         }
 
@@ -149,13 +248,10 @@ private func evaluateAgnosticType(
     let isNumeric = cleanedToken.rangeOfCharacter(from: .decimalDigits) != nil
 
     // Scenario A: Precise Clock Extraction (Hours / Minutes)
-    if let hour = components.hour {
+    if isNumeric, let hour = components.hour {
         let minute = components.minute ?? 0
-
-        if isNumeric || cleanedToken.count <= 4 {
-            let totalDuration = matchDuration > 0 ? matchDuration : nil
-            return .startTime(hour: hour, minute: minute, duration: totalDuration)
-        }
+        let totalDuration = matchDuration > 0 ? matchDuration : nil
+        return .startTime(hour: hour, minute: minute, duration: totalDuration)
     }
 
     let definesDateOffset = components.day != nil || components.weekday != nil

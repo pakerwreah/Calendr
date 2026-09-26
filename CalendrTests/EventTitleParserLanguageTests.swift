@@ -27,25 +27,25 @@ struct EventTitleParserLanguageTests {
         #expect(EventTitleParserLanguage.czech.parser == CzechEventTitleParser.self)
     }
 
-    @Test func testLanguagesDoNotShareVocabulary() {
-        let english = EventTitleParser.parse("Meeting tomorrow at 2pm", language: .english)
+    @Test func testLanguagesDoNotShareVocabulary() async {
+        let english = await EventTitleParser.parse("Meeting tomorrow at 2pm", language: .english)
 
         #expect(english.dayOffset == 1)
         #expect(english.time == .init(hour: 14, minute: 0))
 
         // The same English wording means nothing to the Czech parser.
-        let czech = EventTitleParser.parse("Meeting tomorrow at 2pm", language: .czech)
+        let czech = await EventTitleParser.parse("Meeting tomorrow at 2pm", language: .czech)
 
         #expect(czech.dayOffset == nil)
         #expect(czech.time == nil)
         #expect(czech.tokens.isEmpty)
 
-        let czechInput = EventTitleParser.parse("Schůze zítra ve 14", language: .czech)
+        let czechInput = await EventTitleParser.parse("Schůze zítra ve 14", language: .czech)
 
         #expect(czechInput.dayOffset == 1)
         #expect(czechInput.time == .init(hour: 14, minute: 0))
 
-        let englishReadingCzech = EventTitleParser.parse("Schůze zítra ve 14", language: .english)
+        let englishReadingCzech = await EventTitleParser.parse("Schůze zítra ve 14", language: .english)
 
         #expect(englishReadingCzech.dayOffset == nil)
         #expect(englishReadingCzech.time == nil)
@@ -65,9 +65,9 @@ struct EventTitleParserLanguageTests {
 
 private extension EventTitleParser {
 
-    static func parse(_ text: String, language: EventTitleParserLanguage) -> EventTitleParseResult {
+    static func parse(_ text: String, language: EventTitleParserLanguage) async -> EventTitleParseResult {
 
-        EventTitleParser.parse(
+        await EventTitleParser.parse(
             text,
             calendar: .current,
             referenceDate: .now,
