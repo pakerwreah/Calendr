@@ -198,6 +198,7 @@
 
 "tooltips.toolbar.stay_open" = "前面に固定";
 "tooltips.toolbar.create" = "作成";
+//"tooltips.toolbar.invites" = "Invites";
 "tooltips.toolbar.open_calendar" = "カレンダーを開く";
 "tooltips.toolbar.open_reminders" = "リマインダーを開く";
 "tooltips.toolbar.open_menu" = "メニューを開く";

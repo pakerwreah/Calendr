@@ -14,6 +14,7 @@ class CalendarViewModelTests {
 
     let disposeBag = DisposeBag()
 
+    let showInvites = BehaviorSubject<Bool>(value: false)
     let searchSubject = BehaviorSubject<String>(value: "")
     let dateSubject = PublishSubject<Date>()
     let hoverSubject = PublishSubject<Date?>()
@@ -27,6 +28,7 @@ class CalendarViewModelTests {
     let scheduler = HistoricalScheduler()
 
     lazy var viewModel = CalendarViewModel(
+        showInvitesObservable: showInvites,
         searchObservable: searchSubject,
         dateObservable: dateSubject,
         hoverObservable: hoverSubject,
@@ -837,6 +839,197 @@ class CalendarViewModelTests {
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
 
         #expect(events?.map(\.title) == ["Overdue 1", "Overdue 2" ,"Event 1", "Event 2", "Event 3", "Event 4"])
+    }
+
+    @Test func testViewModel_hasPendingInvitessInThePast_shouldNotReportPendingInvites() {
+
+        calendarService.m_events = [
+            .make(
+                start: .make(year: 2021, month: 1, day: 1),
+                title: "Invite 1",
+                type: .event(.pending),
+            ),
+            .make(
+                start: .make(year: 2021, month: 1, day: 1),
+                title: "Invite 2",
+                type: .event(.pending),
+            )
+        ]
+
+        dateProvider.now = .make(year: 2021, month: 1, day: 2)
+        dateSubject.onNext(.make(year: 2021, month: 10, day: 10)) // doesn't matter
+
+        #expect(viewModel.hasPendingInvites.lastValue() == false)
+    }
+
+    @Test func testViewModel_hasPendingInvitessToday_shouldReportPendingInvites() {
+
+        calendarService.m_events = [
+            .make(
+                start: .make(year: 2021, month: 1, day: 1),
+                title: "Invite 1",
+                type: .event(.pending),
+            ),
+            .make(
+                start: .make(year: 2021, month: 1, day: 2),
+                title: "Invite 2",
+                type: .event(.pending),
+            )
+        ]
+
+        dateProvider.now = .make(year: 2021, month: 1, day: 2)
+        dateSubject.onNext(.make(year: 2021, month: 10, day: 10)) // doesn't matter
+
+        #expect(viewModel.hasPendingInvites.lastValue() == true)
+    }
+
+    @Test func testViewModel_hasPendingInvitessInTheFuture_shouldReportPendingInvites() {
+
+        calendarService.m_events = [
+            .make(
+                start: .make(year: 2021, month: 1, day: 1),
+                title: "Invite 1",
+                type: .event(.pending),
+            ),
+            .make(
+                start: .make(year: 2021, month: 1, day: 3),
+                title: "Invite 2",
+                type: .event(.pending),
+            )
+        ]
+
+        dateProvider.now = .make(year: 2021, month: 1, day: 2)
+        dateSubject.onNext(.make(year: 2021, month: 10, day: 10)) // doesn't matter
+
+        #expect(viewModel.hasPendingInvites.lastValue() == true)
+    }
+
+    @Test func testViewModel_showPendingInvitesInTheFuture() {
+
+        calendarService.m_events = [
+            .make(
+                start: .make(year: 2021, month: 1, day: 1),
+                title: "Invite 1",
+                type: .event(.pending),
+            ),
+            .make(
+                start: .make(year: 2021, month: 1, day: 2),
+                title: "Invite 2",
+                type: .event(.pending),
+            ),
+            .make(
+                start: .make(year: 2021, month: 1, day: 2),
+                title: "Accepted",
+                type: .event(.accepted),
+            ),
+            .make(
+                start: .make(year: 2021, month: 1, day: 3),
+                title: "Invite 4",
+                type: .event(.pending),
+            )
+        ]
+
+        dateProvider.now = .make(year: 2021, month: 1, day: 2)
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 2))
+
+        var lastValue: DateEvents?
+
+        viewModel
+            .eventListObservable
+            .bind { lastValue = $0 }
+            .disposed(by: disposeBag)
+
+        #expect(lastValue?.events.map(\.title) == ["Invite 2", "Accepted"])
+
+        showInvites.onNext(true)
+
+        #expect(lastValue?.events.map(\.title) == ["Invite 2", "Invite 4"])
+    }
+
+    @Test func testViewModel_showRemainingPendingInvitesAfterAccept() {
+
+        calendarService.m_events = [
+            .make(
+                start: .make(year: 2021, month: 1, day: 1),
+                title: "Invite 1",
+                type: .event(.pending),
+            ),
+            .make(
+                start: .make(year: 2021, month: 1, day: 2),
+                title: "Invite 2",
+                type: .event(.pending),
+            )
+        ]
+
+        dateProvider.now = .make(year: 2021, month: 1, day: 1)
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+
+        var lastValue: DateEvents?
+
+        viewModel
+            .eventListObservable
+            .bind { lastValue = $0 }
+            .disposed(by: disposeBag)
+
+        showInvites.onNext(true)
+
+        #expect(lastValue?.events.map(\.title) == ["Invite 1", "Invite 2"])
+
+        calendarService.m_events[safe: 0].map {
+            calendarService.m_events[0] = .make(
+                start: $0.start,
+                title: $0.title,
+                type: .event(.accepted),
+            )
+        }
+
+        calendarService.changeObserver.onNext(())
+
+        #expect(lastValue?.events.map(\.title) == ["Invite 2"])
+    }
+
+    @Test func testViewModel_showPendingInvites_shouldNotShowEmpty() {
+
+        calendarService.m_events = [
+            .make(
+                start: .make(year: 2021, month: 1, day: 1),
+                title: "Event",
+                type: .event(.accepted),
+            ),
+            .make(
+                start: .make(year: 2021, month: 1, day: 2),
+                title: "Invite",
+                type: .event(.pending),
+            )
+        ]
+
+        dateProvider.now = .make(year: 2021, month: 1, day: 1)
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+
+        var lastValue: DateEvents?
+
+        viewModel
+            .eventListObservable
+            .bind { lastValue = $0 }
+            .disposed(by: disposeBag)
+
+        #expect(lastValue?.events.map(\.title) == ["Event"])
+
+        showInvites.onNext(true)
+
+        #expect(lastValue?.events.map(\.title) == ["Invite"])
+
+        calendarService.m_events[safe: 1].map {
+            calendarService.m_events[1] = .make(
+                start: $0.start,
+                title: $0.title,
+                type: .event(.accepted),
+            )
+        }
+
+        calendarService.changeObserver.onNext(())
+
+        #expect(lastValue?.events.map(\.title) == ["Event"])
     }
 
     @Test func testEventDotsPerDate_withSearch() {

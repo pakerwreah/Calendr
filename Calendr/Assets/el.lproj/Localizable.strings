@@ -198,6 +198,7 @@
 
 "tooltips.toolbar.stay_open" = "Μείνετε ανοιχτοί";
 //"tooltips.toolbar.create" = "Create";
+//"tooltips.toolbar.invites" = "Invites";
 "tooltips.toolbar.open_calendar" = "Άνοιγμα Ημερολογίου";
 "tooltips.toolbar.open_reminders" = "Άνοιγμα Υπενθυμίσεων";
 "tooltips.toolbar.open_menu" = "Άνοιγμα μενού";

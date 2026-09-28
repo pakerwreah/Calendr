@@ -12,6 +12,7 @@ class CalendarViewModel {
 
     let cellViewModelsObservable: Observable<[CalendarCellViewModel]>
     let eventListObservable: Observable<DateEvents>
+    let hasPendingInvites: Observable<Bool>
 
     let title: Observable<String>
     let weekCount: Observable<Int>
@@ -24,6 +25,7 @@ class CalendarViewModel {
     let showMonthOutline: Observable<Bool>
 
     init(
+        showInvitesObservable: Observable<Bool>,
         searchObservable: Observable<String>,
         dateObservable: Observable<Date>,
         hoverObservable: Observable<Date?>,
@@ -395,11 +397,40 @@ class CalendarViewModel {
             .distinctUntilChanged()
             .share(replay: 1)
 
-        eventListObservable = Observable
-            .combineLatest(cellViewModelsObservable, searchObservable.map(\.isNotBlank), filteredEventsObservable)
-            .compactMap { cellViewModels, hasSearch, filteredEvents in
+        let isPendingInvite: ((EventModel) -> Bool) = {
+            $0.status == .pending
+            &&
+            dateProvider.calendar.isDate($0.start, greaterThanOrEqualTo: dateProvider.now, granularity: .day)
+        }
 
-                if hasSearch, let filteredEvents {
+        hasPendingInvites = eventsObservable
+            .map {
+                $0?.contains(where: isPendingInvite) ?? false
+            }
+            .distinctUntilChanged()
+            .share(replay: 1)
+
+        let showInvitesIfNotEmpty = Observable
+            .combineLatest(showInvitesObservable, hasPendingInvites)
+            .map { $0 && $1 }
+            .distinctUntilChanged()
+
+        eventListObservable = Observable
+            .combineLatest(
+                cellViewModelsObservable,
+                searchObservable.map(\.isNotBlank),
+                showInvitesIfNotEmpty,
+                filteredEventsObservable
+            )
+            .distinctUntilChanged(==)
+            .compactMap { cellViewModels, hasSearch, showInvites, filteredEvents in
+
+                if hasSearch || showInvites, var filteredEvents {
+
+                    if showInvites {
+                        filteredEvents.removeAll { !isPendingInvite($0) }
+                    }
+
                     return DateEvents(date: .distantPast, events: filteredEvents.suffix(Constants.maxSearchResults))
                 }
 

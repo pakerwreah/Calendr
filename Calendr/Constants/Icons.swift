@@ -25,6 +25,8 @@ enum Icons {
         static let pinned = NSImage(systemName: "pin.fill")
         static let unpinned = NSImage(systemName: "pin")
         static let create = NSImage(systemName: "plus")
+        static let invitesOpen = NSImage(systemName: "envelope.open")
+        static let invitesClosed = NSImage(systemName: "envelope.badge")
     }
 
     enum CalendarList {

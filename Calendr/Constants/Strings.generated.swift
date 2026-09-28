@@ -443,6 +443,8 @@ internal enum Strings {
     internal enum Toolbar {
       /// Create
       internal static let create = Strings.tr("Localizable", "tooltips.toolbar.create", fallback: "Create")
+      /// Invites
+      internal static let invites = Strings.tr("Localizable", "tooltips.toolbar.invites", fallback: "Invites")
       /// Open Calendar
       internal static let openCalendar = Strings.tr("Localizable", "tooltips.toolbar.open_calendar", fallback: "Open Calendar")
       /// Open menu

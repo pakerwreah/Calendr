@@ -198,6 +198,7 @@
 
 "tooltips.toolbar.stay_open" = "Stay open";
 "tooltips.toolbar.create" = "Create";
+"tooltips.toolbar.invites" = "Invites";
 "tooltips.toolbar.open_calendar" = "Open Calendar";
 "tooltips.toolbar.open_reminders" = "Open Reminders";
 "tooltips.toolbar.open_menu" = "Open menu";

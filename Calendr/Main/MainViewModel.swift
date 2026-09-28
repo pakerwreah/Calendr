@@ -37,6 +37,7 @@ class MainViewModel {
     let nextMonthObserver: AnyObserver<Void>
     let navigationObserver: AnyObserver<Keyboard.Key>
     let viewDidDisappearObserver: AnyObserver<Void>
+    let showInvitesObserver: AnyObserver<Bool>
     let searchInputTextObserver: AnyObserver<String>
     let searchInputFocusObserver: AnyObserver<Bool>
     let showSearchInputObserver: AnyObserver<Void>
@@ -49,12 +50,14 @@ class MainViewModel {
 
     let selectedDate: Observable<Date>
     let refreshDate: Observable<Void>
+    let showInvites: Observable<Bool>
     let searchInputText: Observable<String>
     let searchInputSuggestion: Observable<DateSuggestionResult?>
     let searchInputSuggestionText: Observable<String?>
     let isSearchInputSuggestionHidden: Observable<Bool>
     let isSearchInputHidden: Observable<Bool>
     let isCreateButtonHidden: Observable<Bool>
+    let isInvitesButtonHidden: Observable<Bool>
     let updateError: Observable<UpdateError>
     let updateAction: Observable<UpdateAction>
     let showMainPopover: Observable<Void>
@@ -108,6 +111,7 @@ class MainViewModel {
         settings: CalendarSettings,
         autoUpdater: AutoUpdating,
         isAppActive: Observable<Bool>,
+        hasPendingInvites: Observable<Bool>,
         notificationCenter: NotificationCenter,
         workspace: WorkspaceServiceProviding
     ) {
@@ -126,6 +130,7 @@ class MainViewModel {
         (prevMonth, prevMonthObserver) = PublishSubject.pipe()
         (nextMonth, nextMonthObserver) = PublishSubject.pipe()
         (viewDidDisappear, viewDidDisappearObserver) = PublishSubject.pipe()
+        (showInvites, showInvitesObserver) = BehaviorSubject.pipe(value: false)
         (searchInputText, searchInputTextObserver) = BehaviorSubject.pipe(value: "")
         (searchInputFocus, searchInputFocusObserver) = BehaviorSubject.pipe(value: false)
         (showSearchInput, showSearchInputObserver) = PublishSubject.pipe()
@@ -152,6 +157,8 @@ class MainViewModel {
             .share(replay: 1)
 
         let reset = Observable.merge(resetInput, refreshDate.void())
+
+        let escape = navigation.matching(.escape).void()
 
         let backspace = navigation.matching(.backspace).void()
 
@@ -196,6 +203,20 @@ class MainViewModel {
         selectedDate
             .bind(to: selectedDateSubject)
             .disposed(by: disposeBag)
+
+        Observable.merge(
+            reset,
+            escape,
+            backspace,
+            selectedDate.void(),
+            viewDidDisappear,
+            hasPendingInvites.matching(false).void()
+        )
+        .map(false)
+        .bind(to: showInvitesObserver)
+        .disposed(by: disposeBag)
+
+        isInvitesButtonHidden = hasPendingInvites.map(!)
 
         searchInputSuggestion = searchInputSuggestionSubject.asObservable()
 

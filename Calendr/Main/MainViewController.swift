@@ -38,6 +38,7 @@ class MainViewController: NSViewController {
     private let nextBtn = ImageButton()
     private let pinBtn = ImageButton()
     private let createBtn = ImageButton()
+    private let invitesBtn = ImageButton()
     private let remindersBtn = ImageButton()
     private let calendarBtn = ImageButton()
     private let settingsBtn = ImageButton()
@@ -129,11 +130,20 @@ class MainViewController: NSViewController {
             localStorage: localStorage
         )
 
+        let hasPendingInvites = BehaviorSubject(value: false)
+
+        defer {
+            calendarViewModel.hasPendingInvites
+                .bind(to: hasPendingInvites)
+                .disposed(by: disposeBag)
+        }
+
         mainViewModel = MainViewModel(
             dateProvider: dateProvider,
             settings: settingsViewModel,
             autoUpdater: autoUpdater,
             isAppActive: NSApp.rx.observe(\.isActive),
+            hasPendingInvites: hasPendingInvites,
             notificationCenter: notificationCenter,
             workspace: workspace
         )
@@ -159,6 +169,7 @@ class MainViewController: NSViewController {
         )
 
         calendarViewModel = CalendarViewModel(
+            showInvitesObservable: mainViewModel.showInvites,
             searchObservable: mainViewModel.searchInputText,
             dateObservable: mainViewModel.selectedDate,
             hoverObservable: hoveredDate,
@@ -384,6 +395,17 @@ class MainViewController: NSViewController {
         }
         .disposed(by: disposeBag)
 
+        setUpSearchInput()
+
+        setUpInvitesButton()
+
+        setUpCreateButton()
+
+        setUpDateSuggestion()
+    }
+
+    private func setUpSearchInput() {
+
         searchInput.rx.text
             .skipNil()
             .bind(to: mainViewModel.searchInputTextObserver)
@@ -392,10 +414,24 @@ class MainViewController: NSViewController {
         mainViewModel.searchInputText
             .bind(to: searchInput.rx.stringValue)
             .disposed(by: disposeBag)
+    }
 
-        setUpCreateButton()
+    private func setUpInvitesButton() {
 
-        setUpDateSuggestion()
+        mainViewModel.isInvitesButtonHidden
+            .bind(to: invitesBtn.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        invitesBtn.rx.state
+            .map { $0 == .on }
+            .bind(to: mainViewModel.showInvitesObserver)
+            .disposed(by: disposeBag)
+
+        mainViewModel
+            .showInvites
+            .map { $0 ? .on : .off }
+            .bind(to: invitesBtn.rx.state)
+            .disposed(by: disposeBag)
     }
 
     private func setUpCreateButton() {
@@ -877,6 +913,9 @@ class MainViewController: NSViewController {
             case .option(.char("d")):
                 localStorage.showDeclinedEvents.toggle()
 
+            case .escape where mainViewModel.showInvites.lastValue() == true:
+                mainViewModel.navigationObserver.onNext(key)
+
             case .arrow, .command(.arrow), .backspace:
                 mainViewModel.navigationObserver.onNext(key)
 
@@ -1088,6 +1127,19 @@ class MainViewController: NSViewController {
         .with(spacing: 0)
     }
 
+    private func invitesBtnImage(_ state: NSControl.StateValue) -> NSImage? {
+
+        let sizeConfig = NSImage.SymbolConfiguration(pointSize: 14, weight: .regular)
+        let closedColor = NSImage.SymbolConfiguration(paletteColors: [.systemRed, .textColor])
+        let openColor = NSImage.SymbolConfiguration(paletteColors: [.textColor])
+
+        return switch state {
+            case .off: Icons.Calendar.invitesClosed.withSymbolConfiguration(sizeConfig.applying(closedColor))
+            case .on: Icons.Calendar.invitesOpen.withSymbolConfiguration(sizeConfig.applying(openColor))
+            default: nil
+        }
+    }
+
     private func makeToolBar() -> NSView {
 
         [pinBtn, remindersBtn, calendarBtn, settingsBtn].forEach { $0.size(equalTo: 22) }
@@ -1100,6 +1152,11 @@ class MainViewController: NSViewController {
         createBtn.image = Icons.Calendar.create.with(scale: .large)
         createBtn.toolTip = Strings.Tooltips.Toolbar.create
 
+        invitesBtn.setButtonType(.toggle)
+        invitesBtn.image = invitesBtnImage(.off)
+        invitesBtn.alternateImage = invitesBtnImage(.on)
+        invitesBtn.toolTip = Strings.Tooltips.Toolbar.invites
+
         remindersBtn.image = Icons.Calendar.reminders.with(scale: .large)
         remindersBtn.toolTip = Strings.Tooltips.Toolbar.openReminders
 
@@ -1109,7 +1166,7 @@ class MainViewController: NSViewController {
         settingsBtn.image = Icons.Calendar.settings.with(scale: .large)
         settingsBtn.toolTip = Strings.Tooltips.Toolbar.openMenu
 
-        return NSStackView(views: [pinBtn, createBtn, .spacer, remindersBtn, calendarBtn, settingsBtn])
+        return NSStackView(views: [pinBtn, createBtn, .spacer, invitesBtn, remindersBtn, calendarBtn, settingsBtn])
     }
 
 }

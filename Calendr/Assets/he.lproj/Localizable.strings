@@ -198,6 +198,7 @@
 
 "tooltips.toolbar.stay_open" = "הישאר פתוח";
 "tooltips.toolbar.create" = "צור";
+//"tooltips.toolbar.invites" = "Invites";
 "tooltips.toolbar.open_calendar" = "פתח לוח שנה";
 "tooltips.toolbar.open_reminders" = "פתח תזכורות";
 "tooltips.toolbar.open_menu" = "פתח תפריט";
