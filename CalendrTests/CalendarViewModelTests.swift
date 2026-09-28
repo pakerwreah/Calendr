@@ -841,7 +841,7 @@ class CalendarViewModelTests {
         #expect(events?.map(\.title) == ["Overdue 1", "Overdue 2" ,"Event 1", "Event 2", "Event 3", "Event 4"])
     }
 
-    @Test func testViewModel_hasPendingInvitessInThePast_shouldNotReportPendingInvites() {
+    @Test func testViewModel_hasPendingInvitesInThePast_shouldNotReportPendingInvites() {
 
         calendarService.m_events = [
             .make(
@@ -862,7 +862,7 @@ class CalendarViewModelTests {
         #expect(viewModel.hasPendingInvites.lastValue() == false)
     }
 
-    @Test func testViewModel_hasPendingInvitessToday_shouldReportPendingInvites() {
+    @Test func testViewModel_hasPendingInvitesToday_shouldReportPendingInvites() {
 
         calendarService.m_events = [
             .make(
@@ -883,7 +883,7 @@ class CalendarViewModelTests {
         #expect(viewModel.hasPendingInvites.lastValue() == true)
     }
 
-    @Test func testViewModel_hasPendingInvitessInTheFuture_shouldReportPendingInvites() {
+    @Test func testViewModel_hasPendingInvitesInTheFuture_shouldReportPendingInvites() {
 
         calendarService.m_events = [
             .make(
@@ -944,6 +944,81 @@ class CalendarViewModelTests {
         showInvites.onNext(true)
 
         #expect(lastValue?.events.map(\.title) == ["Invite 2", "Invite 4"])
+    }
+
+    @Test func testViewModel_withSearch_filterPendingInvites() {
+
+        calendarService.m_events = [
+            .make(
+                start: .make(year: 2021, month: 1, day: 1),
+                title: "Invite-1",
+                type: .event(.pending),
+            ),
+            .make(
+                start: .make(year: 2021, month: 1, day: 2),
+                title: "Invite-2",
+                type: .event(.pending),
+            )
+        ]
+
+        dateProvider.now = .make(year: 2021, month: 1, day: 1)
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+
+        var lastValue: DateEvents?
+
+        viewModel
+            .eventListObservable
+            .bind { lastValue = $0 }
+            .disposed(by: disposeBag)
+
+        showInvites.onNext(true)
+
+        #expect(lastValue?.events.map(\.title) == ["Invite-1", "Invite-2"])
+
+        searchSubject.onNext(" ")
+
+        #expect(lastValue?.events.map(\.title) == ["Invite-1", "Invite-2"])
+
+        searchSubject.onNext(" 2 ")
+
+        #expect(lastValue?.events.map(\.title) == ["Invite-2"])
+
+        searchSubject.onNext("123")
+
+        #expect(lastValue?.events.map(\.title) == [])
+        #expect(viewModel.hasPendingInvites.lastValue() == true)
+    }
+
+    @Test func testViewModel_withAllDayDisabled_shouldNotAffectPendingInvites() {
+
+        calendarService.m_events = [
+            .make(
+                start: .make(year: 2021, month: 1, day: 1),
+                title: "Invite",
+                isAllDay: true,
+                type: .event(.pending)
+            )
+        ]
+
+        dateProvider.now = .make(year: 2021, month: 1, day: 1)
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+
+        var lastValue: DateEvents?
+
+        viewModel
+            .eventListObservable
+            .bind { lastValue = $0 }
+            .disposed(by: disposeBag)
+
+        showInvites.onNext(true)
+
+        #expect(lastValue?.events.map(\.title) == ["Invite"])
+
+        settings.toggleAllDayEvents.onNext(false)
+
+        #expect(lastValue?.events.map(\.title) == ["Invite"])
+
+        #expect(viewModel.hasPendingInvites.lastValue() == true)
     }
 
     @Test func testViewModel_showRemainingPendingInvitesAfterAccept() {
@@ -1050,7 +1125,7 @@ class CalendarViewModelTests {
             (.make(year: 2021, month: 1, day: 3), [.white])
         ])
 
-        searchSubject.onNext("")
+        searchSubject.onNext(" ")
         assertExpectedEvents(\.dots, [
             (.make(year: 2021, month: 1, day: 1), [.white]),
             (.make(year: 2021, month: 1, day: 2), [.white, .black]),

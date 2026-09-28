@@ -64,7 +64,7 @@ class CalendarListViewModel {
         )
 
         calendars
-            .filter(\.isEmpty.isFalse)
+            .filter(\.isNotEmpty)
             .map { $0.map(\.id) }
             .bind { [localStorage] calendars in
                 // clean up removed calendars
