@@ -41,18 +41,6 @@ extension Collection {
         sorted { getter($0) < getter($1) }
     }
 
-    func distinct<T: Hashable>(by selector: (Element) -> T) -> [Element] {
-        var seen: Set<T> = []
-        var result: [Element] = []
-        for element in self {
-            let property = selector(element)
-            if seen.insert(property).inserted {
-                result.append(element)
-            }
-        }
-        return result
-    }
-
     func firstNonNil<T>(_ transform: (Element) throws -> T?) rethrows -> T? {
         for value in self {
             if let value = try transform(value) {

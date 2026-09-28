@@ -33,7 +33,7 @@ private struct Skipped: Equatable {
     let start: Date
 
     init(_ event: EventModel) {
-        id = event.id
+        id = event.externalId
         start = event.start
     }
 }
@@ -199,7 +199,7 @@ class NextEventViewModel {
                             .sorted(by: \.id)
 
                         let event = if upcoming.count > 1 {
-                            makeEventsGroup(type, upcoming, calendarService)
+                            makeEventsGroup(type, upcoming, calendarService, workspace)
                         } else {
                             upcoming.first
                         }
@@ -239,10 +239,10 @@ class NextEventViewModel {
             .withLatestFrom(settings.forceLocalTimeZone) { ($0.0, $0.1, $1) }
             .map { [actionCallback] next, isEnabled, forceLocalTimeZone in
 
-                guard let next, next.isInProgress, isEnabled else { return nil }
+                guard isEnabled, let next, next.isInProgress, let event = next.grouped.first else { return nil }
 
                 let isOverdue = dateProvider.calendar.isDate(
-                    next.event.end,
+                    event.end,
                     lessThan: dateProvider.now,
                     granularity: .day
                 )
@@ -250,18 +250,16 @@ class NextEventViewModel {
                 guard !isOverdue else { return nil }
 
                 return EventFullScreenViewModel(
-                    event: next.event,
+                    event: event,
                     dateProvider: dateProvider,
                     forceLocalTimeZone: forceLocalTimeZone,
                     localStorage: localStorage,
                     workspace: workspace,
                     scheduler: scheduler,
                     onSkip: {
-                        for event in next.grouped {
-                            actionCallback.onNext(
-                                .event(event, .skip)
-                            )
-                        }
+                        actionCallback.onNext(
+                            .event(event, .skip)
+                        )
                     }
                 )
             }
@@ -611,10 +609,17 @@ private func fakeEvent(
 private func makeEventsGroup(
     _ type: NextEventType,
     _ items: [EventModel],
-    _ calendarService: CalendarServiceProviding
+    _ calendarService: CalendarServiceProviding,
+    _ workspace: WorkspaceServiceProviding
 ) -> EventModel? {
 
     guard let first = items.first else { return nil }
+
+    guard Set(items.map(\.title)).count > 1 else {
+        return items.first {
+            $0.detectLink(using: workspace) != nil
+        } ?? first
+    }
 
     let calendarType = switch (type) {
         case .event: CalendarEntityType.event
@@ -635,15 +640,10 @@ private func makeEventsGroup(
         color = .controlAccentColor
     }
 
-    let title = if items.distinct(by: \.title).count == 1 { first.title } else {
-        eventTitle(for: type, count: items.count)
-    }
-
-    // to show distict fullscreen events
-    let externalId = "br.paker.Calendr.grouped:\(first.start.timeIntervalSince1970)"
+    let title = eventTitle(for: type, count: items.count)
 
     return fakeEvent(
-        externalId: externalId,
+        externalId: first.externalId,
         start: first.start,
         end: items.map(\.end).max()!,
         title: title,

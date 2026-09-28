@@ -417,7 +417,7 @@ class NextEventViewModelFullScreenTests {
         #expect(fullScreen != nil)
     }
 
-    @Test func testNextEvent_withFullScreenViewModel_onSkip_shouldSkipGroupedEvents() {
+    @Test func testNextEvent_withFullScreenViewModel_onSkip_shouldSkipEventsWithSameExternalId() {
 
         settings.toggleFullScreenEvent.onNext(true)
 
@@ -431,13 +431,33 @@ class NextEventViewModelFullScreenTests {
 
         calendarService.changeEvents([
             .make(id: "1", externalId: "1", start: now, end: now + 1, title: "Event 1"),
-            .make(id: "2", externalId: "2", start: now, end: now + 2, title: "Event 2"),
-            .make(id: "3", externalId: "3", start: now, end: now + 3, title: "Event 3")
+            .make(id: "2", externalId: "1", start: now, end: now + 1, title: "Event 1"),
+            .make(id: "3", externalId: "2", start: now, end: now + 2, title: "Event 2"),
+            .make(id: "4", externalId: "3", start: now, end: now + 3, title: "Event 3"),
         ])
 
-        let expectedTitle = "3 events"
-        #expect(fullScreen?.title == expectedTitle)
-        #expect(viewModel.title.lastValue() == expectedTitle)
+        #expect(fullScreen?.title == "Event 1")
+        #expect(viewModel.title.lastValue() == "4 events")
+        #expect(viewModel.hasEvent.lastValue() == true)
+
+        fullScreen?.onAppear()
+        scheduler.advance(.seconds(2))
+
+        fullScreen?.skip()
+        scheduler.advance(.milliseconds(1))
+
+        #expect(fullScreen?.title == "Event 2")
+        #expect(viewModel.title.lastValue() == "2 events")
+        #expect(viewModel.hasEvent.lastValue() == true)
+
+        fullScreen?.onAppear()
+        scheduler.advance(.seconds(2))
+
+        fullScreen?.skip()
+        scheduler.advance(.milliseconds(1))
+
+        #expect(fullScreen?.title == "Event 3")
+        #expect(viewModel.title.lastValue() == "Event 3")
         #expect(viewModel.hasEvent.lastValue() == true)
 
         fullScreen?.onAppear()
