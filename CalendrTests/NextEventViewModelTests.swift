@@ -1474,14 +1474,32 @@ class NextEventViewModelTests {
         // two events starting at the same time are merged into a single group event with no
         // link, so the shortcut must not just open the first one
         calendarService.changeEvents([
-            .make(id: "1", start: now, end: now + 1, url: URL(string: "https://meet.google.com/first")!),
-            .make(id: "2", start: now, end: now + 1, url: URL(string: "https://meet.google.com/second")!)
+            .make(id: "1", start: now, end: now + 1, title: "Event 1", url: URL(string: "https://meet.google.com/first")!),
+            .make(id: "2", start: now, end: now + 1, title: "Event 2", url: URL(string: "https://meet.google.com/second")!)
         ])
         scheduler.advance(.seconds(1))
 
         viewModel.openNextEventLink()
 
         #expect(openedURL == nil)
+    }
+
+    @Test func testOpenNextEventLink_duplicateEvents_opensFirstLink() {
+
+        let viewModel = makeViewModel(type: .event)
+
+        var openedURL: URL?
+        workspace.didOpenURL = { openedURL = $0 }
+
+        calendarService.changeEvents([
+            .make(id: "1", start: now, end: now + 1, title: "Event 1", url: nil),
+            .make(id: "2", start: now, end: now + 1, title: "Event 1", url: URL(string: "https://meet.google.com")!)
+        ])
+        scheduler.advance(.seconds(1))
+
+        viewModel.openNextEventLink()
+
+        #expect(openedURL?.absoluteString == "https://meet.google.com")
     }
 
     @Test func testOpenNextEventLink_withoutEvent_doesNothing() {
