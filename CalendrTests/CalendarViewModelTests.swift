@@ -951,6 +951,11 @@ class CalendarViewModelTests {
         calendarService.m_events = [
             .make(
                 start: .make(year: 2021, month: 1, day: 1),
+                title: "Event",
+                type: .event(.unknown),
+            ),
+            .make(
+                start: .make(year: 2021, month: 1, day: 1),
                 title: "Invite-1",
                 type: .event(.pending),
             ),
@@ -971,6 +976,8 @@ class CalendarViewModelTests {
             .bind { lastValue = $0 }
             .disposed(by: disposeBag)
 
+        #expect(lastValue?.events.map(\.title) == ["Event", "Invite-1"])
+
         showInvites.onNext(true)
 
         #expect(lastValue?.events.map(\.title) == ["Invite-1", "Invite-2"])
@@ -983,9 +990,14 @@ class CalendarViewModelTests {
 
         #expect(lastValue?.events.map(\.title) == ["Invite-2"])
 
-        searchSubject.onNext("123")
+        searchSubject.onNext("Eve")
 
         #expect(lastValue?.events.map(\.title) == [])
+        #expect(viewModel.hasPendingInvites.lastValue() == true)
+
+        showInvites.onNext(false)
+
+        #expect(lastValue?.events.map(\.title) == ["Event"])
         #expect(viewModel.hasPendingInvites.lastValue() == true)
     }
 

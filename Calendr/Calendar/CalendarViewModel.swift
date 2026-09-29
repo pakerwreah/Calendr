@@ -418,9 +418,11 @@ class CalendarViewModel {
                 pendingInvitesObservable,
                 searchObservable
             )
-            .map { invites, searchTerm in
+            .map { invites, searchTerm -> [EventModel]? in
 
-                searchTerm.isBlank ? invites : invites.filter {
+                guard invites.isNotEmpty else { return nil }
+
+                return searchTerm.isBlank ? invites : invites.filter {
                     EventSearch.search(searchTerm, in: $0)
                 }
             }
@@ -438,7 +440,7 @@ class CalendarViewModel {
             )
             .compactMap { cellViewModels, hasSearch, filteredEvents, showInvites, filteredInvites in
 
-                if showInvites, !filteredInvites.isEmpty {
+                if showInvites, let filteredInvites {
                     return DateEvents(date: .distantPast, events: filteredInvites.suffix(Constants.maxSearchResults))
                 }
 
