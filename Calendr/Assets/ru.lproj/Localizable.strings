@@ -200,6 +200,7 @@
 
 "tooltips.toolbar.stay_open" = "Оставить открытым";
 "tooltips.toolbar.create" = "Создать";
+//"tooltips.toolbar.invites" = "Invites";
 "tooltips.toolbar.open_calendar" = "Открыть календарь";
 "tooltips.toolbar.open_reminders" = "Открыть напоминания";
 "tooltips.toolbar.open_menu" = "Открыть меню";

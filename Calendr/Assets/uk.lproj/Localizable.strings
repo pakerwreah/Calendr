@@ -198,6 +198,7 @@
 
 "tooltips.toolbar.stay_open" = "Залишити відкритим";
 //"tooltips.toolbar.create" = "Create";
+//"tooltips.toolbar.invites" = "Invites";
 "tooltips.toolbar.open_calendar" = "Відкрити календар";
 "tooltips.toolbar.open_reminders" = "Відкрити нагадування";
 "tooltips.toolbar.open_menu" = "Відкрити меню";

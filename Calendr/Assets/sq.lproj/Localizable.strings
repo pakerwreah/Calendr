@@ -198,6 +198,7 @@
 
 "tooltips.toolbar.stay_open" = "Qëndroni të hapur";
 //"tooltips.toolbar.create" = "Create";
+//"tooltips.toolbar.invites" = "Invites";
 "tooltips.toolbar.open_calendar" = "Hap Kalendarin";
 "tooltips.toolbar.open_reminders" = "Hapni Përkujtuesit";
 "tooltips.toolbar.open_menu" = "Hap menunë";

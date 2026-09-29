@@ -198,6 +198,7 @@
 
 "tooltips.toolbar.stay_open" = "Ponechať otvorené";
 "tooltips.toolbar.create" = "Vytvoriť";
+//"tooltips.toolbar.invites" = "Invites";
 "tooltips.toolbar.open_calendar" = "Otvoriť Kalendár";
 "tooltips.toolbar.open_reminders" = "Otvoriť Pripomienky";
 "tooltips.toolbar.open_menu" = "Otvoriť menu";

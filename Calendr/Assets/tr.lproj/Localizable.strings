@@ -198,6 +198,7 @@
 
 "tooltips.toolbar.stay_open" = "Açık kal";
 "tooltips.toolbar.create" = "Oluştur";
+//"tooltips.toolbar.invites" = "Invites";
 "tooltips.toolbar.open_calendar" = "Takvimi aç";
 "tooltips.toolbar.open_reminders" = "Hatırlatıcıları aç";
 "tooltips.toolbar.open_menu" = "Menüyü aç";

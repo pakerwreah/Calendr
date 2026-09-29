@@ -18,6 +18,7 @@ class MainViewModelTests {
     let settings = MockCalendarSettings()
     let autoUpdater = MockAutoUpdater()
     let isAppActive = BehaviorSubject(value: true)
+    let hasPendingInvites = BehaviorSubject(value: false)
     let notificationCenter = NotificationCenter()
     let workspace = MockWorkspaceServiceProvider()
 
@@ -25,7 +26,8 @@ class MainViewModelTests {
         dateProvider: dateProvider,
         settings: settings,
         autoUpdater: autoUpdater,
-        isAppActive: isAppActive.asObservable(),
+        isAppActive: isAppActive,
+        hasPendingInvites: hasPendingInvites,
         notificationCenter: notificationCenter,
         workspace: workspace
     )
@@ -113,7 +115,7 @@ class MainViewModelTests {
         #expect(searchInputText == "")
     }
 
-    @Test func testViewDidDisappear_resetsSearchInputWhenViewDisappear() {
+    @Test func testViewDidDisappear_resetsSearchInput() {
 
         var searchInputText: String?
         var isSearchInputHidden: Bool?
@@ -392,5 +394,98 @@ class MainViewModelTests {
         viewModel.select(year: 2026, month: 1)
 
         #expect(viewModel.currentSelectedDate == dateProvider.now)
+    }
+
+    @Test func testInvitesButtonHidden() {
+
+        hasPendingInvites.onNext(true)
+
+        #expect(viewModel.isInvitesButtonHidden.lastValue() == false)
+
+        hasPendingInvites.onNext(false)
+
+        #expect(viewModel.isInvitesButtonHidden.lastValue() == true)
+    }
+
+    @Test func testShowInvites_withPendingInvites_shouldShowInvites() {
+
+        hasPendingInvites.onNext(true)
+        viewModel.showInvitesObserver.onNext(true)
+
+        #expect(viewModel.showInvites.lastValue() == true)
+    }
+
+    @Test func testShowInvites_withoutPendingInvites_shouldNotShowInvites() {
+
+        hasPendingInvites.onNext(true)
+        viewModel.showInvitesObserver.onNext(true)
+
+        #expect(viewModel.showInvites.lastValue() == true)
+
+        hasPendingInvites.onNext(false)
+
+        #expect(viewModel.showInvites.lastValue() == false)
+    }
+
+    @Test func testEscapeKey_shouldHideInvites() {
+
+        hasPendingInvites.onNext(true)
+        viewModel.showInvitesObserver.onNext(true)
+
+        #expect(viewModel.showInvites.lastValue() == true)
+
+        viewModel.navigationObserver.onNext(.escape)
+
+        #expect(viewModel.showInvites.lastValue() == false)
+    }
+
+    @Test func testBackspaceKey_shouldHideInvites() {
+
+        hasPendingInvites.onNext(true)
+        viewModel.showInvitesObserver.onNext(true)
+
+        #expect(viewModel.showInvites.lastValue() == true)
+
+        viewModel.navigationObserver.onNext(.backspace)
+
+        #expect(viewModel.showInvites.lastValue() == false)
+    }
+
+    @Test func testResetPressed_shouldHideInvites() {
+
+        hasPendingInvites.onNext(true)
+        viewModel.showInvitesObserver.onNext(true)
+
+        #expect(viewModel.showInvites.lastValue() == true)
+
+        viewModel.resetObserver.onNext(())
+
+        #expect(viewModel.showInvites.lastValue() == false)
+    }
+
+    @Test func testViewDidDisappear_shouldHideInvites() {
+
+        hasPendingInvites.onNext(true)
+        viewModel.showInvitesObserver.onNext(true)
+
+        #expect(viewModel.showInvites.lastValue() == true)
+
+        viewModel.viewDidDisappearObserver.onNext(())
+
+        #expect(viewModel.showInvites.lastValue() == false)
+    }
+
+    @Test func testDateChange_shouldHideInvites() {
+
+        hasPendingInvites.onNext(true)
+        viewModel.showInvitesObserver.onNext(true)
+
+        #expect(viewModel.showInvites.lastValue() == true)
+
+        #expect(viewModel.currentSelectedDate == .make(year: 2021, month: 1, day: 5))
+
+        viewModel.selectDateObserver.onNext(.make(year: 2021, month: 1, day: 6))
+
+        #expect(viewModel.showInvites.lastValue() == false)
     }
 }

@@ -198,6 +198,7 @@
 
 "tooltips.toolbar.stay_open" = "열어두기";
 "tooltips.toolbar.create" = "생성";
+//"tooltips.toolbar.invites" = "Invites";
 "tooltips.toolbar.open_calendar" = "캘린더 열기";
 "tooltips.toolbar.open_reminders" = "미리 알림 열기";
 "tooltips.toolbar.open_menu" = "메뉴 열기";

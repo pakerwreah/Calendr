@@ -81,6 +81,8 @@ extension StringProtocol {
             .replacingOccurrences(of: "&", with: "%26")
     }
 
+    var isBlank: Bool { trimmed.isEmpty }
+
     var isNotBlank: Bool { !trimmed.isEmpty }
 
     var notEmpty: Self? { isEmpty ? nil : self }

@@ -49,4 +49,6 @@ extension Collection {
         }
         return nil
     }
+
+    var isNotEmpty: Bool { !isEmpty }
 }

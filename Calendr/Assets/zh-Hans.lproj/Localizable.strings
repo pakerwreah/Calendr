@@ -198,6 +198,7 @@
 
 "tooltips.toolbar.stay_open" = "保持打开";
 "tooltips.toolbar.create" = "创建";
+//"tooltips.toolbar.invites" = "Invites";
 "tooltips.toolbar.open_calendar" = "打开日历";
 "tooltips.toolbar.open_reminders" = "打开提醒";
 "tooltips.toolbar.open_menu" = "打开菜单";

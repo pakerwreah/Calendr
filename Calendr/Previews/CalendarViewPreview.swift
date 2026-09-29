@@ -31,6 +31,7 @@ struct CalendarViewPreview: PreviewProvider {
     static var previews: some View {
         CalendarView(
             viewModel: CalendarViewModel(
+                showInvitesObservable: .just(false),
                 searchObservable: .just(""),
                 dateObservable: selected,
                 hoverObservable: hovered,

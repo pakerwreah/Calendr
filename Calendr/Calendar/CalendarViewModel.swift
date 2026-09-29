@@ -12,6 +12,7 @@ class CalendarViewModel {
 
     let cellViewModelsObservable: Observable<[CalendarCellViewModel]>
     let eventListObservable: Observable<DateEvents>
+    let hasPendingInvites: Observable<Bool>
 
     let title: Observable<String>
     let weekCount: Observable<Int>
@@ -24,6 +25,7 @@ class CalendarViewModel {
     let showMonthOutline: Observable<Bool>
 
     init(
+        showInvitesObservable: Observable<Bool>,
         searchObservable: Observable<String>,
         dateObservable: Observable<Date>,
         hoverObservable: Observable<Date?>,
@@ -178,7 +180,7 @@ class CalendarViewModel {
                 &&
                 (showAllDayEvents || !$0.isAllDay)
                 &&
-                (searchTerm.isEmpty || EventSearch.search(searchTerm, in: $0))
+                (searchTerm.isBlank || EventSearch.search(searchTerm, in: $0))
             }
         }
         .distinctUntilChanged()
@@ -395,9 +397,52 @@ class CalendarViewModel {
             .distinctUntilChanged()
             .share(replay: 1)
 
+        let pendingInvitesObservable = eventsObservable
+            .map { events in
+
+                events?.filter {
+                    $0.status == .pending
+                    &&
+                    dateProvider.calendar.isDate($0.start, greaterThanOrEqualTo: dateProvider.now, granularity: .day)
+                } ?? []
+            }
+            .distinctUntilChanged()
+
+        hasPendingInvites = pendingInvitesObservable
+            .map(\.isNotEmpty)
+            .distinctUntilChanged()
+            .share(replay: 1)
+
+        let filteredInvitesObservable = Observable
+            .combineLatest(
+                pendingInvitesObservable,
+                searchObservable
+            )
+            .map { invites, searchTerm -> [EventModel]? in
+
+                guard invites.isNotEmpty else { return nil }
+
+                return searchTerm.isBlank ? invites : invites.filter {
+                    EventSearch.search(searchTerm, in: $0)
+                }
+            }
+            .distinctUntilChanged()
+
+        let hasSearchObservable = searchObservable.map(\.isNotBlank).distinctUntilChanged()
+
         eventListObservable = Observable
-            .combineLatest(cellViewModelsObservable, searchObservable.map(\.isNotBlank), filteredEventsObservable)
-            .compactMap { cellViewModels, hasSearch, filteredEvents in
+            .combineLatest(
+                cellViewModelsObservable,
+                hasSearchObservable,
+                filteredEventsObservable,
+                showInvitesObservable,
+                filteredInvitesObservable
+            )
+            .compactMap { cellViewModels, hasSearch, filteredEvents, showInvites, filteredInvites in
+
+                if showInvites, let filteredInvites {
+                    return DateEvents(date: .distantPast, events: filteredInvites.suffix(Constants.maxSearchResults))
+                }
 
                 if hasSearch, let filteredEvents {
                     return DateEvents(date: .distantPast, events: filteredEvents.suffix(Constants.maxSearchResults))

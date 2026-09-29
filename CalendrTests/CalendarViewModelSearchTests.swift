@@ -14,6 +14,7 @@ class CalendarViewModelSearchTests {
 
     private let disposeBag = DisposeBag()
 
+    private let showInvites = BehaviorSubject<Bool>(value: false)
     private let searchSubject = BehaviorSubject<String>(value: "")
     private let dateSubject = PublishSubject<Date>()
     private let hoverSubject = PublishSubject<Date?>()
@@ -26,6 +27,7 @@ class CalendarViewModelSearchTests {
 
     private lazy var calendarService = MockCalendarServiceProvider(dateProvider: dateProvider)
     private lazy var viewModel = CalendarViewModel(
+        showInvitesObservable: showInvites,
         searchObservable: searchSubject,
         dateObservable: dateSubject,
         hoverObservable: hoverSubject,

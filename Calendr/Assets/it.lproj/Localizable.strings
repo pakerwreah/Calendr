@@ -197,6 +197,7 @@
 
 "tooltips.toolbar.stay_open" = "Fissa";
 //"tooltips.toolbar.create" = "Create";
+//"tooltips.toolbar.invites" = "Invites";
 "tooltips.toolbar.open_calendar" = "Apri Calendario";
 "tooltips.toolbar.open_reminders" = "Apri Promemoria";
 "tooltips.toolbar.open_menu" = "Apri Menu";

@@ -18,6 +18,7 @@ class MainViewModelDateNavigationTests {
     let settings = MockCalendarSettings()
     let autoUpdater = MockAutoUpdater()
     let isAppActive = BehaviorSubject(value: true)
+    let hasPendingInvites = BehaviorSubject(value: false)
     let notificationCenter = NotificationCenter()
     let workspace = MockWorkspaceServiceProvider()
 
@@ -31,7 +32,8 @@ class MainViewModelDateNavigationTests {
             dateProvider: dateProvider,
             settings: settings,
             autoUpdater: autoUpdater,
-            isAppActive: isAppActive.asObservable(),
+            isAppActive: isAppActive,
+            hasPendingInvites: hasPendingInvites,
             notificationCenter: notificationCenter,
             workspace: workspace
         )
