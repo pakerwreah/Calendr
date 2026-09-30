@@ -220,13 +220,13 @@ class CalendarListViewController: NSViewController, SettingsUI {
         let button = ImageButton(image: Icons.CalendarList.settings.with(pointSize: 12))
         button.contentTintColor = .textColor
 
-        let calendarSettingsViewModel = viewModel.calendarSettingsViewModel(for: calendar)
-
         button.rx.tap
             .bind { [weak self] in
-                self?.presentAsSheet(
+                guard let self else { return }
+
+                presentAsSheet(
                     CalendarSettingsViewController(
-                        viewModel: calendarSettingsViewModel
+                        viewModel: viewModel.calendarSettingsViewModel(for: calendar)
                     )
                 )
             }
