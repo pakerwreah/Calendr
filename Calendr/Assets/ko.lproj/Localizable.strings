@@ -8,75 +8,75 @@
 "quit" = "종료";
 "search" = "검색";
 
-"access_required.calendars" = "캘린더의 '전체 접근' 권한이 필요합니다";
+"access_required.calendars" = "캘린더 '전체 접근' 권한이 필요합니다";
 "access_required.reminders" = "미리 알림 접근 권한이 필요합니다";
 "access_required.open_settings" = "설정 열기";
 "access_required.cancel" = "취소";
 
 "auto_update.check_for_updates" = "업데이트 확인";
-//"auto_update.check_automatically" = "Automatically check for updates";
-"auto_update.fetching_releases" = "릴리즈 가져오는 중";
-"auto_update.new_version" = "새로운 버전 사용 가능: %@";
-"auto_update.updated_to" = "버전 %@ 으로 업데이트되었습니다.";
-"auto_update.downloading" = "버전 %@ 다운로드 중";
+"auto_update.check_automatically" = "자동으로 업데이트 확인";
+"auto_update.fetching_releases" = "릴리스 정보 가져오는 중";
+"auto_update.new_version" = "새 버전 사용 가능: %@";
+"auto_update.updated_to" = "%@ 버전으로 업데이트됨";
+"auto_update.downloading" = "%@ 버전 다운로드 중";
 "auto_update.install" = "설치";
 "auto_update.replace.message" = "앱을 교체할 수 있도록 앱 위치를 확인해 주세요";
-"auto_update.replace.error" = "설치 위치를 변경할 수 없습니다";
+"auto_update.replace.error" = "설치 위치를 변경하면 안 됩니다";
 
 "auto_update.failed.check" = "업데이트 확인 실패";
 "auto_update.failed.download" = "업데이트 다운로드 실패";
 "auto_update.failed.install" = "업데이트 설치 실패";
 
 "attachments.open.message" = "첨부 파일에 접근하려면 Calendr에 권한이 필요합니다";
-"attachments.open.authorize" = "첨부 파일 접근 권한 허용";
+"attachments.open.authorize" = "첨부 파일 접근 허용";
 
 "settings.title" = "설정";
 "settings.tab.general" = "일반";
 "settings.tab.appearance" = "모양";
 "settings.tab.calendars" = "캘린더";
-"settings.tab.keyboard" = "바로가기";
+"settings.tab.keyboard" = "단축키";
 "settings.tab.about" = "정보";
 
-"settings.menu_bar" = "메뉴 바";
+"settings.menu_bar" = "메뉴 막대";
 "settings.menu_bar.auto_launch" = "로그인 시 실행";
-//"settings.menu_bar.launch_agent" = "Relaunch automatically";
-//"settings.menu_bar.launch_agent_tooltip" = "Relaunch the app in case macOS decides to kill it due to low memory or disk space.";
+"settings.menu_bar.launch_agent" = "자동으로 다시 실행";
+"settings.menu_bar.launch_agent_tooltip" = "메모리나 디스크 공간 부족으로 macOS가 앱을 종료하면 자동으로 다시 실행합니다.";
 
 "settings.menu_bar.open_on_hover" = "마우스 호버 시 열기";
 
 "settings.menu_bar.show_icon" = "아이콘 표시";
 "settings.menu_bar.show_date" = "날짜 표시";
-//"settings.menu_bar.show_lunar_date" = "Show lunar date";
+"settings.menu_bar.show_lunar_date" = "음력 날짜 표시";
 "settings.menu_bar.date_format_custom" = "사용자 지정";
 
-//"settings.menu_bar.background" = "Background";
-//"settings.menu_bar.background.transparent" = "transparent";
-//"settings.menu_bar.background.opaque" = "opaque";
-//"settings.menu_bar.background.outline" = "outline";
+"settings.menu_bar.background" = "배경";
+"settings.menu_bar.background.transparent" = "투명";
+"settings.menu_bar.background.opaque" = "불투명";
+"settings.menu_bar.background.outline" = "테두리";
 
 "settings.next_event" = "다음 일정";
 "settings.next_event.show_next_event" = "다음 일정 표시";
-//"settings.next_event.show_next_event_title" = "Show next event title";
-"settings.next_event.grab_attention" = "일정이 가까워지면 주의 끌기";
+"settings.next_event.show_next_event_title" = "다음 일정 제목 표시";
+"settings.next_event.grab_attention" = "일정이 임박하면 주의 끌기";
 "settings.next_event.grab_attention.flashing" = "깜빡임";
 "settings.next_event.grab_attention.sound" = "소리 재생";
-//"settings.next_event.grab_attention.start_at_5min" = "Start at 5 min";
-//"settings.next_event.show_full_screen_alert" = "Show full screen alert";
-"settings.next_event.detect_notch" = "노치 디스플레이에서 길이 조정";
+"settings.next_event.grab_attention.start_at_5min" = "5분 전부터 시작";
+"settings.next_event.show_full_screen_alert" = "전체 화면 알림 표시";
+"settings.next_event.detect_notch" = "노치가 있으면 짧게 표시";
 
 "settings.calendar" = "캘린더";
-"settings.calendar.show_month_outline" = "월 외곽선 표시";
+"settings.calendar.show_month_outline" = "월 경계선 표시";
 "settings.calendar.show_week_numbers" = "주 번호 표시";
-//"settings.calendar.show_lunar_calendar" = "Show lunar calendar";
+"settings.calendar.show_lunar_calendar" = "음력 표시";
 "settings.calendar.preserve_selected_date" = "숨길 때 선택한 날짜 유지";
 "settings.calendar.show_declined_events" = "거절한 일정 표시";
-"settings.calendar.show_declined_events_tooltip" = "기본 캘린더 앱에서도 활성화해야 작동합니다. (메뉴바 → 보기 → 거부된 이벤트 보기)";
+"settings.calendar.show_declined_events_tooltip" = "macOS 캘린더 앱에서도 이 옵션을 켜야 적용됩니다.";
 "settings.calendar.date_hover_option" = "⌥ 키를 누른 채 날짜 위에 호버하여 미리보기";
 "settings.calendar.week_count" = "표시할 주 수";
-"settings.calendar.calendar_app_view_mode" = "캘린더 앱 보기 모드";
+"settings.calendar.calendar_app_view_mode" = "캘린더 앱 보기 방식";
 "settings.calendar.default_calendar_app" = "기본 캘린더 앱";
-//"settings.calendar.preferred_browser" = "Preferred browser";
-//"settings.calendar.holiday_calendar" = "Holiday calendar";
+"settings.calendar.preferred_browser" = "선호하는 브라우저";
+"settings.calendar.holiday_calendar" = "공휴일 캘린더";
 
 "settings.calendar.event_dots" = "일정 점 표시 방식";
 "settings.calendar.event_dots.none" = "없음";
@@ -87,31 +87,31 @@
 "settings.events" = "일정";
 "settings.events.show_map" = "지도 및 날씨 표시";
 "settings.events.show_overdue_reminders" = "기한이 지난 미리 알림 표시";
-//"settings.events.show_all_day_events" = "Show all-day events";
-"settings.events.show_all_day_details" = "하루 종일 일정 상세 표시";
+"settings.events.show_all_day_events" = "하루 종일 일정 표시";
+"settings.events.show_all_day_details" = "하루 종일 일정 세부 정보 표시";
 "settings.events.show_finished_events" = "완료된 일정 표시";
-"settings.events.show_recurrence_indicator" = "반복 일정 표시";
-"settings.events.force_local_time_zone" = "모든 일정을 로컬 시간대로 표시";
+"settings.events.show_recurrence_indicator" = "반복 일정 아이콘 표시";
+"settings.events.force_local_time_zone" = "모든 일정을 현재 시간대로 표시";
 "settings.events.show_event_list_summary" = "일정 목록 요약 표시";
 "settings.events.show_future_events" = "예정된 일정 표시";
-//"settings.events.natural_language_input" = "Natural-language input";
-//"settings.events.natural_language_input.universal" = "Universal";
+"settings.events.natural_language_input" = "자연어 입력";
+"settings.events.natural_language_input.universal" = "범용";
 
 "settings.appearance.transparency" = "투명도";
-"settings.appearance.accessibility" = "접근성";
+"settings.appearance.accessibility" = "손쉬운 사용";
 
-"settings.keyboard.local_shortcuts.title" = "바로가기";
+"settings.keyboard.local_shortcuts.title" = "앱 내 단축키";
 "settings.keyboard.local_shortcuts.prev_date" = "이전 날짜";
 "settings.keyboard.local_shortcuts.next_date" = "다음 날짜";
 "settings.keyboard.local_shortcuts.prev_week" = "이전 주";
 "settings.keyboard.local_shortcuts.next_week" = "다음 주";
 "settings.keyboard.local_shortcuts.prev_month" = "이전 달";
 "settings.keyboard.local_shortcuts.next_month" = "다음 달";
-"settings.keyboard.local_shortcuts.curr_date" = "현재 날짜";
+"settings.keyboard.local_shortcuts.curr_date" = "오늘 날짜";
 "settings.keyboard.local_shortcuts.open_date" = "선택한 날짜 열기";
 "settings.keyboard.local_shortcuts.pin_calendar" = "캘린더 고정";
 
-"settings.keyboard.global_shortcuts.title" = "전역 바로가기";
+"settings.keyboard.global_shortcuts.title" = "전역 단축키";
 "settings.keyboard.global_shortcuts.open_calendar" = "캘린더 열기";
 "settings.keyboard.global_shortcuts.open_next_event" = "다음 일정 열기";
 "settings.keyboard.global_shortcuts.open_next_event_options" = "다음 일정 옵션";
@@ -125,9 +125,9 @@
 "formatter.date.relative.left" = "%@ 남음";
 
 "formatter.events.plural" = "일정 %@개";
-//"formatter.events.singular" = "1 event";
+"formatter.events.singular" = "일정 1개";
 "formatter.reminders.plural" = "미리 알림 %@개";
-//"formatter.reminders.singular" = "1 reminder";
+"formatter.reminders.singular" = "미리 알림 1개";
 
 "reminder.status.overdue" = "기한 지남";
 
@@ -138,31 +138,31 @@
 "editor.title" = "제목";
 "editor.save" = "저장";
 "editor.confirm.continue" = "계속 편집";
-"editor.confirm.discard" = "변경사항 모두 취소";
+"editor.confirm.discard" = "모든 변경 사항 버리기";
 
-//"event.editor.headline" = "New Event";
-//"event.editor.start" = "Start";
-//"event.editor.end" = "End";
-//"event.editor.time_zone" = "Time Zone";
-//"event.editor.location" = "Location";
-//"event.editor.url" = "URL";
-//"event.editor.notes" = "Notes";
+"event.editor.headline" = "새 일정";
+"event.editor.start" = "시작";
+"event.editor.end" = "종료";
+"event.editor.time_zone" = "시간대";
+"event.editor.location" = "위치";
+"event.editor.url" = "URL";
+"event.editor.notes" = "메모";
 
-//"event.editor.alert" = "Alert";
-//"event.editor.alert.none" = "None";
-//"event.editor.alert.at_time" = "At time of event";
-//"event.editor.alert.5_minutes_before" = "5 minutes before";
-//"event.editor.alert.10_minutes_before" = "10 minutes before";
-//"event.editor.alert.15_minutes_before" = "15 minutes before";
-//"event.editor.alert.30_minutes_before" = "30 minutes before";
-//"event.editor.alert.1_hour_before" = "1 hour before";
-//"event.editor.alert.2_hours_before" = "2 hours before";
-//"event.editor.alert.1_day_before" = "1 day before";
-//"event.editor.alert.2_days_before" = "2 days before";
+"event.editor.alert" = "알림";
+"event.editor.alert.none" = "없음";
+"event.editor.alert.at_time" = "일정 시작 시";
+"event.editor.alert.5_minutes_before" = "5분 전";
+"event.editor.alert.10_minutes_before" = "10분 전";
+"event.editor.alert.15_minutes_before" = "15분 전";
+"event.editor.alert.30_minutes_before" = "30분 전";
+"event.editor.alert.1_hour_before" = "1시간 전";
+"event.editor.alert.2_hours_before" = "2시간 전";
+"event.editor.alert.1_day_before" = "1일 전";
+"event.editor.alert.2_days_before" = "2일 전";
 
 "reminder.editor.headline" = "새 미리 알림";
 
-"map_black_list.headline" = "위치에 다음 단어가 포함된 경우 지도 숨기기";
+"map_black_list.headline" = "위치에 다음 단어가 포함되면 지도 숨기기";
 "map_black_list.new_item_text" = "새 항목";
 
 "event.details.participant.organizer" = "주최자";
@@ -170,25 +170,25 @@
 
 "event.all_day" = "하루 종일";
 
-"event.status.accepted" = "수락됨";
+"event.status.accepted" = "수락함";
 "event.status.maybe" = "미정";
-"event.status.declined" = "거절됨";
-"event.status.pending" = "대기 중";
+"event.status.declined" = "거절함";
+"event.status.pending" = "응답 대기 중";
 
 "event.action.open" = "열기";
-"event.action.join" = "참여";
+"event.action.join" = "참가";
 "event.action.skip" = "건너뛰기";
 "event.action.accept" = "수락";
 "event.action.maybe" = "미정";
 "event.action.decline" = "거절";
-//"event.action.delete" = "Delete";
+"event.action.delete" = "삭제";
 
-//"event.delete.title" = "Delete Event";
-//"event.delete.message" = "Do you want to delete this and all future occurrences of this event, or only the selected occurrence?";
-//"event.delete.single_message" = "Are you sure you want to delete this event?";
-//"event.delete.this_event" = "Delete Only This Event";
-//"event.delete.future_events" = "Delete All Future Events";
-//"event.delete.cancel" = "Cancel";
+"event.delete.title" = "일정 삭제";
+"event.delete.message" = "이 일정과 이후의 모든 반복 일정을 삭제하시겠습니까, 아니면 선택한 일정만 삭제하시겠습니까?";
+"event.delete.single_message" = "이 일정을 삭제하시겠습니까?";
+"event.delete.this_event" = "이 일정만 삭제";
+"event.delete.future_events" = "이후 일정 모두 삭제";
+"event.delete.cancel" = "취소";
 
 "event_list.summary.agenda" = "오늘";
 
@@ -196,9 +196,9 @@
 "tooltips.navigation.today" = "오늘";
 "tooltips.navigation.next_month" = "다음 달";
 
-"tooltips.toolbar.stay_open" = "열어두기";
-"tooltips.toolbar.create" = "생성";
-//"tooltips.toolbar.invites" = "Invites";
+"tooltips.toolbar.stay_open" = "계속 열어 두기";
+"tooltips.toolbar.create" = "새로 만들기";
+"tooltips.toolbar.invites" = "초대";
 "tooltips.toolbar.open_calendar" = "캘린더 열기";
 "tooltips.toolbar.open_reminders" = "미리 알림 열기";
 "tooltips.toolbar.open_menu" = "메뉴 열기";
