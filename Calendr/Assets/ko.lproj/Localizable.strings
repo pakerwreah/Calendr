@@ -176,7 +176,7 @@
 "event.status.pending" = "응답 대기 중";
 
 "event.action.open" = "열기";
-"event.action.join" = "참여";
+"event.action.join" = "참가";
 "event.action.skip" = "건너뛰기";
 "event.action.accept" = "수락";
 "event.action.maybe" = "미정";
