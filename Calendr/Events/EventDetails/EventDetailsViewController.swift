@@ -228,28 +228,43 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
         let formatter = ByteCountFormatter()
 
         for attachment in viewModel.attachments {
-            let button = NSButton()
+            let button = CursorButton(cursor: .pointingHand)
+            button.font = .small
             button.refusesFirstResponder = true
             button.imagePosition = .imageLeading
             button.showsBorderOnlyWhileMouseInside = true
             button.bezelStyle = .accessoryBar
             button.contentTintColor = .labelColor
-            button.title = attachment.fileName
-            button.lineBreakMode = .byTruncatingTail
-            button.image = Icons.Event.attachment.with(scale: .small)
+            button.lineBreakMode = .byWordWrapping
+            button.alignment = .left
+            button.isBordered = false
+
+            button.attributedTitle = .init(
+                string: attachment.fileName,
+                attributes: [.baselineOffset: 1]
+            )
+
             button.rx.tap.map(attachment)
                 .bind(to: viewModel.openAttachment)
                 .disposed(by: disposeBag)
 
             button.setContentCompressionResistancePriority(.required, for: .vertical)
+            button.setContentHuggingPriority(.fittingSizeCompression, for: .horizontal)
 
-            let stack = NSStackView(views: [button, .spacer])
+            let icon = NSImageView(image: Icons.Event.attachment.with(scale: .small))
+            icon.contentTintColor = .secondaryLabelColor
+
+            icon.setContentCompressionResistancePriority(.required, for: .horizontal)
+            icon.setContentHuggingPriority(.required, for: .horizontal)
+
+            let stack = NSStackView(views: [icon, button]).with(alignment: .centerY)
 
             if let fileSize = attachment.fileSize?.int64Value {
                 let sizeLabel = Label(
                     text: formatter.string(fromByteCount: fileSize),
-                    font: .systemFont(ofSize: 11)
+                    font: .xsmall
                 )
+                sizeLabel.textColor = .secondaryLabelColor
                 sizeLabel.setContentHuggingPriority(.required, for: .horizontal)
                 sizeLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
                 stack.addArrangedSubview(sizeLabel)
@@ -749,6 +764,7 @@ private extension NSFont {
     static let `default` = systemFont(ofSize: 13)
     static let header = systemFont(ofSize: 16)
     static let small = systemFont(ofSize: 12)
+    static let xsmall = systemFont(ofSize: 10)
 
     static func scaled(_ font: NSFont) -> NSFont {
         font.withSize(font.pointSize * Scaling.current)
