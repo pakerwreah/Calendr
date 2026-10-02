@@ -229,7 +229,6 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
 
         for attachment in viewModel.attachments.sorted(by: \.fileName) {
             let button = CursorButton(cursor: .pointingHand)
-            button.font = .small
             button.refusesFirstResponder = true
             button.imagePosition = .imageLeading
             button.showsBorderOnlyWhileMouseInside = true
@@ -241,7 +240,10 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
 
             button.attributedTitle = .init(
                 string: attachment.fileName,
-                attributes: [.baselineOffset: 1]
+                attributes: [
+                    .font: NSFont.small,
+                    .baselineOffset: 1
+                ]
             )
 
             button.rx.tap.map(attachment)
