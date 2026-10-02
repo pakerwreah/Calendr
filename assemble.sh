@@ -84,8 +84,19 @@ if has_xcode; then
     cp .build/resources/AppIcon.icns resources/
 fi
 
-# Build the Binary
-swift build -c $MODE
+# Fix macOS(.v15) showing the UI with the old appearance, while macOS(.v26) works.
+# SPM stamps the binary with the sdk from platforms (minos), not the linked SDK.
+SDK_VERSION=$(xcrun --sdk macosx --show-sdk-version)
+if [[ -z "$SDK_VERSION" ]]; then
+    echo "❌ Unable to determine macOS SDK version"
+    exit 1
+fi
+
+echo -e "\n🔨 Building with minos=$MACOSX_DEPLOYMENT_TARGET sdk=$SDK_VERSION\n"
+
+swift build -c $MODE \
+    -Xlinker -platform_version -Xlinker macos \
+    -Xlinker "$MACOSX_DEPLOYMENT_TARGET" -Xlinker "$SDK_VERSION"
 
 # Configuration
 CONFIG_DIR="Calendr/Config"
