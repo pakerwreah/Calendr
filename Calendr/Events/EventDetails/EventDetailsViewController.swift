@@ -227,7 +227,7 @@ class EventDetailsViewController: NSViewController, PopoverDelegate, MKMapViewDe
 
         let formatter = ByteCountFormatter()
 
-        for attachment in viewModel.attachments {
+        for attachment in viewModel.attachments.sorted(by: \.fileName) {
             let button = CursorButton(cursor: .pointingHand)
             button.font = .small
             button.refusesFirstResponder = true
