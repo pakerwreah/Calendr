@@ -50,6 +50,7 @@ class MainViewModel {
     let togglePinObserver: AnyObserver<Void>
     let openSettingsObserver: AnyObserver<SettingsTab>
 
+    let navigation: Observable<Keyboard.Key>
     let selectedDate: Observable<Date>
     let refreshDate: Observable<Void>
     let showInvites: Observable<Bool>
@@ -70,7 +71,6 @@ class MainViewModel {
     let isShowingDetailsModal = BehaviorSubject(value: false)
 
     var currentSelectedDate: Date { selectedDateSubject.current }
-    var currentSearchInputSuggestion: DateSuggestionResult? { searchInputSuggestionSubject.current }
 
     var createMenuItems: [CreateMenuItem] {
         let formatter = RelativeDateTimeFormatter()
@@ -109,6 +109,8 @@ class MainViewModel {
     private let searchInputSuggestionSubject = BehaviorSubject<DateSuggestionResult?>(value: nil)
 
     private let dateProvider: DateProviding
+    private let launchServices: LaunchServiceProviding
+    private let settings: MainViewSettings
 
     init(
         dateProvider: DateProviding,
@@ -117,13 +119,15 @@ class MainViewModel {
         isAppActive: Observable<Bool>,
         hasPendingInvites: Observable<Bool>,
         notificationCenter: NotificationCenter,
-        workspace: WorkspaceServiceProviding
+        workspace: WorkspaceServiceProviding,
+        launchServices: LaunchServiceProviding
     ) {
         self.dateProvider = dateProvider
+        self.settings = settings
+        self.launchServices = launchServices
 
         let calendar = dateProvider.calendar
 
-        let navigation: Observable<Keyboard.Key>
         let resetInput: Observable<Void>
         let prevMonth: Observable<Void>
         let nextMonth: Observable<Void>
@@ -404,5 +408,59 @@ class MainViewModel {
         else {
             dateProvider.calendar.date(bySettingHour: 8, minute: 0, second: 0, of: currentSelectedDate)!
         }
+    }
+
+    func handleLocalShortcut(_ key: Keyboard.Key) -> Bool {
+
+        switch key {
+            case .command(.char("q")):
+                launchServices.terminate()
+
+            case .command(.char(",")):
+                openSettingsObserver.onNext(.general)
+
+            case .command(.char("p")):
+                togglePinObserver.onNext(())
+
+            case .command(.char("f")):
+                showSearchInputObserver.onNext(())
+
+            case _ where isSearchInputHidden.lastValue() == false:
+                switch key {
+                    case .escape:
+                        hideSearchInputObserver.onNext(())
+
+                    case .enter:
+                        guard searchInputSuggestionSubject.lastValue() != nil else {
+                            return false
+                        }
+                        acceptSearchInputSuggestionObserver.onNext(())
+
+                    default:
+                        return false
+                }
+
+            case .option(.char("w")):
+                let showWeekNumbers = settings.showWeekNumbers.lastValue() == true
+                settings.toggleWeekNumbers.onNext(!showWeekNumbers)
+
+            case .option(.char("d")):
+                let showDeclinedEvents = settings.showDeclinedEvents.lastValue() == true
+                settings.toggleDeclinedEvents.onNext(!showDeclinedEvents)
+
+            case .escape where showInvites.lastValue() == true:
+                navigationObserver.onNext(key)
+
+            case .arrow, .command(.arrow), .backspace:
+                navigationObserver.onNext(key)
+
+            case .enter:
+                openCalendarDateObserver.onNext(currentSelectedDate)
+
+            default:
+                return false
+        }
+
+        return true
     }
 }

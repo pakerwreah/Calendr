@@ -21,6 +21,7 @@ class MainViewModelDateNavigationTests {
     let hasPendingInvites = BehaviorSubject(value: false)
     let notificationCenter = NotificationCenter()
     let workspace = MockWorkspaceServiceProvider()
+    let launchServices = MockLaunchServiceProvider()
 
     var viewModel: MainViewModel!
     var values = [String]()
@@ -35,7 +36,8 @@ class MainViewModelDateNavigationTests {
             isAppActive: isAppActive,
             hasPendingInvites: hasPendingInvites,
             notificationCenter: notificationCenter,
-            workspace: workspace
+            workspace: workspace,
+            launchServices: launchServices
         )
 
         values = []
@@ -67,6 +69,13 @@ class MainViewModelDateNavigationTests {
     @Test func testReset() {
         viewModel.selectDateObserver.onNext(.make(year: 2025, month: 1, day: 1))
         viewModel.resetObserver.onNext(())
+
+        #expect(values == ["2021-01-01", "2025-01-01", "2021-01-01"])
+    }
+
+    @Test func testBackspaceReset() {
+        viewModel.selectDateObserver.onNext(.make(year: 2025, month: 1, day: 1))
+        viewModel.navigationObserver.onNext(.backspace)
 
         #expect(values == ["2021-01-01", "2025-01-01", "2021-01-01"])
     }
@@ -109,12 +118,28 @@ class MainViewModelDateNavigationTests {
         viewModel.prevMonthObserver.onNext(())
 
         #expect(values.last == "2020-12-01")
+
+        viewModel.navigationObserver.onNext(.command(.arrow(.left)))
+
+        #expect(values.last == "2020-11-01")
+
+        viewModel.navigationObserver.onNext(.command(.arrow(.up)))
+
+        #expect(values.last == "2020-10-01")
     }
 
     @Test func testNextMonth() {
         viewModel.nextMonthObserver.onNext(())
 
         #expect(values.last == "2021-02-01")
+
+        viewModel.navigationObserver.onNext(.command(.arrow(.right)))
+
+        #expect(values.last == "2021-03-01")
+
+        viewModel.navigationObserver.onNext(.command(.arrow(.down)))
+
+        #expect(values.last == "2021-04-01")
     }
 
     @Test func testSequence() {

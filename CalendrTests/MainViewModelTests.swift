@@ -21,6 +21,7 @@ class MainViewModelTests {
     let hasPendingInvites = BehaviorSubject(value: false)
     let notificationCenter = NotificationCenter()
     let workspace = MockWorkspaceServiceProvider()
+    let launchServices = MockLaunchServiceProvider()
 
     lazy var viewModel = MainViewModel(
         dateProvider: dateProvider,
@@ -29,7 +30,8 @@ class MainViewModelTests {
         isAppActive: isAppActive,
         hasPendingInvites: hasPendingInvites,
         notificationCenter: notificationCenter,
-        workspace: workspace
+        workspace: workspace,
+        launchServices: launchServices
     )
 
     init() {
