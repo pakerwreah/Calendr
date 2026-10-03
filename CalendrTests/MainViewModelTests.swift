@@ -15,7 +15,7 @@ class MainViewModelTests {
     let disposeBag = DisposeBag()
 
     let dateProvider = MockDateProvider()
-    let settings = MockCalendarSettings()
+    let settings = MockMainViewSettings()
     let autoUpdater = MockAutoUpdater()
     let isAppActive = BehaviorSubject(value: true)
     let hasPendingInvites = BehaviorSubject(value: false)
@@ -487,5 +487,93 @@ class MainViewModelTests {
         viewModel.selectDateObserver.onNext(.make(year: 2021, month: 1, day: 6))
 
         #expect(viewModel.showInvites.lastValue() == false)
+    }
+
+    @Test func testTogglePin() {
+
+        var isPinned: Bool?
+
+        viewModel.pinnedObservable
+            .bind { isPinned = $0 }
+            .disposed(by: disposeBag)
+
+        #expect(isPinned == false)
+
+        viewModel.togglePinObserver.onNext(())
+
+        #expect(isPinned == true)
+
+        viewModel.togglePinObserver.onNext(())
+
+        #expect(isPinned == false)
+    }
+
+    @Test func testSettingsPresented_isNotPinned_shouldPin() {
+
+        var isPinned: Bool?
+
+        viewModel.pinnedObservable
+            .bind { isPinned = $0 }
+            .disposed(by: disposeBag)
+
+        #expect(isPinned == false)
+
+        settings.toggleIsPresented.onNext(true)
+
+        #expect(isPinned == true)
+    }
+
+    @Test func testSettingsPresented_isPinned_shouldKeepPinned() {
+
+        var isPinned: Bool?
+
+        viewModel.pinnedObservable
+            .bind { isPinned = $0 }
+            .disposed(by: disposeBag)
+
+        viewModel.togglePinObserver.onNext(())
+
+        #expect(isPinned == true)
+
+        settings.toggleIsPresented.onNext(true)
+
+        #expect(isPinned == true)
+    }
+
+    func testSettingsDismissed_isNotPinned_shouldRestorePinState() {
+
+        var isPinned: Bool?
+
+        viewModel.pinnedObservable
+            .bind { isPinned = $0 }
+            .disposed(by: disposeBag)
+
+        #expect(isPinned == false)
+
+        settings.toggleIsPresented.onNext(true)
+
+        #expect(isPinned == true)
+
+        settings.toggleIsPresented.onNext(false)
+
+        #expect(isPinned == false)
+    }
+
+    func testSettingsDismissed_isPinned_shouldKeepPinned() {
+
+        var isPinned: Bool?
+
+        viewModel.pinnedObservable
+            .bind { isPinned = $0 }
+            .disposed(by: disposeBag)
+
+        viewModel.togglePinObserver.onNext(())
+
+        #expect(isPinned == true)
+
+        settings.toggleIsPresented.onNext(true)
+        settings.toggleIsPresented.onNext(false)
+
+        #expect(isPinned == true)
     }
 }

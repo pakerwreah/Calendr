@@ -21,6 +21,14 @@ protocol StatusItemSettings {
     var statusItemTextScaling: Observable<Double> { get }
 }
 
+protocol MainViewSettings {
+    var isPresented: Observable<Bool> { get }
+    var toggleIsPresented: AnyObserver<Bool> { get }
+
+    var preserveSelectedDate: Observable<Bool> { get }
+    var calendarAppViewMode: Observable<CalendarViewMode> { get }
+}
+
 protocol CalendarSettings {
     var calendarScaling: Observable<Double> { get }
     var textScaling: Observable<Double> { get }
@@ -33,10 +41,8 @@ protocol CalendarSettings {
     var showLunarCalendar: Observable<Bool> { get }
     var holidayCalendars: Observable<[String]> { get }
     var showDeclinedEvents: Observable<Bool> { get }
-    var preserveSelectedDate: Observable<Bool> { get }
     var dateHoverOption: Observable<Bool> { get }
     var eventDotsStyle: Observable<EventDotsStyle> { get }
-    var calendarAppViewMode: Observable<CalendarViewMode> { get }
     var defaultCalendarApp: Observable<CalendarApp> { get }
     var futureEventsDays: Observable<Int> { get }
     var showAllDayEvents: Observable<Bool> { get }
@@ -83,7 +89,7 @@ protocol NextEventSettings: EventListSettings {
 }
 
 class SettingsViewModel:
-    EventEditorSettings,
+    MainViewSettings, EventEditorSettings,
     StatusItemSettings, NextEventSettings, CalendarSettings,
     EventListSettings, EventSettings, AppearanceSettings {
 
@@ -167,6 +173,7 @@ class SettingsViewModel:
     let defaultCalendarAppObserver: AnyObserver<CalendarApp>
     let appearanceModeObserver: AnyObserver<AppearanceMode>
     let toggleAutoCheckForUpdates: AnyObserver<Bool>
+    let toggleIsPresented: AnyObserver<Bool>
 
     // Observables
     let autoLaunch: Observable<Bool>
@@ -229,8 +236,7 @@ class SettingsViewModel:
     let defaultCalendarApp: Observable<CalendarApp>
     let appearanceMode: Observable<AppearanceMode>
     let autoCheckForUpdates: Observable<Bool>
-
-    let isPresented = BehaviorSubject(value: false)
+    let isPresented: Observable<Bool>
 
     private let disposeBag = DisposeBag()
 
@@ -291,6 +297,8 @@ class SettingsViewModel:
         self.dateProvider = dateProvider
         self.localStorage = localStorage
         self.scheduler = scheduler
+
+        (isPresented, toggleIsPresented) = BehaviorSubject.pipe(value: false)
 
         // MARK: - Observers
 

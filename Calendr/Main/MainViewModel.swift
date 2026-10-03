@@ -47,6 +47,8 @@ class MainViewModel {
     let keyboardModifiersObserver: AnyObserver<NSEvent.ModifierFlags>
     let openCalendarDateObserver: AnyObserver<Date>
     let openCalendarObserver: AnyObserver<Void>
+    let togglePinObserver: AnyObserver<Void>
+    let openSettingsObserver: AnyObserver<SettingsTab>
 
     let selectedDate: Observable<Date>
     let refreshDate: Observable<Void>
@@ -62,6 +64,8 @@ class MainViewModel {
     let updateAction: Observable<UpdateAction>
     let showMainPopover: Observable<Void>
     let keyboardModifiers: Observable<NSEvent.ModifierFlags>
+    let pinnedObservable: Observable<Bool>
+    let openSettings: Observable<(SettingsTab, shouldPresent: Bool)>
 
     let isShowingDetailsModal = BehaviorSubject(value: false)
 
@@ -108,7 +112,7 @@ class MainViewModel {
 
     init(
         dateProvider: DateProviding,
-        settings: CalendarSettings,
+        settings: MainViewSettings,
         autoUpdater: AutoUpdating,
         isAppActive: Observable<Bool>,
         hasPendingInvites: Observable<Bool>,
@@ -279,6 +283,31 @@ class MainViewModel {
                 return .openReleasePage
             }
         }
+
+        let togglePinSubject = PublishSubject<Void>()
+
+        let pinStateObservable = togglePinSubject
+            .scan(false) { curr, _ in !curr }
+            .startWith(false)
+
+        togglePinObserver = togglePinSubject.asObserver()
+
+        pinnedObservable = Observable
+            .combineLatest(settings.isPresented, pinStateObservable)
+            .map { $0 || $1 }
+            .distinctUntilChanged()
+            .share(replay: 1)
+
+        let openSettingsSubject = PublishSubject<SettingsTab>()
+
+        openSettingsObserver = openSettingsSubject.asObserver()
+
+        openSettings = openSettingsSubject
+            .withLatestFrom(settings.isPresented) { tab, isPresented in
+                let shouldPresent = !isPresented
+                settings.toggleIsPresented.onNext(true)
+                return (tab, shouldPresent)
+            }
 
         setUpBindings(deeplinkDate: deeplinkDate, isAppActive: isAppActive)
     }

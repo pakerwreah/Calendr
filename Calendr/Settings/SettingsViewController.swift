@@ -94,7 +94,7 @@ class SettingsViewController: NSTabViewController, NSWindowDelegate {
 
         super.viewWillAppear()
 
-        settingsViewModel.isPresented.onNext(true)
+        settingsViewModel.toggleIsPresented.onNext(true)
     }
 
     override func viewDidAppear() {
@@ -112,7 +112,7 @@ class SettingsViewController: NSTabViewController, NSWindowDelegate {
 
         super.viewDidDisappear()
 
-        settingsViewModel.isPresented.onNext(false)
+        settingsViewModel.toggleIsPresented.onNext(false)
     }
 
     func windowDidBecomeKey(_ notification: Notification) {

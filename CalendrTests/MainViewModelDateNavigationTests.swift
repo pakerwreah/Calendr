@@ -15,7 +15,7 @@ class MainViewModelDateNavigationTests {
     let disposeBag = DisposeBag()
 
     let dateProvider = MockDateProvider()
-    let settings = MockCalendarSettings()
+    let settings = MockMainViewSettings()
     let autoUpdater = MockAutoUpdater()
     let isAppActive = BehaviorSubject(value: true)
     let hasPendingInvites = BehaviorSubject(value: false)

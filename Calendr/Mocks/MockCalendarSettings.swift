@@ -45,12 +45,7 @@ class MockCalendarSettings: CalendarSettings {
     let eventDotsStyleObserver: AnyObserver<EventDotsStyle>
 
     let showMonthOutline: Observable<Bool>
-    let preserveSelectedDate: Observable<Bool>
-    let togglePreserveSelectedDate: AnyObserver<Bool>
     let defaultCalendarApp: Observable<CalendarApp>
-
-    let calendarAppViewMode: Observable<CalendarViewMode>
-    let calendarAppViewModeObserver: AnyObserver<CalendarViewMode>
 
     let calendarScaling: Observable<Double>
     let calendarScalingObserver: AnyObserver<Double>
@@ -77,8 +72,6 @@ class MockCalendarSettings: CalendarSettings {
         showAllDayEvents: Bool = true,
         dateHoverOption: Bool = false,
         futureEventsDays: Int = 0,
-        preserveSelectedDate: Bool = false,
-        calendarAppViewMode: CalendarViewMode = .month,
     ) {
         (self.futureEventsDays, futureEventsDaysObserver) = BehaviorSubject.pipe(value: futureEventsDays)
         (self.firstWeekday, firstWeekdayObserver) = BehaviorSubject.pipe(value: firstWeekday)
@@ -94,8 +87,6 @@ class MockCalendarSettings: CalendarSettings {
         (self.calendarScaling, calendarScalingObserver) = BehaviorSubject.pipe(value: calendarScaling)
         (self.calendarTextScaling, calendarTextScalingObserver) = BehaviorSubject.pipe(value: calendarTextScaling)
         (self.textScaling, textScalingObserver) = BehaviorSubject.pipe(value: textScaling)
-        (self.preserveSelectedDate, togglePreserveSelectedDate) = BehaviorSubject.pipe(value: preserveSelectedDate)
-        (self.calendarAppViewMode, calendarAppViewModeObserver) = BehaviorSubject.pipe(value: calendarAppViewMode)
 
         self.showMonthOutline = .just(showMonthOutline)
         defaultCalendarApp = .just(.calendar)
