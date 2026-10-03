@@ -395,6 +395,15 @@ class MainViewController: NSViewController {
         }
         .disposed(by: disposeBag)
 
+        mainViewModel.pinnedObservable
+            .map { $0 ? .on : .off }
+            .bind(to: pinBtn.rx.state)
+            .disposed(by: disposeBag)
+
+        pinBtn.rx.state.skip(1).void()
+            .bind(to: mainViewModel.togglePinObserver)
+            .disposed(by: disposeBag)
+
         setUpSearchInput()
 
         setUpInvitesButton()
@@ -532,7 +541,7 @@ class MainViewController: NSViewController {
 
             switch action {
                 case .openSettings(let tab):
-                    openSettingsTab(tab)
+                    mainViewModel.openSettingsObserver.onNext(tab)
 
                 case .installUpdate:
                     autoUpdater.downloadAndInstall()
@@ -585,6 +594,17 @@ class MainViewController: NSViewController {
             settingsMenu.popUp(positioning: nil, at: .init(x: 0, y: settingsBtn.frame.height), in: settingsBtn)
         }
         .disposed(by: disposeBag)
+
+        mainViewModel.openSettings
+            .bind { [weak self] tab, shouldPresent in
+                guard let self else { return }
+
+                if shouldPresent {
+                    presentAsModalWindow(settingsViewController)
+                }
+                settingsViewController.selectedTabViewItemIndex = tab.rawValue
+            }
+            .disposed(by: disposeBag)
     }
 
     @objc private func terminate() {
@@ -592,16 +612,7 @@ class MainViewController: NSViewController {
     }
 
     @objc func openSettings() {
-        openSettingsTab(.general)
-    }
-
-    private func openSettingsTab(_ tab: SettingsTab) {
-
-        if !settingsViewModel.isPresented.current {
-            settingsViewController.viewWillAppear()
-            presentAsModalWindow(settingsViewController)
-        }
-        settingsViewController.selectedTabViewItemIndex = tab.rawValue
+        mainViewModel.openSettingsObserver.onNext(.general)
     }
 
     @objc private func openEventEditor(_ sender: NSMenuItem? = nil) {
@@ -674,24 +685,8 @@ class MainViewController: NSViewController {
 
         popover.contentViewController = self
 
-        settingsViewModel.isPresented
-            .matching(true)
-            .map(.permanent)
-            .bind(to: popover.rx.behavior)
-            .disposed(by: popoverDisposeBag)
-
-        settingsViewModel.isPresented
-            .matching(false)
-            .withLatestFrom(pinBtn.rx.state)
-            .matching(.off)
-            .void()
-            .startWith(())
-            .map(.transient)
-            .bind(to: popover.rx.behavior)
-            .disposed(by: popoverDisposeBag)
-
-        pinBtn.rx.state
-            .map { $0 == .on ? .permanent : .transient }
+        mainViewModel.pinnedObservable
+            .map { $0 ? .permanent : .transient }
             .bind(to: popover.rx.behavior)
             .disposed(by: popoverDisposeBag)
 
@@ -888,7 +883,7 @@ class MainViewController: NSViewController {
                 openSettings()
 
             case .command(.char("p")):
-                pinBtn.performClick(nil)
+                mainViewModel.togglePinObserver.onNext(())
 
             case .command(.char("f")):
                 showSearchInput()
