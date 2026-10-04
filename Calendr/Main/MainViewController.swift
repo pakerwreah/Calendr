@@ -425,15 +425,15 @@ class MainViewController: NSViewController {
             .bind(to: searchInput.rx.stringValue)
             .disposed(by: disposeBag)
 
-        mainViewModel.isSearchInputHidden
-            .map(!)
+        mainViewModel.isSearchInputVisible
             .bind(to: searchInput.rx.hasFocus)
             .disposed(by: disposeBag)
     }
 
     private func setUpInvitesButton() {
 
-        mainViewModel.isInvitesButtonHidden
+        mainViewModel.isInvitesButtonVisible
+            .map(!)
             .bind(to: invitesBtn.rx.isHidden)
             .disposed(by: disposeBag)
 
@@ -451,7 +451,8 @@ class MainViewController: NSViewController {
 
     private func setUpCreateButton() {
 
-        mainViewModel.isCreateButtonHidden
+        mainViewModel.isCreateButtonVisible
+            .map(!)
             .bind(to: createBtn.rx.isHidden)
             .disposed(by: disposeBag)
 
@@ -509,11 +510,13 @@ class MainViewController: NSViewController {
             .bind(to: mainViewModel.searchInputFocusObserver)
             .disposed(by: disposeBag)
 
-        mainViewModel.isSearchInputHidden
+        mainViewModel.isSearchInputVisible
+            .map(!)
             .bind(to: searchInput.rx.isHidden)
             .disposed(by: disposeBag)
 
-        mainViewModel.isSearchInputSuggestionHidden
+        mainViewModel.isSearchInputSuggestionVisible
+            .map(!)
             .bind(to: searchInputSuggestionView.rx.isHidden)
             .disposed(by: disposeBag)
 

@@ -76,27 +76,27 @@ class MainViewModelTests {
     @Test func testSearchSuggestion_becomesVisibleWhenInputIsFocused() throws {
 
         var searchSuggestionText: String?
-        var isSearchInputSuggestionHidden: Bool?
+        var isSearchInputSuggestionVisible: Bool?
 
         viewModel.searchInputSuggestionText.bind {
             searchSuggestionText = $0
         }
         .disposed(by: disposeBag)
 
-        viewModel.isSearchInputSuggestionHidden.bind {
-            isSearchInputSuggestionHidden = $0
+        viewModel.isSearchInputSuggestionVisible.bind {
+            isSearchInputSuggestionVisible = $0
         }
         .disposed(by: disposeBag)
 
         viewModel.showSearchInputObserver.onNext(())
         viewModel.searchInputTextObserver.onNext("2021-01-10 lunch")
 
-        #expect(isSearchInputSuggestionHidden == true)
+        #expect(isSearchInputSuggestionVisible == false)
 
         viewModel.searchInputFocusObserver.onNext(true)
 
         #expect(searchSuggestionText == "January 10, 2021")
-        #expect(isSearchInputSuggestionHidden == false)
+        #expect(isSearchInputSuggestionVisible == true)
     }
 
     @Test func testAcceptSearchSuggestion_updatesSelectedDateAndSearchText() throws {
@@ -120,21 +120,21 @@ class MainViewModelTests {
     @Test func testViewDidDisappear_resetsSearchInput() {
 
         var searchInputText: String?
-        var isSearchInputHidden: Bool?
-        var isSearchInputSuggestionHidden: Bool?
+        var isSearchInputVisible: Bool?
+        var isSearchInputSuggestionVisible: Bool?
 
         viewModel.searchInputText.bind {
             searchInputText = $0
         }
         .disposed(by: disposeBag)
 
-        viewModel.isSearchInputHidden.bind {
-            isSearchInputHidden = $0
+        viewModel.isSearchInputVisible.bind {
+            isSearchInputVisible = $0
         }
         .disposed(by: disposeBag)
 
-        viewModel.isSearchInputSuggestionHidden.bind {
-            isSearchInputSuggestionHidden = $0
+        viewModel.isSearchInputSuggestionVisible.bind {
+            isSearchInputSuggestionVisible = $0
         }
         .disposed(by: disposeBag)
 
@@ -143,26 +143,26 @@ class MainViewModelTests {
         viewModel.viewDidDisappearObserver.onNext(())
 
         #expect(searchInputText == "")
-        #expect(isSearchInputHidden == true)
-        #expect(isSearchInputSuggestionHidden == true)
+        #expect(isSearchInputVisible == false)
+        #expect(isSearchInputSuggestionVisible == false)
     }
 
     @Test func testCreateButtonHidden_forPastDatesOnly() {
 
-        var isCreateButtonHidden: Bool?
+        var isCreateButtonVisible: Bool?
 
-        viewModel.isCreateButtonHidden.bind {
-            isCreateButtonHidden = $0
+        viewModel.isCreateButtonVisible.bind {
+            isCreateButtonVisible = $0
         }
         .disposed(by: disposeBag)
 
-        #expect(isCreateButtonHidden == false)
+        #expect(isCreateButtonVisible == true)
 
         viewModel.selectDateObserver.onNext(.make(year: 2021, month: 1, day: 4))
-        #expect(isCreateButtonHidden == true)
+        #expect(isCreateButtonVisible == false)
 
         viewModel.selectDateObserver.onNext(.make(year: 2021, month: 1, day: 5, hour: 8))
-        #expect(isCreateButtonHidden == false)
+        #expect(isCreateButtonVisible == true)
     }
 
     @Test func testDeeplink_updatesSelectedDateAndShowsMainPopover() async throws {
@@ -402,11 +402,11 @@ class MainViewModelTests {
 
         hasPendingInvites.onNext(true)
 
-        #expect(viewModel.isInvitesButtonHidden.lastValue() == false)
+        #expect(viewModel.isInvitesButtonVisible.lastValue() == true)
 
         hasPendingInvites.onNext(false)
 
-        #expect(viewModel.isInvitesButtonHidden.lastValue() == true)
+        #expect(viewModel.isInvitesButtonVisible.lastValue() == false)
     }
 
     @Test func testShowInvites_withPendingInvites_shouldShowInvites() {
