@@ -243,7 +243,7 @@ class MainViewModel {
             }
             .distinctUntilChanged()
 
-        isSearchInputHidden = searchInputHiddenSubject.distinctUntilChanged()
+        isSearchInputHidden = searchInputHiddenSubject
 
         isCreateButtonHidden = selectedDate
             .map { date in
