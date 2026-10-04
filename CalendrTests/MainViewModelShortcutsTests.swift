@@ -41,30 +41,30 @@ class MainViewModelShortcutsTests {
 
     @Test func testLocalShortcut_showSearchInput() {
 
-        var isSearchInputHidden: Bool?
+        var isSearchInputVisible: Bool?
 
-        viewModel.isSearchInputHidden
-            .bind { isSearchInputHidden = $0 }
+        viewModel.isSearchInputVisible
+            .bind { isSearchInputVisible = $0 }
             .disposed(by: disposeBag)
 
-        #expect(isSearchInputHidden == true)
+        #expect(isSearchInputVisible == false)
         #expect(viewModel.handleLocalShortcut(.command(.char("f"))))
-        #expect(isSearchInputHidden == false)
+        #expect(isSearchInputVisible == true)
     }
 
     @Test func testLocalShortcut_hideSearchInput() {
 
-        var isSearchInputHidden: Bool?
+        var isSearchInputVisible: Bool?
 
-        viewModel.isSearchInputHidden
-            .bind { isSearchInputHidden = $0 }
+        viewModel.isSearchInputVisible
+            .bind { isSearchInputVisible = $0 }
             .disposed(by: disposeBag)
 
         viewModel.showSearchInputObserver.onNext(())
 
-        #expect(isSearchInputHidden == false)
+        #expect(isSearchInputVisible == true)
         #expect(viewModel.handleLocalShortcut(.escape))
-        #expect(isSearchInputHidden == true)
+        #expect(isSearchInputVisible == false)
     }
 
     @Test func testLocalShortcut_closeInvites() {
@@ -86,7 +86,7 @@ class MainViewModelShortcutsTests {
 
         var selectedDate: Date?
         var inputText: String?
-        var isSuggestionHidden: Bool?
+        var isSuggestionVisible: Bool?
         var suggestion: DateSuggestionResult?
 
         viewModel.selectedDate
@@ -97,8 +97,8 @@ class MainViewModelShortcutsTests {
             .bind { inputText = $0 }
             .disposed(by: disposeBag)
 
-        viewModel.isSearchInputSuggestionHidden
-            .bind { isSuggestionHidden = $0 }
+        viewModel.isSearchInputSuggestionVisible
+            .bind { isSuggestionVisible = $0 }
             .disposed(by: disposeBag)
 
         viewModel.searchInputSuggestion
@@ -107,7 +107,7 @@ class MainViewModelShortcutsTests {
 
         #expect(selectedDate == .make(year: 2021, month: 1, day: 5))
         #expect(inputText == "")
-        #expect(isSuggestionHidden == true)
+        #expect(isSuggestionVisible == false)
         #expect(suggestion == nil)
 
         viewModel.showSearchInputObserver.onNext(())
@@ -116,7 +116,7 @@ class MainViewModelShortcutsTests {
 
         #expect(selectedDate == .make(year: 2021, month: 1, day: 5))
         #expect(inputText == "test 4 mar 26")
-        #expect(isSuggestionHidden == false)
+        #expect(isSuggestionVisible == true)
         #expect(suggestion?.date == .make(year: 2026, month: 3, day: 4))
         #expect(suggestion?.result == "test")
 
@@ -124,7 +124,7 @@ class MainViewModelShortcutsTests {
 
         #expect(selectedDate == .make(year: 2026, month: 3, day: 4))
         #expect(inputText == "test")
-        #expect(isSuggestionHidden == true)
+        #expect(isSuggestionVisible == false)
         #expect(suggestion == nil)
     }
 

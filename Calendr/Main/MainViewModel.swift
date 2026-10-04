@@ -57,10 +57,10 @@ class MainViewModel {
     let searchInputText: Observable<String>
     let searchInputSuggestion: Observable<DateSuggestionResult?>
     let searchInputSuggestionText: Observable<String?>
-    let isSearchInputSuggestionHidden: Observable<Bool>
-    let isSearchInputHidden: Observable<Bool>
-    let isCreateButtonHidden: Observable<Bool>
-    let isInvitesButtonHidden: Observable<Bool>
+    let isSearchInputSuggestionVisible: Observable<Bool>
+    let isSearchInputVisible: Observable<Bool>
+    let isCreateButtonVisible: Observable<Bool>
+    let isInvitesButtonVisible: Observable<Bool>
     let updateError: Observable<UpdateError>
     let updateAction: Observable<UpdateAction>
     let showMainPopover: Observable<Void>
@@ -103,7 +103,7 @@ class MainViewModel {
     private let openCalendarDate: Observable<Date>
     private let openCalendar: Observable<Void>
     private let searchInputFocus: Observable<Bool>
-    private let searchInputHiddenSubject = BehaviorSubject(value: true)
+    private let searchInputVisibleSubject = BehaviorSubject(value: false)
 
     private let selectedDateSubject: BehaviorSubject<Date>
     private let searchInputSuggestionSubject = BehaviorSubject<DateSuggestionResult?>(value: nil)
@@ -224,7 +224,7 @@ class MainViewModel {
         .bind(to: showInvitesObserver)
         .disposed(by: disposeBag)
 
-        isInvitesButtonHidden = hasPendingInvites.map(!)
+        isInvitesButtonVisible = hasPendingInvites
 
         searchInputSuggestion = searchInputSuggestionSubject.asObservable()
 
@@ -236,18 +236,18 @@ class MainViewModel {
                 suggestion.map { formatter.string(from: $0.date) }
             }
 
-        isSearchInputSuggestionHidden = Observable
-            .combineLatest(searchInputSuggestion, searchInputFocus, searchInputHiddenSubject)
-            .map { suggestion, hasFocus, isHidden in
-                suggestion == nil || !hasFocus || isHidden
+        isSearchInputSuggestionVisible = Observable
+            .combineLatest(searchInputSuggestion, searchInputFocus, searchInputVisibleSubject)
+            .map { suggestion, hasFocus, isVisible in
+                suggestion != nil && hasFocus && isVisible
             }
             .distinctUntilChanged()
 
-        isSearchInputHidden = searchInputHiddenSubject
+        isSearchInputVisible = searchInputVisibleSubject
 
-        isCreateButtonHidden = selectedDate
+        isCreateButtonVisible = selectedDate
             .map { date in
-                dateProvider.calendar.isDate(date, lessThan: dateProvider.now, granularity: .day)
+                dateProvider.calendar.isDate(date, greaterThanOrEqualTo: dateProvider.now, granularity: .day)
             }
             .distinctUntilChanged()
 
@@ -326,8 +326,8 @@ class MainViewModel {
             .disposed(by: disposeBag)
 
         Observable.merge(hideSearchInput, viewDidDisappear)
-            .map(true)
-            .bind(to: searchInputHiddenSubject)
+            .map(false)
+            .bind(to: searchInputVisibleSubject)
             .disposed(by: disposeBag)
 
         Observable.merge(
@@ -339,8 +339,8 @@ class MainViewModel {
         .disposed(by: disposeBag)
 
         showSearchInput
-            .map(false)
-            .bind(to: searchInputHiddenSubject)
+            .map(true)
+            .bind(to: searchInputVisibleSubject)
             .disposed(by: disposeBag)
 
         Observable.merge(
@@ -425,7 +425,7 @@ class MainViewModel {
             case .command(.char("f")):
                 showSearchInputObserver.onNext(())
 
-            case _ where isSearchInputHidden.lastValue() == false:
+            case _ where isSearchInputVisible.lastValue() == true:
                 switch key {
                     case .escape:
                         hideSearchInputObserver.onNext(())
