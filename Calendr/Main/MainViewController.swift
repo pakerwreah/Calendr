@@ -145,7 +145,8 @@ class MainViewController: NSViewController {
             isAppActive: NSApp.rx.observe(\.isActive),
             hasPendingInvites: hasPendingInvites,
             notificationCenter: notificationCenter,
-            workspace: workspace
+            workspace: workspace,
+            launchServices: launchServices
         )
 
         let nextEventCalendars = Observable
@@ -423,6 +424,11 @@ class MainViewController: NSViewController {
         mainViewModel.searchInputText
             .bind(to: searchInput.rx.stringValue)
             .disposed(by: disposeBag)
+
+        mainViewModel.isSearchInputHidden
+            .map(!)
+            .bind(to: searchInput.rx.hasFocus)
+            .disposed(by: disposeBag)
     }
 
     private func setUpInvitesButton() {
@@ -673,7 +679,6 @@ class MainViewController: NSViewController {
     @objc private func showSearchInput() {
 
         mainViewModel.showSearchInputObserver.onNext(())
-        searchInput.focus()
     }
 
     private func hideSearchInput() {
@@ -866,62 +871,15 @@ class MainViewController: NSViewController {
 
     private func setUpLocalShortcuts() {
 
-        keyboard.listen(in: self) { [weak self] event, key -> NSEvent? in
-            guard let self else { return event }
+        keyboard.listen(in: self) { [mainViewModel] event, key in
 
             mainViewModel.keyboardModifiersObserver.onNext(event.modifierFlags)
 
-            guard let key else {
-                return event
+            if let key, mainViewModel.handleLocalShortcut(key) {
+                return .none
             }
 
-            switch key {
-            case .command(.char("q")):
-                launchServices.terminate()
-
-            case .command(.char(",")):
-                openSettings()
-
-            case .command(.char("p")):
-                mainViewModel.togglePinObserver.onNext(())
-
-            case .command(.char("f")):
-                showSearchInput()
-
-            case .escape where searchInput.hasFocus:
-                hideSearchInput()
-
-            case .enter where searchInput.hasFocus:
-                guard mainViewModel.currentSearchInputSuggestion != nil else {
-                    return event
-                }
-                mainViewModel.acceptSearchInputSuggestionObserver.onNext(())
-
-            case _ where searchInput.hasFocus:
-                return event
-
-            // ↓ Search input not focused ↓ //
-
-            case .option(.char("w")):
-                localStorage.showWeekNumbers.toggle()
-
-            case .option(.char("d")):
-                localStorage.showDeclinedEvents.toggle()
-
-            case .escape where mainViewModel.showInvites.lastValue() == true:
-                mainViewModel.navigationObserver.onNext(key)
-
-            case .arrow, .command(.arrow), .backspace:
-                mainViewModel.navigationObserver.onNext(key)
-
-            case .enter:
-                mainViewModel.openCalendarDateObserver.onNext(mainViewModel.currentSelectedDate)
-
-            default:
-                return event
-            }
-
-            return .none
+            return event
         }
     }
 

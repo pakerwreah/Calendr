@@ -27,6 +27,12 @@ protocol MainViewSettings {
 
     var preserveSelectedDate: Observable<Bool> { get }
     var calendarAppViewMode: Observable<CalendarViewMode> { get }
+
+    var showWeekNumbers: Observable<Bool> { get }
+    var toggleWeekNumbers: AnyObserver<Bool> { get }
+
+    var showDeclinedEvents: Observable<Bool> { get }
+    var toggleDeclinedEvents: AnyObserver<Bool> { get }
 }
 
 protocol CalendarSettings {
