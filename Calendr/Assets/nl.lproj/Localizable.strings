@@ -105,6 +105,8 @@
 "settings.keyboard.local_shortcuts.next_week" = "Volgende week";
 "settings.keyboard.local_shortcuts.prev_month" = "Vorige maand";
 "settings.keyboard.local_shortcuts.next_month" = "Volgende maand";
+//"settings.keyboard.local_shortcuts.prev_year" = "Previous year";
+//"settings.keyboard.local_shortcuts.next_year" = "Next year";
 "settings.keyboard.local_shortcuts.curr_date" = "Huidige datum";
 "settings.keyboard.local_shortcuts.open_date" = "Geselecteerde datum openen";
 "settings.keyboard.local_shortcuts.pin_calendar" = "Kalender vastmaken";

@@ -142,6 +142,26 @@ class MainViewModelDateNavigationTests {
         #expect(values.last == "2021-04-01")
     }
 
+    @Test func testPrevYear() {
+        viewModel.navigationObserver.onNext(.command(.shift(.arrow(.left))))
+
+        #expect(values.last == "2020-01-01")
+
+        viewModel.navigationObserver.onNext(.command(.shift(.arrow(.up))))
+
+        #expect(values.last == "2019-01-01")
+    }
+
+    @Test func testNextYear() {
+        viewModel.navigationObserver.onNext(.command(.shift(.arrow(.right))))
+
+        #expect(values.last == "2022-01-01")
+
+        viewModel.navigationObserver.onNext(.command(.shift(.arrow(.down))))
+
+        #expect(values.last == "2023-01-01")
+    }
+
     @Test func testSequence() {
         let steps: [() -> Void] = [
             { self.viewModel.navigationObserver.onNext(.arrow(.left)) },

@@ -178,6 +178,9 @@ class MainViewModel {
         let cmdUpLeft = navigation.matching(.command(.arrow(.up)), .command(.arrow(.left))).void()
         let cmdDownRight = navigation.matching(.command(.arrow(.down)), .command(.arrow(.right))).void()
 
+        let cmdShiftUpLeft = navigation.matching(.command(.shift(.arrow(.up))), .command(.shift(.arrow(.left)))).void()
+        let cmdShiftDownRight = navigation.matching(.command(.shift(.arrow(.down))), .command(.shift(.arrow(.right)))).void()
+
         var timeZone = calendar.timeZone
 
         selectedDate = Observable.merge(
@@ -192,7 +195,9 @@ class MainViewModel {
                 keyUp.map { (.weekOfMonth, -1) },
                 keyDown.map { (.weekOfMonth, 1) },
                 Observable.merge(prevMonth, cmdUpLeft).map { (.month, -1) },
-                Observable.merge(nextMonth, cmdDownRight).map { (.month, 1) }
+                Observable.merge(nextMonth, cmdDownRight).map { (.month, 1) },
+                cmdShiftUpLeft.map { (.year, -1) },
+                cmdShiftDownRight.map { (.year, 1) }
             )
             .scan(date) { current, operation in
                 let (component, value) = operation
@@ -451,7 +456,7 @@ class MainViewModel {
             case .escape where showInvites.lastValue() == true:
                 navigationObserver.onNext(key)
 
-            case .arrow, .command(.arrow), .backspace:
+            case .arrow, .command(.arrow), .command(.shift(.arrow)), .backspace:
                 navigationObserver.onNext(key)
 
             case .enter:

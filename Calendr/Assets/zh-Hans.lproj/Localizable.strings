@@ -107,6 +107,8 @@
 "settings.keyboard.local_shortcuts.next_week" = "后一周";
 "settings.keyboard.local_shortcuts.prev_month" = "前一个月";
 "settings.keyboard.local_shortcuts.next_month" = "后一个月";
+//"settings.keyboard.local_shortcuts.prev_year" = "Previous year";
+//"settings.keyboard.local_shortcuts.next_year" = "Next year";
 "settings.keyboard.local_shortcuts.curr_date" = "当前日期";
 "settings.keyboard.local_shortcuts.open_date" = "打开选定日期";
 "settings.keyboard.local_shortcuts.pin_calendar" = "固定日历";

@@ -356,6 +356,8 @@ internal enum Strings {
         internal static let nextMonth = Strings.tr("Localizable", "settings.keyboard.local_shortcuts.next_month", fallback: "Next month")
         /// Next week
         internal static let nextWeek = Strings.tr("Localizable", "settings.keyboard.local_shortcuts.next_week", fallback: "Next week")
+        /// Next year
+        internal static let nextYear = Strings.tr("Localizable", "settings.keyboard.local_shortcuts.next_year", fallback: "Next year")
         /// Open selected date
         internal static let openDate = Strings.tr("Localizable", "settings.keyboard.local_shortcuts.open_date", fallback: "Open selected date")
         /// Pin calendar
@@ -366,6 +368,8 @@ internal enum Strings {
         internal static let prevMonth = Strings.tr("Localizable", "settings.keyboard.local_shortcuts.prev_month", fallback: "Previous month")
         /// Previous week
         internal static let prevWeek = Strings.tr("Localizable", "settings.keyboard.local_shortcuts.prev_week", fallback: "Previous week")
+        /// Previous year
+        internal static let prevYear = Strings.tr("Localizable", "settings.keyboard.local_shortcuts.prev_year", fallback: "Previous year")
         /// Local shortcuts
         internal static let title = Strings.tr("Localizable", "settings.keyboard.local_shortcuts.title", fallback: "Local shortcuts")
       }

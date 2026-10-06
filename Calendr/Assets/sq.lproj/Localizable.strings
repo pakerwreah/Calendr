@@ -107,6 +107,8 @@
 "settings.keyboard.local_shortcuts.next_week" = "Javën e ardhshme";
 "settings.keyboard.local_shortcuts.prev_month" = "Muajin e kaluar";
 "settings.keyboard.local_shortcuts.next_month" = "Muajin tjetër";
+//"settings.keyboard.local_shortcuts.prev_year" = "Previous year";
+//"settings.keyboard.local_shortcuts.next_year" = "Next year";
 "settings.keyboard.local_shortcuts.curr_date" = "Data aktuale";
 "settings.keyboard.local_shortcuts.open_date" = "Hapni datën e zgjedhur";
 "settings.keyboard.local_shortcuts.pin_calendar" = "Gozhdoni kalendarin";

@@ -107,6 +107,8 @@
 "settings.keyboard.local_shortcuts.next_week" = "Sonraki hafta";
 "settings.keyboard.local_shortcuts.prev_month" = "Önceki ay";
 "settings.keyboard.local_shortcuts.next_month" = "Sonraki ay";
+//"settings.keyboard.local_shortcuts.prev_year" = "Previous year";
+//"settings.keyboard.local_shortcuts.next_year" = "Next year";
 "settings.keyboard.local_shortcuts.curr_date" = "Bugünün tarihi";
 "settings.keyboard.local_shortcuts.open_date" = "Seçili tarihi aç";
 "settings.keyboard.local_shortcuts.pin_calendar" = "Takvimi sabitle";

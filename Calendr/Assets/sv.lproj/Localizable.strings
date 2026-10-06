@@ -107,6 +107,8 @@
 "settings.keyboard.local_shortcuts.next_week" = "Nästa vecka";
 "settings.keyboard.local_shortcuts.prev_month" = "Föregående månad";
 "settings.keyboard.local_shortcuts.next_month" = "Nästa månad";
+//"settings.keyboard.local_shortcuts.prev_year" = "Previous year";
+//"settings.keyboard.local_shortcuts.next_year" = "Next year";
 "settings.keyboard.local_shortcuts.curr_date" = "Aktuellt datum";
 "settings.keyboard.local_shortcuts.open_date" = "Öppna valt datum";
 "settings.keyboard.local_shortcuts.pin_calendar" = "Fäst kalender";
