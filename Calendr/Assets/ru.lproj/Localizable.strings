@@ -109,6 +109,8 @@
 "settings.keyboard.local_shortcuts.next_week" = "Следующая неделя";
 "settings.keyboard.local_shortcuts.prev_month" = "Предыдущий месяц";
 "settings.keyboard.local_shortcuts.next_month" = "Следующий месяц";
+//"settings.keyboard.local_shortcuts.prev_year" = "Previous year";
+//"settings.keyboard.local_shortcuts.next_year" = "Next year";
 "settings.keyboard.local_shortcuts.curr_date" = "Текущая дата";
 "settings.keyboard.local_shortcuts.open_date" = "Открыть выбранную дату";
 "settings.keyboard.local_shortcuts.pin_calendar" = "Прикрепить календарь";

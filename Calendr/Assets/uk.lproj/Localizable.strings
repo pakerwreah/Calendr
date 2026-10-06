@@ -107,6 +107,8 @@
 "settings.keyboard.local_shortcuts.next_week" = "Наступний тиждень";
 "settings.keyboard.local_shortcuts.prev_month" = "Попередній місяць";
 "settings.keyboard.local_shortcuts.next_month" = "Наступний місяць";
+//"settings.keyboard.local_shortcuts.prev_year" = "Previous year";
+//"settings.keyboard.local_shortcuts.next_year" = "Next year";
 "settings.keyboard.local_shortcuts.curr_date" = "Поточна дата";
 "settings.keyboard.local_shortcuts.open_date" = "Відкрити вибрану дату";
 "settings.keyboard.local_shortcuts.pin_calendar" = "Закріпити календар";

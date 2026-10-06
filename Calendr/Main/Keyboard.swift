@@ -24,6 +24,7 @@ class Keyboard {
         case char(Character)
         case command(Key)
         case option(Key)
+        case shift(Key)
     }
 
     private var eventMonitor: Any?
@@ -78,6 +79,10 @@ private extension Keyboard.Key {
 
         if mods.contains(.option) {
             key = .option(key)
+        }
+
+        if mods.contains(.shift) {
+            key = .shift(key)
         }
 
         if mods.contains(.command) {

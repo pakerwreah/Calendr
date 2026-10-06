@@ -107,6 +107,8 @@
 "settings.keyboard.local_shortcuts.next_week" = "Nächste Woche";
 "settings.keyboard.local_shortcuts.prev_month" = "Vorheriger Monat";
 "settings.keyboard.local_shortcuts.next_month" = "Nächster Monat";
+//"settings.keyboard.local_shortcuts.prev_year" = "Previous year";
+//"settings.keyboard.local_shortcuts.next_year" = "Next year";
 "settings.keyboard.local_shortcuts.curr_date" = "Aktuelles Datum";
 "settings.keyboard.local_shortcuts.open_date" = "Ausgewähltes Datum öffnen";
 "settings.keyboard.local_shortcuts.pin_calendar" = "Kalender anheften";

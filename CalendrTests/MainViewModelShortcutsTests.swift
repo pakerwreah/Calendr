@@ -258,6 +258,10 @@ class MainViewModelShortcutsTests {
         .command(.arrow(.right)),
         .command(.arrow(.up)),
         .command(.arrow(.down)),
+        .command(.shift(.arrow(.left))),
+        .command(.shift(.arrow(.right))),
+        .command(.shift(.arrow(.up))),
+        .command(.shift(.arrow(.down))),
         .backspace
     ]
 

@@ -107,6 +107,8 @@
 "settings.keyboard.local_shortcuts.next_week" = "Nasledujúci týždeň";
 "settings.keyboard.local_shortcuts.prev_month" = "Predchádzajúci mesiac";
 "settings.keyboard.local_shortcuts.next_month" = "Nasledujúci mesiac";
+//"settings.keyboard.local_shortcuts.prev_year" = "Previous year";
+//"settings.keyboard.local_shortcuts.next_year" = "Next year";
 "settings.keyboard.local_shortcuts.curr_date" = "Aktuálny dátum";
 "settings.keyboard.local_shortcuts.open_date" = "Otvoriť vybraný dátum";
 "settings.keyboard.local_shortcuts.pin_calendar" = "Pripnúť kalendár";

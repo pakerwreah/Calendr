@@ -107,6 +107,8 @@
 "settings.keyboard.local_shortcuts.next_week" = "Επόμενη εβδομάδα";
 "settings.keyboard.local_shortcuts.prev_month" = "Προηγούμενος μήνας";
 "settings.keyboard.local_shortcuts.next_month" = "Επόμενος μήνας";
+//"settings.keyboard.local_shortcuts.prev_year" = "Previous year";
+//"settings.keyboard.local_shortcuts.next_year" = "Next year";
 "settings.keyboard.local_shortcuts.curr_date" = "Τρέχουσα ημερομηνία";
 "settings.keyboard.local_shortcuts.open_date" = "Άνοιγμα επιλεγμένης ημερομηνίας";
 "settings.keyboard.local_shortcuts.pin_calendar" = "Pin calendar";

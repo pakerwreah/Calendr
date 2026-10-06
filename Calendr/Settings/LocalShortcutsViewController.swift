@@ -37,6 +37,8 @@ class LocalShortcutsViewController: NSViewController, SettingsUI {
             makeShortcut(text: LocalShortcuts.nextWeek, keys: "↓"),
             makeShortcut(text: LocalShortcuts.prevMonth, keys: "⌘ ←", "⌘ ↑"),
             makeShortcut(text: LocalShortcuts.nextMonth, keys: "⌘ →", "⌘ ↓"),
+            makeShortcut(text: LocalShortcuts.prevYear, keys: "⌘ ⇧ ←", "⌘ ⇧ ↑"),
+            makeShortcut(text: LocalShortcuts.nextYear, keys: "⌘ ⇧ →", "⌘ ⇧ ↓"),
             makeShortcut(text: LocalShortcuts.currDate, keys: "⌫"),
             makeShortcut(text: LocalShortcuts.openDate, keys: "↵"),
             makeShortcut(text: LocalShortcuts.showWeekNumbers, keys: "⌥ W"),

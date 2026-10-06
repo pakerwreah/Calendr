@@ -107,6 +107,8 @@
 "settings.keyboard.local_shortcuts.next_week" = "다음 주";
 "settings.keyboard.local_shortcuts.prev_month" = "이전 달";
 "settings.keyboard.local_shortcuts.next_month" = "다음 달";
+//"settings.keyboard.local_shortcuts.prev_year" = "Previous year";
+//"settings.keyboard.local_shortcuts.next_year" = "Next year";
 "settings.keyboard.local_shortcuts.curr_date" = "오늘 날짜";
 "settings.keyboard.local_shortcuts.open_date" = "선택한 날짜 열기";
 "settings.keyboard.local_shortcuts.pin_calendar" = "캘린더 고정";
