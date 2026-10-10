@@ -23,6 +23,8 @@
 "auto_update.replace.message" = "请确认应用程序的位置，以便获得权限来替换。";
 "auto_update.replace.error" = "请勿更改安装目录。";
 
+//"auto_update.failed.latest" = "You have the latest version";
+//"auto_update.failed.incompatible" = "The latest version is incompatible with your macOS";
 "auto_update.failed.check" = "检查更新失败";
 "auto_update.failed.download" = "下载更新失败";
 "auto_update.failed.install" = "安装更新失败";

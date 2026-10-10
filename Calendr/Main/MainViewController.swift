@@ -531,7 +531,7 @@ class MainViewController: NSViewController {
             guard let self else { return }
 
             let alert = NSAlert()
-            alert.alertStyle = .critical
+            alert.alertStyle = error.style
             alert.messageText = error.title
             alert.informativeText = error.message
 
