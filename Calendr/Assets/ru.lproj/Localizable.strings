@@ -25,6 +25,8 @@
 "auto_update.replace.message" = "Подтвердите расположение приложения, чтобы получить разрешение на его замену";
 "auto_update.replace.error" = "Не изменяйте каталог установки";
 
+//"auto_update.failed.latest" = "You have the latest version";
+//"auto_update.failed.incompatible" = "The latest version is incompatible with your macOS";
 "auto_update.failed.check" = "Не удалось проверить наличие обновлений";
 "auto_update.failed.download" = "Не удалось загрузить обновление";
 "auto_update.failed.install" = "Не удалось установить обновление";

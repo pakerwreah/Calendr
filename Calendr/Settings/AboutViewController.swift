@@ -126,7 +126,7 @@ class AboutViewController: NSViewController, SettingsUI {
     }
 
     @objc private func checkForUpdates() {
-        autoUpdater.checkRelease()
+        autoUpdater.checkRelease(userInitiated: true)
     }
 
     @objc private func installUpdates() {

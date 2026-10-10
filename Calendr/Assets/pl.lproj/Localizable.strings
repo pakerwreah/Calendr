@@ -23,6 +23,8 @@
 "auto_update.replace.message" = "Potwierdź lokalizację aplikacji, abyśmy mogli ją zastąpić";
 "auto_update.replace.error" = "Nie możesz zmieniać katalogu instalacji";
 
+//"auto_update.failed.latest" = "You have the latest version";
+//"auto_update.failed.incompatible" = "The latest version is incompatible with your macOS";
 "auto_update.failed.check" = "Nie udało się sprawdzić aktualizacji";
 "auto_update.failed.download" = "Nie udało się pobrać aktualizacji";
 "auto_update.failed.install" = "Nie udało się zainstalować aktualizacji";

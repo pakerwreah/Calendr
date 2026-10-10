@@ -146,39 +146,53 @@ class AutoUpdaterTests {
             }
             .disposed(by: disposeBag)
 
-        await updater.checkRelease()
+        await updater.checkRelease(userInitiated: true)
 
         await fulfillment(of: [initialExpectation, unexpected])
     }
 
-    @Test func testCheckRelease_sameVersion_resetsToInitial() async {
-
-        let initialExpectation = expectation(description: "Initial")
-        let fetchExpectation = expectation(description: "Fetching")
-        let rollbackExpectation = expectation(description: "Rollback")
+    @Test func testCheckRelease_latestVersion_resetsToInitial() async throws {
 
         let json = makeReleaseJSON(name: BuildConfig.appVersion)
         let env = makeAssembleEnv(version: BuildConfig.shortVersion)
 
         networkProvider.m_dataHandler = mockResponses(release: json, assembleEnv: env)
 
+        var statuses: [UpdateStatus] = []
+
         updater.status
-            .enumerated()
-            .bind {
-                switch $0 {
-                    case (0, .initial): initialExpectation.fulfill()
-                    case (1, .fetching): fetchExpectation.fulfill()
-                    case (2, .initial): rollbackExpectation.fulfill()
-                    default: Issue.record("Unexpected status: \($0)")
-                }
-            }
+            .bind { statuses.append($0) }
             .disposed(by: disposeBag)
 
-        await updater.checkRelease()
+        var error: UpdateError?
 
-        await fulfillment(of: [initialExpectation, fetchExpectation, rollbackExpectation])
+        updater.error
+            .bind { error = $0 }
+            .disposed(by: disposeBag)
 
+        await updater.checkRelease(userInitiated: true)
+
+        #expect(statuses == [.initial, .fetching, .initial])
         #expect(localStorage.lastCheckedVersion == BuildConfig.appVersion)
+        #expect(try #require(error) == .check(.latest))
+    }
+
+    @Test func testCheckRelease_latestVersion_inBackground_shouldNotReportError() async throws {
+
+        let json = makeReleaseJSON(name: BuildConfig.appVersion)
+        let env = makeAssembleEnv(version: BuildConfig.shortVersion)
+
+        networkProvider.m_dataHandler = mockResponses(release: json, assembleEnv: env)
+
+        var error: UpdateError?
+
+        updater.error
+            .bind { error = $0 }
+            .disposed(by: disposeBag)
+
+        await updater.checkRelease(userInitiated: false)
+
+        #expect(error == nil)
     }
 
     @Test func testCheckRelease_newVersion_updatesStatus() async {
@@ -208,7 +222,7 @@ class AutoUpdaterTests {
             }
             .disposed(by: disposeBag)
 
-        await updater.checkRelease()
+        await updater.checkRelease(userInitiated: false)
 
         await fulfillment(of: [initialExpectation, fetchExpectation, newVersionExpectation])
     }
@@ -230,7 +244,7 @@ class AutoUpdaterTests {
             }
             .disposed(by: disposeBag)
 
-        await updater.checkRelease()
+        await updater.checkRelease(userInitiated: true)
 
         await fulfillment(of: [newVersionExpectation])
 
@@ -238,8 +252,6 @@ class AutoUpdaterTests {
     }
 
     @Test func testCheckRelease_missingAsset_reportsError() async {
-
-        let errorExpectation = expectation(description: "Error")
 
         let json = makeReleaseJSON(name: "v99.0.0", assetName: "Other.zip")
         let env = makeAssembleEnv(version: "99.0.0")
@@ -249,15 +261,10 @@ class AutoUpdaterTests {
         var error: UpdateError?
 
         updater.error
-            .bind {
-                error = $0
-                errorExpectation.fulfill()
-            }
+            .bind { error = $0 }
             .disposed(by: disposeBag)
 
-        await updater.checkRelease()
-
-        await fulfillment(of: [errorExpectation])
+        await updater.checkRelease(userInitiated: true)
 
         guard let error else {
             Issue.record("Expected error")
@@ -267,45 +274,31 @@ class AutoUpdaterTests {
             Issue.record("Unexpected error \(error)")
             return
         }
-        #expect(error.title == "Failed to check for update")
+        #expect(error.title == Strings.AutoUpdate.Failed.check)
         #expect(error.message == "Missing release asset")
     }
 
     @Test func testCheckRelease_networkError_reportsError() async {
 
-        let initialExpectation = expectation(description: "Initial")
-        let fetchExpectation = expectation(description: "Fetching")
-        let rollbackExpectation = expectation(description: "Rollback")
-        let errorExpectation = expectation(description: "Error")
-
         networkProvider.m_dataHandler = { _ in
             throw UnexpectedError(message: "Network failed")
         }
 
+        var statuses: [UpdateStatus] = []
+
         updater.status
-            .enumerated()
-            .bind {
-                switch $0 {
-                    case (0, .initial): initialExpectation.fulfill()
-                    case (1, .fetching): fetchExpectation.fulfill()
-                    case (2, .initial): rollbackExpectation.fulfill()
-                    default: Issue.record("Unexpected status: \($0)")
-                }
-            }
+            .bind { statuses.append($0) }
             .disposed(by: disposeBag)
 
         var error: UpdateError?
 
         updater.error
-            .bind {
-                error = $0
-                errorExpectation.fulfill()
-            }
+            .bind { error = $0 }
             .disposed(by: disposeBag)
 
-        await updater.checkRelease()
+        await updater.checkRelease(userInitiated: true)
 
-        await fulfillment(of: [initialExpectation, fetchExpectation, rollbackExpectation, errorExpectation])
+        #expect(statuses == [.initial, .fetching, .initial])
 
         guard let error else {
             Issue.record("Expected error")
@@ -315,7 +308,7 @@ class AutoUpdaterTests {
             Issue.record("Unexpected error \(error)")
             return
         }
-        #expect(error.title == "Failed to check for update")
+        #expect(error.title == Strings.AutoUpdate.Failed.check)
         #expect(error.message == "Network failed")
     }
 
@@ -331,64 +324,44 @@ class AutoUpdaterTests {
 
     private func assertCheckRelease_invalidData(_ data: Data) async {
 
-        let initialExpectation = expectation(description: "Initial")
-        let fetchExpectation = expectation(description: "Fetching")
-        let rollbackExpectation = expectation(description: "Rollback")
-        let errorExpectation = expectation(description: "Error")
-
         networkProvider.m_dataHandler = { _ in data }
 
+        var statuses: [UpdateStatus] = []
+
         updater.status
-            .enumerated()
-            .bind {
-                switch $0 {
-                    case (0, .initial): initialExpectation.fulfill()
-                    case (1, .fetching): fetchExpectation.fulfill()
-                    case (2, .initial): rollbackExpectation.fulfill()
-                    default: Issue.record("Unexpected status: \($0)")
-                }
-            }
+            .bind { statuses.append($0) }
             .disposed(by: disposeBag)
 
         var error: UpdateError?
 
         updater.error
-            .bind {
-                error = $0
-                errorExpectation.fulfill()
-            }
+            .bind { error = $0 }
             .disposed(by: disposeBag)
 
-        await updater.checkRelease()
+        await updater.checkRelease(userInitiated: true)
 
-        await fulfillment(of: [initialExpectation, fetchExpectation, rollbackExpectation, errorExpectation])
+        #expect(statuses == [.initial, .fetching, .initial])
 
         guard case .check = error else {
             Issue.record("Unexpected error \(String(describing: error))")
             return
         }
-        #expect(error?.title == "Failed to check for update")
+        #expect(error?.title == Strings.AutoUpdate.Failed.check)
     }
 
     // MARK: - downloadAndInstall
 
     @Test func testDownloadAndInstall_withoutRelease_resetsToInitial() async {
 
-        let initialExpectation = expectation(description: "Initial")
-        initialExpectation.expectedFulfillmentCount = 2
+        var statuses: [UpdateStatus] = []
 
         updater.status
-            .bind {
-                switch $0 {
-                    case .initial: initialExpectation.fulfill()
-                    default: Issue.record("Unexpected status: \($0)")
-                }
-            }
+            .bind { statuses.append($0) }
             .disposed(by: disposeBag)
 
         await updater.downloadAndInstall()
 
-        await fulfillment(of: [initialExpectation])
+        #expect(statuses == [.initial])
     }
 
     @Test func testDownloadAndInstall_downloadError_reportsError() async {
@@ -398,7 +371,6 @@ class AutoUpdaterTests {
         let newVersionExpectation = expectation(description: "New Version")
         let downloadingExpectation = expectation(description: "Downloading")
         let rollbackExpectation = expectation(description: "Rollback")
-        let errorExpectation = expectation(description: "Error")
 
         // First set up a release via checkRelease
         let json = makeReleaseJSON(name: "v99.0.0")
@@ -427,13 +399,10 @@ class AutoUpdaterTests {
         var error: UpdateError?
 
         updater.error
-            .bind {
-                error = $0
-                errorExpectation.fulfill()
-            }
+            .bind { error = $0 }
             .disposed(by: disposeBag)
 
-        await updater.checkRelease()
+        await updater.checkRelease(userInitiated: true)
 
         await fulfillment(of: [initialExpectation, fetchExpectation, newVersionExpectation])
 
@@ -441,7 +410,7 @@ class AutoUpdaterTests {
 
         await updater.downloadAndInstall()
 
-        await fulfillment(of: [downloadingExpectation, errorExpectation, rollbackExpectation])
+        await fulfillment(of: [downloadingExpectation, rollbackExpectation])
 
         guard let error else {
             Issue.record("Expected error")
@@ -451,7 +420,7 @@ class AutoUpdaterTests {
             Issue.record("Unexpected error \(error)")
             return
         }
-        #expect(error.title == "Failed to download update")
+        #expect(error.title == Strings.AutoUpdate.Failed.download)
         #expect(error.message == "Download failed")
     }
 
@@ -503,7 +472,7 @@ class AutoUpdaterTests {
             }
             .disposed(by: localBag)
 
-        await updater.checkRelease()
+        await updater.checkRelease(userInitiated: true)
 
         await fulfillment(of: [initialExpectation, fetchExpectation, newVersionExpectation])
 
@@ -550,7 +519,7 @@ class AutoUpdaterTests {
             }
             .disposed(by: disposeBag)
 
-        await updater.checkRelease()
+        await updater.checkRelease(userInitiated: true)
 
         await fulfillment(of: [initialExpectation, fetchExpectation, newVersionExpectation])
 
@@ -704,7 +673,7 @@ class AutoUpdaterTests {
             }
             .disposed(by: disposeBag)
 
-        await updater.checkRelease()
+        await updater.checkRelease(userInitiated: true)
 
         await fulfillment(of: [initialExpectation, fetchExpectation, newVersionExpectation])
 
@@ -861,28 +830,44 @@ class AutoUpdaterTests {
 
     // MARK: - UpdateError properties
 
-    @Test func testUpdateError_check_title() {
+    @Test func testUpdateError_latest() {
 
-        let error = UpdateError.check(UnexpectedError(message: "test"))
+        let error = UpdateError.check(.latest)
+        #expect(error.style == .informational)
+        #expect(error.title == Strings.AutoUpdate.Failed.latest)
+        #expect(error.message == "")
+    }
+
+    @Test func testUpdateError_incompatible() {
+
+        let error = UpdateError.check(.incompatible)
+        #expect(error.style == .informational)
+        #expect(error.title == Strings.AutoUpdate.Failed.incompatible)
+        #expect(error.message == "")
+    }
+
+    @Test func testUpdateError_check() {
+
+        let error = UpdateError.check(.error("test"))
+        #expect(error.style == .critical)
         #expect(error.title == Strings.AutoUpdate.Failed.check)
+        #expect(error.message == "test")
     }
 
-    @Test func testUpdateError_download_title() {
+    @Test func testUpdateError_download() {
 
-        let error = UpdateError.download(UnexpectedError(message: "test"))
+        let error = UpdateError.download("test")
+        #expect(error.style == .critical)
         #expect(error.title == Strings.AutoUpdate.Failed.download)
+        #expect(error.message == "test")
     }
 
-    @Test func testUpdateError_install_title() {
+    @Test func testUpdateError_install() {
 
-        let error = UpdateError.install(UnexpectedError(message: "test"))
+        let error = UpdateError.install("test")
+        #expect(error.style == .critical)
         #expect(error.title == Strings.AutoUpdate.Failed.install)
-    }
-
-    @Test func testUpdateError_message() {
-
-        let error = UpdateError.check(UnexpectedError(message: "Something went wrong"))
-        #expect(error.message == "Something went wrong")
+        #expect(error.message == "test")
     }
 
     // MARK: - start / stop
@@ -931,13 +916,13 @@ class AutoUpdaterTests {
 
         networkProvider.m_dataHandler = mockResponses(release: json, assembleEnv: env)
 
-        await updater.checkRelease()
+        await updater.checkRelease(userInitiated: true)
 
         #expect(statuses == [.initial, .fetching, .newVersion("v99.0.0")])
         #expect(localStorage.lastCheckedVersion == "v99.0.0")
     }
 
-    @Test func testCheckRelease_withUnsupportedTargetOS_shouldSkipUpdate() async {
+    @Test func testCheckRelease_withUnsupportedTargetOS_shouldSkipUpdate() async throws {
 
         var statuses: [UpdateStatus] = []
 
@@ -945,15 +930,40 @@ class AutoUpdaterTests {
             .bind { statuses.append($0) }
             .disposed(by: disposeBag)
 
+        var error: UpdateError?
+
+        updater.error
+            .bind { error = $0 }
+            .disposed(by: disposeBag)
+
         let json = makeReleaseJSON(name: "v99.0.0")
         let env = makeAssembleEnv(version: "99.0.0", targetOS: "99.0")
 
         networkProvider.m_dataHandler = mockResponses(release: json, assembleEnv: env)
 
-        await updater.checkRelease()
+        await updater.checkRelease(userInitiated: true)
 
         #expect(statuses == [.initial, .fetching, .initial])
         #expect(localStorage.lastCheckedVersion == "v99.0.0")
+        #expect(try #require(error) == .check(.incompatible))
+    }
+
+    @Test func testCheckRelease_withUnsupportedTargetOS_inBackground_shouldNotReportError() async throws {
+
+        var error: UpdateError?
+
+        updater.error
+            .bind { error = $0 }
+            .disposed(by: disposeBag)
+
+        let json = makeReleaseJSON(name: "v99.0.0")
+        let env = makeAssembleEnv(version: "99.0.0", targetOS: "99.0")
+
+        networkProvider.m_dataHandler = mockResponses(release: json, assembleEnv: env)
+
+        await updater.checkRelease(userInitiated: false)
+
+        #expect(error == nil)
     }
 
     @Test func testCheckRelease_withOutdatedEnvFile_shouldTemporarilySkipUpdate() async {
@@ -964,15 +974,22 @@ class AutoUpdaterTests {
             .bind { statuses.append($0) }
             .disposed(by: disposeBag)
 
+        var error: UpdateError?
+
+        updater.error
+            .bind { error = $0 }
+            .disposed(by: disposeBag)
+
         let json = makeReleaseJSON(name: "v99.0.0")
         let env = makeAssembleEnv(version: "88.0.0")
 
         networkProvider.m_dataHandler = mockResponses(release: json, assembleEnv: env)
 
-        await updater.checkRelease()
+        await updater.checkRelease(userInitiated: true)
 
         #expect(statuses == [.initial, .fetching, .initial])
         #expect(localStorage.lastCheckedVersion == nil)
+        #expect(error == nil)
     }
 
     // MARK: - Helpers
@@ -1013,7 +1030,7 @@ class AutoUpdaterTests {
             if case .newVersion = $0 { newVersionExpectation.fulfill() }
         })
 
-        await updater.checkRelease()
+        await updater.checkRelease(userInitiated: true)
 
         await fulfillment(of: [newVersionExpectation])
     }

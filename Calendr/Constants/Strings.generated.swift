@@ -61,8 +61,12 @@ internal enum Strings {
       internal static let check = Strings.tr("Localizable", "auto_update.failed.check", fallback: "Failed to check for update")
       /// Failed to download update
       internal static let download = Strings.tr("Localizable", "auto_update.failed.download", fallback: "Failed to download update")
+      /// The latest version is incompatible with your macOS
+      internal static let incompatible = Strings.tr("Localizable", "auto_update.failed.incompatible", fallback: "The latest version is incompatible with your macOS")
       /// Failed to install update
       internal static let install = Strings.tr("Localizable", "auto_update.failed.install", fallback: "Failed to install update")
+      /// You have the latest version
+      internal static let latest = Strings.tr("Localizable", "auto_update.failed.latest", fallback: "You have the latest version")
     }
     internal enum Replace {
       /// You must not change the installation directory

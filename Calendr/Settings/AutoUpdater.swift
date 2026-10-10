@@ -18,13 +18,22 @@ enum UpdateStatus: Equatable {
     case downloading(String)
 }
 
-enum UpdateError {
-    case check(Error)
-    case download(Error)
-    case install(Error)
+enum UpdateError: Equatable {
+
+    enum Check: Equatable {
+        case latest
+        case incompatible
+        case error(String)
+    }
+
+    case check(Check)
+    case download(String)
+    case install(String)
 
     var title: String {
         switch self {
+            case .check(.latest): Strings.AutoUpdate.Failed.latest
+            case .check(.incompatible): Strings.AutoUpdate.Failed.incompatible
             case .check: Strings.AutoUpdate.Failed.check
             case .download: Strings.AutoUpdate.Failed.download
             case .install: Strings.AutoUpdate.Failed.install
@@ -33,8 +42,15 @@ enum UpdateError {
 
     var message: String {
         switch self {
-            case .check(let error), .download(let error), .install(let error):
-                error.localizedDescription
+            case .check(.error(let msg)), .download(let msg), .install(let msg): msg
+            case .check: ""
+        }
+    }
+
+    var style: NSAlert.Style {
+        switch self {
+            case .check(.latest), .check(.incompatible): .informational
+            case .check(.error), .download, .install: .critical
         }
     }
 }
@@ -48,7 +64,7 @@ protocol AutoUpdating {
 
     @MainActor func start()
     @MainActor func stop()
-    @MainActor func checkRelease()
+    @MainActor func checkRelease(userInitiated: Bool)
     @MainActor func downloadAndInstall()
 }
 
@@ -168,7 +184,7 @@ class AutoUpdater: AutoUpdating {
 
         autoCheck = Task {
             while !Task.isCancelled {
-                await self.checkRelease(notify: true)
+                await self.checkRelease(userInitiated: false)
                 try await Task.sleep(for: .seconds(3 * 60 * 60))
             }
         }
@@ -179,18 +195,20 @@ class AutoUpdater: AutoUpdating {
         autoCheck = nil
     }
 
-    func checkRelease() {
+    func checkRelease(userInitiated: Bool) {
         Task {
-            await checkRelease()
+            await checkRelease(userInitiated: userInitiated)
         }
     }
 
-    func checkRelease(notify: Bool = false) async {
+    func checkRelease(userInitiated: Bool) async {
         guard await notificationProvider.requestAuthorization() else { return }
         do {
-            try await checkReleaseImpl(notify: notify)
+            try await checkReleaseImpl(userInitiated: userInitiated)
         } catch {
-            errorObserver.onNext(.check(error))
+            if userInitiated {
+                errorObserver.onNext(.check(.error(error.localizedDescription)))
+            }
             statusObserver.onNext(.initial)
         }
     }
@@ -216,7 +234,7 @@ class AutoUpdater: AutoUpdating {
         do {
             archiveURL = try await networkProvider.download(from: release.downloadURL)
         } catch {
-            errorObserver.onNext(.download(error))
+            errorObserver.onNext(.download(error.localizedDescription))
             throw error
         }
 
@@ -224,7 +242,7 @@ class AutoUpdater: AutoUpdating {
             try await install(version: release.name, archiveUrl: archiveURL)
         } catch {
             SentrySDK.capture(error: error)
-            errorObserver.onNext(.install(error))
+            errorObserver.onNext(.install(error.localizedDescription))
             throw error
         }
     }
@@ -290,7 +308,7 @@ class AutoUpdater: AutoUpdating {
         return EnvParser.parse(text: contents)
     }
 
-    private func checkReleaseImpl(notify: Bool) async throws {
+    private func checkReleaseImpl(userInitiated: Bool) async throws {
 
         guard !BuildConfig.isUITesting else { return }
 
@@ -301,6 +319,9 @@ class AutoUpdater: AutoUpdating {
         guard release.name != BuildConfig.appVersion else {
             localStorage.lastCheckedVersion = release.name
             statusObserver.onNext(.initial)
+            if userInitiated {
+                errorObserver.onNext(.check(.latest))
+            }
             return
         }
 
@@ -321,13 +342,16 @@ class AutoUpdater: AutoUpdating {
         else {
             localStorage.lastCheckedVersion = release.name
             statusObserver.onNext(.initial)
+            if userInitiated {
+                errorObserver.onNext(.check(.incompatible))
+            }
             return
         }
 
         newRelease = release
         statusObserver.onNext(.newVersion(release.name))
 
-        guard notify else {
+        guard !userInitiated else {
             localStorage.lastCheckedVersion = release.name
             return
         }
@@ -429,7 +453,7 @@ class AutoUpdater: AutoUpdating {
         }
 
         guard url == appContainerUrl else {
-            errorObserver.onNext(.install(.unexpected(Strings.AutoUpdate.Replace.error)))
+            errorObserver.onNext(.install(Strings.AutoUpdate.Replace.error))
             return false
         }
 

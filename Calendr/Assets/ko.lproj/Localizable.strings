@@ -23,6 +23,8 @@
 "auto_update.replace.message" = "앱을 교체할 수 있도록 앱 위치를 확인해 주세요";
 "auto_update.replace.error" = "설치 위치를 변경하면 안 됩니다";
 
+//"auto_update.failed.latest" = "You have the latest version";
+//"auto_update.failed.incompatible" = "The latest version is incompatible with your macOS";
 "auto_update.failed.check" = "업데이트 확인 실패";
 "auto_update.failed.download" = "업데이트 다운로드 실패";
 "auto_update.failed.install" = "업데이트 설치 실패";

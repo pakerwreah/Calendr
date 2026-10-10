@@ -531,14 +531,12 @@ class MainViewController: NSViewController {
             guard let self else { return }
 
             let alert = NSAlert()
-            alert.alertStyle = .critical
+            alert.alertStyle = error.style
             alert.messageText = error.title
             alert.informativeText = error.message
 
             if let window = settingsViewController.tabViewItems[SettingsTab.about.rawValue].view?.window {
                 alert.beginSheetModal(for: window)
-            } else if case .check = error {
-                // drop background update check errors
             } else {
                 alert.runModal()
             }

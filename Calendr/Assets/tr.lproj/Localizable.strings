@@ -23,6 +23,8 @@
 "auto_update.replace.message" = "Uygulamanın konumunu onaylayın, böylece değiştirme iznine sahip olabiliriz";
 "auto_update.replace.error" = "Yükleme konumu değiştirilemez.";
 
+//"auto_update.failed.latest" = "You have the latest version";
+//"auto_update.failed.incompatible" = "The latest version is incompatible with your macOS";
 "auto_update.failed.check" = "Güncellemeler kontrol edilemedi";
 "auto_update.failed.download" = "Güncellemeler indirilemedi";
 "auto_update.failed.install" = "Güncellemeler yüklenemedi";
