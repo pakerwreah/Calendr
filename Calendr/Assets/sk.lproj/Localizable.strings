@@ -23,6 +23,8 @@
 "auto_update.replace.message" = "Potvrď umiestnenie aplikácie pre povolenie ju nahradiť";
 "auto_update.replace.error" = "Nemôžeš zmeniť adresár inštalácie";
 
+//"auto_update.failed.latest" = "You have the latest version";
+//"auto_update.failed.incompatible" = "The latest version is incompatible with your macOS";
 "auto_update.failed.check" = "Kontrola aktualizácie zlyhala";
 "auto_update.failed.download" = "Stiahnutie aktualizácie zlyhalo";
 "auto_update.failed.install" = "Inštalácia aktualizácie zlyhala";

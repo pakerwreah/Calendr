@@ -23,6 +23,8 @@
 "auto_update.replace.message" = "Potvrďte umístění aplikace, aby ji bylo možné nahradit";
 "auto_update.replace.error" = "Instalační složku nelze změnit";
 
+//"auto_update.failed.latest" = "You have the latest version";
+//"auto_update.failed.incompatible" = "The latest version is incompatible with your macOS";
 "auto_update.failed.check" = "Kontrola aktualizací se nezdařila";
 "auto_update.failed.download" = "Stažení aktualizace se nezdařilo";
 "auto_update.failed.install" = "Instalace aktualizace se nezdařila";

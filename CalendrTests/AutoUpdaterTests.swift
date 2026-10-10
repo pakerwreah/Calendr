@@ -151,7 +151,7 @@ class AutoUpdaterTests {
         await fulfillment(of: [initialExpectation, unexpected])
     }
 
-    @Test func testCheckRelease_sameVersion_resetsToInitial() async {
+    @Test func testCheckRelease_latestVersion_resetsToInitial() async throws {
 
         let initialExpectation = expectation(description: "Initial")
         let fetchExpectation = expectation(description: "Fetching")
@@ -174,11 +174,18 @@ class AutoUpdaterTests {
             }
             .disposed(by: disposeBag)
 
+        var error: UpdateError?
+
+        updater.error
+            .bind { error = $0 }
+            .disposed(by: disposeBag)
+
         await updater.checkRelease()
 
         await fulfillment(of: [initialExpectation, fetchExpectation, rollbackExpectation])
 
         #expect(localStorage.lastCheckedVersion == BuildConfig.appVersion)
+        #expect(try #require(error) == .check(.latest))
     }
 
     @Test func testCheckRelease_newVersion_updatesStatus() async {
@@ -861,28 +868,39 @@ class AutoUpdaterTests {
 
     // MARK: - UpdateError properties
 
-    @Test func testUpdateError_check_title() {
+    @Test func testUpdateError_latest() {
 
-        let error = UpdateError.check(UnexpectedError(message: "test"))
-        #expect(error.title == Strings.AutoUpdate.Failed.check)
+        let error = UpdateError.check(.latest)
+        #expect(error.title == Strings.AutoUpdate.Failed.latest)
+        #expect(error.message == "")
     }
 
-    @Test func testUpdateError_download_title() {
+    @Test func testUpdateError_incompatible() {
+
+        let error = UpdateError.check(.incompatible)
+        #expect(error.title == Strings.AutoUpdate.Failed.incompatible)
+        #expect(error.message == "")
+    }
+
+    @Test func testUpdateError_check() {
+
+        let error = UpdateError.check(.error(UnexpectedError(message: "test")))
+        #expect(error.title == Strings.AutoUpdate.Failed.check)
+        #expect(error.message == "test")
+    }
+
+    @Test func testUpdateError_download() {
 
         let error = UpdateError.download(UnexpectedError(message: "test"))
         #expect(error.title == Strings.AutoUpdate.Failed.download)
+        #expect(error.message == "test")
     }
 
-    @Test func testUpdateError_install_title() {
+    @Test func testUpdateError_install() {
 
         let error = UpdateError.install(UnexpectedError(message: "test"))
         #expect(error.title == Strings.AutoUpdate.Failed.install)
-    }
-
-    @Test func testUpdateError_message() {
-
-        let error = UpdateError.check(UnexpectedError(message: "Something went wrong"))
-        #expect(error.message == "Something went wrong")
+        #expect(error.message == "test")
     }
 
     // MARK: - start / stop
@@ -937,12 +955,18 @@ class AutoUpdaterTests {
         #expect(localStorage.lastCheckedVersion == "v99.0.0")
     }
 
-    @Test func testCheckRelease_withUnsupportedTargetOS_shouldSkipUpdate() async {
+    @Test func testCheckRelease_withUnsupportedTargetOS_shouldSkipUpdate() async throws {
 
         var statuses: [UpdateStatus] = []
 
         updater.status
             .bind { statuses.append($0) }
+            .disposed(by: disposeBag)
+
+        var error: UpdateError?
+
+        updater.error
+            .bind { error = $0 }
             .disposed(by: disposeBag)
 
         let json = makeReleaseJSON(name: "v99.0.0")
@@ -954,6 +978,7 @@ class AutoUpdaterTests {
 
         #expect(statuses == [.initial, .fetching, .initial])
         #expect(localStorage.lastCheckedVersion == "v99.0.0")
+        #expect(try #require(error) == .check(.incompatible))
     }
 
     @Test func testCheckRelease_withOutdatedEnvFile_shouldTemporarilySkipUpdate() async {
@@ -962,6 +987,12 @@ class AutoUpdaterTests {
 
         updater.status
             .bind { statuses.append($0) }
+            .disposed(by: disposeBag)
+
+        var error: UpdateError?
+
+        updater.error
+            .bind { error = $0 }
             .disposed(by: disposeBag)
 
         let json = makeReleaseJSON(name: "v99.0.0")
@@ -973,6 +1004,7 @@ class AutoUpdaterTests {
 
         #expect(statuses == [.initial, .fetching, .initial])
         #expect(localStorage.lastCheckedVersion == nil)
+        #expect(error == nil)
     }
 
     // MARK: - Helpers

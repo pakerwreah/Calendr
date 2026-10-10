@@ -23,6 +23,8 @@
 "auto_update.replace.message" = "יש לאשר את מיקום האפליקציה כך שתהיה לנו הרשאה להחליף אותה";
 "auto_update.replace.error" = "אין לשנות את תיקיית ההתקנה";
 
+//"auto_update.failed.latest" = "You have the latest version";
+//"auto_update.failed.incompatible" = "The latest version is incompatible with your macOS";
 "auto_update.failed.check" = "בדיקת עדכון נכשלה";
 "auto_update.failed.download" = "הורדת העדכון נכשלה";
 "auto_update.failed.install" = "התקנת העדכון נכשלה";

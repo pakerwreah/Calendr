@@ -19,12 +19,19 @@ enum UpdateStatus: Equatable {
 }
 
 enum UpdateError {
-    case check(Error)
+    enum Check {
+        case latest
+        case incompatible
+        case error(Error)
+    }
+    case check(Check)
     case download(Error)
     case install(Error)
 
     var title: String {
         switch self {
+            case .check(.latest): Strings.AutoUpdate.Failed.latest
+            case .check(.incompatible): Strings.AutoUpdate.Failed.incompatible
             case .check: Strings.AutoUpdate.Failed.check
             case .download: Strings.AutoUpdate.Failed.download
             case .install: Strings.AutoUpdate.Failed.install
@@ -33,9 +40,21 @@ enum UpdateError {
 
     var message: String {
         switch self {
-            case .check(let error), .download(let error), .install(let error):
+            case .check(.error(let error)), .download(let error), .install(let error):
                 error.localizedDescription
+            case .check: ""
         }
+    }
+
+    var style: NSAlert.Style {
+        switch self {
+            case .check(.latest): .informational
+            default: .critical
+        }
+    }
+
+    static func == (lhs: borrowing UpdateError, rhs: borrowing UpdateError) -> Bool {
+        lhs.message == rhs.message
     }
 }
 
@@ -190,7 +209,7 @@ class AutoUpdater: AutoUpdating {
         do {
             try await checkReleaseImpl(notify: notify)
         } catch {
-            errorObserver.onNext(.check(error))
+            errorObserver.onNext(.check(.error(error)))
             statusObserver.onNext(.initial)
         }
     }
@@ -301,6 +320,7 @@ class AutoUpdater: AutoUpdating {
         guard release.name != BuildConfig.appVersion else {
             localStorage.lastCheckedVersion = release.name
             statusObserver.onNext(.initial)
+            errorObserver.onNext(.check(.latest))
             return
         }
 
@@ -321,6 +341,7 @@ class AutoUpdater: AutoUpdating {
         else {
             localStorage.lastCheckedVersion = release.name
             statusObserver.onNext(.initial)
+            errorObserver.onNext(.check(.incompatible))
             return
         }
 

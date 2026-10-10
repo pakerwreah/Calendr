@@ -23,6 +23,8 @@
 "auto_update.replace.message" = "アプリのインストール先を確認してください。\n古いバージョンと同じ場所を選ぶと、新しいバージョンのアプリに置き換えられます。";
 "auto_update.replace.error" = "インストール先を変更しないでください";
 
+//"auto_update.failed.latest" = "You have the latest version";
+//"auto_update.failed.incompatible" = "The latest version is incompatible with your macOS";
 "auto_update.failed.check" = "更新データの取得に失敗しました";
 "auto_update.failed.download" = "更新データのダウンロードに失敗しました";
 "auto_update.failed.install" = "更新データのインストールに失敗しました";

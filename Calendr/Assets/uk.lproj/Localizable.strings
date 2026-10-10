@@ -23,6 +23,8 @@
 "auto_update.replace.message" = "Підтвердьте місцезнаходження програми, щоб надати дозвіл на її заміну";
 //"auto_update.replace.error" = "You must not change the installation directory";
 
+//"auto_update.failed.latest" = "You have the latest version";
+//"auto_update.failed.incompatible" = "The latest version is incompatible with your macOS";
 //"auto_update.failed.check" = "Failed to check for update";
 //"auto_update.failed.download" = "Failed to download update";
 //"auto_update.failed.install" = "Failed to install update";
