@@ -32,7 +32,7 @@ class MockAutoUpdater: AutoUpdating {
 
     func start() { didStart?() }
     func stop() { didStop?() }
-    func checkRelease() { }
+    func checkRelease(userInitiated: Bool) { }
     func downloadAndInstall() { }
 }
 

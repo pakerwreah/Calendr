@@ -48,8 +48,8 @@ enum UpdateError {
 
     var style: NSAlert.Style {
         switch self {
-            case .check(.latest): .informational
-            default: .critical
+            case .check(.latest), .check(.incompatible): .informational
+            case .check(.error), .download, .install: .critical
         }
     }
 
@@ -67,7 +67,7 @@ protocol AutoUpdating {
 
     @MainActor func start()
     @MainActor func stop()
-    @MainActor func checkRelease()
+    @MainActor func checkRelease(userInitiated: Bool)
     @MainActor func downloadAndInstall()
 }
 
@@ -187,7 +187,7 @@ class AutoUpdater: AutoUpdating {
 
         autoCheck = Task {
             while !Task.isCancelled {
-                await self.checkRelease(notify: true)
+                await self.checkRelease(userInitiated: false)
                 try await Task.sleep(for: .seconds(3 * 60 * 60))
             }
         }
@@ -198,18 +198,20 @@ class AutoUpdater: AutoUpdating {
         autoCheck = nil
     }
 
-    func checkRelease() {
+    func checkRelease(userInitiated: Bool) {
         Task {
-            await checkRelease()
+            await checkRelease(userInitiated: userInitiated)
         }
     }
 
-    func checkRelease(notify: Bool = false) async {
+    func checkRelease(userInitiated: Bool) async {
         guard await notificationProvider.requestAuthorization() else { return }
         do {
-            try await checkReleaseImpl(notify: notify)
+            try await checkReleaseImpl(userInitiated: userInitiated)
         } catch {
-            errorObserver.onNext(.check(.error(error)))
+            if userInitiated {
+                errorObserver.onNext(.check(.error(error)))
+            }
             statusObserver.onNext(.initial)
         }
     }
@@ -309,7 +311,7 @@ class AutoUpdater: AutoUpdating {
         return EnvParser.parse(text: contents)
     }
 
-    private func checkReleaseImpl(notify: Bool) async throws {
+    private func checkReleaseImpl(userInitiated: Bool) async throws {
 
         guard !BuildConfig.isUITesting else { return }
 
@@ -320,7 +322,9 @@ class AutoUpdater: AutoUpdating {
         guard release.name != BuildConfig.appVersion else {
             localStorage.lastCheckedVersion = release.name
             statusObserver.onNext(.initial)
-            errorObserver.onNext(.check(.latest))
+            if userInitiated {
+                errorObserver.onNext(.check(.latest))
+            }
             return
         }
 
@@ -341,14 +345,16 @@ class AutoUpdater: AutoUpdating {
         else {
             localStorage.lastCheckedVersion = release.name
             statusObserver.onNext(.initial)
-            errorObserver.onNext(.check(.incompatible))
+            if userInitiated {
+                errorObserver.onNext(.check(.incompatible))
+            }
             return
         }
 
         newRelease = release
         statusObserver.onNext(.newVersion(release.name))
 
-        guard notify else {
+        guard !userInitiated else {
             localStorage.lastCheckedVersion = release.name
             return
         }

@@ -537,8 +537,6 @@ class MainViewController: NSViewController {
 
             if let window = settingsViewController.tabViewItems[SettingsTab.about.rawValue].view?.window {
                 alert.beginSheetModal(for: window)
-            } else if case .check = error {
-                // drop background update check errors
             } else {
                 alert.runModal()
             }
