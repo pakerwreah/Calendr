@@ -848,7 +848,7 @@ class AutoUpdaterTests {
 
     @Test func testUpdateError_check() {
 
-        let error = UpdateError.check(.error(UnexpectedError(message: "test")))
+        let error = UpdateError.check(.error("test"))
         #expect(error.style == .critical)
         #expect(error.title == Strings.AutoUpdate.Failed.check)
         #expect(error.message == "test")
@@ -856,7 +856,7 @@ class AutoUpdaterTests {
 
     @Test func testUpdateError_download() {
 
-        let error = UpdateError.download(UnexpectedError(message: "test"))
+        let error = UpdateError.download("test")
         #expect(error.style == .critical)
         #expect(error.title == Strings.AutoUpdate.Failed.download)
         #expect(error.message == "test")
@@ -864,7 +864,7 @@ class AutoUpdaterTests {
 
     @Test func testUpdateError_install() {
 
-        let error = UpdateError.install(UnexpectedError(message: "test"))
+        let error = UpdateError.install("test")
         #expect(error.style == .critical)
         #expect(error.title == Strings.AutoUpdate.Failed.install)
         #expect(error.message == "test")
