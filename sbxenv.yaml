@@ -1,0 +1,18 @@
+schemaVersion: "1"
+
+args:
+  name:
+    required: true
+  agent:
+    required: true
+
+name: ${{ env.args.name }}
+agent: ${{ env.args.agent }}
+
+workspace: .
+
+mcp:
+  servers:
+    - name: xcode
+      command: xcrun
+      args: [ mcpbridge ]

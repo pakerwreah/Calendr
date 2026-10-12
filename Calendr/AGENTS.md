@@ -9,6 +9,7 @@ Calendr is a **macOS menu bar calendar application** built in Swift. It displays
 The app supports both Xcode and SPM build systems.
 There's a convenience `assemble.sh` script to build and package the app bundle without Xcode.
 Testing with SPM is as simple as running `swift test`.
+If Swift is not installed, check if the Xcode MCP is available.
 
 ## Architecture
 

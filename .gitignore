@@ -1,4 +1,5 @@
 .DS_Store
 xcuserdata
 .build
+.swiftpm
 Config.local.xcconfig
