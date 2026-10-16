@@ -18,16 +18,19 @@ struct HighlightedTextInput: View {
     let placeholder: String
     let highlights: [EventTitleHighlight]
     let isInvalid: Bool = false
+    var fontSize: CGFloat = 13
+    var showsBorder: Bool = true
 
     var body: some View {
         HighlightedTextField(
             placeholder: placeholder,
             text: $text,
             highlights: highlights,
+            fontSize: fontSize,
             focus: $focus
         )
-        .padding(4)
-        .overlay { InputBorder(isInvalid: isInvalid) }
+        .padding(showsBorder ? 4 : 0)
+        .overlay { showsBorder ? InputBorder(isInvalid: isInvalid) : nil }
     }
 }
 
@@ -36,6 +39,7 @@ private struct HighlightedTextField: NSViewRepresentable {
     let placeholder: String
     @Binding var text: String
     let highlights: [EventTitleHighlight]
+    let fontSize: CGFloat
     @Binding var focus: Bool
 
     private func makeTextField() -> NSTextField {
@@ -43,7 +47,7 @@ private struct HighlightedTextField: NSViewRepresentable {
         let textField = FocusTextField(focus: $focus)
 
         textField.placeholderString = placeholder
-        textField.font = .systemFont(ofSize: 13)
+        textField.font = .systemFont(ofSize: fontSize)
         textField.textColor = .textColor
         textField.isBordered = false
         textField.isBezeled = false
@@ -78,7 +82,7 @@ private struct HighlightedTextField: NSViewRepresentable {
 
     func updateNSView(_ textField: NSTextField, context: Context) {
 
-        applyHighlights(highlights, from: text, to: textField)
+        applyHighlights(highlights, from: text, fontSize: fontSize, to: textField)
 
         if focus, !textField.hasFocus {
             DispatchQueue.main.async {
@@ -107,6 +111,7 @@ private struct HighlightedTextField: NSViewRepresentable {
 private func applyHighlights(
     _ highlights: [EventTitleHighlight],
     from text: String,
+    fontSize: CGFloat,
     to textField: NSTextField
 ) {
     let fullRange = text.nsRange
@@ -114,7 +119,7 @@ private func applyHighlights(
     let attributedString = NSMutableAttributedString(
         string: text,
         attributes: [
-            .font: NSFont.systemFont(ofSize: 13),
+            .font: NSFont.systemFont(ofSize: fontSize),
             .foregroundColor: NSColor.textColor,
         ]
     )
@@ -122,7 +127,7 @@ private func applyHighlights(
     for highlight in highlights {
         guard let range = highlight.range.intersection(fullRange) else { continue }
         attributedString.addAttributes([
-            .font: NSFont.systemFont(ofSize: 13, weight: .semibold),
+            .font: NSFont.systemFont(ofSize: fontSize, weight: .semibold),
             .foregroundColor: highlight.color,
         ], range: range)
     }

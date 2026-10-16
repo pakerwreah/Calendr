@@ -30,12 +30,33 @@ struct CalendarPicker: View {
             }
             .labelsHidden()
         } label: {
-            Image(systemName: "circle.fill")
-                .symbolRenderingMode(.palette)
-                .foregroundStyle(Color(nsColor: selectedCalendarColor))
+            SwiftUI.Label {
+                Text(selectedCalendarTitle)
+            } icon: {
+                Image(systemName: "circle.fill")
+                    .symbolRenderingMode(.palette)
+                    .foregroundStyle(Color(nsColor: selectedCalendarColor))
+                    .imageScale(.small)
+            }
+            .labelStyle(.titleAndIcon)
         }
         .pickerStyle(.inline)
         .menuStyle(.borderlessButton)
+        .font(.system(size: 12, weight: .medium))
+        .frame(maxWidth: 180)
         .fixedSize()
+        .padding(.horizontal, 10)
+        .padding(.vertical, 4)
+        .background(
+            Capsule().fill(Color(nsColor: selectedCalendarColor).opacity(0.15))
+        )
+    }
+
+    private var selectedCalendarTitle: String {
+        calendarSections
+            .lazy
+            .flatMap(\.calendars)
+            .first { $0.id == selectedCalendarId }?
+            .title ?? ""
     }
 }
