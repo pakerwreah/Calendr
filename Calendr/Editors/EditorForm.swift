@@ -92,7 +92,7 @@ struct EditorNotesRow: View {
 
             ZStack(alignment: .topLeading) {
                 EditorNotesTextView(text: $text)
-                    .padding(.top, 8)
+                    .padding(.vertical, 8)
 
                 if text.isEmpty {
                     Text(placeholder)
@@ -231,4 +231,35 @@ enum EditorMetrics {
     static let dividerInset: CGFloat = horizontalPadding + iconWidth + 8
     static let sectionSpacing: CGFloat = 12
     static let padding: CGFloat = 20
+}
+
+// MARK: - Preview
+
+#Preview("Editor Components") {
+    @Previewable @State var text: String = ""
+
+    VStack(spacing: 16) {
+
+        EditorSection {
+            EditorTextFieldRow(
+                placeholder: "Title",
+                systemImage: "tag",
+                text: $text
+            )
+        }
+        EditorSection {
+            EditorTextFieldRow(
+                placeholder: "Location",
+                systemImage: "mappin.and.ellipse",
+                text: $text
+            )
+            EditorDivider()
+            EditorNotesRow(
+                placeholder: "Notes",
+                text: $text
+            )
+        }
+    }
+    .padding()
+    .frame(width: 300)
 }
