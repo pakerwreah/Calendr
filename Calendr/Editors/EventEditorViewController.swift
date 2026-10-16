@@ -20,55 +20,46 @@ struct EventEditorView: ViewModelView {
 
     var body: some View {
 
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: EditorMetrics.sectionSpacing) {
 
-            Text(Strings.Event.Editor.headline)
-                .font(.title2)
-                .bold()
+            EditorHeader(title: Strings.Event.Editor.headline) {
+                CalendarPicker(
+                    calendarSections: viewModel.calendarSections,
+                    selectedCalendarId: $viewModel.selectedCalendarId,
+                    selectedCalendarColor: viewModel.selectedCalendarColor
+                )
+            }
 
-            VStack(alignment: .leading, spacing: 4) {
+            EditorSection {
                 HStack(spacing: 8) {
+                    RoundedRectangle(cornerRadius: 2)
+                        .fill(Color(nsColor: viewModel.selectedCalendarColor))
+                        .frame(width: 4, height: 20)
+                        .frame(width: EditorMetrics.iconWidth)
+
                     HighlightedTextInput(
                         text: $viewModel.title,
                         focus: $autoFocus,
                         placeholder: Strings.Editor.title,
-                        highlights: viewModel.titleHighlights
+                        highlights: viewModel.titleHighlights,
+                        fontSize: 15,
+                        showsBorder: false
                     )
                     .frame(maxWidth: .infinity)
-                    .layoutPriority(1)
-
-                    CalendarPicker(
-                        calendarSections: viewModel.calendarSections,
-                        selectedCalendarId: $viewModel.selectedCalendarId,
-                        selectedCalendarColor: viewModel.selectedCalendarColor
-                    )
                 }
-
-                if let matchedCalendarTitle = viewModel.matchedCalendarTitle {
-                    HStack(spacing: 4) {
-                        Image(systemName: "circle.fill")
-                        Text(matchedCalendarTitle)
-                    }
-                    .font(.system(size: 11))
-                    .foregroundStyle(Color(nsColor: viewModel.selectedCalendarColor))
-                    .padding(.leading, 4)
-                }
+                .padding(.horizontal, EditorMetrics.horizontalPadding)
+                .frame(minHeight: 40)
             }
 
-            Grid(horizontalSpacing: 12, verticalSpacing: 12) {
-                GridRow {
-                    Text(Strings.Event.allDay + ":")
-                        .foregroundStyle(.secondary)
-                        .gridColumnAlignment(.trailing)
-
-                    Toggle(isOn: $viewModel.isAllDay) { }
-                        .toggleStyle(.checkbox)
-                        .gridColumnAlignment(.leading)
+            EditorSection {
+                EditorRow(title: Strings.Event.allDay, systemImage: "sun.max") {
+                    Toggle("", isOn: $viewModel.isAllDay)
+                        .toggleStyle(.switch)
+                        .controlSize(.small)
+                        .labelsHidden()
                 }
-                GridRow {
-                    Text(Strings.Event.Editor.start + ":")
-                        .foregroundStyle(.secondary)
-
+                EditorDivider()
+                EditorRow(title: Strings.Event.Editor.start, systemImage: "clock") {
                     DateTimeInput(
                         date: $viewModel.startDate,
                         showTime: !viewModel.isAllDay,
@@ -76,10 +67,8 @@ struct EventEditorView: ViewModelView {
                         isInvalid: !viewModel.hasValidDateRange
                     )
                 }
-                GridRow {
-                    Text(Strings.Event.Editor.end + ":")
-                        .foregroundStyle(.secondary)
-
+                EditorDivider()
+                EditorRow(title: Strings.Event.Editor.end, systemImage: "clock.badge.checkmark") {
                     DateTimeInput(
                         date: $viewModel.endDate,
                         showTime: !viewModel.isAllDay,
@@ -87,42 +76,45 @@ struct EventEditorView: ViewModelView {
                         isInvalid: !viewModel.hasValidDateRange
                     )
                 }
-                GridRow {
-                    Text(Strings.Event.Editor.timeZone + ":")
-                        .foregroundStyle(.secondary)
-
+                EditorDivider()
+                EditorRow(title: Strings.Event.Editor.timeZone, systemImage: "globe") {
                     TimeZonePicker(selectedIdentifier: $viewModel.selectedTimeZoneIdentifier)
+                        .frame(maxWidth: 220)
                 }
-                GridRow {
-                    Text(Strings.Event.Editor.alert + ":")
-                        .foregroundStyle(.secondary)
+            }
 
+            EditorSection {
+                EditorRow(title: Strings.Event.Editor.alert, systemImage: "bell") {
                     Picker("", selection: $viewModel.selectedAlert) {
                         ForEach(EventAlert.allCases, id: \.self) { alert in
                             Text(alert.title).tag(alert)
                         }
                     }
                     .labelsHidden()
+                    .fixedSize()
                 }
             }
 
-            TextInput(placeholder: Strings.Event.Editor.location, text: $viewModel.location)
-
-            TextInput(placeholder: Strings.Event.Editor.url, text: $viewModel.url)
-
-            TextArea(placeholder: Strings.Event.Editor.notes, text: $viewModel.notes)
-                .frame(height: 60)
-
-            HStack {
-                Spacer()
-                Button(Strings.Editor.save) {
-                    viewModel.saveEvent()
-                }
-                .disabled(!viewModel.hasValidInput)
-                .keyboardShortcut(.defaultAction)
+            EditorSection {
+                EditorTextFieldRow(
+                    placeholder: Strings.Event.Editor.location,
+                    systemImage: "mappin.and.ellipse",
+                    text: $viewModel.location
+                )
+                EditorDivider()
+                EditorTextFieldRow(
+                    placeholder: Strings.Event.Editor.url,
+                    systemImage: "link",
+                    text: $viewModel.url
+                )
+                EditorDivider()
+                EditorNotesRow(placeholder: Strings.Event.Editor.notes, text: $viewModel.notes)
             }
+
+            EditorFooter(isSaveEnabled: viewModel.hasValidInput, onSave: viewModel.saveEvent)
+                .padding(.top, 4)
         }
-        .padding(20)
+        .padding(EditorMetrics.padding)
         .frame(width: 480)
         .fixedSize()
         .onAppear {

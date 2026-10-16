@@ -20,18 +20,9 @@ struct ReminderEditorView: ViewModelView {
 
     var body: some View {
 
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: EditorMetrics.sectionSpacing) {
 
-            Text(Strings.Reminder.Editor.headline)
-                .font(.title2)
-                .bold()
-
-            HStack(spacing: 8) {
-                TextInput(
-                    placeholder: Strings.Editor.title,
-                    text: $viewModel.title,
-                    focus: $autoFocus
-                )
+            EditorHeader(title: Strings.Reminder.Editor.headline) {
                 CalendarPicker(
                     calendarSections: viewModel.calendarSections,
                     selectedCalendarId: $viewModel.selectedCalendarId,
@@ -39,27 +30,50 @@ struct ReminderEditorView: ViewModelView {
                 )
             }
 
-            HStack(spacing: 8) {
-                DateTimeInput(date: $viewModel.dueDate, showTime: !viewModel.isAllDay)
-                Spacer()
-                Toggle(Strings.Event.allDay, isOn: $viewModel.isAllDay)
-                    .toggleStyle(.checkbox)
-            }
+            EditorSection {
+                HStack(spacing: 8) {
+                    Image(systemName: "circle")
+                        .font(.system(size: 15))
+                        .foregroundStyle(Color(nsColor: viewModel.selectedCalendarColor))
+                        .frame(width: EditorMetrics.iconWidth)
 
-            TextArea(placeholder: Strings.Event.Editor.notes, text: $viewModel.notes)
-                .frame(height: 60)
-
-            HStack {
-                Spacer()
-                Button(Strings.Editor.save) {
-                    viewModel.saveReminder()
+                    TextField(Strings.Editor.title, text: $viewModel.title)
+                        .textFieldStyle(.plain)
+                        .font(.system(size: 15))
+                        .focused($autoFocus)
                 }
-                .disabled(!viewModel.hasValidInput)
-                .keyboardShortcut(.defaultAction)
+                .padding(.horizontal, EditorMetrics.horizontalPadding)
+                .frame(minHeight: 40)
             }
+
+            EditorSection {
+                EditorRow(title: Strings.Event.allDay, systemImage: "sun.max") {
+                    Toggle("", isOn: $viewModel.isAllDay)
+                        .toggleStyle(.switch)
+                        .controlSize(.small)
+                        .labelsHidden()
+                }
+                EditorDivider()
+                HStack(spacing: 8) {
+                    EditorIcon(systemImage: "calendar")
+
+                    DateTimeInput(date: $viewModel.dueDate, showTime: !viewModel.isAllDay)
+
+                    Spacer(minLength: 0)
+                }
+                .padding(.horizontal, EditorMetrics.horizontalPadding)
+                .frame(minHeight: EditorMetrics.rowHeight)
+            }
+
+            EditorSection {
+                EditorNotesRow(placeholder: Strings.Event.Editor.notes, text: $viewModel.notes)
+            }
+
+            EditorFooter(isSaveEnabled: viewModel.hasValidInput, onSave: viewModel.saveReminder)
+                .padding(.top, 4)
         }
-        .padding(20)
-        .frame(width: 300)
+        .padding(EditorMetrics.padding)
+        .frame(width: 380)
         .fixedSize()
         .onAppear {
             autoFocus = true
