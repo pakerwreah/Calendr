@@ -3,3 +3,4 @@ xcuserdata
 .build
 .swiftpm
 Config.local.xcconfig
+sbxenv.local.yaml

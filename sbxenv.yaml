@@ -1,18 +1,26 @@
 schemaVersion: "1"
 
 args:
+  home:
+    required: true
   name:
     required: true
   agent:
     required: true
+  agent-kit:
+    default: ""
 
 name: ${{ env.args.name }}
 agent: ${{ env.args.agent }}
 
 workspace: .
 
+kits:
+  - ${{ env.args.agent-kit }}
+  - sbx/github-ssh-kit
+
 mcp:
   servers:
     - name: xcode
       command: xcrun
-      args: [ mcpbridge ]
+      args: [mcpbridge]

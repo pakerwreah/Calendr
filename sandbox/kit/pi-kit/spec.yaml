@@ -1,0 +1,64 @@
+schemaVersion: "2"
+kind: sandbox
+name: pi
+displayName: Pi
+description: Minimal terminal coding agent with extensible tools, skills, and TUI
+
+sandbox:
+  image: docker.io/sbx/pi-image:latest
+  entrypoint: [pi]
+
+agentInstructions:
+  filename: AGENTS.md
+
+permissions:
+  network:
+    allow:
+      - registry.npmjs.org
+      - api.github.com
+      - github.com
+      - codeload.github.com
+      - "**.githubusercontent.com"
+
+credentials:
+  - service: github
+    apiKey:
+      name: COPILOT_GITHUB_TOKEN
+      proxyManaged: true
+      inject:
+        - domain: api.business.githubcopilot.com
+          scheme: bearer
+        - domain: api.enterprise.githubcopilot.com
+          scheme: bearer
+        - domain: api.githubcopilot.com
+          scheme: bearer
+        - domain: api.individual.githubcopilot.com
+          scheme: bearer
+        - domain: copilot.github.com
+          scheme: bearer
+
+setup:
+  install:
+    - command: 'if [ -n "${HTTP_PROXY:-}" ]; then npm config set proxy="$HTTP_PROXY" https-proxy="${HTTPS_PROXY:-$HTTP_PROXY}"; fi'
+      user: "1000"
+      description: Point npm at the sandbox proxy so pi install works without the proxy environment variables
+  startup:
+    - command:
+        - sh
+        - -c
+        - |
+          [ -n "$MCP_GATEWAY_URL" ] || exit 0
+          mkdir -p "$HOME/.pi/agent"
+          cat > "$HOME/.pi/agent/mcp.json" << EOF
+          {
+            "mcpServers": {
+              "sbx": {
+                "url": "$MCP_GATEWAY_URL",
+                "headers": {
+                  "Authorization": "Bearer $MCP_SENTINEL_TOKEN_NAME"
+                }
+              }
+            }
+          }
+          EOF
+      description: Register the sandbox MCP gateway with Pi

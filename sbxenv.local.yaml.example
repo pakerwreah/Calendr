@@ -1,0 +1,15 @@
+# Everything in this file is merged with the base sbxenv.yaml
+schemaVersion: "1"
+
+args:
+  home:
+    required: true
+
+# These are only mounted at creation time
+# To add more paths later you can run:
+#
+#   sbx mount snakzy-mobile ../my-other-folder
+#
+additionalWorkspaces:
+  - path: "${{ env.args.home }}/Downloads"
+    readOnly: false
