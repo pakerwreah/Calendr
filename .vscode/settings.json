@@ -1,0 +1,9 @@
+{
+    "swift.autoGenerateLaunchConfigurations": false,
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "[shellscript]": {
+        "editor.defaultFormatter": "mkhl.shfmt"
+    }
+}

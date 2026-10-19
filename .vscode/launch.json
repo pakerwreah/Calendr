@@ -6,7 +6,7 @@
             "name": "Debug Calendr",
             "cwd": "${workspaceFolder}/.build/Calendr.app/Contents/MacOS",
             "program": "Calendr",
-            "preLaunchTask": "Assemble Debug Calendr",
+            "preLaunchTask": "Assemble Debug Calendr"
         }
     ]
 }
