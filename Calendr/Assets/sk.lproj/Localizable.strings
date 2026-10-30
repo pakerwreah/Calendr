@@ -59,6 +59,7 @@
 "settings.next_event" = "Ďalšia udalosť";
 "settings.next_event.show_next_event" = "Zobraziť ďalšiu udalosť";
 //"settings.next_event.show_next_event_title" = "Show next event title";
+//"settings.next_event.ignore_maybe" = "Ignore \"maybe\" status";
 "settings.next_event.grab_attention" = "Upútať pozornosť na blížiacu sa udalosť";
 "settings.next_event.grab_attention.flashing" = "Blikaním";
 "settings.next_event.grab_attention.sound" = "Prehrať zvuk";

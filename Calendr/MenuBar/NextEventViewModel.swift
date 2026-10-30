@@ -141,14 +141,15 @@ class NextEventViewModel {
 
         let filteredEvents = Observable
             .combineLatest(
-                fetchedEvents, skippedEvents
+                fetchedEvents, skippedEvents, settings.eventStatusItemIgnoreMaybe
             )
-            .map { events, skipped in
+            .map { events, skipped, ignoreMaybe in
                 events.filter { event in
                     type.matches(event.type) &&
                     event.type != .reminder(completed: true) &&
                     !event.isAllDay &&
                     event.status != .declined &&
+                    !(ignoreMaybe && event.status == .maybe) &&
                     !skipped.contains(Skipped(event))
                 }
             }

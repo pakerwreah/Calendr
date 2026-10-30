@@ -59,6 +59,7 @@
 "settings.next_event" = "Następne wydarzenie";
 "settings.next_event.show_next_event" = "Pokaż następne wydarzenie";
 //"settings.next_event.show_next_event_title" = "Show next event title";
+//"settings.next_event.ignore_maybe" = "Ignore \"maybe\" status";
 "settings.next_event.grab_attention" = "Przyciągaj uwagę, gdy wydarzenie się zbliża";
 "settings.next_event.grab_attention.flashing" = "Miganie";
 "settings.next_event.grab_attention.sound" = "Odtwórz dźwięk";

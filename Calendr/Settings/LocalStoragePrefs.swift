@@ -28,6 +28,7 @@ enum Prefs {
     static let showEventStatusItem = "show_event_status_item"
     static let showEventStatusItemTitle = "show_event_status_item_title"
     static let hiddenEventStatusItemTitleCalendars = "hidden_event_status_item_title_calendars"
+    static let eventStatusItemIgnoreMaybe = "event_status_item_ignore_pending"
     static let eventStatusItemCheckRange = "event_status_item_check_range"
     static let eventStatusItemFlashing = "event_status_item_flashing"
     static let eventStatusItemSound = "event_status_item_sound"
@@ -119,6 +120,7 @@ func registerDefaultPrefs(
         Prefs.showEventStatusItem: false,
         Prefs.showEventStatusItemTitle: true,
         Prefs.hiddenEventStatusItemTitleCalendars: [],
+        Prefs.eventStatusItemIgnoreMaybe: false,
         Prefs.eventStatusItemCheckRange: 6,
         Prefs.eventStatusItemFlashing: false,
         Prefs.eventStatusItemSound: false,
@@ -272,6 +274,11 @@ extension LocalStorageProvider {
     @objc dynamic var hiddenEventStatusItemTitleCalendars: [String] {
         get { stringArray(forKey: Prefs.hiddenEventStatusItemTitleCalendars) ?? [] }
         set { set(newValue, forKey: Prefs.hiddenEventStatusItemTitleCalendars) }
+    }
+
+    @objc dynamic var eventStatusItemIgnoreMaybe: Bool {
+        get { bool(forKey: Prefs.eventStatusItemIgnoreMaybe) }
+        set { set(newValue, forKey: Prefs.eventStatusItemIgnoreMaybe) }
     }
 
     @objc dynamic var eventStatusItemCheckRange: Int {

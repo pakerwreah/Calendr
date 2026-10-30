@@ -82,13 +82,13 @@ struct SyncLocalizations {
                 }
 
                 let components = line.split(separator: "=", maxSplits: 1).map { $0.trimmingCharacters(in: .whitespaces) }
-                guard components.count == 2, line.hasSuffix(";") else {
+                guard components.count == 2, line.hasSuffix("\";") else {
                     error = Error("Corrupted localization file at path: \(path)\nLine: \(line)")
                     stop = true
                     return
                 }
-                let key = components[0].description.trimmingCharacters(in: CharacterSet(charactersIn: "\""))
-                let value = components[1].trimmingCharacters(in: CharacterSet(charactersIn: "\";"))
+                let key = String(components[0].dropFirst().dropLast())
+                let value = String(components[1].dropFirst().dropLast(2))
                 keys.append(key)
                 result[key] = value
             }

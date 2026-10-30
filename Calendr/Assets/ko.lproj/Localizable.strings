@@ -59,6 +59,7 @@
 "settings.next_event" = "다음 일정";
 "settings.next_event.show_next_event" = "다음 일정 표시";
 "settings.next_event.show_next_event_title" = "다음 일정 제목 표시";
+//"settings.next_event.ignore_maybe" = "Ignore \"maybe\" status";
 "settings.next_event.grab_attention" = "일정이 임박하면 주의 끌기";
 "settings.next_event.grab_attention.flashing" = "깜빡임";
 "settings.next_event.grab_attention.sound" = "소리 재생";

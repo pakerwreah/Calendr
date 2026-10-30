@@ -59,6 +59,7 @@
 "settings.next_event" = "Наступна подія";
 "settings.next_event.show_next_event" = "Показувати наступну подію";
 //"settings.next_event.show_next_event_title" = "Show next event title";
+//"settings.next_event.ignore_maybe" = "Ignore \"maybe\" status";
 "settings.next_event.grab_attention" = "Сповіщати про наближення події";
 "settings.next_event.grab_attention.flashing" = "Миготінням";
 "settings.next_event.grab_attention.sound" = "Звуком";
