@@ -59,6 +59,7 @@
 "settings.next_event" = "下一個事件";
 "settings.next_event.show_next_event" = "顯示下一個事件";
 //"settings.next_event.show_next_event_title" = "Show next event title";
+//"settings.next_event.ignore_maybe" = "Ignore \"maybe\" status";
 "settings.next_event.grab_attention" = "活動臨近時引起注意";
 "settings.next_event.grab_attention.flashing" = "閃爍";
 "settings.next_event.grab_attention.sound" = "播放聲音";

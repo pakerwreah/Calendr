@@ -132,6 +132,49 @@ class NextEventViewModelTests {
         #expect(hasEvent == true)
     }
 
+    @Test func testNextEvent_ignoreMaybeEnabled_hidesMaybeEvent() {
+
+        let viewModel = makeViewModel(type: .event)
+
+        var hasEvent: Bool?
+
+        viewModel.hasEvent
+            .bind { hasEvent = $0 }
+            .disposed(by: disposeBag)
+
+        calendarService.changeEvents([
+            .make(start: now, end: now + 1, type: .event(.maybe))
+        ])
+
+        #expect(hasEvent == true)
+
+        settings.toggleStatusItemIgnoreMaybe.onNext(true)
+
+        #expect(hasEvent == false)
+    }
+
+    @Test func testNextEvent_ignoreMaybeEnabled_showsNextEligibleEvent() {
+
+        let viewModel = makeViewModel(type: .event)
+
+        var title: String?
+
+        viewModel.title
+            .bind { title = $0 }
+            .disposed(by: disposeBag)
+
+        calendarService.changeEvents([
+            .make(start: now, end: now + 1, title: "Maybe event", type: .event(.maybe)),
+            .make(start: now + 2, end: now + 3, title: "Accepted event", type: .event(.accepted))
+        ])
+
+        #expect(title == "Maybe event")
+
+        settings.toggleStatusItemIgnoreMaybe.onNext(true)
+
+        #expect(title == "Accepted event")
+    }
+
     @Test func testNextEvent_isNotEnabled_noEvent() {
 
         let viewModel = makeViewModel(type: .event)

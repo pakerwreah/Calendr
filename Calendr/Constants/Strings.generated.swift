@@ -411,6 +411,8 @@ internal enum Strings {
       internal static let detectNotch = Strings.tr("Localizable", "settings.next_event.detect_notch", fallback: "Shorten if 'notch' is present")
       /// Grab attention when event is close
       internal static let grabAttention = Strings.tr("Localizable", "settings.next_event.grab_attention", fallback: "Grab attention when event is close")
+      /// Ignore "maybe" status
+      internal static let ignoreMaybe = Strings.tr("Localizable", "settings.next_event.ignore_maybe", fallback: "Ignore \"maybe\" status")
       /// Show full screen alert
       internal static let showFullScreenAlert = Strings.tr("Localizable", "settings.next_event.show_full_screen_alert", fallback: "Show full screen alert")
       /// Show next event

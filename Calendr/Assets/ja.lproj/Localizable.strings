@@ -59,6 +59,7 @@
 "settings.next_event" = "次の予定";
 "settings.next_event.show_next_event" = "次の予定をメニューバーに表示";
 "settings.next_event.show_next_event_title" = "次の予定のタイトルを表示";
+//"settings.next_event.ignore_maybe" = "Ignore \"maybe\" status";
 "settings.next_event.grab_attention" = "予定が近づいたら";
 "settings.next_event.grab_attention.flashing" = "点滅させる";
 "settings.next_event.grab_attention.sound" = "音を鳴らす";

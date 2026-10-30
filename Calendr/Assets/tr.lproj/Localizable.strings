@@ -59,6 +59,7 @@
 "settings.next_event" = "Sonraki Etkinlik";
 "settings.next_event.show_next_event" = "Sonraki etkinliği göster";
 //"settings.next_event.show_next_event_title" = "Show next event title";
+//"settings.next_event.ignore_maybe" = "Ignore \"maybe\" status";
 "settings.next_event.grab_attention" = "Etkinlik yaklaştığında dikkat çek";
 "settings.next_event.grab_attention.flashing" = "Yanıp sönme";
 "settings.next_event.grab_attention.sound" = "Ses çal";

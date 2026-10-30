@@ -59,6 +59,7 @@
 "settings.next_event" = "Ngjarja e Radhës";
 "settings.next_event.show_next_event" = "Shfaq ngjarjen e radhës";
 //"settings.next_event.show_next_event_title" = "Show next event title";
+//"settings.next_event.ignore_maybe" = "Ignore \"maybe\" status";
 "settings.next_event.grab_attention" = "Tërhiq vëmendjen kur ngjarja është afër";
 "settings.next_event.grab_attention.flashing" = "Vezullim";
 "settings.next_event.grab_attention.sound" = "Luaj zërin";

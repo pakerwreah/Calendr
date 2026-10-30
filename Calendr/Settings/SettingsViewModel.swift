@@ -84,6 +84,7 @@ protocol NextEventSettings: EventListSettings {
     var showEventStatusItemTitle: Observable<Bool> { get }
     var hiddenEventStatusItemTitleCalendars: Observable<[String]> { get }
     var eventStatusItemCheckRange: Observable<Int> { get }
+    var eventStatusItemIgnoreMaybe: Observable<Bool> { get }
     var eventStatusItemFlashing: Observable<Bool> { get }
     var eventStatusItemSound: Observable<Bool> { get }
     var eventStatusItemAttentionStartAt5min: Observable<Bool> { get }
@@ -140,6 +141,7 @@ class SettingsViewModel:
     let statusItemDateFormatObserver: AnyObserver<String>
     let toggleEventStatusItem: AnyObserver<Bool>
     let toggleEventStatusItemTitle: AnyObserver<Bool>
+    let toggleEventStatusItemIgnoreMaybe: AnyObserver<Bool>
     let eventStatusItemCheckRangeObserver: AnyObserver<Int>
     let toggleEventStatusItemFlashing: AnyObserver<Bool>
     let toggleEventStatusItemSound: AnyObserver<Bool>
@@ -199,6 +201,7 @@ class SettingsViewModel:
     let showEventStatusItemTitle: Observable<Bool>
     let hiddenEventStatusItemTitleCalendars: Observable<[String]>
     let statusItemTextScaling: Observable<Double>
+    let eventStatusItemIgnoreMaybe: Observable<Bool>
     let eventStatusItemCheckRange: Observable<Int>
     let eventStatusItemCheckRangeLabel: Observable<String>
     let eventStatusItemFlashing: Observable<Bool>
@@ -321,6 +324,7 @@ class SettingsViewModel:
         toggleEventStatusItem = localStorage.rx.observer(for: \.showEventStatusItem)
         toggleEventStatusItemTitle = localStorage.rx.observer(for: \.showEventStatusItemTitle)
         statusItemTextScalingObserver = localStorage.rx.observer(for: \.statusItemTextScaling)
+        toggleEventStatusItemIgnoreMaybe = localStorage.rx.observer(for: \.eventStatusItemIgnoreMaybe)
         eventStatusItemCheckRangeObserver = localStorage.rx.observer(for: \.eventStatusItemCheckRange)
         toggleEventStatusItemFlashing = localStorage.rx.observer(for: \.eventStatusItemFlashing)
         toggleEventStatusItemSound = localStorage.rx.observer(for: \.eventStatusItemSound)
@@ -377,6 +381,7 @@ class SettingsViewModel:
         showEventStatusItemTitle = localStorage.rx.observe(\.showEventStatusItemTitle)
         hiddenEventStatusItemTitleCalendars = localStorage.rx.observe(\.hiddenEventStatusItemTitleCalendars)
         statusItemTextScaling = localStorage.rx.observe(\.statusItemTextScaling)
+        eventStatusItemIgnoreMaybe = localStorage.rx.observe(\.eventStatusItemIgnoreMaybe)
         eventStatusItemCheckRange = localStorage.rx.observe(\.eventStatusItemCheckRange)
         eventStatusItemFlashing = localStorage.rx.observe(\.eventStatusItemFlashing)
         eventStatusItemSound = localStorage.rx.observe(\.eventStatusItemSound)

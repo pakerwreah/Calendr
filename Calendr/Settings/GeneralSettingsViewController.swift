@@ -30,6 +30,7 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     // Next Event
     private let showNextEventCheckbox = Checkbox(title: Strings.Settings.NextEvent.showNextEvent)
     private let showNextEventTitleCheckbox = Checkbox(title: Strings.Settings.NextEvent.showNextEventTitle)
+    private let nextEventIgnoreMaybeCheckbox = Checkbox(title: Strings.Settings.NextEvent.ignoreMaybe)
     private let nextEventRangeStepperLabel = Label()
     private let nextEventRangeStepper = NSStepper()
     private let nextEventGrabAttentionLabel = Label(text: Strings.Settings.NextEvent.grabAttention)
@@ -168,13 +169,14 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         return NSStackView(views: [
             showNextEventStack,
             showNextEventTitleCheckbox,
+            nextEventFullScreenCheckbox,
+            nextEventIgnoreMaybeCheckbox,
             .spacer(height: 0),
             nextEventGrabAttentionLabel,
-            grabAttentionStack,
-            .spacer(height: 0),
-            nextEventFullScreenCheckbox
+            grabAttentionStack
         ])
         .with(orientation: .vertical)
+        .with(spacing: 4, after: showNextEventStack)
     }()
 
     private lazy var calendarAppStack: NSView? = {
@@ -342,6 +344,13 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             control: showNextEventTitleCheckbox,
             observable: viewModel.showEventStatusItemTitle,
             observer: viewModel.toggleEventStatusItemTitle
+        )
+        .disposed(by: disposeBag)
+
+        bind(
+            control: nextEventIgnoreMaybeCheckbox,
+            observable: viewModel.eventStatusItemIgnoreMaybe,
+            observer: viewModel.toggleEventStatusItemIgnoreMaybe
         )
         .disposed(by: disposeBag)
 
