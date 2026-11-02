@@ -51,7 +51,9 @@ enum EventDuration {
         } else {
             formatter.timeStyle = preferredTimeStyle
 
-            let range = event.range(using: dateProvider)
+            let timeZone = event.timeZone(using: dateProvider, forceLocal: forceLocalTimeZone)
+
+            let range = event.range(using: dateProvider, timeZone: timeZone)
 
             let end: Date
 
@@ -64,8 +66,6 @@ enum EventDuration {
             else {
                 end = event.end
             }
-
-            let timeZone = event.timeZone(using: dateProvider, forceLocal: forceLocalTimeZone)
 
             if preferredDateStyle == .none, !range.isSingleDay {
                 formatter.dateStyle = .medium
