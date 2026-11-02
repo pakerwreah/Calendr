@@ -69,7 +69,14 @@ extension EventModel {
         .init(start: start, end: end, timeZone: timeZone, dateProvider: dateProvider)
     }
 
-    func isInProgress(using dateProvider: DateProviding) -> Bool { dateProvider.calendar.isDate(dateProvider.now, in: (start, end), granularity: .second) }
+    func timeZone(using dateProvider: DateProviding, forceLocal: Bool) -> TimeZone {
+        // The start/end of a floating event should be set as if they were in the system time zone.
+        (isMeeting || forceLocal) ? dateProvider.calendar.timeZone : (timeZone ?? dateProvider.systemTimeZone)
+    }
+
+    func isInProgress(using dateProvider: DateProviding) -> Bool {
+        dateProvider.calendar.isDate(dateProvider.now, in: (start, end), granularity: .second)
+    }
 
     var status: EventStatus { if case .event(let status) = type { return status } else { return .unknown } }
 

@@ -237,6 +237,37 @@ class EventViewModelTests {
         #expect(viewModel.duration.lastValue() == "January 1 - 2")
     }
 
+    @Test func testDuration_isAllDay_isSingleDay_isFloatingEvent_shouldNotShowDuration() {
+
+        dateProvider.m_systemTimeZone = TimeZone(abbreviation: "GMT-3")!
+
+        let viewModel = mock(
+            event: .make(
+                start: .make(year: 2021, month: 1, day: 1),
+                end: .make(year: 2021, month: 1, day: 1),
+                isAllDay: true
+            )
+        )
+
+        #expect(viewModel.duration.lastValue() == "")
+    }
+
+    @Test func testDuration_isAllDay_isMultiDay_isFloatingEvent_shouldShowDuration() {
+
+        let systemTimeZone = TimeZone(abbreviation: "GMT-3")!
+        dateProvider.m_systemTimeZone = systemTimeZone
+
+        let viewModel = mock(
+            event: .make(
+                start: .make(year: 2021, month: 1, day: 1, timeZone: systemTimeZone),
+                end: .make(year: 2021, month: 1, day: 2, at: .end, timeZone: systemTimeZone),
+                isAllDay: true
+            )
+        )
+
+        #expect(viewModel.duration.lastValue() == "January 1 - 3")
+    }
+
     @Test func testDuration_isSameDay() {
 
         let viewModel = mock(
@@ -324,6 +355,58 @@ class EventViewModelTests {
         )
 
         #expect(viewModel.duration.lastValue() == "12:00 - 1:00 PM (GMT-3)")
+    }
+
+    @Test func testDuration_isSameDay_isFloatingEvent_shouldUseSystemTimeZone() {
+
+        let systemTimeZone = TimeZone(abbreviation: "GMT-3")!
+        dateProvider.m_systemTimeZone = systemTimeZone
+        dateProvider.m_calendar = .gregorian.with(timeZone: .utc)
+        dateProvider.m_calendar.locale = Locale(identifier: "en_US")
+
+        let viewModel = mock(
+            event: .make(
+                start: .make(year: 2021, month: 1, day: 1, hour: 15, timeZone: systemTimeZone),
+                end: .make(year: 2021, month: 1, day: 1, hour: 16, timeZone: systemTimeZone)
+            )
+        )
+
+        #expect(viewModel.duration.lastValue() == "3:00 - 4:00 PM (GMT-3)")
+    }
+
+    @Test func testDuration_isSameDay_isFloatingEvent_forceLocalTimeZone_shouldUseLocalTimeZone() {
+
+        let systemTimeZone = TimeZone(abbreviation: "GMT-3")!
+        dateProvider.m_systemTimeZone = systemTimeZone
+        dateProvider.m_calendar = .gregorian.with(timeZone: .utc)
+        dateProvider.m_calendar.locale = Locale(identifier: "en_US")
+        settings.toggleForceLocalTimeZone.onNext(true)
+
+        let viewModel = mock(
+            event: .make(
+                start: .make(year: 2021, month: 1, day: 1, hour: 15, timeZone: systemTimeZone),
+                end: .make(year: 2021, month: 1, day: 1, hour: 16, timeZone: systemTimeZone)
+            )
+        )
+
+        #expect(viewModel.duration.lastValue() == "6:00 - 7:00 PM")
+    }
+
+    @Test func testDuration_isMultiDay_isFloatingEvent_shouldUseSystemTimeZoneForRange() {
+
+        let systemTimeZone = TimeZone(abbreviation: "GMT-3")!
+        dateProvider.m_systemTimeZone = systemTimeZone
+        dateProvider.m_calendar = .gregorian.with(timeZone: .utc)
+        dateProvider.m_calendar.locale = Locale(identifier: "en_US")
+
+        let viewModel = mock(
+            event: .make(
+                start: .make(year: 2021, month: 1, day: 1, hour: 22, timeZone: systemTimeZone),
+                end: .make(year: 2021, month: 1, day: 2, hour: 1, timeZone: systemTimeZone)
+            )
+        )
+
+        #expect(viewModel.duration.lastValue() == "01/01/2021, 22:00 (GMT-3)\n01/02/2021, 01:00 (GMT-3)")
     }
 
     @Test func testDuration_isSameDay_isMeeting_withDifferentTimeZone() {
