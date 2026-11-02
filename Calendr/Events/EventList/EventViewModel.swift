@@ -155,7 +155,7 @@ class EventViewModel {
 
         duration = settings.forceLocalTimeZone.map { forceLocalTimeZone in
 
-            let timeZone = event.timeZone(using: dateProvider, forceLocal: forceLocalTimeZone)
+            let timeZone = event.durationTimeZone(using: dateProvider, forceLocal: forceLocalTimeZone)
             let range = event.range(using: dateProvider, timeZone: timeZone)
             let showTime = !(range.startsMidnight && range.endsMidnight)
 

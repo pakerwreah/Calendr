@@ -191,7 +191,7 @@ class CalendarViewModel {
             settings.holidayCalendars
         )
         .map { events, holidayCalendars in
-            events?.filter { holidayCalendars.contains($0.calendar.id) }
+            events?.filter { $0.isAllDay && holidayCalendars.contains($0.calendar.id) }
         }
         .distinctUntilChanged()
         .share(replay: 1)
@@ -208,7 +208,7 @@ class CalendarViewModel {
             return cellViewModels.map { vm in
                 vm.with(
                     isHoliday: holidays.contains { event in
-                        dateProvider.calendar.isDay(vm.date, inDays: (event.start, event.end))
+                        dateProvider.systemCalendar.isDay(vm.date, inDays: (event.start, event.end))
                     }
                 )
             }
@@ -230,7 +230,7 @@ class CalendarViewModel {
             cellViewModels.map { vm in
 
                 let dateHolidays = holidays?.filter {
-                    dateProvider.calendar.isDay(vm.date, inDays: ($0.start, $0.end))
+                    dateProvider.systemCalendar.isDay(vm.date, inDays: ($0.start, $0.end))
                 } ?? []
 
                 let plugin: (any CalendarCellPlugin)? = {
@@ -295,26 +295,29 @@ class CalendarViewModel {
 
                 let eventsWithFuture = events.filter { event in
 
+                    // The start/end of a floating event should be set as if they were in the system time zone.
+                    let calendar = event.isAllDay ? dateProvider.systemCalendar : dateProvider.calendar
+
                     // check if cell date intersects event
-                    if dateProvider.calendar.isDay(vm.date, inDays: (event.start, event.end)) {
+                    if calendar.isDay(vm.date, inDays: (event.start, event.end)) {
                         return true
                     }
 
                     // check if event starts in the future
                     guard
                         vm.isToday, futureEventsDays > 0,
-                        let futureStart = dateProvider.calendar.date(
+                        let futureStart = calendar.date(
                             byAdding: DateComponents(day: 1),
                             to: vm.date
                         ),
-                        let futureEnd = dateProvider.calendar.date(
+                        let futureEnd = calendar.date(
                             byAdding: DateComponents(day: futureEventsDays),
                             to: futureStart
                         )
                     else {
                         return false
                     }
-                    return dateProvider.calendar.isDay(event.start, inDays: (futureStart, futureEnd))
+                    return calendar.isDay(event.start, inDays: (futureStart, futureEnd))
                 }
 
                 return vm.with(events: eventsWithFuture)

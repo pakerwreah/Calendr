@@ -27,7 +27,7 @@ enum EventDuration {
         defer { formatter.timeZone = origTimeZone }
         formatter.timeZone = timeZone
 
-        return "\(formatter.string(from: start, to: end)) (\(tz_abbreviation))"
+        return "\(formatter.string(from: start, to: end)) (\(tz_abbreviation.replacingOccurrences(of: "+0", with: "")))"
     }
 
     static func duration(
@@ -51,7 +51,7 @@ enum EventDuration {
         } else {
             formatter.timeStyle = preferredTimeStyle
 
-            let timeZone = event.timeZone(using: dateProvider, forceLocal: forceLocalTimeZone)
+            let timeZone = event.durationTimeZone(using: dateProvider, forceLocal: forceLocalTimeZone)
 
             let range = event.range(using: dateProvider, timeZone: timeZone)
 

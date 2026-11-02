@@ -69,9 +69,9 @@ extension EventModel {
         .init(start: start, end: end, timeZone: timeZone, dateProvider: dateProvider)
     }
 
-    func timeZone(using dateProvider: DateProviding, forceLocal: Bool) -> TimeZone {
+    func durationTimeZone(using dateProvider: DateProviding, forceLocal: Bool) -> TimeZone {
         // The start/end of a floating event should be set as if they were in the system time zone.
-        (isMeeting || forceLocal) ? dateProvider.calendar.timeZone : (timeZone ?? dateProvider.systemTimeZone)
+        !isAllDay && (isMeeting || forceLocal) ? dateProvider.calendar.timeZone : (timeZone ?? dateProvider.systemTimeZone)
     }
 
     func isInProgress(using dateProvider: DateProviding) -> Bool {
