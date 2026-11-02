@@ -477,6 +477,28 @@ class CalendarViewModelTests {
         ])
     }
 
+    @Test func testEventsPerDate_withAllDayEventAndCustomTimeZone_shouldUseSystemCalendar() {
+
+        let systemTimeZone = TimeZone(abbreviation: "GMT-3")!
+        dateProvider.m_systemTimeZone = systemTimeZone
+        dateProvider.m_calendar = .gregorian.with(timeZone: .utc)
+        calendarService.m_events = [
+            .make(
+                start: .make(year: 2021, month: 1, day: 1, timeZone: systemTimeZone),
+                end: .make(year: 2021, month: 1, day: 2, timeZone: systemTimeZone),
+                title: "All day",
+                isAllDay: true
+            )
+        ]
+
+        dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
+
+        assertExpectedEvents({ $0.events.map(\.title) }, [
+            (.make(year: 2021, month: 1, day: 1), []),
+            (.make(year: 2021, month: 1, day: 2), ["All day"]),
+        ])
+    }
+
     @Test func testEventsPerDate_withAllDayEventsDisabled_shouldNotShowAllDayEvents() {
 
         settings.toggleAllDayEvents.onNext(false)
@@ -1185,11 +1207,13 @@ class CalendarViewModelTests {
             .make(
                 start: .make(year: 2021, month: 1, day: 1),
                 title: "H1",
+                isAllDay: true,
                 calendar: holidayCalendar
             ),
             .make(
                 start: .make(year: 2021, month: 1, day: 5),
                 title: "H2",
+                isAllDay: true,
                 calendar: holidayCalendar
             )
         ])
@@ -1226,6 +1250,7 @@ class CalendarViewModelTests {
             .make(
                 start: .make(year: 2021, month: 1, day: 2),
                 title: "H1",
+                isAllDay: true,
                 calendar: holidayCalendar
             )
         ]
@@ -1342,7 +1367,8 @@ class CalendarViewModelTests {
 
     private func assertExpectedEvents<T, U: Collection<T> & Equatable>(
         _ pick: (CalendarCellViewModel) -> U,
-        _ expectedItems: [(Date, U)]
+        _ expectedItems: [(Date, U)],
+        sourceLocation: SourceLocation = #_sourceLocation
     ) {
         func named<V>(_ value: V) -> String {
             if let color = value as? NSColor {
@@ -1354,10 +1380,10 @@ class CalendarViewModelTests {
 
         for (date, expected) in expectedItems {
             guard let actual = lastValue?.first(where: { $0.date == date }).map(pick) else {
-                Issue.record("\(date) not found")
+                Issue.record("\(date) not found", sourceLocation: sourceLocation)
                 return
             }
-            #expect(actual.map(named) == expected.map(named), "\(date)")
+            #expect(actual.map(named) == expected.map(named), "\(date)", sourceLocation: sourceLocation)
         }
     }
 }

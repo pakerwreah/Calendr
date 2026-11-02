@@ -268,6 +268,24 @@ class EventViewModelTests {
         #expect(viewModel.duration.lastValue() == "January 1 - 3")
     }
 
+    @Test func testDuration_isAllDay_isSingleDay_isFloatingEvent_forceLocalTimeZone_shouldNotShowDuration() {
+
+        let systemTimeZone = TimeZone(abbreviation: "GMT-3")!
+        dateProvider.m_systemTimeZone = systemTimeZone
+        dateProvider.m_calendar = .gregorian.with(timeZone: .utc)
+        settings.toggleForceLocalTimeZone.onNext(true)
+
+        let viewModel = mock(
+            event: .make(
+                start: .make(year: 2021, month: 1, day: 1, timeZone: systemTimeZone),
+                end: .make(year: 2021, month: 1, day: 2, timeZone: systemTimeZone),
+                isAllDay: true
+            )
+        )
+
+        #expect(viewModel.duration.lastValue() == "")
+    }
+
     @Test func testDuration_isSameDay() {
 
         let viewModel = mock(

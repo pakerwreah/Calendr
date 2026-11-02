@@ -13,7 +13,7 @@ import RxSwift
 class MockDateProvider: DateProviding {
 
     var m_systemTimeZone: TimeZone
-    var systemTimeZone: TimeZone { m_systemTimeZone }
+    var systemCalendar: Calendar { calendar.with(timeZone: m_systemTimeZone) }
 
     var m_calendar: Calendar
     var calendar: Calendar { m_calendar }

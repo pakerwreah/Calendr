@@ -9,7 +9,7 @@ import Foundation
 import RxSwift
 
 protocol DateProviding: AnyObject {
-    var systemTimeZone: TimeZone { get }
+    var systemCalendar: Calendar { get }
     var calendar: Calendar { get }
     var now: Date { get }
 
@@ -17,6 +17,9 @@ protocol DateProviding: AnyObject {
 }
 
 extension DateProviding {
+
+    var systemTimeZone: TimeZone { systemCalendar.timeZone }
+
     // use this instead of `calendar.isDateInToday`, which is unmockable
     func isDateInToday(_ date: Date) -> Bool {
         calendar.isDate(date, inSameDayAs: now)
@@ -39,7 +42,7 @@ class DateProvider: DateProviding {
 
     private let system: SystemTimeProviding
 
-    var systemTimeZone: TimeZone { system.calendar.timeZone }
+    var systemCalendar: Calendar { system.calendar }
     var now: Date { system.date }
 
     let calendarUpdated: Observable<Calendar>
