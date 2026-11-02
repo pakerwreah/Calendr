@@ -77,7 +77,7 @@
 "settings.calendar.date_hover_option" = "⌥ 키를 누른 채 날짜 위에 호버하여 미리보기";
 "settings.calendar.week_count" = "표시할 주 수";
 //"settings.calendar.time_zone" = "Time zone";
-//"settings.calendar.system_time_zone" = "system";
+//"settings.calendar.system_time_zone" = "System";
 "settings.calendar.calendar_app_view_mode" = "캘린더 앱 보기 방식";
 "settings.calendar.default_calendar_app" = "기본 캘린더 앱";
 "settings.calendar.preferred_browser" = "선호하는 브라우저";

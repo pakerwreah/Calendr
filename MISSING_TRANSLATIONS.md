@@ -14,7 +14,6 @@ Language|Count
 [Japanese - 日本語 - (ja)](Calendr/Assets/ja.lproj/Localizable.strings)|9
 [Korean - 한국어 - (ko)](Calendr/Assets/ko.lproj/Localizable.strings)|7
 [Polish - polski - (pl)](Calendr/Assets/pl.lproj/Localizable.strings)|54
-[Portuguese - português - (pt)](Calendr/Assets/pt.lproj/Localizable.strings)|2
 [Russian - русский - (ru)](Calendr/Assets/ru.lproj/Localizable.strings)|57
 [Slovak - slovenčina - (sk)](Calendr/Assets/sk.lproj/Localizable.strings)|54
 [Spanish - español - (es)](Calendr/Assets/es.lproj/Localizable.strings)|77

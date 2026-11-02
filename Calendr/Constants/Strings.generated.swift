@@ -295,8 +295,8 @@ internal enum Strings {
       internal static let showMonthOutline = Strings.tr("Localizable", "settings.calendar.show_month_outline", fallback: "Show month outline")
       /// Show week numbers
       internal static let showWeekNumbers = Strings.tr("Localizable", "settings.calendar.show_week_numbers", fallback: "Show week numbers")
-      /// system
-      internal static let systemTimeZone = Strings.tr("Localizable", "settings.calendar.system_time_zone", fallback: "system")
+      /// System
+      internal static let systemTimeZone = Strings.tr("Localizable", "settings.calendar.system_time_zone", fallback: "System")
       /// Time zone
       internal static let timeZone = Strings.tr("Localizable", "settings.calendar.time_zone", fallback: "Time zone")
       /// Visible weeks
