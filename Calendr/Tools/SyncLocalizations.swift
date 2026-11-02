@@ -170,7 +170,7 @@ struct SyncLocalizations {
 
                 return "[\(languageNames)](\(path))|\(count)"
 
-            }.joined(separator: "\n")
+            }.sorted().joined(separator: "\n")
 
             let missingTranslationsPath = "\(srcRoot)/MISSING_TRANSLATIONS.md"
 
