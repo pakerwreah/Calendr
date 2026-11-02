@@ -44,6 +44,7 @@ enum Prefs {
     // Calendar
     static let calendarScaling = "calendar_scaling"
     static let firstWeekday = "first_weekday"
+    static let timeZone = "time_zone"
     static let highlightedWeekdays = "highlighted_weekdays"
     static let weekCount = "week_count"
     static let showMonthOutline = "show_month_outline"
@@ -135,6 +136,7 @@ func registerDefaultPrefs(
         // Calendar
         Prefs.calendarScaling: 1,
         Prefs.firstWeekday: calendar.firstWeekday,
+        Prefs.timeZone: "",
         Prefs.highlightedWeekdays: [0, 6],
         Prefs.weekCount: 6,
         Prefs.showMonthOutline: true,
@@ -341,6 +343,11 @@ extension LocalStorageProvider {
     @objc dynamic var firstWeekday: Int {
         get { integer(forKey: Prefs.firstWeekday) }
         set { set(newValue, forKey: Prefs.firstWeekday) }
+    }
+
+    @objc dynamic var timeZone: String {
+        get { string(forKey: Prefs.timeZone) ?? "" }
+        set { set(newValue, forKey: Prefs.timeZone) }
     }
 
     @objc dynamic var highlightedWeekdays: [Int] {

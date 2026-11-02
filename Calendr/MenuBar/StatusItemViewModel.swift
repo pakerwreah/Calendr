@@ -75,7 +75,7 @@ class StatusItemViewModel {
                 settings.statusItemDateStyle,
                 settings.statusItemDateFormat
             )
-            .repeat(when: localeChangeObservable)
+            .repeat(when: Observable.merge(localeChangeObservable, dateProvider.calendarUpdated.void()))
             .flatMapLatest { showDate, showLunar, style, format -> Observable<String> in
 
                 guard showDate else { return .just("") }

@@ -76,6 +76,8 @@
 "settings.calendar.show_declined_events_tooltip" = "This only works if it is also enabled in the native Calendar app.";
 "settings.calendar.date_hover_option" = "Hold ⌥ to peek at hovered dates";
 "settings.calendar.week_count" = "Visible weeks";
+"settings.calendar.time_zone" = "Time zone";
+"settings.calendar.system_time_zone" = "system";
 "settings.calendar.calendar_app_view_mode" = "Calendar app view";
 "settings.calendar.default_calendar_app" = "Default calendar app";
 "settings.calendar.preferred_browser" = "Preferred browser";

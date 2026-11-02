@@ -233,12 +233,11 @@ class MainViewModel {
 
         searchInputSuggestion = searchInputSuggestionSubject.asObservable()
 
-        let formatter = DateFormatter(calendar: dateProvider.calendar)
-        formatter.dateStyle = .long
-
         searchInputSuggestionText = searchInputSuggestion
             .map { suggestion in
-                suggestion.map { formatter.string(from: $0.date) }
+                suggestion.map {
+                    DateFormatter(calendar: dateProvider.calendar).with(style: .long).string(from: $0.date)
+                }
             }
 
         isSearchInputSuggestionVisible = Observable

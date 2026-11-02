@@ -39,15 +39,39 @@ class DateProvider: DateProviding {
         let calendarSubject = PublishSubject<Calendar>()
         calendarUpdated = calendarSubject.asObservable()
 
-        localStorage.rx
-            .observe(\.firstWeekday)
+        // The system only posts `NSCalendarDayChanged` at its own midnight, so post it at the custom one.
+        // Subscribed first because the pipeline below emits the initial calendar synchronously.
+        calendarSubject
+            .flatMapLatest { calendar -> Observable<Void> in
+                let now = Date()
+                guard
+                    calendar.timeZone != .current,
+                    let midnight = calendar.nextDate(
+                        after: now,
+                        matching: DateComponents(hour: 0, minute: 0, second: 0),
+                        matchingPolicy: .nextTime
+                    )
+                else { return .empty() }
+                let delay = Int(now.distance(to: midnight).rounded(.up))
+                return Observable<Int>.timer(.seconds(delay), scheduler: MainScheduler.instance).void()
+            }
+            .bind { notificationCenter.post(name: .NSCalendarDayChanged, object: nil) }
+            .disposed(by: disposeBag)
+
+        Observable
+            .combineLatest(
+                localStorage.rx.observe(\.firstWeekday),
+                localStorage.rx.observe(\.timeZone)
+            )
             .repeat(when: Observable.merge(
                 notificationCenter.rx.notification(NSLocale.currentLocaleDidChangeNotification).void(),
                 notificationCenter.rx.notification(.NSSystemTimeZoneDidChange).void(),
                 notificationCenter.rx.notification(.NSCalendarDayChanged).void()
             ))
-            .compactMap { [weak self] firstWeekday in
+            .compactMap { [weak self] firstWeekday, timeZone in
                 guard let self else { return nil }
+                // Process-wide, so formatters not built from `calendar` follow it too.
+                NSTimeZone.default = TimeZone(identifier: timeZone) ?? .current
                 calendar = .current
                 calendar.firstWeekday = firstWeekday
                 return calendar

@@ -49,7 +49,10 @@ class EventListViewModel {
     private let refreshScheduler: SchedulerType
     private let eventsScheduler: SchedulerType
 
-    private let dateFormatter: DateFormatter
+    // rebuilt on each use so it follows time zone changes
+    private var dateFormatter: DateFormatter {
+        DateFormatter(template: "EEEE d MMM", calendar: dateProvider.calendar)
+    }
     private let relativeFormatter: RelativeDateTimeFormatter
     private let dateComponentsFormatter: DateComponentsFormatter
 
@@ -108,8 +111,6 @@ class EventListViewModel {
         self.scheduler = scheduler
         self.refreshScheduler = refreshScheduler
         self.eventsScheduler = eventsScheduler
-
-        dateFormatter = DateFormatter(template: "EEEE d MMM", calendar: dateProvider.calendar)
 
         relativeFormatter = RelativeDateTimeFormatter()
         relativeFormatter.dateTimeStyle = .named

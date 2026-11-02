@@ -76,6 +76,8 @@
 "settings.calendar.show_declined_events_tooltip" = "Funguje, len ak je to povolené aj v natívnej aplikácii Kalendár.";
 "settings.calendar.date_hover_option" = "Podržaním ⌥ zobrazíš náhľad dátumov";
 "settings.calendar.week_count" = "Počet zobrazených týždňov";
+//"settings.calendar.time_zone" = "Time zone";
+//"settings.calendar.system_time_zone" = "system";
 "settings.calendar.calendar_app_view_mode" = "Pohľad v kalendári";
 "settings.calendar.default_calendar_app" = "Predvolená apka kalendára";
 //"settings.calendar.preferred_browser" = "Preferred browser";

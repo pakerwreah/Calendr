@@ -112,6 +112,18 @@ class StatusItemViewModelTests {
         #expect(lastText == "1/1/21")
     }
 
+    @Test func testText_withTimeZoneChange_shouldUpdateText() {
+
+        setUp(showIcon: false, showDate: true, iconStyle: .calendar)
+
+        #expect(lastText == "2021-01-01")
+
+        dateProvider.m_calendar.timeZone = TimeZone(identifier: "America/Los_Angeles")!
+        dateProvider.notifyCalendarUpdated()
+
+        #expect(lastText == "2020-12-31")
+    }
+
     @Test func testStatusItemVisibility() {
 
         setUp(showIcon: true, showDate: true)

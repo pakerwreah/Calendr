@@ -76,6 +76,8 @@
 "settings.calendar.show_declined_events_tooltip" = "Це працює лише у разі, якщо увімкнено в рідному додатку Календар.";
 "settings.calendar.date_hover_option" = "Утримуйте ⌥, щоб переглянути дати при наведенні.";
 "settings.calendar.week_count" = "Видимих тижнів";
+//"settings.calendar.time_zone" = "Time zone";
+//"settings.calendar.system_time_zone" = "system";
 "settings.calendar.calendar_app_view_mode" = "Режим перегляду програми «Календар»";
 "settings.calendar.default_calendar_app" = "Програма календаря за замовчуванням";
 //"settings.calendar.preferred_browser" = "Preferred browser";
