@@ -76,6 +76,8 @@
 "settings.calendar.show_declined_events_tooltip" = "עובד רק אם הופעל גם באפליקציית לוח שנה המובנית.";
 "settings.calendar.date_hover_option" = "החזקת ⌥ כדי להציץ תוך כדי ריחוף בתאריכים";
 "settings.calendar.week_count" = "שבועות מוצגים";
+//"settings.calendar.time_zone" = "Time zone";
+//"settings.calendar.system_time_zone" = "system";
 "settings.calendar.calendar_app_view_mode" = "מצב תצוגה באפליקציית לוח שנה";
 "settings.calendar.default_calendar_app" = "ברירת מחדל לאפליקציית לוח שנה";
 //"settings.calendar.preferred_browser" = "Preferred browser";

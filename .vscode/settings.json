@@ -5,5 +5,8 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "[shellscript]": {
         "editor.defaultFormatter": "mkhl.shfmt"
+    },
+    "[swift]": {
+        "editor.defaultFormatter": "swiftlang.swift-vscode"
     }
 }

@@ -391,7 +391,7 @@ class SettingsViewModelTests {
 
         dateProvider.m_calendar.locale = Locale(identifier: "en_GB")
 
-        notificationCenter.post(name: NSLocale.currentLocaleDidChangeNotification, object: nil)
+        dateProvider.notifyCalendarUpdated()
 
         #expect(options?.first == .init(style: .short, title: "01/01/2021"))
     }
@@ -851,6 +851,23 @@ class SettingsViewModelTests {
 
         #expect(firstWeekday == 7)
         #expect(localStorageFirstWeekday == 7)
+    }
+
+    @Test func testChangeTimeZone() {
+
+        var timeZone: String?
+
+        viewModel.timeZone
+            .bind { timeZone = $0 }
+            .disposed(by: disposeBag)
+
+        #expect(timeZone == "")
+        #expect(viewModel.timeZoneOptions.first?.identifier == "")
+
+        viewModel.timeZoneObserver.onNext("Asia/Taipei")
+
+        #expect(timeZone == "Asia/Taipei")
+        #expect(localStorage.timeZone == "Asia/Taipei")
     }
 
     @Test func testChangeHighlightedWeekdays() {

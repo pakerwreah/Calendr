@@ -49,10 +49,6 @@ class EventListViewModel {
     private let refreshScheduler: SchedulerType
     private let eventsScheduler: SchedulerType
 
-    private let dateFormatter: DateFormatter
-    private let relativeFormatter: RelativeDateTimeFormatter
-    private let dateComponentsFormatter: DateComponentsFormatter
-
     private struct EventListProps: Equatable {
         var events: [EventModel]
         let date: Date
@@ -108,16 +104,6 @@ class EventListViewModel {
         self.scheduler = scheduler
         self.refreshScheduler = refreshScheduler
         self.eventsScheduler = eventsScheduler
-
-        dateFormatter = DateFormatter(template: "EEEE d MMM", calendar: dateProvider.calendar)
-
-        relativeFormatter = RelativeDateTimeFormatter()
-        relativeFormatter.dateTimeStyle = .named
-
-        dateComponentsFormatter = DateComponentsFormatter()
-        dateComponentsFormatter.calendar = dateProvider.calendar
-        dateComponentsFormatter.unitsStyle = .abbreviated
-        dateComponentsFormatter.allowedUnits = [.hour, .minute]
 
         items = groups.map {
             $0.overdue + $0.allday + $0.today + $0.future
@@ -273,10 +259,12 @@ class EventListViewModel {
                 return EventListGroups(overdue: [], allday: [], today: items, future: [])
             }
 
-            let overdue = overdueViewModels(props)
+            let dateFormatter = DateFormatter(template: "EEEE d MMM", calendar: dateProvider.calendar)
+
+            let overdue = overdueViewModels(props, dateFormatter)
             let allday = allDayViewModels(props)
-            let today = todayViewModels(props, withFuture: false)
-            let future = todayViewModels(props, withFuture: true)
+            let today = todayViewModels(props, dateFormatter, withFuture: false)
+            let future = todayViewModels(props, dateFormatter, withFuture: true)
 
             return EventListGroups(overdue: overdue, allday: allday, today: today, future: future)
         }
@@ -316,9 +304,13 @@ class EventListViewModel {
         dateProvider.calendar.isDate(event.start, greaterThan: date, granularity: .day)
     }
 
-    private func overdueViewModels(_ props: EventListProps) -> [EventListItem] {
+    private func overdueViewModels(_ props: EventListProps, _ dateFormatter: DateFormatter) -> [EventListItem] {
 
         guard props.showOverdueReminders else { return [] }
+
+        let relativeFormatter = RelativeDateTimeFormatter()
+        relativeFormatter.calendar = dateProvider.calendar
+        relativeFormatter.dateTimeStyle = .named
 
         return props.events
             .filter { isOverdue($0, props.isTodaySelected) }
@@ -357,7 +349,12 @@ class EventListViewModel {
         return viewModels
     }
 
-    private func todayViewModels(_ props: EventListProps, withFuture: Bool) -> [EventListItem] {
+    private func todayViewModels(_ props: EventListProps, _ dateFormatter: DateFormatter, withFuture: Bool) -> [EventListItem] {
+
+        let dateComponentsFormatter = DateComponentsFormatter()
+        dateComponentsFormatter.calendar = dateProvider.calendar
+        dateComponentsFormatter.unitsStyle = .abbreviated
+        dateComponentsFormatter.allowedUnits = [.hour, .minute]
 
         return props.events
             .filter {
@@ -395,7 +392,7 @@ class EventListViewModel {
 
                 let ticker = Observable<Int>.interval(.seconds(1), scheduler: scheduler).void().startWith(())
 
-                let interval = ticker.compactMap { [dateProvider, dateComponentsFormatter] in
+                let interval = ticker.compactMap { [dateProvider] in
 
                     let isUpcoming = dateProvider.calendar.isDate(
                         dateProvider.now, in: (prev.end, curr.start),

@@ -5,18 +5,9 @@
 //  Created by Paker on 06/07/2021.
 //
 
-import Foundation
-
-extension Calendar {
-
-    func with(timeZone: TimeZone) -> Self {
-        var copy = self
-        copy.timeZone = timeZone
-        return copy
-    }
-}
-
 #if DEBUG
+
+import Foundation
 
 extension Calendar {
 

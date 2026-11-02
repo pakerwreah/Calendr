@@ -23,8 +23,21 @@ extension DateProviding {
 }
 
 class DateProvider: DateProviding {
-    private(set) var calendar: Calendar = .current
-    var now: Date { Date() }
+
+    protocol SystemTimeProviding {
+        var date: Date { get }
+        var calendar: Calendar { get }
+    }
+
+    private class SystemTimeProvider: SystemTimeProviding {
+        var date: Date { .init() }
+        var calendar: Calendar { .current }
+    }
+
+    private(set) var calendar: Calendar
+
+    private let system: SystemTimeProviding
+    var now: Date { system.date }
 
     let calendarUpdated: Observable<Calendar>
 
@@ -32,23 +45,53 @@ class DateProvider: DateProviding {
     private let notificationCenter: NotificationCenter
     private let localStorage: LocalStorageProvider
 
-    init(notificationCenter: NotificationCenter, localStorage: LocalStorageProvider) {
+    init(
+        notificationCenter: NotificationCenter,
+        localStorage: LocalStorageProvider,
+        scheduler: SchedulerType = WallTimeScheduler.instance,
+        system: SystemTimeProviding = SystemTimeProvider()
+    ) {
         self.notificationCenter = notificationCenter
         self.localStorage = localStorage
+        self.system = system
+        self.calendar = system.calendar
 
         let calendarSubject = PublishSubject<Calendar>()
         calendarUpdated = calendarSubject.asObservable()
 
-        localStorage.rx
-            .observe(\.firstWeekday)
+        // The system only posts `NSCalendarDayChanged` at its own midnight, so post it at the custom one.
+        // Subscribed first because the pipeline below emits the initial calendar synchronously.
+        calendarSubject
+            .flatMapLatest { calendar -> Observable<Void> in
+                let now = system.date
+                guard
+                    calendar.timeZone != system.calendar.timeZone,
+                    let midnight = calendar.nextDate(
+                        after: now,
+                        matching: DateComponents(hour: 0, minute: 0, second: 0),
+                        matchingPolicy: .nextTime
+                    )
+                else { return .empty() }
+                let delay = Int(now.distance(to: midnight).rounded(.up))
+                return Observable<Int>.timer(.seconds(delay), scheduler: scheduler).void()
+            }
+            .bind { notificationCenter.post(name: .NSCalendarDayChanged, object: nil) }
+            .disposed(by: disposeBag)
+
+        Observable
+            .combineLatest(
+                localStorage.rx.observe(\.firstWeekday),
+                localStorage.rx.observe(\.timeZone)
+            )
             .repeat(when: Observable.merge(
                 notificationCenter.rx.notification(NSLocale.currentLocaleDidChangeNotification).void(),
                 notificationCenter.rx.notification(.NSSystemTimeZoneDidChange).void(),
                 notificationCenter.rx.notification(.NSCalendarDayChanged).void()
             ))
-            .compactMap { [weak self] firstWeekday in
+            .compactMap { [weak self] firstWeekday, timeZone in
                 guard let self else { return nil }
-                calendar = .current
+                let timeZone = TimeZone(identifier: timeZone) ?? system.calendar.timeZone
+                calendar = system.calendar.with(timeZone: timeZone)
                 calendar.firstWeekday = firstWeekday
                 return calendar
             }

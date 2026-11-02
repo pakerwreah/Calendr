@@ -64,10 +64,6 @@ class StatusItemViewModel {
             }
             .startWith(false)
 
-        let localeChangeObservable = notificationCenter.rx
-            .notification(NSLocale.currentLocaleDidChangeNotification)
-            .void()
-
         let dateTextObservable = Observable
             .combineLatest(
                 settings.showStatusItemDate,
@@ -75,7 +71,7 @@ class StatusItemViewModel {
                 settings.statusItemDateStyle,
                 settings.statusItemDateFormat
             )
-            .repeat(when: localeChangeObservable)
+            .repeat(when: dateProvider.calendarUpdated.void())
             .flatMapLatest { showDate, showLunar, style, format -> Observable<String> in
 
                 guard showDate else { return .just("") }

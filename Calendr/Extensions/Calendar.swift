@@ -9,6 +9,12 @@ import Foundation
 
 extension Calendar {
 
+    func with(timeZone: TimeZone) -> Self {
+        var copy = self
+        copy.timeZone = timeZone
+        return copy
+    }
+
     /// - midnightFix: fix range ending at 00:00 of the next day
     func isDay(_ date: Date, inDays range: (start: Date, end: Date), midnightFix: Bool = true) -> Bool {
 

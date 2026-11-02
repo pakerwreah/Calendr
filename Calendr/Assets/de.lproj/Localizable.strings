@@ -76,6 +76,8 @@
 "settings.calendar.show_declined_events_tooltip" = "Dies funktioniert nur, wenn es auch in der nativen Kalender-App aktiviert ist.";
 "settings.calendar.date_hover_option" = "⌥ gedrückt halten, um die hervorgehobenen Daten zu sehen";
 //"settings.calendar.week_count" = "Visible weeks";
+//"settings.calendar.time_zone" = "Time zone";
+//"settings.calendar.system_time_zone" = "system";
 "settings.calendar.calendar_app_view_mode" = "Kalender-App-Ansicht";
 //"settings.calendar.default_calendar_app" = "Default calendar app";
 //"settings.calendar.preferred_browser" = "Preferred browser";

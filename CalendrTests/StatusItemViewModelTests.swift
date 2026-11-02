@@ -107,9 +107,21 @@ class StatusItemViewModelTests {
         #expect(lastText == "2021-01-01")
 
         dateProvider.m_calendar.locale = Locale(identifier: "en")
-        notificationCenter.post(name: NSLocale.currentLocaleDidChangeNotification, object: nil)
+        dateProvider.notifyCalendarUpdated()
 
         #expect(lastText == "1/1/21")
+    }
+
+    @Test func testText_withTimeZoneChange_shouldUpdateText() {
+
+        setUp(showIcon: false, showDate: true, iconStyle: .calendar)
+
+        #expect(lastText == "2021-01-01")
+
+        dateProvider.m_calendar.timeZone = TimeZone(identifier: "America/Los_Angeles")!
+        dateProvider.notifyCalendarUpdated()
+
+        #expect(lastText == "2020-12-31")
     }
 
     @Test func testStatusItemVisibility() {
@@ -257,7 +269,7 @@ class StatusItemViewModelTests {
         setUp(showIcon: false, showDate: true, iconStyle: .calendar)
 
         dateProvider.m_calendar.locale = Locale(identifier: "en_US")
-        notificationCenter.post(name: NSLocale.currentLocaleDidChangeNotification, object: nil)
+        dateProvider.notifyCalendarUpdated()
 
         settings.statusItemDateStyleObserver.onNext(.short)
         #expect(lastText == "1/1/21")
