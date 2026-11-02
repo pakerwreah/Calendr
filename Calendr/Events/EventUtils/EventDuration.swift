@@ -65,7 +65,7 @@ enum EventDuration {
                 end = event.end
             }
 
-            let timeZone = event.isMeeting || forceLocalTimeZone ? nil : event.timeZone
+            let timeZone = event.timeZone(using: dateProvider, forceLocal: forceLocalTimeZone)
 
             if preferredDateStyle == .none, !range.isSingleDay {
                 formatter.dateStyle = .medium

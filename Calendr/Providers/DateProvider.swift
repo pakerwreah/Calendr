@@ -9,6 +9,7 @@ import Foundation
 import RxSwift
 
 protocol DateProviding: AnyObject {
+    var systemTimeZone: TimeZone { get }
     var calendar: Calendar { get }
     var now: Date { get }
 
@@ -37,6 +38,8 @@ class DateProvider: DateProviding {
     private(set) var calendar: Calendar
 
     private let system: SystemTimeProviding
+
+    var systemTimeZone: TimeZone { system.calendar.timeZone }
     var now: Date { system.date }
 
     let calendarUpdated: Observable<Calendar>
