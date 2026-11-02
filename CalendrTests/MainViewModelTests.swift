@@ -44,7 +44,7 @@ class MainViewModelTests {
         viewModel.selectDateObserver.onNext(.make(year: 2021, month: 1, day: 10))
 
         dateProvider.now = .make(year: 2021, month: 1, day: 20)
-        notificationCenter.post(name: .NSCalendarDayChanged, object: nil)
+        dateProvider.notifyCalendarUpdated()
 
         #expect(viewModel.currentSelectedDate == dateProvider.now)
     }

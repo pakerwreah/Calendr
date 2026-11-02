@@ -438,11 +438,8 @@ class SettingsViewModel:
             .startWith(())
             .share(replay: 1)
 
-        let calendarChangeObservable = Observable
-            .merge(
-                notificationCenter.rx.notification(NSLocale.currentLocaleDidChangeNotification).void(),
-                notificationCenter.rx.notification(.NSCalendarDayChanged).void()
-            )
+        let calendarChangeObservable = dateProvider
+            .calendarUpdated.void()
             .startWith(())
             .share(replay: 1)
 

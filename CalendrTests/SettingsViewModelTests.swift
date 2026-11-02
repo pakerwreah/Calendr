@@ -391,7 +391,7 @@ class SettingsViewModelTests {
 
         dateProvider.m_calendar.locale = Locale(identifier: "en_GB")
 
-        notificationCenter.post(name: NSLocale.currentLocaleDidChangeNotification, object: nil)
+        dateProvider.notifyCalendarUpdated()
 
         #expect(options?.first == .init(style: .short, title: "01/01/2021"))
     }

@@ -126,8 +126,6 @@ class MainViewModel {
         self.settings = settings
         self.launchServices = launchServices
 
-        let calendar = dateProvider.calendar
-
         let resetInput: Observable<Void>
         let prevMonth: Observable<Void>
         let nextMonth: Observable<Void>
@@ -156,7 +154,7 @@ class MainViewModel {
             .filter(!)
             .void()
 
-        let calendarDayChanged = notificationCenter.rx.notification(.NSCalendarDayChanged).void()
+        let calendarDayChanged = dateProvider.calendarUpdated.void()
         let didWake = workspace.notificationCenter.rx.notification(NSWorkspace.didWakeNotification).void()
 
         refreshDate = Observable
@@ -181,7 +179,7 @@ class MainViewModel {
         let cmdShiftUpLeft = navigation.matching(.command(.shift(.arrow(.up))), .command(.shift(.arrow(.left)))).void()
         let cmdShiftDownRight = navigation.matching(.command(.shift(.arrow(.down))), .command(.shift(.arrow(.right)))).void()
 
-        var timeZone = calendar.timeZone
+        var timeZone = dateProvider.calendar.timeZone
 
         selectedDate = Observable.merge(
             reset.map { dateProvider.now },
@@ -201,15 +199,15 @@ class MainViewModel {
             )
             .scan(date) { current, operation in
                 let (component, value) = operation
-                return calendar.date(byAdding: component, value: value, to: current) ?? current
+                return dateProvider.calendar.date(byAdding: component, value: value, to: current) ?? current
             }
             .startWith(date)
         }
         .distinctUntilChanged { a, b in
-            timeZone == calendar.timeZone && calendar.isDate(a, inSameDayAs: b)
+            timeZone == dateProvider.calendar.timeZone && dateProvider.calendar.isDate(a, inSameDayAs: b)
         }
         .do(afterNext: { _ in
-            timeZone = calendar.timeZone
+            timeZone = dateProvider.calendar.timeZone
         })
         .share(replay: 1)
 
