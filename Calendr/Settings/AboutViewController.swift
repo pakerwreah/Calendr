@@ -65,10 +65,16 @@ class AboutViewController: NSViewController, SettingsUI {
 
         super.viewDidLoad()
 
+        var appVersion = BuildConfig.appVersion
+
+        if BuildConfig.buildNumber != "1" {
+            appVersion.append(" (\(BuildConfig.buildNumber))")
+        }
+
         let stackView = NSStackView(views: [
             Label(text: "Calendr", font: .systemFont(ofSize: 16, weight: .semibold), align: .center),
             .spacer(height: 0),
-            Label(text: BuildConfig.appVersion, font: .systemFont(ofSize: 13), align: .center),
+            Label(text: appVersion, font: .systemFont(ofSize: 13), align: .center),
             Label(text: "\(BuildConfig.date) - \(BuildConfig.time)", color: .secondaryLabelColor, align: .center),
             .spacer(height: 4),
             Label(text: #"¯\_(ツ)_/¯"#, font: .systemFont(ofSize: 16), align: .center),
