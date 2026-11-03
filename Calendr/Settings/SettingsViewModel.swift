@@ -154,7 +154,6 @@ class SettingsViewModel:
     let calendarScalingObserver: AnyObserver<Double>
     let firstWeekdayPrevObserver: AnyObserver<Void>
     let firstWeekdayNextObserver: AnyObserver<Void>
-    let timeZoneObserver: AnyObserver<String>
     let weekCountObserver: AnyObserver<Int>
     let toggleHighlightedWeekday: AnyObserver<Int>
     let toggleMonthOutline: AnyObserver<Bool>
@@ -215,7 +214,6 @@ class SettingsViewModel:
     let eventStatusItemNotchLength: Observable<Int>
     let calendarScaling: Observable<Double>
     let firstWeekday: Observable<Int>
-    let timeZone: Observable<String>
     let weekCount: Observable<Int>
     let highlightedWeekdays: Observable<[Int]>
     let highlightedWeekdaysOptions: Observable<[WeekDay]>
@@ -284,12 +282,6 @@ class SettingsViewModel:
         }
     }()
 
-    // empty identifier means following the system time zone
-    private(set) lazy var timeZoneOptions: [(identifier: String, title: String)] = {
-        let now = dateProvider.now
-        return [("", Strings.Settings.Calendar.systemTimeZone)] + TimeZone.options(for: now).map { ($0.identifier, $0.displayName(for: now)) }
-    }()
-
     let calendarAppOptions: [CalendarAppOption]
 
     let eventTitleParserLanguageOptions: [EventTitleParserLanguageOption]
@@ -345,7 +337,6 @@ class SettingsViewModel:
         calendarScalingObserver = localStorage.rx.observer(for: \.calendarScaling)
         firstWeekdayPrevObserver = localStorage.rx.observer(for: \.firstWeekday).mapObserver { (1...7).circular(before: localStorage.firstWeekday) }
         firstWeekdayNextObserver = localStorage.rx.observer(for: \.firstWeekday).mapObserver { (1...7).circular(after: localStorage.firstWeekday) }
-        timeZoneObserver = localStorage.rx.observer(for: \.timeZone)
         toggleHighlightedWeekday = localStorage.rx.toggleObserver(for: \.highlightedWeekdays)
         weekCountObserver = localStorage.rx.observer(for: \.weekCount)
         toggleMonthOutline = localStorage.rx.observer(for: \.showMonthOutline)
@@ -402,7 +393,6 @@ class SettingsViewModel:
         eventStatusItemNotchLength = localStorage.rx.observe(\.eventStatusItemNotchLength)
         calendarScaling = localStorage.rx.observe(\.calendarScaling)
         firstWeekday = localStorage.rx.observe(\.firstWeekday)
-        timeZone = localStorage.rx.observe(\.timeZone)
         highlightedWeekdays = localStorage.rx.observe(\.highlightedWeekdays)
         weekCount = localStorage.rx.observe(\.weekCount)
         showMonthOutline = localStorage.rx.observe(\.showMonthOutline)

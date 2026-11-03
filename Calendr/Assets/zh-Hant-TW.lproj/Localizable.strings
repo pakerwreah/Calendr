@@ -76,8 +76,6 @@
 "settings.calendar.show_declined_events_tooltip" = "這僅在本機行事曆應用程式中也啟用時有效。";
 "settings.calendar.date_hover_option" = "按住 ⌥ 以預覽懸停日期";
 //"settings.calendar.week_count" = "Visible weeks";
-"settings.calendar.time_zone" = "時區";
-"settings.calendar.system_time_zone" = "系統";
 "settings.calendar.calendar_app_view_mode" = "行事曆應用程式檢視模式";
 //"settings.calendar.default_calendar_app" = "Default calendar app";
 //"settings.calendar.preferred_browser" = "Preferred browser";

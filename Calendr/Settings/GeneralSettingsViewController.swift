@@ -51,8 +51,6 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
     private let showLunarCalendarCheckbox = Checkbox(title: Strings.Settings.Calendar.showLunarCalendar)
     private let preserveSelectedDateCheckbox = Checkbox(title: Strings.Settings.Calendar.preserveSelectedDate)
     private let dateHoverOptionCheckbox = Checkbox(title: Strings.Settings.Calendar.dateHoverOption)
-    private let timeZoneLabel = Label(text: Strings.Settings.Calendar.timeZone)
-    private let timeZoneDropdown = Dropdown()
     private let eventDotsLabel = Label(text: Strings.Settings.Calendar.eventDots)
     private let eventDotsDropdown = Dropdown()
     private let calendarAppViewModeLabel = Label(text: Strings.Settings.Calendar.calendarAppViewMode)
@@ -199,12 +197,6 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         calendarAppViewModeDropdown.isBordered = false
         calendarAppViewModeDropdown.setContentHuggingPriority(.required, for: .horizontal)
 
-        // the identifiers are long, so let the dropdown shrink and truncate
-        timeZoneDropdown.isBordered = false
-        timeZoneDropdown.setContentHuggingPriority(.required, for: .horizontal)
-        timeZoneDropdown.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        (timeZoneDropdown.cell as? NSPopUpButtonCell)?.lineBreakMode = .byTruncatingTail
-
         weekCountStepper.minValue = 6
         weekCountStepper.maxValue = 10
         weekCountStepper.valueWraps = false
@@ -226,7 +218,6 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             NSStackView(
                 views: [
                     NSStackView(views: [weekCountLabel, .spacer, weekCountStepperLabel, weekCountStepper]),
-                    NSStackView(views: [timeZoneLabel, timeZoneDropdown]),
                     NSStackView(views: [eventDotsLabel, eventDotsDropdown]),
                     NSStackView(views: [calendarAppViewModeLabel, calendarAppViewModeDropdown]),
                     calendarAppStack
@@ -554,28 +545,6 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
             .disposed(by: disposeBag)
     }
 
-    private func setUpTimeZone() {
-
-        let timeZoneControl = timeZoneDropdown.rx.controlProperty(
-            getter: \.indexOfSelectedItem,
-            setter: { $0.selectItem(at: $1) }
-        )
-
-        let options = viewModel.timeZoneOptions
-        timeZoneDropdown.addItems(withTitles: options.map { "\($0.title) " })
-
-        timeZoneControl
-            .skip(1)
-            .map { options[$0].identifier }
-            .bind(to: viewModel.timeZoneObserver)
-            .disposed(by: disposeBag)
-
-        viewModel.timeZone
-            .map { id in options.firstIndex { $0.identifier == id } ?? 0 }
-            .bind(to: timeZoneControl)
-            .disposed(by: disposeBag)
-    }
-
     private func setUpCalendarAppViewMode() {
 
         let calendarAppViewModeControl = calendarAppViewModeDropdown.rx.controlProperty(
@@ -679,7 +648,6 @@ class GeneralSettingsViewController: NSViewController, SettingsUI {
         )
         .disposed(by: disposeBag)
 
-        setUpTimeZone()
         setUpEventDots()
         setUpCalendarAppViewMode()
         setUpDefaultCalendarApp()

@@ -76,8 +76,6 @@
 "settings.calendar.show_declined_events_tooltip" = "ネイティブのカレンダーアプリでもこの設定が有効になっている必要があります。";
 "settings.calendar.date_hover_option" = "⌥キーを押しながらホバーで予定を表示";
 "settings.calendar.week_count" = "表示する週の数";
-//"settings.calendar.time_zone" = "Time zone";
-//"settings.calendar.system_time_zone" = "System";
 "settings.calendar.calendar_app_view_mode" = "カレンダーの表示";
 "settings.calendar.default_calendar_app" = "使用するカレンダーアプリ";
 "settings.calendar.preferred_browser" = "使用するブラウザ";

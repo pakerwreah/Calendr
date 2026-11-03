@@ -12,9 +12,6 @@ import RxSwift
 
 class MockDateProvider: DateProviding {
 
-    var m_systemTimeZone: TimeZone
-    var systemCalendar: Calendar { calendar.with(timeZone: m_systemTimeZone) }
-
     var m_calendar: Calendar
     var calendar: Calendar { m_calendar }
     var now: Date
@@ -23,11 +20,9 @@ class MockDateProvider: DateProviding {
     private let calendarObserver: AnyObserver<Calendar>
 
     init(
-        systemTimeZone: TimeZone = .utc,
         calendar: Calendar = .gregorian,
         now: Date = .make(year: 2021, month: 1, day: 1)
     ) {
-        self.m_systemTimeZone = systemTimeZone
         self.m_calendar = calendar
         self.now = now
         (calendarUpdated, calendarObserver) = PublishSubject.pipe()

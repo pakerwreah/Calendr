@@ -76,8 +76,6 @@
 "settings.calendar.show_declined_events_tooltip" = "Działa tylko wtedy, gdy opcja jest również włączona w natywnej aplikacji Kalendarz.";
 "settings.calendar.date_hover_option" = "Przytrzymaj ⌥, aby podejrzeć daty pod kursorem";
 "settings.calendar.week_count" = "Widoczne tygodnie";
-//"settings.calendar.time_zone" = "Time zone";
-//"settings.calendar.system_time_zone" = "System";
 "settings.calendar.calendar_app_view_mode" = "Widok aplikacji Kalendarz";
 "settings.calendar.default_calendar_app" = "Domyślna aplikacja kalendarza";
 //"settings.calendar.preferred_browser" = "Preferred browser";

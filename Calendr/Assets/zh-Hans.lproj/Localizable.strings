@@ -76,8 +76,6 @@
 "settings.calendar.show_declined_events_tooltip" = "此功能需在原生日历应用中同样启用。";
 "settings.calendar.date_hover_option" = "按住 ⌥ 键预览悬停日期详情";
 "settings.calendar.week_count" = "可见周数";
-"settings.calendar.time_zone" = "时区";
-"settings.calendar.system_time_zone" = "系统";
 "settings.calendar.calendar_app_view_mode" = "日历应用展示模式";
 "settings.calendar.default_calendar_app" = "默认日历应用";
 //"settings.calendar.preferred_browser" = "Preferred browser";

@@ -9,7 +9,6 @@ import Foundation
 import RxSwift
 
 protocol DateProviding: AnyObject {
-    var systemCalendar: Calendar { get }
     var calendar: Calendar { get }
     var now: Date { get }
 
@@ -17,8 +16,6 @@ protocol DateProviding: AnyObject {
 }
 
 extension DateProviding {
-
-    var systemTimeZone: TimeZone { systemCalendar.timeZone }
 
     // use this instead of `calendar.isDateInToday`, which is unmockable
     func isDateInToday(_ date: Date) -> Bool {
@@ -42,7 +39,6 @@ class DateProvider: DateProviding {
 
     private let system: SystemTimeProviding
 
-    var systemCalendar: Calendar { system.calendar }
     var now: Date { system.date }
 
     let calendarUpdated: Observable<Calendar>
@@ -65,39 +61,16 @@ class DateProvider: DateProviding {
         let calendarSubject = PublishSubject<Calendar>()
         calendarUpdated = calendarSubject.asObservable()
 
-        // The system only posts `NSCalendarDayChanged` at its own midnight, so post it at the custom one.
-        // Subscribed first because the pipeline below emits the initial calendar synchronously.
-        calendarSubject
-            .flatMapLatest { calendar -> Observable<Void> in
-                let now = system.date
-                guard
-                    calendar.timeZone != system.calendar.timeZone,
-                    let midnight = calendar.nextDate(
-                        after: now,
-                        matching: DateComponents(hour: 0, minute: 0, second: 0),
-                        matchingPolicy: .nextTime
-                    )
-                else { return .empty() }
-                let delay = Int(now.distance(to: midnight).rounded(.up))
-                return Observable<Int>.timer(.seconds(delay), scheduler: scheduler).void()
-            }
-            .bind { notificationCenter.post(name: .NSCalendarDayChanged, object: nil) }
-            .disposed(by: disposeBag)
-
-        Observable
-            .combineLatest(
-                localStorage.rx.observe(\.firstWeekday),
-                localStorage.rx.observe(\.timeZone)
-            )
+        localStorage
+            .rx.observe(\.firstWeekday)
             .repeat(when: Observable.merge(
                 notificationCenter.rx.notification(NSLocale.currentLocaleDidChangeNotification).void(),
                 notificationCenter.rx.notification(.NSSystemTimeZoneDidChange).void(),
                 notificationCenter.rx.notification(.NSCalendarDayChanged).void()
             ))
-            .compactMap { [weak self] firstWeekday, timeZone in
+            .compactMap { [weak self] firstWeekday in
                 guard let self else { return nil }
-                let timeZone = TimeZone(identifier: timeZone) ?? system.calendar.timeZone
-                calendar = system.calendar.with(timeZone: timeZone)
+                calendar = system.calendar
                 calendar.firstWeekday = firstWeekday
                 return calendar
             }

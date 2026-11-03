@@ -58,7 +58,7 @@ class DateProviderTests {
     }
 
     @Test
-    func testChangeSystemTimeZone_withEmptyCustomTimeZone_shouldUpdateCalendarWithSystemTimeZone() {
+    func testChangeSystemTimeZone_shouldUpdateCalendarWithSystemTimeZone() {
 
         let system = MockSystemTimeProvider()
         let dateProvider = makeDateProvider(system: system)
@@ -72,75 +72,6 @@ class DateProviderTests {
 
         #expect(dateProvider.calendar.timeZone.identifier == "Asia/Tokyo")
         #expect(updatedCalendar.value?.timeZone.identifier == "Asia/Tokyo")
-    }
-
-    @Test
-    func testChangeSystemTimeZone_withValidCustomTimeZone_shouldNotOverrideCustomTimeZone() {
-
-        localStorage.timeZone = "America/Los_Angeles"
-
-        let system = MockSystemTimeProvider()
-        let dateProvider = makeDateProvider(system: system)
-        let updatedCalendar = observeCalendarUpdates(from: dateProvider)
-
-        #expect(dateProvider.calendar.timeZone.identifier == "America/Los_Angeles")
-        #expect(updatedCalendar.value == nil)
-
-        system.calendar = .gregorian.with(timeZone: .init(identifier: "Asia/Tokyo")!)
-        notificationCenter.post(name: .NSSystemTimeZoneDidChange, object: nil)
-
-        #expect(dateProvider.calendar.timeZone.identifier == "America/Los_Angeles")
-        #expect(updatedCalendar.value?.timeZone.identifier == "America/Los_Angeles")
-    }
-
-    @Test
-    func testChangeCustomTimeZone_withValidCustomTimeZone_shouldUpdateCalendarWithCustomTimeZone() {
-
-        let system = MockSystemTimeProvider()
-        let dateProvider = makeDateProvider(system: system)
-        let updatedCalendar = observeCalendarUpdates(from: dateProvider)
-
-        #expect(dateProvider.calendar.timeZone.identifier == "GMT")
-        #expect(updatedCalendar.value == nil)
-
-        localStorage.timeZone = "Europe/London"
-
-        #expect(dateProvider.calendar.timeZone.identifier == "Europe/London")
-        #expect(updatedCalendar.value?.timeZone.identifier == "Europe/London")
-    }
-
-    @Test func testCustomTimeZone_shouldUpdateCalendarAtCustomMidnight() {
-
-        localStorage.timeZone = "Europe/Berlin"
-
-        let system = MockSystemTimeProvider(
-            date: .make(year: 2026, month: 11, day: 2, hour: 21)
-        )
-        let scheduler = HistoricalScheduler()
-        let dateProvider = makeDateProvider(system: system, scheduler: scheduler)
-        let updatedCalendar = observeCalendarUpdates(from: dateProvider)
-
-        let format = "dd/MM/yyyy HH:mm"
-        let systemFormatter = DateFormatter(format: format, calendar: system.calendar)
-        let customFormatter = DateFormatter(format: format, calendar: dateProvider.calendar)
-
-        #expect(systemFormatter.string(from: dateProvider.now) == "02/11/2026 21:00")
-        #expect(customFormatter.string(from: dateProvider.now) == "02/11/2026 22:00")
-
-        #expect(updatedCalendar.value == nil)
-
-        system.date.addTimeInterval(3600)
-        scheduler.advance(1, .hour)
-
-        #expect(updatedCalendar.value == nil)
-
-        system.date.addTimeInterval(3600)
-        scheduler.advance(1, .hour)
-
-        #expect(updatedCalendar.value != nil)
-
-        #expect(systemFormatter.string(from: dateProvider.now) == "02/11/2026 23:00")
-        #expect(customFormatter.string(from: dateProvider.now) == "03/11/2026 00:00")
     }
 
     func makeDateProvider(

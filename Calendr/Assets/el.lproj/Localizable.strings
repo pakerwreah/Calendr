@@ -76,8 +76,6 @@
 "settings.calendar.show_declined_events_tooltip" = "Αυτό λειτουργεί μόνο εάν είναι επίσης ενεργοποιημένο στην εγγενή εφαρμογή Ημερολόγιο";
 "settings.calendar.date_hover_option" = "Κρατήστε πατημένο το ⌥ για να κοιτάξετε τις ημερομηνίες που βρίσκονται σε κατάσταση αιώρησης";
 //"settings.calendar.week_count" = "Visible weeks";
-//"settings.calendar.time_zone" = "Time zone";
-//"settings.calendar.system_time_zone" = "System";
 "settings.calendar.calendar_app_view_mode" = "Προβολή εφαρμογής ημερολογίου";
 //"settings.calendar.default_calendar_app" = "Default calendar app";
 //"settings.calendar.preferred_browser" = "Preferred browser";
