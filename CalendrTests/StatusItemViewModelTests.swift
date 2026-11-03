@@ -205,7 +205,7 @@ class StatusItemViewModelTests {
 
     @Test func testIconVisibility_withBirthday() {
 
-        calendarService.changeEvents([.make(type: .birthday)])
+        calendarService.changeEvents([.make(start: dateProvider.now, type: .birthday)])
 
         setUp(showIcon: true, showDate: true, iconStyle: .date)
         #expect(iconsAndText?.birthday != nil)
@@ -242,7 +242,7 @@ class StatusItemViewModelTests {
 
     @Test func testBirthdayIconVisibility_withShowNextEventDisabled() {
 
-        calendarService.changeEvents([.make(type: .birthday)])
+        calendarService.changeEvents([.make(start: dateProvider.now, type: .birthday)])
 
         setUp(showIcon: true, showDate: true, iconStyle: .date)
         #expect(iconsAndText?.birthday != nil)
@@ -253,6 +253,14 @@ class StatusItemViewModelTests {
         setUp(showIcon: true, showDate: true, iconStyle: .date)
         #expect(iconsAndText?.birthday == nil)
         #expect(iconsAndText?.calendar != nil)
+    }
+
+    @Test func testBirthdayIconVisibility_withBirthdayNotToday() {
+
+        calendarService.changeEvents([.make(start: .make(year: 2020, month: 12, day: 31), type: .birthday)])
+
+        setUp(showIcon: true, showDate: true, iconStyle: .date)
+        #expect(iconsAndText?.birthday == nil)
     }
 
     @Test func testDateVisibility() {

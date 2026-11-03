@@ -60,7 +60,7 @@ class StatusItemViewModel {
                 let end = dateProvider.calendar.endOfDay(for: date)
                 return calendarService
                     .events(from: start, to: end, calendars: calendars)
-                    .map { $0.contains(where: \.type.isBirthday) }
+                    .map { $0.contains { $0.type.isBirthday && dateProvider.isDateInToday($0.start) } }
             }
             .startWith(false)
 
