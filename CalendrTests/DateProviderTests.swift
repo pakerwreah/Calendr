@@ -75,14 +75,12 @@ class DateProviderTests {
     }
 
     func makeDateProvider(
-        system: DateProvider.SystemTimeProviding,
-        scheduler: SchedulerType = MainScheduler.instance
+        system: DateProvider.SystemTimeProviding
     ) -> DateProvider {
 
         DateProvider(
             notificationCenter: notificationCenter,
             localStorage: localStorage,
-            scheduler: scheduler,
             system: system
         )
     }

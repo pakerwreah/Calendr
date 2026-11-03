@@ -51,7 +51,7 @@ enum EventDuration {
         } else {
             formatter.timeStyle = preferredTimeStyle
 
-            let timeZone = event.durationTimeZone(using: dateProvider, forceLocal: forceLocalTimeZone)
+            let timeZone = event.durationTimeZone(forceLocal: forceLocalTimeZone)
 
             let range = event.range(using: dateProvider, timeZone: timeZone)
 

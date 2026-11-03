@@ -69,7 +69,7 @@ extension EventModel {
         .init(start: start, end: end, timeZone: timeZone, dateProvider: dateProvider)
     }
 
-    func durationTimeZone(using dateProvider: DateProviding, forceLocal: Bool) -> TimeZone? {
+    func durationTimeZone(forceLocal: Bool) -> TimeZone? {
         isMeeting || forceLocal ? nil : timeZone
     }
 

@@ -50,7 +50,6 @@ class DateProvider: DateProviding {
     init(
         notificationCenter: NotificationCenter,
         localStorage: LocalStorageProvider,
-        scheduler: SchedulerType = WallTimeScheduler.instance,
         system: SystemTimeProviding = SystemTimeProvider()
     ) {
         self.notificationCenter = notificationCenter
