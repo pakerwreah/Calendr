@@ -15,6 +15,14 @@ extension Calendar {
         return copy
     }
 
+    /// Keeps the wall-clock time of `date` as seen in `timeZone`, but in this calendar's time zone.
+    func date(bySettingWallClockOf date: Date, from timeZone: TimeZone) -> Date {
+        let components = with(timeZone: timeZone).dateComponents(
+            [.year, .month, .day, .hour, .minute, .second], from: date
+        )
+        return self.date(from: components) ?? date
+    }
+
     /// - midnightFix: fix range ending at 00:00 of the next day
     func isDay(_ date: Date, inDays range: (start: Date, end: Date), midnightFix: Bool = true) -> Bool {
 

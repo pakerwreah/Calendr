@@ -477,15 +477,14 @@ class CalendarViewModelTests {
         ])
     }
 
-    @Test func testEventsPerDate_withAllDayEventAndCustomTimeZone_shouldUseSystemCalendar() {
+    @Test func testEventsPerDate_withAllDayEventAndCustomTimeZone_shouldStayOnSameDay() {
 
-        let systemTimeZone = TimeZone(abbreviation: "GMT-3")!
-        dateProvider.m_systemTimeZone = systemTimeZone
+        dateProvider.m_systemTimeZone = TimeZone(abbreviation: "GMT-3")!
         dateProvider.m_calendar = .gregorian.with(timeZone: .utc)
         calendarService.m_events = [
             .make(
-                start: .make(year: 2021, month: 1, day: 1, timeZone: systemTimeZone),
-                end: .make(year: 2021, month: 1, day: 2, timeZone: systemTimeZone),
+                start: .make(year: 2021, month: 1, day: 1),
+                end: .make(year: 2021, month: 1, day: 1, at: .end),
                 title: "All day",
                 isAllDay: true
             )
@@ -494,8 +493,8 @@ class CalendarViewModelTests {
         dateSubject.onNext(.make(year: 2021, month: 1, day: 1))
 
         assertExpectedEvents({ $0.events.map(\.title) }, [
-            (.make(year: 2021, month: 1, day: 1), []),
-            (.make(year: 2021, month: 1, day: 2), ["All day"]),
+            (.make(year: 2021, month: 1, day: 1), ["All day"]),
+            (.make(year: 2021, month: 1, day: 2), []),
         ])
     }
 

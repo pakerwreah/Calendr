@@ -346,7 +346,8 @@ class CalendarServiceProvider: CalendarServiceProviding {
                 event.startDate = dates.start
                 event.endDate = dates.end
                 event.isAllDay = isAllDay
-                event.timeZone = timeZone
+                // All-day events are floating; a time zone turns them into timed events.
+                event.timeZone = isAllDay ? nil : timeZone
                 event.location = location
                 event.url = url
                 event.notes = notes
@@ -414,12 +415,12 @@ class CalendarServiceProvider: CalendarServiceProviding {
 
     func changeEventStatus(id: String, date: Date, to status: EventStatus) -> Completable {
 
-        Completable.create { [store] observer in
+        Completable.create { [store, dateProvider] observer in
 
             let disposable = Disposables.create()
 
             do {
-                let event = try findEvent(id: id, date: date, in: store)
+                let event = try findEvent(id: id, date: date, in: store, dateProvider: dateProvider)
 
                 guard let user = event.currentUser else {
                     throw .unexpected("🔥 User not found")
@@ -475,9 +476,9 @@ class CalendarServiceProvider: CalendarServiceProviding {
 
     func deleteEvent(id: String, date: Date, scope: EventDeletionScope) -> Completable {
 
-        Completable.create { [store] observer in
+        Completable.create { [store, dateProvider] observer in
             do {
-                let event = try findEvent(id: id, date: date, in: store)
+                let event = try findEvent(id: id, date: date, in: store, dateProvider: dateProvider)
 
                 guard event.calendar.allowsContentModifications else {
                     throw .unexpected("Calendar does not allow event deletion")
@@ -510,10 +511,12 @@ class CalendarServiceProvider: CalendarServiceProviding {
     private func eventDates(start: Date, end: Date, isAllDay: Bool, timeZone: TimeZone) -> (start: Date, end: Date) {
         guard isAllDay else { return (start, end) }
 
+        // EventKit reads floating all-day dates in the system time zone.
         let calendar = dateProvider.calendar.with(timeZone: timeZone)
-        let startDay = calendar.startOfDay(for: start)
-        let endDay = calendar.startOfDay(for: end)
-        let exclusiveEnd = calendar.date(byAdding: .day, value: 1, to: endDay)!
+        let systemCalendar = dateProvider.systemCalendar
+        let startDay = systemCalendar.date(bySettingWallClockOf: calendar.startOfDay(for: start), from: timeZone)
+        let endDay = systemCalendar.date(bySettingWallClockOf: calendar.startOfDay(for: end), from: timeZone)
+        let exclusiveEnd = systemCalendar.date(byAdding: .day, value: 1, to: endDay)!
 
         return (startDay, exclusiveEnd)
     }
@@ -529,11 +532,13 @@ private extension EventDeletionScope {
     }
 }
 
-private func findEvent(id: String, date: Date, in store: EKEventStore) throws -> EKEvent {
-    let predicate = store.predicateForEvents(withStart: date, end: date + 1, calendars: nil)
+private func findEvent(id: String, date: Date, in store: EKEventStore, dateProvider: DateProviding) throws -> EKEvent {
+    // All-day dates may be shifted to a custom time zone, so search around it and compare the mapped date.
+    let margin: TimeInterval = 2 * 24 * 3600
+    let predicate = store.predicateForEvents(withStart: date - margin, end: date + margin, calendars: nil)
 
     guard let event = store.events(matching: predicate).first(where: {
-        $0.calendarItemIdentifier == id && $0.startDate == date
+        $0.calendarItemIdentifier == id && EventModel(from: $0, dateProvider: dateProvider)?.start == date
     }) else {
         throw .unexpected("🔥 Event not found")
     }
@@ -742,17 +747,27 @@ private extension EventModel {
             let calendar = event.calendar
         else { return nil }
 
+        let isAllDay = event.shouldBeAllDay(dateProvider)
+
+        // All-day events are floating, so they must stay on the same day in a custom time zone.
+        func date(_ date: Date) -> Date {
+            guard isAllDay else { return date }
+            return dateProvider.calendar.date(
+                bySettingWallClockOf: date, from: event.timeZone ?? dateProvider.systemTimeZone
+            )
+        }
+
         self.init(
             id: event.calendarItemIdentifier,
             externalId: event.calendarItemExternalIdentifier,
-            start: event.startDate,
-            end: event.endDate,
+            start: date(event.startDate),
+            end: date(event.endDate),
             title: event.title,
             location: event.location,
             coordinates: (event.structuredLocation?.geoLocation?.coordinate).map(Coordinates.init),
             notes: event.notes,
             url: event.url,
-            isAllDay: event.shouldBeAllDay(dateProvider),
+            isAllDay: isAllDay,
             type: .init(from: event),
             calendar: .init(from: calendar),
             participants: .init(from: event),

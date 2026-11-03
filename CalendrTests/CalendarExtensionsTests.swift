@@ -11,6 +11,24 @@ import Testing
 
 class CalendarExtensionsTests {
 
+    @Test func testDateBySettingWallClock_shouldKeepAllDayEventsOnSameDay() {
+        let pacific = TimeZone(identifier: "America/Los_Angeles")!
+        let taipei = Calendar.gregorian.with(timeZone: TimeZone(identifier: "Asia/Taipei")!)
+
+        for (month, day) in [(10, 31), (11, 1), (11, 2)] {
+            let start = Date.make(year: 2026, month: month, day: day, timeZone: pacific)
+            let end = Date.make(year: 2026, month: month, day: day, at: .end, timeZone: pacific)
+
+            let range = (
+                start: taipei.date(bySettingWallClockOf: start, from: pacific),
+                end: taipei.date(bySettingWallClockOf: end, from: pacific)
+            )
+
+            #expect(range.start == .make(year: 2026, month: month, day: day, timeZone: taipei.timeZone))
+            #expect(range.end == .make(year: 2026, month: month, day: day, at: .end, timeZone: taipei.timeZone))
+        }
+    }
+
     @Test func testDateInRange() {
         let date: Date = .make(day: 5)
 
