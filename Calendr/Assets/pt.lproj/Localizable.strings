@@ -76,8 +76,6 @@
 "settings.calendar.show_declined_events_tooltip" = "Isso só funciona se também estiver ativado no aplicativo Calendário nativo.";
 "settings.calendar.date_hover_option" = "Segure ⌥ para espiar datas sob o cursor";
 "settings.calendar.week_count" = "Semanas visíveis";
-"settings.calendar.time_zone" = "Fuso horário";
-"settings.calendar.system_time_zone" = "Sistema";
 "settings.calendar.calendar_app_view_mode" = "Visualização do app Calendário";
 "settings.calendar.default_calendar_app" = "App de calendário padrão";
 "settings.calendar.preferred_browser" = "Navegador preferido";

@@ -599,8 +599,6 @@ private extension EKEvent {
     // Fix events that should be all-day but are not correctly reported as such (ex. Google's "Out of office")
     func shouldBeAllDay(_ dateProvider: DateProviding) -> Bool {
         guard !isAllDay else { return true }
-        // The start/end of a floating event should be set as if they were in the system time zone.
-        let timeZone = timeZone ?? dateProvider.systemTimeZone
         let range = DateRange(start: startDate, end: endDate, timeZone: timeZone, dateProvider: dateProvider)
         return !range.isSingleDay && range.startsMidnight && range.endsMidnight
     }
