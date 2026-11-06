@@ -17,7 +17,7 @@ NAME=${2:-calendr-$AGENT}
 if [[ "$AGENT_KIT" == "" ]]; then
 
     if [[ $AGENT == "pi" ]]; then
-        AGENT_KIT="./sandbox/kit/pi-kit"
+        AGENT_KIT="./sandbox/kit/pi"
     fi
 
 fi
@@ -31,7 +31,8 @@ fi
 # `sbx env run` creates and launches the agent,
 # but it breaks the clipboard, for some reason.
 
-sbx env run \
+SBX_KIT_BUILDER=sandbox \
+    sbx env run \
     --detach \
     --force \
     --env-arg home="$HOME" \

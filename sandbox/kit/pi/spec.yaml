@@ -1,0 +1,87 @@
+# syntax=docker/sandbox-kit:3
+schemaVersion: '3'
+kind: workload
+displayName: Pi
+description: Minimal terminal coding agent with extensible tools, skills, and TUI
+
+build: |
+  FROM docker.io/sbx/pi-image:latest
+  ENTRYPOINT ["pi"]
+  CMD []
+
+capabilities:
+  - type: com.docker.sandbox/sbx@1
+
+  - type: com.docker.sandbox/agent-context@1
+    config:
+      filename: AGENTS.md
+
+  - type: com.docker.sandbox/credential@1
+    optional: true
+    config:
+      service: github
+      phase: runtime
+      apiKey:
+        name: COPILOT_GITHUB_TOKEN
+        proxyManaged: true
+        inject:
+          - domain: api.business.githubcopilot.com
+            header: Authorization
+            format: 'Bearer %s'
+          - domain: api.enterprise.githubcopilot.com
+            header: Authorization
+            format: 'Bearer %s'
+          - domain: api.githubcopilot.com
+            header: Authorization
+            format: 'Bearer %s'
+          - domain: api.individual.githubcopilot.com
+            header: Authorization
+            format: 'Bearer %s'
+          - domain: copilot.github.com
+            header: Authorization
+            format: 'Bearer %s'
+
+
+  - type: com.docker.sandbox/network-policy@1
+    config:
+      runtime:
+        allow:
+          - registry.npmjs.org
+          - api.github.com
+          - github.com
+          - codeload.github.com
+          - "**.githubusercontent.com"
+          - api.business.githubcopilot.com
+          - api.enterprise.githubcopilot.com
+          - api.individual.githubcopilot.com
+          - api.githubcopilot.com
+          - copilot.github.com
+
+  - type: com.docker.sandbox/lifecycle@1
+    config:
+      install:
+        - command: 'if [ -n "${HTTP_PROXY:-}" ]; then npm config set proxy="$HTTP_PROXY" https-proxy="${HTTPS_PROXY:-$HTTP_PROXY}"; fi'
+          user: '1000'
+          env: [HTTP_PROXY, HTTPS_PROXY]
+          description: Point npm at the sandbox proxy so pi install works without the proxy environment variables
+      startup:
+        - command:
+            - sh
+            - -c
+            - |
+              [ -n "$MCP_GATEWAY_URL" ] || exit 0
+              mkdir -p "$HOME/.pi/agent"
+              cat > "$HOME/.pi/agent/mcp.json" << EOF
+              {
+                "mcpServers": {
+                  "sbx": {
+                    "url": "$MCP_GATEWAY_URL",
+                    "headers": {
+                      "Authorization": "Bearer $MCP_SENTINEL_TOKEN_NAME"
+                    }
+                  }
+                }
+              }
+              EOF
+          env: [MCP_GATEWAY_URL, MCP_SENTINEL_TOKEN_NAME]
+          description: Register the sandbox MCP gateway with Pi

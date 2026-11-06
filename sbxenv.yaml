@@ -17,10 +17,10 @@ workspace: .
 
 kits:
   - ${{ env.args.agent-kit }}
-  - sbx/github-ssh-kit
+  - sbx/github-ssh
 
 mcp:
   servers:
-    - name: xcode
+    - name: ${{ env.args.name }}-xcode
       command: xcrun
       args: [mcpbridge]
