@@ -170,8 +170,8 @@ internal enum Strings {
         internal static let _5MinutesBefore = Strings.tr("Localizable", "event.editor.alert.5_minutes_before", fallback: "5 minutes before")
         /// At time of event
         internal static let atTime = Strings.tr("Localizable", "event.editor.alert.at_time", fallback: "At time of event")
-        /// None
-        internal static let `none` = Strings.tr("Localizable", "event.editor.alert.none", fallback: "None")
+        /// Default
+        internal static let `none` = Strings.tr("Localizable", "event.editor.alert.none", fallback: "Default")
       }
     }
     internal enum Status {
