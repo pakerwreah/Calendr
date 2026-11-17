@@ -92,6 +92,7 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
     private var parsedTitle: EventTitleParseResult = .empty()
     private var defaultCalendarId: String?
     private var hasCalendarInstruction = false
+    private var parserLocationRestoreState: ParserLocationRestoreState?
     private var parserAllDayRestoreState: ParserAllDayRestoreState?
     private var parserDurationRestoreState: ParserDurationRestoreState?
     private var parserEndTimeRestoreDuration: TimeInterval?
@@ -301,6 +302,8 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
             }
         }
 
+        applyParsedLocation()
+
         titleHighlights = parsedTitle.tokens.map { token in
             let color: NSColor
             switch token.kind {
@@ -309,11 +312,32 @@ class EventEditorViewModel: HostingWindowControllerDelegate {
             case .duration: color = .systemGreen
             case .allDay: color = .systemPurple
             case .calendar: color = matchedCalendar?.color ?? .systemGray
+            case .location: color = .systemTeal
             }
             return .init(range: token.range, color: color)
         }
 
         applyParsedDateAndTime()
+    }
+
+    /// Fills the location from the title, remembering what was there before so it
+    /// can be put back when the instruction is removed. Once the user edits the
+    /// location field directly, their value wins and is never overwritten.
+    private func applyParsedLocation() {
+        if let query = parsedTitle.locationQuery {
+            if let restoreState = parserLocationRestoreState {
+                guard location == restoreState.applied else { return }
+                parserLocationRestoreState = .init(previous: restoreState.previous, applied: query)
+            } else {
+                parserLocationRestoreState = .init(previous: location, applied: query)
+            }
+            location = query
+        } else if let restoreState = parserLocationRestoreState {
+            if location == restoreState.applied {
+                location = restoreState.previous
+            }
+            parserLocationRestoreState = nil
+        }
     }
 
     private func applyParsedDateAndTime() {
@@ -686,6 +710,11 @@ private struct ParserAllDayRestoreState {
     let hour: Int
     let minute: Int
     let duration: TimeInterval
+}
+
+private struct ParserLocationRestoreState {
+    let previous: String
+    let applied: String
 }
 
 private struct ParserTimeRestoreState {

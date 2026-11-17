@@ -444,6 +444,65 @@ class EventEditorViewModelNaturalLanguageTests {
         #expect(viewModel.matchedCalendarTitle == nil)
     }
 
+    @Test func testViewModel_naturalLanguageTitle_fillsLocationAndCleansSavedTitle() async {
+
+        let calendarService = MockCalendarServiceProvider()
+        calendarService.m_calendars = [.make(id: "work", title: "Work", color: .systemBlue)]
+        calendarService.m_defaultCalendarId = "work"
+        let viewModel = makeViewModel(calendarService: calendarService)
+
+        var lastValue: CreateEventArgs?
+        _ = calendarService.spyCreateEventObservable.bind { lastValue = $0 }
+
+        await viewModel.parseTitle("Dinner with mom @Coffee Lab")
+
+        #expect(viewModel.cleanTitle == "Dinner with mom")
+        #expect(viewModel.location == "Coffee Lab")
+        #expect(viewModel.titleHighlights.map(\.color) == [.systemTeal])
+
+        viewModel.saveEvent()
+
+        #expect(lastValue?.title == "Dinner with mom")
+        #expect(lastValue?.location == "Coffee Lab")
+    }
+
+    @Test func testViewModel_naturalLanguageTitle_updatesLocationWhileTyping() async {
+
+        let viewModel = makeViewModel()
+
+        await viewModel.parseTitle("Dinner @Coffee")
+        await viewModel.parseTitle("Dinner @Coffee Lab")
+
+        #expect(viewModel.location == "Coffee Lab")
+    }
+
+    @Test func testViewModel_naturalLanguageTitle_removingLocationInstructionRestoresPreviousLocation() async {
+
+        let viewModel = makeViewModel()
+        viewModel.location = "Home"
+
+        await viewModel.parseTitle("Dinner @Coffee Lab")
+        #expect(viewModel.location == "Coffee Lab")
+
+        await viewModel.parseTitle("Dinner")
+
+        #expect(viewModel.location == "Home")
+    }
+
+    @Test func testViewModel_naturalLanguageTitle_doesNotOverwriteManuallyEditedLocation() async {
+
+        let viewModel = makeViewModel()
+
+        await viewModel.parseTitle("Dinner @Coffee")
+        viewModel.location = "Office"
+
+        await viewModel.parseTitle("Dinner @Coffee Lab")
+        #expect(viewModel.location == "Office")
+
+        await viewModel.parseTitle("Dinner")
+        #expect(viewModel.location == "Office")
+    }
+
     @Test func testViewModel_naturalLanguageTitle_usesSelectedTimeZone() async {
 
         let timeZone = TimeZone(identifier: "America/New_York")!

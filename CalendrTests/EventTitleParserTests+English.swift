@@ -141,6 +141,66 @@ struct EventTitleParserEnglishTests {
         #expect(result.tokens.map(\.kind) == [.date, .time, .calendar])
     }
 
+    @Test func parsesLocationInstruction() async {
+        let result = await parse("Dinner tomorrow at 14 @Coffee Lab, Main St")
+
+        #expect(result.cleanedTitle == "Dinner")
+        #expect(result.locationQuery == "Coffee Lab, Main St")
+        #expect(result.calendarQuery == nil)
+        #expect(result.tokens.map(\.kind) == [.date, .time, .location])
+    }
+
+    @Test(arguments: [
+        "Dinner @Coffee Lab /work",
+        "Dinner /work @Coffee Lab",
+    ])
+    func parsesLocationAndCalendarInAnyOrder(_ title: String) async {
+        let result = await parse(title)
+
+        #expect(result.cleanedTitle == "Dinner")
+        #expect(result.locationQuery == "Coffee Lab")
+        #expect(result.calendarQuery == "work")
+    }
+
+    @Test func usesLastLocationInstruction() async {
+        let result = await parse("Dinner @Home @Office")
+
+        #expect(result.cleanedTitle == "Dinner")
+        #expect(result.locationQuery == "Office")
+        #expect(result.tokens.map(\.kind) == [.location, .location])
+    }
+
+    @Test func doesNotParseDatesOrTimesInsideLocation() async {
+        let result = await parse("Meeting at 9 @Office 12/3 on Friday")
+
+        #expect(result.cleanedTitle == "Meeting")
+        #expect(result.locationQuery == "Office 12/3 on Friday")
+        #expect(result.numericDate == nil)
+        #expect(result.weekday == nil)
+        #expect(result.time == .init(hour: 9, minute: 0))
+    }
+
+    @Test func allowsAtSignInsideCalendarName() async {
+        let result = await parse("Dinner /me@example.com")
+
+        #expect(result.cleanedTitle == "Dinner")
+        #expect(result.calendarQuery == "me@example.com")
+        #expect(result.locationQuery == nil)
+    }
+
+    @Test(arguments: [
+        "Email bob@example.com",
+        "Coffee @ noon",
+        "@Office standup",
+    ])
+    func ignoresAtSignThatIsNotALocation(_ title: String) async {
+        let result = await parse(title)
+
+        #expect(result.cleanedTitle == title)
+        #expect(result.locationQuery == nil)
+        #expect(result.tokens.isEmpty)
+    }
+
     @Test func preservesOrdinaryTitle() async {
         let title = "Dinner with mom"
         let result = await parse(title)

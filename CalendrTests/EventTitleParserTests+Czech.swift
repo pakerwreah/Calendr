@@ -184,6 +184,15 @@ struct EventTitleParserCzechTests {
         #expect(result.tokens.isEmpty)
     }
 
+    @Test func parsesLocationAndCalendarInstructions() async {
+        let result = await parse("Večeře zítra v 19 @U Fleků /práce")
+
+        #expect(result.cleanedTitle == "Večeře")
+        #expect(result.locationQuery == "U Fleků")
+        #expect(result.calendarQuery == "práce")
+        #expect(result.tokens.map(\.kind) == [.date, .time, .location, .calendar])
+    }
+
     @Test func doesNotParseEnglishInstructions() async {
         let title = "Večeře tomorrow at 14"
         let result = await parse(title)

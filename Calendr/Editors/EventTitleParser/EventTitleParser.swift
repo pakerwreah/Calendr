@@ -11,6 +11,7 @@ enum EventTitleTokenKind: Equatable {
     case duration
     case allDay
     case calendar
+    case location
 }
 
 struct EventTitleToken: Equatable {
@@ -67,6 +68,7 @@ struct EventTitleParseResult: Equatable {
     let duration: EventTitleDuration?
     let isAllDay: Bool
     let calendarQuery: String?
+    let locationQuery: String?
     let tokens: [EventTitleToken]
 
     static func empty() -> Self {
@@ -81,6 +83,7 @@ struct EventTitleParseResult: Equatable {
             duration: nil,
             isAllDay: false,
             calendarQuery: nil,
+            locationQuery: nil,
             tokens: []
         )
     }
@@ -137,23 +140,10 @@ enum EventTitleParser {
         language: EventTitleParserLanguage
     ) async -> EventTitleParseResult {
         let firstWordRange = firstWordRange(in: text)
-        let calendarMatches =
-            calendarExpression
-            .matches(in: text, range: text.nsRange)
-            .compactMap { match -> CalendarMatch? in
-                guard
-                    let range = validRange(match.range(at: 1)),
-                    !overlaps(range, firstWordRange),
-                    let queryRange = Range(match.range(at: 2), in: text),
-                    let query = String(text[queryRange]).trimmed.notEmpty
-                else {
-                    return nil
-                }
-                return (range, query)
-            }
-        let calendarMatch = calendarMatches.last
-        let calendarRanges = calendarMatches.map(\.range)
-        let excludedRanges = calendarRanges + [firstWordRange].compactMap { $0 }
+        let segmentMatches = segmentMatches(in: text, excluding: firstWordRange)
+        let calendarMatches = segmentMatches.filter { $0.kind == .calendar }
+        let locationMatches = segmentMatches.filter { $0.kind == .location }
+        let excludedRanges = segmentMatches.map(\.range) + [firstWordRange].compactMap { $0 }
 
         var instructions = await language.parser.instructions(
             in: text,
@@ -173,7 +163,7 @@ enum EventTitleParser {
         let durationMatch = instructions.durations.first?.info
         let isAllDay = !instructions.allDayRanges.isEmpty
 
-        var tokens = calendarRanges.map { EventTitleToken(kind: .calendar, range: $0) }
+        var tokens = segmentMatches.map { EventTitleToken(kind: $0.kind, range: $0.range) }
         tokens += instructions.dates.map { EventTitleToken(kind: .date, range: $0.range) }
         tokens += instructions.times.map { EventTitleToken(kind: .time, range: $0.range) }
         tokens += instructions.relativeStarts.map { EventTitleToken(kind: .time, range: $0.range) }
@@ -190,7 +180,8 @@ enum EventTitleParser {
             relativeStart: relativeStartMatch?.relativeStart,
             duration: durationMatch?.duration,
             isAllDay: isAllDay,
-            calendarQuery: calendarMatch?.query,
+            calendarQuery: calendarMatches.last?.query,
+            locationQuery: locationMatches.last?.query,
             tokens: tokens.sorted { $0.range.location < $1.range.location }
         )
     }
@@ -214,12 +205,38 @@ private func isValid(
         && resolved.day == components.day
 }
 
-private typealias CalendarMatch = (range: NSRange, query: String)
+private typealias SegmentMatch = (kind: EventTitleTokenKind, range: NSRange, query: String)
 
-private let calendarExpression = try! NSRegularExpression(
-    pattern: #"(?:^|\s)(/([^/\n]+?))(?=\s+(?=/)|\s*$)"#,
+/// Trailing segments introduced by a marker, written after everything else:
+/// `/Work` picks a calendar and `@Coffee Lab` sets the location. A segment runs
+/// until the next marker or the end of the text. `@` must start a word and be
+/// followed by a non-space, so `bob@example.com` and `Coffee @ 3pm` are left alone.
+private let segmentExpression = try! NSRegularExpression(
+    pattern: #"(?:^|\s)(/([^/\n]+?)|@([^@\s][^@\n]*?))(?=\s+(?:/|@\S)|\s*$)"#,
     options: [.caseInsensitive]
 )
+
+private func segmentMatches(in text: String, excluding firstWordRange: NSRange?) -> [SegmentMatch] {
+    segmentExpression
+        .matches(in: text, range: text.nsRange)
+        .compactMap { match -> SegmentMatch? in
+            guard
+                let range = validRange(match.range(at: 1)),
+                !overlaps(range, firstWordRange)
+            else {
+                return nil
+            }
+            let (kind, queryGroup): (EventTitleTokenKind, Int) =
+                validRange(match.range(at: 2)) != nil ? (.calendar, 2) : (.location, 3)
+            guard
+                let queryRange = Range(match.range(at: queryGroup), in: text),
+                let query = String(text[queryRange]).trimmed.notEmpty
+            else {
+                return nil
+            }
+            return (kind, range, query)
+        }
+}
 
 private func removing(tokens: [EventTitleToken], from text: String) -> String {
 
