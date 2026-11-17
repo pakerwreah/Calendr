@@ -171,7 +171,7 @@ internal enum Strings {
         /// At time of event
         internal static let atTime = Strings.tr("Localizable", "event.editor.alert.at_time", fallback: "At time of event")
         /// Default
-        internal static let `none` = Strings.tr("Localizable", "event.editor.alert.none", fallback: "Default")
+        internal static let `default` = Strings.tr("Localizable", "event.editor.alert.default", fallback: "Default")
       }
     }
     internal enum Status {

@@ -36,7 +36,7 @@ enum EventAlert: Equatable, Hashable, CaseIterable {
 
     var title: String {
         switch self {
-        case .none: Strings.Event.Editor.Alert.none
+        case .none: Strings.Event.Editor.Alert.default
         case .atTimeOfEvent: Strings.Event.Editor.Alert.atTime
         case .fiveMinutesBefore: Strings.Event.Editor.Alert._5MinutesBefore
         case .tenMinutesBefore: Strings.Event.Editor.Alert._10MinutesBefore

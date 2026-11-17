@@ -154,7 +154,7 @@
 "event.editor.notes" = "Notas";
 
 "event.editor.alert" = "Alerta";
-"event.editor.alert.none" = "Padrão";
+//"event.editor.alert.default" = "Default";
 "event.editor.alert.at_time" = "Na hora do evento";
 "event.editor.alert.5_minutes_before" = "5 minutos antes";
 "event.editor.alert.10_minutes_before" = "10 minutos antes";

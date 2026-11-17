@@ -154,7 +154,7 @@
 //"event.editor.notes" = "Notes";
 
 //"event.editor.alert" = "Alert";
-"event.editor.alert.none" = "Varsayılan";
+//"event.editor.alert.default" = "Default";
 //"event.editor.alert.at_time" = "At time of event";
 //"event.editor.alert.5_minutes_before" = "5 minutes before";
 //"event.editor.alert.10_minutes_before" = "10 minutes before";
