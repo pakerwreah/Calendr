@@ -154,7 +154,7 @@
 "event.editor.notes" = "メモ";
 
 "event.editor.alert" = "通知";
-"event.editor.alert.none" = "なし";
+//"event.editor.alert.default" = "Default";
 "event.editor.alert.at_time" = "予定の時刻";
 "event.editor.alert.5_minutes_before" = "5分前";
 "event.editor.alert.10_minutes_before" = "10分前";

@@ -154,7 +154,7 @@
 "event.editor.notes" = "메모";
 
 "event.editor.alert" = "알림";
-"event.editor.alert.none" = "없음";
+//"event.editor.alert.default" = "Default";
 "event.editor.alert.at_time" = "일정 시작 시";
 "event.editor.alert.5_minutes_before" = "5분 전";
 "event.editor.alert.10_minutes_before" = "10분 전";

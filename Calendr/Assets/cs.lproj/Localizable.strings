@@ -154,7 +154,7 @@
 "event.editor.notes" = "Poznámky";
 
 "event.editor.alert" = "Upozornění";
-"event.editor.alert.none" = "Žádné";
+//"event.editor.alert.default" = "Default";
 "event.editor.alert.at_time" = "V čase události";
 "event.editor.alert.5_minutes_before" = "5 minut předem";
 "event.editor.alert.10_minutes_before" = "10 minut předem";
